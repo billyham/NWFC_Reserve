@@ -12,7 +12,20 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    
+    //set system user defaults
+    NSDictionary* EQRWebDataUrl = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   @"http://10.0.0.2/nwfc/", @"url",
+                                   nil];
+    
+    NSDictionary* appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 EQRWebDataUrl, @"url"
+                                 , nil];
+    
+    [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
+    
+    
+    
     return YES;
 }
 							

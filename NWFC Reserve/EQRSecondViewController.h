@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQRSecondViewController : UIViewController
+@interface EQRSecondViewController : UIViewController 
 
 @end
