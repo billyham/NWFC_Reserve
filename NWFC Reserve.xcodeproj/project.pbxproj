@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01D091C9187F80A50044D733 /* EQREquipUniqueItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D091C8187F80A50044D733 /* EQREquipUniqueItem.m */; };
 		438EDCE0182B7ABD0090F882 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 438EDCDF182B7ABD0090F882 /* Foundation.framework */; };
 		438EDCE2182B7ABE0090F882 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 438EDCE1182B7ABE0090F882 /* CoreGraphics.framework */; };
 		438EDCE4182B7ABE0090F882 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 438EDCE3182B7ABE0090F882 /* UIKit.framework */; };
@@ -53,6 +54,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		01D091C7187F80A50044D733 /* EQREquipUniqueItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipUniqueItem.h; sourceTree = "<group>"; };
+		01D091C8187F80A50044D733 /* EQREquipUniqueItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipUniqueItem.m; sourceTree = "<group>"; };
 		438EDCDC182B7ABD0090F882 /* NWFC Reserve.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NWFC Reserve.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		438EDCDF182B7ABD0090F882 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		438EDCE1182B7ABE0090F882 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -265,6 +268,8 @@
 				54DFE0EF186ECD610089B9EA /* EQRClassRegistrationItem.m */,
 				5402B7CD1875446D00F0888B /* EQRClassCatalog_EquipTitleItem_Join.h */,
 				5402B7CE1875446D00F0888B /* EQRClassCatalog_EquipTitleItem_Join.m */,
+				01D091C7187F80A50044D733 /* EQREquipUniqueItem.h */,
+				01D091C8187F80A50044D733 /* EQREquipUniqueItem.m */,
 			);
 			name = "collectionView objects";
 			sourceTree = "<group>";
@@ -390,6 +395,7 @@
 				5402D237186C24A50091C080 /* EQRClassCell.m in Sources */,
 				438EDCF0182B7ABE0090F882 /* EQRAppDelegate.m in Sources */,
 				5402D234186C242F0091C080 /* EQRClassItem.m in Sources */,
+				01D091C9187F80A50044D733 /* EQREquipUniqueItem.m in Sources */,
 				540B551D18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m in Sources */,
 				438EDCF9182B7ABE0090F882 /* EQRSecondViewController.m in Sources */,
 			);
