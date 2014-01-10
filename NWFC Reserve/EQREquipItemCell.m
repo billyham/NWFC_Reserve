@@ -66,32 +66,51 @@
     
     
     
-    //create button programmatically
-    //create temp button with custom property to retain the brown item
-    UIButton* calButton = [[UIButton alloc] init];
-    calButton.frame = CGRectMake(0, 0, 88, 44);
-    [calButton setTitle:@"Add To Cal" forState:UIControlStateNormal];
-    [calButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-    [calButton setTitle:@"Adding To Cal" forState:UIControlStateHighlighted];
-    [calButton setTitleColor:[UIColor redColor] forState:UIControlStateHighlighted];
-    [calButton setTitle:@"Added To Cal" forState:UIControlStateSelected];
-    [calButton setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+    //create buttons programmatically
+    //___plus button
+    UIButton* plusButtonFoSho = [UIButton buttonWithType:UIButtonTypeSystem];
+    plusButtonFoSho.frame = CGRectMake(0, 0, 46, 32);
     //set font size
-    calButton.titleLabel.font = [UIFont boldSystemFontOfSize:11];
-    calButton.reversesTitleShadowWhenHighlighted = YES;
+    plusButtonFoSho.titleLabel.text = @"+";
+    plusButtonFoSho.titleLabel.font = [UIFont systemFontOfSize:32];
+    [plusButtonFoSho setTitle:@"+" forState:UIControlStateNormal];
+    [plusButtonFoSho setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [plusButtonFoSho setTitle:@"+" forState:UIControlStateHighlighted];
+//  [plusButtonFoSho setTitleColor:[UIColor redColor] forState:UIControlStateHighlighted];
+    [plusButtonFoSho setTitle:@"+" forState:UIControlStateSelected];
+    [plusButtonFoSho setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+    //set font size
+    plusButtonFoSho.reversesTitleShadowWhenHighlighted = YES;
+    
+    //set user interaction
+    plusButtonFoSho.userInteractionEnabled = YES;
+    
+    //target of calendar button is the rootviewcontroller
+    [plusButtonFoSho addTarget:self action:@selector(plusHit:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView addSubview:plusButtonFoSho];
     
     
-        //set font color
-        calButton.titleLabel.textColor = [UIColor redColor];
-        
-        //set user interaction
-        calButton.userInteractionEnabled = YES;
-        
-        //target of calendar button is the rootviewcontroller
-        [calButton addTarget:self action:@selector(plusHit:) forControlEvents:UIControlEventTouchUpInside];
-        
-    [self.contentView addSubview:calButton];
+    //___minus button
+    UIButton* minusButtonFoSho = [UIButton buttonWithType:UIButtonTypeSystem];
+    minusButtonFoSho.frame = CGRectMake(69, 0, 46, 32);
+    minusButtonFoSho.titleLabel.text = @"–";
+    minusButtonFoSho.titleLabel.font = [UIFont systemFontOfSize:32];
+    [minusButtonFoSho setTitle:@"–" forState:UIControlStateNormal];
+    [minusButtonFoSho setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [minusButtonFoSho setTitle:@"–" forState:UIControlStateHighlighted];
+    [minusButtonFoSho setTitle:@"–" forState:UIControlStateSelected];
+    [minusButtonFoSho setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+    //set font size
+    minusButtonFoSho.reversesTitleShadowWhenHighlighted = YES;
     
+    //set user interaction
+    minusButtonFoSho.userInteractionEnabled = YES;
+    
+    //target of calendar button is the rootviewcontroller
+    [minusButtonFoSho addTarget:self action:@selector(minusHit:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView addSubview:minusButtonFoSho];
 
 
     
@@ -102,6 +121,14 @@
 -(IBAction)plusHit:(id)sender{
     
     NSLog(@"plus hit test in EquipItemCell");
+    
+    //_______pass the touch event up the responder chain...
+//    [self.nextResponder touchesBegan:touches withEvent:event];
+}
+
+-(IBAction)minusHit:(id)sender{
+    
+    NSLog(@"minus hit test in EquipoItemCell");
 }
 
 

@@ -49,7 +49,8 @@
 //        }
 //    }
     
-//    self.equipCollectionView.allowsSelection = NO;
+    //this prevents the collection view from responding to touch events
+    self.equipCollectionView.allowsSelection = NO;
     
 
     //register collection view cell
