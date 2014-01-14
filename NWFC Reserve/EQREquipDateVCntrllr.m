@@ -9,12 +9,14 @@
 #import "EQREquipDateVCntrllr.h"
 #import "EQRScheduleRequestItem.h"
 #import "EQRScheduleRequestManager.h"
+#import "EQRGlobals.h"
 
 
 @interface EQREquipDateVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UIDatePicker* pickUpDatePicker;
 @property (strong, nonatomic) IBOutlet UIDatePicker* returnDatePicker;
+@property BOOL datePickupSelectionFlag;
 
 @end
 
@@ -33,7 +35,26 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+    //register for notification
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    
+    //observe for voiding schedule tracking item
+    [nc addObserver:self selector:@selector(receiveVoidScheduleItem:) name:EQRVoidScheduleItemObjects object:nil];
+    
+    self.datePickupSelectionFlag = NO;
 }
+
+
+
+#pragma mark - void date selection
+
+-(void)receiveVoidScheduleItem:(NSNotification*)note{
+
+    self.datePickupSelectionFlag = NO;
+    
+}
+
 
 
 #pragma mark - UIDatePickerMethods
@@ -46,17 +67,22 @@
     //max time by adding  three days to the pickup date
     NSDate* datePlusThree = [self.pickUpDate dateByAddingTimeInterval:259200]; //25920 is three days
     
+    //max return date
     self.returnDatePicker.maximumDate = datePlusThree;
     
-    //move return date to pick up date
-    [self.returnDatePicker setDate:self.pickUpDate animated:YES];
-    
-    //min time is the pick up date
+    //min time for return date is the pick up date
     self.returnDatePicker.minimumDate = self.pickUpDate;
     
+    //move return date to pick up date, unless it has already by set
+    if (!self.datePickupSelectionFlag){
+        
+        [self.returnDatePicker setDate:self.pickUpDate animated:YES];
+    }
     //assign pu date to the scheduleRequest
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     requestManager.request.request_date_begin = self.pickUpDate;
+    
+    self.datePickupSelectionFlag = YES;
 }
 
 

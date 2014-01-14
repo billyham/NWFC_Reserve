@@ -10,6 +10,9 @@
 
 NSString* ApplicationKey = @"3j654FP00o91wer";
 
+//Notification selectors
+NSString* EQRVoidScheduleItemObjects = @"EQRVoidScheduleItemObjects";
+
 @implementation EQRGlobals
 
 @end

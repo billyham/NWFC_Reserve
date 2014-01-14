@@ -10,6 +10,9 @@
 
 extern NSString* ApplicationKey;
 
+//Notification selectors
+extern NSString* EQRVoidScheduleItemObjects;
+
 
 @interface EQRGlobals : NSObject
 

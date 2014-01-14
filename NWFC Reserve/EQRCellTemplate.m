@@ -25,7 +25,7 @@
 
 -(void)initialSetupWithTitle:(NSString*) titleName{
     
-    self.backgroundColor = [UIColor yellowColor];
+    self.backgroundColor = [UIColor whiteColor];
     
     UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(3, 5, 500, 20)];
     self.titleLabel = thisLabel;

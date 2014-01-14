@@ -7,6 +7,7 @@
 //
 
 #import "EQRScheduleRequestManager.h"
+#import "EQRGlobals.h"
 
 @implementation EQRScheduleRequestManager
 
@@ -37,7 +38,13 @@
 
 -(void)dismissRequest{
     
+    //set request item to nil
     self.request = nil;
+    
+    //void any local ivars that view controllers have established for keeping track of selections and flags
+    //send by notification!!
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:self userInfo:nil];
+    
 }
 
 @end
