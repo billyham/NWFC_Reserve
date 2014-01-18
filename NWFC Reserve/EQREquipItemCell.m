@@ -12,6 +12,8 @@
 @interface EQREquipItemCell ()
 
 @property (strong, nonatomic) EQREquipContentViewVCntrllr* myEquipVCntrllr;
+@property int itemQuantity;
+@property (strong, nonatomic) IBOutlet NSString* itemQuantityString;
 
 @end
 
@@ -31,6 +33,10 @@
 
 -(void)initialSetupWithTitle:(NSString*) titleName{
 
+    //initial ivar values
+    self.itemQuantity = 0;
+    self.itemQuantityString = @"0";
+    
     UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 280, 20)];
     self.titleLabel = thisLabel;
     
@@ -120,7 +126,22 @@
 
 -(IBAction)plusHit:(id)sender{
     
-    NSLog(@"plus hit test in EquipItemCell");
+    self.itemQuantity = self.itemQuantity + 1;
+    
+    //set outlet string value
+    if (self.itemQuantity != 0){
+        
+        self.itemQuantityString = [NSString stringWithFormat:@"%u", self.itemQuantity];
+        
+    } else {
+        
+        self.itemQuantityString = @"";
+    }
+    
+    //set subview textfield value
+    self.myEquipVCntrllr.quantityTextField.text = self.itemQuantityString;
+    
+    NSLog(@"plus hit test in EquipItemCell with total: %u", self.itemQuantity);
     
     //_______pass the touch event up the responder chain...
 //    [self.nextResponder touchesBegan:touches withEvent:event];
@@ -128,7 +149,25 @@
 
 -(IBAction)minusHit:(id)sender{
     
-    NSLog(@"minus hit test in EquipoItemCell");
+    if (self.itemQuantity > 0){
+        
+        self.itemQuantity = self.itemQuantity - 1;
+    }
+    
+    //set outlet string value
+    if (self.itemQuantity != 0){
+        
+        self.itemQuantityString = [NSString stringWithFormat:@"%u", self.itemQuantity];
+        
+    } else {
+        
+        self.itemQuantityString = @"";
+    }
+    
+    //set subview textfield value
+    self.myEquipVCntrllr.quantityTextField.text = self.itemQuantityString;
+    
+    NSLog(@"minus hit test in EquipoItemCell with total: %u", self.itemQuantity);
 }
 
 
