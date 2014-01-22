@@ -16,5 +16,6 @@
 +(EQRScheduleRequestManager*)sharedInstance;
 -(void)createNewRequest;
 -(void)dismissRequest;
+-(NSArray*)retrieveArrayOfEquipJoins;
 
 @end

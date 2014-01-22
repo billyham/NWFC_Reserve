@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01FDEA96188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FDEA95188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m */; };
 		438EDCE0182B7ABD0090F882 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 438EDCDF182B7ABD0090F882 /* Foundation.framework */; };
 		438EDCE2182B7ABE0090F882 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 438EDCE1182B7ABE0090F882 /* CoreGraphics.framework */; };
 		438EDCE4182B7ABE0090F882 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 438EDCE3182B7ABE0090F882 /* UIKit.framework */; };
@@ -53,6 +54,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		01FDEA94188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleTracking_EquipmentUnique_Join.h; sourceTree = "<group>"; };
+		01FDEA95188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleTracking_EquipmentUnique_Join.m; sourceTree = "<group>"; };
 		438EDCDC182B7ABD0090F882 /* NWFC Reserve.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NWFC Reserve.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		438EDCDF182B7ABD0090F882 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		438EDCE1182B7ABE0090F882 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -265,6 +268,8 @@
 				54DFE0EF186ECD610089B9EA /* EQRClassRegistrationItem.m */,
 				5402B7CD1875446D00F0888B /* EQRClassCatalog_EquipTitleItem_Join.h */,
 				5402B7CE1875446D00F0888B /* EQRClassCatalog_EquipTitleItem_Join.m */,
+				01FDEA94188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.h */,
+				01FDEA95188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m */,
 			);
 			name = "collectionView objects";
 			sourceTree = "<group>";
@@ -371,6 +376,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01FDEA96188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m in Sources */,
 				5402B7D5187586F400F0888B /* EQREquipContentViewVCntrllr.m in Sources */,
 				54032FE61872D36F00481D86 /* EQRScheduleRequestItem.m in Sources */,
 				5402D22E186BFCF80091C080 /* EQRCellTemplate.m in Sources */,

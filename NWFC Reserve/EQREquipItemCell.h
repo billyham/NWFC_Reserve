@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "EQRCellTemplate.h"
+#import "EQREquipItem.h"
 
 @interface EQREquipItemCell : EQRCellTemplate
 
 
+-(void)initialSetupWithTitle:(NSString*)titleName andEquipItem:(EQREquipItem*)titleItemObject;
 
 @end

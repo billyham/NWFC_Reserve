@@ -47,4 +47,35 @@
     
 }
 
+
+-(NSArray*)retrieveArrayOfEquipJoins{
+    
+    if ([self.request.arrayOfEquipmentJoins count] > 0){
+        
+        NSArray* returnArray = [NSArray arrayWithArray:self.request.arrayOfEquipmentJoins];
+        
+        return returnArray;
+
+    }else{
+        
+        return nil;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @end

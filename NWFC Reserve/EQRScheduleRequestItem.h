@@ -10,6 +10,7 @@
 #import "EQRContactNameItem.h"
 #import "EQRClassItem.h"
 #import "EQRClassRegistrationItem.h"
+#import "EQRScheduleTracking_EquipmentUnique_Join.h"
 
 @interface EQRScheduleRequestItem : NSObject
 
@@ -41,5 +42,7 @@
 @property (strong, nonatomic) EQRContactNameItem* contactNameItem;
 @property (strong, nonatomic) EQRClassItem* classItem;
 @property (strong, nonatomic) EQRClassRegistrationItem* classRegistrationItem;
+
+@property (strong, nonatomic) NSMutableArray* arrayOfEquipmentJoins;
 
 @end

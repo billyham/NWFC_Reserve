@@ -8,6 +8,8 @@
 
 #import "EQREquipItemCell.h"
 #import "EQREquipContentViewVCntrllr.h"
+#import "EQRScheduleRequestManager.h"
+
 
 @interface EQREquipItemCell ()
 
@@ -31,8 +33,8 @@
 
 #pragma mark - methods
 
--(void)initialSetupWithTitle:(NSString*) titleName{
-
+-(void)initialSetupWithTitle:(NSString*)titleName andEquipItem:(EQREquipItem*)titleItemObject{
+    
     //initial ivar values
     self.itemQuantity = 0;
     self.itemQuantityString = @"0";
@@ -61,7 +63,7 @@
 
     //set user enabled
     
-    //_________********** when set to YES: this and this alone prevents the collectionView delegeat from receiving tap actions
+    //_________********** when set to YES: this and this alone prevents the collectionView delegate from receiving tap actions
     [self.myEquipVCntrllr.view setUserInteractionEnabled:NO];
     
     [self.myEquipVCntrllr.plusButton setUserInteractionEnabled:YES];
@@ -91,7 +93,7 @@
     //set user interaction
     plusButtonFoSho.userInteractionEnabled = YES;
     
-    //target of calendar button is the rootviewcontroller
+    //_________******* target of button is the self
     [plusButtonFoSho addTarget:self action:@selector(plusHit:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.contentView addSubview:plusButtonFoSho];
@@ -113,13 +115,36 @@
     //set user interaction
     minusButtonFoSho.userInteractionEnabled = YES;
     
-    //target of calendar button is the rootviewcontroller
+    //_________******* target of button is self
     [minusButtonFoSho addTarget:self action:@selector(minusHit:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.contentView addSubview:minusButtonFoSho];
 
-
+    //________********** retrieve info from scheduleRequestItem to populate quantity text field.
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    NSArray* arrayOfScheduleEquipJoins = [requestManager retrieveArrayOfEquipJoins];
     
+    //_______********** loop through array and find objects that match the equipTitle id???
+    //add up count and list in quantity text field
+    
+    NSMutableArray* arrayOfMatchingItems = [NSMutableArray arrayWithCapacity:1];
+    [arrayOfScheduleEquipJoins enumerateObjectsUsingBlock:^(EQRScheduleTracking_EquipmentUnique_Join* obj, NSUInteger idx, BOOL *stop) {
+        
+        if ([[obj equipUniqueItem_foreignKey] isEqualToString:[titleItemObject key_id]]){
+            
+            [arrayOfMatchingItems addObject:obj];
+        }
+    }];
+    
+    //set temp quantity variable
+    if ([arrayOfMatchingItems count] > 0){
+        
+        self.itemQuantity = [arrayOfMatchingItems count];
+        self.itemQuantityString = [NSString stringWithFormat:@"%u", self.itemQuantity];
+        
+        //set subview textfield value
+        self.myEquipVCntrllr.quantityTextField.text = self.itemQuantityString;
+    }
     
 }
 
