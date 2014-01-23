@@ -13,6 +13,7 @@
 
 @interface EQREquipItemCell ()
 
+@property (strong, nonatomic) EQREquipItem* thisEquipTitleItem;
 @property (strong, nonatomic) EQREquipContentViewVCntrllr* myEquipVCntrllr;
 @property int itemQuantity;
 @property (strong, nonatomic) IBOutlet NSString* itemQuantityString;
@@ -35,11 +36,14 @@
 
 -(void)initialSetupWithTitle:(NSString*)titleName andEquipItem:(EQREquipItem*)titleItemObject{
     
+    //assign ivar
+    self.thisEquipTitleItem = titleItemObject;
+    
     //initial ivar values
     self.itemQuantity = 0;
     self.itemQuantityString = @"0";
     
-    UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 280, 20)];
+    UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, 280, 20)];
     self.titleLabel = thisLabel;
     
     self.titleLabel.text = titleName;
@@ -101,7 +105,7 @@
     
     //___minus button
     UIButton* minusButtonFoSho = [UIButton buttonWithType:UIButtonTypeSystem];
-    minusButtonFoSho.frame = CGRectMake(69, 0, 46, 32);
+    minusButtonFoSho.frame = CGRectMake(110, 0, 46, 32);
     minusButtonFoSho.titleLabel.text = @"–";
     minusButtonFoSho.titleLabel.font = [UIFont systemFontOfSize:32];
     [minusButtonFoSho setTitle:@"–" forState:UIControlStateNormal];
@@ -167,6 +171,12 @@
     self.myEquipVCntrllr.quantityTextField.text = self.itemQuantityString;
     
     NSLog(@"plus hit test in EquipItemCell with total: %u", self.itemQuantity);
+    
+    //add addition to scheduleTrackingRequest as a new join object
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    [requestManager addNewRequestEquipJoin:self.thisEquipTitleItem];
+    
+    
     
     //_______pass the touch event up the responder chain...
 //    [self.nextResponder touchesBegan:touches withEvent:event];

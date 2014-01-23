@@ -18,8 +18,13 @@
                                    @"http://10.0.0.2/nwfc/", @"url",
                                    nil];
     
+    NSDictionary* EQRCurrentTermCode = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        @"F13", @"term",
+                                        nil];
+    
     NSDictionary* appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 EQRWebDataUrl, @"url"
+                                 EQRWebDataUrl, @"url",
+                                 EQRCurrentTermCode, @"term"
                                  , nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];

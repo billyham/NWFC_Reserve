@@ -55,11 +55,14 @@
             
         case (0):{ //student (adult)
             
+            //get current term from user defaults
+            NSString* termString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
+
             //load class table with current term classes and display in collection view
             EQRWebData* webData = [EQRWebData sharedInstance];
             
-            //params for class section query is the current term _______hard coded________
-            NSArray* termArray = [NSArray arrayWithObjects:@"term", @"F13", nil];
+            //params for class section query is the current term
+            NSArray* termArray = [NSArray arrayWithObjects:@"term", termString, nil];
             NSArray* classqueryArray = [NSArray arrayWithObject:termArray];
             
             [webData queryWithLink:@"EQGetClassesCurrent.php" parameters:classqueryArray class:@"EQRClassItem" completion:^(NSMutableArray* muteArray){

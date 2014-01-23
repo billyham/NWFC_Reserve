@@ -8,6 +8,7 @@
 
 #import "EQRScheduleRequestManager.h"
 #import "EQRGlobals.h"
+#import "EQRScheduleTracking_EquipmentUnique_Join.h"
 
 @implementation EQRScheduleRequestManager
 
@@ -33,6 +34,9 @@
     
     //set timestamp
     self.request.time_of_request = [NSDate date];
+    
+    //need to set the key_id right away
+    //send to PHP and use that mechanism to retrieve mysql's auto incremented id
 }
 
 
@@ -63,7 +67,24 @@
 }
 
 
+-(void)addNewRequestEquipJoin:(EQREquipItem*)thisEquipItem{
+    
+    //instantiate new join item
+    EQRScheduleTracking_EquipmentUnique_Join* newJoin = [[EQRScheduleTracking_EquipmentUnique_Join alloc] init];
+    
+    newJoin.equipUniqueItem_foreignKey = @"1";
+    
+    //______**********  HAVE NOT DEFINED THE REQUEST.KEY_ID YET
+    newJoin.scheduleTracking_foreignKey = self.request.key_id;
+}
 
+
+-(void)removeRequestEquipJoin:(EQREquipItem*)thisEquipItem{
+    
+    //find an existing join with a matching equipItem and remove the sucker.
+    
+    
+}
 
 
 

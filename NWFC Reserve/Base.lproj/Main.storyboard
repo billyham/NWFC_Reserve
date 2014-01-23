@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13B3116" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
@@ -203,7 +203,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="WCc-Nb-cUj">
-                                <rect key="frame" x="0.0" y="164" width="370" height="700"/>
+                                <rect key="frame" x="0.0" y="164" width="370" height="810"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="mGd-j8-OXS">
@@ -242,7 +242,7 @@
                                 </connections>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rRe-e1-D3p">
-                                <rect key="frame" x="361" y="931" width="62" height="30"/>
+                                <rect key="frame" x="353" y="94" width="62" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Continue">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -252,10 +252,8 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="WCc-Nb-cUj" firstAttribute="leading" secondItem="rc4-TU-5pR" secondAttribute="leading" id="ERG-Ff-TTf"/>
-                            <constraint firstItem="WCc-Nb-cUj" firstAttribute="leading" secondItem="rc4-TU-5pR" secondAttribute="leading" id="Z1P-uu-IFf"/>
+                            <constraint firstItem="i19-Uj-Hb2" firstAttribute="top" secondItem="WCc-Nb-cUj" secondAttribute="bottom" id="U74-eb-8Cb"/>
                             <constraint firstItem="WCc-Nb-cUj" firstAttribute="top" secondItem="aYt-ZZ-Mb0" secondAttribute="bottom" constant="100" id="g9K-Or-4HU"/>
-                            <constraint firstItem="WCc-Nb-cUj" firstAttribute="leading" secondItem="rc4-TU-5pR" secondAttribute="leading" id="q9L-5s-D62"/>
-                            <constraint firstItem="WCc-Nb-cUj" firstAttribute="leading" secondItem="rc4-TU-5pR" secondAttribute="leading" id="wZz-yS-9MZ"/>
                         </constraints>
                     </view>
                     <toolbarItems>
@@ -459,6 +457,22 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Current Term" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xkv-aJ-mgn">
+                                <rect key="frame" x="249" y="203" width="271" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="imb-2J-3xE">
+                                <rect key="frame" x="336" y="232" width="97" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="termTextFieldDidChange:" destination="6G1-gm-2lt" eventType="editingDidEnd" id="IO7-ub-TUB"/>
+                                </connections>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -469,6 +483,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     </view>
                     <navigationItem key="navigationItem" id="t24-ER-jgh"/>
                     <connections>
+                        <outlet property="termString" destination="imb-2J-3xE" id="XlP-kl-34S"/>
                         <outlet property="urlString" destination="kOp-x7-tiU" id="ruN-xK-cld"/>
                     </connections>
                 </viewController>

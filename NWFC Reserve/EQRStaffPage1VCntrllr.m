@@ -11,6 +11,7 @@
 @interface EQRStaffPage1VCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UITextField* urlString;
+@property (strong, nonatomic) IBOutlet UITextField* termString;
 
 @end
 
@@ -31,7 +32,9 @@
 
     //populate text field with information from user settings
     NSString* currentUrl = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
-    
+    NSString* currentTerm = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
+
+    self.termString.text = currentTerm;
     self.urlString.text = currentUrl;
     
     
@@ -47,6 +50,20 @@
                             , nil];
     
     [defaults setObject:newDic forKey:@"url"];
+    [defaults synchronize];
+    
+}
+
+
+-(IBAction)termTextFieldDidChange:(id)sender{
+    
+    //change user defaults with new string text
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                            self.termString.text, @"term"
+                            , nil];
+    
+    [defaults setObject:newDic forKey:@"term"];
     [defaults synchronize];
     
 }

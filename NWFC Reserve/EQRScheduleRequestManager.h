@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "EQRScheduleRequestItem.h"
+#import "EQREquipItem.h"
 
 @interface EQRScheduleRequestManager : NSObject
 
@@ -17,5 +18,8 @@
 -(void)createNewRequest;
 -(void)dismissRequest;
 -(NSArray*)retrieveArrayOfEquipJoins;
+-(void)addNewRequestEquipJoin:(EQREquipItem*)thisEquipItem;
+-(void)removeRequestEquipJoin:(EQREquipItem*)thisEquipItem;
+
 
 @end
