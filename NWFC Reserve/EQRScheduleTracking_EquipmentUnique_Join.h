@@ -13,6 +13,7 @@
 @property (strong, nonatomic) NSString* key_id;
 @property (strong, nonatomic) NSString* scheduleTracking_foreignKey;
 @property (strong, nonatomic) NSString* equipUniqueItem_foreignKey;
+@property (strong, nonatomic) NSString* equipTitleItem_foreignKey;
 
 @property int itemQuantity;
 

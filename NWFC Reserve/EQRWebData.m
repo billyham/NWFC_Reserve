@@ -173,6 +173,88 @@
 }
 
 
+-(NSString*)queryForStringWithLink:(NSString*)link parameters:(NSArray*)para{
+    
+    //get url string from user defaults
+    NSString* urlRootString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
+
+    //declare the input string
+    NSString* inputString;
+    //declare the parameter string
+    NSMutableString* paraString = [NSMutableString stringWithString:@""];
+    
+    //add a cache killer!!!
+    //a combination of timestamp and a random number
+    NSDate* ckDate = [NSDate date];
+    NSString* thisFormattedDate= [NSDateFormatter localizedStringFromDate:ckDate dateStyle:NSDateFormatterNoStyle
+                                                                timeStyle:NSDateFormatterLongStyle ];
+    float ckFloat = arc4random() % 100000;
+    NSString* ck = [NSString stringWithFormat:@"ck=%5.0f%@", ckFloat, thisFormattedDate];
+    
+    //test if any parameters exist
+    if ([para count] > 0){
+        
+        NSLog(@"this is the number of parameters: %lu", (unsigned long)[para count]);
+        
+        [para enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            //first parameter should exclude &
+            if (idx == 0){
+                
+                [paraString appendString: [NSString stringWithFormat:@"%@=%@", [obj objectAtIndex:0], [obj objectAtIndex:1]]];
+                
+            }else{
+                
+                [paraString appendString: [NSString stringWithFormat:@"&%@=%@", [obj objectAtIndex:0], [obj objectAtIndex:1]]];
+            }
+        }];
+        
+        inputString = [NSString stringWithFormat:@"%@%@?%@&%@", urlRootString, link, paraString, ck];
+        
+    }else{
+        
+        inputString = [NSString stringWithFormat:@"%@%@?%@", urlRootString, link, ck];
+    }
+    
+    
+	//encode the url string
+	NSString* urlString = [inputString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    //remove new line commands
+    NSString* newUrlString = [urlString stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+    
+    
+    NSLog(@"this is the inputstring: %@", newUrlString);
+    
+    
+    //send the url request
+	NSURL* url = [NSURL URLWithString:urlString];
+	NSURLRequest* urlRequest = [NSURLRequest requestWithURL:url
+												cachePolicy:NSURLRequestReturnCacheDataElseLoad
+											timeoutInterval:120];
+	
+	NSData* urlData;
+	NSURLResponse* response;
+	NSError* error;
+	urlData = [NSURLConnection sendSynchronousRequest:urlRequest
+									returningResponse:&response
+												error:&error];
+    
+    if (!urlData) {
+        
+        NSLog(@"NSURLConnection failure");
+        
+        return nil;
+    }
+    
+    //_______*********** The incoming data is in latin1
+    //convert data to string (and define the incoming encoding)
+    NSString* urlDataString = [[NSString alloc] initWithData:urlData encoding:NSISOLatin1StringEncoding];
+    
+    return urlDataString;
+}
+
+
 
 #pragma mark - NSXMLParser Delegate methods
 

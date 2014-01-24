@@ -25,6 +25,7 @@ typedef void (^CompletionBlockWithNestedArray) (NSMutableArray* nestedMuteArray)
 
 //- (void)hardCodedUrlTest;
 - (void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock;
+-(NSString*)queryForStringWithLink:(NSString*)link parameters:(NSArray*)para;
 
 
 @end

@@ -9,6 +9,7 @@
 #import "EQREquipItemCell.h"
 #import "EQREquipContentViewVCntrllr.h"
 #import "EQRScheduleRequestManager.h"
+#import "EQRWebData.h"
 
 
 @interface EQREquipItemCell ()
@@ -132,9 +133,13 @@
     //add up count and list in quantity text field
     
     NSMutableArray* arrayOfMatchingItems = [NSMutableArray arrayWithCapacity:1];
+    NSLog(@"this is the count of arrayOfMatchingItems: %u", [arrayOfMatchingItems count]);
     [arrayOfScheduleEquipJoins enumerateObjectsUsingBlock:^(EQRScheduleTracking_EquipmentUnique_Join* obj, NSUInteger idx, BOOL *stop) {
         
-        if ([[obj equipUniqueItem_foreignKey] isEqualToString:[titleItemObject key_id]]){
+        NSLog(@"inside the arrayOfScheduleEquipJoins with obj equipUniqueItem_foreignKey: %@", [obj equipUniqueItem_foreignKey]);
+        
+        //_____****** uniqueforeignKey is currently hard coded!!!! ****_____
+        if ([[obj equipTitleItem_foreignKey] isEqualToString:titleItemObject.key_id]){
             
             [arrayOfMatchingItems addObject:obj];
         }
@@ -175,6 +180,7 @@
     //add addition to scheduleTrackingRequest as a new join object
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     [requestManager addNewRequestEquipJoin:self.thisEquipTitleItem];
+    
     
     
     

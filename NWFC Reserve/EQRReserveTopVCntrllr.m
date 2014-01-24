@@ -302,6 +302,8 @@
         
         //name list was selected
         
+        //______****** cancel any existing scheduleRequestItems first???  ******___________
+        
         //create a scheduleRequestItem instance
         EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
         

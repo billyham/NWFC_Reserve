@@ -9,6 +9,7 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRGlobals.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
+#import "EQRWebData.h"
 
 @implementation EQRScheduleRequestManager
 
@@ -35,8 +36,20 @@
     //set timestamp
     self.request.time_of_request = [NSDate date];
     
+    //--
     //need to set the key_id right away
-    //send to PHP and use that mechanism to retrieve mysql's auto incremented id
+    //get the next key_id value for a scheduleTracking object
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSString* lastKeyId = [webData queryForStringWithLink:@"EQGetNextScheduleRequestKey.php" parameters:nil];
+    
+    int lastKeyIdInt = [lastKeyId integerValue];
+    int nextKeyId = lastKeyIdInt + 1;
+    NSString* nextKeyIdString = [NSString stringWithFormat:@"%u", nextKeyId];
+    
+    //set the request's key_id ivar
+    self.request.key_id = nextKeyIdString;
+    NSLog(@"this is the nextKeyIdString %@", nextKeyIdString);
+    //---
 }
 
 
@@ -69,19 +82,33 @@
 
 -(void)addNewRequestEquipJoin:(EQREquipItem*)thisEquipItem{
     
+    NSLog(@"adding a new request join with with schedule tracking key %@", self.request.key_id);
+    
     //instantiate new join item
     EQRScheduleTracking_EquipmentUnique_Join* newJoin = [[EQRScheduleTracking_EquipmentUnique_Join alloc] init];
     
     newJoin.equipUniqueItem_foreignKey = @"1";
-    
-    //______**********  HAVE NOT DEFINED THE REQUEST.KEY_ID YET
+    newJoin.equipTitleItem_foreignKey = thisEquipItem.key_id;
     newJoin.scheduleTracking_foreignKey = self.request.key_id;
+    
+    if (self.request.arrayOfEquipmentJoins){
+   
+        [[self.request arrayOfEquipmentJoins] addObject:newJoin];
+    
+    }else{
+        
+        self.request.arrayOfEquipmentJoins = [NSMutableArray arrayWithCapacity:1];
+        
+        [[self.request arrayOfEquipmentJoins] addObject:newJoin];
+    }
 }
 
 
 -(void)removeRequestEquipJoin:(EQREquipItem*)thisEquipItem{
     
     //find an existing join with a matching equipItem and remove the sucker.
+    
+    
     
     
 }
