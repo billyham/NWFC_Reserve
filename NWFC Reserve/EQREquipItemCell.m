@@ -16,8 +16,7 @@
 
 @property (strong, nonatomic) EQREquipItem* thisEquipTitleItem;
 @property (strong, nonatomic) EQREquipContentViewVCntrllr* myEquipVCntrllr;
-@property int itemQuantity;
-@property (strong, nonatomic) IBOutlet NSString* itemQuantityString;
+
 
 @end
 
@@ -191,6 +190,10 @@
 -(IBAction)minusHit:(id)sender{
     
     if (self.itemQuantity > 0){
+        
+        //remove a join object from scheduleTrackingRequest
+        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+        [requestManager removeRequestEquipJoin:self.thisEquipTitleItem];
         
         self.itemQuantity = self.itemQuantity - 1;
     }

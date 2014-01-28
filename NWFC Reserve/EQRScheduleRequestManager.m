@@ -107,10 +107,28 @@
 -(void)removeRequestEquipJoin:(EQREquipItem*)thisEquipItem{
     
     //find an existing join with a matching equipItem and remove the sucker.
-    
-    
-    
-    
+    if (self.request.arrayOfEquipmentJoins){
+        
+        //a integer for rembembering the flagged index
+        NSInteger rememberThisInt= -1;
+        
+        //loop through the array
+        for (EQRScheduleTracking_EquipmentUnique_Join* obj in self.request.arrayOfEquipmentJoins) {
+            
+            if ([[obj equipTitleItem_foreignKey] isEqualToString:thisEquipItem.key_id]){
+                
+                rememberThisInt = [self.request.arrayOfEquipmentJoins indexOfObject:obj];
+                
+                break;
+            }
+        };
+        
+        //the removal
+        if (rememberThisInt >= 0){
+            
+            [self.request.arrayOfEquipmentJoins removeObjectAtIndex:rememberThisInt];
+        }
+    }
 }
 
 

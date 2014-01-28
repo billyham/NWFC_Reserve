@@ -12,7 +12,11 @@
 
 @interface EQREquipItemCell : EQRCellTemplate
 
+@property int itemQuantity;
+@property (strong, nonatomic) IBOutlet NSString* itemQuantityString;
+
 
 -(void)initialSetupWithTitle:(NSString*)titleName andEquipItem:(EQREquipItem*)titleItemObject;
+-(IBAction)plusHit:(id)sender;
 
 @end

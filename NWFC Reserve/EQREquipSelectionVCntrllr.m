@@ -49,8 +49,9 @@
 //        }
 //    }
     
-    //this prevents the collection view from responding to touch events
-    self.equipCollectionView.allowsSelection = NO;
+    //________this prevents the collection view from responding to touch events
+    //________but is unnecessary, the plus and minus buttons will work with or without this disabled.
+//    self.equipCollectionView.allowsSelection = NO;
     
 
     //register collection view cell
@@ -184,6 +185,13 @@
 
     NSLog(@"view collection delegate fires touch");
     
+    //if the selected cell has 0 for quantity, add one. otherwise, do nothing
+    EQREquipItemCell* selectedCell = (EQREquipItemCell*)[collectionView cellForItemAtIndexPath:indexPath];
+    
+    if ([selectedCell itemQuantity] < 1){
+        
+        [selectedCell plusHit:nil];
+    }
 }
 
 
