@@ -128,7 +128,7 @@
     NSLog(@"this is the count of arrayOfMatchingItems: %u", [arrayOfMatchingItems count]);
     [arrayOfScheduleEquipJoins enumerateObjectsUsingBlock:^(EQRScheduleTracking_EquipmentUnique_Join* obj, NSUInteger idx, BOOL *stop) {
         
-        NSLog(@"inside the arrayOfScheduleEquipJoins with obj equipUniqueItem_foreignKey: %@", [obj equipUniqueItem_foreignKey]);
+//        NSLog(@"inside the arrayOfScheduleEquipJoins with obj equipUniqueItem_foreignKey: %@", [obj equipUniqueItem_foreignKey]);
         
         //_____****** uniqueforeignKey is currently hard coded!!!! ****_____
         if ([[obj equipTitleItem_foreignKey] isEqualToString:titleItemObject.key_id]){

@@ -64,9 +64,6 @@
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     NSString* classTitleKey = requestManager.request.classTitle_foreignKey;
     
-    NSLog(@"this is the class title foreign key: %@", requestManager.request.classTitle_foreignKey);
-    
-    
     //set webData request for equiplist
     NSArray* firstParamArray = [NSArray arrayWithObjects:@"ClassCatalog_foreignKey", classTitleKey, nil];
     NSArray* secondParamArray = [NSArray arrayWithObjects:firstParamArray, nil];
@@ -77,17 +74,12 @@
     EQRWebData* webData = [EQRWebData sharedInstance];
     [webData queryWithLink:@"EQGetClassCatalogEquipTitleItemJoins.php" parameters:secondParamArray class:@"EQRClassCatalog_EquipTitleItem_Join" completion:^(NSMutableArray* muteArrayFirst){
         
-    
-        NSLog(@"thisisthecountofmutearrayfirst: %u", [muteArrayFirst count]);
-        
         //declare a mutable array
         NSMutableArray* tempEquipMuteArray = [NSMutableArray arrayWithCapacity:1];
         
         
         //do something with the returned array...
         [muteArrayFirst enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            
-            NSLog(@"this is a list of equipTitle keys: %@", [(EQRClassCatalog_EquipTitleItem_Join*)obj equipTitleItem_foreignKey]);
             
             NSArray* equipParamArrayfirst = [NSArray arrayWithObjects:@"key_id",
                                              [(EQRClassCatalog_EquipTitleItem_Join*)obj equipTitleItem_foreignKey], nil];
@@ -135,8 +127,6 @@
             tempSet = nil;
         }
         
-        NSLog(@"count of items in equipTitleCategoriesList: %u", [self.equipTitleCategoriesList count]);
-        
         //B.1 empty out the current ivar of arrayWithSections
         //create it if it doesn't exist yet
         if (!self.equipTitleArrayWithSections){
@@ -152,16 +142,13 @@
         //create a new array by populating each nested array with equiptitle that match each category
         for (NSString* categoryItem in self.equipTitleCategoriesList){
             
-            NSLog(@"this is the cateoryItem: %@", categoryItem);
-            
             NSMutableArray* subNestArray = [NSMutableArray arrayWithCapacity:1];
             
             for (EQREquipItem* equipItem in self.equipTitleArray){
                 
                 if ([equipItem.category isEqualToString:categoryItem]){
                     
-                    [subNestArray addObject:equipItem];
-                    NSLog(@"this subNestArray: %@ added an object", categoryItem);
+                    [subNestArray addObject: equipItem];
                 }
             }
             
@@ -171,7 +158,6 @@
         }
         
         //we now have a master cateogry array with subnested equipTitle arrays
-        NSLog(@"count of items in master array of equipTitles: %u", [self.equipTitleArrayWithSections count]);
         
         //is this necessary_____???
         [self.equipCollectionView reloadData];
@@ -210,6 +196,7 @@
     UILabel* newLabel = [[UILabel alloc] initWithFrame:thisRect];
     
     newLabel.text = [self.equipTitleCategoriesList objectAtIndex:indexPath.section];
+    newLabel.textAlignment = NSTextAlignmentCenter;
     
     [cell.contentView addSubview:newLabel];
     
