@@ -17,6 +17,8 @@
 @interface EQREquipSelectionVCntrllr ()
 
 @property (strong, nonatomic) NSArray* equipTitleArray;
+@property (strong, nonatomic) NSMutableArray* equipTitleCategoriesList;
+@property (strong, nonatomic) NSMutableArray* equipTitleArrayWithSections;
 
 @end
 
@@ -56,6 +58,7 @@
 
     //register collection view cell
     [self.equipCollectionView registerClass:[EQREquipItemCell class] forCellWithReuseIdentifier:@"Cell"];
+    [self.equipCollectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
     
     //get class data from scheduleRequest object
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
@@ -103,8 +106,72 @@
             }];
         }];
         
-        //save as ivar
+        //... and save to ivar
         self.equipTitleArray = [NSArray arrayWithArray:tempEquipMuteArray];
+        
+        //2. Go through this sinlge array and build a nested array to accommodate sections based on category
+        
+        if (!self.equipTitleCategoriesList){
+            
+            self.equipTitleCategoriesList = [NSMutableArray arrayWithCapacity:1];
+        }
+        
+        //A. first test if array of categories is valid
+        if ([self.equipTitleCategoriesList count] < 1){
+            
+            NSMutableSet* tempSet = [NSMutableSet set];
+            
+            //create a list of unique categories names by looping through the array of equipTitles
+            for (EQREquipItem* obj in self.equipTitleArray){
+                
+                if ([tempSet containsObject:obj.category] == NO){
+                    
+                    [tempSet addObject:obj.category];
+                    [self.equipTitleCategoriesList addObject:[NSString stringWithString:obj.category]];
+                }
+            }
+            
+            [tempSet removeAllObjects];
+            tempSet = nil;
+        }
+        
+        NSLog(@"count of items in equipTitleCategoriesList: %u", [self.equipTitleCategoriesList count]);
+        
+        //B.1 empty out the current ivar of arrayWithSections
+        //create it if it doesn't exist yet
+        if (!self.equipTitleArrayWithSections){
+            
+            self.equipTitleArrayWithSections = [NSMutableArray arrayWithCapacity:1];
+            
+        }else{
+            
+            [self.equipTitleArrayWithSections removeAllObjects];
+        }
+        
+        //B. with a valid list of categories....
+        //create a new array by populating each nested array with equiptitle that match each category
+        for (NSString* categoryItem in self.equipTitleCategoriesList){
+            
+            NSLog(@"this is the cateoryItem: %@", categoryItem);
+            
+            NSMutableArray* subNestArray = [NSMutableArray arrayWithCapacity:1];
+            
+            for (EQREquipItem* equipItem in self.equipTitleArray){
+                
+                if ([equipItem.category isEqualToString:categoryItem]){
+                    
+                    [subNestArray addObject:equipItem];
+                    NSLog(@"this subNestArray: %@ added an object", categoryItem);
+                }
+            }
+            
+            //add subNested array to the master array
+            [self.equipTitleArrayWithSections addObject:subNestArray];
+            
+        }
+        
+        //we now have a master cateogry array with subnested equipTitle arrays
+        NSLog(@"count of items in master array of equipTitles: %u", [self.equipTitleArrayWithSections count]);
         
         //is this necessary_____???
         [self.equipCollectionView reloadData];
@@ -116,28 +183,56 @@
 
 -(IBAction)plusButtonActivated:(id)sender{
     
-    NSLog(@"plus button hit in EquipSelectionVCntrllr class");
 }
 
 
 -(IBAction)minusButtonActivated:(id)sender{
-    
-    
     
 }
 
 
 #pragma mark - view collection data source protocol methods
 
+//Section Methods
+
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
+    
+    static NSString* CellIdentifier = @"SupplementaryCell";
+    UICollectionViewCell* cell = [self.equipCollectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    //remove subviews
+    for (UIView* thisSubview in cell.contentView.subviews){
+        
+        [thisSubview removeFromSuperview];
+    }
+    
+    CGRect thisRect = CGRectMake(cell.contentView.frame.origin.x, cell.contentView.frame.origin.y, cell.contentView.frame.size.width, cell.contentView.frame.size.height);
+    UILabel* newLabel = [[UILabel alloc] initWithFrame:thisRect];
+    
+    newLabel.text = [self.equipTitleCategoriesList objectAtIndex:indexPath.section];
+    
+    [cell.contentView addSubview:newLabel];
+    
+    cell.backgroundColor = [UIColor colorWithRed:0.92 green:0.92 blue:0.92 alpha:1.0];
+    
+    
+    return cell;
+}
+
+
+
+//Cell Methods
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
-    return [self.equipTitleArray count];
+    NSArray* tempArray = [self.equipTitleArrayWithSections objectAtIndex:section];
+    return [tempArray count];
 }
 
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     
-    return 1;
+    return [self.equipTitleArrayWithSections count];
 }
 
 
@@ -154,11 +249,12 @@
 //    cell.backgroundColor = [UIColor yellowColor];
 //    [cell setOpaque:YES];
     
-
     
     if ([self.equipTitleArray count] > 0){
         
-        [cell initialSetupWithTitle:[(EQREquipItem*)[self.equipTitleArray objectAtIndex:indexPath.row] name] andEquipItem:[self.equipTitleArray objectAtIndex:indexPath.row]];
+        [cell initialSetupWithTitle:[[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]  name] andEquipItem:[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+        
+//        [cell initialSetupWithTitle:[(EQREquipItem*)[self.equipTitleArray objectAtIndex:indexPath.row] name] andEquipItem:[self.equipTitleArray objectAtIndex:indexPath.row]];
         
     }else{
         

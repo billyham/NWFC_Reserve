@@ -13,6 +13,9 @@ extern NSString* ApplicationKey;
 //Notification selectors
 extern NSString* EQRVoidScheduleItemObjects;
 
+//Timing
+extern float EQRHighlightTappingTime;
+
 
 @interface EQRGlobals : NSObject
 

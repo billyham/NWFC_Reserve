@@ -292,6 +292,12 @@
         self.currentProperty = elementName;
     }
     
+    if ([elementName isEqualToString:@"category"]){
+        
+        self.currentProperty = elementName;
+    }
+    
+    
     //Properties for Contact Item
     if ([elementName isEqualToString:@"first_and_last"]){
         
@@ -379,6 +385,17 @@
             self.currentValue = nil;
         }
     }
+    
+    if ([prop isEqualToString:@"category"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(category)]){
+            
+            [(EQREquipItem*)self.currentThing setCategory: [self.currentValue substringFromIndex:1]];
+            
+            self.currentValue = nil;
+        }
+    }
+    
     
     //Properties for Contact
     if ([prop isEqualToString:@"first_and_last"]){

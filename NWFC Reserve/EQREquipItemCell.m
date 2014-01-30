@@ -10,6 +10,7 @@
 #import "EQREquipContentViewVCntrllr.h"
 #import "EQRScheduleRequestManager.h"
 #import "EQRWebData.h"
+#import "EQRGlobals.h"
 
 
 @interface EQREquipItemCell ()
@@ -43,15 +44,6 @@
     self.itemQuantity = 0;
     self.itemQuantityString = @"0";
     
-    UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, 280, 20)];
-    self.titleLabel = thisLabel;
-    
-    self.titleLabel.text = titleName;
-    self.titleLabel.userInteractionEnabled = NO;
-    
-//    [self.contentView addSubview:self.titleLabel];
-    
-
     EQREquipContentViewVCntrllr *controller = [[EQREquipContentViewVCntrllr alloc] initWithNibName:@"EQREquipContentViewVCntrllr" bundle:nil];
     
     //retain the view controller
@@ -62,7 +54,8 @@
 
     //assign iboutlet values AFTER adding to the view otherwise it don't work
     //using the contentViewVCntrllr
-    self.myEquipVCntrllr.titleLabel.text = titleName;
+    //_______*********  TABS are leading the equip list text. Must start string after them   *******_______
+    self.myEquipVCntrllr.titleLabel.text = [titleName substringFromIndex:2];
 
 
     //set user enabled
@@ -105,7 +98,7 @@
     
     //___minus button
     UIButton* minusButtonFoSho = [UIButton buttonWithType:UIButtonTypeSystem];
-    minusButtonFoSho.frame = CGRectMake(110, 0, 46, 32);
+    minusButtonFoSho.frame = CGRectMake(100, 0, 46, 32);
     minusButtonFoSho.titleLabel.text = @"–";
     minusButtonFoSho.titleLabel.font = [UIFont systemFontOfSize:32];
     [minusButtonFoSho setTitle:@"–" forState:UIControlStateNormal];
@@ -152,6 +145,9 @@
         
         //set subview textfield value
         self.myEquipVCntrllr.quantityTextField.text = self.itemQuantityString;
+        
+        //set new subview background color
+        self.myEquipVCntrllr.view.backgroundColor = [UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0];
     }
     
 }
@@ -180,11 +176,17 @@
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     [requestManager addNewRequestEquipJoin:self.thisEquipTitleItem];
     
-    
-    
-    
     //_______pass the touch event up the responder chain...
 //    [self.nextResponder touchesBegan:touches withEvent:event];
+    
+    //highlight the background color
+    if (self.itemQuantity > 0){
+        
+        self.myEquipVCntrllr.view.backgroundColor = [UIColor yellowColor];
+        
+        //set color after delay
+        [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0] afterDelay:EQRHighlightTappingTime];
+    }
 }
 
 -(IBAction)minusHit:(id)sender{
@@ -198,7 +200,7 @@
         self.itemQuantity = self.itemQuantity - 1;
     }
     
-    //set outlet string value
+    //set outlet string value and background color
     if (self.itemQuantity != 0){
         
         self.itemQuantityString = [NSString stringWithFormat:@"%u", self.itemQuantity];
@@ -206,6 +208,12 @@
     } else {
         
         self.itemQuantityString = @"";
+        
+        self.myEquipVCntrllr.view.backgroundColor = [UIColor yellowColor];
+        
+        //set color after delay
+        [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[UIColor clearColor] afterDelay:EQRHighlightTappingTime];
+
     }
     
     //set subview textfield value

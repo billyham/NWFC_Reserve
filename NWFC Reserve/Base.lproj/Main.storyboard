@@ -202,22 +202,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="WCc-Nb-cUj">
-                                <rect key="frame" x="0.0" y="164" width="370" height="810"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="WCc-Nb-cUj">
+                                <rect key="frame" x="20" y="114" width="728" height="865"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="mGd-j8-OXS">
-                                    <size key="itemSize" width="299" height="32"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="itemSize" width="350" height="32"/>
+                                    <size key="headerReferenceSize" width="50" height="20"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <inset key="sectionInset" minX="4" minY="4" maxX="4" maxY="8"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="" id="OPr-RH-jky" customClass="EQREquipItemCell">
-                                        <rect key="frame" x="10" y="64" width="350" height="32"/>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="OPr-RH-jky" customClass="EQREquipItemCell">
+                                        <rect key="frame" x="4" y="88" width="330" height="32"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="350" height="32"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="330" height="32"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mUT-8G-MRg">
@@ -230,19 +230,24 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <size key="customSize" width="350" height="32"/>
+                                        <size key="customSize" width="330" height="32"/>
                                         <connections>
                                             <outlet property="titleLabel" destination="mUT-8G-MRg" id="Vb8-aY-DsK"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SupplementaryCell" id="mzV-fJ-HgG">
+                                    <rect key="frame" x="0.0" y="64" width="728" height="20"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                </collectionReusableView>
                                 <connections>
                                     <outlet property="dataSource" destination="cVq-BN-iQE" id="NTq-QR-fKF"/>
                                     <outlet property="delegate" destination="cVq-BN-iQE" id="OOm-V1-YFc"/>
                                 </connections>
                             </collectionView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rRe-e1-D3p">
-                                <rect key="frame" x="353" y="94" width="62" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rRe-e1-D3p">
+                                <rect key="frame" x="353" y="76" width="62" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Continue">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -251,9 +256,11 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="WCc-Nb-cUj" firstAttribute="leading" secondItem="rc4-TU-5pR" secondAttribute="leading" id="ERG-Ff-TTf"/>
+                            <constraint firstItem="WCc-Nb-cUj" firstAttribute="centerX" secondItem="rRe-e1-D3p" secondAttribute="centerX" id="CcC-5k-w2B"/>
+                            <constraint firstItem="WCc-Nb-cUj" firstAttribute="leading" secondItem="rc4-TU-5pR" secondAttribute="leading" constant="20" id="FAA-xv-R7d"/>
                             <constraint firstItem="i19-Uj-Hb2" firstAttribute="top" secondItem="WCc-Nb-cUj" secondAttribute="bottom" id="U74-eb-8Cb"/>
-                            <constraint firstItem="WCc-Nb-cUj" firstAttribute="top" secondItem="aYt-ZZ-Mb0" secondAttribute="bottom" constant="100" id="g9K-Or-4HU"/>
+                            <constraint firstAttribute="trailing" secondItem="WCc-Nb-cUj" secondAttribute="trailing" constant="20" id="VTb-Gf-jOO"/>
+                            <constraint firstItem="WCc-Nb-cUj" firstAttribute="top" secondItem="aYt-ZZ-Mb0" secondAttribute="bottom" constant="50" id="g9K-Or-4HU"/>
                         </constraints>
                     </view>
                     <toolbarItems>
@@ -283,8 +290,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PJk-Zf-mhU">
-                                <rect key="frame" x="350" y="907" width="69" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PJk-Zf-mhU">
+                                <rect key="frame" x="350" y="84" width="69" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Continue">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -356,13 +363,13 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 </connections>
                             </datePicker>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Pick Up Date and Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B3X-jM-y6Z">
-                                <rect key="frame" x="296" y="111" width="177" height="21"/>
+                                <rect key="frame" x="296" y="134" width="177" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Return Date and Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tu2-Wb-pwg">
-                                <rect key="frame" x="300" y="425" width="168" height="21"/>
+                                <rect key="frame" x="300" y="438" width="168" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
@@ -375,6 +382,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                             <constraint firstItem="JKh-Fc-SNU" firstAttribute="leading" secondItem="O8I-IB-7am" secondAttribute="leading" constant="164" id="U1G-Bz-o2L"/>
                             <constraint firstItem="B3X-jM-y6Z" firstAttribute="centerX" secondItem="JKh-Fc-SNU" secondAttribute="centerX" id="U6v-9x-yJc"/>
                             <constraint firstItem="hRx-uz-EVI" firstAttribute="centerX" secondItem="Tu2-Wb-pwg" secondAttribute="centerX" id="ZUQ-fu-SD0"/>
+                            <constraint firstItem="PJk-Zf-mhU" firstAttribute="centerX" secondItem="JKh-Fc-SNU" secondAttribute="centerX" id="dx3-hD-RR0"/>
                             <constraint firstAttribute="trailing" secondItem="hRx-uz-EVI" secondAttribute="trailing" constant="164" id="exh-O4-FKm"/>
                         </constraints>
                     </view>
