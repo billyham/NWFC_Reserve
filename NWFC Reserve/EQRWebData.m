@@ -292,6 +292,11 @@
         self.currentProperty = elementName;
     }
     
+    if ([elementName isEqualToString:@"short_name"]){
+        
+        self.currentProperty = elementName;
+    }
+    
     if ([elementName isEqualToString:@"category"]){
         
         self.currentProperty = elementName;
@@ -381,6 +386,16 @@
         if ([self.currentThing respondsToSelector:@selector(name)]){
             
             [(EQREquipItem*)self.currentThing setName: [self.currentValue substringFromIndex:1]];
+            
+            self.currentValue = nil;
+        }
+    }
+    
+    if ([prop isEqualToString:@"short_name"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(shortname)]){
+            
+            [(EQREquipItem*)self.currentThing setShortname: [self.currentValue substringFromIndex:1]];
             
             self.currentValue = nil;
         }

@@ -127,6 +127,12 @@
             tempSet = nil;
         }
         
+        //sort the equipCatagoriesList
+        NSSortDescriptor* sortDescAlpha = [NSSortDescriptor sortDescriptorWithKey:nil ascending:YES];
+        NSArray* sortArray = [NSArray arrayWithObject:sortDescAlpha];
+        NSArray* tempSortArrayCat = [self.equipTitleCategoriesList sortedArrayUsingDescriptors:sortArray];
+        self.equipTitleCategoriesList = [NSMutableArray arrayWithArray:tempSortArrayCat];
+        
         //B.1 empty out the current ivar of arrayWithSections
         //create it if it doesn't exist yet
         if (!self.equipTitleArrayWithSections){
@@ -158,6 +164,22 @@
         }
         
         //we now have a master cateogry array with subnested equipTitle arrays
+        
+        //sort the subnested arrays
+        NSMutableArray* tempSortedArrayWithSections = [NSMutableArray arrayWithCapacity:1];
+        for (NSArray* obj in self.equipTitleArrayWithSections)  {
+            
+            NSArray* tempSubNestArray = [obj sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
+                
+                NSString* string1 = [(EQREquipItem*)obj1 name];
+                NSString* string2 = [(EQREquipItem*)obj2 name];
+                
+                return [string1 compare:string2];
+            }];
+            
+            [tempSortedArrayWithSections addObject:tempSubNestArray];
+        };
+        self.equipTitleArrayWithSections = tempSortedArrayWithSections;
         
         //is this necessary_____???
         [self.equipCollectionView reloadData];
@@ -196,7 +218,7 @@
     UILabel* newLabel = [[UILabel alloc] initWithFrame:thisRect];
     
     newLabel.text = [self.equipTitleCategoriesList objectAtIndex:indexPath.section];
-    newLabel.textAlignment = NSTextAlignmentCenter;
+//    newLabel.textAlignment = NSTextAlignmentCenter;
     
     [cell.contentView addSubview:newLabel];
     
@@ -239,7 +261,7 @@
     
     if ([self.equipTitleArray count] > 0){
         
-        [cell initialSetupWithTitle:[[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]  name] andEquipItem:[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+        [cell initialSetupWithTitle:[[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]  shortname] andEquipItem:[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
         
 //        [cell initialSetupWithTitle:[(EQREquipItem*)[self.equipTitleArray objectAtIndex:indexPath.row] name] andEquipItem:[self.equipTitleArray objectAtIndex:indexPath.row]];
         

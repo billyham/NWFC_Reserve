@@ -125,7 +125,7 @@
     //add up count and list in quantity text field
     
     NSMutableArray* arrayOfMatchingItems = [NSMutableArray arrayWithCapacity:1];
-    NSLog(@"this is the count of arrayOfMatchingItems: %u", [arrayOfMatchingItems count]);
+
     [arrayOfScheduleEquipJoins enumerateObjectsUsingBlock:^(EQRScheduleTracking_EquipmentUnique_Join* obj, NSUInteger idx, BOOL *stop) {
         
 //        NSLog(@"inside the arrayOfScheduleEquipJoins with obj equipUniqueItem_foreignKey: %@", [obj equipUniqueItem_foreignKey]);
