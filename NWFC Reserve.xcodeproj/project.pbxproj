@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01C79939189C723300D29625 /* EQREquipSummaryVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C79938189C723300D29625 /* EQREquipSummaryVCntrllr.m */; };
 		01FDEA96188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FDEA95188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m */; };
 		438EDCE0182B7ABD0090F882 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 438EDCDF182B7ABD0090F882 /* Foundation.framework */; };
 		438EDCE2182B7ABE0090F882 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 438EDCE1182B7ABE0090F882 /* CoreGraphics.framework */; };
@@ -54,6 +55,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		01C79937189C723300D29625 /* EQREquipSummaryVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSummaryVCntrllr.h; sourceTree = "<group>"; };
+		01C79938189C723300D29625 /* EQREquipSummaryVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipSummaryVCntrllr.m; sourceTree = "<group>"; };
 		01FDEA94188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleTracking_EquipmentUnique_Join.h; sourceTree = "<group>"; };
 		01FDEA95188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleTracking_EquipmentUnique_Join.m; sourceTree = "<group>"; };
 		438EDCDC182B7ABD0090F882 /* NWFC Reserve.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NWFC Reserve.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -189,6 +192,8 @@
 				54032FE11872AC9000481D86 /* EQREquipDateVCntrllr.m */,
 				545661D718321D350067B40D /* EQREquipSelectionVCntrllr.h */,
 				545661D818321D350067B40D /* EQREquipSelectionVCntrllr.m */,
+				01C79937189C723300D29625 /* EQREquipSummaryVCntrllr.h */,
+				01C79938189C723300D29625 /* EQREquipSummaryVCntrllr.m */,
 				540B551B18769CCE0025FDEE /* EQRStaffPage1VCntrllr.h */,
 				540B551C18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m */,
 				54CE45AD186AF4790023FDA4 /* collectionView objects */,
@@ -387,6 +392,7 @@
 				540B551A187687D60025FDEE /* EQRGlobals.m in Sources */,
 				438EDCF6182B7ABE0090F882 /* EQRReserveTopVCntrllr.m in Sources */,
 				5402B7CF1875446D00F0888B /* EQRClassCatalog_EquipTitleItem_Join.m in Sources */,
+				01C79939189C723300D29625 /* EQREquipSummaryVCntrllr.m in Sources */,
 				54032FE21872AC9000481D86 /* EQREquipDateVCntrllr.m in Sources */,
 				545661DF18323ABC0067B40D /* EQREquipItem.m in Sources */,
 				54CE45AC186AF4680023FDA4 /* EQREquipItemCell.m in Sources */,

@@ -309,6 +309,17 @@
         self.currentProperty = elementName;
     }
     
+    if ([elementName isEqualToString:@"phone"]){
+        
+        self.currentProperty = elementName;
+    }
+    
+    if ([elementName isEqualToString:@"email"]){
+        
+        self.currentProperty = elementName;
+    }
+    
+    
     //Properties for Class Section Item
     if ([elementName isEqualToString:@"section_name"]){
         
@@ -422,6 +433,27 @@
             self.currentValue = nil;
         }
     }
+    
+    if ([prop isEqualToString:@"phone"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(phone)]){
+            
+            [(EQRContactNameItem*)self.currentThing setPhone:[self.currentValue substringFromIndex:1]];
+            
+            self.currentValue = nil;
+        }
+    }
+    
+    if ([prop isEqualToString:@"email"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(email)]){
+            
+            [(EQRContactNameItem*)self.currentThing setEmail:[self.currentValue substringFromIndex:1]];
+            
+            self.currentValue = nil;
+        }
+    }
+    
     
     //Properties for Class Section
     if ([prop isEqualToString:@"section_name"]){
