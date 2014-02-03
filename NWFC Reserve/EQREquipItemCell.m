@@ -74,7 +74,7 @@
     //create buttons programmatically
     //___plus button
     UIButton* plusButtonFoSho = [UIButton buttonWithType:UIButtonTypeSystem];
-    plusButtonFoSho.frame = CGRectMake(0, 0, 46, 32);
+    plusButtonFoSho.frame = CGRectMake(100, 0, 46, 32);
     //set font size
     plusButtonFoSho.titleLabel.text = @"+";
     plusButtonFoSho.titleLabel.font = [UIFont systemFontOfSize:32];
@@ -98,7 +98,7 @@
     
     //___minus button
     UIButton* minusButtonFoSho = [UIButton buttonWithType:UIButtonTypeSystem];
-    minusButtonFoSho.frame = CGRectMake(100, 0, 46, 32);
+    minusButtonFoSho.frame = CGRectMake(0, 0, 46, 32);
     minusButtonFoSho.titleLabel.text = @"–";
     minusButtonFoSho.titleLabel.font = [UIFont systemFontOfSize:32];
     [minusButtonFoSho setTitle:@"–" forState:UIControlStateNormal];
