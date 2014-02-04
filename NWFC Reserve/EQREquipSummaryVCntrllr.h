@@ -16,5 +16,6 @@
 @property (nonatomic, strong) IBOutlet UILabel* rentorPickupDateLabel;
 @property (nonatomic, strong) IBOutlet UILabel* rentorReturnDateLabel;
 @property (nonatomic, strong) IBOutlet UILabel* rentorEquipListLabel;
+@property (nonatomic, strong) IBOutlet UITextView* summaryTextView;
 
 @end

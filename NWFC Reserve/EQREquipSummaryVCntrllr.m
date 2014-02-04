@@ -48,6 +48,16 @@
     self.rentorPickupDateLabel.text = [pickUpFormatter stringFromDate:requestManager.request.request_date_begin];
     self.rentorReturnDateLabel.text = [pickUpFormatter stringFromDate:requestManager.request.request_date_end];
     
+    if (!self.summaryTextView){
+    
+        //do I need to initiate this???
+    }
+    
+    self.summaryTextView.text = [NSString stringWithFormat:@"%@\r%@\r%@\r%@",
+                                 self.rentorName.text,
+                                 self.rentorEmail.text,
+                                 self.rentorPhone.text,
+                                 self.rentorPickupDateLabel.text];
 }
 
 
