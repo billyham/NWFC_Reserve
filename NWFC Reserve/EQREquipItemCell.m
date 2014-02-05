@@ -17,6 +17,8 @@
 
 @property (strong, nonatomic) EQREquipItem* thisEquipTitleItem;
 @property (strong, nonatomic) EQREquipContentViewVCntrllr* myEquipVCntrllr;
+@property (strong, nonatomic) UIButton* myMinusButton;
+@property (strong, nonatomic) UIButton* myPlusButton;
 
 
 @end
@@ -92,8 +94,12 @@
     
     //_________******* target of button is the self
     [plusButtonFoSho addTarget:self action:@selector(plusHit:) forControlEvents:UIControlEventTouchUpInside];
+    self.myPlusButton = plusButtonFoSho;
     
-    [self.contentView addSubview:plusButtonFoSho];
+    [self.contentView addSubview:self.myPlusButton];
+    
+    //hide the button for now
+    self.myPlusButton.hidden = YES;
     
     
     //___minus button
@@ -115,7 +121,11 @@
     //_________******* target of button is self
     [minusButtonFoSho addTarget:self action:@selector(minusHit:) forControlEvents:UIControlEventTouchUpInside];
     
-    [self.contentView addSubview:minusButtonFoSho];
+    self.myMinusButton = minusButtonFoSho;
+    [self.contentView addSubview:self.myMinusButton];
+    
+    //hide the button for now
+    self.myMinusButton.hidden = YES;
 
     //________********** retrieve info from scheduleRequestItem to populate quantity text field.
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
@@ -148,6 +158,10 @@
         
         //set new subview background color
         self.myEquipVCntrllr.view.backgroundColor = [UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0];
+        
+        //reveal plus minus buttons
+        self.myPlusButton.hidden = NO;
+        self.myMinusButton.hidden = NO;
     }
     
 }
@@ -161,6 +175,9 @@
     if (self.itemQuantity != 0){
         
         self.itemQuantityString = [NSString stringWithFormat:@"%u", self.itemQuantity];
+        
+        self.myMinusButton.hidden = NO;
+        self.myPlusButton.hidden = NO;
         
     } else {
         
@@ -198,6 +215,12 @@
         [requestManager removeRequestEquipJoin:self.thisEquipTitleItem];
         
         self.itemQuantity = self.itemQuantity - 1;
+        
+        self.myEquipVCntrllr.view.backgroundColor = [UIColor yellowColor];
+        
+        //set color after delay
+        [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0] afterDelay:EQRHighlightTappingTime];
+        
     }
     
     //set outlet string value and background color
@@ -213,6 +236,11 @@
         
         //set color after delay
         [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[UIColor clearColor] afterDelay:EQRHighlightTappingTime];
+        
+        //disappear plus and minus buttons
+        self.myMinusButton.hidden = YES;
+        self.myPlusButton.hidden = YES;
+        
 
     }
     

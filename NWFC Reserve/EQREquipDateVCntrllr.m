@@ -43,6 +43,15 @@
     [nc addObserver:self selector:@selector(receiveVoidScheduleItem:) name:EQRVoidScheduleItemObjects object:nil];
     
     self.datePickupSelectionFlag = NO;
+    
+    //preset dates
+    self.pickUpDate = [NSDate date];
+    self.returnDate = [NSDate date];
+    
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    requestManager.request.request_date_begin = self.pickUpDate;
+    requestManager.request.request_date_end = self.returnDate;
+    
 }
 
 
