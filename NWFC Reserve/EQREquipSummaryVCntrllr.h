@@ -10,12 +10,16 @@
 
 @interface EQREquipSummaryVCntrllr : UIViewController
 
-@property (nonatomic, strong) IBOutlet UILabel* rentorName;
-@property (nonatomic, strong) IBOutlet UILabel* rentorPhone;
-@property (nonatomic, strong) IBOutlet UILabel* rentorEmail;
-@property (nonatomic, strong) IBOutlet UILabel* rentorPickupDateLabel;
-@property (nonatomic, strong) IBOutlet UILabel* rentorReturnDateLabel;
-@property (nonatomic, strong) IBOutlet UILabel* rentorEquipListLabel;
+@property (nonatomic, strong) NSAttributedString* rentorNameAtt;
+@property (nonatomic, strong) NSAttributedString* rentorPhoneAtt;
+@property (nonatomic, strong) NSAttributedString* rentorEmailAtt;
+@property (nonatomic, strong) NSAttributedString* rentorPickupDateAtt;
+@property (nonatomic, strong) NSAttributedString* rentorReturnDateAtt;
+@property (nonatomic, strong) NSAttributedString* rentorEquipListAtt;
+
 @property (nonatomic, strong) IBOutlet UITextView* summaryTextView;
+@property (nonatomic, strong) NSTextStorage* summaryTextStorage;
+@property (nonatomic, strong) NSMutableAttributedString* summaryTotalAtt;
+
 
 @end

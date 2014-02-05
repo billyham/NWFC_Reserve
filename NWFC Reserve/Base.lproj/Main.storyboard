@@ -288,69 +288,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rentor Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aIE-i0-ehz">
-                                <rect key="frame" x="332" y="157" width="104" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rentor pick up" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPr-f9-VLl">
-                                <rect key="frame" x="326" y="290" width="116" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Summary Reservation for:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WTL-P0-vbf">
-                                <rect key="frame" x="284" y="128" width="200" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pick Up Time:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bhU-PR-eL9">
-                                <rect key="frame" x="330" y="261" width="108" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Return Time:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2U3-aB-2Tc">
-                                <rect key="frame" x="335" y="337" width="99" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rentor Email" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kp0-oo-q1W">
-                                <rect key="frame" x="334" y="186" width="101" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rentor Phone" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NSz-9J-m7b">
-                                <rect key="frame" x="330" y="215" width="109" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rentor return" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QPT-RV-Zya">
-                                <rect key="frame" x="332" y="366" width="105" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reserved Equipment:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2W8-iZ-pFm">
-                                <rect key="frame" x="302" y="417" width="165" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="560-5L-0by">
                                 <rect key="frame" x="324" y="86" width="121" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -361,18 +298,12 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Equipment list" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qJF-WQ-j6t">
-                                <rect key="frame" x="329" y="470" width="110" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C1a-fS-4jR">
-                                <rect key="frame" x="105" y="508" width="559" height="427"/>
+                                <rect key="frame" x="105" y="141" width="559" height="727"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="427" id="cyh-ms-qsE"/>
+                                    <constraint firstAttribute="height" constant="727" id="cyh-ms-qsE"/>
                                     <constraint firstAttribute="width" constant="559" id="fbo-NP-A0K"/>
                                 </constraints>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
@@ -382,40 +313,14 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="WTL-P0-vbf" secondAttribute="centerX" id="4cF-0g-Hht"/>
-                            <constraint firstItem="Kp0-oo-q1W" firstAttribute="top" secondItem="aIE-i0-ehz" secondAttribute="bottom" constant="8" id="646-Gv-ouU"/>
-                            <constraint firstAttribute="centerX" secondItem="bhU-PR-eL9" secondAttribute="centerX" id="6Pd-DY-MIF"/>
-                            <constraint firstItem="NSz-9J-m7b" firstAttribute="top" secondItem="Kp0-oo-q1W" secondAttribute="bottom" constant="8" id="9Kp-L3-dNp"/>
                             <constraint firstAttribute="centerX" secondItem="560-5L-0by" secondAttribute="centerX" id="DxP-P4-PPS"/>
-                            <constraint firstItem="WTL-P0-vbf" firstAttribute="top" secondItem="560-5L-0by" secondAttribute="bottom" constant="21" id="EkJ-d4-UTf"/>
                             <constraint firstAttribute="centerX" secondItem="C1a-fS-4jR" secondAttribute="centerX" id="GJ8-Cj-qdT"/>
-                            <constraint firstItem="HPr-f9-VLl" firstAttribute="top" secondItem="bhU-PR-eL9" secondAttribute="bottom" constant="8" id="Id0-Zo-H4G"/>
-                            <constraint firstItem="aIE-i0-ehz" firstAttribute="top" secondItem="WTL-P0-vbf" secondAttribute="bottom" constant="8" id="Iu2-l1-uHd"/>
-                            <constraint firstAttribute="centerX" secondItem="QPT-RV-Zya" secondAttribute="centerX" id="KXH-6X-kS2"/>
-                            <constraint firstAttribute="centerX" secondItem="2W8-iZ-pFm" secondAttribute="centerX" id="NU3-32-Ave"/>
-                            <constraint firstItem="C1a-fS-4jR" firstAttribute="top" secondItem="qJF-WQ-j6t" secondAttribute="bottom" constant="17" id="SDv-M8-x9D"/>
-                            <constraint firstAttribute="centerX" secondItem="NSz-9J-m7b" secondAttribute="centerX" id="TJn-Nv-3Tc"/>
-                            <constraint firstAttribute="centerX" secondItem="2U3-aB-2Tc" secondAttribute="centerX" id="UyP-75-XYi"/>
+                            <constraint firstItem="C1a-fS-4jR" firstAttribute="top" secondItem="560-5L-0by" secondAttribute="bottom" constant="34" id="MAJ-wY-7bi"/>
                             <constraint firstItem="560-5L-0by" firstAttribute="top" secondItem="mmW-xL-xrN" secondAttribute="bottom" constant="22" id="cbu-Tt-Qcc"/>
-                            <constraint firstItem="2U3-aB-2Tc" firstAttribute="top" secondItem="HPr-f9-VLl" secondAttribute="bottom" constant="26" id="cjC-kZ-WTx"/>
-                            <constraint firstAttribute="centerX" secondItem="Kp0-oo-q1W" secondAttribute="centerX" id="dVV-T6-84u"/>
-                            <constraint firstItem="2W8-iZ-pFm" firstAttribute="top" secondItem="QPT-RV-Zya" secondAttribute="bottom" constant="30" id="eWX-f0-jZy"/>
-                            <constraint firstItem="QPT-RV-Zya" firstAttribute="top" secondItem="2U3-aB-2Tc" secondAttribute="bottom" constant="8" id="fWg-y5-53X"/>
-                            <constraint firstAttribute="centerX" secondItem="aIE-i0-ehz" secondAttribute="centerX" id="h02-5g-acc"/>
-                            <constraint firstAttribute="centerX" secondItem="HPr-f9-VLl" secondAttribute="centerX" id="kLb-NH-RwK"/>
-                            <constraint firstItem="bhU-PR-eL9" firstAttribute="top" secondItem="NSz-9J-m7b" secondAttribute="bottom" constant="25" id="oMn-oH-0vZ"/>
-                            <constraint firstItem="qJF-WQ-j6t" firstAttribute="top" secondItem="2W8-iZ-pFm" secondAttribute="bottom" constant="32" id="qLf-zR-A5J"/>
-                            <constraint firstAttribute="centerX" secondItem="qJF-WQ-j6t" secondAttribute="centerX" id="wz3-Bu-agn"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Summary" id="HSF-nb-bGQ"/>
                     <connections>
-                        <outlet property="rentorEmail" destination="Kp0-oo-q1W" id="ZfP-ZO-MMp"/>
-                        <outlet property="rentorEquipListLabel" destination="qJF-WQ-j6t" id="7RI-Ug-EKG"/>
-                        <outlet property="rentorName" destination="aIE-i0-ehz" id="dD5-j6-c2l"/>
-                        <outlet property="rentorPhone" destination="NSz-9J-m7b" id="dcy-NH-rvy"/>
-                        <outlet property="rentorPickupDateLabel" destination="HPr-f9-VLl" id="R1a-Uc-lhf"/>
-                        <outlet property="rentorReturnDateLabel" destination="QPT-RV-Zya" id="S5h-jZ-tvR"/>
                         <outlet property="summaryTextView" destination="C1a-fS-4jR" id="BD6-TR-7ng"/>
                     </connections>
                 </viewController>

@@ -347,6 +347,10 @@
         
         self.currentProperty = elementName;
     }
+    
+    
+    //Properties for ScheduleTracking_EquipUniqueItem_Join
+    
 }
 
 
