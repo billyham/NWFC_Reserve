@@ -134,6 +134,47 @@
 }
 
 
+-(IBAction)confirmAndPrint:(id)sender{
+    
+    //send all this info to webData with GET
+//    key_id,
+//    contact_foreignKey,
+//    classSection_foreignKey,
+//    classTitle_foreignKey,
+//    request_date_begin,
+//    request_date_end,
+//    request_time_begin,
+//    request_time_end
+    
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    EQRScheduleRequestItem* request = requestManager.request;
+    
+    NSLog(@"this is the contact_foreignKey: %@", [NSString stringWithFormat:@"%ld", (long)[request.contact_foreignKey integerValue]]);
+    
+    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", request.key_id,nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:@"contact_foreignKey", [NSString stringWithFormat:@"%ld", (long)[request.contact_foreignKey integerValue]], nil];
+    NSArray* thirdArray = [NSArray arrayWithObjects:@"classSection_foreignKey", request.classSection_foreignKey,nil];
+    NSArray* fourthArray = [NSArray arrayWithObjects:@"classTitle_foreignKey", request.classTitle_foreignKey,nil];
+    NSArray* fifthArray = [NSArray arrayWithObjects:@"request_date_begin", request.request_date_begin,nil];
+    NSArray* sixthArray = [NSArray arrayWithObjects:@"request_date_end", request.request_date_end,nil];
+    NSArray* seventhArray = [NSArray arrayWithObjects:@"request_time_begin", @"",nil];
+    NSArray* eighthArray = [NSArray arrayWithObjects:@"request_time_end", @"",nil];
+    NSArray* bigArray = [NSArray arrayWithObjects:
+                         firstArray,
+                         secondArray,
+                         thirdArray,
+                         fourthArray,
+                         fifthArray,
+                         sixthArray,
+                         seventhArray,
+                         eighthArray,
+                         nil];
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    NSString* returnID = [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
+    NSLog(@"this is the returnID: %@", returnID);
+}
 
 
 

@@ -42,7 +42,7 @@
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSString* lastKeyId = [webData queryForStringWithLink:@"EQGetNextScheduleRequestKey.php" parameters:nil];
     
-    int lastKeyIdInt = [lastKeyId integerValue];
+    int lastKeyIdInt = (int)[lastKeyId integerValue];
     int nextKeyId = lastKeyIdInt + 1;
     NSString* nextKeyIdString = [NSString stringWithFormat:@"%u", nextKeyId];
     
