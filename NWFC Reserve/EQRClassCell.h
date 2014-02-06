@@ -10,4 +10,6 @@
 
 @interface EQRClassCell : EQRCellTemplate
 
+@property (strong, nonatomic) IBOutlet UIView* myContentView;
+
 @end

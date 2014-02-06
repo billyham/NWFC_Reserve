@@ -24,10 +24,12 @@
 
 -(void)initialSetupWithTitle:(NSString*) titleName{
     
-    UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(3, 5, 700, 20)];
+    UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(3, 5, 351, 45)];
     self.titleLabel = thisLabel;
+    self.titleLabel.numberOfLines = 2;
+    self.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     
-    self.titleLabel.text = titleName;
+    self.titleLabel.text = [titleName substringFromIndex:2];
     
     [self.contentView addSubview:self.titleLabel];
     

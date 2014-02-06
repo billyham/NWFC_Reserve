@@ -27,7 +27,7 @@
     
     self.backgroundColor = [UIColor whiteColor];
     
-    UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(3, 5, 500, 20)];
+    UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(3, 5, 295, 45)];
     self.titleLabel = thisLabel;
     
     self.titleLabel.text = titleName;
