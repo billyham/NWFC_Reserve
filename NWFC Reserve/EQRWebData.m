@@ -362,10 +362,10 @@
     }
     
     //_____****** test that value is a real character, otherwise don't append the string
-    if ([self testForValidChar:self.currentValue]){
+    NSString* newString = [self testForValidChar:string];
         
-        [self.currentValue appendString:string];
-    }
+    [self.currentValue appendString:newString];
+    
 }
 
 
@@ -404,7 +404,7 @@
         //_______********  adds a return at the very start of the value?? Use substring to remove it
         if ([self.currentThing respondsToSelector:@selector(name)]){
             
-            [(EQREquipItem*)self.currentThing setName: [self.currentValue substringFromIndex:1]];
+            [(EQREquipItem*)self.currentThing setName: [self.currentValue substringFromIndex:0]];
             
             self.currentValue = nil;
         }
@@ -414,7 +414,7 @@
         
         if ([self.currentThing respondsToSelector:@selector(shortname)]){
             
-            [(EQREquipItem*)self.currentThing setShortname: [self.currentValue substringFromIndex:1]];
+            [(EQREquipItem*)self.currentThing setShortname: [self.currentValue substringFromIndex:0]];
             
             self.currentValue = nil;
         }
@@ -424,7 +424,7 @@
         
         if ([self.currentThing respondsToSelector:@selector(category)]){
             
-            [(EQREquipItem*)self.currentThing setCategory: [self.currentValue substringFromIndex:1]];
+            [(EQREquipItem*)self.currentThing setCategory: [self.currentValue substringFromIndex:0]];
             
             self.currentValue = nil;
         }
@@ -436,7 +436,7 @@
         
         if ([self.currentThing respondsToSelector:@selector(first_and_last)]){
             
-            [(EQRContactNameItem*)self.currentThing setFirst_and_last:[self.currentValue substringFromIndex:1]];
+            [(EQRContactNameItem*)self.currentThing setFirst_and_last:[self.currentValue substringFromIndex:0]];
             
             self.currentValue = nil;
         }
@@ -446,7 +446,7 @@
         
         if ([self.currentThing respondsToSelector:@selector(phone)]){
             
-            [(EQRContactNameItem*)self.currentThing setPhone:[self.currentValue substringFromIndex:1]];
+            [(EQRContactNameItem*)self.currentThing setPhone:[self.currentValue substringFromIndex:0]];
             
             self.currentValue = nil;
         }
@@ -456,7 +456,7 @@
         
         if ([self.currentThing respondsToSelector:@selector(email)]){
             
-            [(EQRContactNameItem*)self.currentThing setEmail:[self.currentValue substringFromIndex:1]];
+            [(EQRContactNameItem*)self.currentThing setEmail:[self.currentValue substringFromIndex:0]];
             
             self.currentValue = nil;
         }
@@ -468,7 +468,7 @@
         
         if ([self.currentThing respondsToSelector:@selector(section_name)]){
             
-            [(EQRClassItem*)self.currentThing setSection_name:[self.currentValue substringFromIndex:1]];
+            [(EQRClassItem*)self.currentThing setSection_name:[self.currentValue substringFromIndex:0]];
             
             self.currentValue = nil;
         }
@@ -478,7 +478,7 @@
         
         if ([self.currentThing respondsToSelector:@selector(key_id)]){
             
-            [(EQRClassItem*)self.currentThing setKey_id:[self.currentValue substringFromIndex:1]];
+            [(EQRClassItem*)self.currentThing setKey_id:[self.currentValue substringFromIndex:0]];
             
             self.currentValue = nil;
         }
@@ -488,7 +488,7 @@
         
         if ([self.currentThing respondsToSelector:@selector(term)]){
             
-            [(EQRClassItem*)self.currentThing setTerm:[self.currentValue substringFromIndex:1]];
+            [(EQRClassItem*)self.currentThing setTerm:[self.currentValue substringFromIndex:0]];
             
             self.currentValue = nil;
         }
@@ -498,7 +498,7 @@
         
         if ([self.currentThing respondsToSelector:@selector(catalog_foreign_key)]){
             
-            [(EQRClassItem*)self.currentThing setCatalog_foreign_key:[self.currentValue substringFromIndex:1]];
+            [(EQRClassItem*)self.currentThing setCatalog_foreign_key:[self.currentValue substringFromIndex:0]];
             
             self.currentValue = nil;
         }
@@ -509,7 +509,7 @@
         
         if ([self.currentThing respondsToSelector:@selector(contact_foreignKey)]){
             
-            [(EQRClassRegistrationItem*)self.currentThing setContact_foreignKey:[self.currentValue substringFromIndex:8]];
+            [(EQRClassRegistrationItem*)self.currentThing setContact_foreignKey:[self.currentValue substringFromIndex:0]];
             
             self.currentValue = nil;
         }
@@ -520,7 +520,7 @@
         
         if ([self.currentThing respondsToSelector:@selector(equipTitleItem_foreignKey)]){
             
-            [(EQRClassCatalog_EquipTitleItem_Join*)self.currentThing setEquipTitleItem_foreignKey:[self.currentValue substringFromIndex:1]];
+            [(EQRClassCatalog_EquipTitleItem_Join*)self.currentThing setEquipTitleItem_foreignKey:[self.currentValue substringFromIndex:0]];
             
             self.currentValue = nil;
         }
@@ -530,24 +530,36 @@
 }
 
 
--(BOOL)testForValidChar:(NSString*)myChar{
+-(NSString*)testForValidChar:(NSString*)myChar{
+    
+    NSLog(@"this here myChar: %@", myChar);
     
     //load up a an array with the alphabet and numbers
     NSArray* alphanumericArray = [NSArray arrayWithObjects:@"1",@"2", @"3", @"4,", @"5", @"6", @"7", @"8", @"9", @"0",
                                   @"a", @"b", @"c", @"d", @"e", @"f", @"g", @"h", @"i", @"j", @"k", @"l", @"m", @"n",
                                   @"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z",
+                                  @"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N",
+                                  @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z",
                                   @"-", @":", @"'", @"\"", @"–", @"<", @">", @"&",
                                   nil];
     
-    for (NSString* alphaNum in alphanumericArray){
+    
+    
+    NSInteger myLength = [myChar length];
+    
+    int n;
+    for (n=0 ; n < myLength ; n++){
         
-        if ([myChar isEqualToString:alphaNum]){
+        for (NSString* alphaNum in alphanumericArray){
             
-            return YES;
+            if ([[NSString stringWithFormat:@"%c", [myChar characterAtIndex:n] ] isEqualToString:alphaNum]){
+                
+                return [myChar substringFromIndex:n];
+            }
         }
     }
     
-    return NO;
+    return @"";
 }
 
 

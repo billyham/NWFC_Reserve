@@ -55,7 +55,7 @@
     
     //________NAME_________
     NSDictionary* arrayAtt = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    self.rentorNameAtt = [[NSAttributedString alloc] initWithString:[contactItem.first_and_last substringFromIndex:2] attributes:arrayAtt];
+    self.rentorNameAtt = [[NSAttributedString alloc] initWithString:contactItem.first_and_last attributes:arrayAtt];
     
     //initiate the total attributed string
     self.summaryTotalAtt = [[NSMutableAttributedString alloc] initWithAttributedString:self.rentorNameAtt];
@@ -69,7 +69,7 @@
     [self.summaryTotalAtt appendAttributedString:emailHead];
     
     NSDictionary* arrayAtt3 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* emailAtt = [[NSAttributedString alloc] initWithString:[contactItem.email substringFromIndex:2] attributes:arrayAtt3];
+    NSAttributedString* emailAtt = [[NSAttributedString alloc] initWithString:contactItem.email attributes:arrayAtt3];
     [self.summaryTotalAtt appendAttributedString:emailAtt];
     
     //____PHONE______
@@ -78,7 +78,7 @@
     [self.summaryTotalAtt appendAttributedString:phoneHead];
     
     NSDictionary* arrayAtt5 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* phoneAtt = [[NSAttributedString alloc] initWithString:[contactItem.phone substringFromIndex:2] attributes:arrayAtt5];
+    NSAttributedString* phoneAtt = [[NSAttributedString alloc] initWithString:contactItem.phone attributes:arrayAtt5];
     [self.summaryTotalAtt appendAttributedString:phoneAtt];
     
     //_______PICKUP DATE_____
@@ -112,7 +112,7 @@
     //first, cycle through scheduleTracking_equip_joins
     for (EQRScheduleTracking_EquipmentUnique_Join* joinItem in requestManager.request.arrayOfEquipmentJoins){
     
-        NSArray* thisArray1 = [NSArray arrayWithObjects:@"key_id", [joinItem.equipTitleItem_foreignKey substringFromIndex:2], Nil];
+        NSArray* thisArray1 = [NSArray arrayWithObjects:@"key_id", joinItem.equipTitleItem_foreignKey, Nil];
         NSArray* thisArray2 = [NSArray arrayWithObject:thisArray1];
         [webData queryWithLink:@"EQGetEquipmentTitles.php" parameters:thisArray2 class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
             
@@ -120,7 +120,7 @@
             for (EQREquipItem* equipItemObj in muteArray){
                 
                 NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-                NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r\r", [equipItemObj.shortname substringFromIndex:2]] attributes:arrayAtt11];
+                NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r\r", equipItemObj.shortname] attributes:arrayAtt11];
                 
                 [self.summaryTotalAtt appendAttributedString:thisHereAttString];
             }

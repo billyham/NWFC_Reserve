@@ -29,7 +29,7 @@
     self.titleLabel.numberOfLines = 2;
     self.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     
-    self.titleLabel.text = [titleName substringFromIndex:2];
+    self.titleLabel.text = titleName;
     
     [self.contentView addSubview:self.titleLabel];
     

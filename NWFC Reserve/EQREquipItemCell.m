@@ -57,7 +57,7 @@
     //assign iboutlet values AFTER adding to the view otherwise it don't work
     //using the contentViewVCntrllr
     //_______*********  TABS are leading the equip list text. Must start string after them   *******_______
-    self.myEquipVCntrllr.titleLabel.text = [titleName substringFromIndex:2];
+    self.myEquipVCntrllr.titleLabel.text = titleName;
 
 
     //set user enabled
