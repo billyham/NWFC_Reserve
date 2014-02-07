@@ -361,7 +361,11 @@
         self.currentValue = [[NSMutableString alloc] initWithCapacity:50];
     }
     
-    [self.currentValue appendString:string];
+    //_____****** test that value is a real character, otherwise don't append the string
+    if ([self testForValidChar:self.currentValue]){
+        
+        [self.currentValue appendString:string];
+    }
 }
 
 
@@ -523,6 +527,27 @@
     }
     
     //_________************ END
+}
+
+
+-(BOOL)testForValidChar:(NSString*)myChar{
+    
+    //load up a an array with the alphabet and numbers
+    NSArray* alphanumericArray = [NSArray arrayWithObjects:@"1",@"2", @"3", @"4,", @"5", @"6", @"7", @"8", @"9", @"0",
+                                  @"a", @"b", @"c", @"d", @"e", @"f", @"g", @"h", @"i", @"j", @"k", @"l", @"m", @"n",
+                                  @"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z",
+                                  @"-", @":", @"'", @"\"", @"–", @"<", @">", @"&",
+                                  nil];
+    
+    for (NSString* alphaNum in alphanumericArray){
+        
+        if ([myChar isEqualToString:alphaNum]){
+            
+            return YES;
+        }
+    }
+    
+    return NO;
 }
 
 
