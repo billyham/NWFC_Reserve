@@ -17,6 +17,8 @@
 
 @interface EQREquipSummaryVCntrllr ()
 
+@property (strong, nonatomic) IBOutlet UIButton* printAndConfirmButton;
+
 @end
 
 @implementation EQREquipSummaryVCntrllr
@@ -45,6 +47,7 @@
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     [pickUpFormatter setLocale:usLocale];
     [pickUpFormatter setDateStyle:NSDateFormatterLongStyle];
+    [pickUpFormatter setTimeStyle:NSDateFormatterShortStyle];
     
     
     
@@ -149,16 +152,42 @@
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     EQRScheduleRequestItem* request = requestManager.request;
     
-    NSLog(@"this is the contact_foreignKey: %@", [NSString stringWithFormat:@"%ld", (long)[request.contact_foreignKey integerValue]]);
+    NSLog(@"this is the contact_foreignKey: %@", [NSString stringWithFormat:@"%@", request.contact_foreignKey]);
+    
+    //must not include nil objects in array
+    //cycle though all inputs and ensure some object is included. use @"88888888" as an error code
+    if (!request.contact_foreignKey) request.contact_foreignKey = @"88888888";
+    if (!request.classSection_foreignKey) request.classSection_foreignKey = @"88888888";
+    if (!request.classTitle_foreignKey) request.classTitle_foreignKey = @"88888888";
+    if (!request.request_date_begin) request.request_date_begin = [NSDate date];
+    if (!request.request_date_end) request.request_date_end = [NSDate date];
+    if (!request.contact_name) request.contact_name = @"88888888";
+    
+    //format the nsdates to a mysql compatible string
+    NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatForDate setLocale:usLocale];
+    [dateFormatForDate setDateFormat:@"yyyy-MM-dd"];
+    NSString* dateBeginString = [dateFormatForDate stringFromDate:request.request_date_begin];
+    NSString* dateEndString = [dateFormatForDate stringFromDate:request.request_date_end];
+    
+    //format the time
+    NSDateFormatter* dateFormatForTime = [[NSDateFormatter alloc] init];
+    [dateFormatForTime setLocale:usLocale];
+    [dateFormatForTime setDateFormat:@"HH:mm:ss"];
+    NSString* timeBeginString = [dateFormatForTime stringFromDate:request.request_date_begin];
+    NSString* timeEndString = [dateFormatForTime stringFromDate:request.request_date_end];
+    
     
     NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", request.key_id,nil];
-    NSArray* secondArray = [NSArray arrayWithObjects:@"contact_foreignKey", [NSString stringWithFormat:@"%ld", (long)[request.contact_foreignKey integerValue]], nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:@"contact_foreignKey", request.contact_foreignKey, nil];
     NSArray* thirdArray = [NSArray arrayWithObjects:@"classSection_foreignKey", request.classSection_foreignKey,nil];
     NSArray* fourthArray = [NSArray arrayWithObjects:@"classTitle_foreignKey", request.classTitle_foreignKey,nil];
-    NSArray* fifthArray = [NSArray arrayWithObjects:@"request_date_begin", request.request_date_begin,nil];
-    NSArray* sixthArray = [NSArray arrayWithObjects:@"request_date_end", request.request_date_end,nil];
-    NSArray* seventhArray = [NSArray arrayWithObjects:@"request_time_begin", @"",nil];
-    NSArray* eighthArray = [NSArray arrayWithObjects:@"request_time_end", @"",nil];
+    NSArray* fifthArray = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
+    NSArray* sixthArray = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
+    NSArray* seventhArray = [NSArray arrayWithObjects:@"request_time_begin", timeBeginString, nil];
+    NSArray* eighthArray = [NSArray arrayWithObjects:@"request_time_end", timeEndString, nil];
+    NSArray* ninthArray =[NSArray arrayWithObjects:@"contact_name", request.contact_name, nil];
     NSArray* bigArray = [NSArray arrayWithObjects:
                          firstArray,
                          secondArray,
@@ -168,12 +197,34 @@
                          sixthArray,
                          seventhArray,
                          eighthArray,
+                         ninthArray,
                          nil];
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     
     NSString* returnID = [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
     NSLog(@"this is the returnID: %@", returnID);
+    
+    
+    //_______PRINTING_________!
+    UIPrintInteractionController* printIntCont = [UIPrintInteractionController sharedPrintController];
+    UIViewPrintFormatter* viewPrintFormatter = [self.summaryTextView viewPrintFormatter];
+    
+    UIPrintInfo* printInfo = [UIPrintInfo printInfo] ;
+    printInfo.jobName = @"NWFC Reserve App: confirmation";
+    printInfo.outputType = UIPrintInfoOutputGrayscale;
+    
+    //assign formatter to int cntrllr
+    printIntCont.printFormatter = viewPrintFormatter;
+    //assign printinfo to int cntrllr
+    printIntCont.printInfo = printInfo;
+    
+    [printIntCont presentFromRect:self.printAndConfirmButton.frame inView:self.view animated:YES completionHandler:^(UIPrintInteractionController *printInteractionController,BOOL completed, NSError *error){
+        
+        //go back to first page in nav
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        
+    }];
 }
 
 
