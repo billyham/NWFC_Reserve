@@ -16,15 +16,22 @@
 #import "EQRClassRegistrationItem.h"
 #import "EQRScheduleRequestManager.h"
 #import "EQRScheduleRequestItem.h"
+#import "EQRGlobals.h"
 
 
 @interface EQRReserveTopVCntrllr ()
 
 @property (strong, nonatomic) NSArray* contactNameArray;
 @property (strong, nonatomic) NSArray* classArray;
-@property (strong, nonatomic) IBOutlet EQREquipSelectionVCntrllr* equipSelectionController;
+@property (strong, nonatomic) NSArray* rentorTypeArray;
 @property (strong, nonatomic) EQRClassItem* thisClassItem;
 @property (strong, nonatomic) EQRClassRegistrationItem* thisClassRegistration;
+
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* rentorWidthContraint;
+
+@property BOOL hideNameListFlag;
+@property BOOL hideClassListFlag;
+
 
 
 @end
@@ -34,86 +41,74 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //set flags
+    self.hideClassListFlag = YES;
+    self.hideNameListFlag = YES;
+    
+    //register for notification
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    
+    //observe for voiding schedule tracking item
+    [nc addObserver:self selector:@selector(startNewDisplay:) name:EQRVoidScheduleItemObjects object:nil];
+    
 
     //register colleciton view cell
     [self.classListTable registerClass:[EQRClassCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.nameListTable registerClass:[EQRContactNameCell class] forCellWithReuseIdentifier:@"Cell"];
-    
+    [self.rentorTypeListTable registerClass:[EQRCellTemplate class] forCellWithReuseIdentifier:@"Cell"];
 
+    //populate rentorTypeArray
+    if (!self.rentorTypeArray){
+        
+        self.rentorTypeArray = [NSArray arrayWithObjects:
+                                @"Student",
+                                @"Faculty",
+                                @"Staff",
+                                @"Public",
+                                @"Youth",
+                                nil];
+    }
+    
+    //expand size of rentor type list
+    self.rentorWidthContraint.constant = 230;
+    
+    //animate change
+    [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
+        
+        
+        [self.view layoutIfNeeded];
+    }];
 
     
 }
 
 
-#pragma mark - Segment control methods
+#pragma mark - return to start screen
 
--(IBAction)receiveSegmentButton:(id)sender{
+-(void)startNewDisplay:(NSNotification*)note{
     
-    NSLog(@"this is the segment number: %ld", (long)[sender selectedSegmentIndex]);
+    //deselect type
+    [self.rentorTypeListTable reloadData];
     
-    switch ([sender selectedSegmentIndex]) {
-            
-        case (0):{ //student (adult)
-            
-            //get current term from user defaults
-            NSString* termString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
-
-            //load class table with current term classes and display in collection view
-            EQRWebData* webData = [EQRWebData sharedInstance];
-            
-            //params for class section query is the current term
-            NSArray* termArray = [NSArray arrayWithObjects:@"term", termString, nil];
-            NSArray* classqueryArray = [NSArray arrayWithObject:termArray];
-            
-            [webData queryWithLink:@"EQGetClassesCurrent.php" parameters:classqueryArray class:@"EQRClassItem" completion:^(NSMutableArray* muteArray){
-                
-                self.classArray = [NSArray arrayWithArray:muteArray];
-            }];
-            
-            //yes, this is necessary
-            [self.classListTable reloadData];
-            
-            break;
-            
-        } case (1):{ //faculty
-            
-            //remove whatever currently exists in the class and contact tables
-            self.classArray = nil;
-            [self.classListTable reloadData];
-            self.contactNameArray = nil;
-            [self.nameListTable reloadData];
-            
-        }case (2):{ //staff
-            
-            //remove whatever currently exists in the class and contact tables
-            self.classArray = nil;
-            [self.classListTable reloadData];
-            self.contactNameArray = nil;
-            [self.nameListTable reloadData];
-            
-        }case (3):{ //public
-            
-            //remove whatever currently exists in the class and contact tables
-            self.classArray = nil;
-            [self.classListTable reloadData];
-            self.contactNameArray = nil;
-            [self.nameListTable reloadData];
-            
-            
-        }case (4):{ //youth camp
-            
-            //remove whatever currently exists in the class and contact tables
-            self.classArray = nil;
-            [self.classListTable reloadData];
-            self.contactNameArray = nil;
-            [self.nameListTable reloadData];
-            
-        }
-            
-        default:
-            break;
-    }
+    //set flags
+    self.hideNameListFlag = YES;
+    self.hideClassListFlag = YES;
     
+    //delete info in collection views
+    [self.classListTable reloadData];
+    [self.nameListTable reloadData];
+//    [self.classListTable deleteSections:[NSIndexSet indexSetWithIndex:0]];
+//    [self.nameListTable deleteSections:[NSIndexSet indexSetWithIndex:0]];
+    
+    //expand size of rentor type list
+    self.rentorWidthContraint.constant = 230;
+    
+    //animate change
+    [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
+       
+        [self.view layoutIfNeeded];
+    }];
     
 }
 
@@ -133,11 +128,29 @@
     
     if (collectionView == self.nameListTable){
         
-        return [self.contactNameArray count];
+        if (self.hideNameListFlag){
+            
+            return 0;
+            
+        }else{
+            
+            return [self.contactNameArray count];
+        }
         
     } else if (collectionView == self.classListTable){
         
-        return [self.classArray count];
+        if (self.hideClassListFlag){
+            
+            return 0;
+            
+        }else {
+
+            return [self.classArray count];
+        }
+        
+    } else if (collectionView == self.rentorTypeListTable){
+        
+        return [self.rentorTypeArray count];
     }
     
     return 1;
@@ -146,7 +159,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    //discern between two different tables
+    //discern between different tables
     
     if (collectionView == self.nameListTable){
         
@@ -199,6 +212,30 @@
         
         return cell;
         
+    }else if(collectionView == self.rentorTypeListTable){
+    
+        static NSString* CellIdentifier  = @"Cell";
+        EQRCellTemplate* cell = [self.rentorTypeListTable dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+        
+        //remove subviews
+        for (UIView* view in cell.contentView.subviews){
+            
+            [view removeFromSuperview];
+        }
+        
+        cell.backgroundColor = [UIColor clearColor];
+        [cell setOpaque:YES];
+        
+        if ([self.rentorTypeArray count] > 0) {
+            
+            [cell initialSetupWithTitle:[self.rentorTypeArray objectAtIndex:indexPath.row]];
+        } else {
+            
+            NSLog(@"No count in the rentor type array");
+        }
+        
+        return cell;
+        
     } else{
         
         NSLog (@"no identified collection view");
@@ -229,6 +266,9 @@
     
     
     if (collectionView == self.classListTable){
+        
+        //reveal name list
+        self.hideNameListFlag = NO;
         
         //initialize webData object
         EQRWebData* webData = [EQRWebData sharedInstance];
@@ -298,7 +338,7 @@
             [self.nameListTable reloadData];
         }];
 
-    } else {
+    } else if (collectionView == self.nameListTable){
         
         //name list was selected
         
@@ -322,6 +362,89 @@
         
         //perform segue to show date picker
         [self performSegueWithIdentifier:@"lookAtDates" sender:self];
+        
+    } else if (collectionView == self.rentorTypeListTable){
+        
+        //reveal class list
+        self.hideClassListFlag = NO;
+        
+        
+        
+        //rentor type is selected
+        switch (indexPath.row) {
+                
+            case (0):{ //student (adult)
+                
+                //contact size of rentor type list
+                self.rentorWidthContraint.constant = 120;
+                
+                //animate change
+                [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
+                    
+                    [self.view layoutIfNeeded];
+                }];
+                
+                
+                //get current term from user defaults
+                NSString* termString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
+                
+                //load class table with current term classes and display in collection view
+                EQRWebData* webData = [EQRWebData sharedInstance];
+                
+                //params for class section query is the current term
+                NSArray* termArray = [NSArray arrayWithObjects:@"term", termString, nil];
+                NSArray* classqueryArray = [NSArray arrayWithObject:termArray];
+                
+                [webData queryWithLink:@"EQGetClassesCurrent.php" parameters:classqueryArray class:@"EQRClassItem" completion:^(NSMutableArray* muteArray){
+                    
+                    self.classArray = [NSArray arrayWithArray:muteArray];
+                }];
+                
+                //yes, this is necessary
+                [self.classListTable reloadData];
+                
+                break;
+                
+            } case (1):{ //faculty
+                
+                //remove whatever currently exists in the class and contact tables
+                self.classArray = nil;
+                [self.classListTable reloadData];
+                self.contactNameArray = nil;
+                [self.nameListTable reloadData];
+                
+            }case (2):{ //staff
+                
+                //remove whatever currently exists in the class and contact tables
+                self.classArray = nil;
+                [self.classListTable reloadData];
+                self.contactNameArray = nil;
+                [self.nameListTable reloadData];
+                
+            }case (3):{ //public
+                
+                //remove whatever currently exists in the class and contact tables
+                self.classArray = nil;
+                [self.classListTable reloadData];
+                self.contactNameArray = nil;
+                [self.nameListTable reloadData];
+                
+                
+            }case (4):{ //youth camp
+                
+                //remove whatever currently exists in the class and contact tables
+                self.classArray = nil;
+                [self.classListTable reloadData];
+                self.contactNameArray = nil;
+                [self.nameListTable reloadData];
+                
+            }
+                
+            default:
+                break;
+        }
+        
+        
     }
 }
 

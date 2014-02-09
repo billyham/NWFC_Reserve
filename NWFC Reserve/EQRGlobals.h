@@ -15,6 +15,7 @@ extern NSString* EQRVoidScheduleItemObjects;
 
 //Timing
 extern float EQRHighlightTappingTime;
+extern float EQRResizingCollectionViewTime;
 
 
 @interface EQRGlobals : NSObject

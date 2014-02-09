@@ -17,11 +17,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Wwo-iZ-sDI">
-                                <rect key="frame" x="19" y="76" width="411" height="834"/>
+                                <rect key="frame" x="120" y="0.0" width="354" height="910"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="411" id="I4z-dd-RiY"/>
+                                    <constraint firstAttribute="width" constant="354" id="I4z-dd-RiY"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="0.0" id="sBn-1g-NzD">
                                     <size key="itemSize" width="354" height="50"/>
@@ -31,7 +31,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="M0f-JV-oct" customClass="EQRClassCell">
-                                        <rect key="frame" x="29" y="0.0" width="354" height="50"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="354" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="354" height="50"/>
@@ -59,24 +59,24 @@
                                 </connections>
                             </collectionView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2lJ-9i-ODA">
-                                <rect key="frame" x="449" y="76" width="299" height="834"/>
+                                <rect key="frame" x="476" y="0.0" width="284" height="910"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="299" id="sgE-3Y-xsQ"/>
+                                    <constraint firstAttribute="width" constant="284" id="sgE-3Y-xsQ"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Vrk-Mv-jIp">
-                                    <size key="itemSize" width="298" height="50"/>
+                                    <size key="itemSize" width="284" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="MB9-em-G1N" customClass="EQRContactNameCell">
-                                        <rect key="frame" x="1" y="0.0" width="298" height="50"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="284" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="298" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="284" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6b3-pj-iQx">
@@ -99,39 +99,64 @@
                                     <outlet property="delegate" destination="9pv-A4-QxB" id="Myd-3h-voL"/>
                                 </connections>
                             </collectionView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" translatesAutoresizingMaskIntoConstraints="NO" id="NZp-4B-08r">
-                                <rect key="frame" x="227" y="26" width="314" height="29"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2it-XM-d52">
+                                <rect key="frame" x="0.0" y="0.0" width="120" height="910"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="28" id="A8o-P4-wVa"/>
+                                    <constraint firstAttribute="width" constant="120" id="KBG-tB-DHa"/>
                                 </constraints>
-                                <segments>
-                                    <segment title="Student"/>
-                                    <segment title="Faculty"/>
-                                    <segment title="Staff"/>
-                                    <segment title="Public"/>
-                                    <segment title="Youth"/>
-                                </segments>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="qoA-F5-OPj">
+                                    <size key="itemSize" width="120" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="JzX-78-emy" customClass="EQRCellTemplate">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="120" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qfq-Nh-cu3">
+                                                    <rect key="frame" x="20" y="14" width="77" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <connections>
+                                            <outlet property="titleLabel" destination="Qfq-Nh-cu3" id="2Bi-O8-Ysu"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
                                 <connections>
-                                    <action selector="receiveSegmentButton:" destination="9pv-A4-QxB" eventType="valueChanged" id="rmK-aq-cGT"/>
+                                    <outlet property="dataSource" destination="9pv-A4-QxB" id="hgn-AJ-qK9"/>
+                                    <outlet property="delegate" destination="9pv-A4-QxB" id="3VW-VE-2N9"/>
                                 </connections>
-                            </segmentedControl>
+                            </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="NZp-4B-08r" secondAttribute="centerX" id="3IY-90-RJe"/>
-                            <constraint firstItem="Wwo-iZ-sDI" firstAttribute="top" secondItem="NZp-4B-08r" secondAttribute="bottom" constant="22" id="956-6x-39c"/>
-                            <constraint firstItem="NZp-4B-08r" firstAttribute="top" secondItem="Cb4-SR-jtu" secondAttribute="bottom" constant="26" id="Iwf-Da-F8K"/>
-                            <constraint firstItem="2lJ-9i-ODA" firstAttribute="top" secondItem="NZp-4B-08r" secondAttribute="bottom" constant="22" id="JHI-F6-aVt"/>
+                            <constraint firstItem="2lJ-9i-ODA" firstAttribute="top" secondItem="Cb4-SR-jtu" secondAttribute="bottom" id="6H4-tJ-dcD"/>
+                            <constraint firstItem="Wwo-iZ-sDI" firstAttribute="top" secondItem="Cb4-SR-jtu" secondAttribute="bottom" id="Q28-l1-apW"/>
                             <constraint firstItem="yAW-zm-NfC" firstAttribute="top" secondItem="2lJ-9i-ODA" secondAttribute="bottom" constant="1" id="U2X-V6-8RX"/>
                             <constraint firstItem="yAW-zm-NfC" firstAttribute="top" secondItem="Wwo-iZ-sDI" secondAttribute="bottom" constant="1" id="YY3-vv-dXo"/>
-                            <constraint firstItem="Wwo-iZ-sDI" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" constant="19" id="h38-re-YTL"/>
-                            <constraint firstItem="2lJ-9i-ODA" firstAttribute="leading" secondItem="Wwo-iZ-sDI" secondAttribute="trailing" constant="19" id="kEr-Zh-ARq"/>
+                            <constraint firstItem="yAW-zm-NfC" firstAttribute="top" secondItem="2it-XM-d52" secondAttribute="bottom" constant="1" id="c6v-2Y-Lhr"/>
+                            <constraint firstItem="2lJ-9i-ODA" firstAttribute="leading" secondItem="Wwo-iZ-sDI" secondAttribute="trailing" constant="2" id="kEr-Zh-ARq"/>
+                            <constraint firstItem="2it-XM-d52" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="nKa-2R-k9I"/>
+                            <constraint firstItem="2it-XM-d52" firstAttribute="top" secondItem="Cb4-SR-jtu" secondAttribute="bottom" id="rUp-bo-UfC"/>
+                            <constraint firstItem="Wwo-iZ-sDI" firstAttribute="leading" secondItem="2it-XM-d52" secondAttribute="trailing" id="tN9-L3-tfk"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
-                    <navigationItem key="navigationItem" title="Contact" id="TGU-ET-2b1">
-                        <barButtonItem key="rightBarButtonItem" title="Dates" id="f3u-Nm-tqA">
+                    <navigationItem key="navigationItem" title="Equipment Request" id="TGU-ET-2b1">
+                        <barButtonItem key="rightBarButtonItem" id="f3u-Nm-tqA">
                             <connections>
                                 <segue destination="W9r-1m-gIx" kind="push" identifier="lookAtDates" id="e6p-Ie-saW"/>
                             </connections>
@@ -140,6 +165,8 @@
                     <connections>
                         <outlet property="classListTable" destination="Wwo-iZ-sDI" id="UCO-xn-g2y"/>
                         <outlet property="nameListTable" destination="2lJ-9i-ODA" id="GEy-QH-VFY"/>
+                        <outlet property="rentorTypeListTable" destination="2it-XM-d52" id="p0v-d4-0CN"/>
+                        <outlet property="rentorWidthContraint" destination="KBG-tB-DHa" id="FL3-O4-6YU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
@@ -266,9 +293,9 @@
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Equipment" id="ekZ-Yo-c4F">
-                        <barButtonItem key="rightBarButtonItem" title="Summary" id="jFQ-IR-Pcm">
+                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="jFQ-IR-Pcm">
                             <connections>
-                                <segue destination="56u-9g-VTe" kind="push" id="i0l-hY-mb3"/>
+                                <action selector="cancelTheThing:" destination="cVq-BN-iQE" id="WXp-Is-StZ"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -327,7 +354,13 @@
                             <constraint firstItem="560-5L-0by" firstAttribute="top" secondItem="mmW-xL-xrN" secondAttribute="bottom" constant="22" id="cbu-Tt-Qcc"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Summary" id="HSF-nb-bGQ"/>
+                    <navigationItem key="navigationItem" title="Summary" id="HSF-nb-bGQ">
+                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="1m5-cA-aGm">
+                            <connections>
+                                <action selector="cancelTheThing:" destination="56u-9g-VTe" id="Utb-nM-VF9"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="printAndConfirmButton" destination="560-5L-0by" id="mly-oT-vBz"/>
                         <outlet property="summaryTextView" destination="C1a-fS-4jR" id="BD6-TR-7ng"/>
@@ -452,9 +485,9 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Dates" id="rEN-CZ-Jdi">
-                        <barButtonItem key="rightBarButtonItem" title="Equipment" id="WDA-av-Z4I">
+                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="WDA-av-Z4I">
                             <connections>
-                                <segue destination="cVq-BN-iQE" kind="push" id="v0x-UT-jb5"/>
+                                <action selector="cancelTheThing:" destination="W9r-1m-gIx" id="LPY-zF-dci"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -466,7 +499,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UDj-3Q-5v2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5040" y="150"/>
+            <point key="canvasLocation" x="5043" y="170"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="rUh-jI-DwO">
@@ -624,8 +657,4 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
-    <inferredMetricsTieBreakers>
-        <segue reference="v0x-UT-jb5"/>
-        <segue reference="Nbg-n1-Zij"/>
-    </inferredMetricsTieBreakers>
 </document>

@@ -13,6 +13,7 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRScheduleRequestItem.h"
 #import "EQRClassCatalog_EquipTitleItem_Join.h"
+#import "EQRGlobals.h"
 
 @interface EQREquipSelectionVCntrllr ()
 
@@ -186,6 +187,18 @@
     }];
 }
 
+
+#pragma mark - cancel
+
+-(IBAction)cancelTheThing:(id)sender{
+    
+    //go back to first page in nav
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    
+    //send note to reset eveything back to 0
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
+    
+}
 
 #pragma mark - equipment cell buttons
 

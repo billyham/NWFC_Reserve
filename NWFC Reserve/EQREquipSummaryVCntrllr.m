@@ -13,6 +13,7 @@
 #import "EQREquipItem.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRWebData.h"
+#import "EQRGlobals.h"
 
 
 @interface EQREquipSummaryVCntrllr ()
@@ -57,11 +58,17 @@
     UIFont* boldFont = [UIFont boldSystemFontOfSize:14];
     
     //________NAME_________
-    NSDictionary* arrayAtt = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    self.rentorNameAtt = [[NSAttributedString alloc] initWithString:contactItem.first_and_last attributes:arrayAtt];
-    
+    NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+    NSAttributedString* nameHead = [[NSAttributedString alloc] initWithString:@"Name\r" attributes:arrayAttA];
+
     //initiate the total attributed string
-    self.summaryTotalAtt = [[NSMutableAttributedString alloc] initWithAttributedString:self.rentorNameAtt];
+    self.summaryTotalAtt = [[NSMutableAttributedString alloc] initWithAttributedString:nameHead];
+    
+    //assign the name
+    NSDictionary* arrayAtt = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
+    NSAttributedString* nameAtt = [[NSAttributedString alloc] initWithString:contactItem.first_and_last attributes:arrayAtt];
+    [self.summaryTotalAtt appendAttributedString:nameAtt];
+    
     
     //____EMAIL____
     //add to the attributed string
@@ -104,7 +111,7 @@
     
     //________EQUIP LIST________
     
-    NSDictionary* arrayAtt10 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+    NSDictionary* arrayAtt10 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
     NSAttributedString* equipHead = [[NSAttributedString alloc] initWithString:@"\r\r\rEquipment Items:\r\r" attributes:arrayAtt10];
     [self.summaryTotalAtt appendAttributedString:equipHead];
     
@@ -122,8 +129,8 @@
             //add the text of the equip item names to the textField's attributed string
             for (EQREquipItem* equipItemObj in muteArray){
                 
-                NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-                NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r\r", equipItemObj.shortname] attributes:arrayAtt11];
+                NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+                NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", equipItemObj.shortname] attributes:arrayAtt11];
                 
                 [self.summaryTotalAtt appendAttributedString:thisHereAttString];
             }
@@ -136,6 +143,21 @@
     self.summaryTextView.attributedText = self.summaryTotalAtt;
 }
 
+
+#pragma mark - cancel
+
+-(IBAction)cancelTheThing:(id)sender{
+    
+    //go back to first page in nav
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    
+    //send note to reset eveything back to 0
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
+    
+}
+
+
+#pragma mark - confirm button
 
 -(IBAction)confirmAndPrint:(id)sender{
     
@@ -221,9 +243,16 @@
     
     [printIntCont presentFromRect:self.printAndConfirmButton.frame inView:self.view animated:YES completionHandler:^(UIPrintInteractionController *printInteractionController,BOOL completed, NSError *error){
         
-        //go back to first page in nav
-        [self.navigationController popToRootViewControllerAnimated:YES];
+        //unless the printing in cancelled...
         
+        if (completed){
+            
+            //go back to first page in nav
+            [self.navigationController popToRootViewControllerAnimated:YES];
+            
+            //send note to reset eveything back to 0
+            [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
+        }
     }];
 }
 

@@ -65,6 +65,19 @@
 }
 
 
+#pragma mark - cancel
+
+-(IBAction)cancelTheThing:(id)sender{
+    
+    //go back to first page in nav
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    
+    //send note to reset eveything back to 0
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
+    
+}
+
+
 
 #pragma mark - UIDatePickerMethods
 

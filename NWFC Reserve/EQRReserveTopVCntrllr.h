@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) IBOutlet UICollectionView* classListTable;
 @property (nonatomic, strong) IBOutlet UICollectionView* nameListTable;
+@property (nonatomic, strong) IBOutlet UICollectionView* rentorTypeListTable;
 
 
 
