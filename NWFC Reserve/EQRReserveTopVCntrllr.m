@@ -28,6 +28,7 @@
 @property (strong, nonatomic) EQRClassRegistrationItem* thisClassRegistration;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* rentorWidthContraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* rentorLeadingConstraint;
 
 @property BOOL hideNameListFlag;
 @property BOOL hideClassListFlag;
@@ -71,7 +72,8 @@
     }
     
     //expand size of rentor type list
-    self.rentorWidthContraint.constant = 230;
+//    self.rentorWidthContraint.constant = 230;
+    self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
     
     //animate change
     [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
@@ -102,7 +104,8 @@
 //    [self.nameListTable deleteSections:[NSIndexSet indexSetWithIndex:0]];
     
     //expand size of rentor type list
-    self.rentorWidthContraint.constant = 230;
+//    self.rentorWidthContraint.constant = 230;
+    self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
     
     //animate change
     [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
@@ -376,7 +379,8 @@
             case (0):{ //student (adult)
                 
                 //contact size of rentor type list
-                self.rentorWidthContraint.constant = 120;
+//                self.rentorWidthContraint.constant = 120;
+                self.rentorLeadingConstraint.constant = 0.0;
                 
                 //animate change
                 [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
@@ -407,6 +411,15 @@
                 
             } case (1):{ //faculty
                 
+                //contact size of rentor type list
+                self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
+                
+                //animate change
+                [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
+                    
+                    [self.view layoutIfNeeded];
+                }];
+                
                 //remove whatever currently exists in the class and contact tables
                 self.classArray = nil;
                 [self.classListTable reloadData];
@@ -414,6 +427,15 @@
                 [self.nameListTable reloadData];
                 
             }case (2):{ //staff
+                
+                //contact size of rentor type list
+                self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
+                
+                //animate change
+                [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
+                    
+                    [self.view layoutIfNeeded];
+                }];
                 
                 //remove whatever currently exists in the class and contact tables
                 self.classArray = nil;
@@ -423,6 +445,15 @@
                 
             }case (3):{ //public
                 
+                //contact size of rentor type list
+                self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
+                
+                //animate change
+                [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
+                    
+                    [self.view layoutIfNeeded];
+                }];
+                
                 //remove whatever currently exists in the class and contact tables
                 self.classArray = nil;
                 [self.classListTable reloadData];
@@ -431,6 +462,15 @@
                 
                 
             }case (4):{ //youth camp
+                
+                //contact size of rentor type list
+                self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
+                
+                //animate change
+                [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
+                    
+                    [self.view layoutIfNeeded];
+                }];
                 
                 //remove whatever currently exists in the class and contact tables
                 self.classArray = nil;

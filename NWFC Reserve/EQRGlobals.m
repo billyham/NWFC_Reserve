@@ -15,7 +15,9 @@ NSString* EQRVoidScheduleItemObjects = @"EQRVoidScheduleItemObjects";
 
 //Timing
 float EQRHighlightTappingTime = 0.125;
-float EQRResizingCollectionViewTime = 0.5;
+float EQRResizingCollectionViewTime = 0.3;
+float EQRRentorTypeLeadingSpace = 80;
+
 
 @implementation EQRGlobals
 
