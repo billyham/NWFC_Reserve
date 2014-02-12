@@ -182,6 +182,8 @@
             
             NSLog(@"this is the class of objects: %@", [[self.contactNameArray objectAtIndex:indexPath.row] class]);
             
+            NSLog(@"this is the fist and last: %@", [(EQRContactNameItem*)[self.contactNameArray objectAtIndex:indexPath.row] first_and_last]);
+            
             [cell initialSetupWithTitle:[(EQRContactNameItem*)[self.contactNameArray objectAtIndex:indexPath.row] first_and_last]];
             
         }else{
@@ -283,7 +285,7 @@
         //1. get key_id of selected class Section
         EQRClassItem* thisClass = [self.classArray objectAtIndex:indexPath.row];
         NSString*  classKeyId = thisClass.key_id;
-        NSLog(@"this is the classCatalog_foreignKey: %@", thisClass.key_id);
+//        NSLog(@"this is the classCatalog_foreignKey: %@", thisClass.key_id);
         
         //2. get list of key_id contacts from class_registrations table
         NSArray* regArray = [NSArray arrayWithObjects:@"classSection_foreignKey", classKeyId, nil];
@@ -297,7 +299,7 @@
             
             //_____keep class item on an ivar to use when creating a new scheduleRequest
             self.thisClassItem = thisClass;
-            NSLog(@"this is the catalog_foreign_key: %@", thisClass.catalog_foreign_key);
+//            NSLog(@"this is the catalog_foreign_key: %@", thisClass.catalog_foreign_key);
             
             //3. get list of student names
             
@@ -307,13 +309,12 @@
             //repeat this step... to add additional objects to the array
             [arrayOfClassRegistrationItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
-                NSLog(@"class of object: %@ and it's contact_foreingKey: %@", [obj class], [[obj contact_foreignKey] class]);
-            
+//                NSLog(@"class of object: %@ and it's contact_foreingKey: %@", [obj class], [[obj contact_foreignKey] class]);
                 
                 NSArray* classParam = [NSArray arrayWithObjects: @"key_id", [(EQRClassRegistrationItem*)obj contact_foreignKey], nil];
                 NSArray* classParamTotal = [NSArray arrayWithObject:classParam];
                 
-                NSLog(@"count of classParam: %lu", (unsigned long)[classParam count]);
+//                NSLog(@"count of classParam: %lu", (unsigned long)[classParam count]);
                 
                 //get student names with query
                 EQRWebData* webDataNew = [EQRWebData sharedInstance];
@@ -321,7 +322,7 @@
                     
                     if ([muteArray2 count] > 0){
                         
-                        NSLog(@"muteArray2 has data");
+//                        NSLog(@"muteArray2 has data");
                         
                         //there should only be one object in the returned array__________???
                         [contactNameMuteArray addObject:[muteArray2 objectAtIndex:0]];
@@ -335,7 +336,7 @@
             //save as ivar
             self.contactNameArray = contactNameMuteArray;
             
-            NSLog(@"count of objects in contactNameMuteArray: %lu", (unsigned long)[contactNameMuteArray count]);
+//            NSLog(@"count of objects in contactNameMuteArray: %lu", (unsigned long)[contactNameMuteArray count]);
             
             //is this necessary_____???
             [self.nameListTable reloadData];
@@ -388,6 +389,9 @@
                     [self.view layoutIfNeeded];
                 }];
                 
+                //remove whatever currently exists in the contact tables
+                self.contactNameArray = nil;
+                [self.nameListTable reloadData];
                 
                 //get current term from user defaults
                 NSString* termString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
@@ -426,6 +430,33 @@
                 self.contactNameArray = nil;
                 [self.nameListTable reloadData];
                 
+                //_____populate nameList table with names of faculty
+                
+                //instantiate mute array
+                NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+                
+                EQRWebData* webData2 = [EQRWebData sharedInstance];
+                
+                //pull a list of names, only ones with faculty bool set to 1
+                [webData2 queryWithLink:@"EQGetFacultyNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+                    
+                    for (id obj in muteArray){
+                        
+                        [tempMuteArray  addObject:obj];
+                    }
+                }];
+                
+                self.contactNameArray = tempMuteArray;
+                
+                //********  reveal name list  **********
+                self.hideNameListFlag = NO;
+                
+                //is this necessary_____???
+                [self.nameListTable reloadData];
+                
+                break;
+                
+                
             }case (2):{ //staff
                 
                 //contact size of rentor type list
@@ -442,6 +473,32 @@
                 [self.classListTable reloadData];
                 self.contactNameArray = nil;
                 [self.nameListTable reloadData];
+                
+                //_____populate nameList table with names of staff
+                
+                //instantiate mute array
+                NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+                
+                EQRWebData* webData2 = [EQRWebData sharedInstance];
+                
+                //pull a list of names, only ones with faculty bool set to 1
+                [webData2 queryWithLink:@"EQGetStaffNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+                    
+                    for (id obj in muteArray){
+                        
+                        [tempMuteArray  addObject:obj];
+                    }
+                }];
+                
+                self.contactNameArray = tempMuteArray;
+                
+                //********  reveal name list  **********
+                self.hideNameListFlag = NO;
+                
+                //is this necessary_____???
+                [self.nameListTable reloadData];
+                
+                break;
                 
             }case (3):{ //public
                 
@@ -460,6 +517,8 @@
                 self.contactNameArray = nil;
                 [self.nameListTable reloadData];
                 
+                break;
+                
                 
             }case (4):{ //youth camp
                 
@@ -477,6 +536,8 @@
                 [self.classListTable reloadData];
                 self.contactNameArray = nil;
                 [self.nameListTable reloadData];
+                
+                break;
                 
             }
                 

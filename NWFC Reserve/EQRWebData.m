@@ -534,37 +534,48 @@
 
 -(NSString*)testForValidChar:(NSString*)myChar{
     
-    NSLog(@"this here myChar: %@", myChar);
+//    NSLog(@"this here myChar: %@", myChar);
     
-    //test if ivar array exists
-    if (!self.alphaNumericaArray){
-     
-        //load up a an array with the alphabet and numbers
-        self.alphaNumericaArray = [NSArray arrayWithObjects:@"1",@"2", @"3", @"4,", @"5", @"6", @"7", @"8", @"9", @"0",
-                                   @"a", @"b", @"c", @"d", @"e", @"f", @"g", @"h", @"i", @"j", @"k", @"l", @"m", @"n",
-                                   @"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z",
-                                   @"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N",
-                                   @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z",
-                                   @"-", @":", @"'", @"\"", @"–", @"<", @">", @"&",
-                                   nil];
-    }
-    
-    
-    NSInteger myLength = [myChar length];
-    
-    int n;
-    for (n=0 ; n < myLength ; n++){
+    //is it a return?
+    if ([[myChar substringToIndex:1] isEqualToString: @"\n"]) {
         
-        for (NSString* alphaNum in self.alphaNumericaArray){
-            
-            if ([[NSString stringWithFormat:@"%c", [myChar characterAtIndex:n] ] isEqualToString:alphaNum]){
-                
-                return [myChar substringFromIndex:n];
-            }
-        }
+        return @"";
+        
+    }else{
+        
+        return myChar;
     }
     
-    return @"";
+    
+//    //test if ivar array exists
+//    if (!self.alphaNumericaArray){
+//     
+//        //load up a an array with the alphabet and numbers
+//        self.alphaNumericaArray = [NSArray arrayWithObjects:@"1",@"2", @"3", @"4,", @"5", @"6", @"7", @"8", @"9", @"0",
+//                                   @"a", @"b", @"c", @"d", @"e", @"f", @"g", @"h", @"i", @"j", @"k", @"l", @"m", @"n",
+//                                   @"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z",
+//                                   @"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N",
+//                                   @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z",
+//                                   @"-", @":", @"'", @"\"", @"–", @"<", @">", @"&",
+//                                   nil];
+//    }
+//    
+//    
+//    NSInteger myLength = [myChar length];
+//    
+//    int n;
+//    for (n=0 ; n < myLength ; n++){
+//        
+//        for (NSString* alphaNum in self.alphaNumericaArray){
+//            
+//            if ([[NSString stringWithFormat:@"%c", [myChar characterAtIndex:n] ] isEqualToString:alphaNum]){
+//                
+//                return [myChar substringFromIndex:n];
+//            }
+//        }
+//    }
+//    
+//    return @"";
 }
 
 
