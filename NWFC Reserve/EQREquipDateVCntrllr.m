@@ -73,7 +73,11 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
     
     //send note to reset eveything back to 0
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
+    
+    //reset eveything back to 0 (which in turn sends an nsnotification)
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    [requestManager dismissRequest];
     
 }
 

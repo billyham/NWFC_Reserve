@@ -61,6 +61,8 @@
     [self.equipCollectionView registerClass:[EQREquipItemCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.equipCollectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
     
+    //______*********  this should only apply to students  ******_______
+    //______*********  need alternate way to forming equipment list for staff, faculty and public
     //get class data from scheduleRequest object
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     NSString* classTitleKey = requestManager.request.classTitle_foreignKey;
@@ -69,122 +71,154 @@
     NSArray* firstParamArray = [NSArray arrayWithObjects:@"ClassCatalog_foreignKey", classTitleKey, nil];
     NSArray* secondParamArray = [NSArray arrayWithObjects:firstParamArray, nil];
     
-
-    
     //1. get list of ClassCatalog_EquipTitleItem_Join
+    //declare a mutable array
+    NSMutableArray* tempEquipMuteArray = [NSMutableArray arrayWithCapacity:1];
+    
     EQRWebData* webData = [EQRWebData sharedInstance];
-    [webData queryWithLink:@"EQGetClassCatalogEquipTitleItemJoins.php" parameters:secondParamArray class:@"EQRClassCatalog_EquipTitleItem_Join" completion:^(NSMutableArray* muteArrayFirst){
+
+    if ([requestManager.request.renter_type isEqualToString:@"student"]){
         
-        //declare a mutable array
-        NSMutableArray* tempEquipMuteArray = [NSMutableArray arrayWithCapacity:1];
-        
-        
-        //do something with the returned array...
-        [muteArrayFirst enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        //get a list of allocated gear...
+        [webData queryWithLink:@"EQGetClassCatalogEquipTitleItemJoins.php" parameters:secondParamArray class:@"EQRClassCatalog_EquipTitleItem_Join" completion:^(NSMutableArray* muteArrayFirst){
             
-            NSArray* equipParamArrayfirst = [NSArray arrayWithObjects:@"key_id",
-                                             [(EQRClassCatalog_EquipTitleItem_Join*)obj equipTitleItem_foreignKey], nil];
-            NSArray* equipParamArraySecond = [NSArray arrayWithObject:equipParamArrayfirst];
             
-            EQRWebData* webDataNew = [EQRWebData sharedInstance];
             
-            [webDataNew queryWithLink:@"EQGetEquipmentTitles.php" parameters:equipParamArraySecond class:@"EQREquipItem"
-                        completion:^(NSMutableArray* muteArrayAlt){
+            //do something with the returned array...
+            [muteArrayFirst enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
-                //do something with the returned array...
-                if ([muteArrayAlt count] > 0){
-                    
-                    [tempEquipMuteArray addObject:[muteArrayAlt objectAtIndex:0]];
-                }
+                NSArray* equipParamArrayfirst = [NSArray arrayWithObjects:@"key_id",
+                                                 [(EQRClassCatalog_EquipTitleItem_Join*)obj equipTitleItem_foreignKey], nil];
+                NSArray* equipParamArraySecond = [NSArray arrayWithObject:equipParamArrayfirst];
+                
+                EQRWebData* webDataNew = [EQRWebData sharedInstance];
+                
+                [webDataNew queryWithLink:@"EQGetEquipmentTitles.php" parameters:equipParamArraySecond class:@"EQREquipItem"
+                               completion:^(NSMutableArray* muteArrayAlt){
+                                   
+                                   //do something with the returned array...
+                                   if ([muteArrayAlt count] > 0){
+                                       
+                                       [tempEquipMuteArray addObject:[muteArrayAlt objectAtIndex:0]];
+                                   }
+                               }];
             }];
         }];
         
-        //... and save to ivar
-        self.equipTitleArray = [NSArray arrayWithArray:tempEquipMuteArray];
+    } else{
         
-        //2. Go through this sinlge array and build a nested array to accommodate sections based on category
-        
-        if (!self.equipTitleCategoriesList){
+        //get the ENTIRE list of equiopment titles...
+        [webData queryWithLink:@"EQGetEquipmentTitlesAll.php" parameters:nil class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
             
-            self.equipTitleCategoriesList = [NSMutableArray arrayWithCapacity:1];
-        }
-        
-        //A. first test if array of categories is valid
-        if ([self.equipTitleCategoriesList count] < 1){
-            
-            NSMutableSet* tempSet = [NSMutableSet set];
-            
-            //create a list of unique categories names by looping through the array of equipTitles
-            for (EQREquipItem* obj in self.equipTitleArray){
+            //do something with the returned array...
+            [muteArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 
-                if ([tempSet containsObject:obj.category] == NO){
-                    
-                    [tempSet addObject:obj.category];
-                    [self.equipTitleCategoriesList addObject:[NSString stringWithString:obj.category]];
-                }
-            }
-            
-            [tempSet removeAllObjects];
-            tempSet = nil;
-        }
-        
-        //sort the equipCatagoriesList
-        NSSortDescriptor* sortDescAlpha = [NSSortDescriptor sortDescriptorWithKey:nil ascending:YES];
-        NSArray* sortArray = [NSArray arrayWithObject:sortDescAlpha];
-        NSArray* tempSortArrayCat = [self.equipTitleCategoriesList sortedArrayUsingDescriptors:sortArray];
-        self.equipTitleCategoriesList = [NSMutableArray arrayWithArray:tempSortArrayCat];
-        
-        //B.1 empty out the current ivar of arrayWithSections
-        //create it if it doesn't exist yet
-        if (!self.equipTitleArrayWithSections){
-            
-            self.equipTitleArrayWithSections = [NSMutableArray arrayWithCapacity:1];
-            
-        }else{
-            
-            [self.equipTitleArrayWithSections removeAllObjects];
-        }
-        
-        //B. with a valid list of categories....
-        //create a new array by populating each nested array with equiptitle that match each category
-        for (NSString* categoryItem in self.equipTitleCategoriesList){
-            
-            NSMutableArray* subNestArray = [NSMutableArray arrayWithCapacity:1];
-            
-            for (EQREquipItem* equipItem in self.equipTitleArray){
+                NSArray* equipParamArrayfirst = [NSArray arrayWithObjects:@"key_id",
+                                                 [(EQREquipItem*)obj key_id], nil];
+                NSArray* equipParamArraySecond = [NSArray arrayWithObject:equipParamArrayfirst];
                 
-                if ([equipItem.category isEqualToString:categoryItem]){
-                    
-                    [subNestArray addObject: equipItem];
-                }
-            }
-            
-            //add subNested array to the master array
-            [self.equipTitleArrayWithSections addObject:subNestArray];
-            
-        }
-        
-        //we now have a master cateogry array with subnested equipTitle arrays
-        
-        //sort the subnested arrays
-        NSMutableArray* tempSortedArrayWithSections = [NSMutableArray arrayWithCapacity:1];
-        for (NSArray* obj in self.equipTitleArrayWithSections)  {
-            
-            NSArray* tempSubNestArray = [obj sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
+                EQRWebData* webDataNew = [EQRWebData sharedInstance];
                 
-                NSString* string1 = [(EQREquipItem*)obj1 name];
-                NSString* string2 = [(EQREquipItem*)obj2 name];
-                
-                return [string1 compare:string2];
+                [webDataNew queryWithLink:@"EQGetEquipmentTitles.php" parameters:equipParamArraySecond class:@"EQREquipItem"
+                               completion:^(NSMutableArray* muteArrayAlt){
+                                   
+                                   //do something with the returned array...
+                                   if ([muteArrayAlt count] > 0){
+                                       
+                                       [tempEquipMuteArray addObject:[muteArrayAlt objectAtIndex:0]];
+                                   }
+                               }];
             }];
-            
-            [tempSortedArrayWithSections addObject:tempSubNestArray];
-        };
-        self.equipTitleArrayWithSections = tempSortedArrayWithSections;
+        }];
+    }
+    
+    
+    
+    //... and save to ivar
+    self.equipTitleArray = [NSArray arrayWithArray:tempEquipMuteArray];
+    
+    //2. Go through this sinlge array and build a nested array to accommodate sections based on category
+    
+    if (!self.equipTitleCategoriesList){
         
-        //is this necessary_____???
-        [self.equipCollectionView reloadData];
-    }];
+        self.equipTitleCategoriesList = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    //A. first test if array of categories is valid
+    if ([self.equipTitleCategoriesList count] < 1){
+        
+        NSMutableSet* tempSet = [NSMutableSet set];
+        
+        //create a list of unique categories names by looping through the array of equipTitles
+        for (EQREquipItem* obj in self.equipTitleArray){
+            
+            if ([tempSet containsObject:obj.category] == NO){
+                
+                [tempSet addObject:obj.category];
+                [self.equipTitleCategoriesList addObject:[NSString stringWithString:obj.category]];
+            }
+        }
+        
+        [tempSet removeAllObjects];
+        tempSet = nil;
+    }
+    
+    //sort the equipCatagoriesList
+    NSSortDescriptor* sortDescAlpha = [NSSortDescriptor sortDescriptorWithKey:nil ascending:YES];
+    NSArray* sortArray = [NSArray arrayWithObject:sortDescAlpha];
+    NSArray* tempSortArrayCat = [self.equipTitleCategoriesList sortedArrayUsingDescriptors:sortArray];
+    self.equipTitleCategoriesList = [NSMutableArray arrayWithArray:tempSortArrayCat];
+    
+    //B.1 empty out the current ivar of arrayWithSections
+    //create it if it doesn't exist yet
+    if (!self.equipTitleArrayWithSections){
+        
+        self.equipTitleArrayWithSections = [NSMutableArray arrayWithCapacity:1];
+        
+    }else{
+        
+        [self.equipTitleArrayWithSections removeAllObjects];
+    }
+    
+    //B. with a valid list of categories....
+    //create a new array by populating each nested array with equiptitle that match each category
+    for (NSString* categoryItem in self.equipTitleCategoriesList){
+        
+        NSMutableArray* subNestArray = [NSMutableArray arrayWithCapacity:1];
+        
+        for (EQREquipItem* equipItem in self.equipTitleArray){
+            
+            if ([equipItem.category isEqualToString:categoryItem]){
+                
+                [subNestArray addObject: equipItem];
+            }
+        }
+        
+        //add subNested array to the master array
+        [self.equipTitleArrayWithSections addObject:subNestArray];
+        
+    }
+    
+    //we now have a master cateogry array with subnested equipTitle arrays
+    
+    //sort the subnested arrays
+    NSMutableArray* tempSortedArrayWithSections = [NSMutableArray arrayWithCapacity:1];
+    for (NSArray* obj in self.equipTitleArrayWithSections)  {
+        
+        NSArray* tempSubNestArray = [obj sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
+            
+            NSString* string1 = [(EQREquipItem*)obj1 name];
+            NSString* string2 = [(EQREquipItem*)obj2 name];
+            
+            return [string1 compare:string2];
+        }];
+        
+        [tempSortedArrayWithSections addObject:tempSubNestArray];
+    };
+    self.equipTitleArrayWithSections = tempSortedArrayWithSections;
+    
+    //is this necessary_____???
+    [self.equipCollectionView reloadData];
 }
 
 
@@ -196,7 +230,11 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
     
     //send note to reset eveything back to 0
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
+    
+    //reset eveything back to 0 (which in turn sends an nsnotification)
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    [requestManager dismissRequest];
     
 }
 

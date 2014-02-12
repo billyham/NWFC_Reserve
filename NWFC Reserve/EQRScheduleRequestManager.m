@@ -31,6 +31,7 @@
     
     EQRScheduleRequestItem* requestItem = [[EQRScheduleRequestItem alloc] init];
     
+    //assign to ivar
     self.request = requestItem;
     
     //set timestamp
@@ -54,6 +55,14 @@
 
 
 -(void)dismissRequest{
+    
+    //set request item's properties to nil
+//    if(self.request){
+//        
+//        self.request.classSection_foreignKey = nil;
+//        self.request.classTitle_foreignKey = nil;
+//        
+//    }
     
     //set request item to nil
     self.request = nil;

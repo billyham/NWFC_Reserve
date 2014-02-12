@@ -26,9 +26,11 @@
 @property (strong, nonatomic) NSArray* rentorTypeArray;
 @property (strong, nonatomic) EQRClassItem* thisClassItem;
 @property (strong, nonatomic) EQRClassRegistrationItem* thisClassRegistration;
+@property (strong, nonatomic) NSString* chosenRentorType;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* rentorWidthContraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* rentorLeadingConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* nameListLeadingConstraint;
 
 @property BOOL hideNameListFlag;
 @property BOOL hideClassListFlag;
@@ -74,6 +76,7 @@
     //expand size of rentor type list
 //    self.rentorWidthContraint.constant = 230;
     self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
+    self.nameListLeadingConstraint.constant = 1 - EQRRentorTypeLeadingSpace;
     
     //animate change
     [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
@@ -93,6 +96,13 @@
     //deselect type
     [self.rentorTypeListTable reloadData];
     
+    //deselect chosenType
+    self.chosenRentorType = @"UNKNOWN";
+    
+    //delesect class item and registration
+    self.thisClassItem = nil;
+    self.thisClassRegistration = nil;
+    
     //set flags
     self.hideNameListFlag = YES;
     self.hideClassListFlag = YES;
@@ -106,6 +116,7 @@
     //expand size of rentor type list
 //    self.rentorWidthContraint.constant = 230;
     self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
+    self.nameListLeadingConstraint.constant = 1 - EQRRentorTypeLeadingSpace;
     
     //animate change
     [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
@@ -362,6 +373,8 @@
         requestManager.request.contact_foreignKey = requestManager.request.contactNameItem.key_id;
         requestManager.request.classSection_foreignKey = self.thisClassItem.key_id;
         requestManager.request.classTitle_foreignKey = self.thisClassItem.catalog_foreign_key;
+        requestManager.request.contact_name = requestManager.request.contactNameItem.first_and_last;
+        requestManager.request.renter_type = self.chosenRentorType;
         
         
         //perform segue to show date picker
@@ -379,9 +392,13 @@
                 
             case (0):{ //student (adult)
                 
+                //set rentorType for request object
+                self.chosenRentorType = @"student";
+                
                 //contact size of rentor type list
 //                self.rentorWidthContraint.constant = 120;
                 self.rentorLeadingConstraint.constant = 0.0;
+                self.nameListLeadingConstraint.constant = 2.0;
                 
                 //animate change
                 [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
@@ -415,8 +432,12 @@
                 
             } case (1):{ //faculty
                 
+                //set rentorType for request object
+                self.chosenRentorType = @"faculty";
+                
                 //contact size of rentor type list
                 self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
+                self.nameListLeadingConstraint.constant = 1 - EQRRentorTypeLeadingSpace;
                 
                 //animate change
                 [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
@@ -459,8 +480,12 @@
                 
             }case (2):{ //staff
                 
+                //set rentorType for request object
+                self.chosenRentorType = @"staff";
+                
                 //contact size of rentor type list
                 self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
+                self.nameListLeadingConstraint.constant = 1 - EQRRentorTypeLeadingSpace;
                 
                 //animate change
                 [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
@@ -502,8 +527,12 @@
                 
             }case (3):{ //public
                 
+                //set rentorType for request object
+                self.chosenRentorType = @"public";
+                
                 //contact size of rentor type list
                 self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
+                self.nameListLeadingConstraint.constant = 1 - EQRRentorTypeLeadingSpace;
                 
                 //animate change
                 [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
@@ -522,8 +551,12 @@
                 
             }case (4):{ //youth camp
                 
+                //set rentorType for request object
+                self.chosenRentorType = @"youth";
+                
                 //contact size of rentor type list
                 self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
+                self.nameListLeadingConstraint.constant = 1 - EQRRentorTypeLeadingSpace;
                 
                 //animate change
                 [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{

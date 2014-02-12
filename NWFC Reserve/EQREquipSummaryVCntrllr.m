@@ -152,7 +152,11 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
     
     //send note to reset eveything back to 0
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
+    
+    //reset eveything back to 0 (which in turn sends an nsnotification)
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    [requestManager dismissRequest];
     
 }
 
@@ -196,9 +200,18 @@
     //format the time
     NSDateFormatter* dateFormatForTime = [[NSDateFormatter alloc] init];
     [dateFormatForTime setLocale:usLocale];
-    [dateFormatForTime setDateFormat:@"HH:mm:ss"];
-    NSString* timeBeginString = [dateFormatForTime stringFromDate:request.request_date_begin];
-    NSString* timeEndString = [dateFormatForTime stringFromDate:request.request_date_end];
+    [dateFormatForTime setDateFormat:@"HH:mm"];
+    NSString* timeBeginStringPartOne = [dateFormatForTime stringFromDate:request.request_date_begin];
+    NSString* timeEndStringPartOne = [dateFormatForTime stringFromDate:request.request_date_end];
+    NSString* timeBeginString = [NSString stringWithFormat:@"%@:00", timeBeginStringPartOne];
+    NSString* timeEndString = [NSString stringWithFormat:@"%@:00", timeEndStringPartOne];
+    
+    //time of request
+    NSDate* timeRequest = [NSDate date];
+    NSDateFormatter* timeStampFormatter = [[NSDateFormatter alloc] init];
+    [timeStampFormatter setLocale:usLocale];
+    [timeStampFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString* timeRequestString = [timeStampFormatter stringFromDate:timeRequest];
     
     
     NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", request.key_id,nil];
@@ -210,6 +223,9 @@
     NSArray* seventhArray = [NSArray arrayWithObjects:@"request_time_begin", timeBeginString, nil];
     NSArray* eighthArray = [NSArray arrayWithObjects:@"request_time_end", timeEndString, nil];
     NSArray* ninthArray =[NSArray arrayWithObjects:@"contact_name", request.contact_name, nil];
+    NSArray* tenthArray = [NSArray arrayWithObjects:@"renter_type", request.renter_type, nil];
+    NSArray* eleventhArray = [NSArray arrayWithObjects:@"time_of_request", timeRequestString, nil];
+    
     NSArray* bigArray = [NSArray arrayWithObjects:
                          firstArray,
                          secondArray,
@@ -220,6 +236,8 @@
                          seventhArray,
                          eighthArray,
                          ninthArray,
+                         tenthArray,
+                         eleventhArray,
                          nil];
     
     EQRWebData* webData = [EQRWebData sharedInstance];
@@ -250,8 +268,8 @@
             //go back to first page in nav
             [self.navigationController popToRootViewControllerAnimated:YES];
             
-            //send note to reset eveything back to 0
-            [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
+            //reset eveything back to 0 (which in turn sends an nsnotification)
+            [requestManager dismissRequest];
         }
     }];
 }

@@ -164,6 +164,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="classListTable" destination="Wwo-iZ-sDI" id="UCO-xn-g2y"/>
+                        <outlet property="nameListLeadingConstraint" destination="kEr-Zh-ARq" id="Gos-FC-4DE"/>
                         <outlet property="nameListTable" destination="2lJ-9i-ODA" id="GEy-QH-VFY"/>
                         <outlet property="rentorLeadingConstraint" destination="nKa-2R-k9I" id="IdN-wY-sSp"/>
                         <outlet property="rentorTypeListTable" destination="2it-XM-d52" id="p0v-d4-0CN"/>
