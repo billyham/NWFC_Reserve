@@ -246,6 +246,25 @@
     NSLog(@"this is the returnID: %@", returnID);
     
     
+    //input array of scheduleTracking_equipUniqueItem_joins
+    for (EQRScheduleTracking_EquipmentUnique_Join* join in requestManager.request.arrayOfEquipmentJoins){
+        
+        NSArray* firstArrayForJoin = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", join.scheduleTracking_foreignKey, nil];
+        NSArray* secondArrayForJoin = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", join.equipUniqueItem_foreignKey, nil];
+        NSArray* thirdArrayForJoin = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", join.equipTitleItem_foreignKey, nil];
+        NSArray* bigArrayForJoin = [NSArray arrayWithObjects:
+                                    firstArrayForJoin,
+                                    secondArrayForJoin,
+                                    thirdArrayForJoin,
+                                    nil];
+        
+        NSString* returnID2 = [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:bigArrayForJoin];
+        NSLog(@"this is the schedule_equip_join return key_id: %@", returnID2);
+    }
+    
+    
+    
+    
     //_______PRINTING_________!
     UIPrintInteractionController* printIntCont = [UIPrintInteractionController sharedPrintController];
     UIViewPrintFormatter* viewPrintFormatter = [self.summaryTextView viewPrintFormatter];
