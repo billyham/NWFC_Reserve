@@ -12,6 +12,7 @@
 #import "EQRClassItem.h"
 #import "EQRClassRegistrationItem.h"
 #import "EQRClassCatalog_EquipTitleItem_Join.h"
+#import "EQREquipUniqueItem.h"
 
 @interface EQRWebData ()
 
@@ -305,6 +306,13 @@
     }
     
     
+    //Properties for EquipUniqueItem
+    if ([elementName isEqualToString:@"equipTitleItem_foreignKey"]){
+        
+        self.currentProperty = elementName;
+    }
+    
+    
     //Properties for Contact Item
     if ([elementName isEqualToString:@"first_and_last"]){
         
@@ -427,6 +435,18 @@
         if ([self.currentThing respondsToSelector:@selector(category)]){
             
             [(EQREquipItem*)self.currentThing setCategory: self.currentValue];
+            
+            self.currentValue = nil;
+        }
+    }
+    
+    
+    //Properties for EquipUniqueItem
+    if ([prop isEqualToString:@"equipTitleItem_foreignKey"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(equipTitleItem_foreignKey)]){
+            
+            [(EQREquipUniqueItem*)self.currentThing setEquipTitleItem_foreignKey: self.currentValue];
             
             self.currentValue = nil;
         }

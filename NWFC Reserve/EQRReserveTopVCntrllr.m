@@ -17,6 +17,7 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRScheduleRequestItem.h"
 #import "EQRGlobals.h"
+#import "EQREquipUniqueItem.h"
 
 
 @interface EQRReserveTopVCntrllr ()
@@ -85,6 +86,13 @@
         [self.view layoutIfNeeded];
     }];
 
+    //load list of equipment and total count of related unqiue items
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    [webData queryWithLink:@"EQGetEquipTitlesWithCountOfEquipUniques.php" parameters:nil class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
+        
+        NSLog(@"count of EquipUniqueItems: %lu", (unsigned long)[muteArray count]);
+        
+    }];
     
 }
 

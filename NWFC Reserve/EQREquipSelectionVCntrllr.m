@@ -76,7 +76,7 @@
     NSMutableArray* tempEquipMuteArray = [NSMutableArray arrayWithCapacity:1];
     
     EQRWebData* webData = [EQRWebData sharedInstance];
-
+    
     if ([requestManager.request.renter_type isEqualToString:@"student"]){
         
         //get a list of allocated gear...
@@ -93,8 +93,7 @@
                 
                 EQRWebData* webDataNew = [EQRWebData sharedInstance];
                 
-                [webDataNew queryWithLink:@"EQGetEquipmentTitles.php" parameters:equipParamArraySecond class:@"EQREquipItem"
-                               completion:^(NSMutableArray* muteArrayAlt){
+                [webDataNew queryWithLink:@"EQGetEquipmentTitles.php" parameters:equipParamArraySecond class:@"EQREquipItem" completion:^(NSMutableArray* muteArrayAlt){
                                    
                                    //do something with the returned array...
                                    if ([muteArrayAlt count] > 0){
