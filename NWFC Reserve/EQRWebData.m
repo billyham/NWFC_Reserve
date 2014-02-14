@@ -272,6 +272,8 @@
             
             self.muteArray = [[NSMutableArray alloc] initWithCapacity:1];
         }
+        
+        return;
     }
     
     //this equip object
@@ -279,6 +281,8 @@
 
         //a variable property
         self.currentThing = [[NSClassFromString(self.variableClassString)  alloc] init];
+        
+        return;
     }
     
     
@@ -287,22 +291,26 @@
     if ([elementName isEqualToString:@"key_id"]){
         
         self.currentProperty = elementName;
+        return;
     }
     
     //Properties for EquipTitle Item
     if ([elementName isEqualToString:@"name"]){
         
         self.currentProperty = elementName;
+        return;
     }
     
     if ([elementName isEqualToString:@"short_name"]){
         
         self.currentProperty = elementName;
+        return;
     }
     
     if ([elementName isEqualToString:@"category"]){
         
         self.currentProperty = elementName;
+        return;
     }
     
     
@@ -310,6 +318,7 @@
     if ([elementName isEqualToString:@"equipTitleItem_foreignKey"]){
         
         self.currentProperty = elementName;
+        return;
     }
     
     
@@ -317,16 +326,19 @@
     if ([elementName isEqualToString:@"first_and_last"]){
         
         self.currentProperty = elementName;
+        return;
     }
     
     if ([elementName isEqualToString:@"phone"]){
         
         self.currentProperty = elementName;
+        return;
     }
     
     if ([elementName isEqualToString:@"email"]){
         
         self.currentProperty = elementName;
+        return;
     }
     
     
@@ -334,28 +346,33 @@
     if ([elementName isEqualToString:@"section_name"]){
         
         self.currentProperty = elementName;
+        return;
     }
     
     if ([elementName isEqualToString:@"term"]){
 
         self.currentProperty = elementName;
+        return;
     }
     
     if ([elementName isEqualToString:@"catalog_foreign_key"]){
 
         self.currentProperty = elementName;
+        return;
     }
     
     //Properties for Class Registration Item
     if ([elementName isEqualToString:@"contact_foreignKey"]){
         
         self.currentProperty = elementName;
+        return;
     }
     
     //Properties for ClassCatalog_EquipTitleItem_Join Item
     if ([elementName isEqualToString:@"EquipTitleItem_foreignKey"]){
         
         self.currentProperty = elementName;
+        return;
     }
     
     
@@ -418,6 +435,7 @@
             
             self.currentValue = nil;
         }
+        return;
     }
     
     if ([prop isEqualToString:@"short_name"]){
@@ -428,6 +446,7 @@
             
             self.currentValue = nil;
         }
+        return;
     }
     
     if ([prop isEqualToString:@"category"]){
@@ -438,6 +457,7 @@
             
             self.currentValue = nil;
         }
+        return;
     }
     
     
@@ -450,6 +470,7 @@
             
             self.currentValue = nil;
         }
+        return;
     }
     
     
@@ -462,6 +483,7 @@
             
             self.currentValue = nil;
         }
+        return;
     }
     
     if ([prop isEqualToString:@"phone"]){
@@ -472,6 +494,7 @@
             
             self.currentValue = nil;
         }
+        return;
     }
     
     if ([prop isEqualToString:@"email"]){
@@ -482,6 +505,7 @@
             
             self.currentValue = nil;
         }
+        return;
     }
     
     
@@ -494,6 +518,7 @@
             
             self.currentValue = nil;
         }
+        return;
     }
     
     if ([prop isEqualToString:@"key_id"]){
@@ -504,6 +529,7 @@
             
             self.currentValue = nil;
         }
+        return;
     }
     
     if ([prop isEqualToString:@"term"]){
@@ -514,6 +540,7 @@
             
             self.currentValue = nil;
         }
+        return;
     }
     
     if ([prop isEqualToString:@"catalog_foreign_key"]){
@@ -524,6 +551,7 @@
             
             self.currentValue = nil;
         }
+        return;
     }
     
     //Properties for Class Registration
@@ -535,6 +563,7 @@
             
             self.currentValue = nil;
         }
+        return;
     }
     
     //Properties for ClassCatalog_EquipTitleItem_Join Item
@@ -546,6 +575,7 @@
             
             self.currentValue = nil;
         }
+        return;
     }
     
     //_________************ END

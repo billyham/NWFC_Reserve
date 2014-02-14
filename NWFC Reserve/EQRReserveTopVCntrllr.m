@@ -87,10 +87,47 @@
     }];
 
     //load list of equipment and total count of related unqiue items
+    //_______****** note that this is returing EquipUniqueItem objects but then discarding them. maybe keep more info...
+    
+    //________******** saving array to the requestManager. Wait, what? should this method be in the request Manager class????
     EQRWebData* webData = [EQRWebData sharedInstance];
     [webData queryWithLink:@"EQGetEquipTitlesWithCountOfEquipUniques.php" parameters:nil class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
+                
+        //organize into a nested array
+        NSMutableArray* topArray = [NSMutableArray arrayWithCapacity:1];
         
-        NSLog(@"count of EquipUniqueItems: %lu", (unsigned long)[muteArray count]);
+        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+        
+        for (EQREquipUniqueItem* obj in muteArray){
+            
+            BOOL foundObjectFlag = NO;
+            
+            NSString* thisTitleKey = obj.equipTitleItem_foreignKey;
+            
+            for (NSMutableArray* objArray in topArray){
+                
+                if ([[objArray objectAtIndex:0] isEqualToString:thisTitleKey]){
+                    
+                    //replace the existing NSNumber at index 1 by adding one
+                    int newInt =  [(NSNumber*)[objArray objectAtIndex:1] intValue] + 1;
+                    NSNumber* newNumber = [NSNumber numberWithInt:newInt];
+                    [objArray replaceObjectAtIndex:1 withObject:newNumber];
+                    
+                    foundObjectFlag = YES;
+                }
+            }
+            
+            if (!foundObjectFlag){
+                
+                //didn't find a match, create a new entry for this title item
+                NSMutableArray* brandNewArray = [NSMutableArray arrayWithObjects:obj.equipTitleItem_foreignKey, [NSNumber numberWithInt:1], nil];
+                
+                [topArray addObject:brandNewArray];
+            }
+        }
+        
+        //assign newly built array to the requestManager (why again the requestManager???
+        requestManager.arrayOfEquipTitlesWithCountOfUniqueItems = topArray;
         
     }];
     

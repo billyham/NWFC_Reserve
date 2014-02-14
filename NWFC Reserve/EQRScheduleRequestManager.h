@@ -14,6 +14,8 @@
 
 @property (strong, nonatomic) EQRScheduleRequestItem* request;
 
+@property (strong, nonatomic) NSMutableArray* arrayOfEquipTitlesWithCountOfUniqueItems;
+
 +(EQRScheduleRequestManager*)sharedInstance;
 -(void)createNewRequest;
 -(void)dismissRequest;

@@ -19,6 +19,7 @@
 @property (strong, nonatomic) EQREquipContentViewVCntrllr* myEquipVCntrllr;
 @property (strong, nonatomic) UIButton* myMinusButton;
 @property (strong, nonatomic) UIButton* myPlusButton;
+@property BOOL quantityLimitFlag;
 
 
 @end
@@ -45,6 +46,7 @@
     //initial ivar values
     self.itemQuantity = 0;
     self.itemQuantityString = @"0";
+    self.quantityLimitFlag = NO;
     
     EQREquipContentViewVCntrllr *controller = [[EQREquipContentViewVCntrllr alloc] initWithNibName:@"EQREquipContentViewVCntrllr" bundle:nil];
     
@@ -204,6 +206,24 @@
         //set color after delay
         [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0] afterDelay:EQRHighlightTappingTime];
     }
+    
+    //______******  test if we have hit the total count of Unique items for this title item
+    //gray out PLUS sign if so
+    for (NSMutableArray* quantityArray in requestManager.arrayOfEquipTitlesWithCountOfUniqueItems){
+        
+        if ([self.thisEquipTitleItem.key_id isEqualToString:[quantityArray objectAtIndex:0]]){
+            //found a matching titleItem key
+            
+            if (self.itemQuantity >= [[quantityArray objectAtIndex:1] intValue]){
+                
+                self.myPlusButton.hidden = YES;
+                
+                //raise the flag
+                self.quantityLimitFlag = YES;
+            }
+        }
+    }
+    
 }
 
 -(IBAction)minusHit:(id)sender{
@@ -220,6 +240,15 @@
         
         //set color after delay
         [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0] afterDelay:EQRHighlightTappingTime];
+        
+        //____***** reactivate plus button if one is in effect
+        if (self.quantityLimitFlag){
+            
+            self.myPlusButton.hidden = NO;
+            
+            //lower the flag
+            self.quantityLimitFlag = NO;
+        }
         
     }
     
@@ -248,6 +277,7 @@
     self.myEquipVCntrllr.quantityTextField.text = self.itemQuantityString;
     
     NSLog(@"minus hit test in EquipoItemCell with total: %u", self.itemQuantity);
+    
 }
 
 

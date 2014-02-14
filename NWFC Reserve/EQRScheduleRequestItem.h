@@ -44,6 +44,5 @@
 @property (strong, nonatomic) EQRClassRegistrationItem* classRegistrationItem;
 
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipmentJoins;
-@property (strong, nonatomic) NSMutableArray* arrayOfEquipTitlesWithCountOfUniqueItems;
 
 @end
