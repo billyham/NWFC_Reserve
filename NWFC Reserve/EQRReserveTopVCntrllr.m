@@ -46,10 +46,6 @@
 {
     [super viewDidLoad];
     
-    //set flags
-    self.hideClassListFlag = YES;
-    self.hideNameListFlag = YES;
-    
     //register for notification
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     
@@ -74,29 +70,51 @@
                                 nil];
     }
     
-    //expand size of rentor type list
-//    self.rentorWidthContraint.constant = 230;
-    self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
-    self.nameListLeadingConstraint.constant = 1 - EQRRentorTypeLeadingSpace;
+    //peform startNewDisplay (to avoid dupicating code
+    [self startNewDisplay:nil];
     
-    //animate change
-    [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
-        
-        
-        [self.view layoutIfNeeded];
-    }];
+}
 
+
+#pragma mark - return to start screen
+
+-(void)startNewDisplay:(NSNotification*)note{
+    
+    //deselect type
+    [self.rentorTypeListTable reloadData];
+    
+    //deselect chosenType
+    self.chosenRentorType = @"UNKNOWN";
+    
+    //delesect class item and registration
+    self.thisClassItem = nil;
+    self.thisClassRegistration = nil;
+    
+    //set flags
+    self.hideNameListFlag = YES;
+    self.hideClassListFlag = YES;
+    
+    //delete info in collection views
+    [self.classListTable reloadData];
+    [self.nameListTable reloadData];
+//    [self.classListTable deleteSections:[NSIndexSet indexSetWithIndex:0]];
+//    [self.nameListTable deleteSections:[NSIndexSet indexSetWithIndex:0]];
+    
+    
     //load list of equipment and total count of related unqiue items
     //_______****** note that this is returing EquipUniqueItem objects but then discarding them. maybe keep more info...
     
-    //________******** saving array to the requestManager. Wait, what? should this method be in the request Manager class????
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
     EQRWebData* webData = [EQRWebData sharedInstance];
     [webData queryWithLink:@"EQGetEquipTitlesWithCountOfEquipUniques.php" parameters:nil class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
-                
+        
+        //pass array of all unique items to ivar
+        requestManager.arrayOfEquipUniqueItems = [NSMutableArray arrayWithArray:muteArray];
+        
+        
         //organize into a nested array
         NSMutableArray* topArray = [NSMutableArray arrayWithCapacity:1];
-        
-        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
         
         for (EQREquipUniqueItem* obj in muteArray){
             
@@ -131,41 +149,16 @@
         
     }];
     
-}
-
-
-#pragma mark - return to start screen
-
--(void)startNewDisplay:(NSNotification*)note{
-    
-    //deselect type
-    [self.rentorTypeListTable reloadData];
-    
-    //deselect chosenType
-    self.chosenRentorType = @"UNKNOWN";
-    
-    //delesect class item and registration
-    self.thisClassItem = nil;
-    self.thisClassRegistration = nil;
-    
-    //set flags
-    self.hideNameListFlag = YES;
-    self.hideClassListFlag = YES;
-    
-    //delete info in collection views
-    [self.classListTable reloadData];
-    [self.nameListTable reloadData];
-//    [self.classListTable deleteSections:[NSIndexSet indexSetWithIndex:0]];
-//    [self.nameListTable deleteSections:[NSIndexSet indexSetWithIndex:0]];
+    NSLog(@"checking in on array of unique items: %u", [requestManager.arrayOfEquipUniqueItems count]);
     
     //expand size of rentor type list
-//    self.rentorWidthContraint.constant = 230;
+    //    self.rentorWidthContraint.constant = 230;
     self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
     self.nameListLeadingConstraint.constant = 1 - EQRRentorTypeLeadingSpace;
     
     //animate change
     [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
-       
+        
         [self.view layoutIfNeeded];
     }];
     

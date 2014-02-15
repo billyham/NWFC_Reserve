@@ -321,6 +321,17 @@
         return;
     }
     
+    if ([elementName isEqualToString:@"distinquishing_id"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"status_level"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
     
     //Properties for Contact Item
     if ([elementName isEqualToString:@"first_and_last"]){
@@ -467,6 +478,28 @@
         if ([self.currentThing respondsToSelector:@selector(equipTitleItem_foreignKey)]){
             
             [(EQREquipUniqueItem*)self.currentThing setEquipTitleItem_foreignKey: self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"status_level"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(status_level)]){
+            
+            [(EQREquipUniqueItem*)self.currentThing setStatus_level: self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"distinquishing_id"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(distinquishing_id)]){
+            
+            [(EQREquipUniqueItem*)self.currentThing setDistinquishing_id: self.currentValue];
             
             self.currentValue = nil;
         }

@@ -251,6 +251,68 @@
 }
 
 
+#pragma mark - allocation of gear items
+
+
+-(IBAction)receiveContinueAction:(id)sender{
+    
+    [self allocateGearList];
+
+}
+
+
+
+-(void)allocateGearList{
+    
+
+    //get a list of uniqueItems that fall within the rental dates.
+    //1. get scheduleTracking objects within the dates (sql script?)
+    //2. gather matching scheduleTracking_equip_joins (using scheduleTracking_foreignKey in schedule_equipUnique_joings)
+    //3. gather key_ids for equipUniqueItems (using equipUniqueItem_foreignKey in scheduleTracking_equipUnique_joins)
+    
+    //subtract out the quantity of uniqueItems available per titleItems
+    //compare with the quantitys requested, then pause and alert user if quantities are exceeded. Identified where excesses are.
+    //1. create a subnested array of titleItems with quantities (similar to the requestManager's ivar
+    //2. cycle through and add quantities from this request
+    //3. cycle through, comparing with titleItem key_ids in requestManager's ivar,
+    //4. on match, identify any item that has exceeded the quantity
+    //5. send that info to a pop up viewcontroller, instructing user to edit their equip list
+    
+    //otherwise...
+    //allocate gear by assigning with available uniqueItem key_ids
+    
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    
+    
+//    NSString* beginDate
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    NSArray* arrayWithBeginDate = [NSArray arrayWithObjects:@"request_date_begin", nil];
+    NSArray* arrayWithEndDate = [NSArray arrayWithObjects:@"request_daate_end", nil];
+    NSArray* arrayTopDate = [NSArray arrayWithObjects:arrayWithBeginDate, arrayWithEndDate, nil];
+    
+    [webData queryWithLink:@"EQGetScheduleItemsInDateRange.php" parameters:arrayTopDate class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        //returns just an array of key_ids
+        
+        NSLog(@"result from schedule request Date range: %@", muteArray);
+    }];
+    
+    
+    
+    //______********  This works only because of the delay...
+//    [self.navigationController performSelector:@selector(popViewControllerAnimated:) withObject:nil afterDelay:1.0];
+    
+    
+}
+
+
+
+
 #pragma mark - view collection data source protocol methods
 
 //Section Methods
