@@ -129,7 +129,7 @@
     //hide the button for now
     self.myMinusButton.hidden = YES;
 
-    //________********** retrieve info from scheduleRequestItem to populate quantity text field.
+    //________********** retrieve info from scheduleRequestManager to populate quantity text field.
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     NSArray* arrayOfScheduleEquipJoins = [requestManager retrieveArrayOfEquipJoins];
     

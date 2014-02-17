@@ -14,6 +14,7 @@
 #import "EQRScheduleRequestItem.h"
 #import "EQRClassCatalog_EquipTitleItem_Join.h"
 #import "EQRGlobals.h"
+#import "EQREquipUniqueItem.h"
 
 @interface EQREquipSelectionVCntrllr ()
 
@@ -95,7 +96,8 @@
                 
                 EQRWebData* webDataNew = [EQRWebData sharedInstance];
                 
-                [webDataNew queryWithLink:@"EQGetEquipmentTitles.php" parameters:equipParamArraySecond class:@"EQREquipItem" completion:^(NSMutableArray* muteArrayAlt){
+                [webDataNew queryWithLink:@"EQGetEquipmentTitles.php" parameters:equipParamArraySecond class:@"EQREquipItem"
+                               completion:^(NSMutableArray* muteArrayAlt){
                                    
                                    //do something with the returned array...
                                    if ([muteArrayAlt count] > 0){
@@ -218,6 +220,8 @@
     };
     self.equipTitleArrayWithSections = tempSortedArrayWithSections;
     
+    
+    
     //is this necessary_____???
     [self.equipCollectionView reloadData];
 }
@@ -267,7 +271,7 @@
 
     //get a list of uniqueItems that fall within the rental dates.
     //1. get scheduleTracking objects within the dates (sql script?)
-    //2. gather matching scheduleTracking_equip_joins (using scheduleTracking_foreignKey in schedule_equipUnique_joings)
+    //2. gather matching scheduleTracking_equip_joins (using scheduleTracking_foreignKey in schedule_equipUnique_joins)
     //3. gather key_ids for equipUniqueItems (using equipUniqueItem_foreignKey in scheduleTracking_equipUnique_joins)
     
     //subtract out the quantity of uniqueItems available per titleItems
@@ -283,24 +287,57 @@
     
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
+    //begin and end dates in sql format
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    
-    
-//    NSString* beginDate
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    NSString* dateBeginString = [dateFormatter stringFromDate:requestManager.request.request_date_begin];
+    NSString* dateEndString = [dateFormatter stringFromDate:requestManager.request.request_date_end];
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     
-    NSArray* arrayWithBeginDate = [NSArray arrayWithObjects:@"request_date_begin", nil];
-    NSArray* arrayWithEndDate = [NSArray arrayWithObjects:@"request_daate_end", nil];
+    NSArray* arrayWithBeginDate = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
+    NSArray* arrayWithEndDate = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
     NSArray* arrayTopDate = [NSArray arrayWithObjects:arrayWithBeginDate, arrayWithEndDate, nil];
+    
+    NSMutableArray* arrayOfScheduleTrackingKeyIDs = [NSMutableArray arrayWithCapacity:1];
+    NSMutableArray* arrayOfEquipUniqueItems = [NSMutableArray arrayWithCapacity:1];
     
     [webData queryWithLink:@"EQGetScheduleItemsInDateRange.php" parameters:arrayTopDate class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
         
-        //returns just an array of key_ids
-        
         NSLog(@"result from schedule request Date range: %@", muteArray);
+        
+        //populate array with key_ids
+        for (EQRScheduleRequestItem* objKey in muteArray){
+            
+            [arrayOfScheduleTrackingKeyIDs addObject:objKey];
+            
+            //cycle through and get equipUniqueItem key IDs
+            
+        }
     }];
+    
+    
+    //Use sql with inner join...
+    //  get compplete EquipUniqueItem objects With ScheduleTrackingKeys
+    
+    for (EQRScheduleTracking_EquipmentUnique_Join* objThingy in arrayOfScheduleTrackingKeyIDs){
+        
+        NSArray* arrayWithTrackingKey = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", objThingy.key_id, nil];
+        NSArray* topArrayWithTrackingKey = [NSArray arrayWithObject:arrayWithTrackingKey];
+        
+        [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys.php" parameters:topArrayWithTrackingKey class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray2) {
+            
+            for (EQREquipUniqueItem* objUniqueItem in muteArray2){
+                
+                NSLog(@"this is EquipUniqueItem key_id: %@  and titleItem key_id: %@ and name: %@",
+                      objUniqueItem.key_id, objUniqueItem.equipTitleItem_foreignKey, objUniqueItem.name);
+                
+                [arrayOfEquipUniqueItems addObject:objUniqueItem];
+            }
+            
+        }];
+    }
     
     
     

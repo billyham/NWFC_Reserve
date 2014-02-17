@@ -13,6 +13,7 @@
 #import "EQRClassRegistrationItem.h"
 #import "EQRClassCatalog_EquipTitleItem_Join.h"
 #import "EQREquipUniqueItem.h"
+#import "EQRScheduleTracking_EquipmentUnique_Join.h"
 
 @interface EQRWebData ()
 
@@ -388,7 +389,11 @@
     
     
     //Properties for ScheduleTracking_EquipUniqueItem_Join
-    
+    if ([elementName isEqualToString:@"equipUniqueItem_foreignKey"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
 }
 
 
@@ -605,6 +610,19 @@
         if ([self.currentThing respondsToSelector:@selector(equipTitleItem_foreignKey)]){
             
             [(EQRClassCatalog_EquipTitleItem_Join*)self.currentThing setEquipTitleItem_foreignKey:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    
+    //Properties for ScheduleTracking_EquipUniqueItem_Join
+    if ([prop isEqualToString:@"equipUniqueItem_foreignKey"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(equipUniqueItem_foreignKey)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setEquipUniqueItem_foreignKey:self.currentValue];
             
             self.currentValue = nil;
         }
