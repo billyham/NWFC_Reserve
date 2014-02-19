@@ -16,6 +16,7 @@
 
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipTitlesWithCountOfUniqueItems;
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItems;
+@property (strong, nonatomic) NSMutableArray* arrayOfEquipTitleItems;
 
 +(EQRScheduleRequestManager*)sharedInstance;
 -(void)createNewRequest;

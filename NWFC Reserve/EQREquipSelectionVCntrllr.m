@@ -110,31 +110,17 @@
         
     } else{
         
-        //get the ENTIRE list of equiopment titles...
+        //_____*****  this a repeat of what the ReserveTopVCntrllr does, maybe use that instead???  **_____
+        //get the ENTIRE list of equiopment titles... for staff and faculty
         [webData queryWithLink:@"EQGetEquipmentTitlesAll.php" parameters:nil class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
             
             //do something with the returned array...
-            [muteArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            for (EQREquipItem* equipItemThingy in muteArray){
                 
-                NSArray* equipParamArrayfirst = [NSArray arrayWithObjects:@"key_id",
-                                                 [(EQREquipItem*)obj key_id], nil];
-                NSArray* equipParamArraySecond = [NSArray arrayWithObject:equipParamArrayfirst];
-                
-                EQRWebData* webDataNew = [EQRWebData sharedInstance];
-                
-                [webDataNew queryWithLink:@"EQGetEquipmentTitles.php" parameters:equipParamArraySecond class:@"EQREquipItem"
-                               completion:^(NSMutableArray* muteArrayAlt){
-                                   
-                                   //do something with the returned array...
-                                   if ([muteArrayAlt count] > 0){
-                                       
-                                       [tempEquipMuteArray addObject:[muteArrayAlt objectAtIndex:0]];
-                                   }
-                               }];
-            }];
+                [tempEquipMuteArray addObject:equipItemThingy];
+            }
         }];
     }
-    
     
     
     //... and save to ivar
@@ -221,6 +207,10 @@
     self.equipTitleArrayWithSections = tempSortedArrayWithSections;
     
     
+    //_______********  try allocating the gear list here... *****______
+    [self allocateGearList];
+    
+    
     
     //is this necessary_____???
     [self.equipCollectionView reloadData];
@@ -260,7 +250,7 @@
 
 -(IBAction)receiveContinueAction:(id)sender{
     
-    [self allocateGearList];
+//    [self allocateGearList];
 
 }
 
@@ -279,11 +269,7 @@
     //1. create a subnested array of titleItems with quantities (similar to the requestManager's ivar
     //2. cycle through and add quantities from this request
     //3. cycle through, comparing with titleItem key_ids in requestManager's ivar,
-    //4. on match, identify any item that has exceeded the quantity
-    //5. send that info to a pop up viewcontroller, instructing user to edit their equip list
-    
-    //otherwise...
-    //allocate gear by assigning with available uniqueItem key_ids
+
     
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
@@ -335,9 +321,9 @@
                 
                 [arrayOfEquipUniqueItems addObject:objUniqueItem];
             }
-            
         }];
     }
+    
     
     
     
@@ -405,6 +391,9 @@
         
         [view removeFromSuperview];
     }
+    
+    //and ensure cell has user interaction enabled
+    [cell setUserInteractionEnabled:YES];
     
 //    cell.backgroundColor = [UIColor yellowColor];
 //    [cell setOpaque:YES];

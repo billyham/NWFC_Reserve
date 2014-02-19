@@ -94,7 +94,14 @@
     NSDate* datePlusThree = [self.pickUpDate dateByAddingTimeInterval:259200]; //25920 is three days
     
     //max return date
-    self.returnDatePicker.maximumDate = datePlusThree;
+    if (EQRDisableTimeLimitForRequest){
+        
+        self.returnDatePicker.maximumDate = nil;
+   
+    } else {
+        
+        self.returnDatePicker.maximumDate = datePlusThree;
+    }
     
     //min time for return date is the pick up date
     self.returnDatePicker.minimumDate = self.pickUpDate;

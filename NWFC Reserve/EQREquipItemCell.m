@@ -20,6 +20,7 @@
 @property (strong, nonatomic) UIButton* myMinusButton;
 @property (strong, nonatomic) UIButton* myPlusButton;
 @property BOOL quantityLimitFlag;
+@property BOOL unavailableDimFlag;
 
 
 @end
@@ -129,8 +130,29 @@
     //hide the button for now
     self.myMinusButton.hidden = YES;
 
-    //________********** retrieve info from scheduleRequestManager to populate quantity text field.
+    //summon the requestManager!!
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
+    //test if there exists any uniqueItems for this titleItem, gray out and make unavailable if not
+    for (NSArray* testArray in requestManager.arrayOfEquipTitlesWithCountOfUniqueItems){
+        
+        if ([[testArray objectAtIndex:0] isEqualToString:self.thisEquipTitleItem.key_id]){
+            
+            //found a matching equipTitleItem
+            if ([[testArray objectAtIndex:1] isEqualToNumber:[NSNumber numberWithInt:0]]){
+                
+                self.myEquipVCntrllr.titleLabel.textColor = [UIColor lightGrayColor];
+                
+                [self setUserInteractionEnabled:NO];
+                
+                //stop initializing
+                return;
+            }
+        }
+    }
+    
+    
+    //________********** retrieve info from scheduleRequestManager to populate quantity text field.
     NSArray* arrayOfScheduleEquipJoins = [requestManager retrieveArrayOfEquipJoins];
     
     //_______********** loop through array and find objects that match the equipTitle id???

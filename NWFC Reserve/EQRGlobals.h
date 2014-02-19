@@ -18,6 +18,8 @@ extern float EQRHighlightTappingTime;
 extern float EQRResizingCollectionViewTime;
 extern float EQRRentorTypeLeadingSpace;
 
+extern BOOL EQRDisableTimeLimitForRequest;
+
 @interface EQRGlobals : NSObject
 
 

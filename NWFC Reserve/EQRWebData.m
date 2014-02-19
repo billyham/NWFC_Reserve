@@ -686,6 +686,19 @@
 }
 
 
+//_________*********  i have no idea what this is or if it's doing anything...
+-(void)connection:(NSURLConnection *)connection didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+    if([challenge previousFailureCount] == 0) {
+        
+        NSURLCredential *newCredential =[NSURLCredential credentialWithUser:@"username" password:@"password" persistence:NSURLCredentialPersistenceForSession];
+        
+        [[challenge sender] useCredential:newCredential forAuthenticationChallenge:challenge];
+        
+    }
+    else {
+        NSLog(@"previous authentication failure");
+    }
+}
 
 
 

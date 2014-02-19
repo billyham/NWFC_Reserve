@@ -146,8 +146,72 @@
         
         //assign newly built array to the requestManager (why again the requestManager???
         requestManager.arrayOfEquipTitlesWithCountOfUniqueItems = topArray;
-        
     }];
+    
+    
+    
+    
+    //______********  A function to add in any items from the list of title equipment where no uniques existed???
+    
+    //loop through list of existing titleItems. subloop against all uniqueItems and add in where no match is found
+    
+    
+    //_______get the ENTIRE list of equipment titles
+    
+    //empty out the current ivar
+    [requestManager.arrayOfEquipTitleItems removeAllObjects];
+    
+    [requestManager.arrayOfEquipTitleItems removeAllObjects];
+    
+    NSMutableArray* weirdNewArray = [NSMutableArray arrayWithCapacity:1];
+    
+    [webData queryWithLink:@"EQGetEquipmentTitlesAll.php" parameters:nil class:@"EQREquipItem" completion:^(NSMutableArray *muteArray2) {
+        
+        //do something with the returned array...
+        //assign array of equipItems to requestManager ivar
+        
+        
+        for (EQREquipItem* meMeMe in muteArray2){
+            
+            [weirdNewArray addObject:meMeMe];
+        }
+    }];
+    
+    requestManager.arrayOfEquipTitleItems = weirdNewArray;
+    
+    NSLog(@"count of equipTitleItems array: %u", [requestManager.arrayOfEquipTitleItems count]);
+    
+    //compare the two arrays with title info...
+    NSMutableArray* additionalTitles = [NSMutableArray arrayWithCapacity:1];
+    
+    for (EQREquipItem* equipTitleItem in requestManager.arrayOfEquipTitleItems){
+        
+        BOOL flagToSkip = NO;
+        
+        for (NSArray* equipUniqueItemArray in requestManager.arrayOfEquipTitlesWithCountOfUniqueItems){
+            
+            if ([(NSString*)[equipUniqueItemArray objectAtIndex:0] isEqualToString:equipTitleItem.key_id]){
+                
+                flagToSkip = YES;
+                break;
+            }
+        }
+        
+        if (!flagToSkip){
+            
+            //add title item because it doesn't exist yet
+            NSArray* newArrayItem = [NSArray arrayWithObjects:equipTitleItem.key_id, [NSNumber numberWithInt:0], nil];
+            [additionalTitles addObject:newArrayItem];
+        }
+    }
+    
+    NSLog(@"count of new title items to add: %u", [additionalTitles count]);
+    
+    //append the requestManager array ivar with the new items
+    [requestManager.arrayOfEquipTitlesWithCountOfUniqueItems addObjectsFromArray:additionalTitles];
+    
+    
+    
     
     NSLog(@"checking in on array of unique items: %u", [requestManager.arrayOfEquipUniqueItems count]);
     
