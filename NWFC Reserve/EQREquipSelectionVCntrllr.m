@@ -59,6 +59,11 @@
     //________but is unnecessary, the plus and minus buttons will work with or without this disabled.
 //    self.equipCollectionView.allowsSelection = NO;
     
+    
+    
+    //_______********  try allocating the gear list here... *****______
+    NSLog(@"begin equipSelectorVCntrllr viewDidLaod");
+    [self allocateGearList];
 
     //register collection view cell
     [self.equipCollectionView registerClass:[EQREquipItemCell class] forCellWithReuseIdentifier:@"Cell"];
@@ -207,8 +212,7 @@
     self.equipTitleArrayWithSections = tempSortedArrayWithSections;
     
     
-    //_______********  try allocating the gear list here... *****______
-    [self allocateGearList];
+    
     
     
     
@@ -324,12 +328,25 @@
         }];
     }
     
+    //_____********  HAVE ARRAY OF UNIQUEITEMS BUT NOT SAVING IT ANYWHERE YET____*******
+    //arrayOfEquipUniqueItems
     
     
-    
-    //______********  This works only because of the delay...
-//    [self.navigationController performSelector:@selector(popViewControllerAnimated:) withObject:nil afterDelay:1.0];
-    
+    //SUBTRACT OUT the scheduled gear from the requestManager array of titles with qty count
+    //loop through arrayOfEquipUniqueItems
+    for (EQREquipUniqueItem* eqritem in arrayOfEquipUniqueItems){
+        
+        for (NSMutableArray* checkArray in requestManager.arrayOfEquipTitlesWithCountOfUniqueItems){
+            
+            if ([eqritem.equipTitleItem_foreignKey isEqualToString:[checkArray objectAtIndex:0]] ){
+                
+                //found a matching title item, now reduce the count of available items by one
+                int newIntValue = [(NSNumber*)[checkArray objectAtIndex:1] intValue] - 1;
+                NSNumber* newNumber = [NSNumber numberWithInt: newIntValue];
+                [checkArray replaceObjectAtIndex:1 withObject:newNumber];
+            }
+        }
+    }
     
 }
 

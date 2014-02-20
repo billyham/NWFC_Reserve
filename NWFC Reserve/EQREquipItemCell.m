@@ -41,6 +41,8 @@
 
 -(void)initialSetupWithTitle:(NSString*)titleName andEquipItem:(EQREquipItem*)titleItemObject{
     
+    NSLog(@"equipItemCell initialSetupWithTitle");
+    
     //assign ivar
     self.thisEquipTitleItem = titleItemObject;
     
@@ -77,6 +79,7 @@
     
     
     //create buttons programmatically
+    //_____********  Must Test if quantities are exceeded and hide plus button ______*******
     //___plus button
     UIButton* plusButtonFoSho = [UIButton buttonWithType:UIButtonTypeSystem];
     plusButtonFoSho.frame = CGRectMake(100, 0, 46, 32);
