@@ -17,6 +17,7 @@
 @property (strong, nonatomic) IBOutlet UIDatePicker* pickUpDatePicker;
 @property (strong, nonatomic) IBOutlet UIDatePicker* returnDatePicker;
 @property BOOL datePickupSelectionFlag;
+@property BOOL dateReturnSelectionFlag;
 
 @end
 
@@ -43,6 +44,7 @@
     [nc addObserver:self selector:@selector(receiveVoidScheduleItem:) name:EQRVoidScheduleItemObjects object:nil];
     
     self.datePickupSelectionFlag = NO;
+//    self.dateReturnSelectionFlag = NO;
     
     //preset dates
     self.pickUpDate = [NSDate date];
@@ -61,6 +63,7 @@
 -(void)receiveVoidScheduleItem:(NSNotification*)note{
 
     self.datePickupSelectionFlag = NO;
+//    self.dateReturnSelectionFlag = NO;
     
 }
 
@@ -111,15 +114,21 @@
         
         [self.returnDatePicker setDate:self.pickUpDate animated:YES];
     }
+    
     //assign pu date to the scheduleRequest
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     requestManager.request.request_date_begin = self.pickUpDate;
+    
+    //MUST also send returnd date because it always change due to the minimumDate property
+    requestManager.request.request_date_end = self.returnDatePicker.date;
     
     self.datePickupSelectionFlag = YES;
 }
 
 
 -(IBAction)receiveReturnDate:(id)sender{
+    
+//    self.dateReturnSelectionFlag = YES;
     
     self.returnDate = [sender date];
     

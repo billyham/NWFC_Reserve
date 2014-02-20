@@ -79,7 +79,6 @@
     
     
     //create buttons programmatically
-    //_____********  Must Test if quantities are exceeded and hide plus button ______*******
     //___plus button
     UIButton* plusButtonFoSho = [UIButton buttonWithType:UIButtonTypeSystem];
     plusButtonFoSho.frame = CGRectMake(100, 0, 46, 32);
@@ -133,15 +132,19 @@
     //hide the button for now
     self.myMinusButton.hidden = YES;
 
+    
+    
     //summon the requestManager!!
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
+    NSLog(@"this is the equip cell asking for the available quantity");
     
     //test if there exists any uniqueItems for this titleItem, gray out and make unavailable if not
     for (NSArray* testArray in requestManager.arrayOfEquipTitlesWithCountOfUniqueItems){
         
         if ([[testArray objectAtIndex:0] isEqualToString:self.thisEquipTitleItem.key_id]){
             
-            //found a matching equipTitleItem
+            //found a matching equipTitleItem with an available quantity of 0
             if ([[testArray objectAtIndex:1] isEqualToNumber:[NSNumber numberWithInt:0]]){
                 
                 self.myEquipVCntrllr.titleLabel.textColor = [UIColor lightGrayColor];
@@ -187,6 +190,7 @@
         self.myEquipVCntrllr.view.backgroundColor = [UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0];
         
         //reveal plus minus buttons
+        //_____******* BUT ONLY THE PLUS BUTTON IF THERE IS STILL AN AVAILABLE QUANTITY  ****_________
         self.myPlusButton.hidden = NO;
         self.myMinusButton.hidden = NO;
     }

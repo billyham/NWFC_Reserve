@@ -21,6 +21,7 @@
 +(EQRScheduleRequestManager*)sharedInstance;
 -(void)createNewRequest;
 -(void)dismissRequest;
+-(void)resetEquipListAndAvailableQuantites;
 -(NSArray*)retrieveArrayOfEquipJoins;
 -(void)addNewRequestEquipJoin:(EQREquipItem*)thisEquipItem;
 -(void)removeRequestEquipJoin:(EQREquipItem*)thisEquipItem;

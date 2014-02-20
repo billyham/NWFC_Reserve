@@ -165,15 +165,47 @@
 
 -(IBAction)confirmAndPrint:(id)sender{
     
+    BOOL successOrNah = [self justPrint];
+
+    if (successOrNah){
+        
+        [self justConfirm];
+        
+        //go back to first page in nav
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        
+        //reset eveything back to 0 (which in turn sends an nsnotification)
+        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+        [requestManager dismissRequest];
+    }
+}
+
+
+-(IBAction)confirm:(id)sender{
+    
+    [self justConfirm];
+    
+    //go back to first page in nav
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    
+    //reset eveything back to 0 (which in turn sends an nsnotification)
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    [requestManager dismissRequest];
+    
+}
+
+
+-(void)justConfirm{
+    
     //send all this info to webData with GET
-//    key_id,
-//    contact_foreignKey,
-//    classSection_foreignKey,
-//    classTitle_foreignKey,
-//    request_date_begin,
-//    request_date_end,
-//    request_time_begin,
-//    request_time_end
+    //    key_id,
+    //    contact_foreignKey,
+    //    classSection_foreignKey,
+    //    classTitle_foreignKey,
+    //    request_date_begin,
+    //    request_date_end,
+    //    request_time_begin,
+    //    request_time_end
     
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     EQRScheduleRequestItem* request = requestManager.request;
@@ -261,11 +293,13 @@
         NSString* returnID2 = [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:bigArrayForJoin];
         NSLog(@"this is the schedule_equip_join return key_id: %@", returnID2);
     }
-    
-    
-    
+}
+
+
+-(BOOL)justPrint{
     
     //_______PRINTING_________!
+    
     UIPrintInteractionController* printIntCont = [UIPrintInteractionController sharedPrintController];
     UIViewPrintFormatter* viewPrintFormatter = [self.summaryTextView viewPrintFormatter];
     
@@ -278,21 +312,30 @@
     //assign printinfo to int cntrllr
     printIntCont.printInfo = printInfo;
     
+    __block BOOL successOrNot;
+    
     [printIntCont presentFromRect:self.printAndConfirmButton.frame inView:self.view animated:YES completionHandler:^(UIPrintInteractionController *printInteractionController,BOOL completed, NSError *error){
         
         //unless the printing in cancelled...
         
         if (completed){
             
-            //go back to first page in nav
-            [self.navigationController popToRootViewControllerAnimated:YES];
+//            //go back to first page in nav
+//            [self.navigationController popToRootViewControllerAnimated:YES];
+//            
+//            //reset eveything back to 0 (which in turn sends an nsnotification)
+//            [requestManager dismissRequest];
             
-            //reset eveything back to 0 (which in turn sends an nsnotification)
-            [requestManager dismissRequest];
+            successOrNot = YES;
+            
+        } else {
+            
+            successOrNot = NO;
         }
     }];
+    
+    return successOrNot;
 }
-
 
 
 

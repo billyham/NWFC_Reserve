@@ -59,20 +59,27 @@
     //________but is unnecessary, the plus and minus buttons will work with or without this disabled.
 //    self.equipCollectionView.allowsSelection = NO;
     
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
     
     //_______********  try allocating the gear list here... *****______
-    NSLog(@"begin equipSelectorVCntrllr viewDidLaod");
+    
+    //must entirely build or rebuild list available equipment as the user could go back and change the dates at anytime
+    [requestManager resetEquipListAndAvailableQuantites];
+    
+    //...now factor in the gear already scheduled for the chosen dates in the available quantities.
     [self allocateGearList];
 
+    //-------*******
+    
+    
     //register collection view cell
     [self.equipCollectionView registerClass:[EQREquipItemCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.equipCollectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
     
     //______*********  this should only apply to students  ******_______
-    //______*********  need alternate way to forming equipment list for staff, faculty and public
     //get class data from scheduleRequest object
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
     NSString* classTitleKey = requestManager.request.classTitle_foreignKey;
     
     //set webData request for equiplist
@@ -341,9 +348,14 @@
             if ([eqritem.equipTitleItem_foreignKey isEqualToString:[checkArray objectAtIndex:0]] ){
                 
                 //found a matching title item, now reduce the count of available items by one
-                int newIntValue = [(NSNumber*)[checkArray objectAtIndex:1] intValue] - 1;
-                NSNumber* newNumber = [NSNumber numberWithInt: newIntValue];
-                [checkArray replaceObjectAtIndex:1 withObject:newNumber];
+                //... but only if the current available quantity is above 0 (to prevent going into negative integers)
+                
+                if ([(NSNumber*)[checkArray objectAtIndex:1] integerValue] > 0){
+                    
+                    int newIntValue = [(NSNumber*)[checkArray objectAtIndex:1] intValue] - 1;
+                    NSNumber* newNumber = [NSNumber numberWithInt: newIntValue];
+                    [checkArray replaceObjectAtIndex:1 withObject:newNumber];
+                }
             }
         }
     }
@@ -427,12 +439,7 @@
         NSLog(@"no count in the equiptitlearray");
     }
     
-    //__________add target to cell plus and minus buttons
-    
-    
-    
     return cell;
-    
 }
 
 
