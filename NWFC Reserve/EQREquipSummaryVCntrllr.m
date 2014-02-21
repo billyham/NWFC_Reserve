@@ -388,26 +388,31 @@
         
         for (NSMutableArray* uniqueArrayMe in tempListOfUniqueItemsJustRequested){
             
-            NSMutableArray* kickMeOffTheTeam = [NSMutableArray arrayWithCapacity:1];
-            BOOL foundAMatchFlag = NO;
-            
-            if ([[(EQREquipUniqueItem*)[uniqueArrayMe objectAtIndex:0] equipTitleItem_foreignKey] isEqualToString:joinMe.equipTitleItem_foreignKey]) {
+            //____an array may be left empty after the last function, avoid tyring to interate through
+            //____it or app will crash
+            if ([uniqueArrayMe count] > 0){
                 
-                joinMe.equipUniqueItem_foreignKey =[(EQREquipUniqueItem*)[uniqueArrayMe objectAtIndex:0] key_id];
+                NSMutableArray* kickMeOffTheTeam = [NSMutableArray arrayWithCapacity:1];
+                BOOL foundAMatchFlag = NO;
                 
-                foundAMatchFlag = YES;
+                if ([[(EQREquipUniqueItem*)[uniqueArrayMe objectAtIndex:0] equipTitleItem_foreignKey] isEqualToString:joinMe.equipTitleItem_foreignKey]) {
+                    
+                    joinMe.equipUniqueItem_foreignKey =[(EQREquipUniqueItem*)[uniqueArrayMe objectAtIndex:0] key_id];
+                    
+                    foundAMatchFlag = YES;
+                    
+                    //remove the EQREquipUniqueItem at index 0
+                    [kickMeOffTheTeam addObject:[uniqueArrayMe objectAtIndex:0]];
+                    
+                }
                 
-                //remove the EQREquipUniqueItem at index 0
-                [kickMeOffTheTeam addObject:[uniqueArrayMe objectAtIndex:0]];
-                
-            }
-            
-            if (foundAMatchFlag){
-                
-                //remove the uniqueItem From the array
-                [uniqueArrayMe removeObjectsInArray:kickMeOffTheTeam];
-                
-                break;
+                if (foundAMatchFlag){
+                    
+                    //remove the uniqueItem From the array
+                    [uniqueArrayMe removeObjectsInArray:kickMeOffTheTeam];
+                    
+                    break;
+                }
             }
             
         }
