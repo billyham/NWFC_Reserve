@@ -353,6 +353,9 @@
         }];
     }
     
+    //assign to requestManager ivar (this is used in EQEquipSummaryVCntrllr > justConfirm method
+    requestManager.arrayOfEquipUniqueItemsByDateCollision = arrayOfEquipUniqueItems;
+    
     
     //_____*******  add structure to the array by sections with titleKey???
     

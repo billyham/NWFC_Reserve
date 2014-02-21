@@ -96,15 +96,8 @@
         [self.arrayOfEquipUniqueItemsByDateCollision removeAllObjects];
     }
     
-    
-    
     EQRWebData* webData = [EQRWebData sharedInstance];
     [webData queryWithLink:@"EQGetEquipTitlesWithCountOfEquipUniques.php" parameters:nil class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
-        
-        for (id obj1 in muteArray){
-            
-            [self.arrayOfEquipUniqueItemsByDateCollision addObject:obj1];
-        }
         
         //organize into a nested array
         NSMutableArray* topArray = [NSMutableArray arrayWithCapacity:1];
