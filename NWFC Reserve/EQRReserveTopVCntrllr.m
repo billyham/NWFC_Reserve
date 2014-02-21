@@ -109,6 +109,10 @@
         [self.view layoutIfNeeded];
     }];
     
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
+    //refresh the list of ALL equipUniqueItems
+    [requestManager retrieveAllEquipUniqueItems];
 }
 
 

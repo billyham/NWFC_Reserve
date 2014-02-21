@@ -14,6 +14,7 @@
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRWebData.h"
 #import "EQRGlobals.h"
+#import "EQREquipUniqueItem.h"
 
 
 @interface EQREquipSummaryVCntrllr ()
@@ -276,6 +277,29 @@
     
     NSString* returnID = [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
     NSLog(@"this is the returnID: %@", returnID);
+    
+    
+    //___________************  Use this moment to allocate a uniqueItem object (key_id and/or dist ID) *****_______
+    
+    // replace the equipUniqueItem_foreignKey in the equipJoins in the requestManager's array
+    
+    // use the requestManager's array of all equipItems: requestManager.arrayOfEquipUniqueItems
+    // compare against: requestManager.arrayOfEquipUniqueItemsByDateCollision
+    // derive available key_ids or distinquishing ids
+    
+    
+    
+    //start by identifying uniqueIds and making an array for each with the all key_ids
+    //subtract from each array the selected key_ids
+    //sort the array by distinguishing ids and select the lowest one for the join
+    
+    NSMutableArray* tempArrayOfNestedArraysWithSelectedTitles = [NSMutableArray arrayWithCapacity:1];
+    
+    
+    
+    //compare this transaction's selections with the array of unqiue item collisions
+    
+    
     
     
     //input array of scheduleTracking_equipUniqueItem_joins

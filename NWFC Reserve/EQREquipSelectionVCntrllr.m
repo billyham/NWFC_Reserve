@@ -88,37 +88,55 @@
     
     //1. get list of ClassCatalog_EquipTitleItem_Join
     //declare a mutable array
-    NSMutableArray* tempEquipMuteArray = [NSMutableArray arrayWithCapacity:1];
+    __block NSMutableArray* tempEquipMuteArray = [NSMutableArray arrayWithCapacity:1];
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     
     if ([requestManager.request.renter_type isEqualToString:@"student"]){
         
-        //get a list of allocated gear...
-        [webData queryWithLink:@"EQGetClassCatalogEquipTitleItemJoins.php" parameters:secondParamArray class:@"EQRClassCatalog_EquipTitleItem_Join" completion:^(NSMutableArray* muteArrayFirst){
+        //get a list of allocated gear using SQL with INNER JOIN
+        
+        [webData queryWithLink:@"EQGetEquipTitlesWithClassCatalogKey.php" parameters:secondParamArray class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
             
-            
-            
-            //do something with the returned array...
-            [muteArrayFirst enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            if ([muteArray count] > 0){
                 
-                NSArray* equipParamArrayfirst = [NSArray arrayWithObjects:@"key_id",
-                                                 [(EQRClassCatalog_EquipTitleItem_Join*)obj equipTitleItem_foreignKey], nil];
-                NSArray* equipParamArraySecond = [NSArray arrayWithObject:equipParamArrayfirst];
-                
-                EQRWebData* webDataNew = [EQRWebData sharedInstance];
-                
-                [webDataNew queryWithLink:@"EQGetEquipmentTitles.php" parameters:equipParamArraySecond class:@"EQREquipItem"
-                               completion:^(NSMutableArray* muteArrayAlt){
-                                   
-                                   //do something with the returned array...
-                                   if ([muteArrayAlt count] > 0){
-                                       
-                                       [tempEquipMuteArray addObject:[muteArrayAlt objectAtIndex:0]];
-                                   }
-                               }];
-            }];
+                for (id something in muteArray){
+                    
+                    [tempEquipMuteArray addObject:something];
+                }
+            }
         }];
+        
+        
+        
+        //get a list of allocated gear...
+//        [webData queryWithLink:@"EQGetClassCatalogEquipTitleItemJoins.php" parameters:secondParamArray class:@"EQRClassCatalog_EquipTitleItem_Join" completion:^(NSMutableArray* muteArrayFirst){
+//            
+//            
+//            
+//            //do something with the returned array...
+//            [muteArrayFirst enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//                
+//                NSArray* equipParamArrayfirst = [NSArray arrayWithObjects:@"key_id",
+//                                                 [(EQRClassCatalog_EquipTitleItem_Join*)obj equipTitleItem_foreignKey], nil];
+//                NSArray* equipParamArraySecond = [NSArray arrayWithObject:equipParamArrayfirst];
+//                
+//                EQRWebData* webDataNew = [EQRWebData sharedInstance];
+//                
+//                [webDataNew queryWithLink:@"EQGetEquipmentTitles.php" parameters:equipParamArraySecond class:@"EQREquipItem"
+//                               completion:^(NSMutableArray* muteArrayAlt){
+//                                   
+//                                   //do something with the returned array...
+//                                   if ([muteArrayAlt count] > 0){
+//                                       
+//                                       [tempEquipMuteArray addObject:[muteArrayAlt objectAtIndex:0]];
+//                                   }
+//                               }];
+//            }];
+//        }];
+        
+        
+        
         
     } else{
         
@@ -316,7 +334,7 @@
     
     
     //Use sql with inner join...
-    //  get compplete EquipUniqueItem objects With ScheduleTrackingKeys
+    //  get reserved EquipUniqueItem objects With ScheduleTrackingKeys
     
     for (EQRScheduleTracking_EquipmentUnique_Join* objThingy in arrayOfScheduleTrackingKeyIDs){
         
@@ -335,9 +353,12 @@
         }];
     }
     
-    //_____********  HAVE ARRAY OF UNIQUEITEMS BUT NOT SAVING IT ANYWHERE YET____*******
-    //arrayOfEquipUniqueItems
     
+    //_____*******  add structure to the array by sections with titleKey???
+    
+    
+    //_____********  NOW HAVE ARRAY OF UNIQUEITEMS BUT NOT SAVING IT ANYWHERE YET____*******
+    //arrayOfEquipUniqueItems
     
     //SUBTRACT OUT the scheduled gear from the requestManager array of titles with qty count
     //loop through arrayOfEquipUniqueItems

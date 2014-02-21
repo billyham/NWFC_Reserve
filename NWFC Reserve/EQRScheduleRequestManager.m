@@ -91,9 +91,9 @@
         [self.arrayOfEquipTitlesWithCountOfUniqueItems removeAllObjects];
     }
     
-    if (self.arrayOfEquipUniqueItems){
+    if (self.arrayOfEquipUniqueItemsByDateCollision){
         
-        [self.arrayOfEquipUniqueItems removeAllObjects];
+        [self.arrayOfEquipUniqueItemsByDateCollision removeAllObjects];
     }
     
     
@@ -101,9 +101,10 @@
     EQRWebData* webData = [EQRWebData sharedInstance];
     [webData queryWithLink:@"EQGetEquipTitlesWithCountOfEquipUniques.php" parameters:nil class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
         
-        //pass array of all unique items to ivar
-        self.arrayOfEquipUniqueItems = [NSMutableArray arrayWithArray:muteArray];
-        
+        for (id obj1 in muteArray){
+            
+            [self.arrayOfEquipUniqueItemsByDateCollision addObject:obj1];
+        }
         
         //organize into a nested array
         NSMutableArray* topArray = [NSMutableArray arrayWithCapacity:1];
@@ -142,9 +143,9 @@
     
     
     
-    
     //______A function to add in any items from the list of title equipment where no uniques existed
     //loop through list of existing titleItems. subloop against all uniqueItems and add in where no match is found
+    
     
     //_______get the ENTIRE list of equipment titles
     
@@ -203,6 +204,68 @@
 }
 
 
+-(NSArray*)retrieveAllEquipUniqueItems{
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    __block NSArray* arrayToReturn;
+    
+    [webData queryWithLink:@"EQGetEquipUniqueItemsAll.php" parameters:nil class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
+        
+        arrayToReturn = [NSArray arrayWithArray:muteArray];
+        
+    }];
+    
+    [self.arrayOfEquipUniqueItemsAll removeAllObjects];
+    
+    //set ivar
+    self.arrayOfEquipUniqueItemsAll = [NSMutableArray arrayWithArray:arrayToReturn];
+    
+    NSLog(@"array of equipUniqueItems count: %u", [self.arrayOfEquipUniqueItemsAll count]);
+    
+    
+    
+    
+    //______****** add structure the array? nested array's in equipTitleItem id's?
+    NSMutableArray* arrayWithSubArrays = [NSMutableArray arrayWithCapacity:1];
+    
+    for (EQREquipUniqueItem* uItem in self.arrayOfEquipUniqueItemsAll){
+        
+        
+        NSMutableArray* nestedArray = [NSMutableArray arrayWithCapacity:1];
+        BOOL gladflag = NO;
+        
+        for (NSMutableArray*  dutifullyNestedarray in arrayWithSubArrays){
+            
+            if ([[(EQREquipUniqueItem*)[dutifullyNestedarray objectAtIndex:0] equipTitleItem_foreignKey] isEqualToString:uItem.equipTitleItem_foreignKey] ){
+                
+                //a match is found with an existing object, add it to the array...
+                
+                [dutifullyNestedarray addObject:uItem];
+                
+                gladflag = YES;
+            }
+        }
+        
+        if (!gladflag){
+            
+            //... or else, create a new array and add it to the arrayWithSubArrays
+            [nestedArray addObject:uItem];
+            
+            [arrayWithSubArrays addObject:nestedArray];
+        }
+    }
+    
+    //assign to ivar
+    self.arrayOfEquipUniqueItemsWithSubArrays = arrayWithSubArrays;
+    
+    
+    //... this is redundant....
+    return arrayToReturn;
+}
+
+
+
 -(NSArray*)retrieveArrayOfEquipJoins{
     
     if ([self.request.arrayOfEquipmentJoins count] > 0){
@@ -218,14 +281,16 @@
 }
 
 
+//_________ **********  THIS SHOULD BE RECEIVING EquipUniqueItem INSTEAD OF titleItems  ********________
+//... OR it does the work of assigning a unique item...
 -(void)addNewRequestEquipJoin:(EQREquipItem*)thisEquipItem{
-    
-    NSLog(@"adding a new request join with with schedule tracking key %@", self.request.key_id);
     
     //instantiate new join item
     EQRScheduleTracking_EquipmentUnique_Join* newJoin = [[EQRScheduleTracking_EquipmentUnique_Join alloc] init];
     
+    //_________*********  EEEEKKKK!! THIS IS WHERE THE EquipUniqueItem key_id is hardcoded ********______
     newJoin.equipUniqueItem_foreignKey = @"1";
+    
     newJoin.equipTitleItem_foreignKey = thisEquipItem.key_id;
     newJoin.scheduleTracking_foreignKey = self.request.key_id;
     

@@ -15,15 +15,23 @@
 @property (strong, nonatomic) EQRScheduleRequestItem* request;
 
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipTitlesWithCountOfUniqueItems;
-@property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItems;
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipTitleItems;
+
+@property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItemsAll;
+@property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItemsWithSubArrays;
+@property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItemsByDateCollision;
+
 
 +(EQRScheduleRequestManager*)sharedInstance;
 -(void)createNewRequest;
 -(void)dismissRequest;
 -(void)resetEquipListAndAvailableQuantites;
+-(NSArray*)retrieveAllEquipUniqueItems;
 -(NSArray*)retrieveArrayOfEquipJoins;
+
+//_________ **********  THIS SHOULD BE RECEIVING EquipUniqueItem INSTEAD OF titleItems  ********________
 -(void)addNewRequestEquipJoin:(EQREquipItem*)thisEquipItem;
+
 -(void)removeRequestEquipJoin:(EQREquipItem*)thisEquipItem;
 
 
