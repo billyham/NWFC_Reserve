@@ -39,20 +39,25 @@
     //set timestamp
     self.request.time_of_request = [NSDate date];
     
+    //get device name
+    NSString* myDeviceName = [[UIDevice currentDevice] name];
+    NSLog(@"this is my device name: %@", myDeviceName);
+    
+    NSArray* bigPoppa = [NSArray arrayWithObjects:@"myDeviceName", myDeviceName, nil];
+    NSArray* lilPoppa = [NSArray arrayWithObject:bigPoppa];
+    
     //--
     //need to set the key_id right away
     //get the next key_id value for a scheduleTracking object
     EQRWebData* webData = [EQRWebData sharedInstance];
-    NSString* lastKeyId = [webData queryForStringWithLink:@"EQGetNextScheduleRequestKey.php" parameters:nil];
-    
-    int lastKeyIdInt = (int)[lastKeyId integerValue];
-    int nextKeyId = lastKeyIdInt + 1;
-    NSString* nextKeyIdString = [NSString stringWithFormat:@"%u", nextKeyId];
+    NSString* assignedKeyId = [webData queryForStringWithLink:@"EQRegisterScheduleRequest.php" parameters:lilPoppa];
     
     //set the request's key_id ivar
-    self.request.key_id = nextKeyIdString;
-    NSLog(@"this is the nextKeyIdString %@", nextKeyIdString);
+    self.request.key_id = assignedKeyId;
+    NSLog(@"this is the nextKeyIdString %@", assignedKeyId);
     //---
+    
+    
 }
 
 

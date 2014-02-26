@@ -133,6 +133,8 @@
     self.myMinusButton.hidden = YES;
 
     
+    //hold onto the available quantity
+    int quantityAvailableTemp = 0;
     
     //summon the requestManager!!
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
@@ -153,6 +155,11 @@
                 
                 //stop initializing
                 return;
+                
+            } else {
+                
+                quantityAvailableTemp = [(NSNumber*)[testArray objectAtIndex:1]integerValue];
+                
             }
         }
     }
@@ -168,14 +175,17 @@
 
     [arrayOfScheduleEquipJoins enumerateObjectsUsingBlock:^(EQRScheduleTracking_EquipmentUnique_Join* obj, NSUInteger idx, BOOL *stop) {
         
-//        NSLog(@"inside the arrayOfScheduleEquipJoins with obj equipUniqueItem_foreignKey: %@", [obj equipUniqueItem_foreignKey]);
-        
-        //_____****** uniqueforeignKey is currently hard coded!!!! ****_____
         if ([[obj equipTitleItem_foreignKey] isEqualToString:titleItemObject.key_id]){
             
             [arrayOfMatchingItems addObject:obj];
         }
     }];
+    
+    //identify that the quantity limit has been reached
+    if ([arrayOfMatchingItems count] >= quantityAvailableTemp){
+        
+        self.quantityLimitFlag = YES;
+    }
     
     //set temp quantity variable
     if ([arrayOfMatchingItems count] > 0){
@@ -190,8 +200,11 @@
         self.myEquipVCntrllr.view.backgroundColor = [UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0];
         
         //reveal plus minus buttons
-        //_____******* BUT ONLY THE PLUS BUTTON IF THERE IS STILL AN AVAILABLE QUANTITY  ****_________
-        self.myPlusButton.hidden = NO;
+        //_____BUT ONLY THE PLUS BUTTON IF THERE IS STILL AN AVAILABLE QUANTITY
+        if (!self.quantityLimitFlag){
+            
+            self.myPlusButton.hidden = NO;
+        }
         self.myMinusButton.hidden = NO;
     }
     
