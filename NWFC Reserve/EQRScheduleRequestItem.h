@@ -42,6 +42,7 @@
 @property (strong, nonatomic) EQRContactNameItem* contactNameItem;
 @property (strong, nonatomic) EQRClassItem* classItem;
 @property (strong, nonatomic) EQRClassRegistrationItem* classRegistrationItem;
+@property BOOL showAllEquipmentFlag;
 
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipmentJoins;
 

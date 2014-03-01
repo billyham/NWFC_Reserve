@@ -19,6 +19,9 @@
 @property BOOL datePickupSelectionFlag;
 @property BOOL dateReturnSelectionFlag;
 
+@property (strong, nonatomic) IBOutlet UIButton* showAllEquipmentButton;
+
+
 @end
 
 @implementation EQREquipDateVCntrllr
@@ -56,6 +59,14 @@
     
 }
 
+
+-(IBAction)showAllEquipment:(id)sender{
+    
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
+    requestManager.request.showAllEquipmentFlag = YES;
+    
+}
 
 
 #pragma mark - void date selection

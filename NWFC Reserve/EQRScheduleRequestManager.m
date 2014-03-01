@@ -36,6 +36,9 @@
     //assign to ivar
     self.request = requestItem;
     
+    //set flags
+    self.request.showAllEquipmentFlag = NO;
+    
     //set timestamp
     self.request.time_of_request = [NSDate date];
     
