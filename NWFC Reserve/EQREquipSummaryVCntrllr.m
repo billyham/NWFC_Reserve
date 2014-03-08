@@ -120,7 +120,31 @@
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     
-    //first, cycle through scheduleTracking_equip_joins
+    
+    
+    //two options, 1. equip uniques or 2. equip titles
+    //_________NOPE, the unqiue IDs haven't been established yet, it happens when confirm is tapped_____
+    // 1.
+//    for (EQRScheduleTracking_EquipmentUnique_Join* joinItem in requestManager.request.arrayOfEquipmentJoins){
+//        
+//        NSArray* thisArray1 = [NSArray arrayWithObjects:@"key_id", joinItem.equipUniqueItem_foreignKey, Nil];
+//        NSArray* thisArray2 = [NSArray arrayWithObject:thisArray1];
+//        [webData queryWithLink:@"EQGetEquipmentUnique.php" parameters:thisArray2 class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
+//            
+//            //add the text of the equip item names to the textField's attributed string
+//            for (EQREquipUniqueItem* equipItemObj in muteArray){
+//                
+//                NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+//                NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ - %@\r", equipItemObj.name, equipItemObj.distinquishing_id] attributes:arrayAtt11];
+//                
+//                [self.summaryTotalAtt appendAttributedString:thisHereAttString];
+//            }
+//            
+//        }];
+//        
+//    }
+    
+    // 2. first, cycle through scheduleTracking_equip_joins
     for (EQRScheduleTracking_EquipmentUnique_Join* joinItem in requestManager.request.arrayOfEquipmentJoins){
     
         NSArray* thisArray1 = [NSArray arrayWithObjects:@"key_id", joinItem.equipTitleItem_foreignKey, Nil];

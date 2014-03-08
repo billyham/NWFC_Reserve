@@ -179,7 +179,7 @@
         <scene sceneID="5v8-5c-8yN">
             <objects>
                 <navigationController definesPresentationContext="YES" id="N1x-Zy-wJ8" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Edit Lab" id="kcE-Ts-bmC"/>
+                    <tabBarItem key="tabBarItem" tag="1" title="Edit Lab" id="kcE-Ts-bmC"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="3GC-Uk-lec">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -552,7 +552,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <scene sceneID="1um-j7-ZW7">
             <objects>
                 <navigationController definesPresentationContext="YES" id="Q0m-16-1SA" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="For Staff" id="9jm-Q9-owK"/>
+                    <tabBarItem key="tabBarItem" tag="2" title="For Staff" id="9jm-Q9-owK"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="m1c-fR-371">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -641,6 +641,41 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
             </objects>
             <point key="canvasLocation" x="3931" y="2726"/>
         </scene>
+        <!--Navigation Controller - Schedule-->
+        <scene sceneID="bdP-zc-5dt">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="hee-oI-qji" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" tag="3" title="Schedule" id="80V-0y-NVa"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ei4-hq-B9c">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Gsi-rN-Qaw" kind="relationship" relationship="rootViewController" id="3c5-br-E06"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CAI-FA-Gio" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3041" y="3846"/>
+        </scene>
+        <!--Schedule TopV Cntrllr-->
+        <scene sceneID="EM0-3n-YZ3">
+            <objects>
+                <viewController id="Gsi-rN-Qaw" customClass="EQRScheduleTopVCntrllr" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="E5Z-bZ-E8P"/>
+                        <viewControllerLayoutGuide type="bottom" id="RVI-N8-2sC"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8QP-Ue-DdR">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="TlY-ai-kDl"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ghd-kE-bkn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3946" y="3868"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
             <objects>
@@ -655,6 +690,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <segue destination="PkY-gJ-1eR" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
                         <segue destination="N1x-Zy-wJ8" kind="relationship" relationship="viewControllers" id="g4f-li-Ac0"/>
                         <segue destination="Q0m-16-1SA" kind="relationship" relationship="viewControllers" id="LrH-oW-zRK"/>
+                        <segue destination="hee-oI-qji" kind="relationship" relationship="viewControllers" id="skc-Dk-72s"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01600B3818CA51CA0006D75A /* EQRScheduleTopVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 01600B3718CA51CA0006D75A /* EQRScheduleTopVCntrllr.m */; };
+		01600B3C18CA53080006D75A /* EQRHeaderCellTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = 01600B3B18CA53080006D75A /* EQRHeaderCellTemplate.m */; };
 		016C3F7E18ADBDAD00B2A692 /* EQREquipUniqueItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 016C3F7D18ADBDAD00B2A692 /* EQREquipUniqueItem.m */; };
 		01C79939189C723300D29625 /* EQREquipSummaryVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C79938189C723300D29625 /* EQREquipSummaryVCntrllr.m */; };
 		01FDEA96188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FDEA95188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m */; };
@@ -56,6 +58,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		01600B3618CA51CA0006D75A /* EQRScheduleTopVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleTopVCntrllr.h; sourceTree = "<group>"; };
+		01600B3718CA51CA0006D75A /* EQRScheduleTopVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleTopVCntrllr.m; sourceTree = "<group>"; };
+		01600B3A18CA53080006D75A /* EQRHeaderCellTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRHeaderCellTemplate.h; sourceTree = "<group>"; };
+		01600B3B18CA53080006D75A /* EQRHeaderCellTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRHeaderCellTemplate.m; sourceTree = "<group>"; };
 		016C3F7C18ADBDAD00B2A692 /* EQREquipUniqueItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipUniqueItem.h; sourceTree = "<group>"; };
 		016C3F7D18ADBDAD00B2A692 /* EQREquipUniqueItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipUniqueItem.m; sourceTree = "<group>"; };
 		01C79937189C723300D29625 /* EQREquipSummaryVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSummaryVCntrllr.h; sourceTree = "<group>"; };
@@ -144,6 +150,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		01600B3918CA51D70006D75A /* Schedule Display */ = {
+			isa = PBXGroup;
+			children = (
+				01600B3618CA51CA0006D75A /* EQRScheduleTopVCntrllr.h */,
+				01600B3718CA51CA0006D75A /* EQRScheduleTopVCntrllr.m */,
+			);
+			name = "Schedule Display";
+			sourceTree = "<group>";
+		};
 		438EDCD3182B7ABD0090F882 = {
 			isa = PBXGroup;
 			children = (
@@ -185,6 +200,7 @@
 				545661DB183239520067B40D /* EQRWebData.m */,
 				438EDCF1182B7ABE0090F882 /* Main.storyboard */,
 				54032FE31872D2EA00481D86 /* Schedule objects */,
+				01600B3918CA51D70006D75A /* Schedule Display */,
 				438EDCF4182B7ABE0090F882 /* EQRReserveTopVCntrllr.h */,
 				438EDCF5182B7ABE0090F882 /* EQRReserveTopVCntrllr.m */,
 				438EDCF7182B7ABE0090F882 /* EQRSecondViewController.h */,
@@ -250,6 +266,8 @@
 			children = (
 				5402D22C186BFCF80091C080 /* EQRCellTemplate.h */,
 				5402D22D186BFCF80091C080 /* EQRCellTemplate.m */,
+				01600B3A18CA53080006D75A /* EQRHeaderCellTemplate.h */,
+				01600B3B18CA53080006D75A /* EQRHeaderCellTemplate.m */,
 				5402B7D2187586F400F0888B /* EQREquipContentViewVCntrllr.h */,
 				5402B7D3187586F400F0888B /* EQREquipContentViewVCntrllr.m */,
 				5402B7D4187586F400F0888B /* EQREquipContentViewVCntrllr.xib */,
@@ -403,9 +421,11 @@
 				54CE45AC186AF4680023FDA4 /* EQREquipItemCell.m in Sources */,
 				5402D231186C01440091C080 /* EQRContactNameItem.m in Sources */,
 				54032FE91872D39E00481D86 /* EQRScheduleRequestManager.m in Sources */,
+				01600B3818CA51CA0006D75A /* EQRScheduleTopVCntrllr.m in Sources */,
 				016C3F7E18ADBDAD00B2A692 /* EQREquipUniqueItem.m in Sources */,
 				54DFE0F0186ECD610089B9EA /* EQRClassRegistrationItem.m in Sources */,
 				5402D237186C24A50091C080 /* EQRClassCell.m in Sources */,
+				01600B3C18CA53080006D75A /* EQRHeaderCellTemplate.m in Sources */,
 				438EDCF0182B7ABE0090F882 /* EQRAppDelegate.m in Sources */,
 				5402D234186C242F0091C080 /* EQRClassItem.m in Sources */,
 				540B551D18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m in Sources */,

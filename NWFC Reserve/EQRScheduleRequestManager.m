@@ -42,6 +42,15 @@
     //set timestamp
     self.request.time_of_request = [NSDate date];
     
+    //ensure the array of hidden sections exists
+    if (!self.arrayOfEquipSectionsThatShouldBeHidden){
+        
+        self.arrayOfEquipSectionsThatShouldBeHidden = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    //emply out array of hidden sections
+    [self.arrayOfEquipSectionsThatShouldBeHidden removeAllObjects];
+    
     //get device name
     NSString* myDeviceName = [[UIDevice currentDevice] name];
     NSLog(@"this is my device name: %@", myDeviceName);
@@ -337,6 +346,57 @@
 
 
 
+#pragma mark - repsond to supplementary cell actions
+
+-(void)collapseOrExpandSection:(NSString*)chosenSection{
+    
+    bool hideMeFlag = YES;
+    NSString* objectToRemove;
+    
+    for (NSString* myObject in self.arrayOfEquipSectionsThatShouldBeHidden){
+        
+        if ([myObject isEqualToString:chosenSection]){
+            
+            hideMeFlag = NO;
+            objectToRemove = myObject;
+        }
+    }
+    
+    if (hideMeFlag){
+        
+        //add object to array
+        [self.arrayOfEquipSectionsThatShouldBeHidden addObject:chosenSection];
+        
+        
+        NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      @"delete", @"type",
+                                    chosenSection, @"sectionString",
+                                      nil];
+        
+        
+        //send note
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshEquipTable object:nil userInfo:thisDic];
+
+        
+    }else{
+
+        //remove object from array
+        [self.arrayOfEquipSectionsThatShouldBeHidden removeObject:objectToRemove];
+        
+        
+        NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 @"insert", @"type",
+                                 chosenSection, @"sectionString",
+                                 nil];;
+        
+        //send note
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshEquipTable object:nil userInfo:thisDic];
+
+    }
+    
+    //________*****  need to reload the collection view!!!
+    
+}
 
 
 

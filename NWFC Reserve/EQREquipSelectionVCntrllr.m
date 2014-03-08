@@ -15,6 +15,7 @@
 #import "EQRClassCatalog_EquipTitleItem_Join.h"
 #import "EQRGlobals.h"
 #import "EQREquipUniqueItem.h"
+#import "EQRHeaderCellTemplate.h"
 
 @interface EQREquipSelectionVCntrllr ()
 
@@ -40,6 +41,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //register for notifications
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(refreshTable:) name:EQRRefreshEquipTable object:nil];
+    
     
     //add longpress gesture recognizer, need to circumvent existing longpress gesture first
 //    UILongPressGestureRecognizer* pressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
@@ -75,7 +81,7 @@
     
     //register collection view cell
     [self.equipCollectionView registerClass:[EQREquipItemCell class] forCellWithReuseIdentifier:@"Cell"];
-    [self.equipCollectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
+    [self.equipCollectionView registerClass:[EQRHeaderCellTemplate class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
     
     //______*********  this should only apply to students  ******_______
     //get class data from scheduleRequest object
@@ -284,6 +290,78 @@
 }
 
 
+#pragma mark - notifications
+
+-(void)refreshTable:(NSNotification*)note{
+    
+    NSString* typeOfChange = [[note userInfo] objectForKey:@"type"];
+    NSString* sectionString = [[note userInfo] objectForKey:@"sectionString"];
+    
+    NSLog(@"this is the type: %@", typeOfChange);
+    
+    //array of index paths to add or delete
+    NSMutableArray* arrayOfIndexPaths = [NSMutableArray arrayWithCapacity:1];
+    int indexPathToDelete;
+    
+    //test whether inserting or deleting
+    if ([typeOfChange isEqualToString:@"insert"]){
+        
+       //loop through the sections of the equipment list to identify the index of the section
+        for (NSArray* subArray in self.equipTitleArrayWithSections){
+            
+            NSString* thisIsCategory = [(EQREquipItem*)[subArray objectAtIndex:0] category];
+            
+            if ([thisIsCategory isEqualToString:sectionString]){
+                
+                //found a match, remember the index
+                indexPathToDelete = [self.equipTitleArrayWithSections indexOfObject:subArray];
+                
+                //loop through all items to build an array of indexpaths
+                [(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    
+                    NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
+                    [arrayOfIndexPaths addObject:newIndexPath];
+                }];
+            }
+        }
+        
+        //do the insert
+        [self.equipCollectionView insertItemsAtIndexPaths:arrayOfIndexPaths];
+        
+        
+    }else if([typeOfChange isEqualToString:@"delete"]) {
+        
+        //loop through the sections of the equipment list to identify the index of the section
+        for (NSArray* subArray in self.equipTitleArrayWithSections){
+            
+            NSString* thisIsCategory = [(EQREquipItem*)[subArray objectAtIndex:0] category];
+            
+            if ([thisIsCategory isEqualToString:sectionString]){
+                
+                //found a match, remember the index
+                indexPathToDelete = [self.equipTitleArrayWithSections indexOfObject:subArray];
+                
+                //loop through all items to build an array of indexpaths
+                [(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    
+                    NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
+                    [arrayOfIndexPaths addObject:newIndexPath];
+                }];
+            }
+        }
+        
+        //do the deletions
+        [self.equipCollectionView deleteItemsAtIndexPaths:arrayOfIndexPaths];
+        
+        
+//        [self.equipCollectionView reloadData];
+    }
+}
+
+
+
+
+#pragma mark - allocation
 
 -(void)allocateGearList{
     
@@ -396,7 +474,7 @@
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
     
     static NSString* CellIdentifier = @"SupplementaryCell";
-    UICollectionViewCell* cell = [self.equipCollectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    EQRHeaderCellTemplate* cell = [self.equipCollectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:CellIdentifier forIndexPath:indexPath];
     
     //remove subviews
     for (UIView* thisSubview in cell.contentView.subviews){
@@ -404,16 +482,25 @@
         [thisSubview removeFromSuperview];
     }
     
-    CGRect thisRect = CGRectMake(cell.contentView.frame.origin.x, cell.contentView.frame.origin.y, cell.contentView.frame.size.width, cell.contentView.frame.size.height);
-    UILabel* newLabel = [[UILabel alloc] initWithFrame:thisRect];
+    //______this is unnecessary(?)
+    //and ensure cell has user interaction enabled
+//    [cell setUserInteractionEnabled:YES];
     
-    newLabel.text = [self.equipTitleCategoriesList objectAtIndex:indexPath.section];
-//    newLabel.textAlignment = NSTextAlignmentCenter;
     
-    [cell.contentView addSubview:newLabel];
+    //_____test whether the section is collapsed or expanded
+    BOOL iAmHidden = NO;
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    for (NSString* sectionString in requestManager.arrayOfEquipSectionsThatShouldBeHidden){
+        
+        if ([sectionString isEqualToString:[(EQREquipItem*)[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:0] category]]){
+            
+            //found a match in the array of hidden sections
+            iAmHidden = YES;
+        }
+    }
     
-    cell.backgroundColor = [UIColor colorWithRed:0.92 green:0.92 blue:0.92 alpha:1.0];
-    
+    //cell's initial setup method with label
+    [cell initialSetupWithTitle:[self.equipTitleCategoriesList objectAtIndex:indexPath.section] isHidden:iAmHidden];
     
     return cell;
 }
@@ -424,6 +511,21 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
+    //test if this section is flagged to be collapsed
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
+    EQREquipItem* sampleItem = [[self.equipTitleArrayWithSections objectAtIndex:section] objectAtIndex:0];
+    
+    //loop through array of hidden sections
+    for (NSString* objectSection in requestManager.arrayOfEquipSectionsThatShouldBeHidden){
+        
+        if ([sampleItem.category isEqualToString:objectSection]){
+            
+            return 0;
+        }
+    }
+    
+    //otherwise... return the count of the array object
     NSArray* tempArray = [self.equipTitleArrayWithSections objectAtIndex:section];
     return [tempArray count];
 }
@@ -474,9 +576,14 @@
 
 #pragma mark - collection view delegate methods
 
+//for header cell
+
+
+
+//for equip item
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
 
-    NSLog(@"view collection delegate fires touch");
+    NSLog(@"view collection delegate fires touch with indexPath: %u, %u", indexPath.section, indexPath.row);
     
     //if the selected cell has 0 for quantity, add one. otherwise, do nothing
     EQREquipItemCell* selectedCell = (EQREquipItemCell*)[collectionView cellForItemAtIndexPath:indexPath];
