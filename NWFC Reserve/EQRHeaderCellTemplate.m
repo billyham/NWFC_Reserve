@@ -35,6 +35,11 @@
     //cell's background color
     self.backgroundColor = [UIColor colorWithRed:0.92 green:0.92 blue:0.92 alpha:1.0];
     
+    //size!
+//    CGRect newSize = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (self.frame.size.height) + 10);
+//    self.frame = newSize;
+    
+    
     //label
     CGRect thisRect = CGRectMake(self.contentView.frame.origin.x, self.contentView.frame.origin.y, self.contentView.frame.size.width, self.contentView.frame.size.height);
     UILabel* thisLabel = [[UILabel alloc] initWithFrame:thisRect];
@@ -56,7 +61,7 @@
         [thisRevealButton setTitle:@"Expand" forState:UIControlStateNormal];
         [thisRevealButton setTitle:@"Expanding" forState:UIControlStateHighlighted];
     }else{
-        [thisRevealButton setTitle:@"Collapse" forState:UIControlStateNormal];
+        [thisRevealButton setTitle:@"Hide" forState:UIControlStateNormal];
         [thisRevealButton setTitle:@"Collapsing" forState:UIControlStateHighlighted];
     }
     
@@ -93,7 +98,7 @@
     
     if (isCurrentlyHidden){
         
-        [self.revealButton setTitle:@"Collapse" forState:UIControlStateNormal];
+        [self.revealButton setTitle:@"Hide" forState:UIControlStateNormal];
         
     }else{
         

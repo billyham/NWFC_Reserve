@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13C64" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
         <!--Reserve TopV Cntrllr - Renter-->
@@ -191,7 +191,7 @@
             </objects>
             <point key="canvasLocation" x="2984" y="1439"/>
         </scene>
-        <!--View Controller-->
+        <!--View Controller - Edit Lab-->
         <scene sceneID="hzE-Ig-bwV">
             <objects>
                 <viewController id="hCN-nQ-JHp" sceneMemberID="viewController">
@@ -204,7 +204,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="2e2-Ak-VUc"/>
+                    <navigationItem key="navigationItem" title="Edit Lab" id="2e2-Ak-VUc"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zfT-Fr-D54" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -231,13 +231,13 @@
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="mGd-j8-OXS">
                                     <size key="itemSize" width="350" height="32"/>
-                                    <size key="headerReferenceSize" width="50" height="20"/>
+                                    <size key="headerReferenceSize" width="50" height="32"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="4" minY="4" maxX="4" maxY="8"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="OPr-RH-jky" customClass="EQREquipItemCell">
-                                        <rect key="frame" x="4" y="24" width="330" height="32"/>
+                                        <rect key="frame" x="4" y="36" width="330" height="32"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="330" height="32"/>
@@ -260,7 +260,7 @@
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SupplementaryCell" id="mzV-fJ-HgG">
-                                    <rect key="frame" x="0.0" y="0.0" width="728" height="20"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="728" height="32"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 </collectionReusableView>
@@ -564,7 +564,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
             </objects>
             <point key="canvasLocation" x="3024" y="2671"/>
         </scene>
-        <!--Staff Page1V Cntrllr-->
+        <!--Staff Page1V Cntrllr - Settings-->
         <scene sceneID="Vjt-57-w9P">
             <objects>
                 <viewController id="6G1-gm-2lt" customClass="EQRStaffPage1VCntrllr" sceneMemberID="viewController">
@@ -631,7 +631,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                             <constraint firstAttribute="centerX" secondItem="xkv-aJ-mgn" secondAttribute="centerX" id="tdO-U9-7SV"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="t24-ER-jgh"/>
+                    <navigationItem key="navigationItem" title="Settings" id="t24-ER-jgh"/>
                     <connections>
                         <outlet property="termString" destination="imb-2J-3xE" id="XlP-kl-34S"/>
                         <outlet property="urlString" destination="kOp-x7-tiU" id="ruN-xK-cld"/>
@@ -657,20 +657,45 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
             </objects>
             <point key="canvasLocation" x="3041" y="3846"/>
         </scene>
-        <!--Schedule TopV Cntrllr-->
+        <!--Schedule TopV Cntrllr - Schedule-->
         <scene sceneID="EM0-3n-YZ3">
             <objects>
-                <viewController id="Gsi-rN-Qaw" customClass="EQRScheduleTopVCntrllr" sceneMemberID="viewController">
+                <viewController title="Schedule" id="Gsi-rN-Qaw" customClass="EQRScheduleTopVCntrllr" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="E5Z-bZ-E8P"/>
                         <viewControllerLayoutGuide type="bottom" id="RVI-N8-2sC"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8QP-Ue-DdR">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <rect key="frame" x="0.0" y="64" width="768" height="911"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kLT-RF-p4Y">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="911"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="sv1-Ge-mKf">
+                                    <size key="itemSize" width="686" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="DlY-VL-CxQ">
+                                        <rect key="frame" x="41" y="0.0" width="686" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="686" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="TlY-ai-kDl"/>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <navigationItem key="navigationItem" title="Schedule for Month" id="TlY-ai-kDl"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ghd-kE-bkn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

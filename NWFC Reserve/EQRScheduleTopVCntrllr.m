@@ -14,6 +14,8 @@
 
 @implementation EQRScheduleTopVCntrllr
 
+#pragma mark - methods
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -28,6 +30,14 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
 }
+
+
+
+
+
+
+
+
 
 - (void)didReceiveMemoryWarning
 {
