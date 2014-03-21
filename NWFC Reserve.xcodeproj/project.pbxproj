@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0119D2FF18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 0119D2FD18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m */; };
+		0119D30018DBB25D009126CB /* EQRScheduleCellContentVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0119D2FE18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.xib */; };
+		0119D30318DBC736009126CB /* EQRScheduleRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0119D30218DBC736009126CB /* EQRScheduleRowCell.m */; };
 		01600B3818CA51CA0006D75A /* EQRScheduleTopVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 01600B3718CA51CA0006D75A /* EQRScheduleTopVCntrllr.m */; };
 		01600B3C18CA53080006D75A /* EQRHeaderCellTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = 01600B3B18CA53080006D75A /* EQRHeaderCellTemplate.m */; };
 		016C3F7E18ADBDAD00B2A692 /* EQREquipUniqueItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 016C3F7D18ADBDAD00B2A692 /* EQREquipUniqueItem.m */; };
@@ -58,6 +61,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0119D2FC18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleCellContentVCntrllr.h; sourceTree = "<group>"; };
+		0119D2FD18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleCellContentVCntrllr.m; sourceTree = "<group>"; };
+		0119D2FE18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRScheduleCellContentVCntrllr.xib; sourceTree = "<group>"; };
+		0119D30118DBC736009126CB /* EQRScheduleRowCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleRowCell.h; sourceTree = "<group>"; };
+		0119D30218DBC736009126CB /* EQRScheduleRowCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleRowCell.m; sourceTree = "<group>"; };
 		01600B3618CA51CA0006D75A /* EQRScheduleTopVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleTopVCntrllr.h; sourceTree = "<group>"; };
 		01600B3718CA51CA0006D75A /* EQRScheduleTopVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleTopVCntrllr.m; sourceTree = "<group>"; };
 		01600B3A18CA53080006D75A /* EQRHeaderCellTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRHeaderCellTemplate.h; sourceTree = "<group>"; };
@@ -155,6 +163,11 @@
 			children = (
 				01600B3618CA51CA0006D75A /* EQRScheduleTopVCntrllr.h */,
 				01600B3718CA51CA0006D75A /* EQRScheduleTopVCntrllr.m */,
+				0119D2FC18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.h */,
+				0119D2FD18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m */,
+				0119D2FE18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.xib */,
+				0119D30118DBC736009126CB /* EQRScheduleRowCell.h */,
+				0119D30218DBC736009126CB /* EQRScheduleRowCell.m */,
 			);
 			name = "Schedule Display";
 			sourceTree = "<group>";
@@ -386,6 +399,7 @@
 				438EDCEA182B7ABE0090F882 /* InfoPlist.strings in Resources */,
 				438EDCF3182B7ABE0090F882 /* Main.storyboard in Resources */,
 				5402B7D6187586F400F0888B /* EQREquipContentViewVCntrllr.xib in Resources */,
+				0119D30018DBB25D009126CB /* EQRScheduleCellContentVCntrllr.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,6 +430,7 @@
 				438EDCF6182B7ABE0090F882 /* EQRReserveTopVCntrllr.m in Sources */,
 				5402B7CF1875446D00F0888B /* EQRClassCatalog_EquipTitleItem_Join.m in Sources */,
 				01C79939189C723300D29625 /* EQREquipSummaryVCntrllr.m in Sources */,
+				0119D30318DBC736009126CB /* EQRScheduleRowCell.m in Sources */,
 				54032FE21872AC9000481D86 /* EQREquipDateVCntrllr.m in Sources */,
 				545661DF18323ABC0067B40D /* EQREquipItem.m in Sources */,
 				54CE45AC186AF4680023FDA4 /* EQREquipItemCell.m in Sources */,
@@ -428,6 +443,7 @@
 				01600B3C18CA53080006D75A /* EQRHeaderCellTemplate.m in Sources */,
 				438EDCF0182B7ABE0090F882 /* EQRAppDelegate.m in Sources */,
 				5402D234186C242F0091C080 /* EQRClassItem.m in Sources */,
+				0119D2FF18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m in Sources */,
 				540B551D18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m in Sources */,
 				438EDCF9182B7ABE0090F882 /* EQRSecondViewController.m in Sources */,
 			);

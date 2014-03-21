@@ -7,8 +7,14 @@
 //
 
 #import "EQRScheduleTopVCntrllr.h"
+#import "EQRGlobals.h"
+#import "EQRCellTemplate.h"
+#import "EQRScheduleCellContentVCntrllr.h"
+#import "EQRScheduleRowCell.h"
 
 @interface EQRScheduleTopVCntrllr ()
+
+@property (strong, nonatomic) IBOutlet UICollectionView* myMasterScheduleCollectionView;
 
 @end
 
@@ -28,10 +34,59 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+	
+    //register collection view cell
+    [self.myMasterScheduleCollectionView registerClass:[EQRScheduleRowCell class] forCellWithReuseIdentifier:@"Cell"];
+    
+    
 }
 
 
+
+#pragma mark - collection view data source methods
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    
+    return 3;
+}
+
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    
+    return 1;
+}
+
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    static NSString* CellIdentifier = @"Cell";
+    EQRScheduleRowCell* cell = [self.myMasterScheduleCollectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    for (UIView* view in cell.contentView.subviews){
+        
+        [view removeFromSuperview];
+    }
+    
+    [cell initialSetupWithTitle:@"gest"];
+    
+    //add content view from xib
+    EQRScheduleCellContentVCntrllr* myContentViewController = [[EQRScheduleCellContentVCntrllr alloc] initWithNibName:@"EQRScheduleCellContentVCntrllr" bundle:nil];
+    
+    //add subview
+    [cell.contentView addSubview:myContentViewController.view];
+    
+    
+    //change label AFTER adding it to the view else defaults to XIB file
+    myContentViewController.myRowLabel.text = @"Big C Stand.";
+
+    
+    
+    
+    return cell;
+}
+
+
+#pragma mark - collection view delegate methods
 
 
 
