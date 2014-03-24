@@ -19,6 +19,10 @@ extern float EQRHighlightTappingTime;
 extern float EQRResizingCollectionViewTime;
 extern float EQRRentorTypeLeadingSpace;
 
+//Schedule collection view cell size
+extern float EQRScheduleItemWidthForDay;
+extern float EQRScheduleItemHeightForDay;
+
 extern BOOL EQRDisableTimeLimitForRequest;
 
 @interface EQRGlobals : NSObject

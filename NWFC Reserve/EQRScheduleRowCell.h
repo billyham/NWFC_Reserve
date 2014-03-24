@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "EQRCellTemplate.h"
 
-@interface EQRScheduleRowCell : EQRCellTemplate <UICollectionViewDataSource, UICollectionViewDelegate>
+
+@interface EQRScheduleRowCell : EQRCellTemplate <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
 @end

@@ -19,6 +19,10 @@ float EQRHighlightTappingTime = 0.125;
 float EQRResizingCollectionViewTime = 0.3;
 float EQRRentorTypeLeadingSpace = 80;
 
+//Schedule sizes
+float EQRScheduleItemWidthForDay = 50;
+float EQRScheduleItemHeightForDay = 50;
+
 BOOL EQRDisableTimeLimitForRequest = YES;
 
 @implementation EQRGlobals

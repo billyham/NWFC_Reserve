@@ -7,6 +7,9 @@
 //
 
 #import "EQRScheduleRowCell.h"
+#import "EQRScheduleFlowLayout.h"
+#import "EQRGlobals.h"
+
 
 @interface EQRScheduleRowCell()
 
@@ -34,9 +37,11 @@
     
 
     //create a uicollectionview object programatically
-    UICollectionViewFlowLayout* thisFlowLayout = [[UICollectionViewFlowLayout alloc] init];
+    EQRScheduleFlowLayout* thisFlowLayout = [[EQRScheduleFlowLayout alloc] init];
+    thisFlowLayout.itemSize = CGSizeMake(50, 50);
+    thisFlowLayout.sectionInset = UIEdgeInsetsZero;
     thisFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    CGRect thisRect = CGRectMake(200, 5, 480, 40);
+    CGRect thisRect = CGRectMake(200, 5, 480, 60);
     UICollectionView* thisCollectionView = [[UICollectionView alloc] initWithFrame:thisRect collectionViewLayout:thisFlowLayout];
     self.myUniqueItemCollectionView = thisCollectionView;
     
@@ -53,7 +58,7 @@
     
     
     
-    self.myUniqueItemCollectionView.backgroundColor = [UIColor blueColor];
+    self.myUniqueItemCollectionView.backgroundColor = [UIColor clearColor];
     
 }
 
@@ -83,7 +88,12 @@
 
     [cell initialSetupWithTitle:@"Monkey Butt"];
     
-    cell.contentView.backgroundColor = [UIColor blackColor];
+    
+    //restrict label to the cell
+    cell.contentView.clipsToBounds = YES;
+    
+    //cell color
+    cell.contentView.backgroundColor = [UIColor lightGrayColor];
 
     NSLog(@"row item is happening");
 
@@ -93,6 +103,19 @@
 
 
 #pragma mark - collection view delegate methods
+
+
+#pragma mark - collection view flow layout delegate
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
+    //______this is overridden in the flow layout subclass method______ 
+    CGSize newSize = CGSizeMake(EQRScheduleItemWidthForDay, EQRScheduleItemHeightForDay);
+    
+    return newSize;
+    
+}
 
 
 
