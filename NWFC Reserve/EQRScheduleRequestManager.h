@@ -21,7 +21,9 @@
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItemsWithSubArrays;
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItemsByDateCollision;
 
-@property (strong, nonatomic) NSMutableArray* arrayOfEquipSectionsThatShouldBeHidden;
+@property (strong, nonatomic) NSMutableArray* arrayOfEquipSectionsThatShouldBeHidden; //for equip reservation
+@property (strong, nonatomic) NSMutableArray* arrayOfEquipSectionsThatShouldBeHiddenInSchedule;
+
 
 
 +(EQRScheduleRequestManager*)sharedInstance;
@@ -31,6 +33,7 @@
 -(NSArray*)retrieveAllEquipUniqueItems;
 -(NSArray*)retrieveArrayOfEquipJoins;
 -(void)collapseOrExpandSection:(NSString*)chosenSection;
+-(void)collapseOrExpandSectionInSchedule:(NSString*)chosenSection;
 
 
 //_________ **********  THIS SHOULD BE RECEIVING EquipUniqueItem INSTEAD OF titleItems  ********________

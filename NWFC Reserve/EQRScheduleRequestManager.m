@@ -399,6 +399,11 @@
 }
 
 
+-(void)collapseOrExpandSectionInSchedule:(NSString*)chosenSection{
+    
+    
+    
+}
 
 
 

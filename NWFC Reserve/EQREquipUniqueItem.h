@@ -16,5 +16,10 @@
 @property (strong, nonatomic) NSString* distinquishing_id;
 @property (strong, nonatomic) NSString* status_level;
 
+//properties derived from the matching titleItem
+@property (strong, nonatomic) NSString* category;
+@property (strong, nonatomic) NSString* subcategory;
+@property (strong, nonatomic) NSString* shortname;
+
 
 @end

@@ -41,7 +41,7 @@
     thisFlowLayout.itemSize = CGSizeMake(50, 50);
     thisFlowLayout.sectionInset = UIEdgeInsetsZero;
     thisFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    CGRect thisRect = CGRectMake(200, 5, 480, 60);
+    CGRect thisRect = CGRectMake(200, 5, 558, 60);
     UICollectionView* thisCollectionView = [[UICollectionView alloc] initWithFrame:thisRect collectionViewLayout:thisFlowLayout];
     self.myUniqueItemCollectionView = thisCollectionView;
     

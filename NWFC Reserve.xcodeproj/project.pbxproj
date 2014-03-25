@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0109F95E18E11A8B0069BE6A /* EQRHeaderCellForSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 0109F95D18E11A8B0069BE6A /* EQRHeaderCellForSchedule.m */; };
 		0119D2FF18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 0119D2FD18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m */; };
 		0119D30018DBB25D009126CB /* EQRScheduleCellContentVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0119D2FE18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.xib */; };
 		0119D30318DBC736009126CB /* EQRScheduleRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0119D30218DBC736009126CB /* EQRScheduleRowCell.m */; };
@@ -62,6 +63,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0109F95C18E11A8B0069BE6A /* EQRHeaderCellForSchedule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRHeaderCellForSchedule.h; sourceTree = "<group>"; };
+		0109F95D18E11A8B0069BE6A /* EQRHeaderCellForSchedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRHeaderCellForSchedule.m; sourceTree = "<group>"; };
 		0119D2FC18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleCellContentVCntrllr.h; sourceTree = "<group>"; };
 		0119D2FD18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleCellContentVCntrllr.m; sourceTree = "<group>"; };
 		0119D2FE18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRScheduleCellContentVCntrllr.xib; sourceTree = "<group>"; };
@@ -173,6 +176,8 @@
 				0119D30218DBC736009126CB /* EQRScheduleRowCell.m */,
 				54746DE918DFF8EA0016C596 /* EQRScheduleFlowLayout.h */,
 				54746DEA18DFF8EA0016C596 /* EQRScheduleFlowLayout.m */,
+				0109F95C18E11A8B0069BE6A /* EQRHeaderCellForSchedule.h */,
+				0109F95D18E11A8B0069BE6A /* EQRHeaderCellForSchedule.m */,
 			);
 			name = "Schedule Display";
 			sourceTree = "<group>";
@@ -433,6 +438,7 @@
 				545661D918321D350067B40D /* EQREquipSelectionVCntrllr.m in Sources */,
 				540B551A187687D60025FDEE /* EQRGlobals.m in Sources */,
 				438EDCF6182B7ABE0090F882 /* EQRReserveTopVCntrllr.m in Sources */,
+				0109F95E18E11A8B0069BE6A /* EQRHeaderCellForSchedule.m in Sources */,
 				5402B7CF1875446D00F0888B /* EQRClassCatalog_EquipTitleItem_Join.m in Sources */,
 				01C79939189C723300D29625 /* EQREquipSummaryVCntrllr.m in Sources */,
 				0119D30318DBC736009126CB /* EQRScheduleRowCell.m in Sources */,

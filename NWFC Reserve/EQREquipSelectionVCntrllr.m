@@ -146,7 +146,7 @@
         
     } else{
         
-        //_____*****  this a repeat of what the ReserveTopVCntrllr does, maybe use that instead???  **_____
+        //_____*****  the ScheduleTopVCntrllr does the same thing, with it's own ivars... **_____
         //get the ENTIRE list of equiopment titles... for staff and faculty
         [webData queryWithLink:@"EQGetEquipmentTitlesAll.php" parameters:nil class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
             
@@ -496,6 +496,8 @@
             
             //found a match in the array of hidden sections
             iAmHidden = YES;
+            
+            break;
         }
     }
     
