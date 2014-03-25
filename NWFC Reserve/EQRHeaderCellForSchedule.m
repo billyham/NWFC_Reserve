@@ -28,12 +28,14 @@
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
     //change text of button
-    BOOL isCurrentlyHidden = NO;
-    for (NSString* sectionString in requestManager.arrayOfEquipSectionsThatShouldBeHidden){
+    BOOL isCurrentlyHidden = YES;
+    for (NSString* sectionString in requestManager.arrayOfEquipSectionsThatShouldBeVisibleInSchedule){
         
         if ([sectionString isEqualToString:self.titleLabel.text]){
             
-            isCurrentlyHidden = YES;
+            isCurrentlyHidden = NO;
+            
+            break;
         }
     }
     
@@ -47,7 +49,7 @@
     }
     
     //update request Manager to do the action and keep persistence
-    [requestManager collapseOrExpandSection:self.titleLabel.text];
+    [requestManager collapseOrExpandSectionInSchedule:self.titleLabel.text];
 }
 
 

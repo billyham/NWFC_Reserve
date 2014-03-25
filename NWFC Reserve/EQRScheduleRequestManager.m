@@ -393,16 +393,63 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshEquipTable object:nil userInfo:thisDic];
 
     }
-    
-    //________*****  need to reload the collection view!!!
-    
 }
+
 
 
 -(void)collapseOrExpandSectionInSchedule:(NSString*)chosenSection{
     
+    //ensure the array of visible sections exists
+    if (!self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule){
+        
+        self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule = [NSMutableArray arrayWithCapacity:1];
+    }
     
+    bool hideMeFlag = NO;
+    NSString* objectToRemove;
     
+    for (NSString* myObject in self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule){
+        
+        if ([myObject isEqualToString:chosenSection]){
+            
+            hideMeFlag = YES;
+            objectToRemove = myObject;
+            
+            break;
+        }
+    }
+    
+    if (hideMeFlag){
+        
+        //add object to array
+        [self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule removeObject:objectToRemove];
+        
+        
+        NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 @"delete", @"type",
+                                 chosenSection, @"sectionString",
+                                 nil];
+        
+        
+        //send note
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshScheduleTable object:nil userInfo:thisDic];
+        
+        
+    }else{
+        
+        //remove object from array
+        [self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule addObject:chosenSection];
+        
+        
+        NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 @"insert", @"type",
+                                 chosenSection, @"sectionString",
+                                 nil];;
+        
+        //send note
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshScheduleTable object:nil userInfo:thisDic];
+        
+    }
 }
 
 

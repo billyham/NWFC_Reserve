@@ -13,6 +13,7 @@ NSString* ApplicationKey = @"3j654FP00o91wer";
 //Notification selectors
 NSString* EQRVoidScheduleItemObjects = @"EQRVoidScheduleItemObjects";
 NSString* EQRRefreshEquipTable = @"EQRRefreshEquipTable";
+NSString* EQRRefreshScheduleTable = @"EQRRefreshScheduleTable";
 
 //Timing
 float EQRHighlightTappingTime = 0.125;
@@ -22,6 +23,9 @@ float EQRRentorTypeLeadingSpace = 80;
 //Schedule sizes
 float EQRScheduleItemWidthForDay = 50;
 float EQRScheduleItemHeightForDay = 50;
+
+//Schedule view by category or subcategory or something else...
+NSString* EQRScheduleGrouping = @"subcategory";  //choose category or subcategory
 
 BOOL EQRDisableTimeLimitForRequest = YES;
 

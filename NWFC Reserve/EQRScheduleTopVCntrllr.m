@@ -32,6 +32,9 @@
 
 @implementation EQRScheduleTopVCntrllr
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+
 #pragma mark - methods
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -43,14 +46,24 @@
     return self;
 }
 
+
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	
+    //register for notifications
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    
+    //notes from scheduleRequestManager for hiding and expanding equipment sections
+    [nc addObserver:self selector:@selector(refreshTable:) name:EQRRefreshScheduleTable object:nil];
+    
+    
     //register collection view cell
     [self.myMasterScheduleCollectionView registerClass:[EQRScheduleRowCell class] forCellWithReuseIdentifier:@"Cell"];
     
-    //registar for header cell
+    //register for header cell
     [self.myMasterScheduleCollectionView registerClass:[EQRHeaderCellForSchedule class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
     
     
@@ -77,7 +90,7 @@
     //... and save to ivar
     self.equipUniqueArray = [NSArray arrayWithArray:tempEquipMuteArray];
     
-    //2. Go through this sinlge array and build a nested array to accommodate sections based on category
+    //2. Go through this sinlge array and build a nested array to accommodate sections based on grouping
     
     if (!self.equipUniqueCategoriesList){
         
@@ -89,19 +102,27 @@
         
         NSMutableSet* tempSet = [NSMutableSet set];
         
-        //create a list of unique categories names by looping through the array of equipTitles
+
+
+        
+        //create a list of unique categories names by looping through the array of equipUniques
         for (EQREquipUniqueItem* obj in self.equipUniqueArray){
             
-            if ([tempSet containsObject:obj.category] == NO){
+
+            
+            if ([tempSet containsObject:[obj performSelector:NSSelectorFromString(EQRScheduleGrouping)]] == NO){
                 
-                [tempSet addObject:obj.category];
-                [self.equipUniqueCategoriesList addObject:[NSString stringWithString:obj.category]];
+                [tempSet addObject:[obj performSelector:NSSelectorFromString(EQRScheduleGrouping)]];
+                [self.equipUniqueCategoriesList addObject:[NSString stringWithString:[obj performSelector:NSSelectorFromString(EQRScheduleGrouping)]]];
             }
+            
+
         }
         
         [tempSet removeAllObjects];
         tempSet = nil;
     }
+    
     
     //sort the equipCatagoriesList
     NSSortDescriptor* sortDescAlpha = [NSSortDescriptor sortDescriptorWithKey:nil ascending:YES];
@@ -121,14 +142,14 @@
     }
     
     //B. with a valid list of categories....
-    //create a new array by populating each nested array with equiptitle that match each category
-    for (NSString* categoryItem in self.equipUniqueCategoriesList){
+    //create a new array by populating each nested array with equiptitle that match each category or subcategory
+    for (NSString* groupingItem in self.equipUniqueCategoriesList){
         
         NSMutableArray* subNestArray = [NSMutableArray arrayWithCapacity:1];
         
         for (EQREquipUniqueItem* equipItem in self.equipUniqueArray){
             
-            if ([equipItem.category isEqualToString:categoryItem]){
+            if ([[equipItem performSelector:NSSelectorFromString(EQRScheduleGrouping)] isEqualToString:groupingItem]){
                 
                 [subNestArray addObject: equipItem];
             }
@@ -192,12 +213,96 @@
 
 
 
+
+#pragma mark - notifications
+
+-(void)refreshTable:(NSNotification*)note{
+    
+    NSString* typeOfChange = [[note userInfo] objectForKey:@"type"];
+    NSString* sectionString = [[note userInfo] objectForKey:@"sectionString"];
+    
+    //array of index paths to add or delete
+    NSMutableArray* arrayOfIndexPaths = [NSMutableArray arrayWithCapacity:1];
+    int indexPathToDelete;
+    
+    //test whether inserting or deleting
+    if ([typeOfChange isEqualToString:@"insert"]){
+        
+        //loop through the sections of the equipment list to identify the index of the section
+        for (NSArray* subArray in self.equipUniqueArrayWithSections){
+            
+            NSString* thisIsGrouping = [(EQREquipUniqueItem*)[subArray objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)];
+            
+            if ([thisIsGrouping isEqualToString:sectionString]){
+                
+                //found a match, remember the index
+                indexPathToDelete = (int)[self.equipUniqueArrayWithSections indexOfObject:subArray];
+                
+                //loop through all items to build an array of indexpaths
+                [(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    
+                    NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
+                    [arrayOfIndexPaths addObject:newIndexPath];
+                }];
+            }
+        }
+        
+        //do the insert
+        [self.myMasterScheduleCollectionView insertItemsAtIndexPaths:arrayOfIndexPaths];
+        
+        
+    }else if([typeOfChange isEqualToString:@"delete"]) {
+        
+        //loop through the sections of the equipment list to identify the index of the section
+        for (NSArray* subArray in self.equipUniqueArrayWithSections){
+            
+            NSString* thisIsGrouping = [(EQREquipUniqueItem*)[subArray objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)];
+            
+            if ([thisIsGrouping isEqualToString:sectionString]){
+                
+                //found a match, remember the index
+                indexPathToDelete = (int)[self.equipUniqueArrayWithSections indexOfObject:subArray];
+                
+                //loop through all items to build an array of indexpaths
+                [(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    
+                    NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
+                    [arrayOfIndexPaths addObject:newIndexPath];
+                }];
+            }
+        }
+        
+        //do the deletions
+        [self.myMasterScheduleCollectionView deleteItemsAtIndexPaths:arrayOfIndexPaths];
+        
+        
+        //        [self.equipCollectionView reloadData];
+    }
+}
+
+
+
 #pragma mark - collection view data source methods
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
+    //test if this section is flagged to be collapsed
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
-    return [(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:section] count];
+    EQREquipUniqueItem* sampleItem = [[self.equipUniqueArrayWithSections objectAtIndex:section] objectAtIndex:0];
+    
+    //loop through array of hidden sections
+    for (NSString* objectSection in requestManager.arrayOfEquipSectionsThatShouldBeVisibleInSchedule){
+        
+        if ([[sampleItem performSelector:NSSelectorFromString(EQRScheduleGrouping)] isEqualToString:objectSection]){
+            
+            return [(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:section] count];
+        }
+    }
+    
+    //otherwise...
+    return 0;
+    
 }
 
 
@@ -258,25 +363,27 @@
     
     
     //_____test whether the section is collapsed or expanded
-    BOOL iAmHidden = NO;
+    BOOL iAmVisible = NO;
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-    for (NSString* sectionString in requestManager.arrayOfEquipSectionsThatShouldBeHiddenInSchedule){
+    for (NSString* sectionString in requestManager.arrayOfEquipSectionsThatShouldBeVisibleInSchedule){
         
-        if ([sectionString isEqualToString:[(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:0] category]]){
+        if ([sectionString isEqualToString:[(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)]]){
             
-            //found a match in the array of hidden sections
-            iAmHidden = YES;
+            //found a match in the array of visible sections
+            iAmVisible = YES;
             
             break;
         }
     }
     
+    //inverse the logic
+    BOOL iAmHidden = abs(1 - iAmVisible);
     
-    //get the category for a sample item in the nested array
-    NSString* thisTitleString = [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:0] category];
+    //get the category or subcategory for a sample item in the nested array
+    NSString* thisTitleString = [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)];
     
     //cell's initial setup method with label
-    [cell initialSetupWithTitle:thisTitleString isHidden:NO];
+    [cell initialSetupWithTitle:thisTitleString isHidden:iAmHidden];
     
     return cell;
     
@@ -297,5 +404,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma clang diagnostic pop
 
 @end

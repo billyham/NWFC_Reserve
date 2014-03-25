@@ -22,7 +22,7 @@
 
 -(void)initialSetupWithTitle:(NSString*) titleName{
     
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor yellowColor];
     
     //_______does nothing with the titleName_______
 //    UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(3, 5, 295, 45)];
@@ -34,7 +34,11 @@
 //    [self.contentView addSubview:self.titleLabel];
     
     
-    
+    //_____******** this does nothing
+    //change the size to match the orientation's width
+    CGRect currentRect = self.frame;
+    CGRect newRect = CGRectMake(currentRect.origin.x, currentRect.origin.y, 968, currentRect.size.height);
+    self.frame = newRect;
 
     //create a uicollectionview object programatically
     EQRScheduleFlowLayout* thisFlowLayout = [[EQRScheduleFlowLayout alloc] init];

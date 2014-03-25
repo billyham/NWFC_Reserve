@@ -308,6 +308,12 @@
         return;
     }
     
+    if ([elementName isEqualToString:@"subcategory"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
     if ([elementName isEqualToString:@"category"]){
         
         self.currentProperty = elementName;
@@ -459,6 +465,17 @@
         if ([self.currentThing respondsToSelector:@selector(shortname)]){
             
             [(EQREquipItem*)self.currentThing setShortname: self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"subcategory"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(subcategory)]){
+            
+            [(EQREquipItem*)self.currentThing setSubcategory: self.currentValue];
             
             self.currentValue = nil;
         }

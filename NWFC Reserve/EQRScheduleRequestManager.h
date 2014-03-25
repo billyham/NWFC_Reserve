@@ -22,7 +22,7 @@
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItemsByDateCollision;
 
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipSectionsThatShouldBeHidden; //for equip reservation
-@property (strong, nonatomic) NSMutableArray* arrayOfEquipSectionsThatShouldBeHiddenInSchedule;
+@property (strong, nonatomic) NSMutableArray* arrayOfEquipSectionsThatShouldBeVisibleInSchedule;
 
 
 
