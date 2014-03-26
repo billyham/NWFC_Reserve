@@ -7,7 +7,7 @@
 //
 
 #import "EQRScheduleRowCell.h"
-#import "EQRScheduleFlowLayout.h"
+#import "EQRScheduleNestedDayLayout.h"
 #import "EQRGlobals.h"
 #import "EQRScheduleNestedDayCell.h"
 #import "EQRScheduleRequestManager.h"
@@ -17,6 +17,9 @@
 @interface EQRScheduleRowCell()
 
 @property (nonatomic, strong) UICollectionView* myUniqueItemCollectionView;
+
+@property (strong, nonatomic) NSMutableArray* temporaryArrayOfEquipUniqueJoins;
+
 
 //needs to know it's equipUniqueItem's key_id
 //and it's year and month???
@@ -47,12 +50,14 @@
     
 
     //create a uicollectionview object programatically
-    EQRScheduleFlowLayout* thisFlowLayout = [[EQRScheduleFlowLayout alloc] init];
-    thisFlowLayout.itemSize = CGSizeMake(50, 30);
-    thisFlowLayout.sectionInset = UIEdgeInsetsZero;
-    thisFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    CGRect thisRect = CGRectMake(200, 5, 558, 30);
-    UICollectionView* thisCollectionView = [[UICollectionView alloc] initWithFrame:thisRect collectionViewLayout:thisFlowLayout];
+    EQRScheduleNestedDayLayout* thisNestedDayLayout = [[EQRScheduleNestedDayLayout alloc] init];
+    
+    //set subclass property
+    thisNestedDayLayout.uniqueItem_keyID = self.uniqueItem_keyID;
+    
+    
+    CGRect thisRect = CGRectMake(200, 0, 824, 30);
+    UICollectionView* thisCollectionView = [[UICollectionView alloc] initWithFrame:thisRect collectionViewLayout:thisNestedDayLayout];
     self.myUniqueItemCollectionView = thisCollectionView;
     
     //register collection view cell
@@ -81,15 +86,33 @@
 
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
+    //put schedule_unique_joins here to count
+    NSMutableArray* temporaryMuteArray = [NSMutableArray arrayWithCapacity:1];
+    
     for (EQRScheduleTracking_EquipmentUnique_Join* join in requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins){
         
         if ([join.equipUniqueItem_foreignKey isEqualToString:self.uniqueItem_keyID]){
             
-            return 1;
+            [temporaryMuteArray addObject:join];
         }
     }
     
-    return 0;
+    //assigin to locao ivar
+    if (!self.temporaryArrayOfEquipUniqueJoins){
+        
+        self.temporaryArrayOfEquipUniqueJoins  = [NSMutableArray arrayWithCapacity:1];
+    }
+    [self.temporaryArrayOfEquipUniqueJoins removeAllObjects];
+    [self.temporaryArrayOfEquipUniqueJoins addObjectsFromArray:temporaryMuteArray];
+    
+    if ([temporaryMuteArray count] > 0){
+        
+        return [temporaryMuteArray count];
+        
+    }else{
+        
+        return 0;
+    }
 }
 
 
@@ -109,7 +132,10 @@
         [view removeFromSuperview];
     }
 
-    [cell initialSetupWithTitle:@"Monkey Butt"];
+    //get the name from the locally saved array
+    NSString* contact_name = [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] contact_name];
+    
+    [cell initialSetupWithTitle:contact_name];
     
     
     //restrict label to the cell
@@ -127,15 +153,15 @@
 
 #pragma mark - collection view flow layout delegate
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
-    
-    //______this is overridden in the flow layout subclass method______ Grrrr!!
-    CGSize newSize = CGSizeMake(EQRScheduleItemWidthForDay, EQRScheduleItemHeightForDay);
-    
-    return newSize;
-    
-}
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+//    
+//    
+//    //______this is overridden in the flow layout subclass method______ Grrrr!!
+//    CGSize newSize = CGSizeMake(EQRScheduleItemWidthForDay, EQRScheduleItemHeightForDay);
+//    
+//    return newSize;
+//    
+//}
 
 
 

@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQRScheduleFlowLayout : UICollectionViewFlowLayout
+@interface EQRScheduleNestedDayLayout : UICollectionViewLayout
+
+@property (strong, nonatomic) NSString* uniqueItem_keyID;
 
 @end

@@ -48,7 +48,7 @@
 		545661D918321D350067B40D /* EQREquipSelectionVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 545661D818321D350067B40D /* EQREquipSelectionVCntrllr.m */; };
 		545661DC183239520067B40D /* EQRWebData.m in Sources */ = {isa = PBXBuildFile; fileRef = 545661DB183239520067B40D /* EQRWebData.m */; };
 		545661DF18323ABC0067B40D /* EQREquipItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 545661DE18323ABC0067B40D /* EQREquipItem.m */; };
-		54746DEB18DFF8EA0016C596 /* EQRScheduleFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 54746DEA18DFF8EA0016C596 /* EQRScheduleFlowLayout.m */; };
+		54746DEB18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 54746DEA18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m */; };
 		54CE45AC186AF4680023FDA4 /* EQREquipItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54CE45AB186AF4680023FDA4 /* EQREquipItemCell.m */; };
 		54DFE0F0186ECD610089B9EA /* EQRClassRegistrationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DFE0EF186ECD610089B9EA /* EQRClassRegistrationItem.m */; };
 /* End PBXBuildFile section */
@@ -135,8 +135,8 @@
 		545661DB183239520067B40D /* EQRWebData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRWebData.m; sourceTree = "<group>"; };
 		545661DD18323ABC0067B40D /* EQREquipItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipItem.h; sourceTree = "<group>"; };
 		545661DE18323ABC0067B40D /* EQREquipItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipItem.m; sourceTree = "<group>"; };
-		54746DE918DFF8EA0016C596 /* EQRScheduleFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleFlowLayout.h; sourceTree = "<group>"; };
-		54746DEA18DFF8EA0016C596 /* EQRScheduleFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleFlowLayout.m; sourceTree = "<group>"; };
+		54746DE918DFF8EA0016C596 /* EQRScheduleNestedDayLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleNestedDayLayout.h; sourceTree = "<group>"; };
+		54746DEA18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleNestedDayLayout.m; sourceTree = "<group>"; };
 		54CE45AA186AF4680023FDA4 /* EQREquipItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipItemCell.h; sourceTree = "<group>"; };
 		54CE45AB186AF4680023FDA4 /* EQREquipItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipItemCell.m; sourceTree = "<group>"; };
 		54DFE0EE186ECD610089B9EA /* EQRClassRegistrationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRClassRegistrationItem.h; sourceTree = "<group>"; };
@@ -181,8 +181,8 @@
 				0190DAE118E234EA00B55D82 /* EQRScheduleNestedDayCell.m */,
 				0109F95C18E11A8B0069BE6A /* EQRHeaderCellForSchedule.h */,
 				0109F95D18E11A8B0069BE6A /* EQRHeaderCellForSchedule.m */,
-				54746DE918DFF8EA0016C596 /* EQRScheduleFlowLayout.h */,
-				54746DEA18DFF8EA0016C596 /* EQRScheduleFlowLayout.m */,
+				54746DE918DFF8EA0016C596 /* EQRScheduleNestedDayLayout.h */,
+				54746DEA18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m */,
 			);
 			name = "Schedule Display";
 			sourceTree = "<group>";
@@ -454,7 +454,7 @@
 				54032FE91872D39E00481D86 /* EQRScheduleRequestManager.m in Sources */,
 				01600B3818CA51CA0006D75A /* EQRScheduleTopVCntrllr.m in Sources */,
 				016C3F7E18ADBDAD00B2A692 /* EQREquipUniqueItem.m in Sources */,
-				54746DEB18DFF8EA0016C596 /* EQRScheduleFlowLayout.m in Sources */,
+				54746DEB18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m in Sources */,
 				54DFE0F0186ECD610089B9EA /* EQRClassRegistrationItem.m in Sources */,
 				0190DAE218E234EA00B55D82 /* EQRScheduleNestedDayCell.m in Sources */,
 				5402D237186C24A50091C080 /* EQRClassCell.m in Sources */,

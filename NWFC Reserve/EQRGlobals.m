@@ -21,7 +21,7 @@ float EQRResizingCollectionViewTime = 0.3;
 float EQRRentorTypeLeadingSpace = 80;
 
 //Schedule sizes
-float EQRScheduleItemWidthForDay = 150;
+float EQRScheduleItemWidthForDay = 26;
 float EQRScheduleItemHeightForDay = 30;
 
 //Schedule view by category or subcategory or something else...
