@@ -24,6 +24,11 @@
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipSectionsThatShouldBeHidden; //for equip reservation
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipSectionsThatShouldBeVisibleInSchedule;
 
+//arrays for schedule of uniqueItems
+@property (strong, nonatomic) NSArray* arrayOfMonthScheduleTracking_EquipUnique_Joins;
+@property (strong, nonatomic) NSMutableArray* arrayOfRowCellRects;  //???????
+
+
 
 
 +(EQRScheduleRequestManager*)sharedInstance;

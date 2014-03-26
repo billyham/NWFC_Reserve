@@ -20,6 +20,7 @@
 @property (strong, nonatomic) NSString* category;
 @property (strong, nonatomic) NSString* subcategory;
 @property (strong, nonatomic) NSString* shortname;
+@property (strong, nonatomic) NSString* schedule_grouping;
 
 
 @end

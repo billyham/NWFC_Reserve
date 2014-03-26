@@ -14,6 +14,7 @@
 		01600B3818CA51CA0006D75A /* EQRScheduleTopVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 01600B3718CA51CA0006D75A /* EQRScheduleTopVCntrllr.m */; };
 		01600B3C18CA53080006D75A /* EQRHeaderCellTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = 01600B3B18CA53080006D75A /* EQRHeaderCellTemplate.m */; };
 		016C3F7E18ADBDAD00B2A692 /* EQREquipUniqueItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 016C3F7D18ADBDAD00B2A692 /* EQREquipUniqueItem.m */; };
+		0190DAE218E234EA00B55D82 /* EQRScheduleNestedDayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0190DAE118E234EA00B55D82 /* EQRScheduleNestedDayCell.m */; };
 		01C79939189C723300D29625 /* EQREquipSummaryVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C79938189C723300D29625 /* EQREquipSummaryVCntrllr.m */; };
 		01FDEA96188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FDEA95188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m */; };
 		438EDCE0182B7ABD0090F882 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 438EDCDF182B7ABD0090F882 /* Foundation.framework */; };
@@ -76,6 +77,8 @@
 		01600B3B18CA53080006D75A /* EQRHeaderCellTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRHeaderCellTemplate.m; sourceTree = "<group>"; };
 		016C3F7C18ADBDAD00B2A692 /* EQREquipUniqueItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipUniqueItem.h; sourceTree = "<group>"; };
 		016C3F7D18ADBDAD00B2A692 /* EQREquipUniqueItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipUniqueItem.m; sourceTree = "<group>"; };
+		0190DAE018E234E900B55D82 /* EQRScheduleNestedDayCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleNestedDayCell.h; sourceTree = "<group>"; };
+		0190DAE118E234EA00B55D82 /* EQRScheduleNestedDayCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleNestedDayCell.m; sourceTree = "<group>"; };
 		01C79937189C723300D29625 /* EQREquipSummaryVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSummaryVCntrllr.h; sourceTree = "<group>"; };
 		01C79938189C723300D29625 /* EQREquipSummaryVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipSummaryVCntrllr.m; sourceTree = "<group>"; };
 		01FDEA94188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleTracking_EquipmentUnique_Join.h; sourceTree = "<group>"; };
@@ -174,10 +177,12 @@
 				0119D2FE18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.xib */,
 				0119D30118DBC736009126CB /* EQRScheduleRowCell.h */,
 				0119D30218DBC736009126CB /* EQRScheduleRowCell.m */,
-				54746DE918DFF8EA0016C596 /* EQRScheduleFlowLayout.h */,
-				54746DEA18DFF8EA0016C596 /* EQRScheduleFlowLayout.m */,
+				0190DAE018E234E900B55D82 /* EQRScheduleNestedDayCell.h */,
+				0190DAE118E234EA00B55D82 /* EQRScheduleNestedDayCell.m */,
 				0109F95C18E11A8B0069BE6A /* EQRHeaderCellForSchedule.h */,
 				0109F95D18E11A8B0069BE6A /* EQRHeaderCellForSchedule.m */,
+				54746DE918DFF8EA0016C596 /* EQRScheduleFlowLayout.h */,
+				54746DEA18DFF8EA0016C596 /* EQRScheduleFlowLayout.m */,
 			);
 			name = "Schedule Display";
 			sourceTree = "<group>";
@@ -451,6 +456,7 @@
 				016C3F7E18ADBDAD00B2A692 /* EQREquipUniqueItem.m in Sources */,
 				54746DEB18DFF8EA0016C596 /* EQRScheduleFlowLayout.m in Sources */,
 				54DFE0F0186ECD610089B9EA /* EQRClassRegistrationItem.m in Sources */,
+				0190DAE218E234EA00B55D82 /* EQRScheduleNestedDayCell.m in Sources */,
 				5402D237186C24A50091C080 /* EQRClassCell.m in Sources */,
 				01600B3C18CA53080006D75A /* EQRHeaderCellTemplate.m in Sources */,
 				438EDCF0182B7ABE0090F882 /* EQRAppDelegate.m in Sources */,

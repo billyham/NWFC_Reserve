@@ -15,13 +15,20 @@
 #import "EQRHeaderCellForSchedule.h"
 #import "EQREquipUniqueItem.h"
 #import "EQRWebData.h"
+#import "EQRWebData.h"
+#import "EQRScheduleTracking_EquipmentUnique_Join.h"
+#import "EQRScheduleRequestItem.h"
 
 
 @interface EQRScheduleTopVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myMasterScheduleCollectionView;
+@property (strong, nonatomic) IBOutlet UICollectionViewFlowLayout* scheduleMasterFlowLayout;
 
-//  YES!!!!
+//moved these to requestManager
+//@property (strong, nonatomic) NSArray* arrayOfMonthScheduleRequestItems;
+//@property (strong, nonatomic) NSArray* arrayOfMonthScheduleTracking_EquipUnique_Joins;
+
 @property (strong, nonatomic) NSArray* equipUniqueArray;
 @property (strong, nonatomic) NSMutableArray* equipUniqueArrayWithSections;
 @property (strong, nonatomic) NSMutableArray* equipUniqueCategoriesList;
@@ -66,15 +73,53 @@
     //register for header cell
     [self.myMasterScheduleCollectionView registerClass:[EQRHeaderCellForSchedule class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
     
+    //assign flow layout programmatically
+//    self.scheduleMasterFlowLayout = [[UICollectionViewFlowLayout alloc] init];
+//    
+//    [self.myMasterScheduleCollectionView setCollectionViewLayout:self.scheduleMasterFlowLayout];
+    
+    
+    
     
     //_____******  initialize how sections are hidden or not hidden  *****_______
     
     
+    //______Get a list of tracking items, starting with the current month
+    NSDate* todaysDate = [NSDate date];
+    NSDateFormatter* timestampFormatter = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [timestampFormatter setLocale:usLocale];
+    [timestampFormatter setDateFormat:@"yyyy-MM"];
+    NSString* initialDateString = [timestampFormatter stringFromDate:todaysDate];
+    NSString* beginDateString = [NSString stringWithFormat:@"%@-01", initialDateString];
+    NSString* endDateString = [NSString stringWithFormat:@"%@-31", initialDateString];
     
-    
-    
-    //_____*****  this a repeat of what the EquipSelectionVCntrllr *****______
     EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    NSArray* request_date_begin = [NSArray arrayWithObjects:@"request_date_begin", beginDateString, nil];
+    NSArray* request_date_end = [NSArray arrayWithObjects:@"request_date_end", endDateString, nil];
+    NSArray* topArray = [NSArray arrayWithObjects:request_date_begin, request_date_end, nil];
+    
+    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+    
+    [webData queryWithLink:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+        
+        [tempMuteArray addObjectsFromArray:muteArray];
+        
+    }];
+    
+    //save array to requestManager (for rowCell to access it as needed)
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins = tempMuteArray;
+    
+
+    
+    
+    
+    
+    
+    //______BUILD CURRENT LIST OF EQUIP UNIQUE ITEMS______
+    //_____*****  this a repeat of what the EquipSelectionVCntrllr *****______
     NSMutableArray* tempEquipMuteArray = [NSMutableArray arrayWithCapacity:1];
     
     //get the ENTIRE list of equiopment titles... for staff and faculty
@@ -102,8 +147,6 @@
         
         NSMutableSet* tempSet = [NSMutableSet set];
         
-
-
         
         //create a list of unique categories names by looping through the array of equipUniques
         for (EQREquipUniqueItem* obj in self.equipUniqueArray){
@@ -328,7 +371,7 @@
                                [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] shortname],
                                [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id]];
     
-    [cell initialSetupWithTitle:myTitleString];
+    [cell initialSetupWithTitle:myTitleString equipKey:[(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]];
     
     //add content view from xib
     EQRScheduleCellContentVCntrllr* myContentViewController = [[EQRScheduleCellContentVCntrllr alloc] initWithNibName:@"EQRScheduleCellContentVCntrllr" bundle:nil];
@@ -394,6 +437,27 @@
 #pragma mark - collection view delegate methods
 
 
+#pragma mark - collection view flow layout delegate methods
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    //______******   a better implementation of this is here:   ******_______
+    //  http://stackoverflow.com/questions/13556554/change-uicollectionviewcell-size-on-different-device-orientations
+    //uses two different flowlayout objects, one for each orientation
+    
+    UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
+        
+        //set size
+        return CGSizeMake(768.f, 30.f);
+        
+    }else{
+        
+        //set size
+        return CGSizeMake(1024.f, 30.f);
+    }
+}
 
 
 

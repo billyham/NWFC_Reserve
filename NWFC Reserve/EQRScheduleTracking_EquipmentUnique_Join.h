@@ -17,4 +17,11 @@
 
 @property int itemQuantity;
 
+//from scheduleTracking record
+@property (strong, nonatomic) NSString* contact_name;
+@property (strong, nonatomic) NSString* request_date_begin;
+@property (strong, nonatomic) NSString* request_date_end;
+@property (strong, nonatomic) NSString* renter_type;
+
+
 @end

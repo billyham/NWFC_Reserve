@@ -320,6 +320,12 @@
         return;
     }
     
+    if ([elementName isEqualToString:@"schedule_grouping"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
     
     //Properties for EquipUniqueItem
     if ([elementName isEqualToString:@"equipTitleItem_foreignKey"]){
@@ -396,6 +402,36 @@
     
     //Properties for ScheduleTracking_EquipUniqueItem_Join
     if ([elementName isEqualToString:@"equipUniqueItem_foreignKey"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"scheduleTracking_foreignKey"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"contact_name"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"request_date_begin"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"request_date_end"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"renter_type"]){
         
         self.currentProperty = elementName;
         return;
@@ -491,6 +527,16 @@
             self.currentValue = nil;
         }
         return;
+    }
+    
+    if ([prop isEqualToString:@"schedule_grouping"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(schedule_grouping)]){
+            
+            [(EQREquipItem*)self.currentThing setSchedule_grouping: self.currentValue];
+            
+            self.currentValue = nil;
+        }
     }
     
     
@@ -640,6 +686,61 @@
         if ([self.currentThing respondsToSelector:@selector(equipUniqueItem_foreignKey)]){
             
             [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setEquipUniqueItem_foreignKey:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"scheduleTracking_foreignKey"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(scheduleTracking_foreignKey)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setScheduleTracking_foreignKey:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"request_date_begin"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(request_date_begin)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_date_begin:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"request_date_end"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(request_date_end)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_date_end:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"contact_name"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(contact_name)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setContact_name:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"renter_type"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(renter_type)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRenter_type:self.currentValue];
             
             self.currentValue = nil;
         }

@@ -12,4 +12,9 @@
 
 @interface EQRScheduleRowCell : EQRCellTemplate <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
+@property (nonatomic, strong) NSString* uniqueItem_keyID;
+
+
+-(void)initialSetupWithTitle:(NSString*) titleName equipKey:(NSString*)uniqueKeyID;
+
 @end

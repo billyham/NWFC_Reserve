@@ -9,20 +9,32 @@
 #import "EQRScheduleRowCell.h"
 #import "EQRScheduleFlowLayout.h"
 #import "EQRGlobals.h"
+#import "EQRScheduleNestedDayCell.h"
+#import "EQRScheduleRequestManager.h"
+#import "EQRScheduleTracking_EquipmentUnique_Join.h"
 
 
 @interface EQRScheduleRowCell()
 
 @property (nonatomic, strong) UICollectionView* myUniqueItemCollectionView;
 
+//needs to know it's equipUniqueItem's key_id
+//and it's year and month???
+
+
+
 @end
 
 @implementation EQRScheduleRowCell
 
 
--(void)initialSetupWithTitle:(NSString*) titleName{
+-(void)initialSetupWithTitle:(NSString*) titleName equipKey:(NSString*)uniqueKeyID{
     
-    self.backgroundColor = [UIColor yellowColor];
+    //set ivar
+    self.uniqueItem_keyID = uniqueKeyID;
+    
+    //set background
+    self.backgroundColor = [UIColor whiteColor];
     
     //_______does nothing with the titleName_______
 //    UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(3, 5, 295, 45)];
@@ -33,24 +45,18 @@
 //    
 //    [self.contentView addSubview:self.titleLabel];
     
-    
-    //_____******** this does nothing
-    //change the size to match the orientation's width
-    CGRect currentRect = self.frame;
-    CGRect newRect = CGRectMake(currentRect.origin.x, currentRect.origin.y, 968, currentRect.size.height);
-    self.frame = newRect;
 
     //create a uicollectionview object programatically
     EQRScheduleFlowLayout* thisFlowLayout = [[EQRScheduleFlowLayout alloc] init];
-    thisFlowLayout.itemSize = CGSizeMake(50, 50);
+    thisFlowLayout.itemSize = CGSizeMake(50, 30);
     thisFlowLayout.sectionInset = UIEdgeInsetsZero;
     thisFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    CGRect thisRect = CGRectMake(200, 5, 558, 60);
+    CGRect thisRect = CGRectMake(200, 5, 558, 30);
     UICollectionView* thisCollectionView = [[UICollectionView alloc] initWithFrame:thisRect collectionViewLayout:thisFlowLayout];
     self.myUniqueItemCollectionView = thisCollectionView;
     
     //register collection view cell
-    [self.myUniqueItemCollectionView registerClass:[EQRCellTemplate class] forCellWithReuseIdentifier:@"ThisCell"];
+    [self.myUniqueItemCollectionView registerClass:[EQRScheduleNestedDayCell class] forCellWithReuseIdentifier:@"ThisCell"];
     
     
     [self.myUniqueItemCollectionView setDataSource:self];
@@ -64,13 +70,26 @@
     
     self.myUniqueItemCollectionView.backgroundColor = [UIColor clearColor];
     
+    //__*******  register its rect in an array that the flow layout can see???   *****____
+    
+    
 }
 
 #pragma mark - collection view data source methods
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
 
-    return 3;
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
+    for (EQRScheduleTracking_EquipmentUnique_Join* join in requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins){
+        
+        if ([join.equipUniqueItem_foreignKey isEqualToString:self.uniqueItem_keyID]){
+            
+            return 1;
+        }
+    }
+    
+    return 0;
 }
 
 
@@ -83,7 +102,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
 
     static NSString* CellIdentifier = @"ThisCell";
-    EQRCellTemplate* cell = [self.myUniqueItemCollectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    EQRScheduleNestedDayCell* cell = [self.myUniqueItemCollectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
 
     for (UIView* view in cell.contentView.subviews){
 
@@ -99,9 +118,6 @@
     //cell color
     cell.contentView.backgroundColor = [UIColor lightGrayColor];
 
-    NSLog(@"row item is happening");
-
-
     return cell;
 }
 
@@ -114,7 +130,7 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     
-    //______this is overridden in the flow layout subclass method______ 
+    //______this is overridden in the flow layout subclass method______ Grrrr!!
     CGSize newSize = CGSizeMake(EQRScheduleItemWidthForDay, EQRScheduleItemHeightForDay);
     
     return newSize;

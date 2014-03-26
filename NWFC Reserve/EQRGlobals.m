@@ -21,11 +21,11 @@ float EQRResizingCollectionViewTime = 0.3;
 float EQRRentorTypeLeadingSpace = 80;
 
 //Schedule sizes
-float EQRScheduleItemWidthForDay = 50;
-float EQRScheduleItemHeightForDay = 50;
+float EQRScheduleItemWidthForDay = 150;
+float EQRScheduleItemHeightForDay = 30;
 
 //Schedule view by category or subcategory or something else...
-NSString* EQRScheduleGrouping = @"subcategory";  //choose category or subcategory
+NSString* EQRScheduleGrouping = @"schedule_grouping";  //choose category or subcategory or schedule_grouping
 
 BOOL EQRDisableTimeLimitForRequest = YES;
 

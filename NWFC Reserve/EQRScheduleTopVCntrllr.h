@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQRScheduleTopVCntrllr : UIViewController
+@interface EQRScheduleTopVCntrllr : UIViewController <UICollectionViewDelegateFlowLayout>
+
+
 
 @end
