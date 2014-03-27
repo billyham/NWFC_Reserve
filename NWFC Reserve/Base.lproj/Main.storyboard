@@ -670,7 +670,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kLT-RF-p4Y">
-                                <rect key="frame" x="0.0" y="0.0" width="768" height="911"/>
+                                <rect key="frame" x="0.0" y="59" width="768" height="852"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="QDg-pa-dIL">
@@ -699,19 +699,85 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="Gsi-rN-Qaw" id="vXf-RN-JmL"/>
                                 </connections>
                             </collectionView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="nYS-BS-rsv">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="50"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="zWQ-qW-g4A"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="xg8-i3-gWM">
+                                    <size key="itemSize" width="70" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Uzz-Rf-Nc9">
+                                        <rect key="frame" x="0.0" y="0.0" width="70" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="70" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="Gsi-rN-Qaw" id="aAl-Bs-Vk5"/>
+                                    <outlet property="delegate" destination="Gsi-rN-Qaw" id="eij-iT-bZI"/>
+                                </connections>
+                            </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="kLT-RF-p4Y" firstAttribute="top" secondItem="E5Z-bZ-E8P" secondAttribute="bottom" id="1kd-II-TNT"/>
+                            <constraint firstItem="kLT-RF-p4Y" firstAttribute="top" secondItem="E5Z-bZ-E8P" secondAttribute="bottom" constant="59" id="1kd-II-TNT"/>
                             <constraint firstAttribute="trailing" secondItem="kLT-RF-p4Y" secondAttribute="trailing" id="Fsq-O0-L3Z"/>
                             <constraint firstItem="kLT-RF-p4Y" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" id="cPC-hH-3Vq"/>
                             <constraint firstItem="RVI-N8-2sC" firstAttribute="top" secondItem="kLT-RF-p4Y" secondAttribute="bottom" id="e9n-XB-kDr"/>
+                            <constraint firstAttribute="trailing" secondItem="nYS-BS-rsv" secondAttribute="trailing" id="luz-x0-wEK"/>
+                            <constraint firstItem="nYS-BS-rsv" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" id="yQk-M8-PmJ"/>
+                            <constraint firstItem="nYS-BS-rsv" firstAttribute="top" secondItem="8QP-Ue-DdR" secondAttribute="top" id="zQt-K0-GW5"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <navigationItem key="navigationItem" title="Schedule for Month" id="TlY-ai-kDl"/>
+                    <navigationItem key="navigationItem" title="Schedule for Month" id="TlY-ai-kDl">
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="wcX-lV-Txx">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="UIe-Ng-tu4">
+                                <rect key="frame" x="16" y="7" width="108" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="YxK-NZ-F4u"/>
+                                    <constraint firstAttribute="width" constant="108" id="ode-Gr-v9B"/>
+                                </constraints>
+                                <state key="normal" title="Previous Month">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="moveToPreviousMonth:" destination="Gsi-rN-Qaw" eventType="touchUpInside" id="Po7-T0-xXO"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="rQY-LN-ATg">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Sj2-h6-g4r">
+                                <rect key="frame" x="669" y="7" width="83" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="inn-gx-fAv"/>
+                                    <constraint firstAttribute="width" constant="83" id="r1n-e9-Mrh"/>
+                                </constraints>
+                                <state key="normal" title="Next Month">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="moveToNextMonth:" destination="Gsi-rN-Qaw" eventType="touchUpInside" id="uy4-vA-HSw"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="myMasterScheduleCollectionView" destination="kLT-RF-p4Y" id="qE8-bG-Dlb"/>
+                        <outlet property="myNavBarCollectionView" destination="nYS-BS-rsv" id="tik-yU-tbf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ghd-kE-bkn" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -757,6 +823,23 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Bi-CU-b2P" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3041" y="150"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="583-Sr-bqZ">
+            <objects>
+                <viewController id="OS0-0H-ptL" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="zCB-aE-eGe"/>
+                        <viewControllerLayoutGuide type="bottom" id="1xh-aM-loA"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ZUn-DW-NE3">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="K6B-aR-QhI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

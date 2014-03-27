@@ -11,6 +11,7 @@
 		0119D2FF18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 0119D2FD18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m */; };
 		0119D30018DBB25D009126CB /* EQRScheduleCellContentVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0119D2FE18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.xib */; };
 		0119D30318DBC736009126CB /* EQRScheduleRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0119D30218DBC736009126CB /* EQRScheduleRowCell.m */; };
+		014F776D18E3B28F00C75D66 /* EQRScheduleNavBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 014F776C18E3B28F00C75D66 /* EQRScheduleNavBarCell.m */; };
 		01600B3818CA51CA0006D75A /* EQRScheduleTopVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 01600B3718CA51CA0006D75A /* EQRScheduleTopVCntrllr.m */; };
 		01600B3C18CA53080006D75A /* EQRHeaderCellTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = 01600B3B18CA53080006D75A /* EQRHeaderCellTemplate.m */; };
 		016C3F7E18ADBDAD00B2A692 /* EQREquipUniqueItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 016C3F7D18ADBDAD00B2A692 /* EQREquipUniqueItem.m */; };
@@ -71,6 +72,8 @@
 		0119D2FE18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRScheduleCellContentVCntrllr.xib; sourceTree = "<group>"; };
 		0119D30118DBC736009126CB /* EQRScheduleRowCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleRowCell.h; sourceTree = "<group>"; };
 		0119D30218DBC736009126CB /* EQRScheduleRowCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleRowCell.m; sourceTree = "<group>"; };
+		014F776B18E3B28F00C75D66 /* EQRScheduleNavBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleNavBarCell.h; sourceTree = "<group>"; };
+		014F776C18E3B28F00C75D66 /* EQRScheduleNavBarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleNavBarCell.m; sourceTree = "<group>"; };
 		01600B3618CA51CA0006D75A /* EQRScheduleTopVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleTopVCntrllr.h; sourceTree = "<group>"; };
 		01600B3718CA51CA0006D75A /* EQRScheduleTopVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleTopVCntrllr.m; sourceTree = "<group>"; };
 		01600B3A18CA53080006D75A /* EQRHeaderCellTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRHeaderCellTemplate.h; sourceTree = "<group>"; };
@@ -183,6 +186,8 @@
 				0109F95D18E11A8B0069BE6A /* EQRHeaderCellForSchedule.m */,
 				54746DE918DFF8EA0016C596 /* EQRScheduleNestedDayLayout.h */,
 				54746DEA18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m */,
+				014F776B18E3B28F00C75D66 /* EQRScheduleNavBarCell.h */,
+				014F776C18E3B28F00C75D66 /* EQRScheduleNavBarCell.m */,
 			);
 			name = "Schedule Display";
 			sourceTree = "<group>";
@@ -434,6 +439,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				01FDEA96188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m in Sources */,
+				014F776D18E3B28F00C75D66 /* EQRScheduleNavBarCell.m in Sources */,
 				5402B7D5187586F400F0888B /* EQREquipContentViewVCntrllr.m in Sources */,
 				54032FE61872D36F00481D86 /* EQRScheduleRequestItem.m in Sources */,
 				5402D22E186BFCF80091C080 /* EQRCellTemplate.m in Sources */,

@@ -18,12 +18,16 @@
 #import "EQRWebData.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRScheduleRequestItem.h"
+#import "EQRScheduleNavBarCell.h"
 
 
 @interface EQRScheduleTopVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myMasterScheduleCollectionView;
-@property (strong, nonatomic) IBOutlet UICollectionViewFlowLayout* scheduleMasterFlowLayout;
+//delete me
+//@property (strong, nonatomic) IBOutlet UICollectionViewFlowLayout* scheduleMasterFlowLayout;
+
+@property (strong ,nonatomic) IBOutlet UICollectionView* myNavBarCollectionView;
 
 //moved these to requestManager
 //@property (strong, nonatomic) NSArray* arrayOfMonthScheduleRequestItems;
@@ -33,6 +37,11 @@
 @property (strong, nonatomic) NSMutableArray* equipUniqueArrayWithSections;
 @property (strong, nonatomic) NSMutableArray* equipUniqueCategoriesList;
 
+@property (strong, nonatomic) NSDate* dateForShow;
+
+
+-(IBAction)moveToNextMonth:(id)sender;
+-(IBAction)moveToPreviousMonth:(id)sender;
 
 
 @end
@@ -69,9 +78,21 @@
     
     //register collection view cell
     [self.myMasterScheduleCollectionView registerClass:[EQRScheduleRowCell class] forCellWithReuseIdentifier:@"Cell"];
-    
+    [self.myNavBarCollectionView registerClass:[EQRScheduleNavBarCell class] forCellWithReuseIdentifier:@"Cell"];
+
     //register for header cell
     [self.myMasterScheduleCollectionView registerClass:[EQRHeaderCellForSchedule class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
+    
+    //initial month is the current month
+    self.dateForShow = [NSDate date];
+    
+    //update month label
+    NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
+    monthNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    monthNameFormatter.dateFormat =@"MMMM yyyy";
+    
+    //assign month to nav bar title
+    self.title = [monthNameFormatter stringFromDate:self.dateForShow];
     
     //assign flow layout programmatically
 //    self.scheduleMasterFlowLayout = [[UICollectionViewFlowLayout alloc] init];
@@ -79,40 +100,18 @@
 //    [self.myMasterScheduleCollectionView setCollectionViewLayout:self.scheduleMasterFlowLayout];
     
     
+}
+
+
+-(void)viewWillAppear:(BOOL)animated{
     
+    NSLog(@"view will appear is called");
     
     //_____******  initialize how sections are hidden or not hidden  *****_______
     
     
-    //______Get a list of tracking items, starting with the current month
-    NSDate* todaysDate = [NSDate date];
-    NSDateFormatter* timestampFormatter = [[NSDateFormatter alloc] init];
-    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [timestampFormatter setLocale:usLocale];
-    [timestampFormatter setDateFormat:@"yyyy-MM"];
-    NSString* initialDateString = [timestampFormatter stringFromDate:todaysDate];
-    NSString* beginDateString = [NSString stringWithFormat:@"%@-01", initialDateString];
-    NSString* endDateString = [NSString stringWithFormat:@"%@-31", initialDateString];
-    
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    
-    NSArray* request_date_begin = [NSArray arrayWithObjects:@"request_date_begin", beginDateString, nil];
-    NSArray* request_date_end = [NSArray arrayWithObjects:@"request_date_end", endDateString, nil];
-    NSArray* topArray = [NSArray arrayWithObjects:request_date_begin, request_date_end, nil];
-    
-    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-    
-    [webData queryWithLink:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
-        
-        [tempMuteArray addObjectsFromArray:muteArray];
-        
-    }];
-    
-    //save array to requestManager (for rowCell to access it as needed)
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-    requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins = tempMuteArray;
-    
-
+    //load the scheduleTracking information
+    [self renewTheView];
     
     
     
@@ -123,6 +122,7 @@
     NSMutableArray* tempEquipMuteArray = [NSMutableArray arrayWithCapacity:1];
     
     //get the ENTIRE list of equiopment titles... for staff and faculty
+    EQRWebData* webData = [EQRWebData sharedInstance];
     [webData queryWithLink:@"EQGetEquipUniqueItemsAndCategories.php" parameters:nil class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
         
         //do something with the returned array...
@@ -151,7 +151,7 @@
         //create a list of unique categories names by looping through the array of equipUniques
         for (EQREquipUniqueItem* obj in self.equipUniqueArray){
             
-
+            
             
             if ([tempSet containsObject:[obj performSelector:NSSelectorFromString(EQRScheduleGrouping)]] == NO){
                 
@@ -159,7 +159,7 @@
                 [self.equipUniqueCategoriesList addObject:[NSString stringWithString:[obj performSelector:NSSelectorFromString(EQRScheduleGrouping)]]];
             }
             
-
+            
         }
         
         [tempSet removeAllObjects];
@@ -247,13 +247,139 @@
     
     //is this necessary_____???
     [self.myMasterScheduleCollectionView reloadData];
+    [self.myNavBarCollectionView reloadData];
     
-    //_________****************
+}
+
+
+-(void)renewTheView{
+    
+    //______Get a list of tracking items (defaulting with the current month)
+    NSDate* todaysDate = self.dateForShow;
+    NSDateFormatter* timestampFormatter = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [timestampFormatter setLocale:usLocale];
+    [timestampFormatter setDateFormat:@"yyyy-MM"];
+    NSString* initialDateString = [timestampFormatter stringFromDate:todaysDate];
+    NSString* beginDateString = [NSString stringWithFormat:@"%@-01", initialDateString];
+    NSString* endDateString = [NSString stringWithFormat:@"%@-31", initialDateString];
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    NSArray* request_date_begin = [NSArray arrayWithObjects:@"request_date_begin", beginDateString, nil];
+    NSArray* request_date_end = [NSArray arrayWithObjects:@"request_date_end", endDateString, nil];
+    NSArray* topArray = [NSArray arrayWithObjects:request_date_begin, request_date_end, nil];
+    
+    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+    
+    [webData queryWithLink:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+        
+        [tempMuteArray addObjectsFromArray:muteArray];
+        
+    }];
+    
+    //save array to requestManager (for rowCell to access it as needed)
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins = tempMuteArray;
     
     
     
 }
 
+
+
+#pragma mark - button actions
+
+
+-(IBAction)moveToNextMonth:(id)sender{
+    
+    //add a month the current month
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dateFormatter.dateFormat = @"yyyy-MM-dd";
+    NSString* oldDateAsString = [dateFormatter stringFromDate:self.dateForShow];
+    
+    //year
+    NSString* yearString = [oldDateAsString substringWithRange:NSMakeRange(0, 4)];
+    int yearInt = [yearString integerValue];
+    
+    //month
+    NSString* monthString = [oldDateAsString substringWithRange:NSMakeRange(5, 2)];
+    int monthInt = [monthString integerValue];
+    
+    //add a month
+    int newMonthInt = monthInt + 1;
+    
+    if (newMonthInt > 12){
+        
+        newMonthInt = 1;
+        
+        //change the year also
+        yearInt = yearInt + 1;
+    }
+    
+    NSDate* newMonthDate = [dateFormatter dateFromString:[NSString stringWithFormat:@"%u-%u-01", yearInt, newMonthInt]];
+    
+    //assign date to ivar
+    self.dateForShow = newMonthDate;
+    
+    //assign new month label
+    NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
+    monthNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    monthNameFormatter.dateFormat =@"MMMM yyyy";
+    
+    //assign month to nav bar title
+    self.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    
+    [self renewTheView];
+    
+    [self.myMasterScheduleCollectionView reloadData];
+}
+
+
+-(IBAction)moveToPreviousMonth:(id)sender{
+    
+    //subtract a month the current month
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dateFormatter.dateFormat = @"yyyy-MM-dd";
+    NSString* oldDateAsString = [dateFormatter stringFromDate:self.dateForShow];
+    
+    //year
+    NSString* yearString = [oldDateAsString substringWithRange:NSMakeRange(0, 4)];
+    int yearInt = [yearString integerValue];
+    
+    //month
+    NSString* monthString = [oldDateAsString substringWithRange:NSMakeRange(5, 2)];
+    int monthInt = [monthString integerValue];
+    
+    //subtract a month
+    int newMonthInt = monthInt - 1;
+    
+    if (newMonthInt < 1){
+        
+        newMonthInt = 12;
+        
+        //change the year also
+        yearInt = yearInt - 1;
+    }
+    
+    NSDate* newMonthDate = [dateFormatter dateFromString:[NSString stringWithFormat:@"%u-%u-01", yearInt, newMonthInt]];
+    
+    //assign date to ivar
+    self.dateForShow = newMonthDate;
+    
+    //assign new month label
+    NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
+    monthNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    monthNameFormatter.dateFormat =@"MMMM yyyy";
+    
+    //assign month to nav bar title
+    self.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    [self renewTheView];
+    
+    [self.myMasterScheduleCollectionView reloadData];
+}
 
 
 
@@ -329,64 +455,101 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
-    //test if this section is flagged to be collapsed
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    //DECIDE WHICH COLLECTION VIEW SHOULD BE AFFECTED
     
-    EQREquipUniqueItem* sampleItem = [[self.equipUniqueArrayWithSections objectAtIndex:section] objectAtIndex:0];
-    
-    //loop through array of hidden sections
-    for (NSString* objectSection in requestManager.arrayOfEquipSectionsThatShouldBeVisibleInSchedule){
+    if (collectionView == self.myMasterScheduleCollectionView){
         
-        if ([[sampleItem performSelector:NSSelectorFromString(EQRScheduleGrouping)] isEqualToString:objectSection]){
+        //test if this section is flagged to be collapsed
+        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+        
+        EQREquipUniqueItem* sampleItem = [[self.equipUniqueArrayWithSections objectAtIndex:section] objectAtIndex:0];
+        
+        //loop through array of hidden sections
+        for (NSString* objectSection in requestManager.arrayOfEquipSectionsThatShouldBeVisibleInSchedule){
             
-            return [(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:section] count];
+            if ([[sampleItem performSelector:NSSelectorFromString(EQRScheduleGrouping)] isEqualToString:objectSection]){
+                
+                return [(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:section] count];
+            }
         }
+        
+        //otherwise...
+        return 0;
+        
+    } else {
+        
+        NSLog(@"equiopUniqueCategoriesList count is: %u", [self.equipUniqueCategoriesList count]);
+        return [self.equipUniqueCategoriesList count];
     }
-    
-    //otherwise...
-    return 0;
     
 }
 
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     
+    //DECIDE WHICH COLLECTION VIEW SHOULD BE AFFECTED
     
-    return [self.equipUniqueArrayWithSections count];
+    if (collectionView == self.myMasterScheduleCollectionView){
+        
+        return [self.equipUniqueArrayWithSections count];
+        
+    } else {
+        
+        return 1;
+    }
 }
 
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     static NSString* CellIdentifier = @"Cell";
-    EQRScheduleRowCell* cell = [self.myMasterScheduleCollectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+
     
-    for (UIView* view in cell.contentView.subviews){
+    //DECIDE WHICH COLLECTION VIEW SHOULD BE AFFECTED
+    
+    if (collectionView == self.myMasterScheduleCollectionView){
         
-        [view removeFromSuperview];
+        EQRScheduleRowCell* cell = [self.myMasterScheduleCollectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+        
+        for (UIView* view in cell.contentView.subviews){
+            
+            [view removeFromSuperview];
+        }
+        
+        //get the item name and distinquishing ID from the nested array
+        NSString* myTitleString = [NSString stringWithFormat:@"%@  #%@",
+                                   [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] shortname],
+                                   [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id]];
+        
+        [cell initialSetupWithTitle:myTitleString equipKey:[(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]];
+        
+        //add content view from xib
+        EQRScheduleCellContentVCntrllr* myContentViewController = [[EQRScheduleCellContentVCntrllr alloc] initWithNibName:@"EQRScheduleCellContentVCntrllr" bundle:nil];
+        
+        //add subview
+        [cell.contentView addSubview:myContentViewController.view];
+        
+        
+        //change label AFTER adding it to the view else defaults to XIB file
+        myContentViewController.myRowLabel.text = myTitleString;
+        
+        return cell;
+        
+    } else {
+        
+        EQRScheduleNavBarCell* cell2 = [self.myNavBarCollectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+        
+        for (UIView* view in cell2.contentView.subviews){
+            
+            [view removeFromSuperview];
+        }
+        
+        [cell2 initialSetupWithTitle:(NSString*)[self.equipUniqueCategoriesList objectAtIndex:indexPath.row]];
+//        [cell2 initialSetupWithTitle:@"Whee!"];
+
+        
+        return cell2;
     }
-    
-    //get the item name and distinquishing ID from the nested array
-    NSString* myTitleString = [NSString stringWithFormat:@"%@  #%@",
-                               [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] shortname],
-                               [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id]];
-    
-    [cell initialSetupWithTitle:myTitleString equipKey:[(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]];
-    
-    //add content view from xib
-    EQRScheduleCellContentVCntrllr* myContentViewController = [[EQRScheduleCellContentVCntrllr alloc] initWithNibName:@"EQRScheduleCellContentVCntrllr" bundle:nil];
-    
-    //add subview
-    [cell.contentView addSubview:myContentViewController.view];
-    
-    
-    //change label AFTER adding it to the view else defaults to XIB file
-    myContentViewController.myRowLabel.text = myTitleString;
-    
-    
-    
-    
-    return cell;
 }
 
 
@@ -405,61 +568,99 @@
     }
     
     
-    //_____test whether the section is collapsed or expanded
-    BOOL iAmVisible = NO;
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-    for (NSString* sectionString in requestManager.arrayOfEquipSectionsThatShouldBeVisibleInSchedule){
+    //DECIDE WHICH COLLECTION VIEW SHOULD BE AFFECTED
+    
+    if (collectionView == self.myMasterScheduleCollectionView){
         
-        if ([sectionString isEqualToString:[(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)]]){
+        //_____test whether the section is collapsed or expanded
+        BOOL iAmVisible = NO;
+        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+        for (NSString* sectionString in requestManager.arrayOfEquipSectionsThatShouldBeVisibleInSchedule){
             
-            //found a match in the array of visible sections
-            iAmVisible = YES;
-            
-            break;
+            if ([sectionString isEqualToString:[(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)]]){
+                
+                //found a match in the array of visible sections
+                iAmVisible = YES;
+                
+                break;
+            }
         }
+        
+        //inverse the logic
+        BOOL iAmHidden = abs(1 - iAmVisible);
+        
+        //get the category or subcategory for a sample item in the nested array
+        NSString* thisTitleString = [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)];
+        
+        //cell's initial setup method with label
+        [cell initialSetupWithTitle:thisTitleString isHidden:iAmHidden];
+        
+        
+        
+    } else {
+        
+        
     }
     
-    //inverse the logic
-    BOOL iAmHidden = abs(1 - iAmVisible);
-    
-    //get the category or subcategory for a sample item in the nested array
-    NSString* thisTitleString = [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)];
-    
-    //cell's initial setup method with label
-    [cell initialSetupWithTitle:thisTitleString isHidden:iAmHidden];
-    
     return cell;
-    
 }
 
 
 
 #pragma mark - collection view delegate methods
 
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    //DECIDE WHICH COLLECTION VIEW SHOULD BE AFFECTED
+    
+    if (collectionView == self.myMasterScheduleCollectionView){
+        
+    } else {
+        
+        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+        
+        //update request Manager to do the action and keep persistence
+        [requestManager collapseOrExpandSectionInSchedule:[self.equipUniqueCategoriesList objectAtIndex:indexPath.row]];
+    }
+    
+}
 
 #pragma mark - collection view flow layout delegate methods
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    //______******   a better implementation of this is here:   ******_______
-    //  http://stackoverflow.com/questions/13556554/change-uicollectionviewcell-size-on-different-device-orientations
-    //uses two different flowlayout objects, one for each orientation
+    //DECIDE WHICH COLLECTION VIEW SHOULD BE AFFECTED
     
-    UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
-    
-    if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
+    if (collectionView == self.myMasterScheduleCollectionView){
         
-        //set size
-        return CGSizeMake(768.f, 30.f);
         
-    }else{
+        //______******   a better implementation of this is here:   ******_______
+        //  http://stackoverflow.com/questions/13556554/change-uicollectionviewcell-size-on-different-device-orientations
+        //uses two different flowlayout objects, one for each orientation
         
-        //set size
-        return CGSizeMake(1024.f, 30.f);
+        UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
+        
+        if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
+            
+            //set size
+            return CGSizeMake(768.f, 30.f);
+            
+        }else{
+            
+            //set size
+            return CGSizeMake(1024.f, 30.f);
+        }
+        
+    } else {
+        
+        
+        return CGSizeMake(60, 50);
     }
+    
 }
 
 
+#pragma mark - memory warning
 
 
 

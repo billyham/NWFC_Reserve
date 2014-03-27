@@ -37,8 +37,6 @@
 @property BOOL hideClassListFlag;
 
 
-
-
 @end
 
 @implementation EQRReserveTopVCntrllr
