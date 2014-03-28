@@ -32,6 +32,7 @@ NSString* EQRScheduleGrouping = @"schedule_grouping";  //choose category or subc
 
 BOOL EQRDisableTimeLimitForRequest = YES;
 
+
 @implementation EQRGlobals
 
 @end

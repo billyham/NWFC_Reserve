@@ -557,12 +557,12 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
             </objects>
             <point key="canvasLocation" x="5554" y="-1059"/>
         </scene>
-        <!--Navigation Controller - For Staff-->
+        <!--Navigation Controller - Settings-->
         <scene sceneID="1um-j7-ZW7">
             <objects>
                 <navigationController definesPresentationContext="YES" id="Q0m-16-1SA" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="2" title="For Staff" id="9jm-Q9-owK"/>
+                    <tabBarItem key="tabBarItem" tag="3" title="Settings" id="9jm-Q9-owK"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="m1c-fR-371">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -652,12 +652,12 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
             </objects>
             <point key="canvasLocation" x="3931" y="2726"/>
         </scene>
-        <!--Navigation Controller - Schedule-->
+        <!--Navigation Controller - Tracking-->
         <scene sceneID="bdP-zc-5dt">
             <objects>
                 <navigationController definesPresentationContext="YES" id="hee-oI-qji" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="3" title="Schedule" id="80V-0y-NVa"/>
+                    <tabBarItem key="tabBarItem" tag="2" title="Tracking" id="80V-0y-NVa"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ei4-hq-B9c">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -669,10 +669,10 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
             </objects>
             <point key="canvasLocation" x="3041" y="3846"/>
         </scene>
-        <!--Schedule TopV Cntrllr - Schedule-->
+        <!--Schedule TopV Cntrllr - Sheet-->
         <scene sceneID="EM0-3n-YZ3">
             <objects>
-                <viewController title="Schedule" id="Gsi-rN-Qaw" customClass="EQRScheduleTopVCntrllr" sceneMemberID="viewController">
+                <viewController title="Sheet" id="Gsi-rN-Qaw" customClass="EQRScheduleTopVCntrllr" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="E5Z-bZ-E8P"/>
                         <viewControllerLayoutGuide type="bottom" id="RVI-N8-2sC"/>
@@ -685,15 +685,15 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <rect key="frame" x="0.0" y="80" width="768" height="831"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="2" minimumInteritemSpacing="10" id="QDg-pa-dIL">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="10" id="QDg-pa-dIL">
                                     <size key="itemSize" width="768" height="50"/>
-                                    <size key="headerReferenceSize" width="768" height="1"/>
+                                    <size key="headerReferenceSize" width="768" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="2" maxX="0.0" maxY="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="DlY-VL-CxQ">
-                                        <rect key="frame" x="0.0" y="3" width="768" height="50"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="768" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="768" height="50"/>
@@ -703,7 +703,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="9XK-hF-XVh">
-                                    <rect key="frame" x="0.0" y="0.0" width="768" height="1"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </collectionReusableView>
                                 <connections>
@@ -740,14 +739,25 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="Gsi-rN-Qaw" id="eij-iT-bZI"/>
                                 </connections>
                             </collectionView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DtK-sQ-FRE" customClass="EQRNavBarTopBar">
+                                <rect key="frame" x="200" y="50" width="568" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="2Mn-oB-Az2"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="kLT-RF-p4Y" firstAttribute="top" secondItem="E5Z-bZ-E8P" secondAttribute="bottom" constant="80" id="1kd-II-TNT"/>
                             <constraint firstAttribute="trailing" secondItem="kLT-RF-p4Y" secondAttribute="trailing" id="Fsq-O0-L3Z"/>
                             <constraint firstItem="kLT-RF-p4Y" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" id="cPC-hH-3Vq"/>
+                            <constraint firstItem="DtK-sQ-FRE" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" constant="200" id="cyD-hk-Pn0"/>
                             <constraint firstItem="RVI-N8-2sC" firstAttribute="top" secondItem="kLT-RF-p4Y" secondAttribute="bottom" id="e9n-XB-kDr"/>
                             <constraint firstAttribute="trailing" secondItem="nYS-BS-rsv" secondAttribute="trailing" id="luz-x0-wEK"/>
+                            <constraint firstAttribute="trailing" secondItem="DtK-sQ-FRE" secondAttribute="trailing" id="sgp-LO-W0a"/>
+                            <constraint firstItem="DtK-sQ-FRE" firstAttribute="top" secondItem="nYS-BS-rsv" secondAttribute="bottom" id="xdh-AC-m91"/>
                             <constraint firstItem="nYS-BS-rsv" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" id="yQk-M8-PmJ"/>
                             <constraint firstItem="nYS-BS-rsv" firstAttribute="top" secondItem="8QP-Ue-DdR" secondAttribute="top" id="zQt-K0-GW5"/>
                         </constraints>
@@ -809,21 +819,21 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     </tabBar>
                     <connections>
                         <segue destination="PkY-gJ-1eR" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
+                        <segue destination="hee-oI-qji" kind="relationship" relationship="viewControllers" id="skc-Dk-72s"/>
                         <segue destination="N1x-Zy-wJ8" kind="relationship" relationship="viewControllers" id="g4f-li-Ac0"/>
                         <segue destination="Q0m-16-1SA" kind="relationship" relationship="viewControllers" id="LrH-oW-zRK"/>
-                        <segue destination="hee-oI-qji" kind="relationship" relationship="viewControllers" id="skc-Dk-72s"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2013" y="878"/>
         </scene>
-        <!--Navigation Controller - Equipment-->
+        <!--Navigation Controller - Request-->
         <scene sceneID="U9f-oN-PdO">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="PkY-gJ-1eR" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" title="Equipment" id="acW-dT-cKf"/>
+                    <tabBarItem key="tabBarItem" title="Request" id="acW-dT-cKf"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="8al-4j-zas">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>

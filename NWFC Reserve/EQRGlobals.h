@@ -32,6 +32,10 @@ extern NSString* EQRScheduleGrouping;
 
 extern BOOL EQRDisableTimeLimitForRequest;
 
+//colors?
+extern UIColor* EQRNavBarSelected;
+
+
 @interface EQRGlobals : NSObject
 
 

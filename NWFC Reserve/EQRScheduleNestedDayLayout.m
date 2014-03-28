@@ -112,8 +112,8 @@
     
     int distanceOffset = (startDayInt - 1) * EQRScheduleItemWidthForDay;
     
-    //trim 2 points off the end otherwise two objects next to each other blend as one long object
-    int objectWidth = (((endDayInt + 1) - startDayInt) * EQRScheduleItemWidthForDay) - 2 ;
+    //trim 1 points off the end otherwise two objects next to each other blend as one long object
+    int objectWidth = (((endDayInt + 1) - startDayInt) * EQRScheduleItemWidthForDay) - 1 ;
     
     
     //SIZE

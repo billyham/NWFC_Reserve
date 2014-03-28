@@ -9,11 +9,12 @@
 #import "EQRScheduleCellContentVCntrllr.h"
 #import "EQRCellTemplate.h"
 #import "EQRGlobals.h"
+#import "EQRNavBarDatesView.h"
 
 @interface EQRScheduleCellContentVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myUniqueItemCollectionView;
-
+@property (strong, nonatomic) IBOutlet EQRNavBarDatesView* navBarDates;
 
 @end
 

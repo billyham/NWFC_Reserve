@@ -92,7 +92,8 @@
     monthNameFormatter.dateFormat =@"MMMM yyyy";
     
     //assign month to nav bar title
-    self.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    
     
     //assign flow layout programmatically
 //    self.scheduleMasterFlowLayout = [[UICollectionViewFlowLayout alloc] init];
@@ -329,7 +330,7 @@
     monthNameFormatter.dateFormat =@"MMMM yyyy";
     
     //assign month to nav bar title
-    self.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
     
     [self renewTheView];
     
@@ -375,7 +376,8 @@
     monthNameFormatter.dateFormat =@"MMMM yyyy";
     
     //assign month to nav bar title
-    self.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    
     [self renewTheView];
     
     [self.myMasterScheduleCollectionView reloadData];
@@ -535,6 +537,8 @@
         
         //add subview
         [cell.contentView addSubview:myContentViewController.view];
+        //move to rear
+        [cell.contentView sendSubviewToBack:myContentViewController.view];
         
         
         //change label AFTER adding it to the view else defaults to XIB file

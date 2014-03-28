@@ -78,6 +78,8 @@
     //__*******  register its rect in an array that the flow layout can see???   *****____
     
     
+    
+    
 }
 
 #pragma mark - collection view data source methods
