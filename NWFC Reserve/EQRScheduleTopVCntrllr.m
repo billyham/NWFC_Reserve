@@ -523,6 +523,13 @@
         
         [cell initialSetupWithTitle:myTitleString equipKey:[(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]];
         
+        //modify the background color to have alternate colors in rows
+        if (indexPath.row % 2){
+            //odd
+            cell.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1.0];
+        }
+        
+        
         //add content view from xib
         EQRScheduleCellContentVCntrllr* myContentViewController = [[EQRScheduleCellContentVCntrllr alloc] initWithNibName:@"EQRScheduleCellContentVCntrllr" bundle:nil];
         
@@ -547,6 +554,11 @@
         [cell2 initialSetupWithTitle:(NSString*)[self.equipUniqueCategoriesList objectAtIndex:indexPath.row]];
 //        [cell2 initialSetupWithTitle:@"Whee!"];
 
+        //modify the background color to have alternate colors in rows
+        if (indexPath.row % 2){
+            //odd
+            cell2.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1.0];
+        }
         
         return cell2;
     }
@@ -559,7 +571,7 @@
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
     
     static NSString* CellIdentifier = @"SupplementaryCell";
-    EQRHeaderCellTemplate* cell = [self.myMasterScheduleCollectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    EQRHeaderCellForSchedule* cell = [self.myMasterScheduleCollectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:CellIdentifier forIndexPath:indexPath];
     
     //remove subviews
     for (UIView* thisSubview in cell.contentView.subviews){
@@ -619,6 +631,8 @@
         
         EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
         
+        //_____********  must close any currently open sections first, then open the selected one  ********____
+        
         //update request Manager to do the action and keep persistence
         [requestManager collapseOrExpandSectionInSchedule:[self.equipUniqueCategoriesList objectAtIndex:indexPath.row]];
     }
@@ -633,7 +647,7 @@
     
     if (collectionView == self.myMasterScheduleCollectionView){
         
-        
+        //for EquipUnique Stuff
         //______******   a better implementation of this is here:   ******_______
         //  http://stackoverflow.com/questions/13556554/change-uicollectionviewcell-size-on-different-device-orientations
         //uses two different flowlayout objects, one for each orientation
@@ -653,8 +667,24 @@
         
     } else {
         
+        //for NAV BAR
+        //size of cell is based available length of collectoin view divided by count in array,
         
-        return CGSizeMake(60, 50);
+        float widthOfMe;
+        
+        UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
+        
+        if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
+            
+            widthOfMe = 768 / [self.equipUniqueCategoriesList count];
+            
+        }else{
+            
+            widthOfMe = 1024 / [self.equipUniqueCategoriesList count];
+
+        }
+        
+        return CGSizeMake(widthOfMe, 50);
     }
     
 }

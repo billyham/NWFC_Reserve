@@ -14,6 +14,8 @@ NSString* ApplicationKey = @"3j654FP00o91wer";
 NSString* EQRVoidScheduleItemObjects = @"EQRVoidScheduleItemObjects";
 NSString* EQRRefreshEquipTable = @"EQRRefreshEquipTable";
 NSString* EQRRefreshScheduleTable = @"EQRRefreshScheduleTable";
+NSString* EQRButtonHighlight = @"EQRButtonHighlight";
+NSString* EQRButtonUnHighlight = @"EQRButtonUnHighlight";
 
 //Timing
 float EQRHighlightTappingTime = 0.125;
@@ -23,6 +25,7 @@ float EQRRentorTypeLeadingSpace = 80;
 //Schedule sizes
 float EQRScheduleItemWidthForDay = 26;
 float EQRScheduleItemHeightForDay = 30;
+float EQRScheduleLengthOfEquipUniqueLabel = 200;
 
 //Schedule view by category or subcategory or something else...
 NSString* EQRScheduleGrouping = @"schedule_grouping";  //choose category or subcategory or schedule_grouping

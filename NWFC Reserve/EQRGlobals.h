@@ -14,6 +14,8 @@ extern NSString* ApplicationKey;
 extern NSString* EQRVoidScheduleItemObjects;
 extern NSString* EQRRefreshEquipTable;
 extern NSString* EQRRefreshScheduleTable;
+extern NSString* EQRButtonHighlight;
+extern NSString* EQRButtonUnHighlight;
 
 //Timing
 extern float EQRHighlightTappingTime;
@@ -23,6 +25,7 @@ extern float EQRRentorTypeLeadingSpace;
 //Schedule collection view cell size
 extern float EQRScheduleItemWidthForDay;
 extern float EQRScheduleItemHeightForDay;
+extern float EQRScheduleLengthOfEquipUniqueLabel;
 
 //Schedule view by category or subcategory
 extern NSString* EQRScheduleGrouping;

@@ -404,6 +404,9 @@
         
         self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule = [NSMutableArray arrayWithCapacity:1];
     }
+
+    
+    
     
     bool hideMeFlag = NO;
     NSString* objectToRemove;
@@ -419,9 +422,40 @@
         }
     }
     
+    
+    //_____********  must close any currently open sections first, then open the selected one  ********____
+    if (!hideMeFlag){
+        
+        
+        //first, remove any existing object to hide them, so only section is visible at a time
+        
+        //populate a new array with existing object in array
+        NSMutableArray* newMuteArray = [NSMutableArray arrayWithArray:self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule];
+        
+        //remove existing objects from array
+        [self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule removeAllObjects];
+        
+        for (NSString* categoryItem in newMuteArray){
+            
+            NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                     @"delete", @"type",
+                                     categoryItem, @"sectionString",
+                                     nil];
+            
+            //send note to collapse the section
+            [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshScheduleTable object:nil userInfo:thisDic];
+            
+            //send note to unhighlight the button
+            NSDictionary* dic = [NSDictionary dictionaryWithObject:categoryItem forKey:@"sectionString"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:EQRButtonUnHighlight object:nil userInfo:dic];
+        }
+
+    }
+    
+    
     if (hideMeFlag){
         
-        //add object to array
+        //remove object from array
         [self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule removeObject:objectToRemove];
         
         
@@ -434,24 +468,40 @@
         //send note
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshScheduleTable object:nil userInfo:thisDic];
         
+        //send note to unhighlight the button
+        NSDictionary* dic = [NSDictionary dictionaryWithObject:chosenSection forKey:@"sectionString"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRButtonUnHighlight object:nil userInfo:dic];
+        
         
     }else{
         
-        //remove object from array
-        [self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule addObject:chosenSection];
+        //show me!
         
+        //must add delay to allow time to close the exsiting sections first...
+        [self performSelector:@selector(delayedExpandAction:) withObject:chosenSection afterDelay:0.25];
         
-        NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 @"insert", @"type",
-                                 chosenSection, @"sectionString",
-                                 nil];;
-        
-        //send note
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshScheduleTable object:nil userInfo:thisDic];
-        
+        //send note to highlight the button
+        NSDictionary* dic = [NSDictionary dictionaryWithObject:chosenSection forKey:@"sectionString"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRButtonHighlight object:nil userInfo:dic];
     }
 }
 
+
+-(void) delayedExpandAction:(NSString*)chosenSection{
+  
+    //add object to array
+    [self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule addObject:chosenSection];
+    
+    
+    NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                             @"insert", @"type",
+                             chosenSection, @"sectionString",
+                             nil];;
+    
+    //send note
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshScheduleTable object:nil userInfo:thisDic];
+    
+};
 
 
 

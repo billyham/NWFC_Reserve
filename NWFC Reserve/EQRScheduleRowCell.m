@@ -56,7 +56,7 @@
     thisNestedDayLayout.uniqueItem_keyID = self.uniqueItem_keyID;
     
     
-    CGRect thisRect = CGRectMake(200, 0, 824, 30);
+    CGRect thisRect = CGRectMake(EQRScheduleLengthOfEquipUniqueLabel, 0, (1024 - EQRScheduleLengthOfEquipUniqueLabel), 30);
     UICollectionView* thisCollectionView = [[UICollectionView alloc] initWithFrame:thisRect collectionViewLayout:thisNestedDayLayout];
     self.myUniqueItemCollectionView = thisCollectionView;
     

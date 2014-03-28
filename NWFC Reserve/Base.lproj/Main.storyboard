@@ -13,11 +13,11 @@
                         <viewControllerLayoutGuide type="bottom" id="yAW-zm-NfC"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="tsR-hK-woN">
-                        <rect key="frame" x="0.0" y="64" width="768" height="960"/>
+                        <rect key="frame" x="0.0" y="64" width="768" height="911"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Wwo-iZ-sDI">
-                                <rect key="frame" x="120" y="0.0" width="354" height="910"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Wwo-iZ-sDI">
+                                <rect key="frame" x="120" y="0.0" width="354" height="861"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -58,8 +58,8 @@
                                     <outlet property="delegate" destination="9pv-A4-QxB" id="ODm-2J-xC5"/>
                                 </connections>
                             </collectionView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2lJ-9i-ODA">
-                                <rect key="frame" x="476" y="0.0" width="284" height="910"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2lJ-9i-ODA">
+                                <rect key="frame" x="476" y="0.0" width="284" height="861"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
@@ -99,8 +99,8 @@
                                     <outlet property="delegate" destination="9pv-A4-QxB" id="Myd-3h-voL"/>
                                 </connections>
                             </collectionView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2it-XM-d52">
-                                <rect key="frame" x="0.0" y="0.0" width="120" height="910"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2it-XM-d52">
+                                <rect key="frame" x="0.0" y="0.0" width="120" height="861"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -154,7 +154,7 @@
                             <constraint firstItem="Wwo-iZ-sDI" firstAttribute="leading" secondItem="2it-XM-d52" secondAttribute="trailing" id="tN9-L3-tfk"/>
                         </constraints>
                     </view>
-                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Equipment Request" id="TGU-ET-2b1">
                         <barButtonItem key="rightBarButtonItem" id="f3u-Nm-tqA">
                             <connections>
@@ -179,6 +179,7 @@
         <scene sceneID="5v8-5c-8yN">
             <objects>
                 <navigationController definesPresentationContext="YES" id="N1x-Zy-wJ8" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" tag="1" title="Edit Lab" id="kcE-Ts-bmC"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="3GC-Uk-lec">
                         <autoresizingMask key="autoresizingMask"/>
@@ -200,10 +201,11 @@
                         <viewControllerLayoutGuide type="bottom" id="cDE-eX-fMh"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Qq8-SQ-nrb">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <rect key="frame" x="0.0" y="64" width="768" height="911"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Edit Lab" id="2e2-Ak-VUc"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zfT-Fr-D54" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -320,11 +322,11 @@
                         <viewControllerLayoutGuide type="bottom" id="2a0-uV-AgL"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Fwt-An-9mD">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="980"/>
+                        <rect key="frame" x="0.0" y="64" width="768" height="916"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="560-5L-0by">
-                                <rect key="frame" x="324" y="86" width="121" height="21"/>
+                                <rect key="frame" x="324" y="22" width="121" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="NEa-bi-MNF"/>
@@ -337,7 +339,7 @@
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C1a-fS-4jR">
-                                <rect key="frame" x="105" y="175" width="559" height="805"/>
+                                <rect key="frame" x="105" y="111" width="559" height="805"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -348,7 +350,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mi1-UB-uJQ">
-                                <rect key="frame" x="357" y="125" width="55" height="30"/>
+                                <rect key="frame" x="357" y="61" width="55" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="SLx-1A-h3l"/>
@@ -372,7 +374,7 @@
                             <constraint firstItem="560-5L-0by" firstAttribute="top" secondItem="mmW-xL-xrN" secondAttribute="bottom" constant="22" id="cbu-Tt-Qcc"/>
                         </constraints>
                     </view>
-                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Summary" id="HSF-nb-bGQ">
                         <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="1m5-cA-aGm">
                             <connections>
@@ -398,11 +400,11 @@
                         <viewControllerLayoutGuide type="bottom" id="4S6-fE-aqx"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="O8I-IB-7am">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <rect key="frame" x="0.0" y="64" width="768" height="911"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PJk-Zf-mhU">
-                                <rect key="frame" x="353" y="96" width="62" height="30"/>
+                                <rect key="frame" x="353" y="32" width="62" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="2AN-da-kdy"/>
@@ -415,7 +417,7 @@
                                 </connections>
                             </button>
                             <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="JKh-Fc-SNU">
-                                <rect key="frame" x="224" y="163" width="320" height="216"/>
+                                <rect key="frame" x="224" y="99" width="320" height="216"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <date key="date" timeIntervalSinceReferenceDate="410169188.53517598">
                                     <!--2013-12-31 07:53:08 +0000-->
@@ -446,7 +448,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 </connections>
                             </datePicker>
                             <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="hRx-uz-EVI">
-                                <rect key="frame" x="224" y="467" width="320" height="216"/>
+                                <rect key="frame" x="224" y="403" width="320" height="216"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <date key="date" timeIntervalSinceReferenceDate="410169200.87450302">
                                     <!--2013-12-31 07:53:20 +0000-->
@@ -477,20 +479,24 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 </connections>
                             </datePicker>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pick Up Date and Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B3X-jM-y6Z">
-                                <rect key="frame" x="296" y="134" width="177" height="21"/>
+                                <rect key="frame" x="296" y="70" width="177" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Return Date and Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tu2-Wb-pwg">
-                                <rect key="frame" x="300" y="438" width="168" height="21"/>
+                                <rect key="frame" x="300" y="374" width="168" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4xw-pC-OF8">
-                                <rect key="frame" x="624" y="96" width="124" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4xw-pC-OF8">
+                                <rect key="frame" x="624" y="32" width="124" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="eJy-eO-CyS"/>
+                                    <constraint firstAttribute="width" constant="124" id="hPz-rI-I6G"/>
+                                </constraints>
                                 <state key="normal" title="List All Equipment">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -504,15 +510,18 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                             <constraint firstItem="hRx-uz-EVI" firstAttribute="top" secondItem="Tu2-Wb-pwg" secondAttribute="bottom" constant="8" id="42h-ZE-ORu"/>
                             <constraint firstAttribute="centerX" secondItem="B3X-jM-y6Z" secondAttribute="centerX" id="8MR-EU-4n6"/>
                             <constraint firstAttribute="centerX" secondItem="PJk-Zf-mhU" secondAttribute="centerX" id="DKx-KG-RxA"/>
+                            <constraint firstAttribute="trailing" secondItem="4xw-pC-OF8" secondAttribute="trailing" constant="20" id="HBj-SL-C1O"/>
                             <constraint firstAttribute="centerX" secondItem="hRx-uz-EVI" secondAttribute="centerX" id="QH7-Dw-LMz"/>
                             <constraint firstItem="B3X-jM-y6Z" firstAttribute="top" secondItem="PJk-Zf-mhU" secondAttribute="bottom" constant="8" id="UCT-sD-uN6"/>
                             <constraint firstItem="Tu2-Wb-pwg" firstAttribute="top" secondItem="JKh-Fc-SNU" secondAttribute="bottom" constant="59" id="XJr-5C-91O"/>
                             <constraint firstItem="JKh-Fc-SNU" firstAttribute="top" secondItem="B3X-jM-y6Z" secondAttribute="bottom" constant="8" id="cLe-hm-jdn"/>
+                            <constraint firstItem="4xw-pC-OF8" firstAttribute="top" secondItem="ZFw-oD-JEm" secondAttribute="bottom" constant="32" id="fjj-wI-9aT"/>
                             <constraint firstAttribute="centerX" secondItem="Tu2-Wb-pwg" secondAttribute="centerX" id="p71-JB-yha"/>
                             <constraint firstAttribute="centerX" secondItem="JKh-Fc-SNU" secondAttribute="centerX" id="qZ7-aa-X8f"/>
                             <constraint firstItem="PJk-Zf-mhU" firstAttribute="top" secondItem="ZFw-oD-JEm" secondAttribute="bottom" constant="32" id="t4J-4M-dNI"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Dates" id="rEN-CZ-Jdi">
                         <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="WDA-av-Z4I">
                             <connections>
@@ -552,6 +561,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <scene sceneID="1um-j7-ZW7">
             <objects>
                 <navigationController definesPresentationContext="YES" id="Q0m-16-1SA" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" tag="2" title="For Staff" id="9jm-Q9-owK"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="m1c-fR-371">
                         <autoresizingMask key="autoresizingMask"/>
@@ -573,10 +583,10 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <viewControllerLayoutGuide type="bottom" id="h8u-87-DAx"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="alO-bc-ApY">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <rect key="frame" x="0.0" y="64" width="768" height="911"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kOp-x7-tiU">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kOp-x7-tiU">
                                 <rect key="frame" x="234" y="352" width="300" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -589,14 +599,14 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <action selector="urlTextFieldDidChange:" destination="6G1-gm-2lt" eventType="editingDidEnd" id="Mot-Dx-9oe"/>
                                 </connections>
                             </textField>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Database Url" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yIg-Iv-qyn">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Database Url" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yIg-Iv-qyn">
                                 <rect key="frame" x="334" y="323" width="100" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Term" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xkv-aJ-mgn">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Current Term" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xkv-aJ-mgn">
                                 <rect key="frame" x="334" y="164" width="100" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -606,7 +616,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="imb-2J-3xE">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="imb-2J-3xE">
                                 <rect key="frame" x="371" y="193" width="26" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -631,6 +641,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                             <constraint firstAttribute="centerX" secondItem="xkv-aJ-mgn" secondAttribute="centerX" id="tdO-U9-7SV"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Settings" id="t24-ER-jgh"/>
                     <connections>
                         <outlet property="termString" destination="imb-2J-3xE" id="XlP-kl-34S"/>
@@ -645,6 +656,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <scene sceneID="bdP-zc-5dt">
             <objects>
                 <navigationController definesPresentationContext="YES" id="hee-oI-qji" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" tag="3" title="Schedule" id="80V-0y-NVa"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ei4-hq-B9c">
                         <autoresizingMask key="autoresizingMask"/>
@@ -670,18 +682,18 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kLT-RF-p4Y">
-                                <rect key="frame" x="0.0" y="59" width="768" height="852"/>
+                                <rect key="frame" x="0.0" y="80" width="768" height="831"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="QDg-pa-dIL">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="2" minimumInteritemSpacing="10" id="QDg-pa-dIL">
                                     <size key="itemSize" width="768" height="50"/>
-                                    <size key="headerReferenceSize" width="768" height="30"/>
+                                    <size key="headerReferenceSize" width="768" height="1"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="2" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="DlY-VL-CxQ">
-                                        <rect key="frame" x="0.0" y="32" width="768" height="50"/>
+                                        <rect key="frame" x="0.0" y="3" width="768" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="768" height="50"/>
@@ -691,7 +703,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="9XK-hF-XVh">
-                                    <rect key="frame" x="0.0" y="0.0" width="768" height="30"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="768" height="1"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </collectionReusableView>
                                 <connections>
@@ -731,7 +743,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="kLT-RF-p4Y" firstAttribute="top" secondItem="E5Z-bZ-E8P" secondAttribute="bottom" constant="59" id="1kd-II-TNT"/>
+                            <constraint firstItem="kLT-RF-p4Y" firstAttribute="top" secondItem="E5Z-bZ-E8P" secondAttribute="bottom" constant="80" id="1kd-II-TNT"/>
                             <constraint firstAttribute="trailing" secondItem="kLT-RF-p4Y" secondAttribute="trailing" id="Fsq-O0-L3Z"/>
                             <constraint firstItem="kLT-RF-p4Y" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" id="cPC-hH-3Vq"/>
                             <constraint firstItem="RVI-N8-2sC" firstAttribute="top" secondItem="kLT-RF-p4Y" secondAttribute="bottom" id="e9n-XB-kDr"/>
@@ -788,6 +800,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <scene sceneID="yl2-sM-qoP">
             <objects>
                 <tabBarController id="49e-Tb-3d3" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="W28-zg-YXA">
                         <rect key="frame" x="0.0" y="975" width="768" height="49"/>
@@ -809,6 +822,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <scene sceneID="U9f-oN-PdO">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="PkY-gJ-1eR" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" title="Equipment" id="acW-dT-cKf"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="8al-4j-zas">

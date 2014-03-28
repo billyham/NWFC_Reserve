@@ -11,4 +11,5 @@
 
 @interface EQRScheduleNavBarCell : EQRCellTemplate
 
+
 @end
