@@ -9,10 +9,14 @@
 #import "EQRScheduleNavBarCell.h"
 #import "EQRGlobals.h"
 #import "EQRScheduleRequestManager.h"
+#import "EQRColors.h"
 
 @implementation EQRScheduleNavBarCell
 
 -(void)initialSetupWithTitle:(NSString*) titleName{
+    
+    //load colors
+    EQRColors* myColors = [EQRColors sharedInstance];
     
     //receive notifications
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
@@ -42,7 +46,7 @@
         
         if ([sectionString isEqualToString:self.titleLabel.text]){
             
-            self.titleLabel.backgroundColor = [UIColor yellowColor];
+            self.titleLabel.backgroundColor = [myColors.colorDic objectForKey:EQRColorLightBlue];
         }
     }
     
@@ -52,12 +56,15 @@
 
 -(void)buttonHighlightResponse:(NSNotification*)note{
     
+    //load colors
+    EQRColors* myColors = [EQRColors sharedInstance];
+    
     NSString* titleString = [note.userInfo objectForKey:@"sectionString"];
     
     if ([titleString isEqualToString:self.titleLabel.text]){
         
         //found a match, so Highlight the button
-        self.titleLabel.backgroundColor = [UIColor yellowColor];
+        self.titleLabel.backgroundColor = [myColors.colorDic objectForKey:EQRColorLightBlue];
     }
     
 }

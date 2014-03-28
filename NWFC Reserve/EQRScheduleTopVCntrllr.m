@@ -19,6 +19,7 @@
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRScheduleRequestItem.h"
 #import "EQRScheduleNavBarCell.h"
+#import "EQREditorTopVCntrllr.h"
 
 
 @interface EQRScheduleTopVCntrllr ()
@@ -74,6 +75,8 @@
     
     //notes from scheduleRequestManager for hiding and expanding equipment sections
     [nc addObserver:self selector:@selector(refreshTable:) name:EQRRefreshScheduleTable object:nil];
+    //receives from scheduleRowCell command to present a requestEditor vcntrllr
+    [nc addObserver:self selector:@selector(showRequestEditor:) name:EQRPresentRequestEditor object:nil];
     
     
     //register collection view cell
@@ -93,7 +96,6 @@
     
     //assign month to nav bar title
     self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
-    
     
     //assign flow layout programmatically
 //    self.scheduleMasterFlowLayout = [[UICollectionViewFlowLayout alloc] init];
@@ -174,6 +176,7 @@
     NSArray* tempSortArrayCat = [self.equipUniqueCategoriesList sortedArrayUsingDescriptors:sortArray];
     self.equipUniqueCategoriesList = [NSMutableArray arrayWithArray:tempSortArrayCat];
     
+    
     //B.1 empty out the current ivar of arrayWithSections
     //create it if it doesn't exist yet
     if (!self.equipUniqueArrayWithSections){
@@ -184,6 +187,7 @@
         
         [self.equipUniqueArrayWithSections removeAllObjects];
     }
+    
     
     //B. with a valid list of categories....
     //create a new array by populating each nested array with equiptitle that match each category or subcategory
@@ -243,12 +247,22 @@
         
         [tempSortedArrayWithSections addObject:tempSubNestArray];
     };
+    
     self.equipUniqueArrayWithSections = tempSortedArrayWithSections;
     
+    //pick an initial tracking sheet item
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    if (([self.equipUniqueCategoriesList count] > 0) && ([requestManager.arrayOfEquipSectionsThatShouldBeVisibleInSchedule count] < 1)){
+        
+        [requestManager collapseOrExpandSectionInSchedule:[self.equipUniqueCategoriesList objectAtIndex:0]];
+        
+    }
     
-    //is this necessary_____???
+    //yes, this is necesary
     [self.myMasterScheduleCollectionView reloadData];
     [self.myNavBarCollectionView reloadData];
+    
+
     
 }
 
@@ -452,6 +466,34 @@
 }
 
 
+-(void) showRequestEditor:(NSNotification*)note{
+    
+    //    [self presentViewController:[[UIViewController alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil] animated:YES completion:^{
+    //
+    //    }];
+    
+    
+    EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
+    
+    //prevent edges from extending beneath nav and tab bars
+    editorViewController.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    //initial setup
+    [editorViewController initialSetupWithInfo:[NSDictionary dictionaryWithDictionary:note.userInfo]];
+    
+    //assign editor's keyID property
+//    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
+    
+    
+    
+    [self.navigationController pushViewController:editorViewController animated:YES];
+    
+
+
+    
+    
+}
+
 
 #pragma mark - collection view data source methods
 
@@ -518,6 +560,9 @@
             [view removeFromSuperview];
         }
         
+        //and reset the cell's background color...
+        cell.backgroundColor = [UIColor whiteColor];
+        
         //get the item name and distinquishing ID from the nested array
         NSString* myTitleString = [NSString stringWithFormat:@"%@  #%@",
                                    [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] shortname],
@@ -554,6 +599,9 @@
             
             [view removeFromSuperview];
         }
+        
+        //and reset the cell's background color...
+        cell2.backgroundColor = [UIColor whiteColor];
         
         [cell2 initialSetupWithTitle:(NSString*)[self.equipUniqueCategoriesList objectAtIndex:indexPath.row]];
 //        [cell2 initialSetupWithTitle:@"Whee!"];

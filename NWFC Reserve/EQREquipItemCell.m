@@ -11,6 +11,7 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRWebData.h"
 #import "EQRGlobals.h"
+#import "EQRColors.h"
 
 
 @interface EQREquipItemCell ()
@@ -41,7 +42,7 @@
 
 -(void)initialSetupWithTitle:(NSString*)titleName andEquipItem:(EQREquipItem*)titleItemObject{
     
-    NSLog(@"equipItemCell initialSetupWithTitle");
+    EQRColors* myColors = [EQRColors sharedInstance];
     
     //assign ivar
     self.thisEquipTitleItem = titleItemObject;
@@ -197,7 +198,7 @@
         self.myEquipVCntrllr.quantityTextField.text = self.itemQuantityString;
         
         //set new subview background color
-        self.myEquipVCntrllr.view.backgroundColor = [UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0];
+        self.myEquipVCntrllr.view.backgroundColor = [myColors.colorDic objectForKey:EQRColorLightBlue];
         
         //reveal plus minus buttons
         //_____BUT ONLY THE PLUS BUTTON IF THERE IS STILL AN AVAILABLE QUANTITY
@@ -212,6 +213,8 @@
 
 
 -(IBAction)plusHit:(id)sender{
+    
+    EQRColors* myColors = [EQRColors sharedInstance];
     
     self.itemQuantity = self.itemQuantity + 1;
     
@@ -246,7 +249,7 @@
         self.myEquipVCntrllr.view.backgroundColor = [UIColor yellowColor];
         
         //set color after delay
-        [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0] afterDelay:EQRHighlightTappingTime];
+        [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[myColors.colorDic objectForKey:EQRColorLightBlue] afterDelay:EQRHighlightTappingTime];
     }
     
     //______******  test if we have hit the total count of Unique items for this title item
@@ -270,6 +273,8 @@
 
 -(IBAction)minusHit:(id)sender{
     
+    EQRColors* myColors = [EQRColors sharedInstance];
+    
     if (self.itemQuantity > 0){
         
         //remove a join object from scheduleTrackingRequest
@@ -281,7 +286,7 @@
         self.myEquipVCntrllr.view.backgroundColor = [UIColor yellowColor];
         
         //set color after delay
-        [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0] afterDelay:EQRHighlightTappingTime];
+        [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[myColors.colorDic objectForKey:EQRColorLightBlue] afterDelay:EQRHighlightTappingTime];
         
         //____***** reactivate plus button if one is in effect
         if (self.quantityLimitFlag){

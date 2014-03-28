@@ -152,6 +152,25 @@
 
 #pragma mark - collection view delegate methods
 
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+
+    //bring up editor view with notification
+//    NSDictionary* dic = [NSDictionary dictionaryWithObject:[(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] scheduleTracking_foreignKey]  forKey:@"keyID"];
+    
+    NSDictionary* dic = [NSDictionary dictionaryWithObjectsAndKeys:
+                         [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] scheduleTracking_foreignKey], @"key_ID",
+                         [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] contact_name], @"contact_name",
+                          [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] renter_type], @"renter_type",
+                           [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_begin], @"request_date_begin",
+                         [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_end], @"request_date_end",
+                         nil];
+    
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditor object:nil userInfo:dic];
+    
+    
+}
+
 
 #pragma mark - collection view flow layout delegate
 

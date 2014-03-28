@@ -7,6 +7,7 @@
 //
 
 #import "EQRAppDelegate.h"
+#import "EQRColors.h"
 
 @implementation EQRAppDelegate
 
@@ -29,6 +30,10 @@
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     
+    
+    //instantiate system colors
+    EQRColors* myColors = [EQRColors sharedInstance];
+    [myColors loadColors];
     
     
     return YES;
