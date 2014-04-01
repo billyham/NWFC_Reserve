@@ -39,11 +39,11 @@
 -(NSArray*)retrieveArrayOfEquipJoins;
 -(void)collapseOrExpandSection:(NSString*)chosenSection;
 -(void)collapseOrExpandSectionInSchedule:(NSString*)chosenSection;
+-(void)allocateGearListWithDates:(NSDictionary*)datesDic;
 
 
 //_________ **********  THIS SHOULD BE RECEIVING EquipUniqueItem INSTEAD OF titleItems  ********________
 -(void)addNewRequestEquipJoin:(EQREquipItem*)thisEquipItem;
-
 -(void)removeRequestEquipJoin:(EQREquipItem*)thisEquipItem;
 
 

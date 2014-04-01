@@ -365,102 +365,92 @@
 
 -(void)allocateGearList{
     
-
-    //get a list of uniqueItems that fall within the rental dates.
-    //1. get scheduleTracking objects within the dates (sql script?)
-    //2. gather matching scheduleTracking_equip_joins (using scheduleTracking_foreignKey in schedule_equipUnique_joins)
-    //3. gather key_ids for equipUniqueItems (using equipUniqueItem_foreignKey in scheduleTracking_equipUnique_joins)
-    
-    //subtract out the quantity of uniqueItems available per titleItems
-    //compare with the quantitys requested, then pause and alert user if quantities are exceeded. Identified where excesses are.
-    //1. create a subnested array of titleItems with quantities (similar to the requestManager's ivar
-    //2. cycle through and add quantities from this request
-    //3. cycle through, comparing with titleItem key_ids in requestManager's ivar,
-
-    
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
-    //begin and end dates in sql format
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-    NSString* dateBeginString = [dateFormatter stringFromDate:requestManager.request.request_date_begin];
-    NSString* dateEndString = [dateFormatter stringFromDate:requestManager.request.request_date_end];
-    
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    
-    NSArray* arrayWithBeginDate = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
-    NSArray* arrayWithEndDate = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
-    NSArray* arrayTopDate = [NSArray arrayWithObjects:arrayWithBeginDate, arrayWithEndDate, nil];
-    
-    NSMutableArray* arrayOfScheduleTrackingKeyIDs = [NSMutableArray arrayWithCapacity:1];
-    NSMutableArray* arrayOfEquipUniqueItems = [NSMutableArray arrayWithCapacity:1];
-    
-    [webData queryWithLink:@"EQGetScheduleItemsInDateRange.php" parameters:arrayTopDate class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-        
-        NSLog(@"result from schedule request Date range: %@", muteArray);
-        
-        //populate array with key_ids
-        for (EQRScheduleRequestItem* objKey in muteArray){
-            
-            [arrayOfScheduleTrackingKeyIDs addObject:objKey];
-            
-            //cycle through and get equipUniqueItem key IDs
-            
-        }
-    }];
+    //_______*********  MOVED METHOD TO REQUESTMANAGER  **********___________
+    [requestManager allocateGearListWithDates:nil];
     
     
-    //Use sql with inner join...
-    //  get reserved EquipUniqueItem objects With ScheduleTrackingKeys
-    
-    for (EQRScheduleTracking_EquipmentUnique_Join* objThingy in arrayOfScheduleTrackingKeyIDs){
-        
-        NSArray* arrayWithTrackingKey = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", objThingy.key_id, nil];
-        NSArray* topArrayWithTrackingKey = [NSArray arrayWithObject:arrayWithTrackingKey];
-        
-        [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys.php" parameters:topArrayWithTrackingKey class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray2) {
-            
-            for (EQREquipUniqueItem* objUniqueItem in muteArray2){
-                
-                NSLog(@"this is EquipUniqueItem key_id: %@  and titleItem key_id: %@ and name: %@",
-                      objUniqueItem.key_id, objUniqueItem.equipTitleItem_foreignKey, objUniqueItem.name);
-                
-                [arrayOfEquipUniqueItems addObject:objUniqueItem];
-            }
-        }];
-    }
-    
-    //assign to requestManager ivar (this is used in EQEquipSummaryVCntrllr > justConfirm method
-    requestManager.arrayOfEquipUniqueItemsByDateCollision = arrayOfEquipUniqueItems;
-    
-    
-    //_____*******  add structure to the array by sections with titleKey???
-    
-    
-    //_____********  NOW HAVE ARRAY OF UNIQUEITEMS BUT NOT SAVING IT ANYWHERE YET____*******
-    //arrayOfEquipUniqueItems
-    
-    //SUBTRACT OUT the scheduled gear from the requestManager array of titles with qty count
-    //loop through arrayOfEquipUniqueItems
-    for (EQREquipUniqueItem* eqritem in arrayOfEquipUniqueItems){
-        
-        for (NSMutableArray* checkArray in requestManager.arrayOfEquipTitlesWithCountOfUniqueItems){
-            
-            if ([eqritem.equipTitleItem_foreignKey isEqualToString:[checkArray objectAtIndex:0]] ){
-                
-                //found a matching title item, now reduce the count of available items by one
-                //... but only if the current available quantity is above 0 (to prevent going into negative integers)
-                
-                if ([(NSNumber*)[checkArray objectAtIndex:1] integerValue] > 0){
-                    
-                    int newIntValue = [(NSNumber*)[checkArray objectAtIndex:1] intValue] - 1;
-                    NSNumber* newNumber = [NSNumber numberWithInt: newIntValue];
-                    [checkArray replaceObjectAtIndex:1 withObject:newNumber];
-                }
-            }
-        }
-    }
+//    //begin and end dates in sql format
+//    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+//    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+//    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+//    NSString* dateBeginString = [dateFormatter stringFromDate:requestManager.request.request_date_begin];
+//    NSString* dateEndString = [dateFormatter stringFromDate:requestManager.request.request_date_end];
+//    
+//    EQRWebData* webData = [EQRWebData sharedInstance];
+//    
+//    NSArray* arrayWithBeginDate = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
+//    NSArray* arrayWithEndDate = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
+//    NSArray* arrayTopDate = [NSArray arrayWithObjects:arrayWithBeginDate, arrayWithEndDate, nil];
+//    
+//    NSMutableArray* arrayOfScheduleTrackingKeyIDs = [NSMutableArray arrayWithCapacity:1];
+//    NSMutableArray* arrayOfEquipUniqueItems = [NSMutableArray arrayWithCapacity:1];
+//    
+//    [webData queryWithLink:@"EQGetScheduleItemsInDateRange.php" parameters:arrayTopDate class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+//        
+//        NSLog(@"result from schedule request Date range: %@", muteArray);
+//        
+//        //populate array with key_ids
+//        for (EQRScheduleRequestItem* objKey in muteArray){
+//            
+//            [arrayOfScheduleTrackingKeyIDs addObject:objKey];
+//            
+//            //cycle through and get equipUniqueItem key IDs
+//        }
+//    }];
+//    
+//    
+//    //Use sql with inner join...
+//    //  get reserved EquipUniqueItem objects With ScheduleTrackingKeys
+//    
+//    for (EQRScheduleTracking_EquipmentUnique_Join* objThingy in arrayOfScheduleTrackingKeyIDs){
+//        
+//        NSArray* arrayWithTrackingKey = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", objThingy.key_id, nil];
+//        NSArray* topArrayWithTrackingKey = [NSArray arrayWithObject:arrayWithTrackingKey];
+//        
+//        [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys.php" parameters:topArrayWithTrackingKey class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray2) {
+//            
+//            for (EQREquipUniqueItem* objUniqueItem in muteArray2){
+//                
+////                NSLog(@"this is EquipUniqueItem key_id: %@  and titleItem key_id: %@ and name: %@",
+////                      objUniqueItem.key_id, objUniqueItem.equipTitleItem_foreignKey, objUniqueItem.name);
+//                
+//                [arrayOfEquipUniqueItems addObject:objUniqueItem];
+//            }
+//        }];
+//    }
+//    
+//    //assign to requestManager ivar (this is used in EQEquipSummaryVCntrllr > justConfirm method
+//    requestManager.arrayOfEquipUniqueItemsByDateCollision = arrayOfEquipUniqueItems;
+//    
+//    
+//    //_____*******  add structure to the array by sections with titleKey???
+//    
+//    
+//    //_____********  NOW HAVE ARRAY OF UNIQUEITEMS BUT NOT SAVING IT ANYWHERE YET____*******
+//    //arrayOfEquipUniqueItems
+//    
+//    //SUBTRACT OUT the scheduled gear from the requestManager array of titles with qty count
+//    //loop through arrayOfEquipUniqueItems
+//    for (EQREquipUniqueItem* eqritem in arrayOfEquipUniqueItems){
+//        
+//        for (NSMutableArray* checkArray in requestManager.arrayOfEquipTitlesWithCountOfUniqueItems){
+//            
+//            if ([eqritem.equipTitleItem_foreignKey isEqualToString:[checkArray objectAtIndex:0]] ){
+//                
+//                //found a matching title item, now reduce the count of available items by one
+//                //... but only if the current available quantity is above 0 (to prevent going into negative integers)
+//                
+//                if ([(NSNumber*)[checkArray objectAtIndex:1] integerValue] > 0){
+//                    
+//                    int newIntValue = [(NSNumber*)[checkArray objectAtIndex:1] intValue] - 1;
+//                    NSNumber* newNumber = [NSNumber numberWithInt: newIntValue];
+//                    [checkArray replaceObjectAtIndex:1 withObject:newNumber];
+//                }
+//            }
+//        }
+//    }
     
 }
 

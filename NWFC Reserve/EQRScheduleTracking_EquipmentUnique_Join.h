@@ -23,5 +23,14 @@
 @property (strong, nonatomic) NSString* request_date_end;
 @property (strong, nonatomic) NSString* renter_type;
 
+//from equipUniqueItem record
+//@property (strong, nonatomic) NSString* name;
+//@property (strong, nonatomic) NSString* distinquishing_id;
+//
+////from equipTitleItem record
+//@property (strong, nonatomic) NSString* category;
+//@property (strong, nonatomic) NSString* subcategory;
+//@property (strong, nonatomic) NSString* schedule_grouping;
+
 
 @end

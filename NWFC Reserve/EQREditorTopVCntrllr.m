@@ -7,6 +7,10 @@
 //
 
 #import "EQREditorTopVCntrllr.h"
+#import "EQREditorEquipListCell.h"
+#import "EQRScheduleTracking_EquipmentUnique_Join.h"
+#import "EQREquipUniqueItem.h"
+#import "EQRScheduleRequestManager.h"
 
 @interface EQREditorTopVCntrllr ()
 
@@ -14,8 +18,11 @@
 @property (strong, nonatomic) IBOutlet UITextField* renterTypeField;
 @property (strong, nonatomic) IBOutlet UIDatePicker* pickupDateField;
 @property (strong, nonatomic) IBOutlet UIDatePicker* returnDateField;
+@property (strong, nonatomic) IBOutlet UICollectionView* equipList;
 
 @property (strong, nonatomic) NSDictionary* myUserInfo;
+@property (strong, nonatomic) NSArray* arrayOfSchedule_Unique_Joins;
+@property (strong, nonatomic) NSArray* arrayOfEquipUniqueItems;
 
 @end
 
@@ -33,6 +40,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //register collection view cell
+    [self.equipList registerClass:[EQREditorEquipListCell class] forCellWithReuseIdentifier:@"Cell"];
+
     
     UIBarButtonItem* rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveAction)];
     
@@ -58,7 +69,17 @@
     self.pickupDateField.date = [dateFormatter dateFromString:[self.myUserInfo objectForKey:@"request_date_begin"]];
     self.returnDateField.date = [dateFormatter dateFromString:[self.myUserInfo objectForKey:@"request_date_end"]];
     
-    NSLog(@"this is the key id: %@", [self.myUserInfo objectForKey:@"key_ID"]);
+    NSLog(@"this is the scheduleRequest key id: %@", [self.myUserInfo objectForKey:@"key_ID"]);
+    
+    //have the requestManager establish the list of available equipment
+    
+    NSDictionary* datesDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                              self.pickupDateField.date, @"request_date_begin",
+                              self.returnDateField.date, @"request_date_end",
+                              nil];
+    
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    [requestManager allocateGearListWithDates:datesDic];
     
     
 }
@@ -67,6 +88,8 @@
 -(void)initialSetupWithInfo:(NSDictionary*)userInfo{
     
     self.myUserInfo = userInfo;
+    
+
     
 }
 
@@ -77,6 +100,39 @@
     
 }
 
+
+#pragma mark - collection view data source methods
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    
+    return 1;
+}
+
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+
+    return 1;
+}
+
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    static NSString* CellIdentifier = @"Cell";
+    
+    
+    EQREditorEquipListCell* cell = [self.equipList dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    for (UIView* view in cell.contentView.subviews){
+        
+        [view removeFromSuperview];
+    }
+    
+    return cell;
+}
+
+
+
+#pragma mark - memory warning
 
 - (void)didReceiveMemoryWarning
 {

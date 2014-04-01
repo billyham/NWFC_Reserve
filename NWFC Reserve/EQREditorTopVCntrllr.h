@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQREditorTopVCntrllr : UIViewController
+@interface EQREditorTopVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (strong, nonatomic) NSString* scheduleRequestKeyID;
 
