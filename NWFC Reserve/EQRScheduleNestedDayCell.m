@@ -13,7 +13,10 @@
 
 -(void)initialSetupWithTitle:(NSString*) titleName{
     
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor lightGrayColor];
+    
+    //make cell semi transparent to spot overlapping items in schedule
+    self.backgroundView.alpha = 0.5;
     
     UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(3, 0, 295, 30)];
     self.titleLabel = thisLabel;

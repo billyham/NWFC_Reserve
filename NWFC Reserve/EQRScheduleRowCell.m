@@ -144,7 +144,7 @@
     cell.contentView.clipsToBounds = YES;
     
     //cell color
-    cell.contentView.backgroundColor = [UIColor lightGrayColor];
+//    cell.contentView.backgroundColor = [UIColor lightGrayColor];
 
     return cell;
 }
@@ -157,12 +157,14 @@
     //bring up editor view with notification
 //    NSDictionary* dic = [NSDictionary dictionaryWithObject:[(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] scheduleTracking_foreignKey]  forKey:@"keyID"];
     
+    //... OR just send the Key_id and let the editor object run a SQL script to pull the scheduleTrackingRequest
+    
     NSDictionary* dic = [NSDictionary dictionaryWithObjectsAndKeys:
                          [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] scheduleTracking_foreignKey], @"key_ID",
                          [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] contact_name], @"contact_name",
                           [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] renter_type], @"renter_type",
-                           [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_begin], @"request_date_begin",
-                         [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_end], @"request_date_end",
+                           [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_begin_string], @"request_date_begin_string",
+                         [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_end_string], @"request_date_end_string",
                          nil];
     
     

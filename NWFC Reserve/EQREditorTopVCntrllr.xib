@@ -83,7 +83,7 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="2U3-9Y-lAh">
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="2U3-9Y-lAh">
                     <rect key="frame" x="412" y="75" width="346" height="949"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -99,17 +99,18 @@
                         <outlet property="delegate" destination="-1" id="bFa-ZL-7Ro"/>
                     </connections>
                 </collectionView>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Equipment" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VcH-qx-J9P">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Equipment" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VcH-qx-J9P">
                     <rect key="frame" x="412" y="53" width="75" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="75" id="3rf-4U-J4L"/>
+                        <constraint firstAttribute="height" constant="21" id="jvq-A1-xOZ"/>
+                        <constraint firstAttribute="width" constant="75" id="u1n-2r-SW5"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="D92-l1-gNr">
+                <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="D92-l1-gNr">
                     <rect key="frame" x="82" y="201" width="210" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <constraints>
@@ -119,7 +120,7 @@
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
-                <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DyV-jp-8Wt">
+                <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DyV-jp-8Wt">
                     <rect key="frame" x="82" y="261" width="210" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <constraints>
@@ -158,13 +159,15 @@
                 <constraint firstItem="Zhs-jY-bce" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="82" id="Ikg-V2-Sgz"/>
                 <constraint firstItem="vAz-I1-es9" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="82" id="Xbw-1X-2hE"/>
                 <constraint firstItem="vAz-I1-es9" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="71" id="XuF-Jt-TE6"/>
-                <constraint firstItem="VcH-qx-J9P" firstAttribute="leading" secondItem="2U3-9Y-lAh" secondAttribute="leading" id="Y7C-we-xst"/>
                 <constraint firstItem="X34-5N-XOv" firstAttribute="top" secondItem="D92-l1-gNr" secondAttribute="bottom" constant="8" id="Yqw-aM-5wG"/>
                 <constraint firstItem="2U3-9Y-lAh" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="75" id="adP-g1-gK8"/>
                 <constraint firstItem="KN8-Pw-AEV" firstAttribute="top" secondItem="Zhs-jY-bce" secondAttribute="bottom" constant="26" id="cLu-g0-3Hg"/>
                 <constraint firstItem="X34-5N-XOv" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="82" id="jv2-Lm-j6a"/>
                 <constraint firstItem="Eeh-aR-IxZ" firstAttribute="top" secondItem="DyV-jp-8Wt" secondAttribute="bottom" constant="8" id="laq-gY-vuQ"/>
+                <constraint firstItem="VcH-qx-J9P" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="53" id="lur-Mc-xLT"/>
                 <constraint firstItem="rdi-Zv-Au8" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="53" id="mnP-cE-FvI"/>
+                <constraint firstItem="2U3-9Y-lAh" firstAttribute="leading" secondItem="DyV-jp-8Wt" secondAttribute="trailing" constant="120" id="n7L-tt-4os"/>
+                <constraint firstItem="VcH-qx-J9P" firstAttribute="leading" secondItem="rdi-Zv-Au8" secondAttribute="trailing" constant="288" id="pLO-il-qPk"/>
                 <constraint firstItem="Zhs-jY-bce" firstAttribute="top" secondItem="vAz-I1-es9" secondAttribute="bottom" constant="25" id="ppu-b4-4aw"/>
                 <constraint firstItem="D92-l1-gNr" firstAttribute="top" secondItem="Zhs-jY-bce" secondAttribute="bottom" constant="45" id="wCJ-VE-nfT"/>
             </constraints>

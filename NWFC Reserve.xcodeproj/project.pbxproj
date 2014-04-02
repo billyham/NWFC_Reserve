@@ -217,9 +217,9 @@
 		018EB75618E5DC8600FBDEA0 /* Request Editor */ = {
 			isa = PBXGroup;
 			children = (
-				01A5D7C318EBA85900EE99EF /* EQREditorTopVCntrllr.xib */,
 				018EB75718E5DCD500FBDEA0 /* EQREditorTopVCntrllr.h */,
 				018EB75818E5DCD500FBDEA0 /* EQREditorTopVCntrllr.m */,
+				01A5D7C318EBA85900EE99EF /* EQREditorTopVCntrllr.xib */,
 				015B7C6818EA22B3002F5B6D /* EQREditorEquipListCell.h */,
 				015B7C6918EA22B3002F5B6D /* EQREditorEquipListCell.m */,
 				01A4755718EB9BDF006F32EB /* EQREditorDateVCntrllr.h */,

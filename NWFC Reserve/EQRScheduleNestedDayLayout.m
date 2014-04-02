@@ -104,8 +104,8 @@
 //    justDayFormatter.dateFormat = @"dd";
     
     //figure out thet start date and end date
-    NSString* startDayString = [(NSString*)[(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_begin] substringFromIndex:8];
-    NSString* endDayString = [(NSString*)[(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_end] substringFromIndex:8];
+    NSString* startDayString = [(NSString*)[(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_begin_string] substringFromIndex:8];
+    NSString* endDayString = [(NSString*)[(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_end_string] substringFromIndex:8];
     
     int startDayInt = (int)[startDayString integerValue];
     int endDayInt = (int)[endDayString integerValue];

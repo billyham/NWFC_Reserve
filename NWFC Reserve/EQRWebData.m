@@ -14,6 +14,7 @@
 #import "EQRClassCatalog_EquipTitleItem_Join.h"
 #import "EQREquipUniqueItem.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
+#import "EQRScheduleRequestItem.h"
 
 @interface EQRWebData ()
 
@@ -419,6 +420,12 @@
         return;
     }
     
+    if ([elementName isEqualToString:@"renter_type"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
     if ([elementName isEqualToString:@"request_date_begin"]){
         
         self.currentProperty = elementName;
@@ -431,11 +438,29 @@
         return;
     }
     
-    if ([elementName isEqualToString:@"renter_type"]){
+    //Properties for ScheduleTracking
+    
+    if ([elementName isEqualToString:@"classSection_foreignKey"]){
         
         self.currentProperty = elementName;
         return;
     }
+    
+    if ([elementName isEqualToString:@"classTitle_foreignKey"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"time_of_request"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    
+    
+    
 }
 
 
@@ -703,28 +728,6 @@
         return;
     }
     
-    if ([prop isEqualToString:@"request_date_begin"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(request_date_begin)]){
-            
-            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_date_begin:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"request_date_end"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(request_date_end)]){
-            
-            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_date_end:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
     if ([prop isEqualToString:@"contact_name"]){
         
         if ([self.currentThing respondsToSelector:@selector(contact_name)]){
@@ -746,6 +749,93 @@
         }
         return;
     }
+    
+    if ([prop isEqualToString:@"request_date_begin"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(request_date_begin_string)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_date_begin_string:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"request_date_end"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(request_date_end_string)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_date_end_string:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+            return;
+    }
+    
+    //Properties for ScheduleRequestItem
+    //need to convert date string into dates
+//    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+//    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+//    dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+//    
+//    if ([prop isEqualToString:@"request_date_begin"]){
+//        
+//        if ([self.currentThing respondsToSelector:@selector(request_date_begin)]){
+//            
+//            [(EQRScheduleRequestItem*)self.currentThing setRequest_date_begin:[dateFormatter dateFromString:self.currentValue]];
+//            
+//            self.currentValue = nil;
+//        }
+//        return;
+//    }
+//    
+//    if ([prop isEqualToString:@"request_date_end"]){
+//        
+//        if ([self.currentThing respondsToSelector:@selector(request_date_end)]){
+//            
+//            [(EQRScheduleRequestItem*)self.currentThing setRequest_date_end:[dateFormatter dateFromString:self.currentValue]];
+//            
+//            self.currentValue = nil;
+//        }
+//        return;
+//    }
+    
+    if ([prop isEqualToString:@"classSection_foreignKey"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(classSection_foreignKey)]){
+            
+            [(EQRScheduleRequestItem*)self.currentThing setClassSection_foreignKey:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"classTitle_foreignKey"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(classTitle_foreignKey)]){
+            
+            [(EQRScheduleRequestItem*)self.currentThing setClassTitle_foreignKey:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+
+    
+//    if ([prop isEqualToString:@"time_of_request"]){
+//        
+//        if ([self.currentThing respondsToSelector:@selector(time_of_request)]){
+//            
+//            [(EQRScheduleRequestItem*)self.currentThing setTime_of_request:[dateFormatter dateFromString:self.currentValue]];
+//            
+//            self.currentValue = nil;
+//        }
+//        return;
+//    }
+    
+    
     
     //_________************ END
 }
