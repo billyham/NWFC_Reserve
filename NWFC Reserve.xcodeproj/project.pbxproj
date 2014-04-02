@@ -21,6 +21,7 @@
 		0190DAE218E234EA00B55D82 /* EQRScheduleNestedDayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0190DAE118E234EA00B55D82 /* EQRScheduleNestedDayCell.m */; };
 		01A4755A18EB9BDF006F32EB /* EQREditorDateVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 01A4755818EB9BDF006F32EB /* EQREditorDateVCntrllr.m */; };
 		01A4755B18EB9BDF006F32EB /* EQREditorDateVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01A4755918EB9BDF006F32EB /* EQREditorDateVCntrllr.xib */; };
+		01A5D7C418EBA85900EE99EF /* EQREditorTopVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01A5D7C318EBA85900EE99EF /* EQREditorTopVCntrllr.xib */; };
 		01C79939189C723300D29625 /* EQREquipSummaryVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C79938189C723300D29625 /* EQREquipSummaryVCntrllr.m */; };
 		01FDEA96188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m in Sources */ = {isa = PBXBuildFile; fileRef = 01FDEA95188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m */; };
 		438EDCE0182B7ABD0090F882 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 438EDCDF182B7ABD0090F882 /* Foundation.framework */; };
@@ -98,6 +99,7 @@
 		01A4755718EB9BDF006F32EB /* EQREditorDateVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREditorDateVCntrllr.h; sourceTree = "<group>"; };
 		01A4755818EB9BDF006F32EB /* EQREditorDateVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREditorDateVCntrllr.m; sourceTree = "<group>"; };
 		01A4755918EB9BDF006F32EB /* EQREditorDateVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREditorDateVCntrllr.xib; sourceTree = "<group>"; };
+		01A5D7C318EBA85900EE99EF /* EQREditorTopVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREditorTopVCntrllr.xib; sourceTree = "<group>"; };
 		01C79937189C723300D29625 /* EQREquipSummaryVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSummaryVCntrllr.h; sourceTree = "<group>"; };
 		01C79938189C723300D29625 /* EQREquipSummaryVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipSummaryVCntrllr.m; sourceTree = "<group>"; };
 		01FDEA94188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleTracking_EquipmentUnique_Join.h; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 		018EB75618E5DC8600FBDEA0 /* Request Editor */ = {
 			isa = PBXGroup;
 			children = (
+				01A5D7C318EBA85900EE99EF /* EQREditorTopVCntrllr.xib */,
 				018EB75718E5DCD500FBDEA0 /* EQREditorTopVCntrllr.h */,
 				018EB75818E5DCD500FBDEA0 /* EQREditorTopVCntrllr.m */,
 				015B7C6818EA22B3002F5B6D /* EQREditorEquipListCell.h */,
@@ -469,6 +472,7 @@
 				438EDCF3182B7ABE0090F882 /* Main.storyboard in Resources */,
 				5402B7D6187586F400F0888B /* EQREquipContentViewVCntrllr.xib in Resources */,
 				0119D30018DBB25D009126CB /* EQRScheduleCellContentVCntrllr.xib in Resources */,
+				01A5D7C418EBA85900EE99EF /* EQREditorTopVCntrllr.xib in Resources */,
 				01A4755B18EB9BDF006F32EB /* EQREditorDateVCntrllr.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

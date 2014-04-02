@@ -107,7 +107,7 @@
 
 #pragma mark - handle date view controller
 
--(void)showDateVCntrllr{
+-(IBAction)showDateVCntrllr:(id)sender{
     
     self.myDateViewController = [[EQREditorDateVCntrllr alloc] initWithNibName:@"EQREditorDateVCntrllr" bundle:nil];
     
