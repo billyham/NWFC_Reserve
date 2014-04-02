@@ -11,14 +11,18 @@
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQREquipUniqueItem.h"
 #import "EQRScheduleRequestManager.h"
+#import "EQREditorDateVCntrllr.h"
 
 @interface EQREditorTopVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UITextField* nameTextField;
 @property (strong, nonatomic) IBOutlet UITextField* renterTypeField;
-@property (strong, nonatomic) IBOutlet UIDatePicker* pickupDateField;
-@property (strong, nonatomic) IBOutlet UIDatePicker* returnDateField;
+@property (strong, nonatomic) NSDate* pickUpDateDate;
+@property (strong, nonatomic) NSDate* returnDateDate;
+@property (strong, nonatomic) IBOutlet UITextField* pickupDateField;
+@property (strong, nonatomic) IBOutlet UITextField* returnDateField;
 @property (strong, nonatomic) IBOutlet UICollectionView* equipList;
+@property (strong, nonatomic) EQREditorDateVCntrllr* myDateViewController;
 
 @property (strong, nonatomic) NSDictionary* myUserInfo;
 @property (strong, nonatomic) NSArray* arrayOfSchedule_Unique_Joins;
@@ -66,16 +70,16 @@
     //must do this AFTER loading the view
     self.nameTextField.text =[self.myUserInfo objectForKey:@"contact_name"];
     self.renterTypeField.text = [self.myUserInfo objectForKey:@"renter_type"];
-    self.pickupDateField.date = [dateFormatter dateFromString:[self.myUserInfo objectForKey:@"request_date_begin"]];
-    self.returnDateField.date = [dateFormatter dateFromString:[self.myUserInfo objectForKey:@"request_date_end"]];
+    self.pickUpDateDate = [dateFormatter dateFromString:[self.myUserInfo objectForKey:@"request_date_begin"]];
+    self.returnDateDate = [dateFormatter dateFromString:[self.myUserInfo objectForKey:@"request_date_end"]];
     
     NSLog(@"this is the scheduleRequest key id: %@", [self.myUserInfo objectForKey:@"key_ID"]);
     
     //have the requestManager establish the list of available equipment
     
     NSDictionary* datesDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                              self.pickupDateField.date, @"request_date_begin",
-                              self.returnDateField.date, @"request_date_end",
+                              self.pickUpDateDate, @"request_date_begin",
+                              self.returnDateDate, @"request_date_end",
                               nil];
     
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
@@ -99,6 +103,23 @@
     [self.navigationController popViewControllerAnimated:YES];
     
 }
+
+
+#pragma mark - handle date view controller
+
+-(void)showDateVCntrllr{
+    
+    self.myDateViewController = [[EQREditorDateVCntrllr alloc] initWithNibName:@"EQREditorDateVCntrllr" bundle:nil];
+    
+    [self.navigationController presentViewController:self.myDateViewController animated:YES completion:^{
+        
+        self.myDateViewController.pickupDateField.date = self.pickUpDateDate;
+        self.myDateViewController.returnDateField.date = self.returnDateDate;
+        
+    }];
+    
+}
+
 
 
 #pragma mark - collection view data source methods
