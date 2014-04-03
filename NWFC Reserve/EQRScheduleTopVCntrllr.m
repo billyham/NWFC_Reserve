@@ -270,6 +270,7 @@
 -(void)renewTheView{
     
     //______Get a list of tracking items (defaulting with the current month)
+    //_______*******  IS NOT GETTING REQUESTS THAT BEGIN IN THE PREVIOUS MONTH AND EXTEND INTO THIS ONE  *******______
     NSDate* todaysDate = self.dateForShow;
     NSDateFormatter* timestampFormatter = [[NSDateFormatter alloc] init];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -290,7 +291,6 @@
     [webData queryWithLink:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
         
         [tempMuteArray addObjectsFromArray:muteArray];
-        
     }];
     
     //save array to requestManager (for rowCell to access it as needed)
@@ -314,11 +314,11 @@
     
     //year
     NSString* yearString = [oldDateAsString substringWithRange:NSMakeRange(0, 4)];
-    int yearInt = [yearString integerValue];
+    int yearInt = (int)[yearString integerValue];
     
     //month
     NSString* monthString = [oldDateAsString substringWithRange:NSMakeRange(5, 2)];
-    int monthInt = [monthString integerValue];
+    int monthInt = (int)[monthString integerValue];
     
     //add a month
     int newMonthInt = monthInt + 1;
@@ -360,11 +360,11 @@
     
     //year
     NSString* yearString = [oldDateAsString substringWithRange:NSMakeRange(0, 4)];
-    int yearInt = [yearString integerValue];
+    int yearInt = (int)[yearString integerValue];
     
     //month
     NSString* monthString = [oldDateAsString substringWithRange:NSMakeRange(5, 2)];
-    int monthInt = [monthString integerValue];
+    int monthInt = (int)[monthString integerValue];
     
     //subtract a month
     int newMonthInt = monthInt - 1;
@@ -520,7 +520,7 @@
         
     } else {
         
-        NSLog(@"equiopUniqueCategoriesList count is: %u", [self.equipUniqueCategoriesList count]);
+        NSLog(@"equiopUniqueCategoriesList count is: %u", (int)[self.equipUniqueCategoriesList count]);
         return [self.equipUniqueCategoriesList count];
     }
     

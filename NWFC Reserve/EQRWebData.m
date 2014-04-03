@@ -30,27 +30,199 @@
 @property (strong, nonatomic) EQRClassRegistrationItem* currentClassRegistration;
 
 @property (strong, nonatomic) NSArray* alphaNumericaArray;
+@property int returnClassInt;
 
 @end
 
 
+const int intEQRScheduleRequestItem = 1;
+const int intEQREquipItem = 2;
+const int intEQRContactNameItem = 3;
+const int intEQRClassItem = 4;
+const int intEQRClassRegistrationItem = 5;
+const int intEQRClassCatalog_EquipTitleItem_Join = 6;
+const int intEQRScheduleTracking_EquipmentUnique_Join = 7;
+const int intEQREquipUniqueItem = 8;
+
 @implementation EQRWebData
 
+#pragma mark - class methods
 
 +(EQRWebData*)sharedInstance{
     
-//    static EQRWebData* myInstance = nil;
-//    
-//    if (!myInstance){
-//        
-//        myInstance = [[EQRWebData alloc] init];
-//    }
-
+    //    static EQRWebData* myInstance = nil;
+    //
+    //    if (!myInstance){
+    //
+    //        myInstance = [[EQRWebData alloc] init];
+    //    }
+    
     EQRWebData* myInstance = [[EQRWebData alloc] init];
     
     return myInstance;
 }
 
+#pragma mark - efficiency methods
+
+-(void)assignIntToClassString:(NSString*)classString{
+    
+    if ([classString isEqualToString:@"EQRScheduleRequestItem"]){
+        self.returnClassInt = intEQRScheduleRequestItem;
+        return;
+    }
+    
+    if ([classString isEqualToString:@"EQREquipItem"]){
+        self.returnClassInt = intEQREquipItem;
+        return;
+    }
+    
+    if ([classString isEqualToString:@"EQRContactNameItem"]){
+        self.returnClassInt = intEQRContactNameItem;
+        return;
+    }
+    
+    if ([classString isEqualToString:@"EQRClassItem"]){
+        self.returnClassInt = intEQRClassItem;
+        return;
+    }
+    
+    if ([classString isEqualToString:@"EQRClassRegistrationItem"]){
+        self.returnClassInt = intEQRClassRegistrationItem;
+        return;
+    }
+    
+    if ([classString isEqualToString:@"EQRClassCatalog_EquipTitleItem_Join"]){
+        self.returnClassInt = intEQRClassCatalog_EquipTitleItem_Join;
+        return;
+    }
+    
+    if ([classString isEqualToString:@"EQRScheduleTracking_EquipmentUnique_Join"]){
+        self.returnClassInt = intEQRScheduleTracking_EquipmentUnique_Join;
+        return;
+    }
+    
+    if ([classString isEqualToString:@"EQREquipUniqueItem"]){
+        self.returnClassInt = intEQREquipUniqueItem;
+        return;
+    }
+    
+    NSLog(@"WEBDATA DID NOT FIND A MATCHING INT FOR THE RETURN CLASS OBJECT");
+}
+
+-(NSString*)testForValidChar:(NSString*)myChar{
+    
+    //    NSLog(@"this here myChar: %@", myChar);
+    
+    //is it a return?
+    if ([[myChar substringToIndex:1] isEqualToString: @"\n"]) {
+        
+        return @"";
+        
+    }else{
+        
+        return myChar;
+    }
+}
+
+-(BOOL)propForEQRScheduleTracking_EquipmentUnique_Join:(NSString*)prop{
+    
+    if ([prop isEqualToString:@"key_id"]){
+        
+//        if ([self.currentThing respondsToSelector:@selector(key_id)]){
+        
+            [(EQRClassItem*)self.currentThing setKey_id:self.currentValue];
+            
+            self.currentValue = nil;
+//        }
+        return YES;
+    }
+    
+    if ([prop isEqualToString:@"equipUniqueItem_foreignKey"]){
+        
+//        if ([self.currentThing respondsToSelector:@selector(equipUniqueItem_foreignKey)]){
+        
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setEquipUniqueItem_foreignKey:self.currentValue];
+            
+            self.currentValue = nil;
+//        }
+        return YES;
+    }
+    
+    if ([prop isEqualToString:@"scheduleTracking_foreignKey"]){
+        
+//        if ([self.currentThing respondsToSelector:@selector(scheduleTracking_foreignKey)]){
+        
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setScheduleTracking_foreignKey:self.currentValue];
+            
+            self.currentValue = nil;
+//        }
+        return YES;
+    }
+    
+    if ([prop isEqualToString:@"contact_name"]){
+        
+//        if ([self.currentThing respondsToSelector:@selector(contact_name)]){
+        
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setContact_name:self.currentValue];
+            
+            self.currentValue = nil;
+//        }
+        return YES;
+    }
+    
+    if ([prop isEqualToString:@"renter_type"]){
+        
+//        if ([self.currentThing respondsToSelector:@selector(renter_type)]){
+        
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRenter_type:self.currentValue];
+            
+            self.currentValue = nil;
+//        }
+        return YES;
+    }
+    
+    
+    if ([prop isEqualToString:@"request_date_begin"]){
+        
+//        if ([self.currentThing respondsToSelector:@selector(request_date_begin)]){
+        
+            //need to convert date string into dates
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            dateFormatter.dateFormat = @"yyyy-MM-dd";
+            // HH:mm:ss
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_date_begin:[dateFormatter dateFromString:self.currentValue]];
+            
+            self.currentValue = nil;
+//        }
+        return YES;
+    }
+    
+    if ([prop isEqualToString:@"request_date_end"]){
+        
+//        if ([self.currentThing respondsToSelector:@selector(request_date_end)]){
+        
+            //need to convert date string into dates
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            dateFormatter.dateFormat = @"yyyy-MM-dd";
+            // HH:mm:ss
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_date_end:[dateFormatter dateFromString:self.currentValue]];
+            
+            self.currentValue = nil;
+//        }
+        return YES;
+    }
+    
+    
+    //if no match is found with a prop
+    return NO;
+}
+
+
+#pragma mark - query methods
 
 - (void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock{
     
@@ -65,7 +237,6 @@
     
     //get url string from user defaults
     NSString* urlRootString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
-
     
     //set variableClassString
     self.variableClassString = classString;
@@ -78,6 +249,10 @@
     //declare the parameter string
     NSMutableString* paraString = [NSMutableString stringWithString:@""];
     
+    //define the return class with an integer
+    self.returnClassInt = 0;
+    [self assignIntToClassString:classString];
+    
     //add a cache killer!!!
     //a combination of timestamp and a random number
     NSDate* ckDate = [NSDate date];
@@ -89,16 +264,12 @@
     //test if any parameters exist
     if ([para count] > 0){
         
-        NSLog(@"this is the number of parameters: %lu", (unsigned long)[para count]);
+//        NSLog(@"this is the number of parameters: %lu", (unsigned long)[para count]);
         
         [para enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
-            NSLog(@"inside the block");
-            
             //first parameter should exclude &
             if (idx == 0){
-                
-                NSLog(@"this is the key after sent to webdata: %@",[obj objectAtIndex:0]);
                 
                 [paraString appendString: [NSString stringWithFormat:@"%@=%@", [obj objectAtIndex:0], [obj objectAtIndex:1]]];
                 
@@ -205,8 +376,6 @@
     //test if any parameters exist
     if ([para count] > 0){
         
-        NSLog(@"this is the number of parameters: %lu", (unsigned long)[para count]);
-        
         [para enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
             //first parameter should exclude &
@@ -264,6 +433,9 @@
     
     return urlDataString;
 }
+
+
+
 
 
 
@@ -496,21 +668,29 @@
         [self.muteArray addObject:self.currentThing];
         
         self.currentThing = nil;
+        
+        return;
     }
     
     
     NSString* prop = self.currentProperty;
     
-    //______probably should create a template Item class that has key_id as a property that other classes inherit from
-//    if ([prop isEqualToString:@"key_id"]){
-//        
-//        if ([self.currentThing respondsToSelector:@selector(key_id)]){
-//            
-//            [(EQREquipItem*)self.currentThing setKey_id: [self.currentValue substringFromIndex:1]];
-//            
-//            self.currentValue = nil;
-//        }
-//    }
+    //________*********START WITH TIME SAVING SUB-METHODS
+    
+    switch (self.returnClassInt) {
+        case intEQRScheduleTracking_EquipmentUnique_Join:
+            
+            if ([self propForEQRScheduleTracking_EquipmentUnique_Join:prop]){
+                return;
+            }
+            
+            break;
+            
+        default:
+            
+            break;
+    }
+    
     
     //_______********* START
     
@@ -757,15 +937,15 @@
     }
     
     
-    //need to convert date string into dates
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    dateFormatter.dateFormat = @"yyyy-MM-dd";
-    // HH:mm:ss
-    
     if ([prop isEqualToString:@"request_date_begin"]){
         
         if ([self.currentThing respondsToSelector:@selector(request_date_begin)]){
+            
+            //need to convert date string into dates
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            dateFormatter.dateFormat = @"yyyy-MM-dd";
+            // HH:mm:ss
             
             [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_date_begin:[dateFormatter dateFromString:self.currentValue]];
             
@@ -778,6 +958,12 @@
         
         if ([self.currentThing respondsToSelector:@selector(request_date_end)]){
             
+            //need to convert date string into dates
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            dateFormatter.dateFormat = @"yyyy-MM-dd";
+            // HH:mm:ss
+            
             [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_date_end:[dateFormatter dateFromString:self.currentValue]];
             
             self.currentValue = nil;
@@ -788,28 +974,7 @@
     
     //Properties for ScheduleRequestItem
 
-//    if ([prop isEqualToString:@"request_date_begin"]){
-//        
-//        if ([self.currentThing respondsToSelector:@selector(request_date_begin)]){
-//            
-//            [(EQRScheduleRequestItem*)self.currentThing setRequest_date_begin:[dateFormatter dateFromString:self.currentValue]];
-//            
-//            self.currentValue = nil;
-//        }
-//        return;
-//    }
-//    
-//    if ([prop isEqualToString:@"request_date_end"]){
-//        
-//        if ([self.currentThing respondsToSelector:@selector(request_date_end)]){
-//            
-//            [(EQRScheduleRequestItem*)self.currentThing setRequest_date_end:[dateFormatter dateFromString:self.currentValue]];
-//            
-//            self.currentValue = nil;
-//        }
-//        return;
-//    }
-    
+
     if ([prop isEqualToString:@"classSection_foreignKey"]){
         
         if ([self.currentThing respondsToSelector:@selector(classSection_foreignKey)]){
@@ -838,6 +1003,12 @@
         
         if ([self.currentThing respondsToSelector:@selector(time_of_request)]){
             
+            //need to convert date string into dates
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            dateFormatter.dateFormat = @"yyyy-MM-dd";
+            // HH:mm:ss
+            
             [(EQRScheduleRequestItem*)self.currentThing setTime_of_request:[dateFormatter dateFromString:self.currentValue]];
             
             self.currentValue = nil;
@@ -848,53 +1019,6 @@
     
     
     //_________************ END
-}
-
-
--(NSString*)testForValidChar:(NSString*)myChar{
-    
-//    NSLog(@"this here myChar: %@", myChar);
-    
-    //is it a return?
-    if ([[myChar substringToIndex:1] isEqualToString: @"\n"]) {
-        
-        return @"";
-        
-    }else{
-        
-        return myChar;
-    }
-    
-    
-//    //test if ivar array exists
-//    if (!self.alphaNumericaArray){
-//     
-//        //load up a an array with the alphabet and numbers
-//        self.alphaNumericaArray = [NSArray arrayWithObjects:@"1",@"2", @"3", @"4,", @"5", @"6", @"7", @"8", @"9", @"0",
-//                                   @"a", @"b", @"c", @"d", @"e", @"f", @"g", @"h", @"i", @"j", @"k", @"l", @"m", @"n",
-//                                   @"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z",
-//                                   @"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N",
-//                                   @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z",
-//                                   @"-", @":", @"'", @"\"", @"–", @"<", @">", @"&",
-//                                   nil];
-//    }
-//    
-//    
-//    NSInteger myLength = [myChar length];
-//    
-//    int n;
-//    for (n=0 ; n < myLength ; n++){
-//        
-//        for (NSString* alphaNum in self.alphaNumericaArray){
-//            
-//            if ([[NSString stringWithFormat:@"%c", [myChar characterAtIndex:n] ] isEqualToString:alphaNum]){
-//                
-//                return [myChar substringFromIndex:n];
-//            }
-//        }
-//    }
-//    
-//    return @"";
 }
 
 
