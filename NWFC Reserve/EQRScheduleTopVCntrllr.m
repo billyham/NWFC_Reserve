@@ -127,7 +127,7 @@
     //get the ENTIRE list of equiopment titles... for staff and faculty
     EQRWebData* webData = [EQRWebData sharedInstance];
     [webData queryWithLink:@"EQGetEquipUniqueItemsAndCategories.php" parameters:nil class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
-        
+                
         //do something with the returned array...
         for (EQREquipUniqueItem* equipItemThingy in muteArray){
             
@@ -296,8 +296,6 @@
     //save array to requestManager (for rowCell to access it as needed)
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins = tempMuteArray;
-    
-    
     
 }
 
@@ -553,6 +551,7 @@
     
     if (collectionView == self.myMasterScheduleCollectionView){
         
+        //FOR Row Cell
         EQRScheduleRowCell* cell = [self.myMasterScheduleCollectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
         
         for (UIView* view in cell.contentView.subviews){
@@ -593,6 +592,7 @@
         
     } else {
         
+        //FOR Nav Bar
         EQRScheduleNavBarCell* cell2 = [self.myNavBarCollectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
         
         for (UIView* view in cell2.contentView.subviews){

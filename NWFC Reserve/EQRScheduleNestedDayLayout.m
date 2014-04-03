@@ -103,9 +103,20 @@
 //    justDayFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
 //    justDayFormatter.dateFormat = @"dd";
     
+    //get dates
+    NSDate* startDayDate = [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_begin];
+    NSDate* endDayDate = [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_end];
+    
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dateFormatter.dateFormat = @"yyyy-MM-dd";
+    
+    //convert dates to strings
     //figure out thet start date and end date
-    NSString* startDayString = [(NSString*)[(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_begin_string] substringFromIndex:8];
-    NSString* endDayString = [(NSString*)[(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_end_string] substringFromIndex:8];
+    NSString* startDayString = [[dateFormatter stringFromDate:startDayDate] substringFromIndex:8];
+    NSString* endDayString = [[dateFormatter stringFromDate:endDayDate] substringFromIndex:8];
+    
+    
     
     int startDayInt = (int)[startDayString integerValue];
     int endDayInt = (int)[endDayString integerValue];

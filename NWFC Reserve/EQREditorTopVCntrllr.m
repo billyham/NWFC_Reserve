@@ -103,43 +103,118 @@
     
     self.myUserInfo = userInfo;
     
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    dateFormatter.dateFormat = @"yyyy-MM-dd";
+//    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+//    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+//    dateFormatter.dateFormat = @"yyyy-MM-dd";
     // HH:mm:ss
     
     //set dates
-    self.pickUpDateDate = [dateFormatter dateFromString:[self.myUserInfo objectForKey:@"request_date_begin_string"]];
-    self.returnDateDate = [dateFormatter dateFromString:[self.myUserInfo objectForKey:@"request_date_end_string"]];
-    
-    NSLog(@"I'M SCREAMING AT YOU!!! %@", [self.myUserInfo objectForKey:@"key_ID"]);
-    
+    self.pickUpDateDate = [self.myUserInfo objectForKey:@"request_date_begin"];
+    self.returnDateDate = [self.myUserInfo objectForKey:@"request_date_end"];
+        
     //instantiate myRequestItem
     self.myRequestItem = [[EQRScheduleRequestItem alloc] init];
     
     //and populate its ivars
+//    self.myRequestItem.key_id = [self.myUserInfo objectForKey:@"key_ID"];
     self.myRequestItem.renter_type = [self.myUserInfo objectForKey:@"renter_type"];
     self.myRequestItem.contact_name = [self.myUserInfo objectForKey:@"contact_name"];
     self.myRequestItem.request_date_begin = self.pickUpDateDate;
     self.myRequestItem.request_date_end = self.returnDateDate;
     
-//    EQRWebData* webData = [EQRWebData sharedInstance];
-//    NSArray* arrayWithKey = [NSArray arrayWithObject:[userInfo objectForKey:@"key_ID"]];
-//    NSArray* topArrayWithKey = [NSArray arrayWithObject:arrayWithKey];
-//    [webData queryWithLink:@"EQGetScheduleRequestComplete.php" parameters:topArrayWithKey class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-//
-//        NSLog(@"this is the county count: %u", [muteArray count]);
-//        
-//        self.myRequestItem.contact_foreignKey =  [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] contact_foreignKey];
-//        self.myRequestItem.classSection_foreignKey = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] classSection_foreignKey];
-//        self.myRequestItem.time_of_request = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] time_of_request];
-//    }];
-//    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSArray* arrayWithKey = [NSArray arrayWithObjects:@"key_id",[userInfo objectForKey:@"key_ID"], nil];
+    NSArray* topArrayWithKey = [NSArray arrayWithObject:arrayWithKey];
+    [webData queryWithLink:@"EQGetScheduleRequestComplete.php" parameters:topArrayWithKey class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        //____ERROR HANDLING WHEN NOTHING IS RETURNED_______
+        if ([muteArray count] > 0){
+            self.myRequestItem.key_id = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] key_id];
+            self.myRequestItem.contact_foreignKey =  [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] contact_foreignKey];
+            self.myRequestItem.classSection_foreignKey = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] classSection_foreignKey];
+            self.myRequestItem.time_of_request = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] time_of_request];
+        }
+    }];
+    
 //    NSLog(@"this is the contact foreign key: %@", self.myRequestItem.contact_foreignKey);
 }
 
 
 -(void)saveAction{
+    
+    //update SQL with new request information
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    //must not include nil objects in array
+    //cycle though all inputs and ensure some object is included. use @"88888888" as an error code
+    if (!self.myRequestItem.contact_foreignKey) self.myRequestItem.contact_foreignKey = @"88888888";
+    if (!self.myRequestItem.classSection_foreignKey) self.myRequestItem.classSection_foreignKey = @"88888888";
+    if (!self.myRequestItem.classTitle_foreignKey) self.myRequestItem.classTitle_foreignKey = @"88888888";
+    if (!self.myRequestItem.request_date_begin) self.myRequestItem.request_date_begin = [NSDate date];
+    if (!self.myRequestItem.request_date_end) self.myRequestItem.request_date_end = [NSDate date];
+    if (!self.myRequestItem.contact_name) self.myRequestItem.contact_name = @"88888888";
+    if (!self.myRequestItem.time_of_request) self.myRequestItem.time_of_request = [NSDate date];
+
+    
+    //format the nsdates to a mysql compatible string
+    NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatForDate setLocale:usLocale];
+    [dateFormatForDate setDateFormat:@"yyyy-MM-dd"];
+    NSString* dateBeginString = [dateFormatForDate stringFromDate:self.myRequestItem.request_date_begin];
+    NSString* dateEndString = [dateFormatForDate stringFromDate:self.myRequestItem.request_date_end];
+    
+    //format the time
+    NSDateFormatter* dateFormatForTime = [[NSDateFormatter alloc] init];
+    [dateFormatForTime setLocale:usLocale];
+    [dateFormatForTime setDateFormat:@"HH:mm"];
+    NSString* timeBeginStringPartOne = [dateFormatForTime stringFromDate:self.myRequestItem.request_date_begin];
+    NSString* timeEndStringPartOne = [dateFormatForTime stringFromDate:self.myRequestItem.request_date_end];
+    NSString* timeBeginString = [NSString stringWithFormat:@"%@:00", timeBeginStringPartOne];
+    NSString* timeEndString = [NSString stringWithFormat:@"%@:00", timeEndStringPartOne];
+    
+    //time of request
+    NSDateFormatter* timeStampFormatter = [[NSDateFormatter alloc] init];
+    [timeStampFormatter setLocale:usLocale];
+    [timeStampFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString* timeRequestString = [timeStampFormatter stringFromDate:self.myRequestItem.time_of_request];
+    
+    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.myRequestItem.key_id, nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:@"contact_foreignKey", self.myRequestItem.contact_foreignKey, nil];
+    NSArray* thirdArray = [NSArray arrayWithObjects:@"classSection_foreignKey", self.myRequestItem.classSection_foreignKey,nil];
+    NSArray* fourthArray = [NSArray arrayWithObjects:@"classTitle_foreignKey", self.myRequestItem.classTitle_foreignKey,nil];
+    NSArray* fifthArray = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
+    NSArray* sixthArray = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
+    NSArray* seventhArray = [NSArray arrayWithObjects:@"request_time_begin", timeBeginString, nil];
+    NSArray* eighthArray = [NSArray arrayWithObjects:@"request_time_end", timeEndString, nil];
+    NSArray* ninthArray =[NSArray arrayWithObjects:@"contact_name", self.myRequestItem.contact_name, nil];
+    NSArray* tenthArray = [NSArray arrayWithObjects:@"renter_type", self.myRequestItem.renter_type, nil];
+    NSArray* eleventhArray = [NSArray arrayWithObjects:@"time_of_request", timeRequestString, nil];
+    
+    NSArray* bigArray = [NSArray arrayWithObjects:
+                         firstArray,
+                         secondArray,
+                         thirdArray,
+                         fourthArray,
+                         fifthArray,
+                         sixthArray,
+                         seventhArray,
+                         eighthArray,
+                         ninthArray,
+                         tenthArray,
+                         eleventhArray,
+                         nil];
+    
+    
+    for (NSArray* arraySample in bigArray){
+    NSLog(@"%@", arraySample);
+    }
+    
+    
+    NSString* returnID = [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
+    NSLog(@"this is the returnID: %@", returnID);
+    
+
     
     [self.navigationController popViewControllerAnimated:YES];
     
@@ -182,6 +257,8 @@
     self.pickupDateField.text = [dateFormatterLookinNice stringFromDate:self.pickUpDateDate];
     self.returnDateField.text = [dateFormatterLookinNice stringFromDate:self.returnDateDate];
     
+    self.myRequestItem.request_date_begin = self.pickUpDateDate;
+    self.myRequestItem.request_date_end = self.returnDateDate;
 
     
     

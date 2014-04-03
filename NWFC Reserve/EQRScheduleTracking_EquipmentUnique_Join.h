@@ -19,8 +19,8 @@
 
 //from scheduleTracking record
 @property (strong, nonatomic) NSString* contact_name;
-@property (strong, nonatomic) NSString* request_date_begin_string;
-@property (strong, nonatomic) NSString* request_date_end_string;
+@property (strong, nonatomic) NSDate* request_date_begin;
+@property (strong, nonatomic) NSDate* request_date_end;
 @property (strong, nonatomic) NSString* renter_type;
 
 //from equipUniqueItem record

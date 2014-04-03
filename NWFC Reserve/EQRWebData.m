@@ -22,7 +22,9 @@
 @property (strong, nonatomic) NSMutableString* currentValue;
 
 @property (strong, nonatomic) NSString* variableClassString;
+@property (strong, nonatomic) NSDate* variableClassDate;
 @property (strong, nonatomic) NSObject* currentThing;
+@property (strong, nonatomic) NSObject* currentThingAlternante;
 @property (strong, nonatomic) EQREquipItem* currentEquip;
 @property (strong, nonatomic) EQRContactNameItem* currentContactName;
 @property (strong, nonatomic) EQRClassRegistrationItem* currentClassRegistration;
@@ -91,8 +93,12 @@
         
         [para enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             
+            NSLog(@"inside the block");
+            
             //first parameter should exclude &
             if (idx == 0){
+                
+                NSLog(@"this is the key after sent to webdata: %@",[obj objectAtIndex:0]);
                 
                 [paraString appendString: [NSString stringWithFormat:@"%@=%@", [obj objectAtIndex:0], [obj objectAtIndex:1]]];
                 
@@ -750,11 +756,18 @@
         return;
     }
     
+    
+    //need to convert date string into dates
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dateFormatter.dateFormat = @"yyyy-MM-dd";
+    // HH:mm:ss
+    
     if ([prop isEqualToString:@"request_date_begin"]){
         
-        if ([self.currentThing respondsToSelector:@selector(request_date_begin_string)]){
+        if ([self.currentThing respondsToSelector:@selector(request_date_begin)]){
             
-            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_date_begin_string:self.currentValue];
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_date_begin:[dateFormatter dateFromString:self.currentValue]];
             
             self.currentValue = nil;
         }
@@ -763,21 +776,18 @@
     
     if ([prop isEqualToString:@"request_date_end"]){
         
-        if ([self.currentThing respondsToSelector:@selector(request_date_end_string)]){
+        if ([self.currentThing respondsToSelector:@selector(request_date_end)]){
             
-            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_date_end_string:self.currentValue];
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_date_end:[dateFormatter dateFromString:self.currentValue]];
             
             self.currentValue = nil;
         }
             return;
     }
+
     
     //Properties for ScheduleRequestItem
-    //need to convert date string into dates
-//    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-//    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-//    dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-//    
+
 //    if ([prop isEqualToString:@"request_date_begin"]){
 //        
 //        if ([self.currentThing respondsToSelector:@selector(request_date_begin)]){
@@ -824,16 +834,16 @@
     
 
     
-//    if ([prop isEqualToString:@"time_of_request"]){
-//        
-//        if ([self.currentThing respondsToSelector:@selector(time_of_request)]){
-//            
-//            [(EQRScheduleRequestItem*)self.currentThing setTime_of_request:[dateFormatter dateFromString:self.currentValue]];
-//            
-//            self.currentValue = nil;
-//        }
-//        return;
-//    }
+    if ([prop isEqualToString:@"time_of_request"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(time_of_request)]){
+            
+            [(EQRScheduleRequestItem*)self.currentThing setTime_of_request:[dateFormatter dateFromString:self.currentValue]];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
     
     
     
