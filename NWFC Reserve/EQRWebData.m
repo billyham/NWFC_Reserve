@@ -675,7 +675,7 @@ const int intEQREquipUniqueItem = 8;
     
     NSString* prop = self.currentProperty;
     
-    //________*********START WITH TIME SAVING SUB-METHODS
+    //________*********START WITH TIME SAVING EFFICIENCY METHODS
     
     switch (self.returnClassInt) {
         case intEQRScheduleTracking_EquipmentUnique_Join:
@@ -683,11 +683,9 @@ const int intEQREquipUniqueItem = 8;
             if ([self propForEQRScheduleTracking_EquipmentUnique_Join:prop]){
                 return;
             }
-            
             break;
             
         default:
-            
             break;
     }
     
