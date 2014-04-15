@@ -14,8 +14,6 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRHeaderCellForSchedule.h"
 #import "EQREquipUniqueItem.h"
-#import "EQRWebData.h"
-#import "EQRWebData.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRScheduleRequestItem.h"
 #import "EQRScheduleNavBarCell.h"
@@ -25,20 +23,18 @@
 @interface EQRScheduleTopVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myMasterScheduleCollectionView;
-//delete me
-//@property (strong, nonatomic) IBOutlet UICollectionViewFlowLayout* scheduleMasterFlowLayout;
 
 @property (strong ,nonatomic) IBOutlet UICollectionView* myNavBarCollectionView;
-
-//moved these to requestManager
-//@property (strong, nonatomic) NSArray* arrayOfMonthScheduleRequestItems;
-//@property (strong, nonatomic) NSArray* arrayOfMonthScheduleTracking_EquipUnique_Joins;
 
 @property (strong, nonatomic) NSArray* equipUniqueArray;
 @property (strong, nonatomic) NSMutableArray* equipUniqueArrayWithSections;
 @property (strong, nonatomic) NSMutableArray* equipUniqueCategoriesList;
 
 @property (strong, nonatomic) NSDate* dateForShow;
+
+@property (nonatomic, strong) EQRWebData* myWebData;
+@property BOOL aChangeWasMade;
+
 
 
 -(IBAction)moveToNextMonth:(id)sender;
@@ -69,6 +65,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //set ivar so that the initial load will load the schedule info
+    self.aChangeWasMade = YES;
 	
     //register for notifications
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
@@ -77,6 +76,8 @@
     [nc addObserver:self selector:@selector(refreshTable:) name:EQRRefreshScheduleTable object:nil];
     //receives from scheduleRowCell command to present a requestEditor vcntrllr
     [nc addObserver:self selector:@selector(showRequestEditor:) name:EQRPresentRequestEditor object:nil];
+    //receive notes from requestEditor and EquipSummaryVCntrllr when a change has been made and needs to refresh the view
+    [nc addObserver:self selector:@selector(raiseFlagThatAChangeHasBeenMade:) name:EQRAChangeWasMadeToTheSchedule object:nil];
     
     
     //register collection view cell
@@ -108,14 +109,16 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    NSLog(@"view will appear is called");
+//    NSLog(@"view will appear is called");
     
     //_____******  initialize how sections are hidden or not hidden  *****_______
     
     
-    //load the scheduleTracking information
-    [self renewTheView];
-    
+    //load the scheduleTracking information BUT ONLY if a change has been made
+    if (self.aChangeWasMade){
+        
+        [self renewTheView];
+    }
     
     
     
@@ -269,7 +272,16 @@
 
 -(void)renewTheView{
     
+    //cancel any existing web data parsing
+    if (self.myWebData){
+        [self.myWebData.xmlParser abortParsing];
+    }
+    
+    //reset the ivar flag
+    self.aChangeWasMade = NO;
+    
     //______Get a list of tracking items (defaulting with the current month)
+    //_______*******  IS NOT GETTING REQUESTS THAT BEGIN IN THE PREVIOUS MONTH AND EXTEND INTO THIS ONE  *******______
     NSDate* todaysDate = self.dateForShow;
     NSDateFormatter* timestampFormatter = [[NSDateFormatter alloc] init];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -279,23 +291,56 @@
     NSString* beginDateString = [NSString stringWithFormat:@"%@-01", initialDateString];
     NSString* endDateString = [NSString stringWithFormat:@"%@-31", initialDateString];
     
+    //_______note that it creates a new webData object every time the view is renewed
     EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    //assign to ivar
+    self.myWebData = webData;
     
     NSArray* request_date_begin = [NSArray arrayWithObjects:@"request_date_begin", beginDateString, nil];
     NSArray* request_date_end = [NSArray arrayWithObjects:@"request_date_end", endDateString, nil];
     NSArray* topArray = [NSArray arrayWithObjects:request_date_begin, request_date_end, nil];
     
-    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
     
-    [webData queryWithLink:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
-        
-        [tempMuteArray addObjectsFromArray:muteArray];
-        
-    }];
     
-    //save array to requestManager (for rowCell to access it as needed)
+    
+    
+//    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+//    
+//    [webData queryWithLink:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+//        
+//        [tempMuteArray addObjectsFromArray:muteArray];
+//    }];
+//    
+//    //save array to requestManager (for rowCell to access it as needed)
+//    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+//    requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins = tempMuteArray;
+    
+
+    
+    
+    
+    //_____test webdata delegation_____
+    
+    //delete the existing objects in the data source array
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-    requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins = tempMuteArray;
+    requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins = nil;
+    [self.myMasterScheduleCollectionView reloadData];
+    
+    //send async method to webData after assigning self as the delegate
+    webData.delegate = self;
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryWithAsync:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join"];
+        
+    });
+    //_________________________________
+
+    
+    
+
     
 }
 
@@ -306,6 +351,11 @@
 
 -(IBAction)moveToNextMonth:(id)sender{
     
+    //cancel any existing web data parsing
+    if (self.myWebData){
+        [self.myWebData.xmlParser abortParsing];
+    }
+    
     //add a month the current month
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -314,11 +364,11 @@
     
     //year
     NSString* yearString = [oldDateAsString substringWithRange:NSMakeRange(0, 4)];
-    int yearInt = [yearString integerValue];
+    int yearInt = (int)[yearString integerValue];
     
     //month
     NSString* monthString = [oldDateAsString substringWithRange:NSMakeRange(5, 2)];
-    int monthInt = [monthString integerValue];
+    int monthInt = (int)[monthString integerValue];
     
     //add a month
     int newMonthInt = monthInt + 1;
@@ -352,6 +402,11 @@
 
 -(IBAction)moveToPreviousMonth:(id)sender{
     
+    //cancel any existing web data parsing
+    if (self.myWebData){
+        [self.myWebData.xmlParser abortParsing];
+    }
+    
     //subtract a month the current month
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -360,11 +415,11 @@
     
     //year
     NSString* yearString = [oldDateAsString substringWithRange:NSMakeRange(0, 4)];
-    int yearInt = [yearString integerValue];
+    int yearInt = (int)[yearString integerValue];
     
     //month
     NSString* monthString = [oldDateAsString substringWithRange:NSMakeRange(5, 2)];
-    int monthInt = [monthString integerValue];
+    int monthInt = (int)[monthString integerValue];
     
     //subtract a month
     int newMonthInt = monthInt - 1;
@@ -463,6 +518,11 @@
     }
 }
 
+-(void)raiseFlagThatAChangeHasBeenMade:(NSNotification*)note{
+    
+    self.aChangeWasMade = YES;
+}
+
 
 -(void) showRequestEditor:(NSNotification*)note{
     
@@ -520,7 +580,7 @@
         
     } else {
         
-        NSLog(@"equiopUniqueCategoriesList count is: %u", [self.equipUniqueCategoriesList count]);
+        NSLog(@"equiopUniqueCategoriesList count is: %u", (int)[self.equipUniqueCategoriesList count]);
         return [self.equipUniqueCategoriesList count];
     }
     
@@ -738,6 +798,27 @@
         
         return CGSizeMake(widthOfMe, 50);
     }
+    
+}
+
+
+#pragma mark - EQRWebData Delegate methods
+
+-(void)addScheduleTrackingItem:(id)currentThing{
+    
+    NSLog(@"WEBDATA SUCCESSFULLY CALLED DELEGATE'S METHOD: %@", [currentThing class]);
+    
+    //save array to requestManager (for rowCell to access it as needed)
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
+    NSMutableArray* newArray = [NSMutableArray arrayWithArray:requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins];
+    
+    [newArray addObject:currentThing];
+    
+    requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins = [NSArray arrayWithArray:newArray];
+    
+    [self.myMasterScheduleCollectionView reloadData];
+
     
 }
 

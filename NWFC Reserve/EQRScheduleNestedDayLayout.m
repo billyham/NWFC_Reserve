@@ -117,13 +117,16 @@
     NSString* endDayString = [[dateFormatter stringFromDate:endDayDate] substringFromIndex:8];
     
     
-    
     int startDayInt = (int)[startDayString integerValue];
     int endDayInt = (int)[endDayString integerValue];
     
+    //__________  correct for when the endDate is in the following month.
+    //__________  simple fix if endInt is smaller than startInt, make it 31.
+    if (endDayInt < startDayInt) endDayInt = 31;
+    
     int distanceOffset = (startDayInt - 1) * EQRScheduleItemWidthForDay;
     
-    //trim 1 points off the end otherwise two objects next to each other blend as one long object
+    //trim 1 point off the end otherwise two objects next to each other blend as one long object
     int objectWidth = (((endDayInt + 1) - startDayInt) * EQRScheduleItemWidthForDay) - 1 ;
     
     

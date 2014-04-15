@@ -17,6 +17,7 @@ NSString* EQRRefreshScheduleTable = @"EQRRefreshScheduleTable";
 NSString* EQRButtonHighlight = @"EQRButtonHighlight";
 NSString* EQRButtonUnHighlight = @"EQRButtonUnHighlight";
 NSString* EQRPresentRequestEditor = @"EQRPresentRequestEditor";
+NSString* EQRAChangeWasMadeToTheSchedule = @"EQRAChangeWasMadeToTheSchedule";
 
 //Timing
 float EQRHighlightTappingTime = 0.125;

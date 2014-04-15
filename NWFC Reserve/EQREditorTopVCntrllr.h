@@ -11,6 +11,7 @@
 @interface EQREditorTopVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (strong, nonatomic) NSString* scheduleRequestKeyID;
+@property BOOL saveButtonTappedFlag;
 
 -(void)initialSetupWithInfo:(NSDictionary*)userInfo;
 

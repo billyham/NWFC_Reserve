@@ -178,7 +178,7 @@
     
     self.arrayOfEquipTitleItems = weirdNewArray;
     
-    NSLog(@"count of equipTitleItems array: %u", [self.arrayOfEquipTitleItems count]);
+    NSLog(@"count of equipTitleItems array: %u", (int)[self.arrayOfEquipTitleItems count]);
     
     //compare the two arrays with title info...
     NSMutableArray* additionalTitles = [NSMutableArray arrayWithCapacity:1];
@@ -204,7 +204,7 @@
         }
     }
     
-    NSLog(@"count of new title items to add: %u", [additionalTitles count]);
+    NSLog(@"count of new title items to add: %u", (int)[additionalTitles count]);
     
     //append the requestManager array ivar with the new items
     [self.arrayOfEquipTitlesWithCountOfUniqueItems addObjectsFromArray:additionalTitles];
@@ -231,7 +231,7 @@
     //set ivar
     self.arrayOfEquipUniqueItemsAll = [NSMutableArray arrayWithArray:arrayToReturn];
     
-    NSLog(@"array of equipUniqueItems count: %u", [self.arrayOfEquipUniqueItemsAll count]);
+    NSLog(@"array of equipUniqueItems count: %u", (int)[self.arrayOfEquipUniqueItemsAll count]);
     
     
     

@@ -13,8 +13,16 @@ typedef void (^CompletionBlock) ();
 typedef void (^CompletionBlockWithArray) (NSMutableArray* muteArray);
 typedef void (^CompletionBlockWithNestedArray) (NSMutableArray* nestedMuteArray);
 
+@protocol EQRWebDataDelegate;
 
-@interface EQRWebData : NSObject <NSXMLParserDelegate>
+
+@interface EQRWebData : NSObject <NSXMLParserDelegate>{
+    
+    __weak id <EQRWebDataDelegate> delegate;
+}
+
+@property (nonatomic, weak) id <EQRWebDataDelegate> delegate;
+@property BOOL cancelTheScheduleDownloadFlag;
 
 //@property (strong, nonatomic) NSMutableArray* totalEquip;
 @property (strong, nonatomic) NSMutableArray* muteArray;
@@ -27,5 +35,14 @@ typedef void (^CompletionBlockWithNestedArray) (NSMutableArray* nestedMuteArray)
 - (void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock;
 -(NSString*)queryForStringWithLink:(NSString*)link parameters:(NSArray*)para;
 
+//try with asynchronous methods
+-(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString;
+
+@end
+
+
+@protocol EQRWebDataDelegate <NSObject>
+
+-(void)addScheduleTrackingItem:(id)currentThing;
 
 @end

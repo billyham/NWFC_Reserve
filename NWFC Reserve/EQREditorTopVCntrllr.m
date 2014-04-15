@@ -14,6 +14,7 @@
 #import "EQRScheduleRequestItem.h"
 #import "EQREditorDateVCntrllr.h"
 #import "EQRWebData.h"
+#import "EQRGlobals.h"
 
 @interface EQREditorTopVCntrllr ()
 
@@ -49,6 +50,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //set ivar flag
+    self.saveButtonTappedFlag = NO;
     
     //register collection view cell
     [self.equipList registerClass:[EQREditorEquipListCell class] forCellWithReuseIdentifier:@"Cell"];
@@ -142,6 +146,8 @@
 
 -(void)saveAction{
     
+    self.saveButtonTappedFlag = YES;
+    
     //update SQL with new request information
     EQRWebData* webData = [EQRWebData sharedInstance];
     
@@ -215,6 +221,8 @@
     NSLog(@"this is the returnID: %@", returnID);
     
 
+    //send note to schedule that a change has been saved
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
     
     [self.navigationController popViewControllerAnimated:YES];
     

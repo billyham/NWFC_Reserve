@@ -67,7 +67,7 @@
     //________NAME_________
     NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
     NSAttributedString* nameHead = [[NSAttributedString alloc] initWithString:@"Name\r" attributes:arrayAttA];
-
+    
     //initiate the total attributed string
     self.summaryTotalAtt = [[NSMutableAttributedString alloc] initWithAttributedString:nameHead];
     
@@ -143,6 +143,7 @@
     //cycle through array of equipItems and build a string
     
     EQRWebData* webData = [EQRWebData sharedInstance];
+
     
     
     
@@ -233,6 +234,9 @@
 -(IBAction)confirm:(id)sender{
     
     [self justConfirm];
+    
+    //send note to schedule that a change has been saved
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
     
     //go back to first page in nav
     [self.navigationController popToRootViewControllerAnimated:YES];
