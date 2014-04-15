@@ -65,6 +65,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //set ivar so that the initial load will load the schedule info
+    self.aChangeWasMade = YES;
 	
     //register for notifications
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
