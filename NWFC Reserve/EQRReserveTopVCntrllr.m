@@ -272,75 +272,116 @@
     
     if (collectionView == self.classListTable){
         
-        //reveal name list
-        self.hideNameListFlag = NO;
+        //discern between adult and youth class
         
-        //initialize webData object
-        EQRWebData* webData = [EQRWebData sharedInstance];
-        
-        //1. get key_id of selected class Section
-        //2. get list of key_id contacts from class_registrations table
-        //3. get list of student names
-        
-        //1. get key_id of selected class Section
-        EQRClassItem* thisClass = [self.classArray objectAtIndex:indexPath.row];
-        NSString*  classKeyId = thisClass.key_id;
-//        NSLog(@"this is the classCatalog_foreignKey: %@", thisClass.key_id);
-        
-        //2. get list of key_id contacts from class_registrations table
-        NSArray* regArray = [NSArray arrayWithObjects:@"classSection_foreignKey", classKeyId, nil];
-        NSArray* regArray2= [NSArray arrayWithObject:regArray];
-        [webData queryWithLink:@"EQGetClassRegistrationsForSectionKey" parameters:regArray2 class:@"EQRClassRegistrationItem" completion:^(NSMutableArray* muteArray){
+        //youth class
+        if ([self.chosenRentorType isEqualToString:@"youth"]){
             
-            //array of contact key ids
-            NSArray* arrayOfClassRegistrationItems = [NSArray arrayWithArray: muteArray];
-            //zero out the muteArray
-            muteArray = nil;
+            //youth camp was selected
             
-            //_____keep class item on an ivar to use when creating a new scheduleRequest
+            //______****** cancel any existing scheduleRequestItems first???  ******___________
+            
+            //create a scheduleRequestItem instance
+            EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+            
+            [requestManager createNewRequest];
+            
+            //1. get key_id of selected class Section
+            EQRClassItem* thisClass = [self.classArray objectAtIndex:indexPath.row];
+            //            NSString*  classKeyId = thisClass.key_id;
             self.thisClassItem = thisClass;
-//            NSLog(@"this is the catalog_foreign_key: %@", thisClass.catalog_foreign_key);
             
+            //assign contact and class to the request
+            //first to the object properties
+            requestManager.request.contactNameItem = nil;
+            requestManager.request.classItem = self.thisClassItem;
+            
+            //second to the data model properties
+            requestManager.request.contact_foreignKey = self.thisClassItem.instructor_foreign_key;
+            requestManager.request.classSection_foreignKey = self.thisClassItem.key_id;
+            requestManager.request.classTitle_foreignKey = self.thisClassItem.catalog_foreign_key;
+            requestManager.request.contact_name = self.thisClassItem.instructor_name;
+            requestManager.request.renter_type = self.chosenRentorType;
+            
+            NSLog(@"this is the instructor name: %@ and key: %@", self.thisClassItem.instructor_name, self.thisClassItem.instructor_foreign_key);
+            
+            //perform segue to show date picker
+            [self performSegueWithIdentifier:@"lookAtDates" sender:self];
+            
+            //adult class
+        }else{
+            
+            //reveal name list
+            self.hideNameListFlag = NO;
+            
+            //initialize webData object
+            EQRWebData* webData = [EQRWebData sharedInstance];
+            
+            //1. get key_id of selected class Section
+            //2. get list of key_id contacts from class_registrations table
             //3. get list of student names
             
-            //declare a mutablearray
-            NSMutableArray* contactNameMuteArray = [NSMutableArray arrayWithCapacity:1];
+            //1. get key_id of selected class Section
+            EQRClassItem* thisClass = [self.classArray objectAtIndex:indexPath.row];
+            NSString*  classKeyId = thisClass.key_id;
+            //        NSLog(@"this is the classCatalog_foreignKey: %@", thisClass.key_id);
             
-            //repeat this step... to add additional objects to the array
-            [arrayOfClassRegistrationItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            //2. get list of key_id contacts from class_registrations table
+            NSArray* regArray = [NSArray arrayWithObjects:@"classSection_foreignKey", classKeyId, nil];
+            NSArray* regArray2= [NSArray arrayWithObject:regArray];
+            [webData queryWithLink:@"EQGetClassRegistrationsForSectionKey" parameters:regArray2 class:@"EQRClassRegistrationItem" completion:^(NSMutableArray* muteArray){
                 
-//                NSLog(@"class of object: %@ and it's contact_foreingKey: %@", [obj class], [[obj contact_foreignKey] class]);
+                //array of contact key ids
+                NSArray* arrayOfClassRegistrationItems = [NSArray arrayWithArray: muteArray];
+                //zero out the muteArray
+                muteArray = nil;
                 
-                NSArray* classParam = [NSArray arrayWithObjects: @"key_id", [(EQRClassRegistrationItem*)obj contact_foreignKey], nil];
-                NSArray* classParamTotal = [NSArray arrayWithObject:classParam];
+                //_____keep class item on an ivar to use when creating a new scheduleRequest
+                self.thisClassItem = thisClass;
+                //            NSLog(@"this is the catalog_foreign_key: %@", thisClass.catalog_foreign_key);
                 
-//                NSLog(@"count of classParam: %lu", (unsigned long)[classParam count]);
+                //3. get list of student names
                 
-                //get student names with query
-                EQRWebData* webDataNew = [EQRWebData sharedInstance];
-                [webDataNew queryWithLink:@"EQGetStudentNamesCurrent.php" parameters:classParamTotal class:@"EQRContactNameItem" completion:^(NSMutableArray* muteArray2){
+                //declare a mutablearray
+                NSMutableArray* contactNameMuteArray = [NSMutableArray arrayWithCapacity:1];
+                
+                //repeat this step... to add additional objects to the array
+                [arrayOfClassRegistrationItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                     
-                    if ([muteArray2 count] > 0){
+                    //                NSLog(@"class of object: %@ and it's contact_foreingKey: %@", [obj class], [[obj contact_foreignKey] class]);
+                    
+                    NSArray* classParam = [NSArray arrayWithObjects: @"key_id", [(EQRClassRegistrationItem*)obj contact_foreignKey], nil];
+                    NSArray* classParamTotal = [NSArray arrayWithObject:classParam];
+                    
+                    //                NSLog(@"count of classParam: %lu", (unsigned long)[classParam count]);
+                    
+                    //get student names with query
+                    EQRWebData* webDataNew = [EQRWebData sharedInstance];
+                    [webDataNew queryWithLink:@"EQGetStudentNamesCurrent.php" parameters:classParamTotal class:@"EQRContactNameItem" completion:^(NSMutableArray* muteArray2){
                         
-//                        NSLog(@"muteArray2 has data");
+                        if ([muteArray2 count] > 0){
+                            
+                            //                        NSLog(@"muteArray2 has data");
+                            
+                            //there should only be one object in the returned array__________???
+                            [contactNameMuteArray addObject:[muteArray2 objectAtIndex:0]];
+                        }
                         
-                        //there should only be one object in the returned array__________???
-                        [contactNameMuteArray addObject:[muteArray2 objectAtIndex:0]];
-                    }
-                    
-                    [muteArray2 removeAllObjects];
-                    
+                        [muteArray2 removeAllObjects];
+                        
+                    }];
                 }];
+                
+                //save as ivar
+                self.contactNameArray = contactNameMuteArray;
+                
+                //            NSLog(@"count of objects in contactNameMuteArray: %lu", (unsigned long)[contactNameMuteArray count]);
+                
+                //is this necessary_____???
+                [self.nameListTable reloadData];
             }];
-            
-            //save as ivar
-            self.contactNameArray = contactNameMuteArray;
-            
-//            NSLog(@"count of objects in contactNameMuteArray: %lu", (unsigned long)[contactNameMuteArray count]);
-            
-            //is this necessary_____???
-            [self.nameListTable reloadData];
-        }];
+        }
+
 
     } else if (collectionView == self.nameListTable){
         
@@ -544,8 +585,8 @@
                 self.chosenRentorType = @"youth";
                 
                 //contact size of rentor type list
-                self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
-                self.nameListLeadingConstraint.constant = 1 - EQRRentorTypeLeadingSpace;
+                self.rentorLeadingConstraint.constant = 0.0;
+                self.nameListLeadingConstraint.constant = 2.0;
                 
                 //animate change
                 [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
@@ -558,6 +599,27 @@
                 [self.classListTable reloadData];
                 self.contactNameArray = nil;
                 [self.nameListTable reloadData];
+                
+                //get current term from user defaults
+                NSString* termString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
+                
+                //load class table with current term classes and display in collection view
+                EQRWebData* webData = [EQRWebData sharedInstance];
+                
+                //params for class section query is the current term
+                NSArray* termArray = [NSArray arrayWithObjects:@"term", termString, nil];
+                NSArray* classqueryArray = [NSArray arrayWithObject:termArray];
+                
+                [webData queryWithLink:@"EQGetClassesCurrent.php" parameters:classqueryArray class:@"EQRClassItem" completion:^(NSMutableArray* muteArray){
+                    
+                    self.classArray = [NSArray arrayWithArray:muteArray];
+                }];
+                
+                NSLog(@"this is the array top item %@", [[self.classArray objectAtIndex:0] instructor_name]);
+                
+                //yes, this is necessary
+                [self.classListTable reloadData];
+                
                 
                 break;
                 

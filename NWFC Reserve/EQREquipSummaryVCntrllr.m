@@ -42,8 +42,14 @@
     //load the request to populate the ivars
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
 
-//    NSString* contactKeyID = requestManager.request.contact_foreignKey;
+    //    NSString* contactKeyID = requestManager.request.contact_foreignKey;
+    NSString* contactCondensedName = requestManager.request.contact_name;
     EQRContactNameItem* contactItem = requestManager.request.contactNameItem;
+    
+    //error handling if contact_name is nil
+    if (contactCondensedName == nil){
+        contactCondensedName = @"NA";
+    }
     
     NSDateFormatter* pickUpFormatter = [[NSDateFormatter alloc] init];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -61,13 +67,20 @@
     //________NAME_________
     NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
     NSAttributedString* nameHead = [[NSAttributedString alloc] initWithString:@"Name\r" attributes:arrayAttA];
-
+    
     //initiate the total attributed string
     self.summaryTotalAtt = [[NSMutableAttributedString alloc] initWithAttributedString:nameHead];
     
     //assign the name
     NSDictionary* arrayAtt = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* nameAtt = [[NSAttributedString alloc] initWithString:contactItem.first_and_last attributes:arrayAtt];
+    
+    //________contactNameItem maybe nil. error handling when that's the case
+    NSAttributedString* nameAtt;
+    if (contactItem != nil){
+        nameAtt = [[NSAttributedString alloc] initWithString:contactItem.first_and_last attributes:arrayAtt];
+    }else{
+        nameAtt = [[NSAttributedString alloc] initWithString:contactCondensedName attributes:arrayAtt];
+    }
     [self.summaryTotalAtt appendAttributedString:nameAtt];
     
     
@@ -80,7 +93,12 @@
     [self.summaryTotalAtt appendAttributedString:emailHead];
     
     NSDictionary* arrayAtt3 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* emailAtt = [[NSAttributedString alloc] initWithString:contactItem.email attributes:arrayAtt3];
+    NSAttributedString* emailAtt;
+    if (contactItem != nil){
+        emailAtt = [[NSAttributedString alloc] initWithString:contactItem.email attributes:arrayAtt3];
+    }else{
+        emailAtt = [[NSAttributedString alloc] initWithString:@"NA" attributes:arrayAtt3];
+    }
     [self.summaryTotalAtt appendAttributedString:emailAtt];
     
     //____PHONE______
@@ -89,7 +107,13 @@
     [self.summaryTotalAtt appendAttributedString:phoneHead];
     
     NSDictionary* arrayAtt5 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* phoneAtt = [[NSAttributedString alloc] initWithString:contactItem.phone attributes:arrayAtt5];
+    NSAttributedString* phoneAtt;
+    if (contactItem != nil){
+        phoneAtt = [[NSAttributedString alloc] initWithString:contactItem.phone attributes:arrayAtt5];
+    }else {
+        phoneAtt = [[NSAttributedString alloc] initWithString:@"NA" attributes:arrayAtt5];
+        
+    }
     [self.summaryTotalAtt appendAttributedString:phoneAtt];
     
     //_______PICKUP DATE_____
@@ -119,6 +143,7 @@
     //cycle through array of equipItems and build a string
     
     EQRWebData* webData = [EQRWebData sharedInstance];
+
     
     
     
