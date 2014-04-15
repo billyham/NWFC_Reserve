@@ -42,7 +42,7 @@
     //load the request to populate the ivars
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
 
-//    NSString* contactKeyID = requestManager.request.contact_foreignKey;
+    //    NSString* contactKeyID = requestManager.request.contact_foreignKey;
     NSString* contactCondensedName = requestManager.request.contact_name;
     EQRContactNameItem* contactItem = requestManager.request.contactNameItem;
     

@@ -9,6 +9,7 @@
 #import "EQRScheduleRowCell.h"
 #import "EQRScheduleNestedDayLayout.h"
 #import "EQRGlobals.h"
+#import "EQRColors.h"
 #import "EQRScheduleNestedDayCell.h"
 #import "EQRScheduleRequestManager.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
@@ -20,6 +21,7 @@
 
 @property (strong, nonatomic) NSMutableArray* temporaryArrayOfEquipUniqueJoins;
 
+@property (strong, nonatomic) EQRColors* myColors;
 
 //needs to know it's equipUniqueItem's key_id
 //and it's year and month???
@@ -35,6 +37,9 @@
     
     //set ivar
     self.uniqueItem_keyID = uniqueKeyID;
+    
+    //ivar colors
+    self.myColors = [EQRColors sharedInstance];
     
     //set background
     self.backgroundColor = [UIColor whiteColor];
@@ -137,11 +142,37 @@
     //get the name from the locally saved array
     NSString* contact_name = [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] contact_name];
     
+    //get the renter type
+    NSString* renter_type = [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] renter_type];
+    NSLog(@"this is the renter type: %@", renter_type);
+    
     [cell initialSetupWithTitle:contact_name];
     
     
     //restrict label to the cell
     cell.contentView.clipsToBounds = YES;
+    
+    //cell color based on renter type
+    if ([renter_type isEqualToString:@"student"]){
+        
+        cell.contentView.backgroundColor = [self.myColors.colorDic objectForKey:EQRColorCalStudent];
+        
+    }else if([renter_type isEqualToString:@"public"]){
+        
+        cell.contentView.backgroundColor = [self.myColors.colorDic objectForKey:EQRColorCalPublic];
+        
+    }else if([renter_type isEqualToString:@"staff"]){
+        
+        cell.contentView.backgroundColor = [self.myColors.colorDic objectForKey:EQRColorCalStaff];
+        
+    }else if([renter_type isEqualToString:@"faculty"]){
+        
+        cell.contentView.backgroundColor = [self.myColors.colorDic objectForKey:EQRColorCalFaculty];
+        
+    }else if([renter_type isEqualToString:@"youth"]){
+        
+        cell.contentView.backgroundColor = [self.myColors.colorDic objectForKey:EQRColorCalYouth];
+    }
     
     //cell color
 //    cell.contentView.backgroundColor = [UIColor lightGrayColor];

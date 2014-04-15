@@ -288,7 +288,7 @@
             
             //1. get key_id of selected class Section
             EQRClassItem* thisClass = [self.classArray objectAtIndex:indexPath.row];
-//            NSString*  classKeyId = thisClass.key_id;
+            //            NSString*  classKeyId = thisClass.key_id;
             self.thisClassItem = thisClass;
             
             //assign contact and class to the request
@@ -381,6 +381,7 @@
                 [self.nameListTable reloadData];
             }];
         }
+
 
     } else if (collectionView == self.nameListTable){
         
