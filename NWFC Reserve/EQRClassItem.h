@@ -16,4 +16,7 @@
 @property (strong, nonatomic) NSString* section_date;
 @property (strong, nonatomic) NSString* term;
 
+@property (strong, nonatomic) NSString* instructor_name;
+@property (strong, nonatomic) NSString* instructor_foreign_key;
+
 @end

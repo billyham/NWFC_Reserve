@@ -392,6 +392,18 @@
         return;
     }
     
+    if ([elementName isEqualToString:@"instructor_name"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"instructor_foreign_key"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
     //Properties for Class Registration Item
     if ([elementName isEqualToString:@"contact_foreignKey"]){
         
@@ -680,6 +692,28 @@
         if ([self.currentThing respondsToSelector:@selector(catalog_foreign_key)]){
             
             [(EQRClassItem*)self.currentThing setCatalog_foreign_key:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"instructor_name"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(instructor_name)]){
+            
+            [(EQRClassItem*)self.currentThing setInstructor_name:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"instructor_foreign_key"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(instructor_foreign_key)]){
+            
+            [(EQRClassItem*)self.currentThing setInstructor_foreign_key:self.currentValue];
             
             self.currentValue = nil;
         }
