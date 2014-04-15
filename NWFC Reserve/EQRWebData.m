@@ -46,6 +46,9 @@ const int intEQREquipUniqueItem = 8;
 
 @implementation EQRWebData
 
+@synthesize delegate;
+
+
 #pragma mark - class methods
 
 +(EQRWebData*)sharedInstance{
@@ -679,6 +682,11 @@ const int intEQREquipUniqueItem = 8;
         //add item to ivar array
         [self.muteArray addObject:self.currentThing];
         
+        //________********** TEST FOR ASYNC METHODS ***********___________
+        [self asyncDispatchWithObject:self.currentThing];
+        
+        
+        
         self.currentThing = nil;
         
         return;
@@ -700,6 +708,8 @@ const int intEQREquipUniqueItem = 8;
         default:
             break;
     }
+    //_______***********END OF EFFICIENCY METHODS
+    
     
     
     //_______********* START
@@ -1077,6 +1087,162 @@ const int intEQREquipUniqueItem = 8;
 
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser{
+    
+}
+
+
+#pragma mark - Asynchronous methods
+
+-(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString{
+    
+    //set the flag
+    self.cancelTheScheduleDownloadFlag = NO;
+    
+//    [self asyncDispatchWithObject:nil];
+    
+    
+    
+    //______
+    
+    //for raysmith as localhost
+    //    NSString* urlRootString = @"http://localhost/nwfc/";
+    
+    //for remote server
+    //    NSString* urlRootString = @"http://kitschplayer.com/nwfc/";
+    
+    //for raysmith as remote
+    //    NSString* urlRootString = @"http://10.0.0.2/nwfc/";
+    
+    //get url string from user defaults
+    NSString* urlRootString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
+    
+    //set variableClassString
+    self.variableClassString = classString;
+    
+    //reset the ivar muteArray
+    [self.muteArray removeAllObjects];
+    
+    //declare the input string
+    NSString* inputString;
+    //declare the parameter string
+    NSMutableString* paraString = [NSMutableString stringWithString:@""];
+    
+    //define the return class with an integer
+    self.returnClassInt = 0;
+    [self assignIntToClassString:classString];
+    
+    //add a cache killer!!!
+    //a combination of timestamp and a random number
+    NSDate* ckDate = [NSDate date];
+    NSString* thisFormattedDate= [NSDateFormatter localizedStringFromDate:ckDate dateStyle:NSDateFormatterNoStyle
+                                                                timeStyle:NSDateFormatterLongStyle ];
+    float ckFloat = arc4random() % 100000;
+    NSString* ck = [NSString stringWithFormat:@"ck=%5.0f%@", ckFloat, thisFormattedDate];
+    
+    //test if any parameters exist
+    if ([para count] > 0){
+        
+        //        NSLog(@"this is the number of parameters: %lu", (unsigned long)[para count]);
+        
+        [para enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
+            //first parameter should exclude &
+            if (idx == 0){
+                
+                [paraString appendString: [NSString stringWithFormat:@"%@=%@", [obj objectAtIndex:0], [obj objectAtIndex:1]]];
+                
+            }else{
+                
+                [paraString appendString: [NSString stringWithFormat:@"&%@=%@", [obj objectAtIndex:0], [obj objectAtIndex:1]]];
+            }
+        }];
+        
+        inputString = [NSString stringWithFormat:@"%@%@?%@&%@", urlRootString, link, paraString, ck];
+        
+    }else{
+        
+        inputString = [NSString stringWithFormat:@"%@%@?%@", urlRootString, link, ck];
+    }
+    
+    
+	//encode the url string
+	NSString* urlString = [inputString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    //remove new line commands
+    NSString* newUrlString = [urlString stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+    
+    
+    NSLog(@"this is the inputstring: %@", newUrlString);
+    
+    
+    //send the url request
+	NSURL* url = [NSURL URLWithString:urlString];
+	NSURLRequest* urlRequest = [NSURLRequest requestWithURL:url
+												cachePolicy:NSURLRequestReturnCacheDataElseLoad
+											timeoutInterval:120];
+	
+	NSData* urlData;
+	NSURLResponse* response;
+	NSError* error;
+	urlData = [NSURLConnection sendSynchronousRequest:urlRequest
+									returningResponse:&response
+												error:&error];
+    
+    if (!urlData) {
+        
+        NSLog(@"NSURLConnection failure");
+        
+        return;
+    }
+    
+    //_______*********** The incoming data is in latin1 and needs to be in utf8 for the xml parsing
+    //convert data to string (and define the incoming encoding)
+    NSString* urlDataString = [[NSString alloc] initWithData:urlData encoding:NSISOLatin1StringEncoding];
+    
+    //convert string back to data with utf8 encoding
+    //_______*********** still have the problem that some utf8 characters are displaying as odd alphanumerics
+    NSData* urlDataConverted = [urlDataString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    
+    //create the parserer from the urldata
+	if (urlData) self.xmlParser = [[NSXMLParser alloc] initWithData:urlDataConverted];
+    
+    //set parser delegate
+    [self.xmlParser setDelegate:self];
+    
+    [self.xmlParser setShouldResolveExternalEntities:YES];
+    
+    //_______________THIS IS THE TIME CONSUMING ELEMENT__________________
+    BOOL success = [self.xmlParser parse];
+    
+    if (!success){
+        
+        NSLog(@"self xml parser failure");
+        
+        return;
+    }else{
+        
+    }
+    
+//    completeBlock(self.muteArray);
+    
+    //reset variable string
+    self.variableClassString = nil;
+    
+    //reset the mutable array back to zero
+    [self.muteArray removeAllObjects];
+    
+}
+
+-(void)asyncDispatchWithObject:(id)currentThing{
+    
+    if (self.delegate != nil){
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [self.delegate addScheduleTrackingItem:currentThing];
+        });
+    }
     
 }
 

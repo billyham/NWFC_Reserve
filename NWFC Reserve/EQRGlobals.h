@@ -17,6 +17,7 @@ extern NSString* EQRRefreshScheduleTable;
 extern NSString* EQRButtonHighlight;
 extern NSString* EQRButtonUnHighlight;
 extern NSString* EQRPresentRequestEditor;
+extern NSString* EQRAChangeWasMadeToTheSchedule;
 
 //Timing
 extern float EQRHighlightTappingTime;

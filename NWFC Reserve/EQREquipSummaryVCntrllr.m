@@ -235,6 +235,9 @@
     
     [self justConfirm];
     
+    //send note to schedule that a change has been saved
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
+    
     //go back to first page in nav
     [self.navigationController popToRootViewControllerAnimated:YES];
     

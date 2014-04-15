@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRWebData.h"
 
-@interface EQRScheduleTopVCntrllr : UIViewController <UICollectionViewDelegateFlowLayout>
+@interface EQRScheduleTopVCntrllr : UIViewController <UICollectionViewDelegateFlowLayout, EQRWebDataDelegate>
 
 
 
