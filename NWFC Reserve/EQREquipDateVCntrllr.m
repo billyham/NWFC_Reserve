@@ -53,6 +53,10 @@
     self.pickUpDate = [NSDate date];
     self.returnDate = [NSDate date];
     
+    //set datepicker mode
+    self.pickUpDatePicker.datePickerMode = UIDatePickerModeDate;
+    self.returnDatePicker.datePickerMode = UIDatePickerModeDate;
+    
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     requestManager.request.request_date_begin = self.pickUpDate;
     requestManager.request.request_date_end = self.returnDate;
