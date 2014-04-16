@@ -15,6 +15,7 @@
 #import "EQREditorDateVCntrllr.h"
 #import "EQRWebData.h"
 #import "EQRGlobals.h"
+#import "EQRColors.h"
 
 @interface EQREditorTopVCntrllr ()
 
@@ -33,8 +34,9 @@
 @property (strong, nonatomic) UIPopoverController* theDatePopOver;
 
 @property (strong, nonatomic) NSDictionary* myUserInfo;
-@property (strong, nonatomic) NSArray* arrayOfSchedule_Unique_Joins;
-@property (strong, nonatomic) NSArray* arrayOfEquipUniqueItems;
+@property (strong, nonatomic) NSMutableArray* arrayOfSchedule_Unique_Joins;
+@property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItems;
+@property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedEquipIDs;
 
 @end
 
@@ -53,12 +55,51 @@
 {
     [super viewDidLoad];
     
+    //register for notes
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    
+    //register to receive delete instructions from equipList cells
+    [nc addObserver:self selector:@selector(addEquipUniqueToBeDeletedArray:) name:EQREquipUniqueToBeDeleted object:nil];
+    [nc addObserver:self selector:@selector(removeEquipUniqueToBeDeletedArray:) name:EQREquipUniqueToBeDeletedCancel object:nil];
+    
     //set ivar flag
     self.saveButtonTappedFlag = NO;
     
     //register collection view cell
     [self.equipList registerClass:[EQREditorEquipListCell class] forCellWithReuseIdentifier:@"Cell"];
-
+    
+    //initialze ivar arrays
+    if (!self.arrayOfEquipUniqueItems){
+        
+        self.arrayOfEquipUniqueItems = [NSMutableArray arrayWithCapacity:1];
+        
+    }else {
+        
+        [self.arrayOfEquipUniqueItems removeAllObjects];
+    }
+    
+    if (!self.arrayOfSchedule_Unique_Joins){
+        
+        self.arrayOfSchedule_Unique_Joins = [NSMutableArray arrayWithCapacity:1];
+        
+    }else {
+        
+        [self.arrayOfSchedule_Unique_Joins removeAllObjects];
+    }
+    
+    
+    if (!self.arrayOfToBeDeletedEquipIDs){
+        
+        self.arrayOfToBeDeletedEquipIDs = [NSMutableArray arrayWithCapacity:1];
+        
+    } else {
+        
+        [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+    }
+    
+    //set color of collection view
+    EQRColors* eqrColors = [EQRColors sharedInstance];
+    self.equipList.backgroundColor = [eqrColors.colorDic objectForKey:EQRColorVeryLightGrey];
     
     UIBarButtonItem* rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveAction)];
     
@@ -124,7 +165,33 @@
     //_______*******  THIS IS CRASHING BECAUSE THE DATE INFO IS NOT PRESENT_________**********
 //    [requestManager allocateGearListWithDates:datesDic];
     
+    NSMutableArray* arrayToReturn = [NSMutableArray arrayWithCapacity:1];
+    NSMutableArray* arrayToReturnJoins = [NSMutableArray arrayWithCapacity:1];
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", [self.myUserInfo objectForKey:@"key_ID"],  nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:firstArray, nil];
+    
+    //get Scheduletracking_equipUnique_joins
+    [webData queryWithLink:@"EQGetScheduleEquipJoins" parameters:secondArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+       
+        [arrayToReturnJoins addObjectsFromArray:muteArray];
+        
+    }];
+    
+    [self.arrayOfSchedule_Unique_Joins addObjectsFromArray:arrayToReturnJoins];
+    
+    
+    //get equipUniqueItems
+    [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys" parameters:secondArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
+        
+        [arrayToReturn addObjectsFromArray:muteArray];
+    }];
+    
+    [self.arrayOfEquipUniqueItems addObjectsFromArray:arrayToReturn];
 
+    //reload collection view
+    [self.equipList reloadData];
     
     
 }
@@ -260,6 +327,31 @@
     NSString* returnID = [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
     NSLog(@"this is the returnID: %@", returnID);
     
+    
+    //_______*********  delete the delted scheduleTracking_equip_joins
+    for (NSString* thisKeyID in self.arrayOfToBeDeletedEquipIDs){
+        
+        for (EQRScheduleTracking_EquipmentUnique_Join* thisJoin in self.arrayOfSchedule_Unique_Joins){
+         
+            if ([thisKeyID isEqualToString:thisJoin.equipUniqueItem_foreignKey]){
+                
+                //found a matching equipUnique item
+                
+                //send php message to detele with the join key_id
+                NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", thisJoin.key_id, nil];
+                NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
+                NSString* returnString = [webData queryForStringWithLink:@"EQRDeleteScheduleEquipJoin" parameters:beeArray];
+                
+                NSLog(@"this is the result: %@", returnString);
+            }
+            
+        }
+    }
+    
+    //empty the arrays
+    [self.arrayOfSchedule_Unique_Joins removeAllObjects];
+    [self.arrayOfEquipUniqueItems removeAllObjects];
+    [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
 
     //send note to schedule that a change has been saved
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
@@ -313,6 +405,30 @@
     //remove popover
     [self.theDatePopOver dismissPopoverAnimated:YES];
     
+}
+
+
+#pragma mark - notification methods
+
+-(void)addEquipUniqueToBeDeletedArray:(NSNotification*)note{
+    
+    [self.arrayOfToBeDeletedEquipIDs addObject:[note.userInfo objectForKey:@"key_id"]];
+    
+}
+
+-(void)removeEquipUniqueToBeDeletedArray:(NSNotification*)note{
+    
+    NSString* stringToBeRemoved;
+    
+    for (NSString* thisString in self.arrayOfToBeDeletedEquipIDs){
+        
+        if ([thisString isEqualToString:[note.userInfo objectForKey:@"key_id"]]){
+            
+            stringToBeRemoved = thisString;
+        }
+    }
+
+    [self.arrayOfToBeDeletedEquipIDs removeObject:stringToBeRemoved];
 }
 
 
@@ -412,7 +528,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
-    return 1;
+    return [self.arrayOfEquipUniqueItems count];
 }
 
 
@@ -434,8 +550,27 @@
         [view removeFromSuperview];
     }
     
+    NSString* thisName = [[self.arrayOfEquipUniqueItems objectAtIndex:indexPath.row] name];
+    NSString* thisDistNumber = [[self.arrayOfEquipUniqueItems objectAtIndex:indexPath.row] distinquishing_id];
+    NSString* thisTitle = [NSString stringWithFormat:@"%@: #%@", thisName, thisDistNumber];
+    
+    
+    BOOL toBeDeleted = NO;
+    for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
+        if ([keyToDelete isEqualToString:[[self.arrayOfEquipUniqueItems objectAtIndex:indexPath.row] key_id]]){
+            toBeDeleted = YES;
+        }
+    }
+    
+    [cell initialSetupWithTitle:thisTitle keyID:[[self.arrayOfEquipUniqueItems objectAtIndex:indexPath.row] key_id] deleteFlag:toBeDeleted];
+    
     return cell;
 }
+
+
+#pragma mark - collection view delegate methods
+
+
 
 
 

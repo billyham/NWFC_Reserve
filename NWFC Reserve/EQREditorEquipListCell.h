@@ -10,4 +10,8 @@
 
 @interface EQREditorEquipListCell : EQRCellTemplate
 
+@property BOOL toBeDeletedFlag;
+
+-(void)initialSetupWithTitle:(NSString*) titleName keyID:(NSString*)keyID deleteFlag:(BOOL)deleteFlag;
+
 @end

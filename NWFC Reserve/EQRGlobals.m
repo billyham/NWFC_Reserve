@@ -18,6 +18,10 @@ NSString* EQRButtonHighlight = @"EQRButtonHighlight";
 NSString* EQRButtonUnHighlight = @"EQRButtonUnHighlight";
 NSString* EQRPresentRequestEditor = @"EQRPresentRequestEditor";
 NSString* EQRAChangeWasMadeToTheSchedule = @"EQRAChangeWasMadeToTheSchedule";
+NSString* EQREquipUniqueToBeDeleted = @"EQREquipUniqueToBeDeleted";
+NSString* EQREquipUniqueToBeDeletedCancel = @"EQREquipUniqueToBeDeletedCancel";
+
+
 
 //Timing
 float EQRHighlightTappingTime = 0.125;

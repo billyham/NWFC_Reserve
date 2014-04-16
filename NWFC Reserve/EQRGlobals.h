@@ -18,6 +18,8 @@ extern NSString* EQRButtonHighlight;
 extern NSString* EQRButtonUnHighlight;
 extern NSString* EQRPresentRequestEditor;
 extern NSString* EQRAChangeWasMadeToTheSchedule;
+extern NSString* EQREquipUniqueToBeDeleted;
+extern NSString* EQREquipUniqueToBeDeletedCancel;
 
 //Timing
 extern float EQRHighlightTappingTime;
