@@ -806,7 +806,7 @@
 
 -(void)addScheduleTrackingItem:(id)currentThing{
     
-    NSLog(@"WEBDATA SUCCESSFULLY CALLED DELEGATE'S METHOD: %@", [currentThing class]);
+//    NSLog(@"WEBDATA SUCCESSFULLY CALLED DELEGATE'S METHOD: %@", [currentThing class]);
     
     //save array to requestManager (for rowCell to access it as needed)
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];

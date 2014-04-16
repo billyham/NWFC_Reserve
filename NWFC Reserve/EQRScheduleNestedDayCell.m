@@ -13,17 +13,21 @@
 
 -(void)initialSetupWithTitle:(NSString*) titleName{
     
-    self.backgroundColor = [UIColor lightGrayColor];
+    self.backgroundColor = [UIColor clearColor];
     
     //make cell semi transparent to spot overlapping items in schedule
-    self.backgroundView.alpha = 0.5;
+//    self.backgroundView.alpha = 0.5;
     
-    UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(3, 0, 295, 30)];
+    UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(3, -20, 295, 50)];
     self.titleLabel = thisLabel;
     
     self.titleLabel.text = titleName; 
     self.titleLabel.font = [UIFont fontWithName:@"Helvetica" size:9.f];
     self.titleLabel.backgroundColor = [UIColor clearColor];
+    
+    //add a slight angle???
+    CGAffineTransform thisTransform = CGAffineTransformMakeRotation(-0.1);
+    self.titleLabel.transform = thisTransform;
     
     [self.contentView addSubview:self.titleLabel];
     

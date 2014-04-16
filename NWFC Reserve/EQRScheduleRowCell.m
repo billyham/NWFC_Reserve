@@ -176,6 +176,9 @@
     
     //cell color
 //    cell.contentView.backgroundColor = [UIColor lightGrayColor];
+    
+    //make background semitransparent to see overlaps
+    cell.backgroundView.alpha = 0.0;
 
     return cell;
 }

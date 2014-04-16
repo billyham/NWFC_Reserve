@@ -22,6 +22,8 @@
 
 @property (strong, nonatomic) IBOutlet UITextField* nameTextField;
 @property (strong, nonatomic) IBOutlet UITextField* renterTypeField;
+@property (strong ,nonatomic) IBOutlet UIPickerView* renterTypePicker;
+@property (strong, nonatomic) NSString* renterTypeString;
 @property (strong, nonatomic) NSDate* pickUpDateDate;
 @property (strong, nonatomic) NSDate* returnDateDate;
 @property (strong, nonatomic) IBOutlet UITextField* pickupDateField;
@@ -77,14 +79,37 @@
     dateFormatterLookinNice.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     dateFormatterLookinNice.dateFormat = @"EEE, MMM d h:mm a";
     
-    //set labesl with provided dictionary
+    //set labels with provided dictionary
     //must do this AFTER loading the view
     self.nameTextField.text =[self.myUserInfo objectForKey:@"contact_name"];
-    self.renterTypeField.text = [self.myUserInfo objectForKey:@"renter_type"];
+    self.renterTypeString = [self.myUserInfo objectForKey:@"renter_type"];
 
     //set date labels
     self.pickupDateField.text = [dateFormatterLookinNice stringFromDate:self.pickUpDateDate];
     self.returnDateField.text = [dateFormatterLookinNice stringFromDate:self.returnDateDate];
+    
+    //set the renterpicker to the correct value
+    if ([self.myRequestItem.renter_type isEqualToString:@"student"]){
+        
+        [self.renterTypePicker selectRow:0 inComponent:0 animated:NO];
+        
+    }else if([self.myRequestItem.renter_type isEqualToString:@"public"]){
+        
+        [self.renterTypePicker selectRow:1 inComponent:0 animated:NO];
+        
+    }else if([self.myRequestItem.renter_type isEqualToString:@"faculty"]){
+        
+        [self.renterTypePicker selectRow:2 inComponent:0 animated:NO];
+        
+    }else if([self.myRequestItem.renter_type isEqualToString:@"staff"]){
+        
+        [self.renterTypePicker selectRow:3 inComponent:0 animated:NO];
+        
+    }else if([self.myRequestItem.renter_type isEqualToString:@"youth"]){
+        
+        [self.renterTypePicker selectRow:4 inComponent:0 animated:NO];
+    }
+    
     
 //    NSLog(@"this is the scheduleRequest key id: %@", [self.myUserInfo objectForKey:@"key_ID"]);
     
@@ -98,6 +123,8 @@
     
     //_______*******  THIS IS CRASHING BECAUSE THE DATE INFO IS NOT PRESENT_________**********
 //    [requestManager allocateGearListWithDates:datesDic];
+    
+
     
     
 }
@@ -141,6 +168,16 @@
     }];
     
 //    NSLog(@"this is the contact foreign key: %@", self.myRequestItem.contact_foreignKey);
+    
+
+    //_________**********  LOAD REQUEST EDITOR COLLECTION VIEW WITH EquipUniqueItem_Joins  *******_____________
+    
+    
+    //populate...
+    //arrayOfSchedule_Unique_Joins
+    
+    
+    
 }
 
 
@@ -151,10 +188,13 @@
     //update SQL with new request information
     EQRWebData* webData = [EQRWebData sharedInstance];
     
+    NSLog(@"this is the classSection_foreignKey: %@", self.myRequestItem.classSection_foreignKey);
+    
     //must not include nil objects in array
     //cycle though all inputs and ensure some object is included. use @"88888888" as an error code
     if (!self.myRequestItem.contact_foreignKey) self.myRequestItem.contact_foreignKey = @"88888888";
     if (!self.myRequestItem.classSection_foreignKey) self.myRequestItem.classSection_foreignKey = @"88888888";
+    if ([self.myRequestItem.classSection_foreignKey isEqualToString:@""]) self.myRequestItem.classSection_foreignKey = @"88888888";
     if (!self.myRequestItem.classTitle_foreignKey) self.myRequestItem.classTitle_foreignKey = @"88888888";
     if (!self.myRequestItem.request_date_begin) self.myRequestItem.request_date_begin = [NSDate date];
     if (!self.myRequestItem.request_date_end) self.myRequestItem.request_date_end = [NSDate date];
@@ -274,6 +314,98 @@
     [self.theDatePopOver dismissPopoverAnimated:YES];
     
 }
+
+
+#pragma mark - picker view datasource methods
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
+    
+    return 1;
+}
+
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
+    
+    return 5;
+}
+
+
+#pragma mark - picker view delegate methods
+
+- (NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component{
+    
+    if (row == 0){
+        
+        NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:8] forKey:NSFontAttributeName];
+        return [[NSAttributedString alloc] initWithString:@"student" attributes:arrayAttA];
+        
+    } else if(row == 1){
+        
+        NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:8] forKey:NSFontAttributeName];
+        return [[NSAttributedString alloc] initWithString:@"public" attributes:arrayAttA];
+        
+    }else if(row == 2){
+        
+        NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:8] forKey:NSFontAttributeName];
+        return [[NSAttributedString alloc] initWithString:@"faculty" attributes:arrayAttA];
+        
+    }else if (row == 3){
+        
+        NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:8] forKey:NSFontAttributeName];
+        return [[NSAttributedString alloc] initWithString:@"staff" attributes:arrayAttA];
+        
+    }else if (row == 4){
+        
+        NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:8] forKey:NSFontAttributeName];
+        return [[NSAttributedString alloc] initWithString:@"youth" attributes:arrayAttA];
+        
+    }else{
+        
+        NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:8] forKey:NSFontAttributeName];
+        return [[NSAttributedString alloc] initWithString:@"NA" attributes:arrayAttA];
+    }
+}
+
+
+- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component{
+    
+    return 25.f;  //30.f
+}
+
+- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component{
+    
+    return 200.f;  //210.f
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
+    
+    switch (row) {
+        case 0:
+            self.myRequestItem.renter_type = @"student";
+            break;
+            
+        case 1:
+            self.myRequestItem.renter_type = @"public";
+            break;
+            
+        case 2:
+            self.myRequestItem.renter_type = @"faculty";
+            break;
+            
+        case 3:
+            self.myRequestItem.renter_type = @"staff";
+            break;
+            
+        case 4:
+            self.myRequestItem.renter_type = @"youth";
+            break;
+            
+        default:
+            self.myRequestItem.renter_type = @"";
+            break;
+    }
+}
+
 
 
 #pragma mark - collection view data source methods

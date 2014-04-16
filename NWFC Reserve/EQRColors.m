@@ -44,11 +44,11 @@ NSString* EQRColorDonePrep = @"EQRColorDonePrep";
         self.colorDic = [NSDictionary dictionaryWithObjectsAndKeys:
                          [UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0], EQRColorLightBlue,
                          [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1.0], EQRColorVeryLightGrey,
-                         [UIColor colorWithRed:0.77 green:0.87 blue:0.97 alpha:1.0], EQRColorCalStudent,
-                         [UIColor colorWithRed:0.87 green:0.87 blue:0.87 alpha:1.0], EQRColorCalPublic,
-                         [UIColor colorWithRed:0.97 green:0.87 blue:0.92 alpha:1.0], EQRColorCalStaff,
-                         [UIColor colorWithRed:0.97 green:0.87 blue:0.82 alpha:1.0], EQRColorCalFaculty,
-                         [UIColor colorWithRed:0.82 green:0.97 blue:0.82 alpha:1.0], EQRColorCalYouth,
+                         [UIColor colorWithRed:0.77 green:0.87 blue:0.97 alpha:0.5], EQRColorCalStudent,
+                         [UIColor colorWithRed:0.97 green:0.32 blue:0.52 alpha:0.5], EQRColorCalPublic,
+                         [UIColor colorWithRed:0.82 green:0.62 blue:0.52 alpha:0.5], EQRColorCalStaff,
+                         [UIColor colorWithRed:0.97 green:0.87 blue:0.32 alpha:0.5], EQRColorCalFaculty,
+                         [UIColor colorWithRed:0.72 green:0.97 blue:0.72 alpha:0.5], EQRColorCalYouth,
                          nil];
     }
 }
