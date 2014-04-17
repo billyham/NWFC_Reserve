@@ -35,6 +35,7 @@
 @property (nonatomic, strong) EQRWebData* myWebData;
 @property BOOL aChangeWasMade;
 @property BOOL isLoadingEquipDataFlag;
+@property (strong, nonatomic) NSTimer* timerForReloadCollectionView;
 
 
 
@@ -106,6 +107,14 @@
 //    
 //    [self.myMasterScheduleCollectionView setCollectionViewLayout:self.scheduleMasterFlowLayout];
     
+    //add gesture recognizers for swiping
+    UISwipeGestureRecognizer* swipeRightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(moveToPreviousMonth:)];
+    swipeRightGesture.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.view addGestureRecognizer:swipeRightGesture];
+    
+    UISwipeGestureRecognizer* swipeLeftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(moveToNextMonth:)];
+    swipeLeftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.view addGestureRecognizer:swipeLeftGesture];
     
 }
 
@@ -355,6 +364,10 @@
 
     
 }
+
+
+#pragma mark - swipe gestures
+
 
 
 
@@ -837,9 +850,21 @@
     
     requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins = [NSArray arrayWithArray:newArray];
     
-    [self.myMasterScheduleCollectionView reloadData];
-
     
+    //should do this only once every 1 second (with NSTimer) to prevent the 1000+ calls to reload
+    //if the timer currently exists, don't do anything...
+    
+    if (![self.timerForReloadCollectionView isValid]){
+        
+        self.timerForReloadCollectionView = [NSTimer timerWithTimeInterval:0.5 target:self selector:@selector(timerFiredReloadCollectionView) userInfo:nil repeats:NO];
+        
+        [[NSRunLoop currentRunLoop] addTimer:self.timerForReloadCollectionView forMode:NSDefaultRunLoopMode];
+    }
+}
+
+-(void)timerFiredReloadCollectionView{
+    
+    [self.myMasterScheduleCollectionView reloadData];
 }
 
 
