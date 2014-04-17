@@ -525,8 +525,6 @@
     }
 
     
-    
-    
     bool hideMeFlag = NO;
     NSString* objectToRemove;
     
@@ -540,7 +538,6 @@
             break;
         }
     }
-    
     
     //_____********  must close any currently open sections first, then open the selected one  ********____
     if (!hideMeFlag){
@@ -597,7 +594,7 @@
         //show me!
         
         //must add delay to allow time to close the exsiting sections first...
-        [self performSelector:@selector(delayedExpandAction:) withObject:chosenSection afterDelay:0.25];
+        [self performSelector:@selector(delayedExpandAction:) withObject:chosenSection afterDelay:0.01];
         
         //send note to highlight the button
         NSDictionary* dic = [NSDictionary dictionaryWithObject:chosenSection forKey:@"sectionString"];

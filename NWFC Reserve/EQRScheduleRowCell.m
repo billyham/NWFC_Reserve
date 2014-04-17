@@ -144,7 +144,6 @@
     
     //get the renter type
     NSString* renter_type = [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] renter_type];
-    NSLog(@"this is the renter type: %@", renter_type);
     
     [cell initialSetupWithTitle:contact_name];
     

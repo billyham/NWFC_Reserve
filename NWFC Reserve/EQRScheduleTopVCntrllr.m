@@ -34,6 +34,7 @@
 
 @property (nonatomic, strong) EQRWebData* myWebData;
 @property BOOL aChangeWasMade;
+@property BOOL isLoadingEquipDataFlag;
 
 
 
@@ -68,6 +69,8 @@
     
     //set ivar so that the initial load will load the schedule info
     self.aChangeWasMade = YES;
+    //ivar flag to indicate when data is loading
+    self.isLoadingEquipDataFlag = NO;
 	
     //register for notifications
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
@@ -330,10 +333,19 @@
     //send async method to webData after assigning self as the delegate
     webData.delegate = self;
     
+    //raise the is loading flag
+    self.isLoadingEquipDataFlag = YES;
+    
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
     dispatch_async(queue, ^{
         
-        [webData queryWithAsync:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join"];
+        [webData queryWithAsync:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(BOOL isLoadingFlagUp) {
+            
+            //lower the isLoading flag
+            self.isLoadingEquipDataFlag = NO;
+            
+//            NSLog(@"INSIDE THE COMPLETION BLOCK WITH THE BOOL: %u", isLoadingFlagUp);
+        }];
         
     });
     //_________________________________
@@ -456,65 +468,73 @@
 
 -(void)refreshTable:(NSNotification*)note{
     
-    NSString* typeOfChange = [[note userInfo] objectForKey:@"type"];
-    NSString* sectionString = [[note userInfo] objectForKey:@"sectionString"];
-    
-    //array of index paths to add or delete
-    NSMutableArray* arrayOfIndexPaths = [NSMutableArray arrayWithCapacity:1];
-    int indexPathToDelete;
-    
-    //test whether inserting or deleting
-    if ([typeOfChange isEqualToString:@"insert"]){
+    //don't use animations when data is loading or it will crash
+    if (self.isLoadingEquipDataFlag){
         
-        //loop through the sections of the equipment list to identify the index of the section
-        for (NSArray* subArray in self.equipUniqueArrayWithSections){
+        [self.myMasterScheduleCollectionView reloadData];
+        
+    }else {
+        
+        NSString* typeOfChange = [[note userInfo] objectForKey:@"type"];
+        NSString* sectionString = [[note userInfo] objectForKey:@"sectionString"];
+        
+        //array of index paths to add or delete
+        NSMutableArray* arrayOfIndexPaths = [NSMutableArray arrayWithCapacity:1];
+        int indexPathToDelete;
+        
+        //test whether inserting or deleting
+        if ([typeOfChange isEqualToString:@"insert"]){
             
-            NSString* thisIsGrouping = [(EQREquipUniqueItem*)[subArray objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)];
-            
-            if ([thisIsGrouping isEqualToString:sectionString]){
+            //loop through the sections of the equipment list to identify the index of the section
+            for (NSArray* subArray in self.equipUniqueArrayWithSections){
                 
-                //found a match, remember the index
-                indexPathToDelete = (int)[self.equipUniqueArrayWithSections indexOfObject:subArray];
+                NSString* thisIsGrouping = [(EQREquipUniqueItem*)[subArray objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)];
                 
-                //loop through all items to build an array of indexpaths
-                [(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                if ([thisIsGrouping isEqualToString:sectionString]){
                     
-                    NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
-                    [arrayOfIndexPaths addObject:newIndexPath];
-                }];
-            }
-        }
-        
-        //do the insert
-        [self.myMasterScheduleCollectionView insertItemsAtIndexPaths:arrayOfIndexPaths];
-        
-        
-    }else if([typeOfChange isEqualToString:@"delete"]) {
-        
-        //loop through the sections of the equipment list to identify the index of the section
-        for (NSArray* subArray in self.equipUniqueArrayWithSections){
-            
-            NSString* thisIsGrouping = [(EQREquipUniqueItem*)[subArray objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)];
-            
-            if ([thisIsGrouping isEqualToString:sectionString]){
-                
-                //found a match, remember the index
-                indexPathToDelete = (int)[self.equipUniqueArrayWithSections indexOfObject:subArray];
-                
-                //loop through all items to build an array of indexpaths
-                [(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    //found a match, remember the index
+                    indexPathToDelete = (int)[self.equipUniqueArrayWithSections indexOfObject:subArray];
                     
-                    NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
-                    [arrayOfIndexPaths addObject:newIndexPath];
-                }];
+                    //loop through all items to build an array of indexpaths
+                    [(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                        
+                        NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
+                        [arrayOfIndexPaths addObject:newIndexPath];
+                    }];
+                }
             }
+            
+            //do the insert
+            [self.myMasterScheduleCollectionView insertItemsAtIndexPaths:arrayOfIndexPaths];
+            
+            
+        }else if([typeOfChange isEqualToString:@"delete"]) {
+            
+            //loop through the sections of the equipment list to identify the index of the section
+            for (NSArray* subArray in self.equipUniqueArrayWithSections){
+                
+                NSString* thisIsGrouping = [(EQREquipUniqueItem*)[subArray objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)];
+                
+                if ([thisIsGrouping isEqualToString:sectionString]){
+                    
+                    //found a match, remember the index
+                    indexPathToDelete = (int)[self.equipUniqueArrayWithSections indexOfObject:subArray];
+                    
+                    //loop through all items to build an array of indexpaths
+                    [(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                        
+                        NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
+                        [arrayOfIndexPaths addObject:newIndexPath];
+                    }];
+                }
+            }
+            
+            //do the deletions
+            [self.myMasterScheduleCollectionView deleteItemsAtIndexPaths:arrayOfIndexPaths];
+            
+            
+            //        [self.equipCollectionView reloadData];
         }
-        
-        //do the deletions
-        [self.myMasterScheduleCollectionView deleteItemsAtIndexPaths:arrayOfIndexPaths];
-        
-        
-        //        [self.equipCollectionView reloadData];
     }
 }
 

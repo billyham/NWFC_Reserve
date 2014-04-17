@@ -1093,7 +1093,7 @@ const int intEQREquipUniqueItem = 8;
 
 #pragma mark - Asynchronous methods
 
--(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString{
+-(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithBool)completeBlock{
     
     //set the flag
     self.cancelTheScheduleDownloadFlag = NO;
@@ -1224,7 +1224,8 @@ const int intEQREquipUniqueItem = 8;
         
     }
     
-//    completeBlock(self.muteArray);
+    //send completion block to indicate when loading is finished
+    completeBlock(YES);
     
     //reset variable string
     self.variableClassString = nil;
