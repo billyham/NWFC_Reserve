@@ -73,6 +73,16 @@
     //assign to ivar
     self.revealButton = thisRevealButton;
     
+    
+    //all button
+    
+    
+    //make the entire header cell a button to reveal or hide
+    UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(revealButtonTapped:)];
+    [self addGestureRecognizer:tapGesture];
+    self.userInteractionEnabled = YES;
+    
+    
     //add subviews
     [self.contentView addSubview:self.titleLabel];
     [self.contentView addSubview:self.revealButton];
@@ -106,7 +116,38 @@
     }
     
     //update request Manager to do the action and keep persistence
-    [requestManager collapseOrExpandSection:self.titleLabel.text];
+    [requestManager collapseOrExpandSection:self.titleLabel.text WithAll:NO];
+}
+
+
+-(IBAction)allButtonTapped:(id)sender{
+    
+    //inform the request manager about the status of hide/reveal for persistence
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
+    //change text of button
+    BOOL isCurrentlyHidden = NO;
+    for (NSString* sectionString in requestManager.arrayOfEquipSectionsThatShouldBeHidden){
+        
+        if ([sectionString isEqualToString:self.titleLabel.text]){
+            
+            isCurrentlyHidden = YES;
+        }
+    }
+    
+    if (isCurrentlyHidden){
+        
+        [self.revealButton setTitle:@"Hide" forState:UIControlStateNormal];
+        
+    }else{
+        
+        [self.revealButton setTitle:@"Expand" forState:UIControlStateNormal];
+    }
+    
+    //update request Manager to do the action and keep persistence
+    [requestManager collapseOrExpandSection:self.titleLabel.text WithAll:YES];
+    
+    
 }
 
 

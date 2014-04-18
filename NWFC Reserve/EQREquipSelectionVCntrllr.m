@@ -295,9 +295,11 @@
 -(void)refreshTable:(NSNotification*)note{
     
     NSString* typeOfChange = [[note userInfo] objectForKey:@"type"];
-    NSString* sectionString = [[note userInfo] objectForKey:@"sectionString"];
+//    NSString* sectionString = [[note userInfo] objectForKey:@"sectionString"];
+    NSArray* sectionArray = [[note userInfo] objectForKey:@"sectionArray"];
     
-    NSLog(@"this is the type: %@", typeOfChange);
+    
+//    NSLog(@"this is the type: %@", typeOfChange);
     
     //array of index paths to add or delete
     NSMutableArray* arrayOfIndexPaths = [NSMutableArray arrayWithCapacity:1];
@@ -306,22 +308,26 @@
     //test whether inserting or deleting
     if ([typeOfChange isEqualToString:@"insert"]){
         
-       //loop through the sections of the equipment list to identify the index of the section
+        //loop through the sections of the equipment list to identify the index of the section
         for (NSArray* subArray in self.equipTitleArrayWithSections){
             
             NSString* thisIsCategory = [(EQREquipItem*)[subArray objectAtIndex:0] category];
             
-            if ([thisIsCategory isEqualToString:sectionString]){
+            //loop through array of chosen sections
+            for (NSString* sectionString in sectionArray){
                 
-                //found a match, remember the index
-                indexPathToDelete = [self.equipTitleArrayWithSections indexOfObject:subArray];
-                
-                //loop through all items to build an array of indexpaths
-                [(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                if ([thisIsCategory isEqualToString:sectionString]){
                     
-                    NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
-                    [arrayOfIndexPaths addObject:newIndexPath];
-                }];
+                    //found a match, remember the index
+                    indexPathToDelete = [self.equipTitleArrayWithSections indexOfObject:subArray];
+                    
+                    //loop through all items to build an array of indexpaths
+                    [(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                        
+                        NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
+                        [arrayOfIndexPaths addObject:newIndexPath];
+                    }];
+                }
             }
         }
         
@@ -336,17 +342,21 @@
             
             NSString* thisIsCategory = [(EQREquipItem*)[subArray objectAtIndex:0] category];
             
-            if ([thisIsCategory isEqualToString:sectionString]){
+            //loop through array of chosen sections
+            for (NSString* sectionString in sectionArray){
                 
-                //found a match, remember the index
-                indexPathToDelete = [self.equipTitleArrayWithSections indexOfObject:subArray];
-                
-                //loop through all items to build an array of indexpaths
-                [(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                if ([thisIsCategory isEqualToString:sectionString]){
                     
-                    NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
-                    [arrayOfIndexPaths addObject:newIndexPath];
-                }];
+                    //found a match, remember the index
+                    indexPathToDelete = [self.equipTitleArrayWithSections indexOfObject:subArray];
+                    
+                    //loop through all items to build an array of indexpaths
+                    [(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                        
+                        NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
+                        [arrayOfIndexPaths addObject:newIndexPath];
+                    }];
+                }
             }
         }
         
@@ -567,9 +577,6 @@
 
 
 #pragma mark - collection view delegate methods
-
-//for header cell
-
 
 
 //for equip item

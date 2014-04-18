@@ -22,7 +22,7 @@
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItemsByDateCollision;
 
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipSectionsThatShouldBeHidden; //for equip reservation
-@property (strong, nonatomic) NSMutableArray* arrayOfEquipSectionsThatShouldBeVisibleInSchedule;
+@property (strong, nonatomic) NSMutableArray* arrayOfEquipSectionsThatShouldBeVisibleInSchedule;  //for schedule
 
 //arrays for schedule of uniqueItems
 @property (strong, nonatomic) NSArray* arrayOfMonthScheduleTracking_EquipUnique_Joins;
@@ -37,7 +37,7 @@
 -(void)resetEquipListAndAvailableQuantites;
 -(NSArray*)retrieveAllEquipUniqueItems;
 -(NSArray*)retrieveArrayOfEquipJoins;
--(void)collapseOrExpandSection:(NSString*)chosenSection;
+-(void)collapseOrExpandSection:(NSString*)chosenSection WithAll:(BOOL)withAllFlag;
 -(void)collapseOrExpandSectionInSchedule:(NSString*)chosenSection;
 -(void)allocateGearListWithDates:(NSDictionary*)datesDic;
 

@@ -12,8 +12,10 @@
 
 @property (strong, nonatomic) IBOutlet UILabel* titleLabel;
 @property (strong ,nonatomic) IBOutlet UIButton* revealButton;
+@property (strong, nonatomic) IBOutlet UIButton* allButton;
 
 
 -(void)initialSetupWithTitle:(NSString*) titleName isHidden:(BOOL)yesHidden;
+-(IBAction)revealButtonTapped:(id)sender;
 
 @end

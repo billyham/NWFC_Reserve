@@ -366,12 +366,8 @@
 }
 
 
-#pragma mark - swipe gestures
 
-
-
-
-#pragma mark - button actions
+#pragma mark - button actions... also swipe actions
 
 
 -(IBAction)moveToNextMonth:(id)sender{
@@ -576,9 +572,15 @@
 //    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
     
     
-    
+    //pushes from the side and preserves navigation controller
     [self.navigationController pushViewController:editorViewController animated:YES];
     
+    //model pops up from below, removes navigiation controller
+//    [self.navigationController presentViewController:editorViewController animated:YES completion:^{
+//    
+//        
+//                                              
+//    }];
 
 
     

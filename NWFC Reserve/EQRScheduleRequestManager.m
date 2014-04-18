@@ -467,29 +467,54 @@
 
 #pragma mark - repsond to supplementary cell actions
 
--(void)collapseOrExpandSection:(NSString*)chosenSection{
+//from request equip selection list
+-(void)collapseOrExpandSection:(NSString*)chosenSection WithAll:(BOOL)withAllFlag{
     
     bool hideMeFlag = YES;
-    NSString* objectToRemove;
+//    NSString* objectToRemove;
+    NSArray* arrayOfObjectsToRemove;
+    NSArray* chosenArray;
     
     for (NSString* myObject in self.arrayOfEquipSectionsThatShouldBeHidden){
         
         if ([myObject isEqualToString:chosenSection]){
             
             hideMeFlag = NO;
-            objectToRemove = myObject;
+            
+            if (!withAllFlag){
+                
+                //when only one section is be hidden or revealed
+//                objectToRemove = myObject;
+                arrayOfObjectsToRemove = [NSArray arrayWithObject:myObject];
+            }
         }
     }
+    
+    //when all sections are to be revealed
+    if (withAllFlag && hideMeFlag){
+        
+        
+    }
+    
+    //when all sections are to hidden
+    //need to use a list of all equipSections (strings) and subtract out the EquipSectionThatShouldBeHidden
+    if (withAllFlag && (hideMeFlag == NO)){
+        
+        
+    }
+    
+    
     
     if (hideMeFlag){
         
         //add object to array
         [self.arrayOfEquipSectionsThatShouldBeHidden addObject:chosenSection];
         
+        chosenArray = [NSArray arrayWithObject:chosenSection];
         
         NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
                                       @"delete", @"type",
-                                    chosenSection, @"sectionString",
+                                    chosenArray, @"sectionArray",
                                       nil];
         
         
@@ -498,14 +523,19 @@
 
         
     }else{
-
-        //remove object from array
-        [self.arrayOfEquipSectionsThatShouldBeHidden removeObject:objectToRemove];
         
+        //loop through array
+        for (NSString* objectToRemove in arrayOfObjectsToRemove){
+            
+            //remove object from array
+            [self.arrayOfEquipSectionsThatShouldBeHidden removeObject:objectToRemove];
+        }
+        
+        chosenArray = [NSArray arrayWithObject:chosenSection];
         
         NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
                                  @"insert", @"type",
-                                 chosenSection, @"sectionString",
+                                 chosenArray, @"sectionArray",
                                  nil];;
         
         //send note
@@ -516,6 +546,8 @@
 
 
 
+
+//from schedule
 -(void)collapseOrExpandSectionInSchedule:(NSString*)chosenSection{
     
     //ensure the array of visible sections exists

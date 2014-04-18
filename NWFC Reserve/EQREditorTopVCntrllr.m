@@ -13,6 +13,7 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRScheduleRequestItem.h"
 #import "EQREditorDateVCntrllr.h"
+#import "EQREditorRenterVCntrllr.h"
 #import "EQRWebData.h"
 #import "EQRGlobals.h"
 #import "EQRColors.h"
@@ -22,16 +23,20 @@
 @property (strong, nonatomic) EQRScheduleRequestItem* myRequestItem;
 
 @property (strong, nonatomic) IBOutlet UITextField* nameTextField;
-@property (strong, nonatomic) IBOutlet UITextField* renterTypeField;
-@property (strong ,nonatomic) IBOutlet UIPickerView* renterTypePicker;
-@property (strong, nonatomic) NSString* renterTypeString;
 @property (strong, nonatomic) NSDate* pickUpDateDate;
 @property (strong, nonatomic) NSDate* returnDateDate;
+
 @property (strong, nonatomic) IBOutlet UITextField* pickupDateField;
 @property (strong, nonatomic) IBOutlet UITextField* returnDateField;
 @property (strong, nonatomic) IBOutlet UICollectionView* equipList;
 @property (strong, nonatomic) EQREditorDateVCntrllr* myDateViewController;
 @property (strong, nonatomic) UIPopoverController* theDatePopOver;
+
+@property (strong, nonatomic) IBOutlet UITextField* renterTypeField;
+//@property (strong ,nonatomic) IBOutlet UIPickerView* renterTypePicker;
+@property (strong, nonatomic) NSString* renterTypeString;  //I don't think this is used
+@property (strong, nonatomic) EQREditorRenterVCntrllr* myRenterViewController;
+@property (strong, nonatomic) UIPopoverController* theRenterPopOver;
 
 @property (strong, nonatomic) NSDictionary* myUserInfo;
 @property (strong, nonatomic) NSMutableArray* arrayOfSchedule_Unique_Joins;
@@ -101,6 +106,7 @@
     EQRColors* eqrColors = [EQRColors sharedInstance];
     self.equipList.backgroundColor = [eqrColors.colorDic objectForKey:EQRColorVeryLightGrey];
     
+    //save bar button
     UIBarButtonItem* rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveAction)];
     
     [self.navigationItem setRightBarButtonItem:rightButton];
@@ -112,9 +118,6 @@
     //get array of schedule_equipUnique_joins
     //user self.scheduleRequestKeyID
     
-    
-    
-
     
     NSDateFormatter* dateFormatterLookinNice = [[NSDateFormatter alloc] init];
     dateFormatterLookinNice.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -129,28 +132,8 @@
     self.pickupDateField.text = [dateFormatterLookinNice stringFromDate:self.pickUpDateDate];
     self.returnDateField.text = [dateFormatterLookinNice stringFromDate:self.returnDateDate];
     
-    //set the renterpicker to the correct value
-    if ([self.myRequestItem.renter_type isEqualToString:@"student"]){
-        
-        [self.renterTypePicker selectRow:0 inComponent:0 animated:NO];
-        
-    }else if([self.myRequestItem.renter_type isEqualToString:@"public"]){
-        
-        [self.renterTypePicker selectRow:1 inComponent:0 animated:NO];
-        
-    }else if([self.myRequestItem.renter_type isEqualToString:@"faculty"]){
-        
-        [self.renterTypePicker selectRow:2 inComponent:0 animated:NO];
-        
-    }else if([self.myRequestItem.renter_type isEqualToString:@"staff"]){
-        
-        [self.renterTypePicker selectRow:3 inComponent:0 animated:NO];
-        
-    }else if([self.myRequestItem.renter_type isEqualToString:@"youth"]){
-        
-        [self.renterTypePicker selectRow:4 inComponent:0 animated:NO];
-    }
-    
+    //set the renter field....
+    self.renterTypeField.text = self.myRequestItem.renter_type;
     
 //    NSLog(@"this is the scheduleRequest key id: %@", [self.myUserInfo objectForKey:@"key_ID"]);
     
@@ -408,6 +391,40 @@
 }
 
 
+#pragma mark - handle renter view controller
+
+-(IBAction)showRenterVCntrllr:(id)sender{
+    
+    self.myRenterViewController = [[EQREditorRenterVCntrllr alloc] initWithNibName:@"EQREditorRenterVCntrllr" bundle:nil];
+    
+    UIPopoverController* popOverC2 = [[UIPopoverController alloc] initWithContentViewController:self.myRenterViewController];
+    self.theRenterPopOver= popOverC2;
+    
+    [self.theRenterPopOver presentPopoverFromRect:self.renterTypeField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    //set renterViewController value ivar
+    self.myRenterViewController.renter_type = self.myRequestItem.renter_type;
+    
+    //initial setup
+    [self.myRenterViewController initialSetup];
+
+    [self.myRenterViewController.saveButton addTarget:self action:@selector(renterSaveButton:) forControlEvents:UIControlEventAllTouchEvents];
+    
+}
+
+
+-(IBAction)renterSaveButton:(id)sender{
+    
+    //set new renter type value
+    self.renterTypeField.text = self.myRenterViewController.renter_type;
+//    self.renterTypeString = self.myRenterViewController.renter_type;
+    self.myRequestItem.renter_type = self.myRenterViewController.renter_type;
+    
+    //remove popover
+    [self.theRenterPopOver dismissPopoverAnimated:YES];
+}
+
+
 #pragma mark - notification methods
 
 -(void)addEquipUniqueToBeDeletedArray:(NSNotification*)note{
@@ -432,95 +449,7 @@
 }
 
 
-#pragma mark - picker view datasource methods
 
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
-    
-    return 1;
-}
-
-
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
-    
-    return 5;
-}
-
-
-#pragma mark - picker view delegate methods
-
-- (NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component{
-    
-    if (row == 0){
-        
-        NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:8] forKey:NSFontAttributeName];
-        return [[NSAttributedString alloc] initWithString:@"student" attributes:arrayAttA];
-        
-    } else if(row == 1){
-        
-        NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:8] forKey:NSFontAttributeName];
-        return [[NSAttributedString alloc] initWithString:@"public" attributes:arrayAttA];
-        
-    }else if(row == 2){
-        
-        NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:8] forKey:NSFontAttributeName];
-        return [[NSAttributedString alloc] initWithString:@"faculty" attributes:arrayAttA];
-        
-    }else if (row == 3){
-        
-        NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:8] forKey:NSFontAttributeName];
-        return [[NSAttributedString alloc] initWithString:@"staff" attributes:arrayAttA];
-        
-    }else if (row == 4){
-        
-        NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:8] forKey:NSFontAttributeName];
-        return [[NSAttributedString alloc] initWithString:@"youth" attributes:arrayAttA];
-        
-    }else{
-        
-        NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:8] forKey:NSFontAttributeName];
-        return [[NSAttributedString alloc] initWithString:@"NA" attributes:arrayAttA];
-    }
-}
-
-
-- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component{
-    
-    return 25.f;  //30.f
-}
-
-- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component{
-    
-    return 200.f;  //210.f
-}
-
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
-    
-    switch (row) {
-        case 0:
-            self.myRequestItem.renter_type = @"student";
-            break;
-            
-        case 1:
-            self.myRequestItem.renter_type = @"public";
-            break;
-            
-        case 2:
-            self.myRequestItem.renter_type = @"faculty";
-            break;
-            
-        case 3:
-            self.myRequestItem.renter_type = @"staff";
-            break;
-            
-        case 4:
-            self.myRequestItem.renter_type = @"youth";
-            break;
-            
-        default:
-            self.myRequestItem.renter_type = @"";
-            break;
-    }
-}
 
 
 
