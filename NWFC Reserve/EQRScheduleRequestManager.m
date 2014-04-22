@@ -473,6 +473,7 @@
     bool hideMeFlag = YES;
 //    NSString* objectToRemove;
     NSArray* arrayOfObjectsToRemove;
+    NSMutableArray* arrayOfObjectsToAdd = [NSMutableArray arrayWithCapacity:1];
     NSArray* chosenArray;
     
     for (NSString* myObject in self.arrayOfEquipSectionsThatShouldBeHidden){
@@ -490,27 +491,83 @@
         }
     }
     
+    
+    //__________for ALL hide and expand__________________
     //when all sections are to be revealed
-    if (withAllFlag && hideMeFlag){
+    if (withAllFlag && (hideMeFlag == NO)){
+        
+        chosenArray = [NSArray arrayWithArray: self.arrayOfEquipSectionsThatShouldBeHidden];
         
         
+        //remove all objects from ivar array
+        [self.arrayOfEquipSectionsThatShouldBeHidden removeAllObjects];
+        
+        //inserts objects into colection view
+        NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 @"insert", @"type",
+                                 chosenArray, @"sectionArray",
+                                 nil];
+        
+        
+        //send note
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshEquipTable object:nil userInfo:thisDic];
+        
+        return;
+
     }
     
     //when all sections are to hidden
     //need to use a list of all equipSections (strings) and subtract out the EquipSectionThatShouldBeHidden
-    if (withAllFlag && (hideMeFlag == NO)){
+    if (withAllFlag && hideMeFlag){
+        
+        for (NSString* totalCatItem in self.arrayOfEquipTitleCategories){
+            
+            BOOL shouldAdd = YES;
+            
+            for (NSString* hiddenCatItem in self.arrayOfEquipSectionsThatShouldBeHidden){
+                
+                if ([hiddenCatItem isEqualToString:totalCatItem]){
+                    
+                    shouldAdd = NO;
+                    break;
+                }
+            }
+            
+            if (shouldAdd) {
+                
+                [arrayOfObjectsToAdd addObject:totalCatItem];
+            }
+            
+        }
+        
+        //add all objects not currently hidden to hidden ivar
+        [self.arrayOfEquipSectionsThatShouldBeHidden addObjectsFromArray:arrayOfObjectsToAdd];
+        
+        //delete objects from collection view
+        chosenArray = [NSArray arrayWithArray:arrayOfObjectsToAdd];
+        
+        NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 @"delete", @"type",
+                                 chosenArray, @"sectionArray",
+                                 nil];
         
         
+        //send note
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshEquipTable object:nil userInfo:thisDic];
+        
+        return;
     }
     
     
     
+    //________for individual hide/expand__________
     if (hideMeFlag){
         
         //add object to array
         [self.arrayOfEquipSectionsThatShouldBeHidden addObject:chosenSection];
         
         chosenArray = [NSArray arrayWithObject:chosenSection];
+        
         
         NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
                                       @"delete", @"type",

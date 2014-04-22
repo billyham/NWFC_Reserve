@@ -8,6 +8,12 @@
 
 #import "EQRScheduleNestedDayCell.h"
 
+@interface EQRScheduleNestedDayCell ()
+
+@property (strong, nonatomic) UILongPressGestureRecognizer* longPressGesture;
+
+@end
+
 @implementation EQRScheduleNestedDayCell
 
 
@@ -30,6 +36,18 @@
     self.titleLabel.transform = thisTransform;
     
     [self.contentView addSubview:self.titleLabel];
+    
+    //add long press gesture recog
+    self.longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressMethod:)];
+    [self addGestureRecognizer:self.longPressGesture];
+    
+}
+
+-(void)longPressMethod:(id)gesture{
+    
+    NSLog(@"long press is pressed pants");
+    
+    
     
 }
 

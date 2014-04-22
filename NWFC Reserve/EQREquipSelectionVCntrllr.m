@@ -188,6 +188,16 @@
         tempSet = nil;
     }
     
+    //save equipTitleCategoriesList to scheduleRequestManager
+    if (!requestManager.arrayOfEquipTitleCategories){
+        
+        requestManager.arrayOfEquipTitleCategories = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    [requestManager.arrayOfEquipTitleCategories removeAllObjects];
+    [requestManager.arrayOfEquipTitleCategories addObjectsFromArray:self.equipTitleCategoriesList];
+    
+    
     //sort the equipCatagoriesList
     NSSortDescriptor* sortDescAlpha = [NSSortDescriptor sortDescriptorWithKey:nil ascending:YES];
     NSArray* sortArray = [NSArray arrayWithObject:sortDescAlpha];
@@ -366,6 +376,9 @@
         
 //        [self.equipCollectionView reloadData];
     }
+    
+    //reload data to ensure that header cells are updated correctly when the "All" button is tapped
+    [self.equipCollectionView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5];
 }
 
 

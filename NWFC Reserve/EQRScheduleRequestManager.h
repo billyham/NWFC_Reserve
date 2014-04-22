@@ -16,6 +16,7 @@
 
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipTitlesWithCountOfUniqueItems;
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipTitleItems;
+@property (strong, nonatomic) NSMutableArray* arrayOfEquipTitleCategories;
 
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItemsAll;
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItemsWithSubArrays;

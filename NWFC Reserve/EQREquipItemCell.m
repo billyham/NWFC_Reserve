@@ -140,7 +140,7 @@
     //summon the requestManager!!
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
-    NSLog(@"this is the equip cell asking for the available quantity");
+//    NSLog(@"this is the equip cell asking for the available quantity");
     
     //test if there exists any uniqueItems for this titleItem, gray out and make unavailable if not
     for (NSArray* testArray in requestManager.arrayOfEquipTitlesWithCountOfUniqueItems){
@@ -234,7 +234,7 @@
     //set subview textfield value
     self.myEquipVCntrllr.quantityTextField.text = self.itemQuantityString;
     
-    NSLog(@"plus hit test in EquipItemCell with total: %u", self.itemQuantity);
+//    NSLog(@"plus hit test in EquipItemCell with total: %u", self.itemQuantity);
     
     //add addition to scheduleTrackingRequest as a new join object
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
@@ -323,7 +323,7 @@
     //set subview textfield value
     self.myEquipVCntrllr.quantityTextField.text = self.itemQuantityString;
     
-    NSLog(@"minus hit test in EquipoItemCell with total: %u", self.itemQuantity);
+//    NSLog(@"minus hit test in EquipoItemCell with total: %u", self.itemQuantity);
     
 }
 

@@ -32,6 +32,8 @@
 
 -(void)initialSetupWithTitle:(NSString*) titleName isHidden:(BOOL)yesHidden{
     
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshViewFromAllButton:) name:EQRRefreshEquipTable object:nil];
+    
     //cell's background color
     self.backgroundColor = [UIColor colorWithRed:0.92 green:0.92 blue:0.92 alpha:1.0];
     
@@ -54,7 +56,7 @@
     
     //reveal button
     UIButton* thisRevealButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    CGRect thatRect = CGRectMake(self.contentView.frame.size.width - 100, self.contentView.frame.origin.y, 90, self.contentView.frame.size.height);
+    CGRect thatRect = CGRectMake(self.contentView.frame.size.width - 200, self.contentView.frame.origin.y, 90, self.contentView.frame.size.height);
     thisRevealButton.frame = thatRect;
     
     if (yesHidden){
@@ -75,6 +77,18 @@
     
     
     //all button
+    UIButton* thisAllButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    CGRect peasRect = CGRectMake(self.contentView.frame.size.width - 100, self.contentView.frame.origin.y , 90, self.contentView.frame.size.height);
+    thisAllButton.frame = peasRect;
+    [thisAllButton setTitle:@"All" forState:UIControlStateNormal];
+    [thisAllButton setTitle:@"All" forState:UIControlStateHighlighted];
+    [thisAllButton setTitle:@"All" forState:UIControlStateSelected];
+    [thisAllButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [thisAllButton setTitleColor:[UIColor yellowColor] forState:UIControlStateHighlighted];
+    //add all button
+    [thisAllButton addTarget:self action:@selector(allButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    //assign to ivar
+    self.allButton = thisAllButton;
     
     
     //make the entire header cell a button to reveal or hide
@@ -86,7 +100,33 @@
     //add subviews
     [self.contentView addSubview:self.titleLabel];
     [self.contentView addSubview:self.revealButton];
+    [self.contentView addSubview:self.allButton];
 }
+
+
+#pragma mark - notification
+
+//-(void)refreshViewFromAllButton:(NSNotification*)note{
+//    
+//    NSDictionary* thisDic = [note userInfo];
+//    NSString* insertOrDelete = [thisDic objectForKey:@"type"];
+//    
+//    if ([insertOrDelete isEqualToString:@"insert"]){
+//        
+//        if ([self.revealButton.titleLabel.text isEqualToString:@"Hide"]){
+//            
+//            [self.revealButton setTitle:@"Expand" forState:UIControlStateNormal];
+//        }
+//        
+//    }else{
+//        
+//        if ([self.revealButton.titleLabel.text isEqualToString:@"Expand"]){
+//            
+//            [self.revealButton setTitle:@"Hide" forState:UIControlStateNormal];
+//        }
+//    }
+//    
+//}
 
 
 #pragma mark - disclosure methods
