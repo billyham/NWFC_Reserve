@@ -152,23 +152,23 @@
     cell.contentView.clipsToBounds = YES;
     
     //cell color based on renter type
-    if ([renter_type isEqualToString:@"student"]){
+    if ([renter_type isEqualToString:EQRRenterStudent]){
         
         cell.contentView.backgroundColor = [self.myColors.colorDic objectForKey:EQRColorCalStudent];
         
-    }else if([renter_type isEqualToString:@"public"]){
+    }else if([renter_type isEqualToString:EQRRenterPublic]){
         
         cell.contentView.backgroundColor = [self.myColors.colorDic objectForKey:EQRColorCalPublic];
         
-    }else if([renter_type isEqualToString:@"staff"]){
+    }else if([renter_type isEqualToString:EQRRenterStaff]){
         
         cell.contentView.backgroundColor = [self.myColors.colorDic objectForKey:EQRColorCalStaff];
         
-    }else if([renter_type isEqualToString:@"faculty"]){
+    }else if([renter_type isEqualToString:EQRRenterFaculty]){
         
         cell.contentView.backgroundColor = [self.myColors.colorDic objectForKey:EQRColorCalFaculty];
         
-    }else if([renter_type isEqualToString:@"youth"]){
+    }else if([renter_type isEqualToString:EQRRenterYouth]){
         
         cell.contentView.backgroundColor = [self.myColors.colorDic objectForKey:EQRColorCalYouth];
     }

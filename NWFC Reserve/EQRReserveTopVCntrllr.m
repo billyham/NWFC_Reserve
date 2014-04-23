@@ -61,11 +61,11 @@
     if (!self.rentorTypeArray){
         
         self.rentorTypeArray = [NSArray arrayWithObjects:
-                                @"Student",
-                                @"Faculty",
-                                @"Staff",
-                                @"Public",
-                                @"Youth",
+                                [EQRRenterStudent capitalizedString],
+                                [EQRRenterFaculty capitalizedString],
+                                [EQRRenterStaff capitalizedString],
+                                [EQRRenterPublic capitalizedString],
+                                [EQRRenterYouth capitalizedString],
                                 nil];
     }
     
@@ -275,7 +275,7 @@
         //discern between adult and youth class
         
         //youth class
-        if ([self.chosenRentorType isEqualToString:@"youth"]){
+        if ([self.chosenRentorType isEqualToString:EQRRenterYouth]){
             
             //youth camp was selected
             
@@ -423,7 +423,7 @@
             case (0):{ //student (adult)
                 
                 //set rentorType for request object
-                self.chosenRentorType = @"student";
+                self.chosenRentorType = EQRRenterStudent;
                 
                 //contact size of rentor type list
 //                self.rentorWidthContraint.constant = 120;
@@ -463,7 +463,7 @@
             } case (1):{ //faculty
                 
                 //set rentorType for request object
-                self.chosenRentorType = @"faculty";
+                self.chosenRentorType = EQRRenterFaculty;
                 
                 //contact size of rentor type list
                 self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
@@ -511,7 +511,7 @@
             }case (2):{ //staff
                 
                 //set rentorType for request object
-                self.chosenRentorType = @"staff";
+                self.chosenRentorType = EQRRenterStaff;
                 
                 //contact size of rentor type list
                 self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
@@ -558,7 +558,7 @@
             }case (3):{ //public
                 
                 //set rentorType for request object
-                self.chosenRentorType = @"public";
+                self.chosenRentorType = EQRRenterPublic;
                 
                 //contact size of rentor type list
                 self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
@@ -582,7 +582,7 @@
             }case (4):{ //youth camp
                 
                 //set rentorType for request object
-                self.chosenRentorType = @"youth";
+                self.chosenRentorType = EQRRenterYouth;
                 
                 //contact size of rentor type list
                 self.rentorLeadingConstraint.constant = 0.0;

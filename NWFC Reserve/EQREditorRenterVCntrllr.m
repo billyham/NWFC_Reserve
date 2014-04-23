@@ -7,6 +7,7 @@
 //
 
 #import "EQREditorRenterVCntrllr.h"
+#import "EQRGlobals.h"
 
 @interface EQREditorRenterVCntrllr ()
 
@@ -34,23 +35,23 @@
 -(void)initialSetup{
     
     //set the renterpicker to the correct value
-    if ([self.renter_type isEqualToString:@"student"]){
+    if ([self.renter_type isEqualToString:EQRRenterStudent]){
         
         [self.renterTypePicker selectRow:0 inComponent:0 animated:NO];
         
-    }else if([self.renter_type isEqualToString:@"public"]){
+    }else if([self.renter_type isEqualToString:EQRRenterPublic]){
         
         [self.renterTypePicker selectRow:1 inComponent:0 animated:NO];
         
-    }else if([self.renter_type isEqualToString:@"faculty"]){
+    }else if([self.renter_type isEqualToString:EQRRenterFaculty]){
         
         [self.renterTypePicker selectRow:2 inComponent:0 animated:NO];
         
-    }else if([self.renter_type isEqualToString:@"staff"]){
+    }else if([self.renter_type isEqualToString:EQRRenterStaff]){
         
         [self.renterTypePicker selectRow:3 inComponent:0 animated:NO];
         
-    }else if([self.renter_type isEqualToString:@"youth"]){
+    }else if([self.renter_type isEqualToString:EQRRenterYouth]){
         
         [self.renterTypePicker selectRow:4 inComponent:0 animated:NO];
     }
@@ -80,23 +81,23 @@
     
     if (row == 0){
         
-        return [[NSAttributedString alloc] initWithString:@"student" attributes:arrayAttA];
+        return [[NSAttributedString alloc] initWithString:EQRRenterStudent attributes:arrayAttA];
         
     } else if(row == 1){
         
-        return [[NSAttributedString alloc] initWithString:@"public" attributes:arrayAttA];
+        return [[NSAttributedString alloc] initWithString:EQRRenterPublic attributes:arrayAttA];
         
     }else if(row == 2){
         
-        return [[NSAttributedString alloc] initWithString:@"faculty" attributes:arrayAttA];
+        return [[NSAttributedString alloc] initWithString:EQRRenterFaculty attributes:arrayAttA];
         
     }else if (row == 3){
         
-        return [[NSAttributedString alloc] initWithString:@"staff" attributes:arrayAttA];
+        return [[NSAttributedString alloc] initWithString:EQRRenterStaff attributes:arrayAttA];
         
     }else if (row == 4){
         
-        return [[NSAttributedString alloc] initWithString:@"youth" attributes:arrayAttA];
+        return [[NSAttributedString alloc] initWithString:EQRRenterYouth attributes:arrayAttA];
         
     }else{
         
@@ -119,23 +120,23 @@
     
     switch (row) {
         case 0:
-            self.renter_type = @"student";
+            self.renter_type = EQRRenterStudent;
             break;
             
         case 1:
-            self.renter_type = @"public";
+            self.renter_type = EQRRenterPublic;
             break;
             
         case 2:
-            self.renter_type = @"faculty";
+            self.renter_type = EQRRenterFaculty;
             break;
             
         case 3:
-            self.renter_type = @"staff";
+            self.renter_type = EQRRenterStaff;
             break;
             
         case 4:
-            self.renter_type = @"youth";
+            self.renter_type = EQRRenterYouth;
             break;
             
         default:

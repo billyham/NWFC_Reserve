@@ -7,6 +7,7 @@
 //
 
 #import "EQRScheduleNestedDayCell.h"
+#import "EQRGlobals.h"
 
 @interface EQRScheduleNestedDayCell ()
 
@@ -43,12 +44,77 @@
     
 }
 
--(void)longPressMethod:(id)gesture{
+-(void)longPressMethod:(UILongPressGestureRecognizer *)gesture{
     
     NSLog(@"long press is pressed pants");
     
+    if (gesture.state == UIGestureRecognizerStateBegan){
+        
+        //make cell invisible
+        [self setHidden:YES];
+        
+        
+        
+        //send message to collectionViewController to create a new view object at the cell's location and size
+        CGRect frameSize = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+        
+        //translate coordinates from cell to view controller
+        CGRect frameSizeInSuperViewCooridnates = [self convertRect:frameSize toView:self.superview.superview.superview.superview.superview];
+        
+        //save cgrect as an object
+        NSValue* frameSizeValue = [NSValue valueWithCGRect:frameSizeInSuperViewCooridnates];
+        
+        NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 gesture, @"gesture",
+                                 frameSizeValue, @"frameSizeValue",
+                                 nil];
+        
+        //send note to EQRScheduleTopVCntrllr
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRLongPressOnNestedDayCell object:nil userInfo:userDic];
+        
+        
+    }
     
+    if (gesture.state == UIGestureRecognizerStateChanged){
+                
+    }
     
+    if (gesture.state == UIGestureRecognizerStateEnded){
+        
+        //make cell invisible
+        [self setHidden:NO];
+        
+        NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 gesture, @"gesture",
+                                 nil];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRLongPressOnNestedDayCell object:nil userInfo:userDic];
+    }
+    
+    if (gesture.state == UIGestureRecognizerStateCancelled){
+        
+        //make cell invisible
+        [self setHidden:NO];
+        
+        NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 gesture, @"gesture",
+                                 nil];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRLongPressOnNestedDayCell object:nil userInfo:userDic];
+    }
+    
+    if (gesture.state == UIGestureRecognizerStateFailed){
+        
+        //make cell invisible
+        [self setHidden:NO];
+        
+        NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 gesture, @"gesture",
+                                 nil];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRLongPressOnNestedDayCell object:nil userInfo:userDic];
+        
+    }
 }
 
 @end

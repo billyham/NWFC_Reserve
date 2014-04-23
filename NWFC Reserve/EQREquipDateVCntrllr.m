@@ -15,7 +15,9 @@
 @interface EQREquipDateVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UIDatePicker* pickUpDatePicker;
+@property (strong, nonatomic) IBOutlet UIDatePicker* pickUpTimePicker;
 @property (strong, nonatomic) IBOutlet UIDatePicker* returnDatePicker;
+@property (strong, nonatomic) IBOutlet UIDatePicker* returnTimePicker;
 @property BOOL datePickupSelectionFlag;
 @property BOOL dateReturnSelectionFlag;
 
@@ -53,9 +55,10 @@
     self.pickUpDate = [NSDate date];
     self.returnDate = [NSDate date];
     
+    //_________use this when entering archival information
     //set datepicker mode
-    self.pickUpDatePicker.datePickerMode = UIDatePickerModeDate;
-    self.returnDatePicker.datePickerMode = UIDatePickerModeDate;
+//    self.pickUpDatePicker.datePickerMode = UIDatePickerModeDate;
+//    self.returnDatePicker.datePickerMode = UIDatePickerModeDate;
     
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     requestManager.request.request_date_begin = self.pickUpDate;

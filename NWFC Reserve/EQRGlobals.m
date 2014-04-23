@@ -10,6 +10,16 @@
 
 NSString* ApplicationKey = @"3j654FP00o91wer";
 
+//renter type strings
+NSString* EQRRenterStudent = @"student";
+NSString* EQRRenterFaculty = @"faculty";
+NSString* EQRRenterStaff = @"staff";
+NSString* EQRRenterPublic = @"public";
+NSString* EQRRenterYouth = @"youth";
+//______******* if any change is made to these, be sure to updat existing renter_type fields in BOTH
+//______******* scheduleTracking AND scheduleTracking_uniqueItem_join tables
+
+
 //Notification selectors
 NSString* EQRVoidScheduleItemObjects = @"EQRVoidScheduleItemObjects";
 NSString* EQRRefreshEquipTable = @"EQRRefreshEquipTable";
@@ -20,8 +30,7 @@ NSString* EQRPresentRequestEditor = @"EQRPresentRequestEditor";
 NSString* EQRAChangeWasMadeToTheSchedule = @"EQRAChangeWasMadeToTheSchedule";
 NSString* EQREquipUniqueToBeDeleted = @"EQREquipUniqueToBeDeleted";
 NSString* EQREquipUniqueToBeDeletedCancel = @"EQREquipUniqueToBeDeletedCancel";
-
-
+NSString* EQRLongPressOnNestedDayCell = @"EQRLongPressOnNestedDayCell";
 
 //Timing
 float EQRHighlightTappingTime = 0.125;

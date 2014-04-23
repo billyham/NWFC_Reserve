@@ -37,6 +37,7 @@
 @property BOOL isLoadingEquipDataFlag;
 @property (strong, nonatomic) NSTimer* timerForReloadCollectionView;
 
+@property (strong, nonatomic) UIView* movingNestedCellView;
 
 
 -(IBAction)moveToNextMonth:(id)sender;
@@ -82,7 +83,8 @@
     [nc addObserver:self selector:@selector(showRequestEditor:) name:EQRPresentRequestEditor object:nil];
     //receive notes from requestEditor and EquipSummaryVCntrllr when a change has been made and needs to refresh the view
     [nc addObserver:self selector:@selector(raiseFlagThatAChangeHasBeenMade:) name:EQRAChangeWasMadeToTheSchedule object:nil];
-    
+    //receive note from nestedDayCell about long press actions
+    [nc addObserver:self selector:@selector(longPressMoveNestedDayCell:) name:EQRLongPressOnNestedDayCell object:nil];
     
     //register collection view cell
     [self.myMasterScheduleCollectionView registerClass:[EQRScheduleRowCell class] forCellWithReuseIdentifier:@"Cell"];
@@ -584,6 +586,30 @@
 
 
     
+    
+}
+
+
+#pragma mark - handle movement of nested day cells
+
+-(void)longPressMoveNestedDayCell:(NSNotification*)note{
+    
+    UIGestureRecognizer* gesture = [[note userInfo] objectForKey:@"gesture"];
+    CGRect frameSize = [[[note userInfo] objectForKey:@"frameSizeValue"] CGRectValue];
+    
+    if (gesture.state == UIGestureRecognizerStateBegan){
+        
+        self.movingNestedCellView = [[UIView alloc] initWithFrame:frameSize];
+        self.movingNestedCellView.backgroundColor = [UIColor darkGrayColor];
+        [self.view addSubview:self.movingNestedCellView];
+    }
+    
+    
+    if ((gesture.state == UIGestureRecognizerStateCancelled) || (gesture.state == UIGestureRecognizerStateEnded) || (gesture.state ==UIGestureRecognizerStateFailed)){
+        
+        [self.movingNestedCellView removeFromSuperview];
+    }
+
     
 }
 

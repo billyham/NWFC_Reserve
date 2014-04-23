@@ -98,7 +98,7 @@
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     
-    if (([requestManager.request.renter_type isEqualToString:@"student"]) && (requestManager.request.showAllEquipmentFlag == NO)){
+    if (([requestManager.request.renter_type isEqualToString:EQRRenterStudent]) && (requestManager.request.showAllEquipmentFlag == NO)){
         
         //get a list of allocated gear using SQL with INNER JOIN
         
