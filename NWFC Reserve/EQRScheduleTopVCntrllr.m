@@ -18,6 +18,7 @@
 #import "EQRScheduleRequestItem.h"
 #import "EQRScheduleNavBarCell.h"
 #import "EQREditorTopVCntrllr.h"
+#import "EQRColors.h"
 
 
 @interface EQRScheduleTopVCntrllr ()
@@ -596,6 +597,8 @@
     
     UIGestureRecognizer* gesture = [[note userInfo] objectForKey:@"gesture"];
     CGRect frameSize = [[[note userInfo] objectForKey:@"frameSizeValue"] CGRectValue];
+    NSString* joinKey_id = [[note userInfo] objectForKey:@"key_id"];
+    NSIndexPath* indexPathForRowCell = [[note userInfo] objectForKey:@"indexPath"];
     
     if (gesture.state == UIGestureRecognizerStateBegan){
         
@@ -604,10 +607,91 @@
         [self.view addSubview:self.movingNestedCellView];
     }
     
+    if (gesture.state == UIGestureRecognizerStateChanged){
+        
+        //get the y value
+        CGPoint thisPoint = [gesture locationInView:self.view];
+        
+        //add 15 pts becasue origin is about the touch... plus a little sumptin' sumptin'
+        float valueWithHalfHeight = thisPoint.y + (EQRScheduleItemHeightForDay * 0.5) + 10;
+        
+        //move only in increments equal to the cell height
+        valueWithHalfHeight = valueWithHalfHeight / EQRScheduleItemHeightForDay;
+        int newValueInt = valueWithHalfHeight;
+        float newValueExpanded = newValueInt * EQRScheduleItemHeightForDay;
+        
+        //add in the scroll view offset from the collection view
+        CGPoint scrollViewOffsetPoint = self.myMasterScheduleCollectionView.contentOffset;
+        float scrollViewOffsetY = (int)scrollViewOffsetPoint.y % (int)EQRScheduleItemHeightForDay;
+        newValueExpanded = newValueExpanded - scrollViewOffsetY;
+        
+        //subtract a further 10pnts to get the coordinates for the view to sync with our increment (based on origin of the collection view)
+        newValueExpanded = newValueExpanded - 10;
+        
+
+        //create modified rect with new y value...
+        CGRect thisRect = CGRectMake(self.movingNestedCellView.frame.origin.x, newValueExpanded, self.movingNestedCellView.frame.size.width, self.movingNestedCellView.frame.size.height);
+        
+        //assign to moving cell ivar
+        self.movingNestedCellView.frame = thisRect;
+        
+    }
     
-    if ((gesture.state == UIGestureRecognizerStateCancelled) || (gesture.state == UIGestureRecognizerStateEnded) || (gesture.state ==UIGestureRecognizerStateFailed)){
+    
+    if (gesture.state == UIGestureRecognizerStateEnded){
+        
+        NSString* equipUniqueItem_foreignKey;
+        NSString* equipTitleItem_foreignKey;
+        
+        //change equipKeyID on requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins
+        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+        
+        //use the touch location to derive the target equipItem from the self.equipUniqueArrayWithSections ivar
+        //we know the section from the supplied indexPath...
+        CGPoint thatPoint = [gesture locationInView:self.view];
+        
+        //80 is the distance between the collectionView and the top of the view
+        //must also add in the collection view offset
+        CGPoint offsetPoint = self.myMasterScheduleCollectionView.contentOffset;
+        int newRowInt = ((thatPoint.y - 80) + offsetPoint.y) / EQRScheduleItemHeightForDay;
+        
+        for (EQRScheduleTracking_EquipmentUnique_Join* thisJoin in requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins){
+            
+            if ([thisJoin.key_id isEqualToString:joinKey_id]){
+                
+                //found a match, now update the equipUnique and equipTitle values
+                 equipUniqueItem_foreignKey = [(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] key_id];
+                
+                thisJoin.equipUniqueItem_foreignKey = equipUniqueItem_foreignKey;
+                
+                 equipTitleItem_foreignKey =[(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] equipTitleItem_foreignKey];
+                
+                thisJoin.equipTitleItem_foreignKey = equipTitleItem_foreignKey;
+            }
+        }
+        
+        //then reload the collection views in the former and new rowCells
+        [self.myMasterScheduleCollectionView reloadData];
+
+        
+        //webData query to change equipKeyID on schedule_equip_join (or delete previous and create a new one)
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        NSArray* firstArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", equipUniqueItem_foreignKey, nil];
+        NSArray* secondArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", equipTitleItem_foreignKey, nil];
+        NSArray* thirdArray = [NSArray arrayWithObjects:@"key_id", joinKey_id, nil];
+        NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
+        
+        NSString* testString = [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
+        NSLog(@"this is the test string: %@", testString);
+        
         
         [self.movingNestedCellView removeFromSuperview];
+        
+    }
+    
+    if ((gesture.state == UIGestureRecognizerStateCancelled) || (gesture.state ==UIGestureRecognizerStateFailed)){
+        
+        
     }
 
     
@@ -688,12 +772,13 @@
                                    [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] shortname],
                                    [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id]];
         
-        [cell initialSetupWithTitle:myTitleString equipKey:[(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]];
+        [cell initialSetupWithTitle:myTitleString equipKey:[(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id] indexPath:indexPath];
         
         //modify the background color to have alternate colors in rows
         if (indexPath.row % 2){
             //odd
-            cell.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1.0];
+            EQRColors* myColors = [EQRColors sharedInstance];
+            cell.backgroundColor = [[myColors colorDic] objectForKey:EQRColorVeryLightGrey];;
         }
         
         

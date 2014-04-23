@@ -12,13 +12,20 @@
 @interface EQRScheduleNestedDayCell ()
 
 @property (strong, nonatomic) UILongPressGestureRecognizer* longPressGesture;
+@property (nonatomic, strong) NSString* joinKeyID;
+@property (nonatomic, strong) NSIndexPath* indexPathForRowCell;
 
 @end
 
 @implementation EQRScheduleNestedDayCell
 
 
--(void)initialSetupWithTitle:(NSString*) titleName{
+-(void)initialSetupWithTitle:(NSString*) titleName joinKeyID:(NSString*)joinKeyID indexPath:(NSIndexPath*)indexPath{
+    
+    //set ivars
+    self.joinKeyID = joinKeyID;
+    self.indexPathForRowCell = indexPath;
+    
     
     self.backgroundColor = [UIColor clearColor];
     
@@ -53,13 +60,31 @@
         //make cell invisible
         [self setHidden:YES];
         
+        //original point with offset ...  I HAVE NO IDEA WHY THE X VALUE NEEDS TO REFERENCE THE CONTENTVIEW, BUT OTHERWISE IT DON'T WORK
+        CGPoint originPoint = CGPointMake(
+                                          self.contentView.frame.origin.x + EQRScheduleLengthOfEquipUniqueLabel,
+                                          self.frame.origin.y);
         
+        //Size is OK
+        CGSize originSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
         
-        //send message to collectionViewController to create a new view object at the cell's location and size
-        CGRect frameSize = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+        //convert values to other superview coordinates
+        CGPoint convertedPointForX = [self convertPoint:originPoint toView:self.superview];
+        CGPoint convertedPointForY = [self convertPoint:convertedPointForX toView:self.superview.superview.superview.superview.superview];
         
-        //translate coordinates from cell to view controller
-        CGRect frameSizeInSuperViewCooridnates = [self convertRect:frameSize toView:self.superview.superview.superview.superview.superview];
+        //final CGRect
+        CGRect frameSizeInSuperViewCooridnates = CGRectMake(convertedPointForX.x, convertedPointForY.y, originSize.width, originSize.height);
+        
+        //___this is the view hierarchy___
+        //self
+        //UICollectionView
+        //UIView
+        //EQRScheduleRowCell
+        //UICollectionView
+        //UIView
+        //UIViewControllerWrapperView
+        //UINavigationTransitionView
+        //UILayoutContainerView
         
         //save cgrect as an object
         NSValue* frameSizeValue = [NSValue valueWithCGRect:frameSizeInSuperViewCooridnates];
@@ -76,24 +101,34 @@
     }
     
     if (gesture.state == UIGestureRecognizerStateChanged){
-                
-    }
-    
-    if (gesture.state == UIGestureRecognizerStateEnded){
-        
-        //make cell invisible
-        [self setHidden:NO];
         
         NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:
                                  gesture, @"gesture",
                                  nil];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRLongPressOnNestedDayCell object:nil userInfo:userDic];
+        
+    }
+    
+    if (gesture.state == UIGestureRecognizerStateEnded){
+        
+        //____________don't make cell visible
+//        [self setHidden:NO];
+        
+        NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 gesture, @"gesture",
+                                 self.joinKeyID, @"key_id",
+                                 self.indexPathForRowCell, @"indexPath",
+                                 nil];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRLongPressOnNestedDayCell object:nil userInfo:userDic];
+        
+        //instead... send message to matching rowCell??? 
     }
     
     if (gesture.state == UIGestureRecognizerStateCancelled){
         
-        //make cell invisible
+        //make cell visible
         [self setHidden:NO];
         
         NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -105,7 +140,7 @@
     
     if (gesture.state == UIGestureRecognizerStateFailed){
         
-        //make cell invisible
+        //make cell visible
         [self setHidden:NO];
         
         NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:

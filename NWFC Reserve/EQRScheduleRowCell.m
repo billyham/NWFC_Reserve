@@ -18,12 +18,11 @@
 @interface EQRScheduleRowCell()
 
 @property (nonatomic, strong) UICollectionView* myUniqueItemCollectionView;
-
+@property (nonatomic, strong) NSIndexPath* rowCellIndexPath;
 @property (strong, nonatomic) NSMutableArray* temporaryArrayOfEquipUniqueJoins;
 
 @property (strong, nonatomic) EQRColors* myColors;
 
-//needs to know it's equipUniqueItem's key_id
 //and it's year and month???
 
 
@@ -33,10 +32,11 @@
 @implementation EQRScheduleRowCell
 
 
--(void)initialSetupWithTitle:(NSString*) titleName equipKey:(NSString*)uniqueKeyID{
+-(void)initialSetupWithTitle:(NSString*) titleName equipKey:(NSString*)uniqueKeyID indexPath:(NSIndexPath*)indexPath{
     
     //set ivar
     self.uniqueItem_keyID = uniqueKeyID;
+    self.rowCellIndexPath = indexPath;
     
     //ivar colors
     self.myColors = [EQRColors sharedInstance];
@@ -145,7 +145,10 @@
     //get the renter type
     NSString* renter_type = [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] renter_type];
     
-    [cell initialSetupWithTitle:contact_name];
+    //get the join's key_id
+    NSString* key_id = [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] key_id];
+    
+    [cell initialSetupWithTitle:contact_name joinKeyID:key_id indexPath:self.rowCellIndexPath];
     
     
     //restrict label to the cell
