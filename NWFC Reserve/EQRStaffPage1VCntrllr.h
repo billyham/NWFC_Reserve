@@ -12,5 +12,6 @@
 
 -(IBAction)urlTextFieldDidChange:(id)sender;
 -(IBAction)termTextFieldDidChange:(id)sender;
+-(IBAction)campTermTextFieldDidChange:(id)sender;
 
 @end

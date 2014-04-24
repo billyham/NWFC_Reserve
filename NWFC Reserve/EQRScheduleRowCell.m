@@ -203,7 +203,7 @@
                          [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_end], @"request_date_end",
                          nil];
     
-    
+    //sends note to scheduleTopVCntrllr
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditor object:nil userInfo:dic];
     
     

@@ -12,6 +12,7 @@
 
 @property (strong, nonatomic) IBOutlet UITextField* urlString;
 @property (strong, nonatomic) IBOutlet UITextField* termString;
+@property (strong, nonatomic) IBOutlet UITextField* campTermString;
 
 @end
 
@@ -33,9 +34,11 @@
     //populate text field with information from user settings
     NSString* currentUrl = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
     NSString* currentTerm = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
+    NSString* currentCampTerm = [[[NSUserDefaults standardUserDefaults] objectForKey:@"campTerm"] objectForKey:@"campTerm"];
 
     self.termString.text = currentTerm;
     self.urlString.text = currentUrl;
+    self.campTermString.text = currentCampTerm;
     
     
 }
@@ -64,6 +67,20 @@
                             , nil];
     
     [defaults setObject:newDic forKey:@"term"];
+    [defaults synchronize];
+    
+}
+
+
+-(IBAction)campTermTextFieldDidChange:(id)sender{
+    
+    //change user defaults with new string text
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                            self.campTermString.text, @"campTerm"
+                            , nil];
+    
+    [defaults setObject:newDic forKey:@"campTerm"];
     [defaults synchronize];
     
 }

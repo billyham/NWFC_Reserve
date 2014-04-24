@@ -558,11 +558,6 @@
 
 -(void) showRequestEditor:(NSNotification*)note{
     
-    //    [self presentViewController:[[UIViewController alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil] animated:YES completion:^{
-    //
-    //    }];
-    
-    
     EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
     
     //prevent edges from extending beneath nav and tab bars
@@ -575,15 +570,20 @@
 //    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
     
     
-    //pushes from the side and preserves navigation controller
-    [self.navigationController pushViewController:editorViewController animated:YES];
     
-    //model pops up from below, removes navigiation controller
-//    [self.navigationController presentViewController:editorViewController animated:YES completion:^{
-//    
-//        
-//                                              
-//    }];
+    //______1_______pushes from the side and preserves navigation controller
+//    [self.navigationController pushViewController:editorViewController animated:YES];
+    
+    
+    //______2_______model pops up from below, removes navigiation controller
+    UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
+    //add cancel button
+    
+    [self presentViewController:newNavController animated:YES completion:^{
+    
+        
+                                              
+    }];
 
 
     

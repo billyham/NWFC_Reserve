@@ -23,9 +23,15 @@
                                         @"F13", @"term",
                                         nil];
     
+    NSDictionary* EQRCurrentCampTermCode = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            @"SC14", @"campTerm",
+                                            nil];
+    
+    
     NSDictionary* appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
                                  EQRWebDataUrl, @"url",
-                                 EQRCurrentTermCode, @"term"
+                                 EQRCurrentTermCode, @"term",
+                                 EQRCurrentCampTermCode, @"campTerm"
                                  , nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];

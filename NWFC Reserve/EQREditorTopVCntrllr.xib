@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -154,6 +154,19 @@
                         <action selector="showRenterVCntrllr:" destination="-1" eventType="touchUpInside" id="neu-tC-Axe"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="azt-mV-ixn">
+                    <rect key="frame" x="361" y="15" width="46" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="46" id="Ltg-Vo-GAc"/>
+                    </constraints>
+                    <state key="normal" title="Save">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="saveAction:" destination="-1" eventType="touchUpInside" id="BMO-VH-EVM"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
@@ -166,6 +179,7 @@
                 <constraint firstItem="2U3-9Y-lAh" firstAttribute="leading" secondItem="DyV-jp-8Wt" secondAttribute="trailing" constant="120" id="A7b-x5-jYG"/>
                 <constraint firstItem="rdi-Zv-Au8" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="70" id="Cqu-B3-2Qv"/>
                 <constraint firstItem="Eeh-aR-IxZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="82" id="DCb-xH-rVt"/>
+                <constraint firstAttribute="centerX" secondItem="azt-mV-ixn" secondAttribute="centerX" id="Ds1-nn-CuN"/>
                 <constraint firstAttribute="trailing" secondItem="2U3-9Y-lAh" secondAttribute="trailing" constant="10" id="E5M-Dx-vgC"/>
                 <constraint firstItem="abZ-YS-ffx" firstAttribute="top" secondItem="vAz-I1-es9" secondAttribute="bottom" constant="24" id="Eez-WO-DY4"/>
                 <constraint firstItem="abZ-YS-ffx" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="70" id="IgZ-I0-h37"/>
@@ -181,6 +195,7 @@
                 <constraint firstItem="VcH-qx-J9P" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="53" id="lur-Mc-xLT"/>
                 <constraint firstItem="rdi-Zv-Au8" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="53" id="mnP-cE-FvI"/>
                 <constraint firstItem="VcH-qx-J9P" firstAttribute="leading" secondItem="rdi-Zv-Au8" secondAttribute="trailing" constant="283" id="pLO-il-qPk"/>
+                <constraint firstItem="azt-mV-ixn" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="15" id="xqf-2r-5MM"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
         </view>

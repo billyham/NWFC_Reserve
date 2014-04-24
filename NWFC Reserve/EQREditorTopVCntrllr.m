@@ -107,9 +107,14 @@
     self.equipList.backgroundColor = [eqrColors.colorDic objectForKey:EQRColorVeryLightGrey];
     
     //save bar button
-    UIBarButtonItem* rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveAction)];
+//    UIBarButtonItem* rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveAction)];
+    
+    //cancel bar button
+    UIBarButtonItem* rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction)];
     
     [self.navigationItem setRightBarButtonItem:rightButton];
+    
+
     
     //set title
     self.navigationItem.title = @"Editor Request";
@@ -231,7 +236,19 @@
 }
 
 
--(void)saveAction{
+-(void)cancelAction{
+    
+//    [self.navigationController popViewControllerAnimated:YES];
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        
+    }];
+    
+}
+
+
+-(IBAction)saveAction:(id)sender{
     
     self.saveButtonTappedFlag = YES;
     
@@ -339,7 +356,11 @@
     //send note to schedule that a change has been saved
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
     
-    [self.navigationController popViewControllerAnimated:YES];
+//    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        
+    }];
     
 }
 

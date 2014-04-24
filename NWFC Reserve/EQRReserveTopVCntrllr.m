@@ -601,7 +601,7 @@
                 [self.nameListTable reloadData];
                 
                 //get current term from user defaults
-                NSString* termString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
+                NSString* termString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"campTerm"] objectForKey:@"campTerm"];
                 
                 //load class table with current term classes and display in collection view
                 EQRWebData* webData = [EQRWebData sharedInstance];
@@ -615,7 +615,7 @@
                     self.classArray = [NSArray arrayWithArray:muteArray];
                 }];
                 
-                NSLog(@"this is the array top item %@", [[self.classArray objectAtIndex:0] instructor_name]);
+//                NSLog(@"this is the array top item %@", [[self.classArray objectAtIndex:0] instructor_name]);
                 
                 //yes, this is necessary
                 [self.classListTable reloadData];

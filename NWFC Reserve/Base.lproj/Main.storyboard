@@ -606,8 +606,8 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Term" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xkv-aJ-mgn">
-                                <rect key="frame" x="334" y="100" width="100" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Adult Term" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xkv-aJ-mgn">
+                                <rect key="frame" x="312" y="88" width="145" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="VcI-yN-aDk"/>
@@ -616,11 +616,12 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="imb-2J-3xE">
-                                <rect key="frame" x="371" y="129" width="26" height="30"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="imb-2J-3xE">
+                                <rect key="frame" x="334" y="117" width="100" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="QeQ-Re-ETF"/>
+                                    <constraint firstAttribute="width" constant="100" id="ebZ-1m-pcZ"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -628,22 +629,51 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <action selector="termTextFieldDidChange:" destination="6G1-gm-2lt" eventType="editingDidEnd" id="IO7-ub-TUB"/>
                                 </connections>
                             </textField>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Camp Term" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uEZ-Z9-nGl">
+                                <rect key="frame" x="309" y="173" width="151" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="151" id="7Uf-Hm-GAV"/>
+                                    <constraint firstAttribute="height" constant="21" id="SlG-SH-Vel"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vVA-7f-kPL">
+                                <rect key="frame" x="334" y="202" width="100" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="CRs-r1-N48"/>
+                                    <constraint firstAttribute="height" constant="30" id="jAt-Os-C60"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="campTermTextFieldDidChange:" destination="6G1-gm-2lt" eventType="editingDidEnd" id="21T-KW-1uj"/>
+                                </connections>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="kOp-x7-tiU" firstAttribute="top" secondItem="yIg-Iv-qyn" secondAttribute="bottom" constant="8" id="3YD-z1-Dwo"/>
+                            <constraint firstAttribute="centerX" secondItem="uEZ-Z9-nGl" secondAttribute="centerX" id="9N7-wq-aoO"/>
                             <constraint firstAttribute="centerX" secondItem="imb-2J-3xE" secondAttribute="centerX" id="BLF-pJ-onn"/>
-                            <constraint firstItem="yIg-Iv-qyn" firstAttribute="top" secondItem="imb-2J-3xE" secondAttribute="bottom" constant="100" id="BUW-vK-7if"/>
+                            <constraint firstItem="yIg-Iv-qyn" firstAttribute="top" secondItem="imb-2J-3xE" secondAttribute="bottom" constant="112" id="BUW-vK-7if"/>
                             <constraint firstAttribute="centerX" secondItem="yIg-Iv-qyn" secondAttribute="centerX" id="DSh-SW-erT"/>
                             <constraint firstAttribute="centerX" secondItem="kOp-x7-tiU" secondAttribute="centerX" id="bFy-Ob-3qQ"/>
+                            <constraint firstItem="uEZ-Z9-nGl" firstAttribute="top" secondItem="imb-2J-3xE" secondAttribute="bottom" constant="26" id="cF4-y7-UNP"/>
+                            <constraint firstAttribute="centerX" secondItem="vVA-7f-kPL" secondAttribute="centerX" id="fYS-IU-Fpg"/>
                             <constraint firstItem="imb-2J-3xE" firstAttribute="top" secondItem="xkv-aJ-mgn" secondAttribute="bottom" constant="8" id="g3C-59-6mk"/>
-                            <constraint firstItem="xkv-aJ-mgn" firstAttribute="top" secondItem="hxL-HC-Nj7" secondAttribute="bottom" constant="100" id="gCB-sJ-m15"/>
+                            <constraint firstItem="xkv-aJ-mgn" firstAttribute="top" secondItem="hxL-HC-Nj7" secondAttribute="bottom" constant="88" id="gCB-sJ-m15"/>
+                            <constraint firstItem="vVA-7f-kPL" firstAttribute="top" secondItem="uEZ-Z9-nGl" secondAttribute="bottom" constant="8" id="rN9-HN-qta"/>
                             <constraint firstAttribute="centerX" secondItem="xkv-aJ-mgn" secondAttribute="centerX" id="tdO-U9-7SV"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Settings" id="t24-ER-jgh"/>
                     <connections>
+                        <outlet property="campTermString" destination="vVA-7f-kPL" id="UXk-Lp-bhx"/>
                         <outlet property="termString" destination="imb-2J-3xE" id="XlP-kl-34S"/>
                         <outlet property="urlString" destination="kOp-x7-tiU" id="ruN-xK-cld"/>
                     </connections>

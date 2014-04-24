@@ -14,5 +14,6 @@
 @property BOOL saveButtonTappedFlag;
 
 -(void)initialSetupWithInfo:(NSDictionary*)userInfo;
+-(IBAction)saveAction:(id)sender;
 
 @end

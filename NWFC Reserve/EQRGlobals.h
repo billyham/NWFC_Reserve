@@ -17,8 +17,6 @@ extern NSString* EQRRenterStaff;
 extern NSString* EQRRenterPublic;
 extern NSString* EQRRenterYouth;
 
-
-
 //Notification selectors
 extern NSString* EQRVoidScheduleItemObjects;
 extern NSString* EQRRefreshEquipTable;
@@ -34,6 +32,8 @@ extern NSString* EQRLongPressOnNestedDayCell;
 //Timing
 extern float EQRHighlightTappingTime;
 extern float EQRResizingCollectionViewTime;
+
+//Top View column size
 extern float EQRRentorTypeLeadingSpace;
 
 //Schedule collection view cell size
