@@ -932,7 +932,6 @@ const int intEQREquipUniqueItem = 8;
         return;
     }
     
-    
     //Properties for ScheduleTracking_EquipUniqueItem_Join
     if ([prop isEqualToString:@"equipUniqueItem_foreignKey"]){
         

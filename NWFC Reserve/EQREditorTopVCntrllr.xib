@@ -167,12 +167,26 @@
                         <action selector="saveAction:" destination="-1" eventType="touchUpInside" id="BMO-VH-EVM"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4md-Xy-tdp">
+                    <rect key="frame" x="70" y="974" width="130" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="NKS-CV-j3n"/>
+                    </constraints>
+                    <state key="normal" title="Delete Reservation">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="deleteRequest:" destination="-1" eventType="touchUpInside" id="qAY-gT-S8Y"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="DyV-jp-8Wt" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="82" id="0e8-pq-3U3"/>
                 <constraint firstAttribute="bottom" secondItem="2U3-9Y-lAh" secondAttribute="bottom" id="2lp-Kg-p5s"/>
                 <constraint firstItem="D92-l1-gNr" firstAttribute="top" secondItem="abZ-YS-ffx" secondAttribute="bottom" constant="184" id="6h1-Yo-0Ej"/>
+                <constraint firstItem="4md-Xy-tdp" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="70" id="6vx-jy-j67"/>
                 <constraint firstItem="DyV-jp-8Wt" firstAttribute="top" secondItem="X34-5N-XOv" secondAttribute="bottom" constant="5" id="7eO-Tw-OJ0"/>
                 <constraint firstItem="LeQ-78-At9" firstAttribute="top" secondItem="abZ-YS-ffx" secondAttribute="bottom" constant="-1" id="9Nl-N5-8HF"/>
                 <constraint firstItem="KN8-Pw-AEV" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="70" id="9dl-Ik-Yng"/>
@@ -185,6 +199,7 @@
                 <constraint firstItem="abZ-YS-ffx" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="70" id="IgZ-I0-h37"/>
                 <constraint firstItem="Eeh-aR-IxZ" firstAttribute="top" secondItem="DyV-jp-8Wt" secondAttribute="bottom" constant="7" id="LZV-8J-bqh"/>
                 <constraint firstItem="D92-l1-gNr" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="82" id="OuW-OZ-a62"/>
+                <constraint firstAttribute="bottom" secondItem="4md-Xy-tdp" secondAttribute="bottom" constant="20" id="PDB-Ij-RDn"/>
                 <constraint firstItem="vAz-I1-es9" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="82" id="Xbw-1X-2hE"/>
                 <constraint firstItem="vAz-I1-es9" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="71" id="XuF-Jt-TE6"/>
                 <constraint firstItem="2U3-9Y-lAh" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="75" id="adP-g1-gK8"/>

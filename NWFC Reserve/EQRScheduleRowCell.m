@@ -148,7 +148,10 @@
     //get the join's key_id
     NSString* key_id = [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] key_id];
     
-    [cell initialSetupWithTitle:contact_name joinKeyID:key_id indexPath:self.rowCellIndexPath];
+    //get the join's titleItem foreign key
+    NSString* equipTitleItem_foreignKey = [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] equipTitleItem_foreignKey];
+        
+    [cell initialSetupWithTitle:contact_name joinKeyID:key_id joinTitleKeyID:equipTitleItem_foreignKey indexPath:self.rowCellIndexPath];
     
     
     //restrict label to the cell

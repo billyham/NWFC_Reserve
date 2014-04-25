@@ -598,6 +598,7 @@
     UIGestureRecognizer* gesture = [[note userInfo] objectForKey:@"gesture"];
     CGRect frameSize = [[[note userInfo] objectForKey:@"frameSizeValue"] CGRectValue];
     NSString* joinKey_id = [[note userInfo] objectForKey:@"key_id"];
+    NSString* joinTitleKey_id = [[note userInfo] objectForKey:@"equipTitleItem_foreignKey"];
     NSIndexPath* indexPathForRowCell = [[note userInfo] objectForKey:@"indexPath"];
     
     if (gesture.state == UIGestureRecognizerStateBegan){
@@ -667,6 +668,14 @@
                  equipTitleItem_foreignKey =[(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] equipTitleItem_foreignKey];
                 
                 thisJoin.equipTitleItem_foreignKey = equipTitleItem_foreignKey;
+                
+                //if titleKey doesn't match the original title key, then pause and give warning in an alert view
+                if (![thisJoin.equipTitleItem_foreignKey isEqualToString:joinTitleKey_id]){
+                    
+                    UIAlertView* newAlertView = [[UIAlertView alloc] initWithTitle:@"New Equipment" message:@"You have selected a different type of equipment" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                    
+                    [newAlertView show];
+                }
             }
         }
         
@@ -681,8 +690,7 @@
         NSArray* thirdArray = [NSArray arrayWithObjects:@"key_id", joinKey_id, nil];
         NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
         
-        NSString* testString = [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
-        NSLog(@"this is the test string: %@", testString);
+        [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
         
         
         [self.movingNestedCellView removeFromSuperview];
@@ -693,8 +701,6 @@
         
         
     }
-
-    
 }
 
 
@@ -962,7 +968,6 @@
     [newArray addObject:currentThing];
     
     requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins = [NSArray arrayWithArray:newArray];
-    
     
     //should do this only once every 1 second (with NSTimer) to prevent the 1000+ calls to reload
     //if the timer currently exists, don't do anything...

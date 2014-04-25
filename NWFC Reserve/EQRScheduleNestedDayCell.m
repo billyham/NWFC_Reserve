@@ -13,6 +13,7 @@
 
 @property (strong, nonatomic) UILongPressGestureRecognizer* longPressGesture;
 @property (nonatomic, strong) NSString* joinKeyID;
+@property (nonatomic, strong) NSString* joinTitleKeyID;
 @property (nonatomic, strong) NSIndexPath* indexPathForRowCell;
 
 @end
@@ -20,12 +21,12 @@
 @implementation EQRScheduleNestedDayCell
 
 
--(void)initialSetupWithTitle:(NSString*) titleName joinKeyID:(NSString*)joinKeyID indexPath:(NSIndexPath*)indexPath{
+-(void)initialSetupWithTitle:(NSString*) titleName joinKeyID:(NSString*)joinKeyID joinTitleKeyID:(NSString*)joinTitleKeyID indexPath:(NSIndexPath*)indexPath{
     
     //set ivars
     self.joinKeyID = joinKeyID;
+    self.joinTitleKeyID = joinTitleKeyID;
     self.indexPathForRowCell = indexPath;
-    
     
     self.backgroundColor = [UIColor clearColor];
     
@@ -118,6 +119,7 @@
         NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:
                                  gesture, @"gesture",
                                  self.joinKeyID, @"key_id",
+                                 self.joinTitleKeyID, @"equipTitleItem_foreignKey",
                                  self.indexPathForRowCell, @"indexPath",
                                  nil];
         

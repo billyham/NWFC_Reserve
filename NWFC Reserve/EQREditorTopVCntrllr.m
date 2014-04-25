@@ -365,6 +365,54 @@
 }
 
 
+-(IBAction)deleteRequest:(id)sender{
+    
+    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Delete Confirmation" message:@"Are you sure want to delete this reservation?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
+    [alertView show];
+    
+    
+    
+}
+
+#pragma mark - alert view delegate methods
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    //buttonIndex at 0 is cancel
+
+    //handle delete action when delete in confirmed
+    if (buttonIndex == 1){
+        
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        
+        //delete the scheduleTracking item
+        NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.myRequestItem.key_id, nil];
+        NSArray* secondArray = [NSArray arrayWithObjects:firstArray, nil];
+        NSString* scheduleReturn = [webData queryForStringWithLink:@"EQDeleteScheduleItem.php" parameters:secondArray];
+        NSLog(@"this is the schedule return: %@", scheduleReturn);
+        
+        //delete all scheduleTracking_equipUnique_joins
+        NSArray* alphaArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey",self.myRequestItem.key_id, nil];
+        NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
+        NSString* joinReturn = [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoinWithScheduleKey" parameters:betaArray];
+        NSLog(@"this is the join return: %@", joinReturn);
+        
+        //empty the arrays
+        [self.arrayOfSchedule_Unique_Joins removeAllObjects];
+        [self.arrayOfEquipUniqueItems removeAllObjects];
+        [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+        
+        //send note to schedule that a change has been saved
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+            
+        }];
+    }
+}
+
+
+
 #pragma mark - handle date view controller
 
 -(IBAction)showDateVCntrllr:(id)sender{

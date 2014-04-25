@@ -15,5 +15,6 @@
 
 -(void)initialSetupWithInfo:(NSDictionary*)userInfo;
 -(IBAction)saveAction:(id)sender;
+-(IBAction)deleteRequest:(id)sender;
 
 @end
