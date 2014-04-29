@@ -40,9 +40,13 @@
     self.titleLabel.font = [UIFont fontWithName:@"Helvetica" size:9.f];
     self.titleLabel.backgroundColor = [UIColor clearColor];
     
-    //add a slight angle???
+    //add a slight angle to the label
     CGAffineTransform thisTransform = CGAffineTransformMakeRotation(-0.1);
     self.titleLabel.transform = thisTransform;
+    
+    //apply rounded corners
+    self.contentView.layer.masksToBounds = YES;
+    self.contentView.layer.cornerRadius = 4.0;
     
     [self.contentView addSubview:self.titleLabel];
     

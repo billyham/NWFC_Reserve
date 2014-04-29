@@ -161,7 +161,7 @@
     NSArray* secondArray = [NSArray arrayWithObjects:firstArray, nil];
     
     //get Scheduletracking_equipUnique_joins
-    [webData queryWithLink:@"EQGetScheduleEquipJoins" parameters:secondArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+    [webData queryWithLink:@"EQGetScheduleEquipJoins.php" parameters:secondArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
        
         [arrayToReturnJoins addObjectsFromArray:muteArray];
         
@@ -171,7 +171,7 @@
     
     
     //get equipUniqueItems
-    [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys" parameters:secondArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
+    [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys.php" parameters:secondArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
         
         [arrayToReturn addObjectsFromArray:muteArray];
     }];
@@ -340,7 +340,7 @@
                 //send php message to detele with the join key_id
                 NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", thisJoin.key_id, nil];
                 NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
-                NSString* returnString = [webData queryForStringWithLink:@"EQRDeleteScheduleEquipJoin" parameters:beeArray];
+                NSString* returnString = [webData queryForStringWithLink:@"EQRDeleteScheduleEquipJoin.php" parameters:beeArray];
                 
                 NSLog(@"this is the result: %@", returnString);
             }
@@ -394,7 +394,7 @@
         //delete all scheduleTracking_equipUnique_joins
         NSArray* alphaArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey",self.myRequestItem.key_id, nil];
         NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
-        NSString* joinReturn = [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoinWithScheduleKey" parameters:betaArray];
+        NSString* joinReturn = [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoinWithScheduleKey.php" parameters:betaArray];
         NSLog(@"this is the join return: %@", joinReturn);
         
         //empty the arrays
