@@ -378,6 +378,11 @@
     //cancel any existing web data parsing
     if (self.myWebData){
         [self.myWebData.xmlParser abortParsing];
+        
+        //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
+        //_________falsely showing equip joins from a previous month
+        //_________remedy by disconnecting the webdata's delegate
+        self.myWebData.delegate = nil;
     }
     
     //add a month the current month
@@ -429,6 +434,11 @@
     //cancel any existing web data parsing
     if (self.myWebData){
         [self.myWebData.xmlParser abortParsing];
+        
+        //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
+        //_________falsely showing equip joins from a previous month
+        //_________remedy by disconnecting the webdata's delegate
+        self.myWebData.delegate = nil;
     }
     
     //subtract a month the current month
