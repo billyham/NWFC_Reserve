@@ -25,6 +25,8 @@
 @property (strong, nonatomic) IBOutlet UITextField* nameTextField;
 @property (strong, nonatomic) NSDate* pickUpDateDate;
 @property (strong, nonatomic) NSDate* returnDateDate;
+@property (strong, nonatomic) NSDate* pickUpTime;
+@property (strong, nonatomic) NSDate* returnTime;
 
 @property (strong, nonatomic) IBOutlet UITextField* pickupDateField;
 @property (strong, nonatomic) IBOutlet UITextField* returnDateField;
@@ -46,6 +48,8 @@
 @end
 
 @implementation EQREditorTopVCntrllr
+
+#pragma mark - methods
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -126,7 +130,7 @@
     
     NSDateFormatter* dateFormatterLookinNice = [[NSDateFormatter alloc] init];
     dateFormatterLookinNice.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    dateFormatterLookinNice.dateFormat = @"EEE, MMM d h:mm a";
+    dateFormatterLookinNice.dateFormat = @"EEE, MMM d, h:mm a";
     
     //set labels with provided dictionary
     //must do this AFTER loading the view
@@ -197,6 +201,12 @@
     //set dates
     self.pickUpDateDate = [self.myUserInfo objectForKey:@"request_date_begin"];
     self.returnDateDate = [self.myUserInfo objectForKey:@"request_date_end"];
+    self.pickUpTime = [self.myUserInfo objectForKey:@"request_time_begin"];
+    self.returnTime = [self.myUserInfo objectForKey:@"request_time_end"];
+    
+    //add times to dates
+    self.pickUpDateDate = [self.pickUpDateDate dateByAddingTimeInterval: [self.pickUpTime timeIntervalSinceReferenceDate]];
+    self.returnDateDate = [self.returnDateDate dateByAddingTimeInterval:[self.returnTime timeIntervalSinceReferenceDate]];
         
     //instantiate myRequestItem
     self.myRequestItem = [[EQRScheduleRequestItem alloc] init];

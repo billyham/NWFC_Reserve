@@ -110,7 +110,7 @@
     NSString* titleString = [note.userInfo objectForKey:@"sectionString"];
     
     
-    NSLog(@"button turn off fires with self.titlelabel.text = %@  and sectionString: %@", self.titleLabel.text, titleString);
+//    NSLog(@"button turn off fires with self.titlelabel.text = %@  and sectionString: %@", self.titleLabel.text, titleString);
     
     if ([titleString isEqualToString:self.titleLabel.text]){
         

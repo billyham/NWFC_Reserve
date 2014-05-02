@@ -21,6 +21,8 @@
 @property (strong, nonatomic) NSString* contact_name;
 @property (strong, nonatomic) NSDate* request_date_begin;
 @property (strong, nonatomic) NSDate* request_date_end;
+@property (strong, nonatomic) NSDate* request_time_begin;
+@property (strong, nonatomic) NSDate* request_time_end;
 @property (strong, nonatomic) NSString* renter_type;
 
 //from equipUniqueItem record

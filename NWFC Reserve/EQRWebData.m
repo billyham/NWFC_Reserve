@@ -631,6 +631,18 @@ const int intEQREquipUniqueItem = 8;
         return;
     }
     
+    if ([elementName isEqualToString:@"request_time_begin"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"request_time_end"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
     //Properties for ScheduleTracking
     
     if ([elementName isEqualToString:@"classSection_foreignKey"]){
@@ -1010,6 +1022,38 @@ const int intEQREquipUniqueItem = 8;
             self.currentValue = nil;
         }
             return;
+    }
+
+    if ([prop isEqualToString:@"request_time_begin"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(request_time_begin)]){
+            
+            //piggy back the time by adding it to the system reference date
+            float secondsFromHours = [[self.currentValue substringToIndex:2] floatValue] * 60 * 60;
+            float secondsFromMinutes = [[self.currentValue substringWithRange:NSMakeRange(3, 2)] floatValue] * 60;
+            float combinedSeconds = secondsFromHours + secondsFromMinutes;
+            NSDate* referenceDate = [NSDate dateWithTimeIntervalSinceReferenceDate:combinedSeconds];
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_time_begin:referenceDate];
+                        
+            self.currentValue = nil;
+        }
+    }
+    
+    if ([prop isEqualToString:@"request_time_end"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(request_time_end)]){
+            
+            //piggy back the time by adding it to the system reference date
+            float secondsFromHours = [[self.currentValue substringToIndex:2] floatValue] * 60 * 60;
+            float secondsFromMinutes = [[self.currentValue substringWithRange:NSMakeRange(3, 2)] floatValue] * 60;
+            float combinedSeconds = secondsFromHours + secondsFromMinutes;
+            NSDate* referenceDate = [NSDate dateWithTimeIntervalSinceReferenceDate:combinedSeconds];
+
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_time_end:referenceDate];
+            
+            self.currentValue = nil;
+        }
     }
 
     
