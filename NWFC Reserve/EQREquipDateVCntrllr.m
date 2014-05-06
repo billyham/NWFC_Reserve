@@ -10,6 +10,7 @@
 #import "EQRScheduleRequestItem.h"
 #import "EQRScheduleRequestManager.h"
 #import "EQRGlobals.h"
+#import "EQREquipSelectionGenericVCntrllr.h"
 
 
 @interface EQREquipDateVCntrllr ()
@@ -72,6 +73,19 @@
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
     requestManager.request.showAllEquipmentFlag = YES;
+    
+}
+
+
+#pragma mark - continue
+
+-(IBAction)receiveContinueAction:(id)sender{
+
+    EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
+    
+    genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    [self.navigationController pushViewController:genericEquipVCntrllr animated:YES];
     
 }
 

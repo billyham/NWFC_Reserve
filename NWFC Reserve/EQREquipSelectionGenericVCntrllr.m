@@ -1,10 +1,20 @@
 //
-//  EQREquipSelectionVCntrllrViewController.m
+//  EQREquipSelectionGenericVCntrllr.m
 //  NWFC Reserve
 //
-//  Created by Ray Smith on 11/12/13.
-//  Copyright (c) 2013 Ham Again LLC. All rights reserved.
+//  Created by Ray Smith on 5/6/14.
+//  Copyright (c) 2014 Ham Again LLC. All rights reserved.
 //
+
+#import "EQREquipSelectionGenericVCntrllr.h"
+
+@interface EQREquipSelectionGenericVCntrllr ()
+
+@property (strong, nonatomic) NSArray* equipTitleArray;
+@property (strong, nonatomic) NSMutableArray* equipTitleCategoriesList;
+@property (strong, nonatomic) NSMutableArray* equipTitleArrayWithSections;
+
+@end
 
 #import "EQREquipSelectionVCntrllr.h"
 #import "EQRWebData.h"
@@ -16,18 +26,13 @@
 #import "EQRGlobals.h"
 #import "EQREquipUniqueItem.h"
 #import "EQRHeaderCellTemplate.h"
+#import "EQREquipSummaryVCntrllr.h"
 
-@interface EQREquipSelectionVCntrllr ()
 
-@property (strong, nonatomic) NSArray* equipTitleArray;
-@property (strong, nonatomic) NSMutableArray* equipTitleCategoriesList;
-@property (strong, nonatomic) NSMutableArray* equipTitleArrayWithSections;
-
-@end
-
-@implementation EQREquipSelectionVCntrllr
+@implementation EQREquipSelectionGenericVCntrllr
 
 #pragma mark - methods
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -48,22 +53,22 @@
     
     
     //add longpress gesture recognizer, need to circumvent existing longpress gesture first
-//    UILongPressGestureRecognizer* pressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-//    
-//    NSArray* recognizers = [self.equipCollectionView gestureRecognizers];
-//    
-//    //make the default gesture recognizer wait until the custom fails
-//    for (UIGestureRecognizer* aRecognizer in recognizers) {
-//        
-//        if ([aRecognizer isKindOfClass:[UITapGestureRecognizer class]]) {
-//            
-//            [aRecognizer requireGestureRecognizerToFail:pressGesture];
-//        }
-//    }
+    //    UILongPressGestureRecognizer* pressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+    //
+    //    NSArray* recognizers = [self.equipCollectionView gestureRecognizers];
+    //
+    //    //make the default gesture recognizer wait until the custom fails
+    //    for (UIGestureRecognizer* aRecognizer in recognizers) {
+    //
+    //        if ([aRecognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+    //
+    //            [aRecognizer requireGestureRecognizerToFail:pressGesture];
+    //        }
+    //    }
     
     //________this prevents the collection view from responding to touch events
     //________but is unnecessary, the plus and minus buttons will work with or without this disabled.
-//    self.equipCollectionView.allowsSelection = NO;
+    //    self.equipCollectionView.allowsSelection = NO;
     
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
@@ -75,7 +80,7 @@
     
     //...now factor in the gear already scheduled for the chosen dates in the available quantities.
     [self allocateGearList];
-
+    
     //-------*******
     
     
@@ -116,30 +121,30 @@
         
         
         //get a list of allocated gear...
-//        [webData queryWithLink:@"EQGetClassCatalogEquipTitleItemJoins.php" parameters:secondParamArray class:@"EQRClassCatalog_EquipTitleItem_Join" completion:^(NSMutableArray* muteArrayFirst){
-//            
-//            
-//            
-//            //do something with the returned array...
-//            [muteArrayFirst enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-//                
-//                NSArray* equipParamArrayfirst = [NSArray arrayWithObjects:@"key_id",
-//                                                 [(EQRClassCatalog_EquipTitleItem_Join*)obj equipTitleItem_foreignKey], nil];
-//                NSArray* equipParamArraySecond = [NSArray arrayWithObject:equipParamArrayfirst];
-//                
-//                EQRWebData* webDataNew = [EQRWebData sharedInstance];
-//                
-//                [webDataNew queryWithLink:@"EQGetEquipmentTitles.php" parameters:equipParamArraySecond class:@"EQREquipItem"
-//                               completion:^(NSMutableArray* muteArrayAlt){
-//                                   
-//                                   //do something with the returned array...
-//                                   if ([muteArrayAlt count] > 0){
-//                                       
-//                                       [tempEquipMuteArray addObject:[muteArrayAlt objectAtIndex:0]];
-//                                   }
-//                               }];
-//            }];
-//        }];
+        //        [webData queryWithLink:@"EQGetClassCatalogEquipTitleItemJoins.php" parameters:secondParamArray class:@"EQRClassCatalog_EquipTitleItem_Join" completion:^(NSMutableArray* muteArrayFirst){
+        //
+        //
+        //
+        //            //do something with the returned array...
+        //            [muteArrayFirst enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        //
+        //                NSArray* equipParamArrayfirst = [NSArray arrayWithObjects:@"key_id",
+        //                                                 [(EQRClassCatalog_EquipTitleItem_Join*)obj equipTitleItem_foreignKey], nil];
+        //                NSArray* equipParamArraySecond = [NSArray arrayWithObject:equipParamArrayfirst];
+        //
+        //                EQRWebData* webDataNew = [EQRWebData sharedInstance];
+        //
+        //                [webDataNew queryWithLink:@"EQGetEquipmentTitles.php" parameters:equipParamArraySecond class:@"EQREquipItem"
+        //                               completion:^(NSMutableArray* muteArrayAlt){
+        //
+        //                                   //do something with the returned array...
+        //                                   if ([muteArrayAlt count] > 0){
+        //
+        //                                       [tempEquipMuteArray addObject:[muteArrayAlt objectAtIndex:0]];
+        //                                   }
+        //                               }];
+        //            }];
+        //        }];
         
         
         
@@ -270,7 +275,7 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
     
     //send note to reset eveything back to 0
-//    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
+    //    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
     
     //reset eveything back to 0 (which in turn sends an nsnotification)
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
@@ -295,8 +300,10 @@
 
 -(IBAction)receiveContinueAction:(id)sender{
     
-//    [self allocateGearList];
-
+    EQREquipSummaryVCntrllr* summaryVCntrllr = [[EQREquipSummaryVCntrllr alloc] initWithNibName:@"EQREquipSummaryVCntrllr" bundle:nil];
+    
+    [self.navigationController pushViewController:summaryVCntrllr animated:YES];
+    
 }
 
 
@@ -305,11 +312,11 @@
 -(void)refreshTable:(NSNotification*)note{
     
     NSString* typeOfChange = [[note userInfo] objectForKey:@"type"];
-//    NSString* sectionString = [[note userInfo] objectForKey:@"sectionString"];
+    //    NSString* sectionString = [[note userInfo] objectForKey:@"sectionString"];
     NSArray* sectionArray = [[note userInfo] objectForKey:@"sectionArray"];
     
     
-//    NSLog(@"this is the type: %@", typeOfChange);
+    //    NSLog(@"this is the type: %@", typeOfChange);
     
     //array of index paths to add or delete
     NSMutableArray* arrayOfIndexPaths = [NSMutableArray arrayWithCapacity:1];
@@ -329,7 +336,7 @@
                 if ([thisIsCategory isEqualToString:sectionString]){
                     
                     //found a match, remember the index
-                    indexPathToDelete = (int)[self.equipTitleArrayWithSections indexOfObject:subArray];
+                    indexPathToDelete = [self.equipTitleArrayWithSections indexOfObject:subArray];
                     
                     //loop through all items to build an array of indexpaths
                     [(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -358,7 +365,7 @@
                 if ([thisIsCategory isEqualToString:sectionString]){
                     
                     //found a match, remember the index
-                    indexPathToDelete = (int)[self.equipTitleArrayWithSections indexOfObject:subArray];
+                    indexPathToDelete = [self.equipTitleArrayWithSections indexOfObject:subArray];
                     
                     //loop through all items to build an array of indexpaths
                     [(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -374,7 +381,7 @@
         [self.equipCollectionView deleteItemsAtIndexPaths:arrayOfIndexPaths];
         
         
-//        [self.equipCollectionView reloadData];
+        //        [self.equipCollectionView reloadData];
     }
     
     //reload data to ensure that header cells are updated correctly when the "All" button is tapped
@@ -394,86 +401,86 @@
     [requestManager allocateGearListWithDates:nil];
     
     
-//    //begin and end dates in sql format
-//    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-//    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-//    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-//    NSString* dateBeginString = [dateFormatter stringFromDate:requestManager.request.request_date_begin];
-//    NSString* dateEndString = [dateFormatter stringFromDate:requestManager.request.request_date_end];
-//    
-//    EQRWebData* webData = [EQRWebData sharedInstance];
-//    
-//    NSArray* arrayWithBeginDate = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
-//    NSArray* arrayWithEndDate = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
-//    NSArray* arrayTopDate = [NSArray arrayWithObjects:arrayWithBeginDate, arrayWithEndDate, nil];
-//    
-//    NSMutableArray* arrayOfScheduleTrackingKeyIDs = [NSMutableArray arrayWithCapacity:1];
-//    NSMutableArray* arrayOfEquipUniqueItems = [NSMutableArray arrayWithCapacity:1];
-//    
-//    [webData queryWithLink:@"EQGetScheduleItemsInDateRange.php" parameters:arrayTopDate class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-//        
-//        NSLog(@"result from schedule request Date range: %@", muteArray);
-//        
-//        //populate array with key_ids
-//        for (EQRScheduleRequestItem* objKey in muteArray){
-//            
-//            [arrayOfScheduleTrackingKeyIDs addObject:objKey];
-//            
-//            //cycle through and get equipUniqueItem key IDs
-//        }
-//    }];
-//    
-//    
-//    //Use sql with inner join...
-//    //  get reserved EquipUniqueItem objects With ScheduleTrackingKeys
-//    
-//    for (EQRScheduleTracking_EquipmentUnique_Join* objThingy in arrayOfScheduleTrackingKeyIDs){
-//        
-//        NSArray* arrayWithTrackingKey = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", objThingy.key_id, nil];
-//        NSArray* topArrayWithTrackingKey = [NSArray arrayWithObject:arrayWithTrackingKey];
-//        
-//        [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys.php" parameters:topArrayWithTrackingKey class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray2) {
-//            
-//            for (EQREquipUniqueItem* objUniqueItem in muteArray2){
-//                
-////                NSLog(@"this is EquipUniqueItem key_id: %@  and titleItem key_id: %@ and name: %@",
-////                      objUniqueItem.key_id, objUniqueItem.equipTitleItem_foreignKey, objUniqueItem.name);
-//                
-//                [arrayOfEquipUniqueItems addObject:objUniqueItem];
-//            }
-//        }];
-//    }
-//    
-//    //assign to requestManager ivar (this is used in EQEquipSummaryVCntrllr > justConfirm method
-//    requestManager.arrayOfEquipUniqueItemsByDateCollision = arrayOfEquipUniqueItems;
-//    
-//    
-//    //_____*******  add structure to the array by sections with titleKey???
-//    
-//    
-//    //_____********  NOW HAVE ARRAY OF UNIQUEITEMS BUT NOT SAVING IT ANYWHERE YET____*******
-//    //arrayOfEquipUniqueItems
-//    
-//    //SUBTRACT OUT the scheduled gear from the requestManager array of titles with qty count
-//    //loop through arrayOfEquipUniqueItems
-//    for (EQREquipUniqueItem* eqritem in arrayOfEquipUniqueItems){
-//        
-//        for (NSMutableArray* checkArray in requestManager.arrayOfEquipTitlesWithCountOfUniqueItems){
-//            
-//            if ([eqritem.equipTitleItem_foreignKey isEqualToString:[checkArray objectAtIndex:0]] ){
-//                
-//                //found a matching title item, now reduce the count of available items by one
-//                //... but only if the current available quantity is above 0 (to prevent going into negative integers)
-//                
-//                if ([(NSNumber*)[checkArray objectAtIndex:1] integerValue] > 0){
-//                    
-//                    int newIntValue = [(NSNumber*)[checkArray objectAtIndex:1] intValue] - 1;
-//                    NSNumber* newNumber = [NSNumber numberWithInt: newIntValue];
-//                    [checkArray replaceObjectAtIndex:1 withObject:newNumber];
-//                }
-//            }
-//        }
-//    }
+    //    //begin and end dates in sql format
+    //    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    //    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    //    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    //    NSString* dateBeginString = [dateFormatter stringFromDate:requestManager.request.request_date_begin];
+    //    NSString* dateEndString = [dateFormatter stringFromDate:requestManager.request.request_date_end];
+    //
+    //    EQRWebData* webData = [EQRWebData sharedInstance];
+    //
+    //    NSArray* arrayWithBeginDate = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
+    //    NSArray* arrayWithEndDate = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
+    //    NSArray* arrayTopDate = [NSArray arrayWithObjects:arrayWithBeginDate, arrayWithEndDate, nil];
+    //
+    //    NSMutableArray* arrayOfScheduleTrackingKeyIDs = [NSMutableArray arrayWithCapacity:1];
+    //    NSMutableArray* arrayOfEquipUniqueItems = [NSMutableArray arrayWithCapacity:1];
+    //
+    //    [webData queryWithLink:@"EQGetScheduleItemsInDateRange.php" parameters:arrayTopDate class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+    //
+    //        NSLog(@"result from schedule request Date range: %@", muteArray);
+    //
+    //        //populate array with key_ids
+    //        for (EQRScheduleRequestItem* objKey in muteArray){
+    //
+    //            [arrayOfScheduleTrackingKeyIDs addObject:objKey];
+    //
+    //            //cycle through and get equipUniqueItem key IDs
+    //        }
+    //    }];
+    //
+    //
+    //    //Use sql with inner join...
+    //    //  get reserved EquipUniqueItem objects With ScheduleTrackingKeys
+    //
+    //    for (EQRScheduleTracking_EquipmentUnique_Join* objThingy in arrayOfScheduleTrackingKeyIDs){
+    //
+    //        NSArray* arrayWithTrackingKey = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", objThingy.key_id, nil];
+    //        NSArray* topArrayWithTrackingKey = [NSArray arrayWithObject:arrayWithTrackingKey];
+    //
+    //        [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys.php" parameters:topArrayWithTrackingKey class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray2) {
+    //
+    //            for (EQREquipUniqueItem* objUniqueItem in muteArray2){
+    //
+    ////                NSLog(@"this is EquipUniqueItem key_id: %@  and titleItem key_id: %@ and name: %@",
+    ////                      objUniqueItem.key_id, objUniqueItem.equipTitleItem_foreignKey, objUniqueItem.name);
+    //
+    //                [arrayOfEquipUniqueItems addObject:objUniqueItem];
+    //            }
+    //        }];
+    //    }
+    //
+    //    //assign to requestManager ivar (this is used in EQEquipSummaryVCntrllr > justConfirm method
+    //    requestManager.arrayOfEquipUniqueItemsByDateCollision = arrayOfEquipUniqueItems;
+    //
+    //
+    //    //_____*******  add structure to the array by sections with titleKey???
+    //
+    //
+    //    //_____********  NOW HAVE ARRAY OF UNIQUEITEMS BUT NOT SAVING IT ANYWHERE YET____*******
+    //    //arrayOfEquipUniqueItems
+    //
+    //    //SUBTRACT OUT the scheduled gear from the requestManager array of titles with qty count
+    //    //loop through arrayOfEquipUniqueItems
+    //    for (EQREquipUniqueItem* eqritem in arrayOfEquipUniqueItems){
+    //
+    //        for (NSMutableArray* checkArray in requestManager.arrayOfEquipTitlesWithCountOfUniqueItems){
+    //
+    //            if ([eqritem.equipTitleItem_foreignKey isEqualToString:[checkArray objectAtIndex:0]] ){
+    //
+    //                //found a matching title item, now reduce the count of available items by one
+    //                //... but only if the current available quantity is above 0 (to prevent going into negative integers)
+    //
+    //                if ([(NSNumber*)[checkArray objectAtIndex:1] integerValue] > 0){
+    //
+    //                    int newIntValue = [(NSNumber*)[checkArray objectAtIndex:1] intValue] - 1;
+    //                    NSNumber* newNumber = [NSNumber numberWithInt: newIntValue];
+    //                    [checkArray replaceObjectAtIndex:1 withObject:newNumber];
+    //                }
+    //            }
+    //        }
+    //    }
     
 }
 
@@ -497,7 +504,7 @@
     
     //______this is unnecessary(?)
     //and ensure cell has user interaction enabled
-//    [cell setUserInteractionEnabled:YES];
+    //    [cell setUserInteractionEnabled:YES];
     
     
     //_____test whether the section is collapsed or expanded
@@ -565,15 +572,15 @@
     //and ensure cell has user interaction enabled
     [cell setUserInteractionEnabled:YES];
     
-//    cell.backgroundColor = [UIColor yellowColor];
-//    [cell setOpaque:YES];
+    //    cell.backgroundColor = [UIColor yellowColor];
+    //    [cell setOpaque:YES];
     
     
     if ([self.equipTitleArray count] > 0){
         
         [cell initialSetupWithTitle:[[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]  shortname] andEquipItem:[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
         
-//        [cell initialSetupWithTitle:[(EQREquipItem*)[self.equipTitleArray objectAtIndex:indexPath.row] name] andEquipItem:[self.equipTitleArray objectAtIndex:indexPath.row]];
+        //        [cell initialSetupWithTitle:[(EQREquipItem*)[self.equipTitleArray objectAtIndex:indexPath.row] name] andEquipItem:[self.equipTitleArray objectAtIndex:indexPath.row]];
         
     }else{
         
@@ -594,8 +601,8 @@
 
 //for equip item
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-
-    NSLog(@"view collection delegate fires touch with indexPath: %u, %u", (int)indexPath.section, (int)indexPath.row);
+    
+    NSLog(@"view collection delegate fires touch with indexPath: %u, %u", indexPath.section, indexPath.row);
     
     //if the selected cell has 0 for quantity, add one. otherwise, do nothing
     EQREquipItemCell* selectedCell = (EQREquipItemCell*)[collectionView cellForItemAtIndexPath:indexPath];
@@ -605,8 +612,6 @@
         [selectedCell plusHit:nil];
     }
 }
-
-
 
 - (void)didReceiveMemoryWarning
 {
