@@ -17,6 +17,7 @@
 #import "EQRWebData.h"
 #import "EQRGlobals.h"
 #import "EQRColors.h"
+#import "EQREquipSelectionGenericVCntrllr.h"
 
 @interface EQREditorTopVCntrllr ()
 
@@ -501,6 +502,19 @@
     
     //remove popover
     [self.theRenterPopOver dismissPopoverAnimated:YES];
+}
+
+
+#pragma mark - handle add equip item
+
+-(IBAction)addEquipItem:(id)sender{
+    
+    EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
+    
+    genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    [self.navigationController pushViewController:genericEquipVCntrllr animated:YES];
+    
 }
 
 

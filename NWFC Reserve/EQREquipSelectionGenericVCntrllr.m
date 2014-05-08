@@ -26,7 +26,7 @@
 #import "EQRGlobals.h"
 #import "EQREquipUniqueItem.h"
 #import "EQRHeaderCellTemplate.h"
-#import "EQREquipSummaryVCntrllr.h"
+#import "EQREquipSummaryGenericVCntrllr.h"
 
 
 @implementation EQREquipSelectionGenericVCntrllr
@@ -69,6 +69,14 @@
     //________this prevents the collection view from responding to touch events
     //________but is unnecessary, the plus and minus buttons will work with or without this disabled.
     //    self.equipCollectionView.allowsSelection = NO;
+    
+    
+    //add the cancel button
+    UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelTheThing:)];
+    
+    //add button to the current navigation item
+    [self.navigationItem setRightBarButtonItem:cancelButton];
+    
     
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
@@ -300,7 +308,9 @@
 
 -(IBAction)receiveContinueAction:(id)sender{
     
-    EQREquipSummaryVCntrllr* summaryVCntrllr = [[EQREquipSummaryVCntrllr alloc] initWithNibName:@"EQREquipSummaryVCntrllr" bundle:nil];
+    EQREquipSummaryGenericVCntrllr* summaryVCntrllr = [[EQREquipSummaryGenericVCntrllr alloc] initWithNibName:@"EQREquipSummaryGenericVCntrllr" bundle:nil];
+    
+    summaryVCntrllr.edgesForExtendedLayout = UIRectEdgeNone;
     
     [self.navigationController pushViewController:summaryVCntrllr animated:YES];
     
@@ -336,7 +346,7 @@
                 if ([thisIsCategory isEqualToString:sectionString]){
                     
                     //found a match, remember the index
-                    indexPathToDelete = [self.equipTitleArrayWithSections indexOfObject:subArray];
+                    indexPathToDelete = (int)[self.equipTitleArrayWithSections indexOfObject:subArray];
                     
                     //loop through all items to build an array of indexpaths
                     [(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -365,7 +375,7 @@
                 if ([thisIsCategory isEqualToString:sectionString]){
                     
                     //found a match, remember the index
-                    indexPathToDelete = [self.equipTitleArrayWithSections indexOfObject:subArray];
+                    indexPathToDelete = (int)[self.equipTitleArrayWithSections indexOfObject:subArray];
                     
                     //loop through all items to build an array of indexpaths
                     [(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
