@@ -41,6 +41,7 @@
 -(void)collapseOrExpandSection:(NSString*)chosenSection WithAll:(BOOL)withAllFlag;
 -(void)collapseOrExpandSectionInSchedule:(NSString*)chosenSection;
 -(void)allocateGearListWithDates:(NSDictionary*)datesDic;
+-(void)justConfirm;
 
 
 //_________ **********  THIS SHOULD BE RECEIVING EquipUniqueItem INSTEAD OF titleItems  ********________

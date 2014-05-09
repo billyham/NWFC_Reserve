@@ -21,6 +21,7 @@
 
 @interface EQREditorTopVCntrllr ()
 
+@property (strong, nonatomic) EQRScheduleRequestManager* privateRequesetManager;
 @property (strong, nonatomic) EQRScheduleRequestItem* myRequestItem;
 
 @property (strong, nonatomic) IBOutlet UITextField* nameTextField;
@@ -74,6 +75,12 @@
     
     //set ivar flag
     self.saveButtonTappedFlag = NO;
+    
+    //create private request manager as ivar
+    if (!self.privateRequesetManager){
+        
+        self.privateRequesetManager = [[EQRScheduleRequestManager alloc] init];
+    }
     
     //register collection view cell
     [self.equipList registerClass:[EQREditorEquipListCell class] forCellWithReuseIdentifier:@"Cell"];
