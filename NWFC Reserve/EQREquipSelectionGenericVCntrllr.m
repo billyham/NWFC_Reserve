@@ -7,26 +7,28 @@
 //
 
 #import "EQREquipSelectionGenericVCntrllr.h"
+#import "EQRScheduleRequestManager.h"
 
 @interface EQREquipSelectionGenericVCntrllr ()
 
 @property (strong, nonatomic) NSArray* equipTitleArray;
 @property (strong, nonatomic) NSMutableArray* equipTitleCategoriesList;
 @property (strong, nonatomic) NSMutableArray* equipTitleArrayWithSections;
+@property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
+@property BOOL privateRequestManagerFlag;
 
 @end
 
 #import "EQREquipSelectionVCntrllr.h"
 #import "EQRWebData.h"
 #import "EQREquipItem.h"
-#import "EQREquipItemCell.h"
-#import "EQRScheduleRequestManager.h"
 #import "EQRScheduleRequestItem.h"
 #import "EQRClassCatalog_EquipTitleItem_Join.h"
 #import "EQRGlobals.h"
 #import "EQREquipUniqueItem.h"
-#import "EQRHeaderCellTemplate.h"
 #import "EQREquipSummaryGenericVCntrllr.h"
+#import "EQRHeaderCellTemplate.h"
+
 
 
 @implementation EQREquipSelectionGenericVCntrllr
@@ -78,8 +80,13 @@
     [self.navigationItem setRightBarButtonItem:cancelButton];
     
     
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-    
+    EQRScheduleRequestManager* requestManager;
+    if (self.privateRequestManagerFlag){
+        requestManager = self.privateRequestManager;
+    }else{
+        NSLog(@"USING THE SHARED REQUEST MANAGER!!!");
+        requestManager = [EQRScheduleRequestManager sharedInstance];
+    }
     
     //_______********  try allocating the gear list here... *****______
     
@@ -275,6 +282,15 @@
 }
 
 
+-(void)overrideSharedRequestManager:(id)privateRequestManager{
+    
+    self.privateRequestManager = privateRequestManager;
+    self.privateRequestManagerFlag = YES;
+    
+}
+
+
+
 #pragma mark - cancel
 
 -(IBAction)cancelTheThing:(id)sender{
@@ -286,7 +302,13 @@
     //    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
     
     //reset eveything back to 0 (which in turn sends an nsnotification)
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    EQRScheduleRequestManager* requestManager;
+    if (self.privateRequestManagerFlag){
+        requestManager = self.privateRequestManager;
+    }else{
+        requestManager = [EQRScheduleRequestManager sharedInstance];
+
+    }
     [requestManager dismissRequest];
     
 }
@@ -320,6 +342,7 @@
 #pragma mark - notifications
 
 -(void)refreshTable:(NSNotification*)note{
+    
     
     NSString* typeOfChange = [[note userInfo] objectForKey:@"type"];
     //    NSString* sectionString = [[note userInfo] objectForKey:@"sectionString"];
@@ -405,7 +428,13 @@
 
 -(void)allocateGearList{
     
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    EQRScheduleRequestManager* requestManager;
+    if (self.privateRequestManagerFlag){
+        requestManager = self.privateRequestManager;
+    }else{
+        NSLog(@"INSIDE THE ALLOCATE GEAR LIST AND IS USING SHARED REQUEST MANAGER");
+        requestManager = [EQRScheduleRequestManager sharedInstance];
+    }
     
     //_______*********  MOVED METHOD TO REQUESTMANAGER  **********___________
     [requestManager allocateGearListWithDates:nil];
@@ -517,9 +546,20 @@
     //    [cell setUserInteractionEnabled:YES];
     
     
+    
+    
     //_____test whether the section is collapsed or expanded
     BOOL iAmHidden = NO;
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
+    EQRScheduleRequestManager* requestManager;
+    if (self.privateRequestManagerFlag){
+        requestManager = self.privateRequestManager;
+    }else{
+        requestManager = [EQRScheduleRequestManager sharedInstance];
+    }
+    
+    [cell setDelegate:requestManager];
+    
     for (NSString* sectionString in requestManager.arrayOfEquipSectionsThatShouldBeHidden){
         
         if ([sectionString isEqualToString:[(EQREquipItem*)[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:0] category]]){
@@ -544,9 +584,15 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
     //test if this section is flagged to be collapsed
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-    
+    EQRScheduleRequestManager* requestManager;
+    if (self.privateRequestManagerFlag){
+        requestManager = self.privateRequestManager;
+    }else{
+        requestManager = [EQRScheduleRequestManager sharedInstance];
+    }
+
     EQREquipItem* sampleItem = [[self.equipTitleArrayWithSections objectAtIndex:section] objectAtIndex:0];
+    
     
     //loop through array of hidden sections
     for (NSString* objectSection in requestManager.arrayOfEquipSectionsThatShouldBeHidden){
@@ -586,6 +632,16 @@
     //    [cell setOpaque:YES];
     
     
+    //assign the shared requestManager OR a private reqeust manager as a delegate to the equipItemCell
+    EQRScheduleRequestManager* requestManager;
+    if (self.privateRequestManagerFlag){
+        requestManager = self.privateRequestManager;
+    }else{
+        requestManager = [EQRScheduleRequestManager sharedInstance];
+    }
+    
+    [cell setDelegate: requestManager];
+    
     if ([self.equipTitleArray count] > 0){
         
         [cell initialSetupWithTitle:[[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]  shortname] andEquipItem:[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
@@ -612,7 +668,7 @@
 //for equip item
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    NSLog(@"view collection delegate fires touch with indexPath: %u, %u", indexPath.section, indexPath.row);
+    NSLog(@"view collection delegate fires touch with indexPath: %u, %u", (int)indexPath.section, (int)indexPath.row);
     
     //if the selected cell has 0 for quantity, add one. otherwise, do nothing
     EQREquipItemCell* selectedCell = (EQREquipItemCell*)[collectionView cellForItemAtIndexPath:indexPath];

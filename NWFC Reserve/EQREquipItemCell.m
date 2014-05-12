@@ -8,7 +8,8 @@
 
 #import "EQREquipItemCell.h"
 #import "EQREquipContentViewVCntrllr.h"
-#import "EQRScheduleRequestManager.h"
+//#import "EQRScheduleRequestManager.h"
+#import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRWebData.h"
 #import "EQRGlobals.h"
 #import "EQRColors.h"
@@ -27,6 +28,9 @@
 @end
 
 @implementation EQREquipItemCell
+
+@synthesize delegate;
+
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -137,13 +141,11 @@
     //hold onto the available quantity
     int quantityAvailableTemp = 0;
     
-    //summon the requestManager!!
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
 //    NSLog(@"this is the equip cell asking for the available quantity");
     
     //test if there exists any uniqueItems for this titleItem, gray out and make unavailable if not
-    for (NSArray* testArray in requestManager.arrayOfEquipTitlesWithCountOfUniqueItems){
+    for (NSArray* testArray in [self.delegate retrieveArrayOfEquipTitlesWithCountOfUniqueItems]){
         
         if ([[testArray objectAtIndex:0] isEqualToString:self.thisEquipTitleItem.key_id]){
             
@@ -159,15 +161,15 @@
                 
             } else {
                 
-                quantityAvailableTemp = [(NSNumber*)[testArray objectAtIndex:1]integerValue];
+                quantityAvailableTemp = (int)[(NSNumber*)[testArray objectAtIndex:1]integerValue];
                 
             }
         }
     }
     
     
-    //________********** retrieve info from scheduleRequestManager to populate quantity text field.
-    NSArray* arrayOfScheduleEquipJoins = [requestManager retrieveArrayOfEquipJoins];
+    //________********** retrieve info from delegate requestManager to populate quantity text field.
+    NSArray* arrayOfScheduleEquipJoins = [self.delegate retrieveArrayOfEquipJoins];
     
     //_______********** loop through array and find objects that match the equipTitle id???
     //add up count and list in quantity text field
@@ -191,7 +193,7 @@
     //set temp quantity variable
     if ([arrayOfMatchingItems count] > 0){
         
-        self.itemQuantity = [arrayOfMatchingItems count];
+        self.itemQuantity = (int)[arrayOfMatchingItems count];
         self.itemQuantityString = [NSString stringWithFormat:@"%u", self.itemQuantity];
         
         //set subview textfield value
@@ -237,8 +239,7 @@
 //    NSLog(@"plus hit test in EquipItemCell with total: %u", self.itemQuantity);
     
     //add addition to scheduleTrackingRequest as a new join object
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-    [requestManager addNewRequestEquipJoin:self.thisEquipTitleItem];
+    [self.delegate addNewRequestEquipJoin:self.thisEquipTitleItem];
     
     //_______pass the touch event up the responder chain...
 //    [self.nextResponder touchesBegan:touches withEvent:event];
@@ -254,7 +255,7 @@
     
     //______******  test if we have hit the total count of Unique items for this title item
     //gray out PLUS sign if so
-    for (NSMutableArray* quantityArray in requestManager.arrayOfEquipTitlesWithCountOfUniqueItems){
+    for (NSMutableArray* quantityArray in [self.delegate retrieveArrayOfEquipTitlesWithCountOfUniqueItems]){
         
         if ([self.thisEquipTitleItem.key_id isEqualToString:[quantityArray objectAtIndex:0]]){
             //found a matching titleItem key
@@ -278,8 +279,7 @@
     if (self.itemQuantity > 0){
         
         //remove a join object from scheduleTrackingRequest
-        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-        [requestManager removeRequestEquipJoin:self.thisEquipTitleItem];
+        [self.delegate removeRequestEquipJoin:self.thisEquipTitleItem];
         
         self.itemQuantity = self.itemQuantity - 1;
         

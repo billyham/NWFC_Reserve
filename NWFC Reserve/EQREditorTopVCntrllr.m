@@ -22,7 +22,6 @@
 @interface EQREditorTopVCntrllr ()
 
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequesetManager;
-@property (strong, nonatomic) EQRScheduleRequestItem* myRequestItem;
 
 @property (strong, nonatomic) IBOutlet UITextField* nameTextField;
 @property (strong, nonatomic) NSDate* pickUpDateDate;
@@ -41,6 +40,9 @@
 @property (strong, nonatomic) NSString* renterTypeString;  //I don't think this is used
 @property (strong, nonatomic) EQREditorRenterVCntrllr* myRenterViewController;
 @property (strong, nonatomic) UIPopoverController* theRenterPopOver;
+
+@property (strong, nonatomic) UIPopoverController* theEquipSelectionPopOver;
+@property (strong, nonatomic) IBOutlet UIButton* addEquipItemButton;
 
 @property (strong, nonatomic) NSDictionary* myUserInfo;
 @property (strong, nonatomic) NSMutableArray* arrayOfSchedule_Unique_Joins;
@@ -76,11 +78,7 @@
     //set ivar flag
     self.saveButtonTappedFlag = NO;
     
-    //create private request manager as ivar
-    if (!self.privateRequesetManager){
-        
-        self.privateRequesetManager = [[EQRScheduleRequestManager alloc] init];
-    }
+    
     
     //register collection view cell
     [self.equipList registerClass:[EQREditorEquipListCell class] forCellWithReuseIdentifier:@"Cell"];
@@ -150,17 +148,17 @@
     self.returnDateField.text = [dateFormatterLookinNice stringFromDate:self.returnDateDate];
     
     //set the renter field....
-    self.renterTypeField.text = self.myRequestItem.renter_type;
+    self.renterTypeField.text = self.privateRequesetManager.request.renter_type;
     
 //    NSLog(@"this is the scheduleRequest key id: %@", [self.myUserInfo objectForKey:@"key_ID"]);
     
-    //have the requestManager establish the list of available equipment
-    NSDictionary* datesDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                              self.pickUpDateDate, @"request_date_begin",
-                              self.returnDateDate, @"request_date_end",
-                              nil];
+    //have the requestManager establish the list of available equipment?????
+//    NSDictionary* datesDic = [NSDictionary dictionaryWithObjectsAndKeys:
+//                              self.pickUpDateDate, @"request_date_begin",
+//                              self.returnDateDate, @"request_date_end",
+//                              nil];
     
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+//    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
     //_______*******  THIS IS CRASHING BECAUSE THE DATE INFO IS NOT PRESENT_________**********
 //    [requestManager allocateGearListWithDates:datesDic];
@@ -201,6 +199,12 @@
     
     self.myUserInfo = userInfo;
     
+    //create private request manager as ivar
+    if (!self.privateRequesetManager){
+        
+        self.privateRequesetManager = [[EQRScheduleRequestManager alloc] init];
+    }
+    
 //    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
 //    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
 //    dateFormatter.dateFormat = @"yyyy-MM-dd";
@@ -216,15 +220,20 @@
     self.pickUpDateDate = [self.pickUpDateDate dateByAddingTimeInterval: [self.pickUpTime timeIntervalSinceReferenceDate]];
     self.returnDateDate = [self.returnDateDate dateByAddingTimeInterval:[self.returnTime timeIntervalSinceReferenceDate]];
         
-    //instantiate myRequestItem
-    self.myRequestItem = [[EQRScheduleRequestItem alloc] init];
+    //instantiate the request item in ivar requestManager
+    self.privateRequesetManager.request = [[EQRScheduleRequestItem alloc] init];
+    
+    //two important methods that initiate requestManager ivar arrays
+    [self.privateRequesetManager resetEquipListAndAvailableQuantites];
+    [self.privateRequesetManager retrieveAllEquipUniqueItems];
+    
     
     //and populate its ivars
-//    self.myRequestItem.key_id = [self.myUserInfo objectForKey:@"key_ID"];
-    self.myRequestItem.renter_type = [self.myUserInfo objectForKey:@"renter_type"];
-    self.myRequestItem.contact_name = [self.myUserInfo objectForKey:@"contact_name"];
-    self.myRequestItem.request_date_begin = self.pickUpDateDate;
-    self.myRequestItem.request_date_end = self.returnDateDate;
+//    self.privateRequesetManager.request.key_id = [self.myUserInfo objectForKey:@"key_ID"];
+    self.privateRequesetManager.request.renter_type = [self.myUserInfo objectForKey:@"renter_type"];
+    self.privateRequesetManager.request.contact_name = [self.myUserInfo objectForKey:@"contact_name"];
+    self.privateRequesetManager.request.request_date_begin = self.pickUpDateDate;
+    self.privateRequesetManager.request.request_date_end = self.returnDateDate;
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSArray* arrayWithKey = [NSArray arrayWithObjects:@"key_id",[userInfo objectForKey:@"key_ID"], nil];
@@ -233,14 +242,14 @@
         
         //____ERROR HANDLING WHEN NOTHING IS RETURNED_______
         if ([muteArray count] > 0){
-            self.myRequestItem.key_id = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] key_id];
-            self.myRequestItem.contact_foreignKey =  [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] contact_foreignKey];
-            self.myRequestItem.classSection_foreignKey = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] classSection_foreignKey];
-            self.myRequestItem.time_of_request = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] time_of_request];
+            self.privateRequesetManager.request.key_id = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] key_id];
+            self.privateRequesetManager.request.contact_foreignKey =  [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] contact_foreignKey];
+            self.privateRequesetManager.request.classSection_foreignKey = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] classSection_foreignKey];
+            self.privateRequesetManager.request.time_of_request = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] time_of_request];
         }
     }];
     
-//    NSLog(@"this is the contact foreign key: %@", self.myRequestItem.contact_foreignKey);
+//    NSLog(@"this is the contact foreign key: %@", self.privateRequesetManager.request.contact_foreignKey);
     
 
     //_________**********  LOAD REQUEST EDITOR COLLECTION VIEW WITH EquipUniqueItem_Joins  *******_____________
@@ -273,18 +282,18 @@
     //update SQL with new request information
     EQRWebData* webData = [EQRWebData sharedInstance];
     
-    NSLog(@"this is the classSection_foreignKey: %@", self.myRequestItem.classSection_foreignKey);
+    NSLog(@"this is the classSection_foreignKey: %@", self.privateRequesetManager.request.classSection_foreignKey);
     
     //must not include nil objects in array
     //cycle though all inputs and ensure some object is included. use @"88888888" as an error code
-    if (!self.myRequestItem.contact_foreignKey) self.myRequestItem.contact_foreignKey = @"88888888";
-    if (!self.myRequestItem.classSection_foreignKey) self.myRequestItem.classSection_foreignKey = @"88888888";
-    if ([self.myRequestItem.classSection_foreignKey isEqualToString:@""]) self.myRequestItem.classSection_foreignKey = @"88888888";
-    if (!self.myRequestItem.classTitle_foreignKey) self.myRequestItem.classTitle_foreignKey = @"88888888";
-    if (!self.myRequestItem.request_date_begin) self.myRequestItem.request_date_begin = [NSDate date];
-    if (!self.myRequestItem.request_date_end) self.myRequestItem.request_date_end = [NSDate date];
-    if (!self.myRequestItem.contact_name) self.myRequestItem.contact_name = @"88888888";
-    if (!self.myRequestItem.time_of_request) self.myRequestItem.time_of_request = [NSDate date];
+    if (!self.privateRequesetManager.request.contact_foreignKey) self.privateRequesetManager.request.contact_foreignKey = @"88888888";
+    if (!self.privateRequesetManager.request.classSection_foreignKey) self.privateRequesetManager.request.classSection_foreignKey = @"88888888";
+    if ([self.privateRequesetManager.request.classSection_foreignKey isEqualToString:@""]) self.privateRequesetManager.request.classSection_foreignKey = @"88888888";
+    if (!self.privateRequesetManager.request.classTitle_foreignKey) self.privateRequesetManager.request.classTitle_foreignKey = @"88888888";
+    if (!self.privateRequesetManager.request.request_date_begin) self.privateRequesetManager.request.request_date_begin = [NSDate date];
+    if (!self.privateRequesetManager.request.request_date_end) self.privateRequesetManager.request.request_date_end = [NSDate date];
+    if (!self.privateRequesetManager.request.contact_name) self.privateRequesetManager.request.contact_name = @"88888888";
+    if (!self.privateRequesetManager.request.time_of_request) self.privateRequesetManager.request.time_of_request = [NSDate date];
 
     
     //format the nsdates to a mysql compatible string
@@ -292,15 +301,15 @@
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     [dateFormatForDate setLocale:usLocale];
     [dateFormatForDate setDateFormat:@"yyyy-MM-dd"];
-    NSString* dateBeginString = [dateFormatForDate stringFromDate:self.myRequestItem.request_date_begin];
-    NSString* dateEndString = [dateFormatForDate stringFromDate:self.myRequestItem.request_date_end];
+    NSString* dateBeginString = [dateFormatForDate stringFromDate:self.privateRequesetManager.request.request_date_begin];
+    NSString* dateEndString = [dateFormatForDate stringFromDate:self.privateRequesetManager.request.request_date_end];
     
     //format the time
     NSDateFormatter* dateFormatForTime = [[NSDateFormatter alloc] init];
     [dateFormatForTime setLocale:usLocale];
     [dateFormatForTime setDateFormat:@"HH:mm"];
-    NSString* timeBeginStringPartOne = [dateFormatForTime stringFromDate:self.myRequestItem.request_date_begin];
-    NSString* timeEndStringPartOne = [dateFormatForTime stringFromDate:self.myRequestItem.request_date_end];
+    NSString* timeBeginStringPartOne = [dateFormatForTime stringFromDate:self.privateRequesetManager.request.request_date_begin];
+    NSString* timeEndStringPartOne = [dateFormatForTime stringFromDate:self.privateRequesetManager.request.request_date_end];
     NSString* timeBeginString = [NSString stringWithFormat:@"%@:00", timeBeginStringPartOne];
     NSString* timeEndString = [NSString stringWithFormat:@"%@:00", timeEndStringPartOne];
     
@@ -308,18 +317,18 @@
     NSDateFormatter* timeStampFormatter = [[NSDateFormatter alloc] init];
     [timeStampFormatter setLocale:usLocale];
     [timeStampFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    NSString* timeRequestString = [timeStampFormatter stringFromDate:self.myRequestItem.time_of_request];
+    NSString* timeRequestString = [timeStampFormatter stringFromDate:self.privateRequesetManager.request.time_of_request];
     
-    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.myRequestItem.key_id, nil];
-    NSArray* secondArray = [NSArray arrayWithObjects:@"contact_foreignKey", self.myRequestItem.contact_foreignKey, nil];
-    NSArray* thirdArray = [NSArray arrayWithObjects:@"classSection_foreignKey", self.myRequestItem.classSection_foreignKey,nil];
-    NSArray* fourthArray = [NSArray arrayWithObjects:@"classTitle_foreignKey", self.myRequestItem.classTitle_foreignKey,nil];
+    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.privateRequesetManager.request.key_id, nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:@"contact_foreignKey", self.privateRequesetManager.request.contact_foreignKey, nil];
+    NSArray* thirdArray = [NSArray arrayWithObjects:@"classSection_foreignKey", self.privateRequesetManager.request.classSection_foreignKey,nil];
+    NSArray* fourthArray = [NSArray arrayWithObjects:@"classTitle_foreignKey", self.privateRequesetManager.request.classTitle_foreignKey,nil];
     NSArray* fifthArray = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
     NSArray* sixthArray = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
     NSArray* seventhArray = [NSArray arrayWithObjects:@"request_time_begin", timeBeginString, nil];
     NSArray* eighthArray = [NSArray arrayWithObjects:@"request_time_end", timeEndString, nil];
-    NSArray* ninthArray =[NSArray arrayWithObjects:@"contact_name", self.myRequestItem.contact_name, nil];
-    NSArray* tenthArray = [NSArray arrayWithObjects:@"renter_type", self.myRequestItem.renter_type, nil];
+    NSArray* ninthArray =[NSArray arrayWithObjects:@"contact_name", self.privateRequesetManager.request.contact_name, nil];
+    NSArray* tenthArray = [NSArray arrayWithObjects:@"renter_type", self.privateRequesetManager.request.renter_type, nil];
     NSArray* eleventhArray = [NSArray arrayWithObjects:@"time_of_request", timeRequestString, nil];
     
     NSArray* bigArray = [NSArray arrayWithObjects:
@@ -404,13 +413,13 @@
         EQRWebData* webData = [EQRWebData sharedInstance];
         
         //delete the scheduleTracking item
-        NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.myRequestItem.key_id, nil];
+        NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.privateRequesetManager.request.key_id, nil];
         NSArray* secondArray = [NSArray arrayWithObjects:firstArray, nil];
         NSString* scheduleReturn = [webData queryForStringWithLink:@"EQDeleteScheduleItem.php" parameters:secondArray];
         NSLog(@"this is the schedule return: %@", scheduleReturn);
         
         //delete all scheduleTracking_equipUnique_joins
-        NSArray* alphaArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey",self.myRequestItem.key_id, nil];
+        NSArray* alphaArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey",self.privateRequesetManager.request.key_id, nil];
         NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
         NSString* joinReturn = [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoinWithScheduleKey.php" parameters:betaArray];
         NSLog(@"this is the join return: %@", joinReturn);
@@ -447,8 +456,8 @@
     self.myDateViewController.returnDateField.date = self.returnDateDate;
     
     //update requestItem date properties
-    self.myRequestItem.request_date_begin = self.pickUpDateDate;
-    self.myRequestItem.request_date_end = self.returnDateDate;
+    self.privateRequesetManager.request.request_date_begin = self.pickUpDateDate;
+    self.privateRequesetManager.request.request_date_end = self.returnDateDate;
     
     [self.myDateViewController.saveButton addTarget:self action:@selector(dateSaveButton:) forControlEvents:UIControlEventAllTouchEvents];
 }
@@ -467,8 +476,8 @@
     self.pickupDateField.text = [dateFormatterLookinNice stringFromDate:self.pickUpDateDate];
     self.returnDateField.text = [dateFormatterLookinNice stringFromDate:self.returnDateDate];
     
-    self.myRequestItem.request_date_begin = self.pickUpDateDate;
-    self.myRequestItem.request_date_end = self.returnDateDate;
+    self.privateRequesetManager.request.request_date_begin = self.pickUpDateDate;
+    self.privateRequesetManager.request.request_date_end = self.returnDateDate;
 
     
     
@@ -490,7 +499,7 @@
     [self.theRenterPopOver presentPopoverFromRect:self.renterTypeField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
     //set renterViewController value ivar
-    self.myRenterViewController.renter_type = self.myRequestItem.renter_type;
+    self.myRenterViewController.renter_type = self.privateRequesetManager.request.renter_type;
     
     //initial setup
     [self.myRenterViewController initialSetup];
@@ -505,7 +514,7 @@
     //set new renter type value
     self.renterTypeField.text = self.myRenterViewController.renter_type;
 //    self.renterTypeString = self.myRenterViewController.renter_type;
-    self.myRequestItem.renter_type = self.myRenterViewController.renter_type;
+    self.privateRequesetManager.request.renter_type = self.myRenterViewController.renter_type;
     
     //remove popover
     [self.theRenterPopOver dismissPopoverAnimated:YES];
@@ -518,9 +527,73 @@
     
     EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
     
-    genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeNone;
+    //need to specify a privateRequestManager for the equip selection v cntrllr
+    [genericEquipVCntrllr overrideSharedRequestManager:self.privateRequesetManager];
     
-    [self.navigationController pushViewController:genericEquipVCntrllr animated:YES];
+    
+//    genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeNone;
+//    [self.navigationController pushViewController:genericEquipVCntrllr animated:NO];
+    
+    UIPopoverController* popOverMe = [[UIPopoverController alloc] initWithContentViewController:genericEquipVCntrllr];
+    self.theEquipSelectionPopOver = popOverMe;
+    //must manually set the size, cannot be wider than 600px!!!!
+    self.theEquipSelectionPopOver.popoverContentSize = CGSizeMake(600, 600);
+    
+    [self.theEquipSelectionPopOver presentPopoverFromRect:self.addEquipItemButton.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated: YES];
+    
+
+    //need to reprogram the target of the save button
+    [genericEquipVCntrllr.continueButton removeTarget:genericEquipVCntrllr action:NULL forControlEvents:UIControlEventAllEvents];
+    [genericEquipVCntrllr.continueButton addTarget:self action:@selector(continueAddEquipItem:) forControlEvents:UIControlEventTouchUpInside];
+    
+}
+
+-(IBAction)continueAddEquipItem:(id)sender{
+    
+    //replaces the uniqueItem key from "1" to an accurate value
+    [self.privateRequesetManager justConfirm];
+
+    [self.theEquipSelectionPopOver dismissPopoverAnimated:YES];
+    
+    
+    
+    
+    //_________***  need to update self.arrayOfEquipUniqueItems
+    //empty arrays first
+    [self.arrayOfEquipUniqueItems removeAllObjects];
+    [self.arrayOfSchedule_Unique_Joins removeAllObjects];
+    
+    NSMutableArray* arrayToReturn = [NSMutableArray arrayWithCapacity:1];
+    NSMutableArray* arrayToReturnJoins = [NSMutableArray arrayWithCapacity:1];
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", [self.myUserInfo objectForKey:@"key_ID"],  nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:firstArray, nil];
+    
+    //get Scheduletracking_equipUnique_joins
+    [webData queryWithLink:@"EQGetScheduleEquipJoins.php" parameters:secondArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+        
+        [arrayToReturnJoins addObjectsFromArray:muteArray];
+        
+    }];
+    
+    [self.arrayOfSchedule_Unique_Joins addObjectsFromArray:arrayToReturnJoins];
+    
+    
+    //get equipUniqueItems
+    [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys.php" parameters:secondArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
+        
+        [arrayToReturn addObjectsFromArray:muteArray];
+    }];
+    
+    [self.arrayOfEquipUniqueItems addObjectsFromArray:arrayToReturn];
+    
+    //reload collection view
+    [self.equipList reloadData];
+    
+    //____________***
+    
+
     
 }
 

@@ -18,6 +18,8 @@
 
 @implementation EQRHeaderCellTemplate
 
+@synthesize delegate;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -133,12 +135,11 @@
 
 -(IBAction)revealButtonTapped:(id)sender{
     
-    //inform the request manager about the status of hide/reveal for persistence
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    //inform the delegate about the status of hide/reveal for persistence
     
     //change text of button
     BOOL isCurrentlyHidden = NO;
-    for (NSString* sectionString in requestManager.arrayOfEquipSectionsThatShouldBeHidden){
+    for (NSString* sectionString in [self.delegate retrieveArrayOfEquipSectionsThatShouldBeHidden]){
         
         if ([sectionString isEqualToString:self.titleLabel.text]){
             
@@ -155,19 +156,18 @@
         [self.revealButton setTitle:@"Expand" forState:UIControlStateNormal];
     }
     
-    //update request Manager to do the action and keep persistence
-    [requestManager collapseOrExpandSection:self.titleLabel.text WithAll:NO];
+    //update private request Manager to do the action and keep persistence
+    [self.delegate collapseOrExpandSection:self.titleLabel.text WithAll:NO];
 }
 
 
 -(IBAction)allButtonTapped:(id)sender{
     
-    //inform the request manager about the status of hide/reveal for persistence
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    //inform the delegate about the status of hide/reveal for persistence
     
     //change text of button
     BOOL isCurrentlyHidden = NO;
-    for (NSString* sectionString in requestManager.arrayOfEquipSectionsThatShouldBeHidden){
+    for (NSString* sectionString in [self.delegate retrieveArrayOfEquipSectionsThatShouldBeHidden]){
         
         if ([sectionString isEqualToString:self.titleLabel.text]){
             
@@ -184,8 +184,8 @@
         [self.revealButton setTitle:@"Expand" forState:UIControlStateNormal];
     }
     
-    //update request Manager to do the action and keep persistence
-    [requestManager collapseOrExpandSection:self.titleLabel.text WithAll:YES];
+    //update private request Manager to do the action and keep persistence
+    [self.delegate collapseOrExpandSection:self.titleLabel.text WithAll:YES];
     
     
 }

@@ -48,7 +48,7 @@
         self.arrayOfEquipSectionsThatShouldBeHidden = [NSMutableArray arrayWithCapacity:1];
     }
     
-    //emply out array of hidden sections
+    //empty out array of hidden sections
     [self.arrayOfEquipSectionsThatShouldBeHidden removeAllObjects];
     
     //get device name
@@ -178,7 +178,7 @@
     
     self.arrayOfEquipTitleItems = weirdNewArray;
     
-    NSLog(@"count of equipTitleItems array: %u", (int)[self.arrayOfEquipTitleItems count]);
+//    NSLog(@"count of equipTitleItems array: %u", (int)[self.arrayOfEquipTitleItems count]);
     
     //compare the two arrays with title info...
     NSMutableArray* additionalTitles = [NSMutableArray arrayWithCapacity:1];
@@ -204,7 +204,7 @@
         }
     }
     
-    NSLog(@"count of new title items to add: %u", (int)[additionalTitles count]);
+//    NSLog(@"count of new title items to add: %u", (int)[additionalTitles count]);
     
     //append the requestManager array ivar with the new items
     [self.arrayOfEquipTitlesWithCountOfUniqueItems addObjectsFromArray:additionalTitles];
@@ -291,6 +291,31 @@
 }
 
 
+-(NSArray*)retrieveArrayOfEquipTitlesWithCountOfUniqueItems{
+    
+    if (self.arrayOfEquipTitlesWithCountOfUniqueItems){
+        
+        return self.arrayOfEquipTitlesWithCountOfUniqueItems;
+    } else {
+        
+        return nil;
+    }
+}
+
+
+-(NSArray*)retrieveArrayOfEquipSectionsThatShouldBeHidden{
+    
+    if (self.arrayOfEquipSectionsThatShouldBeHidden){
+        
+        return self.arrayOfEquipSectionsThatShouldBeHidden;
+    } else {
+        
+        return nil;
+    }
+}
+
+
+
 //_________ **********  THIS SHOULD BE RECEIVING EquipUniqueItem INSTEAD OF titleItems  ********________
 //... OR it does the work of assigning a unique item...
 -(void)addNewRequestEquipJoin:(EQREquipItem*)thisEquipItem{
@@ -349,9 +374,6 @@
 
 
 -(void)justConfirm{
-    
-//    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-//    EQRScheduleRequestItem* request = requestManager.request;
     
     //    NSLog(@"this is the contact_foreignKey: %@", [NSString stringWithFormat:@"%@", request.contact_foreignKey]);
     
@@ -529,6 +551,8 @@
     
     for (EQRScheduleTracking_EquipmentUnique_Join* joinMe in self.request.arrayOfEquipmentJoins){
         
+        NSLog(@"count of items in uniqueArrayMe: %u", [[tempListOfUniqueItemsJustRequested objectAtIndex:0] count]);
+        
         for (NSMutableArray* uniqueArrayMe in tempListOfUniqueItemsJustRequested){
             
             //____an array may be left empty after the last function, avoid tyring to interate through
@@ -564,6 +588,8 @@
     
     //input array of scheduleTracking_equipUniqueItem_joins
     for (EQRScheduleTracking_EquipmentUnique_Join* join in self.request.arrayOfEquipmentJoins){
+        
+        NSLog(@"this is the equipUniqueItem key: %@", join.equipUniqueItem_foreignKey, nil);
         
         NSArray* firstArrayForJoin = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", join.scheduleTracking_foreignKey, nil];
         NSArray* secondArrayForJoin = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", join.equipUniqueItem_foreignKey, nil];
@@ -712,6 +738,12 @@
     NSMutableArray* arrayOfObjectsToAdd = [NSMutableArray arrayWithCapacity:1];
     NSArray* chosenArray;
     
+    //ensure this ivar exists
+    if (!self.arrayOfEquipSectionsThatShouldBeHidden){
+        
+        self.arrayOfEquipSectionsThatShouldBeHidden = [NSMutableArray arrayWithCapacity:1];
+    }
+    
     for (NSString* myObject in self.arrayOfEquipSectionsThatShouldBeHidden){
         
         if ([myObject isEqualToString:chosenSection]){
@@ -804,6 +836,7 @@
         
         chosenArray = [NSArray arrayWithObject:chosenSection];
         
+//        NSLog(@"in requestManager count of chosenSection for arrayOfEquipSectionsThatShouldBeHidden: %u", (int)[chosenArray count]);
         
         NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
                                       @"delete", @"type",

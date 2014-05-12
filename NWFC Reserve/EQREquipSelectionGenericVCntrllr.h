@@ -6,24 +6,22 @@
 //  Copyright (c) 2014 Ham Again LLC. All rights reserved.
 //
 
-@protocol EQREquipSelectionGenericDelegate;
 
 #import <UIKit/UIKit.h>
+#import "EQREquipItemCell.h"
+
 
 @interface EQREquipSelectionGenericVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>{
     
-    __weak id <EQREquipSelectionGenericDelegate> delegate;
     
 }
 
 @property (nonatomic, strong) IBOutlet UICollectionView* equipCollectionView;
+@property (nonatomic, strong) IBOutlet UIButton* continueButton;
+
+-(void)overrideSharedRequestManager:(id)privateRequestManager;
 
 
 @end
 
 
-@protocol  QREquipSelectionGenericDelegate <NSObject>
-
-
-
-@end

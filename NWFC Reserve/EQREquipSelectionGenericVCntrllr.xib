@@ -6,6 +6,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQREquipSelectionGenericVCntrllr">
             <connections>
+                <outlet property="continueButton" destination="6bK-FM-VHe" id="l7o-BL-vMz"/>
                 <outlet property="equipCollectionView" destination="Hha-K8-upK" id="RGE-rh-XRI"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>

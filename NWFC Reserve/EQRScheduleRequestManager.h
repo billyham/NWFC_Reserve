@@ -9,8 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "EQRScheduleRequestItem.h"
 #import "EQREquipItem.h"
+#import "EQREquipItemCell.h"
+#import "EQRHeaderCellTemplate.h"
 
-@interface EQRScheduleRequestManager : NSObject
+@interface EQRScheduleRequestManager : NSObject <EQREquipItemCellDelegate, EQRHeaderCellTemplateDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem* request;
 
@@ -37,16 +39,21 @@
 -(void)dismissRequest;
 -(void)resetEquipListAndAvailableQuantites;
 -(NSArray*)retrieveAllEquipUniqueItems;
--(NSArray*)retrieveArrayOfEquipJoins;
--(void)collapseOrExpandSection:(NSString*)chosenSection WithAll:(BOOL)withAllFlag;
 -(void)collapseOrExpandSectionInSchedule:(NSString*)chosenSection;
 -(void)allocateGearListWithDates:(NSDictionary*)datesDic;
 -(void)justConfirm;
 
 
-//_________ **********  THIS SHOULD BE RECEIVING EquipUniqueItem INSTEAD OF titleItems  ********________
+//EQREquipItemCellDelegate protocal methods
+-(NSArray*)retrieveArrayOfEquipJoins;
+-(NSArray*)retrieveArrayOfEquipTitlesWithCountOfUniqueItems;
+
 -(void)addNewRequestEquipJoin:(EQREquipItem*)thisEquipItem;
 -(void)removeRequestEquipJoin:(EQREquipItem*)thisEquipItem;
+
+//EQRHeaderCellDelegate protocal methods
+-(NSArray*)retrieveArrayOfEquipSectionsThatShouldBeHidden;
+-(void)collapseOrExpandSection:(NSString*)chosenSection WithAll:(BOOL)withAllFlag;
 
 
 @end
