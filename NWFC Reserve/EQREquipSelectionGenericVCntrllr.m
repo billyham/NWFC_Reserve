@@ -84,7 +84,7 @@
     if (self.privateRequestManagerFlag){
         requestManager = self.privateRequestManager;
     }else{
-        NSLog(@"USING THE SHARED REQUEST MANAGER!!!");
+        
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
     
@@ -96,7 +96,7 @@
     //...now factor in the gear already scheduled for the chosen dates in the available quantities.
     [self allocateGearList];
     
-    //-------*******
+    //-------*******___________
     
     
     //register collection view cell

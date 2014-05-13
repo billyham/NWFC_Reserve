@@ -58,8 +58,8 @@
     
     //_________use this when entering archival information
     //set datepicker mode
-//    self.pickUpDatePicker.datePickerMode = UIDatePickerModeDate;
-//    self.returnDatePicker.datePickerMode = UIDatePickerModeDate;
+    self.pickUpDatePicker.datePickerMode = UIDatePickerModeDate;
+    self.returnDatePicker.datePickerMode = UIDatePickerModeDate;
     
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     requestManager.request.request_date_begin = self.pickUpDate;

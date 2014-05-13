@@ -536,8 +536,8 @@
     
     UIPopoverController* popOverMe = [[UIPopoverController alloc] initWithContentViewController:genericEquipVCntrllr];
     self.theEquipSelectionPopOver = popOverMe;
-    //must manually set the size, cannot be wider than 600px!!!!
-    self.theEquipSelectionPopOver.popoverContentSize = CGSizeMake(600, 600);
+    //must manually set the size, cannot be wider than 600px!!!!???? But seems to work ok at 800 anyway???
+    self.theEquipSelectionPopOver.popoverContentSize = CGSizeMake(800, 600);
     
     [self.theEquipSelectionPopOver presentPopoverFromRect:self.addEquipItemButton.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated: YES];
     

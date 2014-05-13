@@ -56,6 +56,10 @@
     self.itemQuantityString = @"0";
     self.quantityLimitFlag = NO;
     
+    //_______*******  programatically set the size (to accommodate the smaller popvover view ******_______
+    
+    
+    
     EQREquipContentViewVCntrllr *controller = [[EQREquipContentViewVCntrllr alloc] initWithNibName:@"EQREquipContentViewVCntrllr" bundle:nil];
     
     //retain the view controller
