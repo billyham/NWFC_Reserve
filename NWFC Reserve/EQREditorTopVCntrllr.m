@@ -22,6 +22,7 @@
 @interface EQREditorTopVCntrllr ()
 
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequesetManager;
+@property (strong, nonatomic) NSDictionary* myUserInfo;
 
 @property (strong, nonatomic) IBOutlet UITextField* nameTextField;
 @property (strong, nonatomic) NSDate* pickUpDateDate;
@@ -44,7 +45,6 @@
 @property (strong, nonatomic) UIPopoverController* theEquipSelectionPopOver;
 @property (strong, nonatomic) IBOutlet UIButton* addEquipItemButton;
 
-@property (strong, nonatomic) NSDictionary* myUserInfo;
 @property (strong, nonatomic) NSMutableArray* arrayOfSchedule_Unique_Joins;
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItems;
 @property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedEquipIDs;

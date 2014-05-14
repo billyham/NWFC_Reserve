@@ -24,7 +24,6 @@
 @interface EQRScheduleTopVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myMasterScheduleCollectionView;
-
 @property (strong ,nonatomic) IBOutlet UICollectionView* myNavBarCollectionView;
 
 @property (strong, nonatomic) NSArray* equipUniqueArray;
