@@ -7,6 +7,7 @@
 //
 
 #import "EQRItineraryVCntrllr.h"
+#import "EQRItineraryRowCell.h"
 
 @interface EQRItineraryVCntrllr ()
 
@@ -35,7 +36,9 @@
 {
     [super viewDidLoad];
 
-
+    //register collection view cell
+    [self.myMasterItineraryCollection registerClass:[EQRItineraryRowCell class] forCellWithReuseIdentifier:@"Cell"];
+    
 
     //initial day is the current day
     self.dateForShow = [NSDate date];
@@ -50,6 +53,12 @@
 
 }
 
+
+-(void)refreshTheView{
+    
+    
+    
+}
 
 
 #pragma mark - day movement
@@ -66,6 +75,51 @@
     
     
 }
+
+
+
+#pragma mark - collection view data source methods
+
+
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    
+    
+    return 1;
+}
+
+
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    
+    return 5;
+}
+
+-(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    static NSString* CellIdentifier = @"Cell";
+    
+    
+    EQRItineraryRowCell* cell = [self.myMasterItineraryCollection dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    //remove subviews
+    for (UIView* view in cell.contentView.subviews){
+        
+        [view removeFromSuperview];
+    }
+    
+    //and reset the cell's background color...
+    cell.backgroundColor = [UIColor whiteColor];
+    
+    
+    
+    [cell initialSetupWithTitle:@"title"];
+    
+    
+    
+    
+    return cell;
+}
+
+
 
 
 

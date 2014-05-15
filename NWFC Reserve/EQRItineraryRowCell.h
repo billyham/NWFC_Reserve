@@ -1,5 +1,5 @@
 //
-//  EQRItineraryVCntrllr.h
+//  EQRItineraryRowCell.h
 //  NWFC Reserve
 //
 //  Created by Ray Smith on 5/14/14.
@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRCellTemplate.h"
 
-@interface EQRItineraryVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface EQRItineraryRowCell : EQRCellTemplate
 
 @end
