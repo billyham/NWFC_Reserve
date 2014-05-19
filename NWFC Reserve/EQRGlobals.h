@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString* ApplicationKey;
+extern NSString* EQRApplicationKey;
 
 //renter type Strings
 extern NSString* EQRRenterStudent;

@@ -8,7 +8,7 @@
 
 #import "EQRGlobals.h"
 
-NSString* ApplicationKey = @"3j654FP00o91wer";
+NSString* EQRApplicationKey = @"3j654FP00o91wer";
 
 //renter type strings
 NSString* EQRRenterStudent = @"student";
@@ -16,7 +16,7 @@ NSString* EQRRenterFaculty = @"faculty";
 NSString* EQRRenterStaff = @"staff";
 NSString* EQRRenterPublic = @"public";
 NSString* EQRRenterYouth = @"youth";
-//______******* if any change is made to these, be sure to updat existing renter_type fields in BOTH
+//______******* if any change is made to these, be sure to update existing renter_type rows in BOTH
 //______******* scheduleTracking AND scheduleTracking_uniqueItem_join tables
 
 
