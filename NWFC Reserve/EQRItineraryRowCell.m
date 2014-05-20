@@ -8,6 +8,7 @@
 
 #import "EQRItineraryRowCell.h"
 #import "EQRItineraryCellContentVCntrllr.h"
+#import "EQRGlobals.h"
 
 @interface EQRItineraryRowCell ()
 
@@ -41,6 +42,7 @@
     self.myItineraryContent.firstLastName.text = @"Hunky Dory";
     self.myItineraryContent.checkInOrOut.text = @"Check Out";
     self.myItineraryContent.interactionTime.text = @"3:15pm";
+    self.myItineraryContent.renterType.text = EQRRenterStudent;
     
 
     

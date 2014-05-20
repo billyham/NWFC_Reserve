@@ -13,5 +13,8 @@
 @property (strong, nonatomic) IBOutlet UILabel* interactionTime;
 @property (strong, nonatomic) IBOutlet UILabel* firstLastName;
 @property (strong, nonatomic) IBOutlet UILabel* checkInOrOut;
+@property (strong, nonatomic) IBOutlet UILabel* renterType;
+@property BOOL showPrepSwitch;
+@property BOOL showShelveSwitch;
 
 @end

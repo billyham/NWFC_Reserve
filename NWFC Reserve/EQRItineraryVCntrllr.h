@@ -8,6 +8,22 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_OPTIONS(NSUInteger, EQRItineraryFilter){
+    
+    EQRGoingShelf = (1 << 0),  //00000001
+    EQRGoingPrepped = (1 << 1),  //00000010
+    EQRGoingPickedUp = (1 << 2),  //00000100
+    EQRReturningOut = (1 << 3),  //00001000
+    EQRReturningReturned = (1 << 4),  //00010000
+    EQRReturningShelved = (1 << 5),  //00100000
+    EQRFilterAll = 63,
+    EQRFilterNone = 0
+    
+};
+
+
 @interface EQRItineraryVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+
+-(IBAction)applyFilter:(id)sender;
 
 @end

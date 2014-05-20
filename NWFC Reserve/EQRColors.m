@@ -17,6 +17,7 @@ NSString* EQRColorCalFaculty = @"EQRColorCalFaculty";
 NSString* EQRColorCalYouth = @"EQRColorCalYouth";
 NSString* EQRColorNeedsPrep = @"EQRColorNeedsPrep";
 NSString* EQRColorDonePrep = @"EQRColorDonePrep";
+NSString* EQRColorFilterOn = @"EQRColorFilterOn";
 
 @implementation EQRColors
 
@@ -49,6 +50,7 @@ NSString* EQRColorDonePrep = @"EQRColorDonePrep";
                          [UIColor colorWithRed:0.82 green:0.62 blue:0.52 alpha:0.5], EQRColorCalStaff,
                          [UIColor colorWithRed:0.97 green:0.87 blue:0.32 alpha:0.5], EQRColorCalFaculty,
                          [UIColor colorWithRed:0.72 green:0.97 blue:0.72 alpha:0.5], EQRColorCalYouth,
+                         [UIColor colorWithRed:1.0 green:0.0 blue:0.3 alpha:1.0], EQRColorFilterOn,
                          nil];
     }
 }
