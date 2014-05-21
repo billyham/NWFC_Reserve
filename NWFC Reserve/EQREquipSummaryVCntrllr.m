@@ -362,8 +362,8 @@
                 
                 for (NSMutableArray* innerArray in tempListOfUniqueItemsJustRequested){
                     
-                    NSLog(@"this is a titleForeignKey: %@", [(EQREquipUniqueItem*)[innerArray objectAtIndex:0] equipTitleItem_foreignKey]);
-                    NSLog(@"this is another titleForeignKey: %@", join.equipTitleItem_foreignKey);
+//                    NSLog(@"this is a titleForeignKey: %@", [(EQREquipUniqueItem*)[innerArray objectAtIndex:0] equipTitleItem_foreignKey]);
+//                    NSLog(@"this is another titleForeignKey: %@", join.equipTitleItem_foreignKey);
                     
                     if ([[(EQREquipUniqueItem*)[innerArray objectAtIndex:0] equipTitleItem_foreignKey] isEqualToString:join.equipTitleItem_foreignKey]){
                         
@@ -390,10 +390,10 @@
     //______the result is a nested array of just the titleItems requested, with sub_arrays of ALL uniqueItems
     //tempListOfUniqueItemsJustRequested
 
-    for (id obj in tempListOfUniqueItemsJustRequested){
-        
-        NSLog(@"count of objects in inner array: %u", [obj count]);
-    }
+//    for (id obj in tempListOfUniqueItemsJustRequested){
+//        
+//        NSLog(@"count of objects in inner array: %lu", (unsigned long)[obj count]);
+//    }
     
     
     
@@ -407,12 +407,12 @@
         //the inner array
         for (EQREquipUniqueItem* selectedUniqueItem in selectedUniqueList){
             
-            NSLog(@"this is the count of requestManager.arrayOfEquipUniqueItemsByDateCollision: %u", [requestManager.arrayOfEquipUniqueItemsByDateCollision count]);
+//            NSLog(@"this is the count of requestManager.arrayOfEquipUniqueItemsByDateCollision: %lu", (unsigned long)[requestManager.arrayOfEquipUniqueItemsByDateCollision count]);
 
             
             for (EQREquipUniqueItem* unItem in requestManager.arrayOfEquipUniqueItemsByDateCollision){
                 
-                NSLog(@"this is the selectedUniqueItem.key_id: %@  and this is the unItem.key_id: %@", selectedUniqueItem.key_id,unItem.key_id );
+//                NSLog(@"this is the selectedUniqueItem.key_id: %@  and this is the unItem.key_id: %@", selectedUniqueItem.key_id,unItem.key_id );
                 
                 if ([selectedUniqueItem.key_id isEqualToString:unItem.key_id]){
                     
@@ -429,10 +429,10 @@
     }
     //____the result is a modified nested array with the date collision uniques removed
     
-    for (id obj in tempListOfUniqueItemsJustRequested){
-    
-        NSLog(@"NEW count of objects in inner array: %u", [obj count]);
-    }
+//    for (id obj in tempListOfUniqueItemsJustRequested){
+//    
+//        NSLog(@"NEW count of objects in inner array: %lu", (unsigned long)[obj count]);
+//    }
     
     //geez.... now for each title item, find the matching array of uniques, and assign the key_id from the top of the stack and then pop the stack
     

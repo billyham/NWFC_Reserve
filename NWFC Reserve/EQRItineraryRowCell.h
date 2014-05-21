@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "EQRCellTemplate.h"
+#import "EQRScheduleRequestItem.h"
 
 @interface EQRItineraryRowCell : EQRCellTemplate
+
+-(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem;
 
 @end

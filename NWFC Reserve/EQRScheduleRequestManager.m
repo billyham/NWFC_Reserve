@@ -551,7 +551,7 @@
     
     for (EQRScheduleTracking_EquipmentUnique_Join* joinMe in self.request.arrayOfEquipmentJoins){
         
-        NSLog(@"count of items in uniqueArrayMe: %u", [[tempListOfUniqueItemsJustRequested objectAtIndex:0] count]);
+        NSLog(@"count of items in uniqueArrayMe: %lu", (unsigned long)[[tempListOfUniqueItemsJustRequested objectAtIndex:0] count]);
         
         for (NSMutableArray* uniqueArrayMe in tempListOfUniqueItemsJustRequested){
             

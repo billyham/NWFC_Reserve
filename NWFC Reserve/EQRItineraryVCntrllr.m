@@ -10,6 +10,9 @@
 #import "EQRItineraryRowCell.h"
 #import "EQRGlobals.h"
 #import "EQRColors.h"
+#import "EQRScheduleRequestItem.h"
+#import "EQRScheduleRequestManager.h"
+#import "EQRWebData.h"
 
 @interface EQRItineraryVCntrllr ()
 
@@ -17,6 +20,10 @@
 @property (strong ,nonatomic) IBOutlet UICollectionView* myNavBarCollectionView;
 
 @property (strong, nonatomic) NSDate* dateForShow;
+
+@property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
+
+@property (strong, nonatomic) NSArray* arrayOfScheduleRequests;
 
 @property EQRItineraryFilter currentFilterBitmask;
 @property (strong, nonatomic) IBOutlet UIButton* buttonAll;
@@ -47,6 +54,11 @@
 {
     [super viewDidLoad];
 
+    //register for notifications
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    //refresh the view when a change is made
+    [nc addObserver:self selector:@selector(refreshTheView) name:EQRAChangeWasMadeToTheSchedule object:nil];
+    
     //register collection view cell
     [self.myMasterItineraryCollection registerClass:[EQRItineraryRowCell class] forCellWithReuseIdentifier:@"Cell"];
     
@@ -68,6 +80,24 @@
     
     //assign month to nav bar title
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
+    
+    
+    //instantiate private request manager
+//    if (!self.privateRequestManager){
+//        
+//        self.privateRequestManager = [[EQRScheduleRequestManager alloc] init];
+//    }
+//    
+//    //two important methods that initiate requestManager ivar arrays
+//    [self.privateRequestManager resetEquipListAndAvailableQuantites];
+//    [self.privateRequestManager retrieveAllEquipUniqueItems];
+    
+    
+    //this will load the ivar array of scheduleReqeust items based on the dateForShow ivar
+    [self refreshTheView];
+   
+    
+
 
 }
 
@@ -83,12 +113,69 @@
     
     //get scheduleTrackingItems for the day
     
+    //tricky cuz each tracking item actually needs to appear twice, once for pick up and once for return
+    //maybe populate two sub arrays with trackingItem objects: going and returning.
+    
     //add items to a local ivar array
     
     
     
+    //________________________
     
+    //get some schedule request items
     
+    //empty out the exiting array
+    if (self.arrayOfScheduleRequests){
+        
+        self.arrayOfScheduleRequests = nil;
+    }
+    
+    //put the date in timestamp format
+    //format the nsdates to a mysql compatible string
+    NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatForDate setLocale:usLocale];
+    [dateFormatForDate setDateFormat:@"yyyy-MM-dd"];
+    NSString* dateBeginString = [NSString stringWithFormat:@"%@ 00:00:00", [dateFormatForDate stringFromDate:self.dateForShow]];
+    NSString* dateEndString = [NSString stringWithFormat:@"%@ 23:59:59", [dateFormatForDate stringFromDate:self.dateForShow]];
+
+    //go get an array
+    NSArray* firstArray = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+    
+    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    [webData queryWithLink:@"EQGetScheduleItemsWithBeginDate.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+     
+        for (id object in muteArray){
+            
+            //adjust the begin date by adding 9 hours... or 8 hours
+            float secondsForOffset = 28800;    //this is 9 hours = 32400;
+            NSDate* newTimeBegin = [[(EQRScheduleRequestItem*)object request_time_begin] dateByAddingTimeInterval:secondsForOffset];
+            [(EQRScheduleRequestItem*)object setRequest_time_begin:newTimeBegin];
+            
+            [tempMuteArray addObject:object];
+        }
+        
+    }];
+    
+    //sort by request date begin (...and end)
+    
+    NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        NSDate* date1 = [(EQRScheduleRequestItem*) obj1 request_time_begin];
+        NSDate* date2 = [(EQRScheduleRequestItem*) obj2 request_time_begin];
+        
+        return [date1 compare:date2];
+    }];
+    
+    //assign to ivar
+    self.arrayOfScheduleRequests = tempMuteArrayAlpha;
+    
+    //reload the view
+    [self.myMasterItineraryCollection reloadData];
     
 }
 
@@ -260,10 +347,23 @@
         
     }
     
+    //if all filters are added, switch 'all' on
+    if ((self.currentFilterBitmask == EQRFilterAll) && ([sender tag] != 0)){
+        
+        [self.buttonAll setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
+        
+        //set all other buttons to white (off color)
+        [self.buttonGoingShelf setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.buttonGoingPrepped setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.buttonGoingPickedUp setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.buttonReturningOut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.buttonReturningReturned setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.buttonReturningShelved setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    }
     
     
     
-    NSLog(@"this is the bitmask: %u", self.currentFilterBitmask);
+    NSLog(@"this is the bitmask: %u", (int)self.currentFilterBitmask);
 }
 
 
@@ -290,7 +390,7 @@
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
-    return 15;
+    return [self.arrayOfScheduleRequests count];
 }
 
 -(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -311,7 +411,7 @@
     
     
     
-    [cell initialSetupWithTitle:@"title"];
+    [cell initialSetupWithRequestItem:[self.arrayOfScheduleRequests objectAtIndex:indexPath.row]];
     
     
     

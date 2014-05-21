@@ -29,7 +29,9 @@
 }
 
 
--(void)initialSetupWithTitle:(NSString*) titleName{
+-(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem{
+    
+    NSLog(@"inside itineraryRowCell initialSetup with request item contact name: %@", [requestItem contact_name]);
     
     self.backgroundColor = [UIColor whiteColor];
     
@@ -39,10 +41,16 @@
     
     [self.contentView addSubview:self.myItineraryContent.view];
     
-    self.myItineraryContent.firstLastName.text = @"Hunky Dory";
+    //format date for string
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dateFormatter.dateFormat = @"h:mm a";
+    NSString* timeString = [dateFormatter stringFromDate:requestItem.request_time_begin];
+    
+    self.myItineraryContent.firstLastName.text = requestItem.contact_name;
     self.myItineraryContent.checkInOrOut.text = @"Check Out";
-    self.myItineraryContent.interactionTime.text = @"3:15pm";
-    self.myItineraryContent.renterType.text = EQRRenterStudent;
+    self.myItineraryContent.interactionTime.text = timeString;
+    self.myItineraryContent.renterType.text = requestItem.renter_type;
     
 
     

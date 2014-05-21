@@ -20,8 +20,10 @@
 @property (strong, nonatomic) NSString* classTitle_foreignKey;
 @property (strong, nonatomic) NSDate* request_date_begin;
 @property (strong, nonatomic) NSDate* request_date_end;
-//@property (strong, nonatomic) NSString* request_time_begin;
-//@property (strong, nonatomic) NSString* request_time_end;
+//__________these time properties only get used in the itinerary class
+@property (strong, nonatomic) NSDate* request_time_begin;
+@property (strong, nonatomic) NSDate* request_time_end;
+//___________
 @property (strong, nonatomic) NSDate* time_of_request;
 @property (strong, nonatomic) NSString* renter_type;
 @property (strong, nonatomic) NSString* staff_prep_id;
