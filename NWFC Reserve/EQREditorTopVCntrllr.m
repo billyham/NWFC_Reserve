@@ -186,7 +186,19 @@
         [arrayToReturn addObjectsFromArray:muteArray];
     }];
     
-    [self.arrayOfEquipUniqueItems addObjectsFromArray:arrayToReturn];
+    //alphabatize the list of unique items
+    NSArray* tempMuteArrayAlpha = [arrayToReturn sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        NSString* string1 = [(EQREquipUniqueItem*)obj1 name];
+        NSString* string2 = [(EQREquipUniqueItem*)obj2 name];
+        
+        return [string1 compare:string2];
+        
+    }];
+    
+    self.arrayOfEquipUniqueItems = [NSMutableArray arrayWithArray: tempMuteArrayAlpha];
+    
+//    [self.arrayOfEquipUniqueItems addObjectsFromArray:arrayToReturn];
 
     //reload collection view
     [self.equipList reloadData];

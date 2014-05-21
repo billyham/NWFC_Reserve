@@ -256,14 +256,14 @@
     
     //we now have a master cateogry array with subnested equipTitle arrays
     
-    //sort the subnested arrays
+    //sort the subnested arrays alphabetically
     NSMutableArray* tempSortedArrayWithSections = [NSMutableArray arrayWithCapacity:1];
     for (NSArray* obj in self.equipTitleArrayWithSections)  {
         
         NSArray* tempSubNestArray = [obj sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
             
-            NSString* string1 = [(EQREquipItem*)obj1 name];
-            NSString* string2 = [(EQREquipItem*)obj2 name];
+            NSString* string1 = [(EQREquipItem*)obj1 shortname];
+            NSString* string2 = [(EQREquipItem*)obj2 shortname];
             
             return [string1 compare:string2];
         }];
@@ -271,11 +271,6 @@
         [tempSortedArrayWithSections addObject:tempSubNestArray];
     };
     self.equipTitleArrayWithSections = tempSortedArrayWithSections;
-    
-    
-    
-    
-    
     
     //is this necessary_____???
     [self.equipCollectionView reloadData];

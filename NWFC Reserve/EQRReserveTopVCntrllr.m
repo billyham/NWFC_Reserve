@@ -372,8 +372,18 @@
                     }];
                 }];
                 
-                //save as ivar
-                self.contactNameArray = contactNameMuteArray;
+                
+                //alphabatize the class list
+                NSArray* tempMuteArrayAlpha = [contactNameMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                    
+                    NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
+                    NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
+                    
+                    return [string1 compare:string2];
+                    
+                }];
+                
+                self.contactNameArray = tempMuteArrayAlpha;
                 
                 //            NSLog(@"count of objects in contactNameMuteArray: %lu", (unsigned long)[contactNameMuteArray count]);
                 
@@ -446,14 +456,33 @@
                 //load class table with current term classes and display in collection view
                 EQRWebData* webData = [EQRWebData sharedInstance];
                 
+                //instantiate mute array
+                NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+                
                 //params for class section query is the current term
                 NSArray* termArray = [NSArray arrayWithObjects:@"term", termString, nil];
                 NSArray* classqueryArray = [NSArray arrayWithObject:termArray];
                 
                 [webData queryWithLink:@"EQGetClassesCurrent.php" parameters:classqueryArray class:@"EQRClassItem" completion:^(NSMutableArray* muteArray){
                     
-                    self.classArray = [NSArray arrayWithArray:muteArray];
+                    for (id object in muteArray){
+                        
+                        [tempMuteArray addObject:object];
+
+                    }
                 }];
+                
+                //alphabatize the class list
+                NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                    
+                    NSString* string1 = [(EQRClassItem*)obj1 section_name];
+                    NSString* string2 = [(EQRClassItem*)obj2 section_name];
+                    
+                    return [string1 compare:string2];
+                    
+                }];
+                
+                self.classArray = tempMuteArrayAlpha;      
                 
                 //yes, this is necessary
                 [self.classListTable reloadData];
@@ -497,7 +526,17 @@
                     }
                 }];
                 
-                self.contactNameArray = tempMuteArray;
+                //alphabatize the class list
+                NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                    
+                    NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
+                    NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
+                    
+                    return [string1 compare:string2];
+                    
+                }];
+                
+                self.contactNameArray = tempMuteArrayAlpha;
                 
                 //********  reveal name list  **********
                 self.hideNameListFlag = NO;
@@ -545,7 +584,17 @@
                     }
                 }];
                 
-                self.contactNameArray = tempMuteArray;
+                //alphabatize the class list
+                NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                    
+                    NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
+                    NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
+                    
+                    return [string1 compare:string2];
+                    
+                }];
+                
+                self.contactNameArray = tempMuteArrayAlpha;
                 
                 //********  reveal name list  **********
                 self.hideNameListFlag = NO;
@@ -606,14 +655,32 @@
                 //load class table with current term classes and display in collection view
                 EQRWebData* webData = [EQRWebData sharedInstance];
                 
+                NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+                
                 //params for class section query is the current term
                 NSArray* termArray = [NSArray arrayWithObjects:@"term", termString, nil];
                 NSArray* classqueryArray = [NSArray arrayWithObject:termArray];
                 
                 [webData queryWithLink:@"EQGetClassesCurrent.php" parameters:classqueryArray class:@"EQRClassItem" completion:^(NSMutableArray* muteArray){
                     
-                    self.classArray = [NSArray arrayWithArray:muteArray];
+                    for (id object in muteArray){
+                        
+                        [tempMuteArray addObject:object];
+                    }
+                    
                 }];
+                
+                //alphabatize the class list
+                NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                    
+                    NSString* string1 = [(EQRClassItem*)obj1 section_name];
+                    NSString* string2 = [(EQRClassItem*)obj2 section_name];
+                    
+                    return [string1 compare:string2];
+                    
+                }];
+                
+                self.classArray = tempMuteArrayAlpha;
                 
 //                NSLog(@"this is the array top item %@", [[self.classArray objectAtIndex:0] instructor_name]);
                 
