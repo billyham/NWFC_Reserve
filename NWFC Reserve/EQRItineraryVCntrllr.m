@@ -78,7 +78,7 @@
     dayNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     dayNameFormatter.dateFormat =@"EEEE, MMM d, yyyy";
     
-    //assign month to nav bar title
+    //assign date to nav bar title
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
     
     
@@ -184,6 +184,19 @@
 
 -(IBAction)moveToNextDay:(id)sender{
     
+    //seconds in a day 86400
+    
+    self.dateForShow = [self.dateForShow dateByAddingTimeInterval:86400];
+    
+    //update day label
+    NSDateFormatter* dayNameFormatter = [[NSDateFormatter alloc] init];
+    dayNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dayNameFormatter.dateFormat =@"EEEE, MMM d, yyyy";
+    
+    //assign day to nav bar title
+    self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
+    
+    [self refreshTheView];
     
 }
 
@@ -191,7 +204,17 @@
 
 -(IBAction)moveToPreviousDay:(id)sender{
     
+    self.dateForShow = [self.dateForShow dateByAddingTimeInterval:-86400];
     
+    //update day label
+    NSDateFormatter* dayNameFormatter = [[NSDateFormatter alloc] init];
+    dayNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dayNameFormatter.dateFormat =@"EEEE, MMM d, yyyy";
+    
+    //assign day to nav bar title
+    self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
+    
+    [self refreshTheView];
     
 }
 
