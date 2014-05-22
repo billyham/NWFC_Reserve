@@ -48,4 +48,6 @@
 
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipmentJoins;
 
+@property BOOL markedForReturn;
+
 @end

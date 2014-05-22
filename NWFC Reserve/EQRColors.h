@@ -19,6 +19,10 @@ extern NSString* EQRColorNeedsPrep;
 extern NSString* EQRColorDonePrep;
 extern NSString* EQRColorFilterOn;
 
+extern NSString* EQRColorStatusNil;
+extern NSString* EQRColorStatusGoing;
+extern NSString* EQRColorStatusReturning;
+
 
 
 @interface EQRColors : NSObject

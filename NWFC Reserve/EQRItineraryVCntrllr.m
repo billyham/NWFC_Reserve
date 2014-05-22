@@ -81,6 +81,11 @@
     //assign date to nav bar title
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
     
+    //assign custom view / buttons to nav bar
+    UIView *testView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 150, 40)];
+    testView.backgroundColor = [UIColor yellowColor];
+    [self.navigationController.navigationBar addSubview:testView];
+    
     
     //instantiate private request manager
 //    if (!self.privateRequestManager){
@@ -146,6 +151,7 @@
     
     NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
     
+    //First, add the 'going' schedule items
     EQRWebData* webData = [EQRWebData sharedInstance];
     [webData queryWithLink:@"EQGetScheduleItemsWithBeginDate.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
      
@@ -161,12 +167,45 @@
         
     }];
     
+    //Second, add the 'returning' items to the same array
+    [webData queryWithLink:@"EQGetScheduleItemsWithEndDate.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        for (id object in muteArray){
+            
+            //adjust the date by adding 9 hours... or 8 hours
+            float secondsForOffset = 28800;    //this is 9 hours = 32400;
+            NSDate* newTimeEnd = [[(EQRScheduleRequestItem*)object request_time_end] dateByAddingTimeInterval:secondsForOffset];
+            [(EQRScheduleRequestItem*)object setRequest_time_end:newTimeEnd];
+            
+            //mark the request item as a return object
+            [(EQRScheduleRequestItem*) object setMarkedForReturn:YES];
+            
+            [tempMuteArray addObject:object];
+        }
+    }];
+    
+    
+    
+    
     //sort by request date begin (...and end)
     
-    NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+    NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(EQRScheduleRequestItem* obj1, EQRScheduleRequestItem* obj2) {
         
-        NSDate* date1 = [(EQRScheduleRequestItem*) obj1 request_time_begin];
-        NSDate* date2 = [(EQRScheduleRequestItem*) obj2 request_time_begin];
+        //use either time begin or time end depending on whether this item is going or returning
+        
+        NSDate* date1;
+        if (!obj1.markedForReturn){
+            date1 = [obj1 request_time_begin];
+        } else{
+            date1 = [obj1 request_time_end];
+        }
+        
+        NSDate* date2;
+        if (!obj2.markedForReturn){
+            date2 = [obj2 request_time_begin];
+        } else{
+            date2 = [obj2 request_time_end];
+        }
         
         return [date1 compare:date2];
     }];

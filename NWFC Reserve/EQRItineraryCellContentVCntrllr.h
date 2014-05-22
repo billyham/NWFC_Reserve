@@ -7,14 +7,33 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRStatusBarView.h"
+
 
 @interface EQRItineraryCellContentVCntrllr : UIViewController
 
 @property (strong, nonatomic) IBOutlet UILabel* interactionTime;
 @property (strong, nonatomic) IBOutlet UILabel* firstLastName;
-@property (strong, nonatomic) IBOutlet UILabel* checkInOrOut;
+@property (strong, nonatomic) IBOutlet UILabel* switchLabel1;
+@property (strong, nonatomic) IBOutlet UILabel* switchLabel2;
 @property (strong, nonatomic) IBOutlet UILabel* renterType;
+@property (strong, nonatomic) IBOutlet UISwitch* switch1;
+@property (strong, nonatomic) IBOutlet UISwitch* switch2;
+
+
+//??
 @property BOOL showPrepSwitch;
 @property BOOL showShelveSwitch;
+
+@property (strong, nonatomic) EQRStatusBarView* firstStatusBar;
+@property (strong, nonatomic) EQRStatusBarView* secondStatusBar;
+@property (strong, nonatomic) EQRStatusBarView* thirdStatusBar;
+
+@property BOOL markedForReturning;
+@property NSUInteger myStatus;
+
+-(IBAction)switch1Fires:(id)sender;
+-(IBAction)switch2Fires:(id)sender;
+
 
 @end
