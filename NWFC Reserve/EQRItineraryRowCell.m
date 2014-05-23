@@ -49,15 +49,87 @@
         self.myItineraryContent.markedForReturning = NO;
     }
     
-    [self.contentView addSubview:self.myItineraryContent.view];
+    //save the request key_id to the view
+    self.myItineraryContent.requestKeyId = requestItem.key_id;
     
+    //a lot depends on whether the item is going or returning
+    NSString* timeString;
     //format date for string
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     dateFormatter.dateFormat = @"h:mm a";
     
-    //a lot depends on whether the item is going or returning
-    NSString* timeString;
+
+    if (!requestItem.markedForReturn){
+        
+        //check the status
+        if (!requestItem.staff_prep_date){
+            
+            self.myItineraryContent.myStatus = 0;
+            
+        }else{
+            
+            if (!requestItem.staff_checkout_date){
+                
+                self.myItineraryContent.myStatus = 1;
+
+            }else{
+                
+                self.myItineraryContent.myStatus = 2;
+            }
+        }
+        
+    } else{
+        
+        //check the status
+        if (!requestItem.staff_checkin_date){
+            
+            self.myItineraryContent.myStatus = 0;
+            
+        }else{
+            
+            if (!requestItem.staff_shelf_date){
+                
+                self.myItineraryContent.myStatus = 1;
+
+            }else{
+                
+                self.myItineraryContent.myStatus = 2;
+
+            }
+        }
+    }
+    
+    
+    
+    
+    //______add the itinerary view to the cell's content view
+    [self.contentView addSubview:self.myItineraryContent.view];
+    
+
+    
+    //only if status is 0, disable the second switch
+    if (self.myItineraryContent.myStatus < 1){
+        
+        //disable the second switch
+        self.myItineraryContent.switch2.userInteractionEnabled = NO;
+        self.myItineraryContent.switch2.alpha = 0.3;
+        self.myItineraryContent.switchLabel2.alpha = 0.3;
+        
+    } else if (self.myItineraryContent.myStatus == 1){
+        
+        //set first swith to on
+        [self.myItineraryContent.switch1 setOn:YES];
+        
+        
+    } else {
+        // status must be equal to 2
+        
+        //set first and second swith to on
+        [self.myItineraryContent.switch1 setOn:YES];
+        [self.myItineraryContent.switch2 setOn:YES];
+        
+    }
     
     
     if (!requestItem.markedForReturn){
@@ -71,12 +143,8 @@
         timeString = [dateFormatter stringFromDate:requestItem.request_time_end];
         self.myItineraryContent.switchLabel1.text = @"Check In";
         self.myItineraryContent.switchLabel2.text = @"Shelved";
+        
     }
-    
-    //disable the second switch
-    self.myItineraryContent.switch2.userInteractionEnabled = NO;
-    self.myItineraryContent.switch2.alpha = 0.3;
-    self.myItineraryContent.switchLabel2.alpha = 0.3;
     
     //assign name and renter type
     self.myItineraryContent.firstLastName.text = requestItem.contact_name;

@@ -8,6 +8,8 @@
 
 #import "EQRItineraryCellContentVCntrllr.h"
 #import "EQRColors.h"
+#import "EQRWebData.h"
+#import "EQRGlobals.h"
 
 @interface EQRItineraryCellContentVCntrllr ()
 
@@ -58,6 +60,23 @@
     self.thirdStatusBar.myColor = [colors.colorDic objectForKey:EQRColorVeryLightGrey];
     
     
+    //determine which status bars should be on
+    //second bar
+    if (self.myStatus > 0){
+        
+        self.secondStatusBar.myColor = self.myAssignedColor;
+    }
+    
+    //third bar
+    if (self.myStatus > 1){
+        
+        self.thirdStatusBar.myColor = self.myAssignedColor;
+    }
+
+    
+    
+    
+    
     [self.view addSubview:self.firstStatusBar];
     [self.view addSubview:self.secondStatusBar];
     [self.view addSubview:self.thirdStatusBar];
@@ -99,6 +118,29 @@
             
         }];
         
+        //update the model
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+        
+        NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.requestKeyId, nil];
+        NSArray* secondArray;
+        if (!self.markedForReturning){
+            secondArray = [NSArray arrayWithObjects:@"staff_prep_date",  [dateFormatter stringFromDate:[NSDate date]], nil];
+        }else {
+            secondArray = [NSArray arrayWithObjects:@"staff_checkin_date",  [dateFormatter stringFromDate:[NSDate date]], nil];
+        }
+        NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+        
+        NSString* resultString = [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
+        NSLog(@"%@", resultString);
+        
+        //________*********  also update the value in the itinarary object's ivar arrayOfScheduleRequests
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil];
+        
+        
         
     }else{
         //switched to off
@@ -121,6 +163,27 @@
             self.switch2.alpha = 0.3;
             self.switchLabel2.alpha = 0.3;
         }];
+        
+        //update the model
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        
+        NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.requestKeyId, nil];
+        NSArray* secondArray;
+        if (!self.markedForReturning){
+            secondArray = [NSArray arrayWithObjects:@"staff_prep_date",  @"nix", nil];
+        }else {
+            secondArray = [NSArray arrayWithObjects:@"staff_checkin_date",  @"nix", nil];
+        }
+        NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+        
+        NSString* resultString = [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
+        NSLog(@"%@", resultString);
+        
+        //________*********  also update the value in the itinarary object's ivar arrayOfScheduleRequests
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil];
+
+
+        
     }
     
     
@@ -149,6 +212,30 @@
         //change color of second status bar
         [self.thirdStatusBar setNeedsDisplay];
         
+        
+        //update the model
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+        
+        NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.requestKeyId, nil];
+        NSArray* secondArray;
+        if (!self.markedForReturning){
+            secondArray = [NSArray arrayWithObjects:@"staff_checkout_date",  [dateFormatter stringFromDate:[NSDate date]], nil];
+        }else{
+            secondArray = [NSArray arrayWithObjects:@"staff_shelf_date",  [dateFormatter stringFromDate:[NSDate date]], nil];
+        }
+        NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+        
+        NSString* resultString = [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
+        NSLog(@"%@", resultString);
+        
+        //________*********  also update the value in the itinarary object's ivar arrayOfScheduleRequests
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil];
+        
+        
 
     }else{
         //switched to off
@@ -160,6 +247,25 @@
         [self.thirdStatusBar setNeedsDisplay];
         
 
+        //update the model
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        
+        NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.requestKeyId, nil];
+        NSArray* secondArray;
+        if (!self.markedForReturning){
+            secondArray = [NSArray arrayWithObjects:@"staff_checkout_date",  @"nix", nil];
+        }else{
+            secondArray = [NSArray arrayWithObjects:@"staff_shelf_date",  @"nix", nil];
+        }
+        NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+        
+        NSString* resultString = [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
+        NSLog(@"%@", resultString);
+        
+        //________*********  also update the value in the itinarary object's ivar arrayOfScheduleRequests
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil];
+
+        
     }
     
     

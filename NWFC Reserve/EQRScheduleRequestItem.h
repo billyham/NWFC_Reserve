@@ -40,6 +40,10 @@
 @property (strong, nonatomic) NSString* payment_deposit;
 @property (strong, nonatomic) NSString* payment_type;
 @property (strong, nonatomic) NSString* contact_name;
+@property (strong, nonatomic) NSString* station_id;
+@property (strong, nonatomic) NSDate* staff_shelf_date;
+@property (strong, nonatomic) NSString* staff_shelf_id;
+
 
 @property (strong, nonatomic) EQRContactNameItem* contactNameItem;
 @property (strong, nonatomic) EQRClassItem* classItem;

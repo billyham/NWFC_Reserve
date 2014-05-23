@@ -28,6 +28,7 @@ extern NSString* EQRAChangeWasMadeToTheSchedule;
 extern NSString* EQREquipUniqueToBeDeleted;
 extern NSString* EQREquipUniqueToBeDeletedCancel;
 extern NSString* EQRLongPressOnNestedDayCell;
+extern NSString* EQRPartialRefreshToItineraryArray;
 
 //Timing
 extern float EQRHighlightTappingTime;

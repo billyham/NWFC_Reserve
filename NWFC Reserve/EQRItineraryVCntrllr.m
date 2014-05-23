@@ -24,6 +24,7 @@
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
 
 @property (strong, nonatomic) NSArray* arrayOfScheduleRequests;
+@property (strong, nonatomic) NSArray* filteredArrayOfScheduleRequests;
 
 @property EQRItineraryFilter currentFilterBitmask;
 @property (strong, nonatomic) IBOutlet UIButton* buttonAll;
@@ -58,6 +59,8 @@
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     //refresh the view when a change is made
     [nc addObserver:self selector:@selector(refreshTheView) name:EQRAChangeWasMadeToTheSchedule object:nil];
+    //partial refresh to when a switch is thrown in the itinarary cell view
+    [nc addObserver:self selector:@selector(partialRefreshToUpdateTheArrayOfRequests:) name:EQRPartialRefreshToItineraryArray object:nil];
     
     //register collection view cell
     [self.myMasterItineraryCollection registerClass:[EQRItineraryRowCell class] forCellWithReuseIdentifier:@"Cell"];
@@ -82,9 +85,11 @@
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
     
     //assign custom view / buttons to nav bar
-    UIView *testView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 150, 40)];
-    testView.backgroundColor = [UIColor yellowColor];
-    [self.navigationController.navigationBar addSubview:testView];
+//    UIView *testView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 150, 40)];
+//    testView.backgroundColor = [UIColor yellowColor];
+//    [self.navigationController.navigationBar addSubview:testView];
+
+    
     
     
     //instantiate private request manager
@@ -116,6 +121,18 @@
 
 -(void)refreshTheView{
     
+    //update the array first
+    [self partialRefreshToUpdateTheArrayOfRequests:nil];
+
+    
+    //reload the view
+    [self.myMasterItineraryCollection reloadData];
+    
+}
+
+
+-(void)partialRefreshToUpdateTheArrayOfRequests:(NSNotification*)note{
+    
     //get scheduleTrackingItems for the day
     
     //tricky cuz each tracking item actually needs to appear twice, once for pick up and once for return
@@ -143,7 +160,7 @@
     [dateFormatForDate setDateFormat:@"yyyy-MM-dd"];
     NSString* dateBeginString = [NSString stringWithFormat:@"%@ 00:00:00", [dateFormatForDate stringFromDate:self.dateForShow]];
     NSString* dateEndString = [NSString stringWithFormat:@"%@ 23:59:59", [dateFormatForDate stringFromDate:self.dateForShow]];
-
+    
     //go get an array
     NSArray* firstArray = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
     NSArray* secondArray = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
@@ -154,8 +171,10 @@
     //First, add the 'going' schedule items
     EQRWebData* webData = [EQRWebData sharedInstance];
     [webData queryWithLink:@"EQGetScheduleItemsWithBeginDate.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-     
+        
         for (id object in muteArray){
+            
+            NSLog(@"this is the prep date: %@", [(EQRScheduleRequestItem*)object staff_prep_date]);
             
             //adjust the begin date by adding 9 hours... or 8 hours
             float secondsForOffset = 28800;    //this is 9 hours = 32400;
@@ -213,8 +232,11 @@
     //assign to ivar
     self.arrayOfScheduleRequests = tempMuteArrayAlpha;
     
-    //reload the view
-    [self.myMasterItineraryCollection reloadData];
+    //if a bitmisk filer it on, update it also
+    if (self.currentFilterBitmask != EQRFilterAll){
+        
+        [self createTheFilteredArray:self.currentFilterBitmask];
+    }
     
 }
 
@@ -306,6 +328,8 @@
             [self.buttonReturningReturned setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [self.buttonReturningShelved setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             
+            [self.myMasterItineraryCollection reloadData];
+            
             break;
             
         case 1:
@@ -323,6 +347,9 @@
                 [self.buttonGoingShelf setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
 
             }
+    
+            [self createTheFilteredArray:self.currentFilterBitmask];
+            [self.myMasterItineraryCollection reloadData];
             
             break;
             
@@ -338,6 +365,10 @@
                 [self.buttonGoingPrepped setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
 
             }
+            
+            [self createTheFilteredArray:self.currentFilterBitmask];
+            [self.myMasterItineraryCollection reloadData];
+            
             break;
             
         case 3:
@@ -352,6 +383,10 @@
                 [self.buttonGoingPickedUp setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
 
             }
+            
+            [self createTheFilteredArray:self.currentFilterBitmask];
+            [self.myMasterItineraryCollection reloadData];
+            
             break;
             
         case 4:
@@ -366,6 +401,10 @@
                 [self.buttonReturningOut setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
 
             }
+            
+            [self createTheFilteredArray:self.currentFilterBitmask];
+            [self.myMasterItineraryCollection reloadData];
+            
             break;
             
         case 5:
@@ -380,6 +419,10 @@
                 [self.buttonReturningReturned setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
 
             }
+            
+            [self createTheFilteredArray:self.currentFilterBitmask];
+            [self.myMasterItineraryCollection reloadData];
+            
             break;
             
         case 6:
@@ -394,6 +437,10 @@
                 [self.buttonReturningShelved setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
 
             }
+            
+            [self createTheFilteredArray:self.currentFilterBitmask];
+            [self.myMasterItineraryCollection reloadData];
+            
             break;
             
         default:
@@ -423,11 +470,109 @@
         [self.buttonReturningShelved setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
     
-    
-    
-    NSLog(@"this is the bitmask: %u", (int)self.currentFilterBitmask);
+//    NSLog(@"this is the bitmask: %u", (int)self.currentFilterBitmask);
 }
 
+
+-(void)createTheFilteredArray:(NSUInteger)myBitmask{
+    
+    
+    NSMutableArray* tempFilteredArray = [NSMutableArray arrayWithCapacity:1];
+    
+    
+    if (myBitmask & EQRGoingShelf){
+        
+        for (EQRScheduleRequestItem* object in self.arrayOfScheduleRequests){
+            
+            if (!object.markedForReturn && !object.staff_prep_date){
+                
+                [tempFilteredArray addObject:object];
+            }
+        }
+    }
+    
+    if (myBitmask & EQRGoingPrepped){
+        
+        for (EQRScheduleRequestItem* object in self.arrayOfScheduleRequests){
+            
+            if (!object.markedForReturn && object.staff_prep_date && !object.staff_checkout_date){
+                
+                [tempFilteredArray addObject:object];
+            }
+        }
+    }
+    
+    if (myBitmask & EQRGoingPickedUp){
+        
+        for (EQRScheduleRequestItem* object in self.arrayOfScheduleRequests){
+            
+            if (!object.markedForReturn && object.staff_checkout_date){
+                
+                [tempFilteredArray addObject:object];
+            }
+        }
+    }
+    
+    if (myBitmask & EQRReturningOut){
+        
+        for (EQRScheduleRequestItem* object in self.arrayOfScheduleRequests){
+            
+            if (object.markedForReturn && !object.staff_checkin_date){
+                
+                [tempFilteredArray addObject:object];
+            }
+        }
+    }
+    
+    if (myBitmask & EQRReturningReturned){
+        
+        for (EQRScheduleRequestItem* object in self.arrayOfScheduleRequests){
+            
+            if (object.markedForReturn && object.staff_checkin_date && !object.staff_shelf_date){
+                
+                [tempFilteredArray addObject:object];
+            }
+        }
+    }
+    
+    if (myBitmask & EQRReturningShelved){
+        
+        for (EQRScheduleRequestItem* object in self.arrayOfScheduleRequests){
+            
+            if (object.markedForReturn && object.staff_shelf_date){
+                
+                [tempFilteredArray addObject:object];
+            }
+        }
+    }
+    
+    //must sort it first
+    //sort by request date begin (...and end)
+    
+    NSArray* tempFilterArrayAlpha = [tempFilteredArray sortedArrayUsingComparator:^NSComparisonResult(EQRScheduleRequestItem* obj1, EQRScheduleRequestItem* obj2) {
+        
+        //use either time begin or time end depending on whether this item is going or returning
+        
+        NSDate* date1;
+        if (!obj1.markedForReturn){
+            date1 = [obj1 request_time_begin];
+        } else{
+            date1 = [obj1 request_time_end];
+        }
+        
+        NSDate* date2;
+        if (!obj2.markedForReturn){
+            date2 = [obj2 request_time_begin];
+        } else{
+            date2 = [obj2 request_time_end];
+        }
+        
+        return [date1 compare:date2];
+    }];
+    
+    
+    self.filteredArrayOfScheduleRequests = [NSArray arrayWithArray:tempFilterArrayAlpha];
+}
 
 
 #pragma mark - request box methods
@@ -452,7 +597,18 @@
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
-    return [self.arrayOfScheduleRequests count];
+    //first test if a filter has been applied
+    if (self.currentFilterBitmask == EQRFilterAll){
+        //no filter
+        
+        return [self.arrayOfScheduleRequests count];
+        
+    }else{
+        //yes filter
+        
+        return [self.filteredArrayOfScheduleRequests count];
+    }
+    
 }
 
 -(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -472,8 +628,20 @@
     cell.backgroundColor = [UIColor whiteColor];
     
     
+    //test if a filter has been applied
     
-    [cell initialSetupWithRequestItem:[self.arrayOfScheduleRequests objectAtIndex:indexPath.row]];
+    if (self.currentFilterBitmask == EQRFilterAll){
+        //no filter
+        
+        [cell initialSetupWithRequestItem:[self.arrayOfScheduleRequests objectAtIndex:indexPath.row]];
+
+    }else{
+        //yes filter
+        
+        [cell initialSetupWithRequestItem:[self.filteredArrayOfScheduleRequests objectAtIndex:indexPath.row]];
+
+    }
+    
     
     
     
@@ -484,6 +652,8 @@
 
 
 
+
+#pragma mark - memory warning
 
 - (void)didReceiveMemoryWarning
 {

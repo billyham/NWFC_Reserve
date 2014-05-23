@@ -23,7 +23,8 @@
 
 //??
 @property BOOL showPrepSwitch;
-@property BOOL showShelveSwitch;
+@property BOOL showShelfSwitch;
+//
 
 @property (strong, nonatomic) EQRStatusBarView* firstStatusBar;
 @property (strong, nonatomic) EQRStatusBarView* secondStatusBar;
@@ -31,6 +32,9 @@
 
 @property BOOL markedForReturning;
 @property NSUInteger myStatus;
+
+@property (strong, nonatomic) NSString* requestKeyId;
+
 
 -(IBAction)switch1Fires:(id)sender;
 -(IBAction)switch2Fires:(id)sender;

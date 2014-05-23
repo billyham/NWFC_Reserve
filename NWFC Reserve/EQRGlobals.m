@@ -31,6 +31,7 @@ NSString* EQRAChangeWasMadeToTheSchedule = @"EQRAChangeWasMadeToTheSchedule";
 NSString* EQREquipUniqueToBeDeleted = @"EQREquipUniqueToBeDeleted";
 NSString* EQREquipUniqueToBeDeletedCancel = @"EQREquipUniqueToBeDeletedCancel";
 NSString* EQRLongPressOnNestedDayCell = @"EQRLongPressOnNestedDayCell";
+NSString* EQRPartialRefreshToItineraryArray = @"EQRPartialRefreshToItineraryArray";
 
 //Timing
 float EQRHighlightTappingTime = 0.125;

@@ -663,6 +663,30 @@ const int intEQREquipUniqueItem = 8;
         return;
     }
     
+    if ([elementName isEqualToString:@"staff_prep_date"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"staff_checkout_date"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"staff_checkin_date"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"staff_shelf_date"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
     
     
     
@@ -1082,8 +1106,6 @@ const int intEQREquipUniqueItem = 8;
         return;
     }
     
-
-    
     if ([prop isEqualToString:@"time_of_request"]){
         
         if ([self.currentThing respondsToSelector:@selector(time_of_request)]){
@@ -1100,6 +1122,71 @@ const int intEQREquipUniqueItem = 8;
         }
         return;
     }
+    
+    if ([prop isEqualToString:@"staff_prep_date"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(staff_prep_date)]){
+            
+            //need to convert date string into dates
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            
+            [(EQRScheduleRequestItem*)self.currentThing setStaff_prep_date:[dateFormatter dateFromString:self.currentValue]];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"staff_checkout_date"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(staff_checkout_date)]){
+            
+            //need to convert date string into dates
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            
+            [(EQRScheduleRequestItem*)self.currentThing setStaff_checkout_date:[dateFormatter dateFromString:self.currentValue]];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"staff_checkin_date"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(staff_checkin_date)]){
+            
+            //need to convert date string into dates
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            
+            [(EQRScheduleRequestItem*)self.currentThing setStaff_checkin_date:[dateFormatter dateFromString:self.currentValue]];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"staff_shelf_date"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(staff_shelf_date)]){
+            
+            //need to convert date string into dates
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            
+            [(EQRScheduleRequestItem*)self.currentThing setStaff_shelf_date:[dateFormatter dateFromString:self.currentValue]];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
     
     
     
