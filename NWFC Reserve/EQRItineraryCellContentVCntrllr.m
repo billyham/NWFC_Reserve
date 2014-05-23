@@ -40,20 +40,20 @@
         self.myAssignedColor = [colors.colorDic objectForKey:EQRColorStatusReturning];
     }
     
-    self.firstStatusBar = [[EQRStatusBarView alloc] initWithFrame:CGRectMake(3, 3, 320, 70)];
+    self.firstStatusBar = [[EQRStatusBarView alloc] initWithFrame:CGRectMake(3, 8, 320, 70)];
     self.firstStatusBar.intID = 1;
     self.firstStatusBar.opaque = NO;
     self.firstStatusBar.backgroundColor = [UIColor clearColor];
     self.firstStatusBar.myColor = self.myAssignedColor;
     
-    self.secondStatusBar = [[EQRStatusBarView alloc] initWithFrame:CGRectMake(3, 3, 320, 70)];
+    self.secondStatusBar = [[EQRStatusBarView alloc] initWithFrame:CGRectMake(3, 8, 320, 70)];
     self.secondStatusBar.intID =2;
     self.secondStatusBar.opaque = NO;
     self.secondStatusBar.backgroundColor = [UIColor clearColor];
     self.secondStatusBar.myColor = [colors.colorDic objectForKey:EQRColorVeryLightGrey];
 
     
-    self.thirdStatusBar = [[EQRStatusBarView alloc] initWithFrame:CGRectMake(3, 3, 320, 70)];
+    self.thirdStatusBar = [[EQRStatusBarView alloc] initWithFrame:CGRectMake(3, 8, 320, 70)];
     self.thirdStatusBar.intID = 3;
     self.thirdStatusBar.opaque = NO;
     self.thirdStatusBar.backgroundColor = [UIColor clearColor];
