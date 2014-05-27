@@ -133,20 +133,42 @@
 
 -(void)partialRefreshToUpdateTheArrayOfRequests:(NSNotification*)note{
     
-    //get scheduleTrackingItems for the day
+    //test if a cell is now displaying a status that has been filtered out
+    //change bitmask to allow for that status
+    BOOL needToReloadTheView = NO;
     
-    //tricky cuz each tracking item actually needs to appear twice, once for pick up and once for return
-    //maybe populate two sub arrays with trackingItem objects: going and returning.
+    NSUInteger cellBitmaskValue = [self determineTheBitmaskFromCellInfo:[note userInfo]];
     
-    //add items to a local ivar array
+    if ((self.currentFilterBitmask & cellBitmaskValue) == NO){
+                
+        //add the value to the bitmask
+        self.currentFilterBitmask = self.currentFilterBitmask | cellBitmaskValue;
+        
+        //update the filter button to ON
+        [self updateFilterButtonDisplayWithAddedBitmask:cellBitmaskValue];
+        
+        
+        //if all filters are added, switch 'all' on
+        if (self.currentFilterBitmask == EQRFilterAll){
+            
+            EQRColors* sharedColors = [EQRColors sharedInstance];
+            [self.buttonAll setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
+            
+            //set all other buttons to white (off color)
+            [self.buttonGoingShelf setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [self.buttonGoingPrepped setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [self.buttonGoingPickedUp setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [self.buttonReturningOut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [self.buttonReturningReturned setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [self.buttonReturningShelved setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        }
+        
+        //need to reload the view???
+        needToReloadTheView = YES;
+    }
     
     
-    
-    //________________________
-    
-    //get some schedule request items
-    
-    //empty out the exiting array
+    //empty out the existing array
     if (self.arrayOfScheduleRequests){
         
         self.arrayOfScheduleRequests = nil;
@@ -236,6 +258,11 @@
     if (self.currentFilterBitmask != EQRFilterAll){
         
         [self createTheFilteredArray:self.currentFilterBitmask];
+    }
+    
+    if (needToReloadTheView){
+        
+        [self.myMasterItineraryCollection reloadData];
     }
     
 }
@@ -572,6 +599,125 @@
     
     
     self.filteredArrayOfScheduleRequests = [NSArray arrayWithArray:tempFilterArrayAlpha];
+}
+
+
+-(NSUInteger)determineTheBitmaskFromCellInfo:(NSDictionary*)cellData{
+    
+    NSUInteger cellStatus = [[cellData objectForKey:@"status"] unsignedIntegerValue];
+    BOOL cellNarkedForReturning = [[cellData objectForKey:@"markedForReturning"] boolValue];
+    
+    NSUInteger returnValue = EQRFilterNone;
+    
+    if ((cellStatus == 0) && (cellNarkedForReturning == NO)){
+        
+        returnValue = EQRGoingShelf;
+    }
+    
+    if ((cellStatus == 1) && (cellNarkedForReturning == NO)){
+        
+        returnValue = EQRGoingPrepped;
+    }
+    
+    if ((cellStatus == 2) && (cellNarkedForReturning == NO)){
+        
+        returnValue = EQRGoingPickedUp;
+    }
+    
+    if ((cellStatus == 0) && (cellNarkedForReturning == YES)){
+        
+        returnValue = EQRReturningOut;
+    }
+    
+    if ((cellStatus == 1) && (cellNarkedForReturning == YES)){
+        
+        returnValue = EQRReturningReturned;
+    }
+    
+    if ((cellStatus == 2) && (cellNarkedForReturning == YES)){
+        
+        returnValue = EQRReturningShelved;
+    }
+    
+    return returnValue;
+}
+
+
+-(int)determineFilterButtonTagFromBitmaskValue:(NSUInteger)bitmaskValue{
+    
+    int returnValue = 0;
+    
+    switch (bitmaskValue) {
+            
+        case EQRFilterAll:
+            returnValue = 0;
+            break;
+            
+        case EQRGoingShelf:
+            returnValue = 1;
+            break;
+            
+        case EQRGoingPrepped:
+            returnValue = 2;
+            break;
+            
+        case EQRGoingPickedUp:
+            returnValue = 3;
+            break;
+            
+        case EQRReturningOut:
+            returnValue = 4;
+            break;
+            
+        case EQRReturningReturned:
+            returnValue = 5;
+            break;
+            
+        case EQRReturningShelved:
+            returnValue = 6;
+            break;
+            
+        default:
+            break;
+    }
+    
+    return returnValue;
+}
+
+
+-(void)updateFilterButtonDisplayWithAddedBitmask:(NSUInteger)addedBitmask{
+    
+    EQRColors* sharedColors = [EQRColors sharedInstance];
+    
+    switch (addedBitmask) {
+            
+        case EQRGoingShelf:
+            [self.buttonGoingShelf setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
+            break;
+            
+        case EQRGoingPrepped:
+            [self.buttonGoingPrepped setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
+            break;
+            
+        case EQRGoingPickedUp:
+            [self.buttonGoingPickedUp setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
+            break;
+            
+        case EQRReturningOut:
+            [self.buttonReturningOut setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
+            break;
+            
+        case EQRReturningReturned:
+            [self.buttonReturningReturned setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
+            break;
+            
+        case EQRReturningShelved:
+            [self.buttonReturningShelved setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
+            break;
+            
+        default:
+            break;
+    }
 }
 
 

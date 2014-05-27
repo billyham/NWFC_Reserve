@@ -179,8 +179,7 @@
         cell.contentView.backgroundColor = [self.myColors.colorDic objectForKey:EQRColorCalYouth];
     }
     
-    //cell color
-//    cell.contentView.backgroundColor = [UIColor lightGrayColor];
+    //_______********  ..maybe color should change if it is currently out?
     
     //make background semitransparent to see overlaps
     cell.backgroundView.alpha = 0.0;

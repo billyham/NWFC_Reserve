@@ -83,7 +83,7 @@
 
     EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
     
-    genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeNone;
+    genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeAll;
     
     [self.navigationController pushViewController:genericEquipVCntrllr animated:YES];
     

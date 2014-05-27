@@ -82,10 +82,17 @@
     
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
+        
         requestManager = self.privateRequestManager;
+        
     }else{
         
         requestManager = [EQRScheduleRequestManager sharedInstance];
+        
+        //correct the scroll view's scroll indicator position
+        //_________these two work, but man, this seems janky!!!
+        self.equipCollectionView.scrollIndicatorInsets = UIEdgeInsetsMake(-60, 0, 0, 0);
+        self.equipCollectionView.contentInset = UIEdgeInsetsMake(-60, 0, 0, 0);
     }
     
     //_______********  try allocating the gear list here... *****______
@@ -327,7 +334,7 @@
     
     EQREquipSummaryGenericVCntrllr* summaryVCntrllr = [[EQREquipSummaryGenericVCntrllr alloc] initWithNibName:@"EQREquipSummaryGenericVCntrllr" bundle:nil];
     
-    summaryVCntrllr.edgesForExtendedLayout = UIRectEdgeNone;
+    summaryVCntrllr.edgesForExtendedLayout = UIRectEdgeAll;
     
     [self.navigationController pushViewController:summaryVCntrllr animated:YES];
     

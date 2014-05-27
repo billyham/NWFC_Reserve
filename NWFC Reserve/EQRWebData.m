@@ -1354,8 +1354,12 @@ const int intEQREquipUniqueItem = 8;
         
     }
     
-    //send completion block to indicate when loading is finished
-    completeBlock(YES);
+    //__________NOTE, IT IS REQUIRED TO SEND THE COMPLETION BLOCK ON THE MAIN THREAD!!!!_____________
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        //send completion block to indicate when loading is finished
+        completeBlock(YES);
+    });
     
     //reset variable string
     self.variableClassString = nil;

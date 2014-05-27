@@ -57,9 +57,7 @@
 }
 
 -(void)longPressMethod:(UILongPressGestureRecognizer *)gesture{
-    
-    NSLog(@"long press is pressed pants");
-    
+        
     if (gesture.state == UIGestureRecognizerStateBegan){
         
         //make cell invisible
@@ -97,6 +95,7 @@
         NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:
                                  gesture, @"gesture",
                                  frameSizeValue, @"frameSizeValue",
+                                 self.contentView.backgroundColor, @"color",
                                  nil];
         
         //send note to EQRScheduleTopVCntrllr

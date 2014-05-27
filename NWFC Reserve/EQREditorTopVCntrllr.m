@@ -686,6 +686,19 @@
 
 
 
+#pragma mark - change in orientation methods
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    
+}
+
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    
+    [self.equipList reloadData];
+}
+
+
 
 
 #pragma mark - memory warning

@@ -25,9 +25,14 @@
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myMasterScheduleCollectionView;
 @property (strong ,nonatomic) IBOutlet UICollectionView* myNavBarCollectionView;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView* myActivityIndicator;
 
 @property (strong, nonatomic) NSArray* equipUniqueArray;
 @property (strong, nonatomic) NSMutableArray* equipUniqueArrayWithSections;
+//
+//an alternate to the above array with a further nested array of sections defined by titleItems
+@property (strong, nonatomic) NSMutableArray* equipUniqueArrayWithSubArraysAndSections;
+//
 @property (strong, nonatomic) NSMutableArray* equipUniqueCategoriesList;
 
 @property (strong, nonatomic) NSDate* dateForShow;
@@ -38,6 +43,8 @@
 @property (strong, nonatomic) NSTimer* timerForReloadCollectionView;
 
 @property (strong, nonatomic) UIView* movingNestedCellView;
+
+
 
 
 -(IBAction)moveToNextMonth:(id)sender;
@@ -93,8 +100,16 @@
     //register for header cell
     [self.myMasterScheduleCollectionView registerClass:[EQRHeaderCellForSchedule class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
     
+    //adjust content and scroll insets if edges are extended
+    //______this is janky!!!!
+//    self.myMasterScheduleCollectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+//    self.myMasterScheduleCollectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+    
     //initial month is the current month
     self.dateForShow = [NSDate date];
+    
+    //hide the activity indicator
+    self.myActivityIndicator.hidden = YES;
     
     //update month label
     NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
@@ -347,6 +362,10 @@
     //raise the is loading flag
     self.isLoadingEquipDataFlag = YES;
     
+    //activity indicator
+    self.myActivityIndicator.hidden = NO;
+    [self.myActivityIndicator startAnimating];
+    
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
     dispatch_async(queue, ^{
         
@@ -355,7 +374,9 @@
             //lower the isLoading flag
             self.isLoadingEquipDataFlag = NO;
             
-//            NSLog(@"INSIDE THE COMPLETION BLOCK WITH THE BOOL: %u", isLoadingFlagUp);
+            //stop activity indicator
+            [self.myActivityIndicator stopAnimating];
+            self.myActivityIndicator.hidden = YES;
         }];
         
     });
@@ -609,11 +630,23 @@
     NSString* joinKey_id = [[note userInfo] objectForKey:@"key_id"];
     NSString* joinTitleKey_id = [[note userInfo] objectForKey:@"equipTitleItem_foreignKey"];
     NSIndexPath* indexPathForRowCell = [[note userInfo] objectForKey:@"indexPath"];
+    UIColor* myCellColor = [[note userInfo] objectForKey:@"color"];
     
     if (gesture.state == UIGestureRecognizerStateBegan){
         
         self.movingNestedCellView = [[UIView alloc] initWithFrame:frameSize];
-        self.movingNestedCellView.backgroundColor = [UIColor darkGrayColor];
+        self.movingNestedCellView.backgroundColor = myCellColor;
+        
+        //expand the rect itself to new size
+        [UIView animateWithDuration:0.25 animations:^{
+            
+            self.movingNestedCellView.frame = CGRectMake(frameSize.origin.x - 20, frameSize.origin.y - 10, frameSize.size.width + 40, frameSize.size.height + 20);
+            
+            self.movingNestedCellView.layer.cornerRadius = 5;
+        }];
+
+        
+        
         [self.view addSubview:self.movingNestedCellView];
     }
     
@@ -639,6 +672,9 @@
         newValueExpanded = newValueExpanded - 10;
         
 
+        //add back into it, the resize adjustment
+        newValueExpanded = newValueExpanded - 10;
+        
         //create modified rect with new y value...
         CGRect thisRect = CGRectMake(self.movingNestedCellView.frame.origin.x, newValueExpanded, self.movingNestedCellView.frame.size.width, self.movingNestedCellView.frame.size.height);
         
@@ -890,6 +926,20 @@
     return cell;
 }
 
+
+
+#pragma mark - change in orientation methods
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    
+}
+
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    
+    [self.myMasterScheduleCollectionView reloadData];
+    [self.myNavBarCollectionView reloadData];
+}
 
 
 #pragma mark - collection view delegate methods

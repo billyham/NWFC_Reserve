@@ -98,6 +98,9 @@
     if ([sender isOn]){
         //switched to on
         
+        //update status
+        self.myStatus = 1;
+        
         self.switch2.userInteractionEnabled = YES;
         
         //change status color (to both)
@@ -105,17 +108,12 @@
         
         //change color of second status bar
         [self.secondStatusBar setNeedsDisplay];
-
-        
-        
+ 
         [UIView animateWithDuration:0.25 animations:^{
             
             //enable switch2
             self.switch2.alpha = 1.0;
             self.switchLabel2.alpha = 1.0;
-            
-            
-            
         }];
         
         //update the model
@@ -138,12 +136,38 @@
         NSLog(@"%@", resultString);
         
         //________*********  also update the value in the itinarary object's ivar arrayOfScheduleRequests
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil];
+        //include the new status
+        NSDictionary* infoDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 [NSNumber numberWithInteger:self.myStatus], @"status",
+                                 [NSNumber numberWithBool:self.markedForReturning], @"markedForReturning",
+                                nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
+
         
         
         
     }else{
         //switched to off
+        
+        //_______ need to accommodate when switch 2 is ON and remove that from model as well
+        if (self.myStatus == 2){
+            
+            EQRWebData* webData = [EQRWebData sharedInstance];
+            
+            NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.requestKeyId, nil];
+            NSArray* secondArray;
+            if (!self.markedForReturning){
+                secondArray = [NSArray arrayWithObjects:@"staff_checkout_date",  @"nix", nil];
+            }else{
+                secondArray = [NSArray arrayWithObjects:@"staff_shelf_date",  @"nix", nil];
+            }
+            NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+            
+            [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
+        }
+        
+        //update status
+        self.myStatus = 0;
         
         [self.switch2 setOn:NO animated:YES];
         self.switch2.userInteractionEnabled = NO;
@@ -180,16 +204,13 @@
         NSLog(@"%@", resultString);
         
         //________*********  also update the value in the itinarary object's ivar arrayOfScheduleRequests
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil];
+        NSDictionary* infoDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 [NSNumber numberWithInteger:self.myStatus], @"status",
+                                 [NSNumber numberWithBool:self.markedForReturning], @"markedForReturning",
+                                 nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
 
-
-        
     }
-    
-    
-    
-    
-    
 }
 
 
@@ -205,6 +226,10 @@
     
     if ([sender isOn]){
         //switched to on
+        
+        
+        //update status
+        self.myStatus = 2;
         
         //change status color
         self.thirdStatusBar.myColor = self.myAssignedColor;
@@ -233,12 +258,21 @@
         NSLog(@"%@", resultString);
         
         //________*********  also update the value in the itinarary object's ivar arrayOfScheduleRequests
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil];
+        NSDictionary* infoDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 [NSNumber numberWithInteger:self.myStatus], @"status",
+                                 [NSNumber numberWithBool:self.markedForReturning], @"markedForReturning",
+                                 nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
+
         
         
 
     }else{
         //switched to off
+        
+        
+        //update status
+        self.myStatus = 1;
         
         //change status color
         self.thirdStatusBar.myColor = [[[EQRColors sharedInstance] colorDic] objectForKey:EQRColorVeryLightGrey];
@@ -259,11 +293,14 @@
         }
         NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
         
-        NSString* resultString = [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
-        NSLog(@"%@", resultString);
+        [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
         
         //________*********  also update the value in the itinarary object's ivar arrayOfScheduleRequests
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil];
+        NSDictionary* infoDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 [NSNumber numberWithInteger:self.myStatus], @"status",
+                                 [NSNumber numberWithBool:self.markedForReturning], @"markedForReturning",
+                                 nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
 
         
     }
