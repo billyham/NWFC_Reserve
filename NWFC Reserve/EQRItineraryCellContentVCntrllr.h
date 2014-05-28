@@ -16,6 +16,8 @@
 @property (strong, nonatomic) IBOutlet UILabel* firstLastName;
 @property (strong, nonatomic) IBOutlet UILabel* switchLabel1;
 @property (strong, nonatomic) IBOutlet UILabel* switchLabel2;
+@property (strong, nonatomic) IBOutlet UILabel* cautionLabel1;
+@property (strong, nonatomic) IBOutlet UILabel* cautionLabel2;
 @property (strong, nonatomic) IBOutlet UILabel* renterType;
 @property (strong, nonatomic) IBOutlet UISwitch* switch1;
 @property (strong, nonatomic) IBOutlet UISwitch* switch2;

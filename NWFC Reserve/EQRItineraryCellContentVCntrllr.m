@@ -60,7 +60,7 @@
     self.thirdStatusBar.myColor = [colors.colorDic objectForKey:EQRColorVeryLightGrey];
     
     
-    //determine which status bars should be on
+    //determine which status bars should be turned on
     //second bar
     if (self.myStatus > 0){
         

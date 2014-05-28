@@ -134,15 +134,30 @@
     
     if (!requestItem.markedForReturn){
         
+        //set time
         timeString = [dateFormatter stringFromDate:requestItem.request_time_begin];
+        
+        //set switch labels
         self.myItineraryContent.switchLabel1.text = @"Prepped";
         self.myItineraryContent.switchLabel2.text = @"Check Out";
         
+        //set caution labels
+        self.myItineraryContent.cautionLabel1.text = @"*Some items are not prepped";
+        self.myItineraryContent.cautionLabel2.text = @"*Some items are not checked out";
+        
     } else{
         
+        //set time
         timeString = [dateFormatter stringFromDate:requestItem.request_time_end];
+        
+        //set switch labels
         self.myItineraryContent.switchLabel1.text = @"Check In";
         self.myItineraryContent.switchLabel2.text = @"Shelved";
+        
+        //set caution labels
+        self.myItineraryContent.cautionLabel1.text = @"*Some items are not checked in";
+        self.myItineraryContent.cautionLabel2.text = @"*Some items are not shelved";
+        
         
     }
     
