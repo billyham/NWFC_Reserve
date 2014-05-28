@@ -27,6 +27,7 @@ NSString* EQRRefreshScheduleTable = @"EQRRefreshScheduleTable";
 NSString* EQRButtonHighlight = @"EQRButtonHighlight";
 NSString* EQRButtonUnHighlight = @"EQRButtonUnHighlight";
 NSString* EQRPresentRequestEditor = @"EQRPresentRequestEditor";
+NSString* EQRPresentCheckInOut = @"EQRPresentCheckInOut";
 NSString* EQRAChangeWasMadeToTheSchedule = @"EQRAChangeWasMadeToTheSchedule";
 NSString* EQREquipUniqueToBeDeleted = @"EQREquipUniqueToBeDeleted";
 NSString* EQREquipUniqueToBeDeletedCancel = @"EQREquipUniqueToBeDeletedCancel";

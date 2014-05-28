@@ -31,7 +31,7 @@
 
 -(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem{
     
-    NSLog(@"inside itineraryRowCell initialSetup with request item contact name: %@", [requestItem contact_name]);
+//    NSLog(@"inside itineraryRowCell initialSetup with request item contact name: %@", [requestItem contact_name]);
     
     self.backgroundColor = [UIColor clearColor];
     

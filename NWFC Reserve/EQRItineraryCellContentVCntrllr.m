@@ -88,6 +88,15 @@
 
 -(IBAction)switch1Fires:(id)sender{
     
+    //_______show check in out view
+    NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:self.requestKeyId, @"scheduleKey",
+                             [NSNumber numberWithBool:self.markedForReturning], @"marked_for_returning",
+                              [NSNumber numberWithInteger:1], @"switch_num",
+                             nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentCheckInOut object:nil userInfo:userDic];
+    
+    
     if (!self.markedForReturning){
         //when going
     }else{
@@ -215,6 +224,14 @@
 
 
 -(IBAction)switch2Fires:(id)sender{
+    
+    //_______show check in out view
+    NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:self.requestKeyId, @"scheduleKey",
+                             [NSNumber numberWithBool:self.markedForReturning], @"marked_for_returning",
+                             [NSNumber numberWithInteger:2], @"switch_num",
+                             nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentCheckInOut object:nil userInfo:userDic];
     
     if (!self.markedForReturning){
         //when going

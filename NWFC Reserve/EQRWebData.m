@@ -643,6 +643,30 @@ const int intEQREquipUniqueItem = 8;
         return;
     }
     
+    if ([elementName isEqualToString:@"prep_flag"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"checkout_flag"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"checkin_flag"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"shelf_flag"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
     //Properties for ScheduleTracking
     
     if ([elementName isEqualToString:@"classSection_foreignKey"]){
@@ -1079,7 +1103,50 @@ const int intEQREquipUniqueItem = 8;
             self.currentValue = nil;
         }
     }
+    
+    if ([prop isEqualToString:@"prep_flag"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(prep_flag)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setPrep_flag:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
 
+    if ([prop isEqualToString:@"checkout_flag"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(checkout_flag)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setCheckout_flag:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"checkin_flag"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(checkin_flag)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setCheckin_flag:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"shelf_flag"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(shelf_flag)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setShelf_flag:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
     
     //Properties for ScheduleRequestItem
 

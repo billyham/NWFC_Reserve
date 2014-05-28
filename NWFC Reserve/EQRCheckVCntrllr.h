@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQRCheckVCntrllr : UIViewController
+@interface EQRCheckVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (strong, nonatomic) NSString* scheduleRequestKeyID;
+@property BOOL marked_for_returning;
+@property NSUInteger switch_num;
 
 -(void)initialSetupWithInfo:(NSDictionary*)userInfo;
 

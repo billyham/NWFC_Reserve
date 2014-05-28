@@ -14,6 +14,10 @@
 @property (strong, nonatomic) NSString* scheduleTracking_foreignKey;
 @property (strong, nonatomic) NSString* equipUniqueItem_foreignKey;
 @property (strong, nonatomic) NSString* equipTitleItem_foreignKey;
+@property (strong, nonatomic) NSString* prep_flag;
+@property (strong, nonatomic) NSString* checkout_flag;
+@property (strong, nonatomic) NSString* checkin_flag;
+@property (strong, nonatomic) NSString* shelf_flag;
 
 @property int itemQuantity;
 

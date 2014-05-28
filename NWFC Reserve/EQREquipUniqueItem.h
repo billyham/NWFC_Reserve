@@ -22,5 +22,11 @@
 @property (strong, nonatomic) NSString* shortname;
 @property (strong, nonatomic) NSString* schedule_grouping;
 
+//properties derived from the matching schedule_equip_join
+@property (strong, nonatomic) NSString* prep_flag;
+@property (strong, nonatomic) NSString* checkout_flag;
+@property (strong, nonatomic) NSString* checkin_flag;
+@property (strong, nonatomic) NSString* shelf_flag;
+
 
 @end

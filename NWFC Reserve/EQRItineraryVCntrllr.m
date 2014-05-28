@@ -13,6 +13,7 @@
 #import "EQRScheduleRequestItem.h"
 #import "EQRScheduleRequestManager.h"
 #import "EQRWebData.h"
+#import "EQRCheckVCntrllr.h"
 
 @interface EQRItineraryVCntrllr ()
 
@@ -61,6 +62,8 @@
     [nc addObserver:self selector:@selector(refreshTheView) name:EQRAChangeWasMadeToTheSchedule object:nil];
     //partial refresh to when a switch is thrown in the itinarary cell view
     [nc addObserver:self selector:@selector(partialRefreshToUpdateTheArrayOfRequests:) name:EQRPartialRefreshToItineraryArray object:nil];
+    //receive note from cellContentView to show check in out v controllr
+    [nc addObserver:self selector:@selector(showCheckInOut:) name:EQRPresentCheckInOut object:nil];
     
     //register collection view cell
     [self.myMasterItineraryCollection registerClass:[EQRItineraryRowCell class] forCellWithReuseIdentifier:@"Cell"];
@@ -265,6 +268,37 @@
         [self.myMasterItineraryCollection reloadData];
     }
     
+}
+
+
+#pragma mark - show check out in view
+
+-(void)showCheckInOut:(NSNotification*)note{
+    
+    NSString* scheduleKey = [[note userInfo] objectForKey:@"scheduleKey"];
+    NSNumber* marked_for_returning = [[note userInfo] objectForKey:@"marked_for_returning"];
+    NSNumber* switch_num = [[note userInfo] objectForKey:@"switch_num"];
+    
+    
+    EQRCheckVCntrllr* checkViewController = [[EQRCheckVCntrllr alloc] initWithNibName:@"EQRCheckVCntrllr" bundle:nil];
+    
+    //extend edges under nav and tab bar
+    checkViewController.edgesForExtendedLayout = UIRectEdgeAll;
+    
+    NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:scheduleKey, @"scheduleKey",
+                            marked_for_returning, @"marked_for_returning",
+                            switch_num, @"switch_num",
+                            nil];
+    
+    //initial setup
+    [checkViewController initialSetupWithInfo:newDic];
+    
+    //model pops up from below, removes navigiation controller
+    UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:checkViewController];
+    
+    [self presentViewController:newNavController animated:YES completion:^{
+        
+    }];
 }
 
 
