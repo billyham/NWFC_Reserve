@@ -10,6 +10,10 @@
 
 @interface EQRCheckCellContentVCntrllr : UIViewController
 
+@property (strong, nonatomic) NSString* myJoinKeyID;
+@property (strong, nonatomic) NSString* joinPropertyToBeUpdated;
+
+
 @property (strong, nonatomic) IBOutlet UILabel* equipNameLabel;
 @property (strong, nonatomic) IBOutlet UILabel* distIDLabel;
 @property (strong, nonatomic) IBOutlet UILabel* status1Label;

@@ -29,13 +29,14 @@
 
 
 
--(void)initialSetupWithEquipUnique:(EQREquipUniqueItem*)equipUnique marked:(BOOL)mark_for_returning switch_num:(NSUInteger)switch_num{
+-(void)initialSetupWithEquipUnique:(EQRScheduleTracking_EquipmentUnique_Join*)equipJoin marked:(BOOL)mark_for_returning switch_num:(NSUInteger)switch_num{
     
     self.backgroundColor = [UIColor clearColor];
     
     EQRCheckCellContentVCntrllr* checkContent = [[EQRCheckCellContentVCntrllr alloc] initWithNibName:@"EQRCheckCellContentVCntrllr" bundle:nil];
     
     self.myCheckContent = checkContent;
+    self.myCheckContent.myJoinKeyID = equipJoin.key_id;
     
 
     
@@ -52,7 +53,9 @@
         
         if (switch_num == 1){
             
-            if ([equipUnique.prep_flag isEqualToString:@"yes"]){
+            self.myCheckContent.joinPropertyToBeUpdated = @"prep_flag";
+            
+            if ([equipJoin.prep_flag isEqualToString:@"yes"]){
                 
                 self.myCheckContent.statusSwitch.on = YES;
                 
@@ -70,7 +73,9 @@
             
         }else {
             
-            if ([equipUnique.checkout_flag isEqualToString:@"yes"]){
+            self.myCheckContent.joinPropertyToBeUpdated = @"checkout_flag";
+            
+            if ([equipJoin.checkout_flag isEqualToString:@"yes"]){
                 
                 self.myCheckContent.statusSwitch.on = YES;
                 
@@ -92,7 +97,9 @@
         
         if (switch_num == 1){
             
-            if ([equipUnique.checkin_flag isEqualToString:@"yes"]){
+            self.myCheckContent.joinPropertyToBeUpdated = @"checkin_flag";
+            
+            if ([equipJoin.checkin_flag isEqualToString:@"yes"]){
                 
                 self.myCheckContent.statusSwitch.on = YES;
                 
@@ -110,7 +117,9 @@
             
         }else{
             
-            if ([equipUnique.shelf_flag isEqualToString:@"yes"]){
+            self.myCheckContent.joinPropertyToBeUpdated = @"shelf_flag";
+            
+            if ([equipJoin.shelf_flag isEqualToString:@"yes"]){
                 
                 self.myCheckContent.statusSwitch.on = YES;
                 
@@ -131,8 +140,8 @@
     }
 
     
-    self.myCheckContent.equipNameLabel.text = equipUnique.name;
-    self.myCheckContent.distIDLabel.text = equipUnique.distinquishing_id;
+    self.myCheckContent.equipNameLabel.text = equipJoin.name;
+    self.myCheckContent.distIDLabel.text = equipJoin.distinquishing_id;
     
 }
 

@@ -666,6 +666,7 @@ const int intEQREquipUniqueItem = 8;
         self.currentProperty = elementName;
         return;
     }
+
     
     //Properties for ScheduleTracking
     

@@ -23,10 +23,12 @@
 @property (strong, nonatomic) NSString* schedule_grouping;
 
 //properties derived from the matching schedule_equip_join
-@property (strong, nonatomic) NSString* prep_flag;
-@property (strong, nonatomic) NSString* checkout_flag;
-@property (strong, nonatomic) NSString* checkin_flag;
-@property (strong, nonatomic) NSString* shelf_flag;
+//@property (strong, nonatomic) NSString* prep_flag;
+//@property (strong, nonatomic) NSString* checkout_flag;
+//@property (strong, nonatomic) NSString* checkin_flag;
+//@property (strong, nonatomic) NSString* shelf_flag;
+////the schedule_equip_join key_id but renamed so it doesn't get saved as the unique_item's key_id
+//@property (strong, nonatomic) NSString* tracking_unique_join_key_id;
 
 
 @end

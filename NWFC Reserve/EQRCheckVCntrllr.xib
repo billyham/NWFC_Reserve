@@ -24,7 +24,7 @@
                         <size key="itemSize" width="590" height="60"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
                     </collectionViewFlowLayout>
                     <cells/>
                     <connections>
@@ -33,19 +33,79 @@
                     </connections>
                 </collectionView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DTX-f9-bSI">
-                    <rect key="frame" x="0.0" y="0.0" width="178" height="1024"/>
+                    <rect key="frame" x="0.0" y="64" width="178" height="960"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XRl-J1-VbJ">
-                            <rect key="frame" x="20" y="20" width="150" height="21"/>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XRl-J1-VbJ">
+                            <rect key="frame" x="20" y="20" width="38" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="21" id="UJz-x0-62S"/>
+                            </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Bi-6v-kk2">
+                            <rect key="frame" x="25" y="170" width="128" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="Mqk-SR-Gsp"/>
+                            </constraints>
+                            <state key="normal" title="Mark As Complete">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="markAsComplete:" destination="-1" eventType="touchUpInside" id="AjK-My-mRt"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bHs-uE-ik1">
+                            <rect key="frame" x="21" y="269" width="137" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="Ml5-C0-6wM"/>
+                            </constraints>
+                            <state key="normal" title="Mark As Incomplete">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="markAsIncomplete:" destination="-1" eventType="touchUpInside" id="3Oe-mJ-lYi"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9pr-dk-qkw">
+                            <rect key="frame" x="20" y="49" width="31" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="21" id="IfM-kX-UqX"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Renter Type" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nOj-Lf-asi">
+                            <rect key="frame" x="20" y="78" width="77" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="21" id="vbR-MM-LBI"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
+                        <constraint firstItem="nOj-Lf-asi" firstAttribute="top" secondItem="9pr-dk-qkw" secondAttribute="bottom" constant="8" id="BEJ-VN-V58"/>
+                        <constraint firstItem="XRl-J1-VbJ" firstAttribute="leading" secondItem="DTX-f9-bSI" secondAttribute="leading" constant="20" id="Dfc-Mp-ac7"/>
                         <constraint firstAttribute="width" constant="178" id="Epi-hs-07A"/>
+                        <constraint firstAttribute="centerX" secondItem="bHs-uE-ik1" secondAttribute="centerX" id="TRT-yh-Fbg"/>
+                        <constraint firstItem="9pr-dk-qkw" firstAttribute="leading" secondItem="DTX-f9-bSI" secondAttribute="leading" constant="20" id="WZC-BA-Q95"/>
+                        <constraint firstAttribute="centerX" secondItem="0Bi-6v-kk2" secondAttribute="centerX" id="Y40-oK-oSH"/>
+                        <constraint firstItem="0Bi-6v-kk2" firstAttribute="top" secondItem="nOj-Lf-asi" secondAttribute="bottom" constant="71" id="Z7s-WB-i48"/>
+                        <constraint firstItem="nOj-Lf-asi" firstAttribute="leading" secondItem="DTX-f9-bSI" secondAttribute="leading" constant="20" id="bdx-r4-woF"/>
+                        <constraint firstItem="bHs-uE-ik1" firstAttribute="top" secondItem="0Bi-6v-kk2" secondAttribute="bottom" constant="69" id="i0D-WF-Yi4"/>
+                        <constraint firstItem="9pr-dk-qkw" firstAttribute="top" secondItem="XRl-J1-VbJ" secondAttribute="bottom" constant="8" id="rLX-0O-IjE"/>
+                        <constraint firstItem="XRl-J1-VbJ" firstAttribute="top" secondItem="DTX-f9-bSI" secondAttribute="top" constant="20" id="xwj-WU-HKU"/>
                     </constraints>
                 </view>
             </subviews>
@@ -57,7 +117,7 @@
                 <constraint firstAttribute="bottom" secondItem="fVz-SU-K6t" secondAttribute="bottom" id="a00-41-l2Q"/>
                 <constraint firstItem="fVz-SU-K6t" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="e15-H8-44r"/>
                 <constraint firstItem="DTX-f9-bSI" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="eKk-1m-gnh"/>
-                <constraint firstItem="DTX-f9-bSI" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="nsA-vO-ALo"/>
+                <constraint firstItem="DTX-f9-bSI" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="nsA-vO-ALo"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
         </view>

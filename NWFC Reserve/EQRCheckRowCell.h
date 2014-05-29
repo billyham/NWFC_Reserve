@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EQREquipUniqueItem.h"
+//#import "EQREquipUniqueItem.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 
 @interface EQRCheckRowCell : UICollectionViewCell
 
 
--(void)initialSetupWithEquipUnique:(EQREquipUniqueItem*)equipUnique marked:(BOOL)mark_for_returning switch_num:(NSUInteger)switch_num;
+-(void)initialSetupWithEquipUnique:(EQRScheduleTracking_EquipmentUnique_Join*)equipJoin marked:(BOOL)mark_for_returning switch_num:(NSUInteger)switch_num;
 
 
 @end

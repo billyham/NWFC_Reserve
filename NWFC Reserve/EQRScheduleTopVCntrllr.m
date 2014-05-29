@@ -694,7 +694,8 @@
         
         //use the touch location to derive the target equipItem from the self.equipUniqueArrayWithSections ivar
         //we know the section from the supplied indexPath...
-        CGPoint thatPoint = [gesture locationInView:self.view];
+        //_______Use the center of the moving nested cell view_______
+        CGPoint thatPoint = self.movingNestedCellView.center;
         
         //80 is the distance between the collectionView and the top of the view
         //must also add in the collection view offset

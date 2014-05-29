@@ -30,8 +30,9 @@
 @property (strong, nonatomic) NSString* renter_type;
 
 //from equipUniqueItem record
-//@property (strong, nonatomic) NSString* name;
-//@property (strong, nonatomic) NSString* distinquishing_id;
+@property (strong, nonatomic) NSString* name;
+@property (strong, nonatomic) NSString* distinquishing_id;
+@property (strong, nonatomic) NSString* status_level;
 //
 ////from equipTitleItem record
 //@property (strong, nonatomic) NSString* category;

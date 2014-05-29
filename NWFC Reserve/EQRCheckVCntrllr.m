@@ -10,7 +10,6 @@
 #import "EQRCheckRowCell.h"
 #import "EQRWebData.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
-#import "EQREquipUniqueItem.h"
 
 @interface EQRCheckVCntrllr ()
 
@@ -19,7 +18,6 @@
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myEquipCollection;
 @property (strong, nonatomic) NSArray* arrayOfEquipJoins;
-@property (strong, nonatomic) NSArray* arrayOfEquipUnique;  //????
 
 
 
@@ -46,66 +44,23 @@
     
     //populate arrays using schedule key
     EQRWebData* webData = [EQRWebData sharedInstance];
-    
-    //______******* SHOULD SIMPLIFY WITH SINGLE CALL TO SQL WITH INNER JOIN... BUT MAKE SURE EQUIP UNIQUES THAT
-    //______******* ARE RETURNED ARE ONE-FOR-ONE WITH THE NUMBER OF JOINS (TROUBLE IF TWO JOINS SHARE THE SAME EQUIPUNIQUE
 
     NSMutableArray* altMuteArray = [NSMutableArray arrayWithCapacity:1];
     NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.scheduleRequestKeyID, nil];
     NSArray* bigArray = [NSArray arrayWithObject:ayeArray];
-    [webData queryWithLink:@"EQGetUniqueItemKeysForCheckWithScheduleTrackingKey.php" parameters:bigArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
-       
-        NSLog(@" count of array for smurfs: %u", [muteArray count]);
+    [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:bigArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
         
-        for (id object in muteArray){
-            
+        for (EQRScheduleTracking_EquipmentUnique_Join* object in muteArray){
+                        
             [altMuteArray addObject:object];
         }
     }];
     
-    self.arrayOfEquipUnique = [NSArray arrayWithArray:altMuteArray];
+    self.arrayOfEquipJoins = [NSArray arrayWithArray:altMuteArray];
     
-    NSLog(@" count of self.arrayOfEquipUnique: %u", [self.arrayOfEquipUnique count]);
+    
+    
 
-    
-    
-    
-    //_____********   ALT USING TWO METHODS TO GET BOTH EQUIP UNIQUES AND SCHEDULE_EQUIP_JOINS
-//    //get scheduleEquipJoins
-//    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", scheduleKey, nil];
-//    NSArray* topArray = [NSArray arrayWithObject:firstArray];
-//    
-//    NSMutableArray* newMute = [NSMutableArray arrayWithCapacity:1];
-//    
-//    [webData queryWithLink:@"EQGetScheduleEquipJoins.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
-//        
-//        for (id object in muteArray){
-//            
-//            [newMute addObject:object];
-//        }
-//    }];
-//
-//    self.arrayOfEquipJoins = [NSArray arrayWithArray:newMute];
-//
-//    
-//    //get equipUniques
-//    NSMutableArray* muteUniques = [NSMutableArray arrayWithCapacity:1];
-//    
-//    for (EQRScheduleTracking_EquipmentUnique_Join* join in self.arrayOfEquipJoins){
-//        
-//        NSArray* firstFirstArray = [NSArray arrayWithObjects:@"key_id", join.equipUniqueItem_foreignKey, nil];
-//        NSArray* firstTopArray = [NSArray arrayWithObjects:firstFirstArray, nil];
-//        
-//        [webData queryWithLink:@"EQGetEquipmentUnique.php" parameters:firstTopArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
-//            
-//            for (id object in muteArray){
-//             
-//                [muteUniques addObject:object];
-//            }
-//        }];
-//    }
-//    
-//    self.arrayOfEquipUnique = [NSArray arrayWithArray:muteUniques];
     
 }
 
@@ -119,9 +74,9 @@
     [self.myEquipCollection registerClass:[EQRCheckRowCell class] forCellWithReuseIdentifier:@"Cell"];
     
     //cancel bar button
-    UIBarButtonItem* rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction)];
-    
-    [self.navigationItem setRightBarButtonItem:rightButton];
+//    UIBarButtonItem* rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction)];
+//    
+//    [self.navigationItem setRightBarButtonItem:rightButton];
 
 
 
@@ -130,13 +85,31 @@
 
 #pragma mark - navigation buttons
 
--(void)cancelAction{
+//-(void)cancelAction{
+//    
+//    [self dismissViewControllerAnimated:YES completion:^{
+//        
+//        
+//    }];
+//    
+//}
+
+
+-(IBAction)markAsComplete:(id)sender{
     
     [self dismissViewControllerAnimated:YES completion:^{
         
+    }];
+
+}
+
+
+-(IBAction)markAsIncomplete:(id)sender{
+    
+    [self dismissViewControllerAnimated:YES completion:^{
         
     }];
-    
+
 }
 
 
@@ -150,7 +123,7 @@
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
-    return  [self.arrayOfEquipUnique count];
+    return  [self.arrayOfEquipJoins count];
 }
 
 
@@ -169,7 +142,7 @@
     //and reset the cell's background color...
     cell.backgroundColor = [UIColor whiteColor];
     
-    [cell initialSetupWithEquipUnique:[self.arrayOfEquipUnique objectAtIndex:indexPath.row] marked:self.marked_for_returning switch_num:self.switch_num];
+    [cell initialSetupWithEquipUnique:[self.arrayOfEquipJoins objectAtIndex:indexPath.row] marked:self.marked_for_returning switch_num:self.switch_num];
     
     return cell;
 };
