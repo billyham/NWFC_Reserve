@@ -32,6 +32,15 @@
 {
     [super viewDidLoad];
     
+    //register for notes
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    //receive complete or incomplete for this rows individual items editor
+    [nc addObserver:self selector:@selector(dismissedCheckInOut:) name:EQRMarkItineraryAsCompleteOrNot object:nil];
+    
+    //initially... hide the caution labels
+    self.cautionLabel1.hidden = YES;
+    self.cautionLabel2.hidden = YES;
+    
     EQRColors* colors = [EQRColors sharedInstance];
     
     if (!self.markedForReturning){
@@ -323,6 +332,130 @@
     }
     
     
+}
+
+
+//@"scheduleKey",
+//@"complete", @"comleteOrIncomplete",
+//[NSNumber numberWithBool:self.marked_for_returning], @"marked_for_returning",
+//[NSNumber numberWithInteger:self.switch_num], @"switch_num",
+//self.myProperty, @"propertyToUpdate",
+//[NSNumber numberWithBool:foundOutstandingItem], @"foundOutstandingItem",
+
+
+
+#pragma mark - notes
+
+-(void)dismissedCheckInOut:(NSNotification*)note{
+    
+    //_______********  still need to update the data model and local ivar   *******_______
+    
+    
+    NSString* scheduleKey = [[note userInfo] objectForKey:@"scheduleKey"];
+    NSString* completeOrIncomplete = [[note userInfo] objectForKey:@"comleteOrIncomplete"];
+    NSUInteger switch_num = [[[note userInfo] objectForKey:@"switch_num"] integerValue];
+    BOOL foundOutstandingItem = [[[note userInfo] objectForKey:@"foundOutstandingItem"] boolValue];
+    
+    if ([self.requestKeyId isEqualToString:scheduleKey]){
+        
+        if ([completeOrIncomplete isEqualToString:@"complete"]){
+            
+            if (switch_num == 1){
+                
+                self.myStatus = 1;
+                
+                [self.switch1 setOn:YES];
+                
+                //enable switch2
+                self.switch2.alpha = 1.0;
+                self.switchLabel2.alpha = 1.0;
+                self.switch2.userInteractionEnabled = YES;
+                
+                //change status color
+                self.secondStatusBar.myColor = self.myAssignedColor;
+                self.thirdStatusBar.myColor = [[[EQRColors sharedInstance] colorDic] objectForKey:EQRColorVeryLightGrey];
+                
+                //change color of second status bar
+                [self.secondStatusBar setNeedsDisplay];
+                [self.thirdStatusBar setNeedsDisplay];
+                
+                //turn on caution label
+                if (foundOutstandingItem){
+                    
+                    self.cautionLabel1.hidden = NO;
+                    
+                }else{
+                    
+                    self.cautionLabel1.hidden = YES;
+                }
+                
+            }else{
+                
+                self.myStatus = 2;
+                
+                [self.switch2 setOn:YES];
+                
+                //change status color
+                self.secondStatusBar.myColor = self.myAssignedColor;
+                self.thirdStatusBar.myColor = self.myAssignedColor;
+                
+                //change color of second status bar
+                [self.secondStatusBar setNeedsDisplay];
+                [self.thirdStatusBar setNeedsDisplay];
+                
+                //turn on caution label
+                if (foundOutstandingItem){
+                    
+                    self.cautionLabel2.hidden = NO;
+                    
+                }else{
+                    
+                    self.cautionLabel2.hidden = YES;
+                }
+            }
+            
+        }else{
+            //marked as incomplete
+            
+            if (switch_num == 1){
+                
+                self.myStatus = 0;
+                
+                [self.switch1 setOn:NO];
+                
+                //disable switch2
+                self.switch2.alpha = 0.3;
+                self.switchLabel2.alpha = 0.3;
+                self.switch2.userInteractionEnabled = NO;
+                
+                //change status color
+                self.secondStatusBar.myColor = [[[EQRColors sharedInstance] colorDic] objectForKey:EQRColorVeryLightGrey];
+                self.thirdStatusBar.myColor = [[[EQRColors sharedInstance] colorDic] objectForKey:EQRColorVeryLightGrey];
+                
+                //change color of second status bar
+                [self.secondStatusBar setNeedsDisplay];
+                [self.thirdStatusBar setNeedsDisplay];
+                
+                self.cautionLabel1.hidden = YES;
+                
+            }else{
+                
+                self.myStatus = 1;
+                
+                [self.switch2 setOn:NO];
+                
+                //change status color
+                self.secondStatusBar.myColor = self.myAssignedColor;
+                self.thirdStatusBar.myColor = [[[EQRColors sharedInstance] colorDic] objectForKey:EQRColorVeryLightGrey];
+                
+                //change color of second status bar
+                [self.secondStatusBar setNeedsDisplay];
+                [self.thirdStatusBar setNeedsDisplay];
+                
+                self.cautionLabel2.hidden = YES;
+            }
+        }
+    }
 }
 
 

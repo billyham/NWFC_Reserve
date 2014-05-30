@@ -25,6 +25,8 @@ extern NSString* EQRButtonHighlight;
 extern NSString* EQRButtonUnHighlight;
 extern NSString* EQRPresentRequestEditor;
 extern NSString* EQRPresentCheckInOut;
+extern NSString* EQRUpdateCheckInOutArrayOfJoins;
+extern NSString* EQRMarkItineraryAsCompleteOrNot;
 extern NSString* EQRAChangeWasMadeToTheSchedule;
 extern NSString* EQREquipUniqueToBeDeleted;
 extern NSString* EQREquipUniqueToBeDeletedCancel;

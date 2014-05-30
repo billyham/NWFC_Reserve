@@ -8,6 +8,7 @@
 
 #import "EQRCheckCellContentVCntrllr.h"
 #import "EQRWebData.h"
+#import "EQRGlobals.h"
 
 @interface EQRCheckCellContentVCntrllr ()
 
@@ -38,8 +39,20 @@
         NSArray* secondArray = [NSArray arrayWithObjects:@"key_id", self.myJoinKeyID, nil];
         NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
         
+        //update model
         [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleEquipJoin.php" parameters:topArray];
 
+        
+        //____need to update ivar array
+        NSString* verdict = @"yes";
+        NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                self.myJoinKeyID, @"joinKeyID",
+                                self.joinPropertyToBeUpdated, @"joinProperty",
+                                verdict, @"markedAsYes",
+                                nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRUpdateCheckInOutArrayOfJoins object:nil userInfo:newDic];
+        
+        
         //update status label
         if ([self.joinPropertyToBeUpdated isEqualToString:@"prep_flag"]){
             
@@ -73,7 +86,18 @@
         NSArray* secondArray = [NSArray arrayWithObjects:@"key_id", self.myJoinKeyID, nil];
         NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
         
+        //update model
         [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleEquipJoin.php" parameters:topArray];
+        
+        
+        //____need to update ivar array
+        NSString* verdict = @"";
+        NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                self.myJoinKeyID, @"joinKeyID",
+                                self.joinPropertyToBeUpdated, @"joinProperty",
+                                verdict, @"markedAsYes",
+                                nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRUpdateCheckInOutArrayOfJoins object:nil userInfo:newDic];
         
         //update status label
         if ([self.joinPropertyToBeUpdated isEqualToString:@"prep_flag"]){

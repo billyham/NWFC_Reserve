@@ -10,11 +10,14 @@
 #import "EQRCheckRowCell.h"
 #import "EQRWebData.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
+#import "EQRGlobals.h"
 
 @interface EQRCheckVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UILabel* nameTextLabel;
 @property (strong, nonatomic) NSDictionary* myUserInfo;
+
+@property (strong, nonatomic) NSString* myProperty;
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myEquipCollection;
 @property (strong, nonatomic) NSArray* arrayOfEquipJoins;
@@ -41,6 +44,29 @@
     self.scheduleRequestKeyID = [userInfo objectForKey:@"scheduleKey"];
     self.marked_for_returning = [[userInfo objectForKey:@"marked_for_returning"] boolValue];
     self.switch_num = [[userInfo objectForKey:@"switch_num"] integerValue];
+    
+    //figure out the literal column name in the database to use
+    if (!self.marked_for_returning){
+        
+        if (self.switch_num == 1){
+            
+            self.myProperty = @"prep_flag";
+            
+        }else {
+            
+            self.myProperty = @"checkout_flag";
+        }
+    }else{
+        
+        if (self.switch_num == 1){
+            
+            self.myProperty = @"checkin_flag";
+            
+        }else {
+            
+            self.myProperty = @"shelf_flag";
+        }
+    }
     
     //populate arrays using schedule key
     EQRWebData* webData = [EQRWebData sharedInstance];
@@ -73,6 +99,12 @@
     //register collection view cell
     [self.myEquipCollection registerClass:[EQRCheckRowCell class] forCellWithReuseIdentifier:@"Cell"];
     
+    //register for notes
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    //receive change in state from row items
+    [nc addObserver:self selector:@selector(updateArrayOfJoins:) name:EQRUpdateCheckInOutArrayOfJoins object:nil];
+    
+    
     //cancel bar button
 //    UIBarButtonItem* rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction)];
 //    
@@ -97,6 +129,44 @@
 
 -(IBAction)markAsComplete:(id)sender{
     
+
+    
+    //make special note if any of the joins in the ivar array are not complete
+    BOOL foundOutstandingItem = NO;
+    
+    for (EQRScheduleTracking_EquipmentUnique_Join* join in self.arrayOfEquipJoins){
+        
+        if ([join respondsToSelector:NSSelectorFromString(self.myProperty)]){
+         
+            SEL thisSelector = NSSelectorFromString(self.myProperty);
+            
+            
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            NSString* thisLiteralProperty = [join performSelector:thisSelector];
+#pragma clang diagnostic pop
+            
+            if (([thisLiteralProperty isEqualToString:@""]) || (thisLiteralProperty == nil)){
+                
+                foundOutstandingItem = YES;
+                
+            }
+        }
+        
+    }
+    
+    
+    NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                             self.scheduleRequestKeyID, @"scheduleKey",
+                             @"complete", @"comleteOrIncomplete",
+                             [NSNumber numberWithBool:self.marked_for_returning], @"marked_for_returning",
+                             [NSNumber numberWithInteger:self.switch_num], @"switch_num",
+                             self.myProperty, @"propertyToUpdate",
+                             [NSNumber numberWithBool:foundOutstandingItem], @"foundOutstandingItem",
+                             nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRMarkItineraryAsCompleteOrNot object:nil userInfo:thisDic];
+    
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];
@@ -106,11 +176,61 @@
 
 -(IBAction)markAsIncomplete:(id)sender{
     
+    NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                             self.scheduleRequestKeyID, @"scheduleKey",
+                             @"incomplete", @"comleteOrIncomplete",
+                             [NSNumber numberWithBool:self.marked_for_returning], @"marked_for_returning",
+                             [NSNumber numberWithInteger:self.switch_num], @"switch_num",
+                             self.myProperty, @"propertyToUpdate",
+                             [NSNumber numberWithBool:0], @"foundOutstandingItem",
+                             nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRMarkItineraryAsCompleteOrNot object:nil userInfo:thisDic];
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+    
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];
 
 }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+
+#pragma mark - receive messages from row content
+
+-(void)updateArrayOfJoins:(NSNotification*)note{
+    
+    NSString* joinKeyID = [[note userInfo] objectForKey:@"joinKeyID"];
+    NSString* joinProperty = [[note userInfo] objectForKey:@"joinProperty"];
+    NSString* verdict = [[note userInfo] objectForKey: @"markedAsYes"];
+    
+    for (EQRScheduleTracking_EquipmentUnique_Join* joinItem in self.arrayOfEquipJoins){
+        
+        if ([joinItem.key_id isEqualToString:joinKeyID]){
+            
+            //gotta cutoff the "_flag" at the end or else is will capitalize the "F"
+            NSUInteger thisLength = [joinProperty length];
+            NSRange newRange = NSMakeRange(0, thisLength - 5);
+            NSString* joinSubstring = [joinProperty substringWithRange:newRange];
+            
+            NSString* joinPropertyWithCap = [joinSubstring capitalizedString];
+            NSString* joinPropertySetMethod = [NSString stringWithFormat:@"set%@_flag:", joinPropertyWithCap];
+            SEL mySelector = NSSelectorFromString(joinPropertySetMethod);
+            
+            if ([joinItem respondsToSelector:mySelector]){
+                
+                [joinItem performSelector:mySelector withObject:verdict];
+            }
+        }
+    }
+}
+
+#pragma clang diagnostic pop
+
 
 
 #pragma mark - datasource methods
@@ -147,6 +267,9 @@
     return cell;
 };
 
+
+
+#pragma mark - memory warning
 
 
 - (void)didReceiveMemoryWarning

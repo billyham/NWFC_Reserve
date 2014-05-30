@@ -271,7 +271,7 @@
 }
 
 
-#pragma mark - show check out in view
+#pragma mark - show dismiss check out in view
 
 -(void)showCheckInOut:(NSNotification*)note{
     
@@ -300,6 +300,22 @@
         
     }];
 }
+
+
+//-(void)dismissedCheckInOut:(NSNotification*)note{
+//    
+//    NSString* scheduleKey = [[note userInfo] objectForKey:@"scheduleKey"];
+//    NSString* completeOrIncomplete = [[note userInfo] objectForKey:@"comleteOrIncomplete"];
+//    
+//    if ([completeOrIncomplete isEqualToString:@"complete"]){
+//        
+//        self.
+//        
+//    }else{
+//        
+//        
+//    }
+//}
 
 
 #pragma mark - day movement
