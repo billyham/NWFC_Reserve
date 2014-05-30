@@ -16,7 +16,7 @@
     
     //set system user defaults
     NSDictionary* EQRWebDataUrl = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   @"http://10.0.0.2/nwfc/", @"url",
+                                   @"http://EducationAssistant-5.local/nwfc/", @"url",
                                    nil];
     
     NSDictionary* EQRCurrentTermCode = [NSDictionary dictionaryWithObjectsAndKeys:

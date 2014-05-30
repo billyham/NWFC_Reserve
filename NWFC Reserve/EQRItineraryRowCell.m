@@ -9,6 +9,7 @@
 #import "EQRItineraryRowCell.h"
 #import "EQRItineraryCellContentVCntrllr.h"
 #import "EQRGlobals.h"
+#import "EQRWebData.h"
 
 @interface EQRItineraryRowCell ()
 
@@ -160,6 +161,100 @@
         
         
     }
+    
+    
+    //__________SHOW any appropriate caution labels
+    
+    //get an array of joins for this row's schedule_key
+    NSMutableArray* muteJoinArray = [NSMutableArray arrayWithCapacity:1];
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.myItineraryContent.requestKeyId, nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
+    [webData queryWithLink:@"EQGetUniqueItemKeysForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+        
+        for (EQRScheduleTracking_EquipmentUnique_Join* join in muteArray){
+            
+            [muteJoinArray addObject:join];
+        }
+    }];
+  
+    //only apply caution to switch 1 if it is on
+    if (self.myItineraryContent.switch1.isOn){
+        
+        BOOL foundOutstandingItemSwitch1 = NO;
+
+        //decide between returning or going
+
+        if (!self.myItineraryContent.markedForReturning){
+            //going
+            
+            for (EQRScheduleTracking_EquipmentUnique_Join* join in muteJoinArray){
+                
+                if (([join.prep_flag isEqualToString:@""]) || (join.prep_flag == nil)){
+                    
+                    foundOutstandingItemSwitch1 = YES;
+                }
+            }
+            
+        }else{
+            //returning
+            
+            for (EQRScheduleTracking_EquipmentUnique_Join* join in muteJoinArray){
+                
+                if (([join.checkin_flag isEqualToString:@""]) || (join.checkin_flag == nil)){
+                    
+                    foundOutstandingItemSwitch1 = YES;
+                }
+            }
+            
+        }
+        
+        if (foundOutstandingItemSwitch1 == YES){
+            
+            self.myItineraryContent.cautionLabel1.hidden = NO;
+        }
+    }
+    
+    
+    //only apply caution to switch 2 if it is on
+    if (self.myItineraryContent.switch2.isOn){
+        
+        BOOL foundOutstandingItemSwitch2 = NO;
+        
+        //decide between returning or going
+        
+        if (!self.myItineraryContent.markedForReturning){
+            //going
+            
+            for (EQRScheduleTracking_EquipmentUnique_Join* join in muteJoinArray){
+                
+                if (([join.checkout_flag isEqualToString:@""]) || (join.checkout_flag == nil)){
+                    
+                    foundOutstandingItemSwitch2 = YES;
+                }
+            }
+            
+        }else{
+            //returning
+            
+            for (EQRScheduleTracking_EquipmentUnique_Join* join in muteJoinArray){
+                
+                if (([join.shelf_flag isEqualToString:@""]) || (join.shelf_flag == nil)){
+                    
+                    foundOutstandingItemSwitch2 = YES;
+                }
+            }
+            
+        }
+        
+        if (foundOutstandingItemSwitch2 == YES){
+            
+            self.myItineraryContent.cautionLabel2.hidden = NO;
+        }
+    }
+    
+
+    
     
     //assign name and renter type
     self.myItineraryContent.firstLastName.text = requestItem.contact_name;

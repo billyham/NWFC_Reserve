@@ -127,9 +127,10 @@
 //}
 
 
--(IBAction)markAsComplete:(id)sender{
-    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
+-(IBAction)markAsComplete:(id)sender{
     
     //make special note if any of the joins in the ivar array are not complete
     BOOL foundOutstandingItem = NO;
@@ -139,12 +140,8 @@
         if ([join respondsToSelector:NSSelectorFromString(self.myProperty)]){
          
             SEL thisSelector = NSSelectorFromString(self.myProperty);
-            
-            
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+
             NSString* thisLiteralProperty = [join performSelector:thisSelector];
-#pragma clang diagnostic pop
             
             if (([thisLiteralProperty isEqualToString:@""]) || (thisLiteralProperty == nil)){
                 
@@ -172,6 +169,7 @@
     }];
 
 }
+#pragma clang diagnostic pop
 
 
 -(IBAction)markAsIncomplete:(id)sender{
