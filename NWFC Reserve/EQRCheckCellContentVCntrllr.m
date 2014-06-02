@@ -26,6 +26,39 @@
 }
 
 
+#pragma mark - view methods
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    //receive a qrcode match
+    [nc addObserver:self selector:@selector(receiveQRCodeMessage:) name:EQRQRCodeFlipsSwitchInRowCellContent object:nil];
+    
+}
+
+
+#pragma mark - notification methods
+
+-(void)receiveQRCodeMessage:(NSNotification*)note{
+    
+    NSString* equipKeyID = [[note userInfo] objectForKey:@"keyID"];
+    
+//    NSLog(@"this is a row's equipUnique key: %@", self.equipUniteItem_foreignKey);
+    
+    if ([equipKeyID isEqualToString:self.equipUniteItem_foreignKey]){
+        
+        [self.statusSwitch setOn:YES];
+        
+        [self receiveSwitchChange:self.statusSwitch];
+        
+    }
+    
+}
+
+
 #pragma mark - switch actions
 
 -(IBAction)receiveSwitchChange:(id)sender{
@@ -132,11 +165,7 @@
 
 
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-}
+
 
 - (void)didReceiveMemoryWarning
 {

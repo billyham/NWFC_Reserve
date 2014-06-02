@@ -37,6 +37,7 @@
     
     self.myCheckContent = checkContent;
     self.myCheckContent.myJoinKeyID = equipJoin.key_id;
+    self.myCheckContent.equipUniteItem_foreignKey = equipJoin.equipUniqueItem_foreignKey;
     
 
     

@@ -32,6 +32,7 @@ extern NSString* EQREquipUniqueToBeDeleted;
 extern NSString* EQREquipUniqueToBeDeletedCancel;
 extern NSString* EQRLongPressOnNestedDayCell;
 extern NSString* EQRPartialRefreshToItineraryArray;
+extern NSString* EQRQRCodeFlipsSwitchInRowCellContent;
 
 //Timing
 extern float EQRHighlightTappingTime;
@@ -48,10 +49,10 @@ extern float EQRScheduleLengthOfEquipUniqueLabel;
 //Schedule view by category or subcategory
 extern NSString* EQRScheduleGrouping;
 
+//application options
 extern BOOL EQRDisableTimeLimitForRequest;
+extern BOOL EQRIncludeQRCodeReader;
 
-//colors?
-extern UIColor* EQRNavBarSelected;
 
 
 @interface EQRGlobals : NSObject

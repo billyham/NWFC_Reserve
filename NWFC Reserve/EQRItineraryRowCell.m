@@ -170,7 +170,7 @@
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.myItineraryContent.requestKeyId, nil];
     NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-    [webData queryWithLink:@"EQGetUniqueItemKeysForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+    [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
         
         for (EQRScheduleTracking_EquipmentUnique_Join* join in muteArray){
             

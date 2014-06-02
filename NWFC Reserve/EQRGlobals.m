@@ -35,10 +35,13 @@ NSString* EQREquipUniqueToBeDeleted = @"EQREquipUniqueToBeDeleted";
 NSString* EQREquipUniqueToBeDeletedCancel = @"EQREquipUniqueToBeDeletedCancel";
 NSString* EQRLongPressOnNestedDayCell = @"EQRLongPressOnNestedDayCell";
 NSString* EQRPartialRefreshToItineraryArray = @"EQRPartialRefreshToItineraryArray";
+NSString* EQRQRCodeFlipsSwitchInRowCellContent = @"EQRQRCodeFlipsSwitchInRowCellContent";
 
 //Timing
 float EQRHighlightTappingTime = 0.125;
 float EQRResizingCollectionViewTime = 0.3;
+
+//Top View column size
 float EQRRentorTypeLeadingSpace = 80;
 
 //Schedule sizes
@@ -49,7 +52,9 @@ float EQRScheduleLengthOfEquipUniqueLabel = 200;
 //Schedule view by category or subcategory or something else...
 NSString* EQRScheduleGrouping = @"schedule_grouping";  //choose category or subcategory or schedule_grouping
 
+//application options
 BOOL EQRDisableTimeLimitForRequest = YES;
+BOOL EQRIncludeQRCodeReader = YES;
 
 
 @implementation EQRGlobals

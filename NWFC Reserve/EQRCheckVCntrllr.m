@@ -11,8 +11,11 @@
 #import "EQRWebData.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRGlobals.h"
+//#import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
+//#import <CoreImage/CoreImage.h>
 
-@interface EQRCheckVCntrllr ()
+@interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel* nameTextLabel;
 @property (strong, nonatomic) NSDictionary* myUserInfo;
@@ -21,6 +24,10 @@
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myEquipCollection;
 @property (strong, nonatomic) NSArray* arrayOfEquipJoins;
+
+//for qr code reader
+@property(nonatomic, strong) AVCaptureSession *session;
+@property (nonatomic, strong) NSMutableSet* setOfAlreadyCapturedQRs;
 
 
 
@@ -111,19 +118,211 @@
 //    [self.navigationItem setRightBarButtonItem:rightButton];
 
 
-
+    //QR Code if application options bool is set in globals
+    if (EQRIncludeQRCodeReader == YES){
+        
+        [self initiateQRCodeSteps];
+    }
+    
 }
+
+
+#pragma mark - QR Code reader methods
+
+-(void)initiateQRCodeSteps{
+    
+    self.session = [[AVCaptureSession alloc] init];
+
+    //sweep out the array of captured codes
+    if (!self.setOfAlreadyCapturedQRs){
+        
+        self.setOfAlreadyCapturedQRs = [[NSMutableSet alloc] initWithCapacity:1];
+    }
+    
+    [self.setOfAlreadyCapturedQRs removeAllObjects];
+    
+    
+    // Get the Camera Device
+    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+	AVCaptureDevice *camera = nil; //[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    for(camera in devices) {
+        if(camera.position == AVCaptureDevicePositionBack) {
+            break;
+        }
+    }
+	
+	// Create a AVCaptureInput with the camera device
+	NSError *error=nil;
+	AVCaptureDeviceInput *cameraInput = [[AVCaptureDeviceInput alloc] initWithDevice:camera error:&error];
+	if (cameraInput == nil) {
+		NSLog(@"Error to create camera capture:%@",error);
+	}
+ 	// Add the input and output
+	[self.session addInput:cameraInput];
+    
+    // Create a VideoDataOutput and add it to the session
+    AVCaptureMetadataOutput *output = [[AVCaptureMetadataOutput alloc] init];
+    [self.session addOutput:output];
+    
+    // see what types are supported (do this after adding otherwise the output reports nothing supported
+    NSSet *potentialDataTypes = [NSSet setWithArray:@[AVMetadataObjectTypeQRCode]];
+    
+    NSMutableArray *supportedMetaDataTypes = [NSMutableArray array];
+    for(NSString *availableMetadataObject in output.availableMetadataObjectTypes) {
+        if([potentialDataTypes containsObject:availableMetadataObject]) {
+            [supportedMetaDataTypes addObject:availableMetadataObject];
+        }
+    }
+    
+    [output setMetadataObjectTypes:supportedMetaDataTypes];
+    
+    // Get called back everytime something is recognised
+    [output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
+	
+	// Start the session running
+	[self.session startRunning];
+}
+
+
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection {
+    
+    for(AVMetadataMachineReadableCodeObject *recognizedObject in metadataObjects) {
+        
+        BOOL alreadyInArray = NO;
+        
+        //check to see if the string value already has been captured
+        for (NSString* stringObject in self.setOfAlreadyCapturedQRs){
+            
+            
+            if ([stringObject isEqualToString:recognizedObject.stringValue]){
+                
+                alreadyInArray = YES;
+                break;
+            }
+        }
+        
+        if (alreadyInArray == YES){
+            
+            //exit if the item has already been scanned
+            break;
+        }
+        
+        //otherwise... add to the set of found objects
+        [self.setOfAlreadyCapturedQRs addObject:recognizedObject.stringValue];
+        
+        //derive just the equipItem key
+        NSRange eqrRange = [recognizedObject.stringValue rangeOfString:@"eqr"];
+        
+        //will return NSNotFound for location and 0 for length if it doesn't find the string
+        if (eqrRange.location == NSNotFound){
+            
+//            present a message that an object was scanned but not recognized by the system
+            
+            //exit the method
+            break;
+        }
+        
+        //derive the titleItem key
+        NSInteger locationOfTitleKey = eqrRange.location + 3;
+        NSInteger lengthOfTitleKey = [recognizedObject.stringValue length] - locationOfTitleKey;
+        NSRange titleEqrRange = NSMakeRange(locationOfTitleKey, lengthOfTitleKey);
+        
+        //valuable sub strings
+        NSString* uniqueItemSubString = [recognizedObject.stringValue substringToIndex:eqrRange.location];
+        NSString* titleItemSubString = [recognizedObject.stringValue substringWithRange:titleEqrRange];
+        
+//        NSLog(@"this is the substring: %@", uniqueItemSubString);
+//        NSLog(@"this is the title key, perhaps: %@", titleItemSubString);
+
+        
+        //_________FIRST respond to an exact equipUnique key id match
+        BOOL foundAMatchingEquipKey = NO;
+        for (EQRScheduleTracking_EquipmentUnique_Join* joinObject in self.arrayOfEquipJoins){
+            
+            if ([joinObject.equipUniqueItem_foreignKey isEqualToString:uniqueItemSubString]){
+                
+                //                        NSLog(@"FOUND A EquipKey MATCH");
+                
+                foundAMatchingEquipKey = YES;
+                
+                //alert matching row cell content with a notification
+                NSDictionary* newDic = [NSDictionary dictionaryWithObject:uniqueItemSubString forKey:@"keyID"];
+                [[NSNotificationCenter defaultCenter] postNotificationName:EQRQRCodeFlipsSwitchInRowCellContent object:nil userInfo:newDic];
+            }
+        }
+        
+        if (foundAMatchingEquipKey == YES){
+            
+            //exit the method
+            break;
+        }
+        
+        
+        //___________SECOND respond to a matching title key id match and replace an existing unique item with the scanned item
+        //___________in the case of c stands or sand bags that are not specified but they are tracked
+        BOOL foundAMatchingTitleKey = NO;
+        for (EQRScheduleTracking_EquipmentUnique_Join* joinObject in self.arrayOfEquipJoins){
+            
+            if ([joinObject.equipTitleItem_foreignKey isEqualToString:titleItemSubString]){
+                
+                //should also test the the item has not already been give a YES value for the 'myProperty' value
+                //otherwise it continues to the next segment, adding it as a new item to the order
+                
+                //found a matching title key in the ivar array
+                foundAMatchingTitleKey = YES;
+                
+                
+            }
+            //change the data layer
+            
+            //change the local ivar
+            
+            //change the row cell content distinguishing id, and flip switch
+            
+            
+            
+        }
+        
+        if (foundAMatchingTitleKey == YES){
+            
+            //exit the method
+            break;
+        }
+
+        
+        
+        //_____________ THIRD respond to a new titleItem by adding it the the order (in the case of batteries)
+        
+        //change the data layer
+        
+        //change the local ivar
+        
+        //reload collection view??
+        //add the item to the collection view and flip switch
+        
+        
+        
+        //_____________FOURTH respond to code that has the "eqr" string  but doesn't find a matching title key in the data
+        
+        //present a message that an object was scanned but not found in the database
+        
+        
+    }
+}
+
+
+
 
 
 #pragma mark - navigation buttons
 
 //-(void)cancelAction{
-//    
+//
 //    [self dismissViewControllerAnimated:YES completion:^{
-//        
-//        
+//
+//
 //    }];
-//    
+//
 //}
 
 

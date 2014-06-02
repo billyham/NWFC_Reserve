@@ -12,6 +12,7 @@
 
 @property (strong, nonatomic) NSString* myJoinKeyID;
 @property (strong, nonatomic) NSString* joinPropertyToBeUpdated;
+@property (strong, nonatomic) NSString* equipUniteItem_foreignKey;
 
 
 @property (strong, nonatomic) IBOutlet UILabel* equipNameLabel;
