@@ -46,7 +46,7 @@
     
     NSString* equipKeyID = [[note userInfo] objectForKey:@"keyID"];
     
-//    NSLog(@"this is a row's equipUnique key: %@", self.equipUniteItem_foreignKey);
+    NSLog(@"this is a row's equipUnique key: %@", self.equipUniteItem_foreignKey);
     
     if ([equipKeyID isEqualToString:self.equipUniteItem_foreignKey]){
         

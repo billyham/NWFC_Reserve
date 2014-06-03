@@ -14,6 +14,7 @@
 //#import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 //#import <CoreImage/CoreImage.h>
+#import "EQREquipUniqueItem.h"
 
 @interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate>
 
@@ -23,7 +24,7 @@
 @property (strong, nonatomic) NSString* myProperty;
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myEquipCollection;
-@property (strong, nonatomic) NSArray* arrayOfEquipJoins;
+@property (strong, nonatomic) NSMutableArray* arrayOfEquipJoins;
 
 //for qr code reader
 @property(nonatomic, strong) AVCaptureSession *session;
@@ -89,11 +90,14 @@
         }
     }];
     
-    self.arrayOfEquipJoins = [NSArray arrayWithArray:altMuteArray];
+    if (!self.arrayOfEquipJoins){
+        
+        self.arrayOfEquipJoins = [NSMutableArray arrayWithCapacity:1];
+    }
     
+    [self.arrayOfEquipJoins removeAllObjects];
     
-    
-
+    [self.arrayOfEquipJoins addObjectsFromArray:altMuteArray];
     
 }
 
@@ -273,13 +277,12 @@
                 
                 
             }
+            
             //change the data layer
             
             //change the local ivar
             
             //change the row cell content distinguishing id, and flip switch
-            
-            
             
         }
         
@@ -288,17 +291,81 @@
             //exit the method
             break;
         }
-
+        
         
         
         //_____________ THIRD respond to a new titleItem by adding it the the order (in the case of batteries)
         
+        
+        
+        BOOL foundACatalogTitleKey = NO;
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        NSArray* firstyArray = [NSArray arrayWithObjects:@"key_id", titleItemSubString, nil];
+        NSArray* topyArray = [NSArray arrayWithObject:firstyArray];
+        
+        //confirm that the title key object exists
+        
+        NSString* resultString = [webData queryForStringWithLink:@"EQConfirmExistenceOfEquipTitleKey.php" parameters:topyArray];
+        if ([resultString isEqualToString:@"1"]){
+            
+            foundACatalogTitleKey = YES;
+            
+        } else {
+            
+            //____show error message that the item wasn't found in the database
+            //exit the method
+            break;
+        }
+        
         //change the data layer
+        //create a new schedule_equip_join object
+        //retrieve the key_id of the join?
         
-        //change the local ivar
         
-        //reload collection view??
-        //add the item to the collection view and flip switch
+        
+        NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.scheduleRequestKeyID, nil];
+        NSArray* secondArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", uniqueItemSubString, nil];
+        NSArray* thirdArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", titleItemSubString, nil];
+        NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
+        
+        NSString* returnString = [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:topArray];
+        
+        NSLog(@"this is the new join key: %@", returnString);
+        
+        //________create a new join item to add to the local ivar
+        EQRScheduleTracking_EquipmentUnique_Join* newJoinToAdd = [[EQRScheduleTracking_EquipmentUnique_Join alloc] init];
+        newJoinToAdd.key_id = returnString;
+        newJoinToAdd.scheduleTracking_foreignKey = self.scheduleRequestKeyID;
+        newJoinToAdd.equipTitleItem_foreignKey = titleItemSubString;
+        newJoinToAdd.equipUniqueItem_foreignKey = uniqueItemSubString;
+        
+        
+        NSArray* fourthArray = [NSArray arrayWithObjects:@"key_id", uniqueItemSubString, nil];
+        NSArray* tipTopArray = [NSArray arrayWithObject:fourthArray];
+        
+        [webData queryWithLink:@"EQGetEquipmentUnique.php" parameters:tipTopArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
+            
+            newJoinToAdd.name = [(EQREquipUniqueItem*)[muteArray objectAtIndex:0] name];
+            newJoinToAdd.distinquishing_id = [(EQREquipUniqueItem*) [muteArray objectAtIndex:0] distinquishing_id];
+        }];
+        
+        
+        
+        //add join object to array ivar
+        
+        [self.arrayOfEquipJoins addObject:newJoinToAdd];
+        
+        [self.myEquipCollection reloadData];
+
+        
+        //flip the switch in the row cell
+        //alert matching row cell content with a notification
+        NSDictionary* newDic = [NSDictionary dictionaryWithObject:uniqueItemSubString forKey:@"keyID"];
+        
+        [self performSelector:@selector(delayedNotification:) withObject:newDic afterDelay:0.25];
+        
+        
+    
         
         
         
@@ -308,6 +375,13 @@
         
         
     }
+}
+
+-(void)delayedNotification:(NSDictionary*)myUserDic{
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRQRCodeFlipsSwitchInRowCellContent object:nil userInfo:myUserDic];
+    
+    
 }
 
 
