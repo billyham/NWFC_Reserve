@@ -75,6 +75,7 @@
 		54882BD31900D588005A4D5A /* EQREditorRenterVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54882BD11900D588005A4D5A /* EQREditorRenterVCntrllr.xib */; };
 		549BF3BC191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 549BF3BA191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m */; };
 		549BF3BD191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 549BF3BB191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib */; };
+		54BBC193193D9DEA004D5DFE /* EQRCheckPageRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 54BBC192193D9DEA004D5DFE /* EQRCheckPageRenderer.m */; };
 		54CE45AC186AF4680023FDA4 /* EQREquipItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54CE45AB186AF4680023FDA4 /* EQREquipItemCell.m */; };
 		54DFE0F0186ECD610089B9EA /* EQRClassRegistrationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DFE0EF186ECD610089B9EA /* EQRClassRegistrationItem.m */; };
 		54E046EF192499E9006912F9 /* EQRItineraryRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54E046EE192499E9006912F9 /* EQRItineraryRowCell.m */; };
@@ -207,6 +208,8 @@
 		549BF3B9191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSummaryGenericVCntrllr.h; sourceTree = "<group>"; };
 		549BF3BA191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipSummaryGenericVCntrllr.m; sourceTree = "<group>"; };
 		549BF3BB191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREquipSummaryGenericVCntrllr.xib; sourceTree = "<group>"; };
+		54BBC191193D9DEA004D5DFE /* EQRCheckPageRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRCheckPageRenderer.h; sourceTree = "<group>"; };
+		54BBC192193D9DEA004D5DFE /* EQRCheckPageRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRCheckPageRenderer.m; sourceTree = "<group>"; };
 		54CE45AA186AF4680023FDA4 /* EQREquipItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipItemCell.h; sourceTree = "<group>"; };
 		54CE45AB186AF4680023FDA4 /* EQREquipItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipItemCell.m; sourceTree = "<group>"; };
 		54DFE0EE186ECD610089B9EA /* EQRClassRegistrationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRClassRegistrationItem.h; sourceTree = "<group>"; };
@@ -447,6 +450,8 @@
 				54457ECE1935B7B900E9061A /* EQRCheckCellContentVCntrllr.h */,
 				54457ECF1935B7B900E9061A /* EQRCheckCellContentVCntrllr.m */,
 				54457ED01935B7B900E9061A /* EQRCheckCellContentVCntrllr.xib */,
+				54BBC191193D9DEA004D5DFE /* EQRCheckPageRenderer.h */,
+				54BBC192193D9DEA004D5DFE /* EQRCheckPageRenderer.m */,
 			);
 			name = "Check Out/In";
 			sourceTree = "<group>";
@@ -618,6 +623,7 @@
 				01FDEA96188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m in Sources */,
 				014F776D18E3B28F00C75D66 /* EQRScheduleNavBarCell.m in Sources */,
 				5402B7D5187586F400F0888B /* EQREquipContentViewVCntrllr.m in Sources */,
+				54BBC193193D9DEA004D5DFE /* EQRCheckPageRenderer.m in Sources */,
 				54032FE61872D36F00481D86 /* EQRScheduleRequestItem.m in Sources */,
 				5402D22E186BFCF80091C080 /* EQRCellTemplate.m in Sources */,
 				438EDCEC182B7ABE0090F882 /* main.m in Sources */,

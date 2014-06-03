@@ -17,6 +17,8 @@
 #import "EQRGlobals.h"
 #import "EQREquipUniqueItem.h"
 
+#import "EQRCheckPageRenderer.h"
+
 @interface EQREquipSummaryGenericVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UIButton* printAndConfirmButton;
@@ -497,16 +499,35 @@
     //_______PRINTING_________!
     
     UIPrintInteractionController* printIntCont = [UIPrintInteractionController sharedPrintController];
-    UIViewPrintFormatter* viewPrintFormatter = [self.summaryTextView viewPrintFormatter];
+    UIViewPrintFormatter* viewPrintFormatter = [self.summaryTextView viewPrintFormatter];\
     
     UIPrintInfo* printInfo = [UIPrintInfo printInfo] ;
     printInfo.jobName = @"NWFC Reserve App: confirmation";
     printInfo.outputType = UIPrintInfoOutputGrayscale;
-    
-    //assign formatter to int cntrllr
-    printIntCont.printFormatter = viewPrintFormatter;
     //assign printinfo to int cntrllr
     printIntCont.printInfo = printInfo;
+    
+    
+    //assign formatter to int cntrllr
+//    printIntCont.printFormatter = viewPrintFormatter;
+    
+    //... or... create page renderer
+    EQRCheckPageRenderer* pageRenderer = [[EQRCheckPageRenderer alloc] init];
+    
+    //assign renderer properties
+    pageRenderer.headerHeight = 300.f;
+    pageRenderer.footerHeight = 10.f;
+    
+    //add printer formatter object to the page renderer
+    [pageRenderer addPrintFormatter:viewPrintFormatter startingAtPageAtIndex:0];
+//    pageRenderer.printFormatters = [NSArray arrayWithObject:viewPrintFormatter];
+    
+    //assign page renderer to int cntrllr
+    printIntCont.printPageRenderer = pageRenderer;
+    
+    
+    
+    
     
     __block BOOL successOrNot;
     

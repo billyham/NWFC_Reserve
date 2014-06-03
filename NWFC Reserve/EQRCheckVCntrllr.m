@@ -15,6 +15,7 @@
 #import <AVFoundation/AVFoundation.h>
 //#import <CoreImage/CoreImage.h>
 #import "EQREquipUniqueItem.h"
+#import "EQRCheckPageRenderer.h"
 
 @interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate>
 
@@ -127,6 +128,36 @@
         
         [self initiateQRCodeSteps];
     }
+    
+}
+
+
+#pragma mark - test at printing
+
+-(void)printMe{
+    
+    //_______PRINTING_________!
+    
+    UIPrintInteractionController* printIntCont = [UIPrintInteractionController sharedPrintController];
+    
+    UIPrintInfo* printInfo = [UIPrintInfo printInfo] ;
+    printInfo.jobName = @"NWFC Reserve App: Request";
+    printInfo.outputType = UIPrintInfoOutputGrayscale;
+    
+    //assign printinfo to int cntrllr
+    printIntCont.printInfo = printInfo;
+    
+    //create page renderer
+    EQRCheckPageRenderer* pageRenderer = [[EQRCheckPageRenderer alloc] init];
+    
+    //assign properties
+    pageRenderer.headerHeight = 300.f;
+    pageRenderer.footerHeight = 500.f;
+    
+    //assign page renderer to int cntrllr
+    printIntCont.printPageRenderer = pageRenderer;
+    
+    
     
 }
 
@@ -293,10 +324,7 @@
         }
         
         
-        
         //_____________ THIRD respond to a new titleItem by adding it the the order (in the case of batteries)
-        
-        
         
         BOOL foundACatalogTitleKey = NO;
         EQRWebData* webData = [EQRWebData sharedInstance];
@@ -321,8 +349,6 @@
         //create a new schedule_equip_join object
         //retrieve the key_id of the join?
         
-        
-        
         NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.scheduleRequestKeyID, nil];
         NSArray* secondArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", uniqueItemSubString, nil];
         NSArray* thirdArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", titleItemSubString, nil];
@@ -330,7 +356,7 @@
         
         NSString* returnString = [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:topArray];
         
-        NSLog(@"this is the new join key: %@", returnString);
+//        NSLog(@"this is the new join key: %@", returnString);
         
         //________create a new join item to add to the local ivar
         EQRScheduleTracking_EquipmentUnique_Join* newJoinToAdd = [[EQRScheduleTracking_EquipmentUnique_Join alloc] init];
@@ -338,7 +364,6 @@
         newJoinToAdd.scheduleTracking_foreignKey = self.scheduleRequestKeyID;
         newJoinToAdd.equipTitleItem_foreignKey = titleItemSubString;
         newJoinToAdd.equipUniqueItem_foreignKey = uniqueItemSubString;
-        
         
         NSArray* fourthArray = [NSArray arrayWithObjects:@"key_id", uniqueItemSubString, nil];
         NSArray* tipTopArray = [NSArray arrayWithObject:fourthArray];
@@ -349,14 +374,10 @@
             newJoinToAdd.distinquishing_id = [(EQREquipUniqueItem*) [muteArray objectAtIndex:0] distinquishing_id];
         }];
         
-        
-        
         //add join object to array ivar
-        
         [self.arrayOfEquipJoins addObject:newJoinToAdd];
         
         [self.myEquipCollection reloadData];
-
         
         //flip the switch in the row cell
         //alert matching row cell content with a notification
