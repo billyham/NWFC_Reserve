@@ -16,6 +16,8 @@
 //#import <CoreImage/CoreImage.h>
 #import "EQREquipUniqueItem.h"
 #import "EQRCheckPageRenderer.h"
+#import "EQRCheckPrintPage.h"
+
 
 @interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate>
 
@@ -134,32 +136,32 @@
 
 #pragma mark - test at printing
 
--(void)printMe{
-    
-    //_______PRINTING_________!
-    
-    UIPrintInteractionController* printIntCont = [UIPrintInteractionController sharedPrintController];
-    
-    UIPrintInfo* printInfo = [UIPrintInfo printInfo] ;
-    printInfo.jobName = @"NWFC Reserve App: Request";
-    printInfo.outputType = UIPrintInfoOutputGrayscale;
-    
-    //assign printinfo to int cntrllr
-    printIntCont.printInfo = printInfo;
-    
-    //create page renderer
-    EQRCheckPageRenderer* pageRenderer = [[EQRCheckPageRenderer alloc] init];
-    
-    //assign properties
-    pageRenderer.headerHeight = 300.f;
-    pageRenderer.footerHeight = 500.f;
-    
-    //assign page renderer to int cntrllr
-    printIntCont.printPageRenderer = pageRenderer;
-    
-    
-    
-}
+//-(void)printMe{
+//    
+//    //_______PRINTING_________!
+//    
+//    UIPrintInteractionController* printIntCont = [UIPrintInteractionController sharedPrintController];
+//    
+//    UIPrintInfo* printInfo = [UIPrintInfo printInfo] ;
+//    printInfo.jobName = @"NWFC Reserve App: Request";
+//    printInfo.outputType = UIPrintInfoOutputGrayscale;
+//    
+//    //assign printinfo to int cntrllr
+//    printIntCont.printInfo = printInfo;
+//    
+//    //create page renderer
+//    EQRCheckPageRenderer* pageRenderer = [[EQRCheckPageRenderer alloc] init];
+//    
+//    //assign properties
+//    pageRenderer.headerHeight = 300.f;
+//    pageRenderer.footerHeight = 500.f;
+//    
+//    //assign page renderer to int cntrllr
+//    printIntCont.printPageRenderer = pageRenderer;
+//    
+//    
+//    
+//}
 
 
 #pragma mark - QR Code reader methods
@@ -469,6 +471,56 @@
 
 }
 #pragma clang diagnostic pop
+
+
+
+
+-(IBAction)printMeForReal:(id)sender{
+    
+    [self printPageWithScheduleRequestItemKey:self.scheduleRequestKeyID];
+}
+
+
+
+-(void)printPageWithScheduleRequestItemKey:(NSString*)scheduleKey{
+    
+
+    //get complete scheduleRequest item info
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", scheduleKey, nil];
+    NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+    __block EQRScheduleRequestItem* chosenItem;
+    [webData queryWithLink:@"EQGetScheduleRequestComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        if ([muteArray count] > 0){
+            
+        chosenItem = [muteArray objectAtIndex:0];
+        }
+    }];
+    
+
+    
+    //create printable page view controller
+    EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
+    
+    //add the request item to the view controller
+    [pageForPrint initialSetupWithScheduleRequestItem:chosenItem];
+    
+    //assign ivar variables
+    pageForPrint.rentorNameAtt = chosenItem.contact_name;
+    pageForPrint.rentorEmailAtt = @"test email address";
+    pageForPrint.rentorPhoneAtt = @"test phone";
+    
+    
+    //show the view controller
+    [self presentViewController:pageForPrint animated:YES completion:^{
+        
+        
+    }];
+    
+    
+}
+
 
 
 -(IBAction)markAsIncomplete:(id)sender{

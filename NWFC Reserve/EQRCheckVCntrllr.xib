@@ -92,6 +92,19 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gg-aJ-9eq">
+                            <rect key="frame" x="42" y="373" width="94" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="XKE-eE-4Vz"/>
+                            </constraints>
+                            <state key="normal" title="Print Request">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="printMeForReal:" destination="-1" eventType="touchUpInside" id="tfM-Zy-FFw"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
@@ -103,7 +116,9 @@
                         <constraint firstAttribute="centerX" secondItem="0Bi-6v-kk2" secondAttribute="centerX" id="Y40-oK-oSH"/>
                         <constraint firstItem="0Bi-6v-kk2" firstAttribute="top" secondItem="nOj-Lf-asi" secondAttribute="bottom" constant="71" id="Z7s-WB-i48"/>
                         <constraint firstItem="nOj-Lf-asi" firstAttribute="leading" secondItem="DTX-f9-bSI" secondAttribute="leading" constant="20" id="bdx-r4-woF"/>
+                        <constraint firstItem="5gg-aJ-9eq" firstAttribute="top" secondItem="bHs-uE-ik1" secondAttribute="bottom" constant="74" id="fm2-HD-iZT"/>
                         <constraint firstItem="bHs-uE-ik1" firstAttribute="top" secondItem="0Bi-6v-kk2" secondAttribute="bottom" constant="69" id="i0D-WF-Yi4"/>
+                        <constraint firstAttribute="centerX" secondItem="5gg-aJ-9eq" secondAttribute="centerX" id="jWa-Ag-bYw"/>
                         <constraint firstItem="9pr-dk-qkw" firstAttribute="top" secondItem="XRl-J1-VbJ" secondAttribute="bottom" constant="8" id="rLX-0O-IjE"/>
                         <constraint firstItem="XRl-J1-VbJ" firstAttribute="top" secondItem="DTX-f9-bSI" secondAttribute="top" constant="20" id="xwj-WU-HKU"/>
                     </constraints>
