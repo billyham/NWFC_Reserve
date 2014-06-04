@@ -69,66 +69,76 @@
     
     
     
+    //save values to ivar
+    self.rentorNameAtt = requestManager.request.contact_name;
+    self.rentorPhoneAtt = contactItem.phone;
+    self.rentorEmailAtt = contactItem.email;
+    
     //nsattributedstrings
+    UIFont* normalFont = [UIFont systemFontOfSize:10];
+    UIFont* boldFont = [UIFont boldSystemFontOfSize:10];
     
-    UIFont* normalFont = [UIFont systemFontOfSize:12];
-    UIFont* boldFont = [UIFont boldSystemFontOfSize:14];
-    
-    //________NAME_________
-    NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-    NSAttributedString* nameHead = [[NSAttributedString alloc] initWithString:@"Name\r" attributes:arrayAttA];
-    
-    //initiate the total attributed string
-    self.summaryTotalAtt = [[NSMutableAttributedString alloc] initWithAttributedString:nameHead];
-    
-    //assign the name
-    NSDictionary* arrayAtt = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    
-    //________contactNameItem maybe nil. error handling when that's the case
-    NSAttributedString* nameAtt;
-    if (contactItem != nil){
-        nameAtt = [[NSAttributedString alloc] initWithString:contactItem.first_and_last attributes:arrayAtt];
-    }else{
-        nameAtt = [[NSAttributedString alloc] initWithString:contactCondensedName attributes:arrayAtt];
-    }
-    [self.summaryTotalAtt appendAttributedString:nameAtt];
+    //begin the total attribute string
+    self.summaryTotalAtt = [[NSMutableAttributedString alloc] initWithString:@""];
+
     
     
-    //____EMAIL____
-    //add to the attributed string
-    NSDictionary* arrayAtt2 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-    NSAttributedString* emailHead = [[NSAttributedString alloc] initWithString:@"\r\rContact Email:\r" attributes:arrayAtt2];
     
-    //concatentate to the att string
-    [self.summaryTotalAtt appendAttributedString:emailHead];
-    
-    NSDictionary* arrayAtt3 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* emailAtt;
-    if (contactItem != nil){
-        emailAtt = [[NSAttributedString alloc] initWithString:contactItem.email attributes:arrayAtt3];
-    }else{
-        emailAtt = [[NSAttributedString alloc] initWithString:@"NA" attributes:arrayAtt3];
-    }
-    [self.summaryTotalAtt appendAttributedString:emailAtt];
-    
-    //____PHONE______
-    NSDictionary* arrayAtt4 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-    NSAttributedString* phoneHead = [[NSAttributedString alloc] initWithString:@"\r\rContact Phone:\r" attributes:arrayAtt4];
-    [self.summaryTotalAtt appendAttributedString:phoneHead];
-    
-    NSDictionary* arrayAtt5 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* phoneAtt;
-    if (contactItem != nil){
-        phoneAtt = [[NSAttributedString alloc] initWithString:contactItem.phone attributes:arrayAtt5];
-    }else {
-        phoneAtt = [[NSAttributedString alloc] initWithString:@"NA" attributes:arrayAtt5];
-        
-    }
-    [self.summaryTotalAtt appendAttributedString:phoneAtt];
+//    //________NAME_________
+//    NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+//    NSAttributedString* nameHead = [[NSAttributedString alloc] initWithString:@"Name\r" attributes:arrayAttA];
+//    
+//    //initiate the total attributed string
+//    [self.summaryTotalAtt appendAttributedString:nameHead];
+//    
+//    //assign the name
+//    NSDictionary* arrayAtt = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
+//    
+//    //________contactNameItem maybe nil. error handling when that's the case
+//    NSAttributedString* nameAtt;
+//    if (contactItem != nil){
+//        nameAtt = [[NSAttributedString alloc] initWithString:contactItem.first_and_last attributes:arrayAtt];
+//    }else{
+//        nameAtt = [[NSAttributedString alloc] initWithString:contactCondensedName attributes:arrayAtt];
+//    }
+//    [self.summaryTotalAtt appendAttributedString:nameAtt];
+//    
+//    
+//    //____EMAIL____
+//    //add to the attributed string
+//    NSDictionary* arrayAtt2 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+//    NSAttributedString* emailHead = [[NSAttributedString alloc] initWithString:@"\r\rContact Email:\r" attributes:arrayAtt2];
+//    
+//    //concatentate to the att string
+//    [self.summaryTotalAtt appendAttributedString:emailHead];
+//    
+//    NSDictionary* arrayAtt3 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
+//    NSAttributedString* emailAtt;
+//    if (contactItem != nil){
+//        emailAtt = [[NSAttributedString alloc] initWithString:contactItem.email attributes:arrayAtt3];
+//    }else{
+//        emailAtt = [[NSAttributedString alloc] initWithString:@"NA" attributes:arrayAtt3];
+//    }
+//    [self.summaryTotalAtt appendAttributedString:emailAtt];
+//    
+//    //____PHONE______
+//    NSDictionary* arrayAtt4 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+//    NSAttributedString* phoneHead = [[NSAttributedString alloc] initWithString:@"\r\rContact Phone:\r" attributes:arrayAtt4];
+//    [self.summaryTotalAtt appendAttributedString:phoneHead];
+//    
+//    NSDictionary* arrayAtt5 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
+//    NSAttributedString* phoneAtt;
+//    if (contactItem != nil){
+//        phoneAtt = [[NSAttributedString alloc] initWithString:contactItem.phone attributes:arrayAtt5];
+//    }else {
+//        phoneAtt = [[NSAttributedString alloc] initWithString:@"NA" attributes:arrayAtt5];
+//        
+//    }
+//    [self.summaryTotalAtt appendAttributedString:phoneAtt];
     
     //_______PICKUP DATE_____
     NSDictionary* arrayAtt6 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-    NSAttributedString* pickupHead = [[NSAttributedString alloc] initWithString:@"\r\rPick Up Date:\r" attributes:arrayAtt6];
+    NSAttributedString* pickupHead = [[NSAttributedString alloc] initWithString:@"Pick Up: " attributes:arrayAtt6];
     [self.summaryTotalAtt appendAttributedString:pickupHead];
     
     NSDictionary* arrayAtt7 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
@@ -137,7 +147,7 @@
     
     //______RETURN DATE________
     NSDictionary* arrayAtt8 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-    NSAttributedString* returnHead = [[NSAttributedString alloc] initWithString:@"\r\rReturn Date:\r" attributes:arrayAtt8];
+    NSAttributedString* returnHead = [[NSAttributedString alloc] initWithString:@"            Return: " attributes:arrayAtt8];
     [self.summaryTotalAtt appendAttributedString:returnHead];
     
     NSDictionary* arrayAtt9 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
@@ -147,7 +157,7 @@
     //________EQUIP LIST________
     
     NSDictionary* arrayAtt10 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* equipHead = [[NSAttributedString alloc] initWithString:@"\r\r\rEquipment Items:\r\r" attributes:arrayAtt10];
+    NSAttributedString* equipHead = [[NSAttributedString alloc] initWithString:@"\r\r\r Pick Up | Return   Equipment Items:\r\r" attributes:arrayAtt10];
     [self.summaryTotalAtt appendAttributedString:equipHead];
     
     //cycle through array of equipItems and build a string
@@ -190,7 +200,7 @@
             for (EQREquipItem* equipItemObj in muteArray){
                 
                 NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-                NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", equipItemObj.shortname] attributes:arrayAtt11];
+                NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"   ______ | ______   %@\r", equipItemObj.shortname] attributes:arrayAtt11];
                 
                 [self.summaryTotalAtt appendAttributedString:thisHereAttString];
             }
@@ -499,7 +509,12 @@
     //_______PRINTING_________!
     
     UIPrintInteractionController* printIntCont = [UIPrintInteractionController sharedPrintController];
-    UIViewPrintFormatter* viewPrintFormatter = [self.summaryTextView viewPrintFormatter];\
+    
+    UIViewPrintFormatter* viewPrintFormatter = [self.summaryTextView viewPrintFormatter];
+    //add contect insets to printFormatter
+    UIEdgeInsets myInsets = UIEdgeInsetsMake (0, 90, 0, 20);
+    viewPrintFormatter.contentInsets = myInsets;
+    
     
     UIPrintInfo* printInfo = [UIPrintInfo printInfo] ;
     printInfo.jobName = @"NWFC Reserve App: confirmation";
@@ -515,17 +530,23 @@
     EQRCheckPageRenderer* pageRenderer = [[EQRCheckPageRenderer alloc] init];
     
     //assign renderer properties
-    pageRenderer.headerHeight = 300.f;
-    pageRenderer.footerHeight = 10.f;
+    pageRenderer.headerHeight = 210.f;
+    pageRenderer.footerHeight = 300.f;
+    
+    //add info to renderer properties
+    pageRenderer.name_text_value = self.rentorNameAtt;
+    pageRenderer.phone_text_value = self.rentorPhoneAtt;
+    pageRenderer.email_text_value = self.rentorEmailAtt;
+    
     
     //add printer formatter object to the page renderer
     [pageRenderer addPrintFormatter:viewPrintFormatter startingAtPageAtIndex:0];
-//    pageRenderer.printFormatters = [NSArray arrayWithObject:viewPrintFormatter];
     
     //assign page renderer to int cntrllr
     printIntCont.printPageRenderer = pageRenderer;
     
     
+
     
     
     

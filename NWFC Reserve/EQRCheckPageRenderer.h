@@ -10,4 +10,8 @@
 
 @interface EQRCheckPageRenderer : UIPrintPageRenderer
 
+@property (strong, nonatomic) NSString* name_text_value;
+@property (strong, nonatomic) NSString* phone_text_value;
+@property (strong, nonatomic) NSString* email_text_value;
+
 @end

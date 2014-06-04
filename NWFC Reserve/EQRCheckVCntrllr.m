@@ -190,8 +190,13 @@
 	NSError *error=nil;
 	AVCaptureDeviceInput *cameraInput = [[AVCaptureDeviceInput alloc] initWithDevice:camera error:&error];
 	if (cameraInput == nil) {
+        
 		NSLog(@"Error to create camera capture:%@",error);
+        
+        //exit or it will crash
+        return;
 	}
+    
  	// Add the input and output
 	[self.session addInput:cameraInput];
     

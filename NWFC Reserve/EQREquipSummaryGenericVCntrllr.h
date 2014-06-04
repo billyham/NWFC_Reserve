@@ -10,12 +10,18 @@
 
 @interface EQREquipSummaryGenericVCntrllr : UIViewController
 
-@property (nonatomic, strong) NSAttributedString* rentorNameAtt;
-@property (nonatomic, strong) NSAttributedString* rentorPhoneAtt;
-@property (nonatomic, strong) NSAttributedString* rentorEmailAtt;
-@property (nonatomic, strong) NSAttributedString* rentorPickupDateAtt;
-@property (nonatomic, strong) NSAttributedString* rentorReturnDateAtt;
-@property (nonatomic, strong) NSAttributedString* rentorEquipListAtt;
+//why did I add these if they never get used???
+//@property (nonatomic, strong) NSAttributedString* rentorNameAtt;
+//@property (nonatomic, strong) NSAttributedString* rentorPhoneAtt;
+//@property (nonatomic, strong) NSAttributedString* rentorEmailAtt;
+//@property (nonatomic, strong) NSAttributedString* rentorPickupDateAtt;
+//@property (nonatomic, strong) NSAttributedString* rentorReturnDateAtt;
+//@property (nonatomic, strong) NSAttributedString* rentorEquipListAtt;
+
+@property (nonatomic, strong) NSString* rentorNameAtt;
+@property (nonatomic, strong) NSString* rentorPhoneAtt;
+@property (nonatomic, strong) NSString* rentorEmailAtt;
+
 
 @property (nonatomic, strong) IBOutlet UITextView* summaryTextView;
 @property (nonatomic, strong) NSTextStorage* summaryTextStorage;
