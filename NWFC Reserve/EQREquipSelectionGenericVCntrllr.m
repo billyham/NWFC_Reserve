@@ -85,6 +85,8 @@
         
         requestManager = self.privateRequestManager;
         
+        //____****   create the manager's request ivar, and outfit with a classTitleKey???   ******____
+        
     }else{
         
         requestManager = [EQRScheduleRequestManager sharedInstance];
@@ -113,7 +115,6 @@
     //______*********  this should only apply to students  ******_______
     //get class data from scheduleRequest object
     
-    //______the private reqeust manager doesn't have a request yet!!!!
     //______IF NO VALUE EXISTS FOR REQUEST.CLASSTITLE_FOREIGNKEY, THEN IT WILL PASS AS NULL WHICH WILL CRASH IN THE WEBDATA QUERY______
     //______*****  USE BETTER ERROR HANDLING IN THE WEBDATA METHOD  *******__________
     NSString* classTitleKey;
@@ -140,7 +141,7 @@
         
         [webData queryWithLink:@"EQGetEquipTitlesWithClassCatalogKey.php" parameters:secondParamArray class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
             
-            NSLog(@"this is the array count: %u", [muteArray count]);
+            NSLog(@"this is the array count: %u", (int)[muteArray count]);
             
             if ([muteArray count] > 0){
                 

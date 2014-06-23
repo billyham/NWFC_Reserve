@@ -257,6 +257,7 @@
             self.privateRequesetManager.request.key_id = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] key_id];
             self.privateRequesetManager.request.contact_foreignKey =  [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] contact_foreignKey];
             self.privateRequesetManager.request.classSection_foreignKey = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] classSection_foreignKey];
+            self.privateRequesetManager.request.classTitle_foreignKey = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] classTitle_foreignKey];
             self.privateRequesetManager.request.time_of_request = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] time_of_request];
         }
     }];
@@ -541,6 +542,7 @@
     
     //need to specify a privateRequestManager for the equip selection v cntrllr
     [genericEquipVCntrllr overrideSharedRequestManager:self.privateRequesetManager];
+    
     
     
 //    genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeNone;
