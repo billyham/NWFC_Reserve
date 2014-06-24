@@ -43,7 +43,9 @@
 @property (strong, nonatomic) NSTimer* timerForReloadCollectionView;
 
 @property (strong, nonatomic) UIView* movingNestedCellView;
-
+@property (strong, nonatomic) NSString* thisTempJoinKey;
+@property (strong, nonatomic) NSIndexPath* thisTempIndexPath;
+@property NSInteger thisTempNewRowInt;
 
 
 
@@ -706,47 +708,119 @@
             
             if ([thisJoin.key_id isEqualToString:joinKey_id]){
                 
-                //found a match, now update the equipUnique and equipTitle values
-                 equipUniqueItem_foreignKey = [(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] key_id];
+                //found a match
                 
-                thisJoin.equipUniqueItem_foreignKey = equipUniqueItem_foreignKey;
+                equipTitleItem_foreignKey =[(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] equipTitleItem_foreignKey];
                 
-                 equipTitleItem_foreignKey =[(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] equipTitleItem_foreignKey];
-                
-                thisJoin.equipTitleItem_foreignKey = equipTitleItem_foreignKey;
                 
                 //if titleKey doesn't match the original title key, then pause and give warning in an alert view
-                if (![thisJoin.equipTitleItem_foreignKey isEqualToString:joinTitleKey_id]){
+                if (![equipTitleItem_foreignKey isEqualToString:joinTitleKey_id]){
                     
-                    UIAlertView* newAlertView = [[UIAlertView alloc] initWithTitle:@"New Equipment" message:@"You have selected a different type of equipment" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                    //save joinkey and indexpath to use in alert delegate method
+                    self.thisTempJoinKey = joinKey_id;
+                    self.thisTempIndexPath = indexPathForRowCell;
+                    self.thisTempNewRowInt = newRowInt;
+                    
+                    UIAlertView* newAlertView = [[UIAlertView alloc] initWithTitle:@"New Equipment" message:@"You have selected a different type of equipment" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles: @"Continue", nil];
                     
                     [newAlertView show];
+                    
+                }else{
+                    
+                    //or continue as planned...
+                    
+                    //now update the equipUnique and equipTitle values
+                    equipUniqueItem_foreignKey = [(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] key_id];
+                    
+                    thisJoin.equipUniqueItem_foreignKey = equipUniqueItem_foreignKey;
+                    
+                    thisJoin.equipTitleItem_foreignKey = equipTitleItem_foreignKey;
+                    
+                    //then reload the collection views in the former and new rowCells
+                    [self.myMasterScheduleCollectionView reloadData];
+                    
+                    
+                    //webData query to change equipKeyID on schedule_equip_join (or delete previous and create a new one)
+                    EQRWebData* webData = [EQRWebData sharedInstance];
+                    NSArray* firstArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", equipUniqueItem_foreignKey, nil];
+                    NSArray* secondArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", equipTitleItem_foreignKey, nil];
+                    NSArray* thirdArray = [NSArray arrayWithObjects:@"key_id", joinKey_id, nil];
+                    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
+                    
+                    [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
+                    
+                    
+                    [self.movingNestedCellView removeFromSuperview];
                 }
             }
         }
-        
-        //then reload the collection views in the former and new rowCells
-        [self.myMasterScheduleCollectionView reloadData];
-
-        
-        //webData query to change equipKeyID on schedule_equip_join (or delete previous and create a new one)
-        EQRWebData* webData = [EQRWebData sharedInstance];
-        NSArray* firstArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", equipUniqueItem_foreignKey, nil];
-        NSArray* secondArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", equipTitleItem_foreignKey, nil];
-        NSArray* thirdArray = [NSArray arrayWithObjects:@"key_id", joinKey_id, nil];
-        NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
-        
-        [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
-        
-        
-        [self.movingNestedCellView removeFromSuperview];
-        
     }
     
     if ((gesture.state == UIGestureRecognizerStateCancelled) || (gesture.state ==UIGestureRecognizerStateFailed)){
         
         
     }
+}
+
+
+#pragma mark - alert view delegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+
+    
+    NSLog(@"this is the alert button index: %u", buttonIndex);
+    
+    //continue button tapped, continue with change
+    if (buttonIndex == 1){
+        
+        NSString* joinKey_id = self.thisTempJoinKey;
+        NSIndexPath* indexPathForRowCell = self.thisTempIndexPath;
+        int newRowInt = self.thisTempNewRowInt;
+        NSString* equipUniqueItem_foreignKey;
+        NSString* equipTitleItem_foreignKey;
+        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+        
+        for (EQRScheduleTracking_EquipmentUnique_Join* thisJoin in requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins){
+            
+            if ([thisJoin.key_id isEqualToString:joinKey_id]){
+                
+                //now update the equipUnique and equipTitle values
+                equipUniqueItem_foreignKey = [(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] key_id];
+                
+                thisJoin.equipUniqueItem_foreignKey = equipUniqueItem_foreignKey;
+                
+                equipTitleItem_foreignKey =[(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] equipTitleItem_foreignKey];
+                
+                thisJoin.equipTitleItem_foreignKey = equipTitleItem_foreignKey;
+                
+                //then reload the collection views in the former and new rowCells
+                [self.myMasterScheduleCollectionView reloadData];
+                
+                
+                //webData query to change equipKeyID on schedule_equip_join (or delete previous and create a new one)
+                EQRWebData* webData = [EQRWebData sharedInstance];
+                NSArray* firstArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", equipUniqueItem_foreignKey, nil];
+                NSArray* secondArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", equipTitleItem_foreignKey, nil];
+                NSArray* thirdArray = [NSArray arrayWithObjects:@"key_id", joinKey_id, nil];
+                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
+                
+                [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
+                
+                [self.movingNestedCellView removeFromSuperview];
+            }
+        }
+    }
+    
+    //cancel button, move nestedCellView back to original position
+    if (buttonIndex == 0){
+        
+        [self.movingNestedCellView removeFromSuperview];
+        
+        //make original cell visible again
+        [self.myMasterScheduleCollectionView reloadData];
+        
+    }
+    
 }
 
 
