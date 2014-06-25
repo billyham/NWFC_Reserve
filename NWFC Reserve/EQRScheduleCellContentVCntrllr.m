@@ -33,6 +33,9 @@
 {
     [super viewDidLoad];
     
+    
+    
+    
 //    //register collection view cell
 //    [self.myUniqueItemCollectionView registerClass:[EQRCellTemplate class] forCellWithReuseIdentifier:@"Cell"];
 //    
@@ -48,6 +51,8 @@
 //    [self.view addSubview:self.myUniqueItemCollectionView];
     
 }
+
+
 //
 //#pragma mark - collection view data source methods
 //

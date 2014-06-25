@@ -116,13 +116,39 @@
     NSString* startDayString = [[dateFormatter stringFromDate:startDayDate] substringFromIndex:8];
     NSString* endDayString = [[dateFormatter stringFromDate:endDayDate] substringFromIndex:8];
     
+    //figure out the start month and end month
+    NSString* startMonthString = [[dateFormatter stringFromDate:startDayDate] substringWithRange:NSMakeRange(5, 2)];
+    NSString* endMonthString = [[dateFormatter stringFromDate:endDayDate] substringWithRange:NSMakeRange(5, 2)];
+    NSString* startYearString = [[dateFormatter stringFromDate:startDayDate] substringToIndex:4];
+    NSString* endYearString = [[dateFormatter stringFromDate:endDayDate] substringToIndex:4];
+    NSString* dateForShowMonthString = [[dateFormatter stringFromDate:self.scheduleDateForShow] substringWithRange:NSMakeRange(5, 2)];
+    NSString* dateForShowYearString = [[dateFormatter stringFromDate:self.scheduleDateForShow] substringToIndex:4];
+    
+//    NSLog(@"this is the startYearString: %@  this is the dateForShowYearString: %@", startYearString, dateForShowYearString);
     
     int startDayInt = (int)[startDayString integerValue];
     int endDayInt = (int)[endDayString integerValue];
     
-    //__________  correct for when the endDate is in the following month.
-    //__________  simple fix if endInt is smaller than startInt, make it 31.
-    if (endDayInt < startDayInt) endDayInt = 31;
+    int startMonthInt = (int)[startMonthString intValue];
+    int endMonthInt = (int)[endMonthString intValue];
+    int startYearInt = (int)[startYearString intValue];
+    int endYearInt = (int)[endYearString intValue];
+    int dateForShowMonthInt = (int)[dateForShowMonthString intValue];
+    int dateForShowYearInt = (int)[dateForShowYearString intValue];
+    
+    //accommodate when the start or end date is in a different month (and year)
+    //________********  limit end to actual number of days in the month instead of defaulting to 31  ********_______
+    
+    if ((startMonthInt < dateForShowMonthInt) || (startYearInt < dateForShowYearInt)){
+        
+        startDayInt = 1;
+    }
+    
+    if ((endMonthInt > dateForShowMonthInt) || (endYearInt > dateForShowYearInt)){
+        
+        endDayInt = 31;
+    }
+    
     
     int distanceOffset = (startDayInt - 1) * EQRScheduleItemWidthForDay;
     

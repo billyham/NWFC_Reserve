@@ -11,5 +11,6 @@
 @interface EQRScheduleNestedDayLayout : UICollectionViewLayout
 
 @property (strong, nonatomic) NSString* uniqueItem_keyID;
+@property (strong, nonatomic) NSDate* scheduleDateForShow;
 
 @end

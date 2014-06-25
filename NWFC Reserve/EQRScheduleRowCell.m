@@ -32,7 +32,7 @@
 @implementation EQRScheduleRowCell
 
 
--(void)initialSetupWithTitle:(NSString*) titleName equipKey:(NSString*)uniqueKeyID indexPath:(NSIndexPath*)indexPath{
+-(void)initialSetupWithTitle:(NSString*) titleName equipKey:(NSString*)uniqueKeyID indexPath:(NSIndexPath*)indexPath dateForShow:(NSDate*)dateForShow{
     
     //set ivar
     self.uniqueItem_keyID = uniqueKeyID;
@@ -59,6 +59,9 @@
     
     //set subclass property
     thisNestedDayLayout.uniqueItem_keyID = self.uniqueItem_keyID;
+    //assign the dateForShow property to the layout object
+    thisNestedDayLayout.scheduleDateForShow = dateForShow;
+
     
     
     CGRect thisRect = CGRectMake(EQRScheduleLengthOfEquipUniqueLabel, 0, (1024 - EQRScheduleLengthOfEquipUniqueLabel), 30);

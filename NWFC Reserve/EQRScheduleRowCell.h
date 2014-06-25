@@ -15,6 +15,6 @@
 @property (nonatomic, strong) NSString* uniqueItem_keyID;
 
 
--(void)initialSetupWithTitle:(NSString*) titleName equipKey:(NSString*)uniqueKeyID indexPath:(NSIndexPath*)indexPath;
+-(void)initialSetupWithTitle:(NSString*) titleName equipKey:(NSString*)uniqueKeyID indexPath:(NSIndexPath*)indexPath dateForShow:(NSDate*)dateForShow;
 
 @end
