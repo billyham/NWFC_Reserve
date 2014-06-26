@@ -64,8 +64,9 @@
     NSDateFormatter* pickUpFormatter = [[NSDateFormatter alloc] init];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     [pickUpFormatter setLocale:usLocale];
-    [pickUpFormatter setDateStyle:NSDateFormatterLongStyle];
-    [pickUpFormatter setTimeStyle:NSDateFormatterShortStyle];
+//    [pickUpFormatter setDateStyle:NSDateFormatterLongStyle];
+//    [pickUpFormatter setTimeStyle:NSDateFormatterShortStyle];
+    [pickUpFormatter setDateFormat:@"EEE, MMM d, yyyy, h:mm aaa"];
     
     
     

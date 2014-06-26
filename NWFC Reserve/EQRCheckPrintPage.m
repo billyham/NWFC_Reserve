@@ -84,9 +84,22 @@
     NSDateFormatter* pickUpFormatter = [[NSDateFormatter alloc] init];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     [pickUpFormatter setLocale:usLocale];
-    [pickUpFormatter setDateStyle:NSDateFormatterLongStyle];
-    [pickUpFormatter setTimeStyle:NSDateFormatterShortStyle];
+
+    [pickUpFormatter setDateFormat:@"EEE, MMM d, yyyy"];  // 'at' h:mm aaa
+//    [pickUpFormatter setDateStyle:NSDateFormatterFullStyle];
+//    [pickUpFormatter setTimeStyle:NSDateFormatterShortStyle];
     
+    NSDateFormatter* pickUpTimeFormatter = [[NSDateFormatter alloc] init];
+    [pickUpTimeFormatter setLocale:usLocale];
+    [pickUpTimeFormatter setTimeStyle:NSDateFormatterShortStyle];
+    
+    //adjust the time by adding 9 hours... or 8 hours
+    float secondsForOffset = 28800;    //this is 9 hours = 32400;
+    NSDate* newTimeBegin = [self.request.request_time_begin dateByAddingTimeInterval:secondsForOffset];
+    NSDate* newTimeEnd = [self.request.request_time_end dateByAddingTimeInterval:secondsForOffset];
+
+    NSString* combinedDateAndTimeBegin = [NSString stringWithFormat:@"%@ at %@", [pickUpFormatter stringFromDate:self.request.request_date_begin], [pickUpTimeFormatter stringFromDate:newTimeBegin]];
+    NSString* combinedDateAndTimeEnd = [NSString stringWithFormat:@"%@ at %@", [pickUpFormatter stringFromDate:self.request.request_date_end], [pickUpTimeFormatter stringFromDate:newTimeEnd]];
     
     
     //save values to ivar
@@ -111,7 +124,7 @@
     [self.summaryTotalAtt appendAttributedString:pickupHead];
     
     NSDictionary* arrayAtt7 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* pickupAtt = [[NSAttributedString alloc] initWithString:[pickUpFormatter stringFromDate:self.request.request_date_begin]  attributes:arrayAtt7];
+    NSAttributedString* pickupAtt = [[NSAttributedString alloc] initWithString:combinedDateAndTimeBegin  attributes:arrayAtt7];
     [self.summaryTotalAtt appendAttributedString:pickupAtt];
     
     //______RETURN DATE________
@@ -120,7 +133,7 @@
     [self.summaryTotalAtt appendAttributedString:returnHead];
     
     NSDictionary* arrayAtt9 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* returnAtt = [[NSAttributedString alloc] initWithString:[pickUpFormatter stringFromDate:self.request.request_date_end]  attributes:arrayAtt9];
+    NSAttributedString* returnAtt = [[NSAttributedString alloc] initWithString:combinedDateAndTimeEnd  attributes:arrayAtt9];
     [self.summaryTotalAtt appendAttributedString:returnAtt];
     
     //________EQUIP LIST________

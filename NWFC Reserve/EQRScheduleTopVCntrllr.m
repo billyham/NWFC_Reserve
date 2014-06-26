@@ -768,14 +768,14 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
 
     
-    NSLog(@"this is the alert button index: %u", buttonIndex);
+//    NSLog(@"this is the alert button index: %u", buttonIndex);
     
     //continue button tapped, continue with change
     if (buttonIndex == 1){
         
         NSString* joinKey_id = self.thisTempJoinKey;
         NSIndexPath* indexPathForRowCell = self.thisTempIndexPath;
-        int newRowInt = self.thisTempNewRowInt;
+        int newRowInt = (int)self.thisTempNewRowInt;
         NSString* equipUniqueItem_foreignKey;
         NSString* equipTitleItem_foreignKey;
         EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];

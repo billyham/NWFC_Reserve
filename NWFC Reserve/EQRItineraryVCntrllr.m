@@ -75,7 +75,7 @@
     EQRColors* sharedColors = [EQRColors sharedInstance];
     [self.buttonAll setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
     
-    
+
     //initial day is the current day
     self.dateForShow = [NSDate date];
     
@@ -91,6 +91,8 @@
 //    UIView *testView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 150, 40)];
 //    testView.backgroundColor = [UIColor yellowColor];
 //    [self.navigationController.navigationBar addSubview:testView];
+    
+    
 
     
     
