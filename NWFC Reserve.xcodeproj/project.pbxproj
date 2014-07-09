@@ -83,6 +83,7 @@
 		54E046EF192499E9006912F9 /* EQRItineraryRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54E046EE192499E9006912F9 /* EQRItineraryRowCell.m */; };
 		54E046F31924A062006912F9 /* EQRItineraryCellContentVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54E046F11924A062006912F9 /* EQRItineraryCellContentVCntrllr.m */; };
 		54E046F41924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54E046F21924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib */; };
+		54F73784196D360F005BE295 /* EQRTapRadioButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F73783196D360F005BE295 /* EQRTapRadioButtonView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -224,6 +225,8 @@
 		54E046F01924A062006912F9 /* EQRItineraryCellContentVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRItineraryCellContentVCntrllr.h; sourceTree = "<group>"; };
 		54E046F11924A062006912F9 /* EQRItineraryCellContentVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRItineraryCellContentVCntrllr.m; sourceTree = "<group>"; };
 		54E046F21924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRItineraryCellContentVCntrllr.xib; sourceTree = "<group>"; };
+		54F73782196D360F005BE295 /* EQRTapRadioButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRTapRadioButtonView.h; sourceTree = "<group>"; };
+		54F73783196D360F005BE295 /* EQRTapRadioButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRTapRadioButtonView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -439,6 +442,8 @@
 				54E046F01924A062006912F9 /* EQRItineraryCellContentVCntrllr.h */,
 				54E046F11924A062006912F9 /* EQRItineraryCellContentVCntrllr.m */,
 				54E046F21924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib */,
+				54F73782196D360F005BE295 /* EQRTapRadioButtonView.h */,
+				54F73783196D360F005BE295 /* EQRTapRadioButtonView.m */,
 				54243D68192DC3CF00C91925 /* status pieces */,
 			);
 			name = Itinerary;
@@ -632,6 +637,7 @@
 				01FDEA96188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m in Sources */,
 				014F776D18E3B28F00C75D66 /* EQRScheduleNavBarCell.m in Sources */,
 				5402B7D5187586F400F0888B /* EQREquipContentViewVCntrllr.m in Sources */,
+				54F73784196D360F005BE295 /* EQRTapRadioButtonView.m in Sources */,
 				54BBC193193D9DEA004D5DFE /* EQRCheckPageRenderer.m in Sources */,
 				54032FE61872D36F00481D86 /* EQRScheduleRequestItem.m in Sources */,
 				5402D22E186BFCF80091C080 /* EQRCellTemplate.m in Sources */,

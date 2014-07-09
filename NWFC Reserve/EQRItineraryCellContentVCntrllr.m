@@ -11,10 +11,14 @@
 #import "EQRWebData.h"
 #import "EQRGlobals.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
+#import "EQRTapRadioButtonView.h"
 
 @interface EQRItineraryCellContentVCntrllr ()
 
 @property (strong, nonatomic) UIColor* myAssignedColor;
+
+@property (strong, nonatomic) EQRTapRadioButtonView* switchTap1;
+@property (strong, nonatomic) EQRTapRadioButtonView* switchTap2;
 
 @end
 
@@ -44,6 +48,18 @@
     
     EQRColors* colors = [EQRColors sharedInstance];
     
+    //______create tap radio "buttons"
+    CGRect thisFirstRect = CGRectMake(354, 8, 30, 30);
+    self.switchTap1 = [[EQRTapRadioButtonView alloc] initWithFrame:thisFirstRect];
+    self.switchTap1.opaque = NO;
+    self.switchTap1.backgroundColor = [UIColor clearColor];
+    UITapGestureRecognizer* firstTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(switch1Fires:)];
+    [self.switchTap1 addGestureRecognizer:firstTap];
+
+    
+    
+    
+    //_____create status bar
     if (!self.markedForReturning){
         self.myAssignedColor = [colors.colorDic objectForKey:EQRColorStatusGoing];
     }else{
@@ -75,6 +91,14 @@
     if (self.myStatus > 0){
         
         self.secondStatusBar.myColor = self.myAssignedColor;
+        
+        //change color of inside of tap button
+        self.switchTap1.innerCircleColor = [UIColor colorWithRed: 0 green: 0.657 blue: 0 alpha: 1];
+        
+    } else {
+        
+        //change color of inside of tap button
+        self.switchTap1.innerCircleColor = [UIColor whiteColor];
     }
     
     //third bar
@@ -86,6 +110,9 @@
     [self.view addSubview:self.firstStatusBar];
     [self.view addSubview:self.secondStatusBar];
     [self.view addSubview:self.thirdStatusBar];
+    
+    [self.view addSubview:self.switchTap1];
+
 }
 
 
@@ -93,6 +120,10 @@
 
 
 -(IBAction)switch1Fires:(id)sender{
+    
+    //show button tap
+    [self.switchTap1 tapped];
+    
     
     //_______show check in out view
     NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:self.requestKeyId, @"scheduleKey",
@@ -142,7 +173,11 @@
                 
                 self.myStatus = 1;
                 
-                [self.switch1 setOn:YES];
+                //change color of inside of tap button
+                self.switchTap1.innerCircleColor = [UIColor colorWithRed: 0 green: 0.657 blue: 0 alpha: 1];
+                [self.switchTap1 setNeedsDisplay];
+                
+//                [self.switch1 setOn:YES];
                 
                 //enable switch2
                 self.switch2.alpha = 1.0;
@@ -256,7 +291,11 @@
                 
                 self.myStatus = 0;
                 
-                [self.switch1 setOn:NO];
+                //change color of inside of tap button
+                self.switchTap1.innerCircleColor = [UIColor whiteColor];
+                [self.switchTap1 setNeedsDisplay];
+                
+//                [self.switch1 setOn:NO];
                 
                 //disable switch2
                 self.switch2.alpha = 0.3;
