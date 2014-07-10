@@ -11,8 +11,6 @@
                 <outlet property="firstLastName" destination="2IS-JS-zwx" id="7b9-Er-8Eo"/>
                 <outlet property="interactionTime" destination="lfb-ZL-ddp" id="tc4-bW-jhz"/>
                 <outlet property="renterType" destination="O30-Q9-g31" id="dSR-xm-4aV"/>
-                <outlet property="switch1" destination="pEt-2C-IVP" id="zlm-u8-NBj"/>
-                <outlet property="switch2" destination="YjT-Me-DOX" id="ctf-fu-xSe"/>
                 <outlet property="switchLabel1" destination="qMC-LL-ouR" id="F12-LQ-lPf"/>
                 <outlet property="switchLabel2" destination="BL3-is-drS" id="7Kj-sC-qSv"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -72,7 +70,7 @@
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="YjT-Me-DOX">
+                <switch hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="YjT-Me-DOX">
                     <rect key="frame" x="515" y="5" width="51" height="31"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <connections>

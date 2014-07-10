@@ -113,22 +113,22 @@
     if (self.myItineraryContent.myStatus < 1){
         
         //disable the second switch
-        self.myItineraryContent.switch2.userInteractionEnabled = NO;
-        self.myItineraryContent.switch2.alpha = 0.3;
+        self.myItineraryContent.switchTap2.userInteractionEnabled = NO;
+        self.myItineraryContent.switchTap2.alpha = 0.3;
         self.myItineraryContent.switchLabel2.alpha = 0.3;
         
     } else if (self.myItineraryContent.myStatus == 1){
         
         //set first swith to on
-        [self.myItineraryContent.switch1 setOn:YES];
+        self.myItineraryContent.switchTap1.innerCircleColor = [UIColor colorWithRed: 0 green: 0.657 blue: 0 alpha: 1];
         
         
     } else {
         // status must be equal to 2
         
         //set first and second swith to on
-        [self.myItineraryContent.switch1 setOn:YES];
-        [self.myItineraryContent.switch2 setOn:YES];
+        self.myItineraryContent.switchTap1.innerCircleColor = [UIColor colorWithRed: 0 green: 0.657 blue: 0 alpha: 1];
+        self.myItineraryContent.switchTap2.innerCircleColor = [UIColor colorWithRed: 0 green: 0.657 blue: 0 alpha: 1];
         
     }
     
@@ -179,7 +179,7 @@
     }];
   
     //only apply caution to switch 1 if it is on
-    if (self.myItineraryContent.switch1.isOn){
+    if (self.myItineraryContent.myStatus == 1){
         
         BOOL foundOutstandingItemSwitch1 = NO;
 
@@ -217,7 +217,7 @@
     
     
     //only apply caution to switch 2 if it is on
-    if (self.myItineraryContent.switch2.isOn){
+    if (self.myItineraryContent.myStatus == 2){
         
         BOOL foundOutstandingItemSwitch2 = NO;
         

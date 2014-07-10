@@ -17,6 +17,11 @@
 
 @implementation EQRTapRadioButtonView
 
+@synthesize delegate;
+
+
+#pragma mark - init
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -24,25 +29,15 @@
         
         _innerCircleColor = [UIColor whiteColor];
         
-
-        
     }
     return self;
 }
 
 
-//-(void)initialSetup{
-//    
-//    self.innerCircleColor = [UIColor whiteColor];
-//    
-//}
+#pragma mark - touch methods
 
 
-
-
-
-
--(void)tapped{
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     
     self.originalFrame = self.frame;
     
@@ -52,25 +47,43 @@
         
     } completion:^(BOOL finished) {
         
-        //return to original size
-        [self performSelector:@selector(undoTheTap)];
-        
     }];
     
+    [super touchesBegan:touches withEvent:event];
     
 }
 
 
--(void) undoTheTap{
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     
     [UIView animateWithDuration:0.1 animations:^{
         
-        self.frame = self.originalFrame;        
+        self.frame = self.originalFrame;
     }];
     
-    
+    if (self.IAmSwitch2 == NO){
+        
+        [self.delegate switch1Fires:self];
+        
+    } else {
+        
+        [self.delegate switch2Fires:self];
+    }
 }
 
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    
+    [UIView animateWithDuration:0.1 animations:^{
+        
+        self.frame = self.originalFrame;
+    }];
+}
+
+
+
+#pragma mark - draw method
 
 - (void)drawRect:(CGRect)rect
 {

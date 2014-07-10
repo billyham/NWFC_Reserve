@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "EQRStatusBarView.h"
+#import "EQRTapRadioButtonView.h"
 
-
-@interface EQRItineraryCellContentVCntrllr : UIViewController
+@interface EQRItineraryCellContentVCntrllr : UIViewController <EQRTapRadioButtonDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel* interactionTime;
 @property (strong, nonatomic) IBOutlet UILabel* firstLastName;
@@ -19,8 +19,10 @@
 @property (strong, nonatomic) IBOutlet UILabel* cautionLabel1;
 @property (strong, nonatomic) IBOutlet UILabel* cautionLabel2;
 @property (strong, nonatomic) IBOutlet UILabel* renterType;
-@property (strong, nonatomic) IBOutlet UISwitch* switch1;
-@property (strong, nonatomic) IBOutlet UISwitch* switch2;
+//@property (strong, nonatomic) IBOutlet UISwitch* switch1;
+//@property (strong, nonatomic) IBOutlet UISwitch* switch2;
+@property (strong, nonatomic) EQRTapRadioButtonView* switchTap1;
+@property (strong, nonatomic) EQRTapRadioButtonView* switchTap2;
 
 
 
@@ -38,6 +40,7 @@
 
 @property (strong, nonatomic) NSString* requestKeyId;
 
+#pragma mark - tapRadioButtonDelegate methods
 
 -(IBAction)switch1Fires:(id)sender;
 -(IBAction)switch2Fires:(id)sender;
