@@ -19,12 +19,8 @@
 @property (strong, nonatomic) IBOutlet UILabel* cautionLabel1;
 @property (strong, nonatomic) IBOutlet UILabel* cautionLabel2;
 @property (strong, nonatomic) IBOutlet UILabel* renterType;
-//@property (strong, nonatomic) IBOutlet UISwitch* switch1;
-//@property (strong, nonatomic) IBOutlet UISwitch* switch2;
 @property (strong, nonatomic) EQRTapRadioButtonView* switchTap1;
 @property (strong, nonatomic) EQRTapRadioButtonView* switchTap2;
-
-
 
 //??
 @property BOOL showPrepSwitch;

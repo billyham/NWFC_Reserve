@@ -179,22 +179,25 @@
     
     NSString* scheduleKey = [[note userInfo] objectForKey:@"scheduleKey"];
     NSString* completeOrIncomplete = [[note userInfo] objectForKey:@"comleteOrIncomplete"];
+    BOOL markedForReturning = [(NSNumber*)[[note userInfo] objectForKey:@"marked_for_returning"] boolValue];
     NSUInteger switch_num = [[[note userInfo] objectForKey:@"switch_num"] integerValue];
     BOOL foundOutstandingItem = [[[note userInfo] objectForKey:@"foundOutstandingItem"] boolValue];
     
-    if ([self.requestKeyId isEqualToString:scheduleKey]){
+    if (([self.requestKeyId isEqualToString:scheduleKey]) && (markedForReturning == self.markedForReturning)){
         
         if ([completeOrIncomplete isEqualToString:@"complete"]){
             
             if (switch_num == 1){
                 
-                self.myStatus = 1;
+                //don't change status if it's at 2
+                if (self.myStatus == 0){
+                
+                    self.myStatus = 1;
+                }
                 
                 //change color of inside of tap button
                 self.switchTap1.innerCircleColor = [UIColor colorWithRed: 0 green: 0.657 blue: 0 alpha: 1];
                 [self.switchTap1 setNeedsDisplay];
-                
-//                [self.switch1 setOn:YES];
                 
                 //enable switch2
                 self.switchTap2.alpha = 1.0;
@@ -203,7 +206,15 @@
                 
                 //change status color
                 self.secondStatusBar.myColor = self.myAssignedColor;
-                self.thirdStatusBar.myColor = [[[EQRColors sharedInstance] colorDic] objectForKey:EQRColorVeryLightGrey];
+                
+                if (self.myStatus < 2){
+                    
+                    self.thirdStatusBar.myColor = [[[EQRColors sharedInstance] colorDic] objectForKey:EQRColorVeryLightGrey];
+                    
+                } else {
+                    
+                   self.thirdStatusBar.myColor = self.myAssignedColor;
+                }
                 
                 //change color of second status bar
                 [self.secondStatusBar setNeedsDisplay];
@@ -249,13 +260,13 @@
                 
             }else{
                 
+                //swtichNum == 2
+                
                 self.myStatus = 2;
                 
                 //change color of inside of tap button
                 self.switchTap2.innerCircleColor = [UIColor colorWithRed: 0 green: 0.657 blue: 0 alpha: 1];
                 [self.switchTap2 setNeedsDisplay];
-                
-//                [self.switch2 setOn:YES];
                 
                 //change status color
                 self.secondStatusBar.myColor = self.myAssignedColor;
@@ -316,12 +327,14 @@
                 self.switchTap1.innerCircleColor = [UIColor whiteColor];
                 [self.switchTap1 setNeedsDisplay];
                 
-//                [self.switch1 setOn:NO];
-                
                 //disable switch2
                 self.switchTap2.alpha = 0.3;
                 self.switchLabel2.alpha = 0.3;
                 self.switchTap2.userInteractionEnabled = NO;
+                
+                //also change color of inside of switch2 tap button
+                self.switchTap2.innerCircleColor = [UIColor whiteColor];
+                [self.switchTap2 setNeedsDisplay];
                 
                 //change status color
                 self.secondStatusBar.myColor = [[[EQRColors sharedInstance] colorDic] objectForKey:EQRColorVeryLightGrey];
@@ -332,6 +345,7 @@
                 [self.thirdStatusBar setNeedsDisplay];
                 
                 self.cautionLabel1.hidden = YES;
+                self.cautionLabel2.hidden = YES;
                 
                 
                 //update the model
@@ -378,13 +392,13 @@
                 
             }else{
                 
+                //swtichNum == 2
+                
                 self.myStatus = 1;
                 
                 //change color of inside of tap button
                 self.switchTap2.innerCircleColor = [UIColor whiteColor];
                 [self.switchTap2 setNeedsDisplay];
-                
-//                [self.switch2 setOn:NO];
                 
                 //change status color
                 self.secondStatusBar.myColor = self.myAssignedColor;
