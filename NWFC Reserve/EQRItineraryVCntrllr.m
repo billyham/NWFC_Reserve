@@ -87,13 +87,33 @@
     //assign date to nav bar title
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
     
-    //assign custom view / buttons to nav bar
-//    UIView *testView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 150, 40)];
-//    testView.backgroundColor = [UIColor yellowColor];
-//    [self.navigationController.navigationBar addSubview:testView];
     
+    //_______custom bar buttons
+    //create uiimages
+    UIImage* leftArrow = [UIImage imageNamed:@"GenericLeftArrow"];
+    UIImage* rightArrow = [UIImage imageNamed:@"GenericRightArrow"];
     
+    //uibar buttons
+    //create fixed spaces
+    UIBarButtonItem* twentySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+    twentySpace.width = 20;
+    UIBarButtonItem* thirtySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+    thirtySpace.width = 30;
+    
+    //wrap buttons in barbuttonitem
+    UIBarButtonItem* leftBarButtonArrow =[[UIBarButtonItem alloc] initWithImage:leftArrow style:UIBarButtonItemStylePlain target:self action:@selector(moveToPreviousDay:)];
+    UIBarButtonItem* todayBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Today" style:UIBarButtonItemStylePlain target:self action:@selector(moveToToday:)];
+    UIBarButtonItem* rightBarButtonArrow = [[UIBarButtonItem alloc] initWithImage:rightArrow style:UIBarButtonItemStylePlain target:self action:@selector(moveToNextDay:)];
+    
+    //array that shit
+    NSArray* arrayOfLeftButtons = [NSArray arrayWithObjects:twentySpace, leftBarButtonArrow, thirtySpace, todayBarButton, thirtySpace, rightBarButtonArrow, nil];
+    
+    //set leftBarButton item on SELF
+    [self.navigationItem setLeftBarButtonItems:arrayOfLeftButtons];
+    //___________
 
+    
+    
     
     
     
@@ -345,6 +365,23 @@
 -(IBAction)moveToPreviousDay:(id)sender{
     
     self.dateForShow = [self.dateForShow dateByAddingTimeInterval:-86400];
+    
+    //update day label
+    NSDateFormatter* dayNameFormatter = [[NSDateFormatter alloc] init];
+    dayNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dayNameFormatter.dateFormat =@"EEEE, MMM d, yyyy";
+    
+    //assign day to nav bar title
+    self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
+    
+    [self refreshTheView];
+    
+}
+
+
+-(IBAction)moveToToday:(id)sender{
+    
+    self.dateForShow = [NSDate date];
     
     //update day label
     NSDateFormatter* dayNameFormatter = [[NSDateFormatter alloc] init];

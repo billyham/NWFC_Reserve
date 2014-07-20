@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -21,10 +21,10 @@
             </objects>
             <point key="canvasLocation" x="3092" y="-1173"/>
         </scene>
-        <!--View Controller - Request Inbox-->
+        <!--InboxV Cntrllr - Request Inbox-->
         <scene sceneID="QqA-0i-rd2">
             <objects>
-                <viewController id="Wnh-Gd-WtA" sceneMemberID="viewController">
+                <viewController id="Wnh-Gd-WtA" customClass="EQRInboxVCntrllr" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="8nY-ay-azF"/>
                         <viewControllerLayoutGuide type="bottom" id="xKD-Fy-biV"/>
@@ -32,9 +32,57 @@
                     <view key="view" contentMode="scaleToFill" id="6nf-Uj-jLg">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="utD-MW-RKI">
+                                <rect key="frame" x="0.0" y="64" width="100" height="911"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="FbJ-IF-hv1"/>
+                                </constraints>
+                            </view>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Med-QV-Ko0">
+                                <rect key="frame" x="100" y="64" width="668" height="960"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="cmQ-5X-Hkh">
+                                    <size key="itemSize" width="668" height="64"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="10" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="TXJ-do-O7f">
+                                        <rect key="frame" x="0.0" y="10" width="668" height="64"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="668" height="64"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="Wnh-Gd-WtA" id="z41-8s-zU0"/>
+                                    <outlet property="delegate" destination="Wnh-Gd-WtA" id="lrx-2C-qDk"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.87058830259999997" green="0.9215686917" blue="0.91764712329999998" alpha="1" colorSpace="deviceRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="Med-QV-Ko0" secondAttribute="bottom" id="7Ef-Ct-2gO"/>
+                            <constraint firstItem="Med-QV-Ko0" firstAttribute="leading" secondItem="6nf-Uj-jLg" secondAttribute="leading" constant="100" id="IRP-1K-RHi"/>
+                            <constraint firstAttribute="trailing" secondItem="Med-QV-Ko0" secondAttribute="trailing" id="O4A-52-mQe"/>
+                            <constraint firstItem="utD-MW-RKI" firstAttribute="leading" secondItem="6nf-Uj-jLg" secondAttribute="leading" id="Pc6-vr-mCd"/>
+                            <constraint firstItem="Med-QV-Ko0" firstAttribute="top" secondItem="6nf-Uj-jLg" secondAttribute="top" constant="64" id="PeE-Nt-jNs"/>
+                            <constraint firstItem="xKD-Fy-biV" firstAttribute="top" secondItem="utD-MW-RKI" secondAttribute="bottom" id="av8-sG-6Ve"/>
+                            <constraint firstItem="utD-MW-RKI" firstAttribute="top" secondItem="8nY-ay-azF" secondAttribute="bottom" id="kEO-FY-4kN"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Request Inbox" id="4e6-BN-ATv"/>
+                    <connections>
+                        <outlet property="inboxCollection" destination="Med-QV-Ko0" id="Ltn-j5-pXa"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Yso-Ud-pAv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -856,7 +904,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Schedule for Month" id="TlY-ai-kDl">
-                        <barButtonItem key="leftBarButtonItem" id="wcX-lV-Txx">
+                        <barButtonItem key="leftBarButtonItem" enabled="NO" id="wcX-lV-Txx">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="UIe-Ng-tu4">
                                 <rect key="frame" x="16" y="7" width="108" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -867,12 +915,9 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <state key="normal" title="Previous Month">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <action selector="moveToPreviousMonth:" destination="Gsi-rN-Qaw" eventType="touchUpInside" id="Po7-T0-xXO"/>
-                                </connections>
                             </button>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" id="rQY-LN-ATg">
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" id="rQY-LN-ATg">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Sj2-h6-g4r">
                                 <rect key="frame" x="669" y="7" width="83" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -883,9 +928,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <state key="normal" title="Next Month">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <action selector="moveToNextMonth:" destination="Gsi-rN-Qaw" eventType="touchUpInside" id="uy4-vA-HSw"/>
-                                </connections>
                             </button>
                         </barButtonItem>
                     </navigationItem>
@@ -1116,18 +1158,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                             <constraint firstItem="gH6-Am-xOY" firstAttribute="top" secondItem="Uir-bj-SIE" secondAttribute="bottom" id="z9R-1p-Xq4"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Schedule for Day" id="yFi-Ci-Iu5">
-                        <barButtonItem key="leftBarButtonItem" title="Previous Day" id="wgV-oq-HEn">
-                            <connections>
-                                <action selector="moveToPreviousDay:" destination="zYG-c6-BKe" id="BSq-nO-9DG"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Next Day" id="JMs-JR-ayR">
-                            <connections>
-                                <action selector="moveToNextDay:" destination="zYG-c6-BKe" id="1b4-MK-g3D"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Schedule for Day" id="yFi-Ci-Iu5"/>
                     <connections>
                         <outlet property="buttonAll" destination="W5h-3V-kxh" id="XAy-Ue-M6L"/>
                         <outlet property="buttonGoingPickedUp" destination="gFe-WC-EU9" id="SsM-BA-mio"/>

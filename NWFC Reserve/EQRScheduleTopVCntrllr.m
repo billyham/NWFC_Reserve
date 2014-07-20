@@ -126,6 +126,31 @@
 //    
 //    [self.myMasterScheduleCollectionView setCollectionViewLayout:self.scheduleMasterFlowLayout];
     
+    
+    //_______custom bar buttons
+    //create uiimages
+    UIImage* leftArrow = [UIImage imageNamed:@"GenericLeftArrow"];
+    UIImage* rightArrow = [UIImage imageNamed:@"GenericRightArrow"];
+    
+    //uibar buttons
+    //create fixed spaces
+    UIBarButtonItem* twentySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+    twentySpace.width = 20;
+    UIBarButtonItem* thirtySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+    thirtySpace.width = 30;
+    
+    //wrap buttons in barbuttonitem
+    UIBarButtonItem* leftBarButtonArrow =[[UIBarButtonItem alloc] initWithImage:leftArrow style:UIBarButtonItemStylePlain target:self action:@selector(moveToPreviousMonth:)];
+    UIBarButtonItem* todayBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Current" style:UIBarButtonItemStylePlain target:self action:@selector(moveToCurrentMonth:)];
+    UIBarButtonItem* rightBarButtonArrow = [[UIBarButtonItem alloc] initWithImage:rightArrow style:UIBarButtonItemStylePlain target:self action:@selector(moveToNextMonth:)];
+    
+    //array that shit
+    NSArray* arrayOfLeftButtons = [NSArray arrayWithObjects:twentySpace, leftBarButtonArrow, thirtySpace, todayBarButton, thirtySpace, rightBarButtonArrow, nil];
+    
+    //set leftBarButton item on SELF
+    [self.navigationItem setLeftBarButtonItems:arrayOfLeftButtons];
+    //___________
+    
     //add gesture recognizers for swiping
     UISwipeGestureRecognizer* swipeRightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(moveToPreviousMonth:)];
     swipeRightGesture.direction = UISwipeGestureRecognizerDirectionRight;
@@ -492,6 +517,35 @@
     
     //assign date to ivar
     self.dateForShow = newMonthDate;
+    
+    //assign new month label
+    NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
+    monthNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    monthNameFormatter.dateFormat =@"MMMM yyyy";
+    
+    //assign month to nav bar title
+    self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    
+    [self renewTheView];
+    
+    [self.myMasterScheduleCollectionView reloadData];
+}
+
+
+-(IBAction)moveToCurrentMonth:(id)sender{
+    
+    //cancel any existing web data parsing
+    if (self.myWebData){
+        [self.myWebData.xmlParser abortParsing];
+        
+        //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
+        //_________falsely showing equip joins from a previous month
+        //_________remedy by disconnecting the webdata's delegate
+        self.myWebData.delegate = nil;
+    }
+    
+    //assign date to ivar
+    self.dateForShow = [NSDate date];
     
     //assign new month label
     NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
