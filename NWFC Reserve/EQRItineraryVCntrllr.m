@@ -14,6 +14,7 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRWebData.h"
 #import "EQRCheckVCntrllr.h"
+#import "EQRDayDatePickerVCntrllr.h"
 
 @interface EQRItineraryVCntrllr ()
 
@@ -35,6 +36,8 @@
 @property (strong, nonatomic) IBOutlet UIButton* buttonReturningOut;
 @property (strong, nonatomic) IBOutlet UIButton* buttonReturningReturned;
 @property (strong, nonatomic) IBOutlet UIButton* buttonReturningShelved;
+
+@property (strong, nonatomic) UIPopoverController* myDayDatePicker;
 
 -(IBAction)moveToNextDay:(id)sender;
 -(IBAction)moveToPreviousDay:(id)sender;
@@ -110,6 +113,13 @@
     
     //set leftBarButton item on SELF
     [self.navigationItem setLeftBarButtonItems:arrayOfLeftButtons];
+    
+    
+    //right button
+    UIBarButtonItem* rightBarButtonSearch = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(showDatePicker)];
+    
+    //set rightBarButton item in SELF
+    [self.navigationItem setRightBarButtonItem:rightBarButtonSearch];
     //___________
 
     
@@ -393,6 +403,41 @@
     
     [self refreshTheView];
     
+}
+
+
+-(void)showDatePicker{
+    
+    EQRDayDatePickerVCntrllr* dayDateView = [[EQRDayDatePickerVCntrllr alloc] initWithNibName:@"EQRDayDatePickerVCntrllr" bundle:nil];
+    self.myDayDatePicker = [[UIPopoverController alloc] initWithContentViewController:dayDateView];
+    
+    //present popover
+    [self.myDayDatePicker presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    //set target of continue button
+    [dayDateView.myContinueButton addTarget:self action:@selector(dismissShowDatePicker:) forControlEvents:UIControlEventAllEvents];
+    
+    
+}
+
+
+-(IBAction)dismissShowDatePicker:(id)sender{
+    
+    //get date from the popover's content view controller, a public method
+    self.dateForShow = [(EQRDayDatePickerVCntrllr*)[self.myDayDatePicker contentViewController] retrieveSelectedDate];
+
+    //update day label
+    NSDateFormatter* dayNameFormatter = [[NSDateFormatter alloc] init];
+    dayNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dayNameFormatter.dateFormat =@"EEEE, MMM d, yyyy";
+    
+    //assign day to nav bar title
+    self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
+    
+    //dismiss the picker
+    [self.myDayDatePicker dismissPopoverAnimated:YES];
+    
+    [self refreshTheView];
 }
 
 

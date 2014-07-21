@@ -19,6 +19,7 @@
 #import "EQRScheduleNavBarCell.h"
 #import "EQREditorTopVCntrllr.h"
 #import "EQRColors.h"
+#import "EQRDayDatePickerVCntrllr.h"
 
 
 @interface EQRScheduleTopVCntrllr ()
@@ -46,6 +47,8 @@
 @property (strong, nonatomic) NSString* thisTempJoinKey;
 @property (strong, nonatomic) NSIndexPath* thisTempIndexPath;
 @property NSInteger thisTempNewRowInt;
+
+@property (strong, nonatomic) UIPopoverController* myDayDatePicker;
 
 
 
@@ -149,6 +152,12 @@
     
     //set leftBarButton item on SELF
     [self.navigationItem setLeftBarButtonItems:arrayOfLeftButtons];
+    
+    //right button
+    UIBarButtonItem* rightBarButtonSearch = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(showDatePicker)];
+    
+    //set rightBarButton item in SELF
+    [self.navigationItem setRightBarButtonItem:rightBarButtonSearch];
     //___________
     
     //add gesture recognizers for swiping
@@ -560,6 +569,48 @@
     [self.myMasterScheduleCollectionView reloadData];
 }
 
+
+-(void)showDatePicker{
+    
+    EQRDayDatePickerVCntrllr* dayDateView = [[EQRDayDatePickerVCntrllr alloc] initWithNibName:@"EQRDayDatePickerVCntrllr" bundle:nil];
+    self.myDayDatePicker = [[UIPopoverController alloc] initWithContentViewController:dayDateView];
+    
+    //present popover
+    [self.myDayDatePicker presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    //set target of continue button
+    [dayDateView.myContinueButton addTarget:self action:@selector(dismissShowDatePicker:) forControlEvents:UIControlEventAllEvents];
+}
+
+
+-(IBAction)dismissShowDatePicker:(id)sender{
+    
+    //cancel any existing web data parsing
+    if (self.myWebData){
+        [self.myWebData.xmlParser abortParsing];
+        
+        //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
+        //_________falsely showing equip joins from a previous month
+        //_________remedy by disconnecting the webdata's delegate
+        self.myWebData.delegate = nil;
+    }
+    
+    //get date from the popover's content view controller, a public method
+    self.dateForShow = [(EQRDayDatePickerVCntrllr*)[self.myDayDatePicker contentViewController] retrieveSelectedDate];
+    
+    //assign new month label
+    NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
+    monthNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    monthNameFormatter.dateFormat =@"MMMM yyyy";
+    
+    //assign month to nav bar title
+    self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    
+    //dismiss the picker
+    [self.myDayDatePicker dismissPopoverAnimated:YES];
+    
+    [self renewTheView];
+}
 
 
 #pragma mark - notifications
