@@ -26,9 +26,6 @@ NSString* EQRColorStatusReturning = @"EQRColorStatusReturning";
 @implementation EQRColors
 
 
-
-
-
 +(EQRColors*)sharedInstance{
     
     static EQRColors* myInstance = nil;
@@ -45,7 +42,6 @@ NSString* EQRColorStatusReturning = @"EQRColorStatusReturning";
 -(void)loadColors{
     
     if (!self.colorDic){
-        
         self.colorDic = [NSDictionary dictionaryWithObjectsAndKeys:
                          [UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0], EQRColorLightBlue,
                          [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1.0], EQRColorVeryLightGrey,

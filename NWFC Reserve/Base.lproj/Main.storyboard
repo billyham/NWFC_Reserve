@@ -68,7 +68,7 @@
                                 </connections>
                             </collectionView>
                         </subviews>
-                        <color key="backgroundColor" red="0.87058830259999997" green="0.9215686917" blue="0.91764712329999998" alpha="1" colorSpace="deviceRGB"/>
+                        <color key="backgroundColor" red="0.87058830261230469" green="0.92156869173049927" blue="0.91764712333679199" alpha="1" colorSpace="deviceRGB"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="Med-QV-Ko0" secondAttribute="bottom" id="7Ef-Ct-2gO"/>
                             <constraint firstItem="Med-QV-Ko0" firstAttribute="leading" secondItem="6nf-Uj-jLg" secondAttribute="leading" constant="100" id="IRP-1K-RHi"/>
