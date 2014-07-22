@@ -72,6 +72,8 @@
 		542F5FF8192355E6001C28CA /* EQRItineraryVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 542F5FF7192355E6001C28CA /* EQRItineraryVCntrllr.m */; };
 		542F5FFD192357AF001C28CA /* EQRCheckVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 542F5FFB192357AF001C28CA /* EQRCheckVCntrllr.m */; };
 		542F5FFE192357AF001C28CA /* EQRCheckVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 542F5FFC192357AF001C28CA /* EQRCheckVCntrllr.xib */; };
+		5431456B197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54314569197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.m */; };
+		5431456C197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5431456A197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.xib */; };
 		54457ECD1935B78E00E9061A /* EQRCheckRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54457ECC1935B78E00E9061A /* EQRCheckRowCell.m */; };
 		54457ED11935B7B900E9061A /* EQRCheckCellContentVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54457ECF1935B7B900E9061A /* EQRCheckCellContentVCntrllr.m */; };
 		54457ED21935B7B900E9061A /* EQRCheckCellContentVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54457ED01935B7B900E9061A /* EQRCheckCellContentVCntrllr.xib */; };
@@ -215,6 +217,9 @@
 		542F5FFA192357AF001C28CA /* EQRCheckVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRCheckVCntrllr.h; sourceTree = "<group>"; };
 		542F5FFB192357AF001C28CA /* EQRCheckVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRCheckVCntrllr.m; sourceTree = "<group>"; };
 		542F5FFC192357AF001C28CA /* EQRCheckVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRCheckVCntrllr.xib; sourceTree = "<group>"; };
+		54314568197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleRowQuickViewVCntrllr.h; sourceTree = "<group>"; };
+		54314569197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleRowQuickViewVCntrllr.m; sourceTree = "<group>"; };
+		5431456A197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRScheduleRowQuickViewVCntrllr.xib; sourceTree = "<group>"; };
 		54457ECB1935B78E00E9061A /* EQRCheckRowCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRCheckRowCell.h; sourceTree = "<group>"; };
 		54457ECC1935B78E00E9061A /* EQRCheckRowCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRCheckRowCell.m; sourceTree = "<group>"; };
 		54457ECE1935B7B900E9061A /* EQRCheckCellContentVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRCheckCellContentVCntrllr.h; sourceTree = "<group>"; };
@@ -299,6 +304,9 @@
 				54746DEA18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m */,
 				014F776B18E3B28F00C75D66 /* EQRScheduleNavBarCell.h */,
 				014F776C18E3B28F00C75D66 /* EQRScheduleNavBarCell.m */,
+				54314568197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.h */,
+				54314569197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.m */,
+				5431456A197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.xib */,
 			);
 			name = "Schedule Display";
 			sourceTree = "<group>";
@@ -669,6 +677,7 @@
 				542F5FFE192357AF001C28CA /* EQRCheckVCntrllr.xib in Resources */,
 				0119D30018DBB25D009126CB /* EQRScheduleCellContentVCntrllr.xib in Resources */,
 				54457ED21935B7B900E9061A /* EQRCheckCellContentVCntrllr.xib in Resources */,
+				5431456C197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.xib in Resources */,
 				542CC236197BA30E00BFD581 /* GenericLeftArrow.png in Resources */,
 				01A5D7C418EBA85900EE99EF /* EQREditorTopVCntrllr.xib in Resources */,
 				01735F1E193FAC38007E85C1 /* EQRCheckPrintPage.xib in Resources */,
@@ -725,6 +734,7 @@
 				54032FE21872AC9000481D86 /* EQREquipDateVCntrllr.m in Sources */,
 				542F5FFD192357AF001C28CA /* EQRCheckVCntrllr.m in Sources */,
 				545661DF18323ABC0067B40D /* EQREquipItem.m in Sources */,
+				5431456B197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.m in Sources */,
 				54CE45AC186AF4680023FDA4 /* EQREquipItemCell.m in Sources */,
 				018EB75A18E5DCD500FBDEA0 /* EQREditorTopVCntrllr.m in Sources */,
 				015B7C6A18EA22B3002F5B6D /* EQREditorEquipListCell.m in Sources */,

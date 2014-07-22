@@ -26,6 +26,7 @@ NSString* EQRRefreshEquipTable = @"EQRRefreshEquipTable";
 NSString* EQRRefreshScheduleTable = @"EQRRefreshScheduleTable";
 NSString* EQRButtonHighlight = @"EQRButtonHighlight";
 NSString* EQRButtonUnHighlight = @"EQRButtonUnHighlight";
+NSString* EQRPresentScheduleRowQuickView = @"EQRPresentScheduleQuickView";
 NSString* EQRPresentRequestEditor = @"EQRPresentRequestEditor";
 NSString* EQRPresentCheckInOut = @"EQRPresentCheckInOut";
 NSString* EQRUpdateCheckInOutArrayOfJoins = @"EQRUpdateCheckInOutArrayOfJoins";

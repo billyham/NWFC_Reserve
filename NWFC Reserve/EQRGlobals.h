@@ -23,6 +23,7 @@ extern NSString* EQRRefreshEquipTable;
 extern NSString* EQRRefreshScheduleTable;
 extern NSString* EQRButtonHighlight;
 extern NSString* EQRButtonUnHighlight;
+extern NSString* EQRPresentScheduleRowQuickView;
 extern NSString* EQRPresentRequestEditor;
 extern NSString* EQRPresentCheckInOut;
 extern NSString* EQRUpdateCheckInOutArrayOfJoins;

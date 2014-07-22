@@ -32,6 +32,8 @@
 @implementation EQRScheduleRowCell
 
 
+#pragma mark - setup
+
 -(void)initialSetupWithTitle:(NSString*) titleName equipKey:(NSString*)uniqueKeyID indexPath:(NSIndexPath*)indexPath dateForShow:(NSDate*)dateForShow{
     
     //set ivar
@@ -89,6 +91,22 @@
     
     
 }
+
+
+#pragma mark - notifications???
+
+//-(void)showScheduleRowQuickView:(NSNotification*)note{
+//    
+//    EQRScheduleRowQuickViewVCntrllr* quickView = [[EQRScheduleRowQuickViewVCntrllr alloc] initWithNibName:@"EQRScheduleRowQuickViewVCntrllr" bundle:nil];
+//    self.myScheduleRowQuickView = [[UIPopoverController alloc] initWithContentViewController:quickView];
+//    
+//    
+//    
+//    
+//    self.myScheduleRowQuickView presentPopoverFromRect:<#(CGRect)#> inView:<#(UIView *)#> permittedArrowDirections:<#(UIPopoverArrowDirection)#> animated:<#(BOOL)#>
+//    
+//}
+
 
 #pragma mark - collection view data source methods
 
@@ -195,6 +213,34 @@
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
 
+    
+    //get the cgRect of the selected cell
+    UICollectionViewCell* cellOfSelectedNestedDayCell = [collectionView cellForItemAtIndexPath:indexPath];
+//    CGRect rectOfSelectedNestedDayCell = cellOfSelectedNestedDayCell.frame;
+    
+    
+    
+    
+    //original point with offset ...  I HAVE NO IDEA WHY THE X VALUE NEEDS TO REFERENCE THE CONTENTVIEW, BUT OTHERWISE IT DON'T WORK
+    CGPoint originPoint = CGPointMake(
+                                      cellOfSelectedNestedDayCell.contentView.frame.origin.x + EQRScheduleLengthOfEquipUniqueLabel,
+                                      cellOfSelectedNestedDayCell.frame.origin.y);
+    
+    //Size is OK
+    CGSize originSize = CGSizeMake(cellOfSelectedNestedDayCell.frame.size.width, cellOfSelectedNestedDayCell.frame.size.height);
+    
+    //convert values to other superview coordinates
+    CGPoint convertedPointForX = [cellOfSelectedNestedDayCell convertPoint:originPoint toView:cellOfSelectedNestedDayCell.superview];
+    CGPoint convertedPointForY = [cellOfSelectedNestedDayCell convertPoint:convertedPointForX toView:cellOfSelectedNestedDayCell.superview.superview.superview.superview.superview];
+    
+    //final CGRect
+    CGRect frameSizeInSuperViewCooridnates = CGRectMake(convertedPointForX.x, convertedPointForY.y, originSize.width, originSize.height);
+    
+    
+
+    
+    NSValue* valueOfRect = [NSValue valueWithCGRect:frameSizeInSuperViewCooridnates];
+    
     //bring up editor view with notification
 //    NSDictionary* dic = [NSDictionary dictionaryWithObject:[(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] scheduleTracking_foreignKey]  forKey:@"keyID"];
     
@@ -208,10 +254,12 @@
                          [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_date_end], @"request_date_end",
                          [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_time_begin], @"request_time_begin",
                          [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_time_end], @"request_time_end",
+                         valueOfRect, @"rectOfSelectedNestedDayCell",
                          nil];
     
     //sends note to scheduleTopVCntrllr
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditor object:nil userInfo:dic];
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentScheduleRowQuickView object:nil userInfo:dic];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditor object:nil userInfo:dic];
     
     
 }

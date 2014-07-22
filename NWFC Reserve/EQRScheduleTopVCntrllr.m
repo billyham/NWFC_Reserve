@@ -20,6 +20,7 @@
 #import "EQREditorTopVCntrllr.h"
 #import "EQRColors.h"
 #import "EQRDayDatePickerVCntrllr.h"
+#import "EQRScheduleRowQuickViewVCntrllr.h"
 
 
 @interface EQRScheduleTopVCntrllr ()
@@ -49,6 +50,8 @@
 @property NSInteger thisTempNewRowInt;
 
 @property (strong, nonatomic) UIPopoverController* myDayDatePicker;
+@property (strong, nonatomic) UIPopoverController* myScheduleRowQuickView;
+@property (strong, nonatomic) NSDictionary* temporaryDicFromNestedDayCell;
 
 
 
@@ -91,6 +94,8 @@
     
     //notes from scheduleRequestManager for hiding and expanding equipment sections
     [nc addObserver:self selector:@selector(refreshTable:) name:EQRRefreshScheduleTable object:nil];
+    //receive note from scheduleRowCell to present schedule row quick view
+    [nc addObserver:self selector:@selector(showScheduleRowQuickView:) name:EQRPresentScheduleRowQuickView object:nil];
     //receives from scheduleRowCell command to present a requestEditor vcntrllr
     [nc addObserver:self selector:@selector(showRequestEditor:) name:EQRPresentRequestEditor object:nil];
     //receive notes from requestEditor and EquipSummaryVCntrllr when a change has been made and needs to refresh the view
@@ -693,6 +698,66 @@
 }
 
 
+
+-(void)showScheduleRowQuickView:(NSNotification*)note{
+    
+    EQRScheduleRowQuickViewVCntrllr* quickView = [[EQRScheduleRowQuickViewVCntrllr alloc] initWithNibName:@"EQRScheduleRowQuickViewVCntrllr" bundle:nil];
+    self.myScheduleRowQuickView = [[UIPopoverController alloc] initWithContentViewController:quickView];
+    
+    //__________****** assign userInfo dic to ivar SEEMS WEIRD  *********_______
+    self.temporaryDicFromNestedDayCell = [NSDictionary dictionaryWithDictionary:[note userInfo]];
+    
+    //convert items in note's userInfo
+    NSDate* pickupDateAsDate = [[note userInfo] objectForKey:@"request_date_begin"];
+    NSDate* returnDateAsDate = [[note userInfo] objectForKey:@"request_date_end"];
+    NSDate* pickupTimeAsDate = [[note userInfo] objectForKey:@"request_time_begin"];
+    NSDate* returnTimeAsDate = [[note userInfo] objectForKey:@"request_time_end"];
+    
+//    NSString* key_id = [[note userInfo] objectForKey:@"key_ID"];
+    
+    NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
+    CGRect selectedRect = [valueOfRect CGRectValue];
+
+    
+    //_____convert dates to strings
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatter setLocale:usLocale];
+    
+    [dateFormatter setDateFormat:@"EEE, MMM d"];  // 'at' h:mm aaa
+    
+    NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
+    [timeFormatter setLocale:usLocale];
+    [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
+    
+    //adjust the time by adding 9 hours... or 8 hours
+    float secondsForOffset = 28800;    //this is 9 hours = 32400;
+    NSDate* newTimeBegin = [pickupTimeAsDate dateByAddingTimeInterval:secondsForOffset];
+    NSDate* newTimeEnd = [returnTimeAsDate dateByAddingTimeInterval:secondsForOffset];
+    
+    NSString* combinedDateAndTimeBegin = [NSString stringWithFormat:@"%@ at %@", [dateFormatter stringFromDate:pickupDateAsDate], [timeFormatter stringFromDate:newTimeBegin]];
+    NSString* combinedDateAndTimeEnd = [NSString stringWithFormat:@"%@ at %@", [dateFormatter stringFromDate:returnDateAsDate], [timeFormatter stringFromDate:newTimeEnd]];
+    //_______
+    
+    
+    //assign target of popover's "edit request" button
+    [quickView.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventAllEvents];
+    
+    //show popover
+    [self.myScheduleRowQuickView presentPopoverFromRect:selectedRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    //assign values to quickView's ivars
+    quickView.contactName.text = [[note userInfo] objectForKey:@"contact_name"];
+//    quickView.classTitle.text = [[note userInfo] objectForKey:@"contact_name"];
+    quickView.pickUpDate.text = combinedDateAndTimeBegin;
+    quickView.returnDate.text = combinedDateAndTimeEnd;
+
+    
+    
+    
+}
+
+
 -(void) showRequestEditor:(NSNotification*)note{
     
     EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
@@ -717,13 +782,40 @@
     //add cancel button
     
     [self presentViewController:newNavController animated:YES completion:^{
-    
         
-                                              
     }];
+}
 
 
+-(IBAction)showRequestEditorFromQuickView:(id)sender{
     
+    //dismiss the quickView popover
+    [self.myScheduleRowQuickView dismissPopoverAnimated:YES];
+    
+    EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
+    
+    //prevent edges from extending beneath nav and tab bars
+    editorViewController.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    //initial setup
+    [editorViewController initialSetupWithInfo:self.temporaryDicFromNestedDayCell];;
+    
+    //assign editor's keyID property
+    //    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
+    
+    
+    
+    //______1_______pushes from the side and preserves navigation controller
+    //    [self.navigationController pushViewController:editorViewController animated:YES];
+    
+    
+    //______2_______model pops up from below, removes navigiation controller
+    UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
+    //add cancel button
+    
+    [self presentViewController:newNavController animated:YES completion:^{
+        
+    }];
     
 }
 
