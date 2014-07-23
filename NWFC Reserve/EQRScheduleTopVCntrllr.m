@@ -742,6 +742,8 @@
     
     //assign target of popover's "edit request" button
     [quickView.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventAllEvents];
+
+    
     
     //show popover
     [self.myScheduleRowQuickView presentPopoverFromRect:selectedRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];

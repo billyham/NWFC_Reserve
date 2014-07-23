@@ -63,10 +63,6 @@
 		542CC209197B531100BFD581 /* EQRInboxRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 542CC208197B531100BFD581 /* EQRInboxRowCell.m */; };
 		542CC20D197B56B100BFD581 /* EQRInboxCellContentVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 542CC20B197B56B100BFD581 /* EQRInboxCellContentVCntrllr.m */; };
 		542CC20E197B56B100BFD581 /* EQRInboxCellContentVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 542CC20C197B56B100BFD581 /* EQRInboxCellContentVCntrllr.xib */; };
-		542CC236197BA30E00BFD581 /* GenericLeftArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 542CC232197BA30E00BFD581 /* GenericLeftArrow.png */; };
-		542CC237197BA30E00BFD581 /* GenericLeftArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 542CC233197BA30E00BFD581 /* GenericLeftArrow@2x.png */; };
-		542CC238197BA30E00BFD581 /* GenericRightArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 542CC234197BA30E00BFD581 /* GenericRightArrow.png */; };
-		542CC239197BA30E00BFD581 /* GenericRightArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 542CC235197BA30E00BFD581 /* GenericRightArrow@2x.png */; };
 		542CC23E197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 542CC23C197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.m */; };
 		542CC23F197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 542CC23D197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.xib */; };
 		542F5FF8192355E6001C28CA /* EQRItineraryVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 542F5FF7192355E6001C28CA /* EQRItineraryVCntrllr.m */; };
@@ -81,6 +77,10 @@
 		5447B092193C32B5004C6DB9 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5447B091193C32B5004C6DB9 /* AVFoundation.framework */; };
 		5447B094193C32FB004C6DB9 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5447B093193C32FB004C6DB9 /* CoreVideo.framework */; };
 		5447B096193C3305004C6DB9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5447B095193C3305004C6DB9 /* CoreMedia.framework */; };
+		545547CC197F987C001AC986 /* GenericLeftArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 545547C8197F987C001AC986 /* GenericLeftArrow.png */; };
+		545547CD197F987C001AC986 /* GenericLeftArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 545547C9197F987C001AC986 /* GenericLeftArrow@2x.png */; };
+		545547CE197F987C001AC986 /* GenericRightArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 545547CA197F987C001AC986 /* GenericRightArrow.png */; };
+		545547CF197F987C001AC986 /* GenericRightArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 545547CB197F987C001AC986 /* GenericRightArrow@2x.png */; };
 		545661D918321D350067B40D /* EQREquipSelectionVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 545661D818321D350067B40D /* EQREquipSelectionVCntrllr.m */; };
 		545661DC183239520067B40D /* EQRWebData.m in Sources */ = {isa = PBXBuildFile; fileRef = 545661DB183239520067B40D /* EQRWebData.m */; };
 		545661DF18323ABC0067B40D /* EQREquipItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 545661DE18323ABC0067B40D /* EQREquipItem.m */; };
@@ -205,10 +205,6 @@
 		542CC20A197B56B100BFD581 /* EQRInboxCellContentVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRInboxCellContentVCntrllr.h; sourceTree = "<group>"; };
 		542CC20B197B56B100BFD581 /* EQRInboxCellContentVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRInboxCellContentVCntrllr.m; sourceTree = "<group>"; };
 		542CC20C197B56B100BFD581 /* EQRInboxCellContentVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRInboxCellContentVCntrllr.xib; sourceTree = "<group>"; };
-		542CC232197BA30E00BFD581 /* GenericLeftArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GenericLeftArrow.png; sourceTree = "<group>"; };
-		542CC233197BA30E00BFD581 /* GenericLeftArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GenericLeftArrow@2x.png"; sourceTree = "<group>"; };
-		542CC234197BA30E00BFD581 /* GenericRightArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GenericRightArrow.png; sourceTree = "<group>"; };
-		542CC235197BA30E00BFD581 /* GenericRightArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GenericRightArrow@2x.png"; sourceTree = "<group>"; };
 		542CC23B197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRDayDatePickerVCntrllr.h; sourceTree = "<group>"; };
 		542CC23C197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRDayDatePickerVCntrllr.m; sourceTree = "<group>"; };
 		542CC23D197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRDayDatePickerVCntrllr.xib; sourceTree = "<group>"; };
@@ -229,6 +225,10 @@
 		5447B091193C32B5004C6DB9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		5447B093193C32FB004C6DB9 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		5447B095193C3305004C6DB9 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		545547C8197F987C001AC986 /* GenericLeftArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GenericLeftArrow.png; sourceTree = "<group>"; };
+		545547C9197F987C001AC986 /* GenericLeftArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GenericLeftArrow@2x.png"; sourceTree = "<group>"; };
+		545547CA197F987C001AC986 /* GenericRightArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GenericRightArrow.png; sourceTree = "<group>"; };
+		545547CB197F987C001AC986 /* GenericRightArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GenericRightArrow@2x.png"; sourceTree = "<group>"; };
 		545661D718321D350067B40D /* EQREquipSelectionVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSelectionVCntrllr.h; sourceTree = "<group>"; };
 		545661D818321D350067B40D /* EQREquipSelectionVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipSelectionVCntrllr.m; sourceTree = "<group>"; };
 		545661DA183239520067B40D /* EQRWebData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRWebData.h; sourceTree = "<group>"; };
@@ -449,10 +449,10 @@
 		541167BA18E545630059BA3C /* art */ = {
 			isa = PBXGroup;
 			children = (
-				542CC232197BA30E00BFD581 /* GenericLeftArrow.png */,
-				542CC233197BA30E00BFD581 /* GenericLeftArrow@2x.png */,
-				542CC234197BA30E00BFD581 /* GenericRightArrow.png */,
-				542CC235197BA30E00BFD581 /* GenericRightArrow@2x.png */,
+				545547C8197F987C001AC986 /* GenericLeftArrow.png */,
+				545547C9197F987C001AC986 /* GenericLeftArrow@2x.png */,
+				545547CA197F987C001AC986 /* GenericRightArrow.png */,
+				545547CB197F987C001AC986 /* GenericRightArrow@2x.png */,
 				541167BB18E5458A0059BA3C /* EQRNavBarDatesView.h */,
 				541167BC18E5458A0059BA3C /* EQRNavBarDatesView.m */,
 				541167BE18E54FB80059BA3C /* EQRNavBarTopBar.h */,
@@ -663,12 +663,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				542CC238197BA30E00BFD581 /* GenericRightArrow.png in Resources */,
+				545547CD197F987C001AC986 /* GenericLeftArrow@2x.png in Resources */,
 				438EDCFB182B7ABE0090F882 /* Images.xcassets in Resources */,
-				542CC239197BA30E00BFD581 /* GenericRightArrow@2x.png in Resources */,
 				54E046F41924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib in Resources */,
 				549BF3BD191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib in Resources */,
-				542CC237197BA30E00BFD581 /* GenericLeftArrow@2x.png in Resources */,
 				438EDCEA182B7ABE0090F882 /* InfoPlist.strings in Resources */,
 				438EDCF3182B7ABE0090F882 /* Main.storyboard in Resources */,
 				542CC20E197B56B100BFD581 /* EQRInboxCellContentVCntrllr.xib in Resources */,
@@ -678,11 +676,13 @@
 				0119D30018DBB25D009126CB /* EQRScheduleCellContentVCntrllr.xib in Resources */,
 				54457ED21935B7B900E9061A /* EQRCheckCellContentVCntrllr.xib in Resources */,
 				5431456C197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.xib in Resources */,
-				542CC236197BA30E00BFD581 /* GenericLeftArrow.png in Resources */,
+				545547CC197F987C001AC986 /* GenericLeftArrow.png in Resources */,
 				01A5D7C418EBA85900EE99EF /* EQREditorTopVCntrllr.xib in Resources */,
 				01735F1E193FAC38007E85C1 /* EQRCheckPrintPage.xib in Resources */,
 				01A4755B18EB9BDF006F32EB /* EQREditorDateVCntrllr.xib in Resources */,
+				545547CF197F987C001AC986 /* GenericRightArrow@2x.png in Resources */,
 				5416F9A01918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.xib in Resources */,
+				545547CE197F987C001AC986 /* GenericRightArrow.png in Resources */,
 				54882BD31900D588005A4D5A /* EQREditorRenterVCntrllr.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

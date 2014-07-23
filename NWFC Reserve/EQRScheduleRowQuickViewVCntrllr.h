@@ -23,6 +23,8 @@
 @property (strong, nonatomic) IBOutlet UIButton* editRequestButton;
 
 
--(IBAction)editRequest:(id)sender;
+-(void)initialSetupWithDic:(NSDictionary*)dictionary;
+
+//-(IBAction)editRequest:(id)sender;
 
 @end

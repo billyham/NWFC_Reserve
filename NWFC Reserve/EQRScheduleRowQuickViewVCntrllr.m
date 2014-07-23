@@ -14,6 +14,8 @@
 
 @implementation EQRScheduleRowQuickViewVCntrllr
 
+#pragma mark - initialize
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -23,6 +25,14 @@
     return self;
 }
 
+
+-(void)initialSetupWithDic:(NSDictionary*)dictionary{
+    
+    
+    
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -30,13 +40,15 @@
 }
 
 
--(IBAction)editRequest:(id)sender{
-    
-    
-    
-    
-}
+//-(IBAction)editRequest:(id)sender{
+//    
+//    
+//    
+//    
+//}
 
+
+#pragma mark - memory warning
 
 - (void)didReceiveMemoryWarning
 {
