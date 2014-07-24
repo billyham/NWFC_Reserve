@@ -19,10 +19,11 @@ typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
 
 @interface EQRWebData : NSObject <NSXMLParserDelegate>{
     
-    __weak id <EQRWebDataDelegate> delegate;
+    __weak id <EQRWebDataDelegate> delegateForSchedule;
 }
 
-@property (nonatomic, weak) id <EQRWebDataDelegate> delegate;
+@property (nonatomic, weak) id <EQRWebDataDelegate> delegateForSchedule;
+
 @property BOOL cancelTheScheduleDownloadFlag;
 
 //@property (strong, nonatomic) NSMutableArray* totalEquip;

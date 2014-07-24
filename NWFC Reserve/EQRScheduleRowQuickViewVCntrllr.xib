@@ -7,16 +7,21 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRScheduleRowQuickViewVCntrllr">
             <connections>
                 <outlet property="classTitle" destination="gjc-jS-PhS" id="cxU-PE-0KD"/>
-                <outlet property="confirmedLabel" destination="T5t-je-oN8" id="1gf-z4-8jl"/>
+                <outlet property="confirmedLabel" destination="DUy-uN-bQD" id="jXI-tS-TY8"/>
+                <outlet property="confirmedValue" destination="T5t-je-oN8" id="yN8-aC-ClX"/>
                 <outlet property="contactName" destination="ga4-UI-EFM" id="jCP-aT-8b1"/>
                 <outlet property="editRequestButton" destination="iGQ-AE-SRP" id="Uf5-h8-wgG"/>
                 <outlet property="notesView" destination="nVn-19-PXP" id="7CI-PM-TNv"/>
                 <outlet property="pickUpDate" destination="LO9-yt-SDu" id="gmJ-4M-eKn"/>
-                <outlet property="pickedUpLabel" destination="d7n-av-b3d" id="XqW-on-7GR"/>
-                <outlet property="preppedLabel" destination="yG0-mW-Rvs" id="CoQ-PS-ceh"/>
+                <outlet property="pickedUpLabel" destination="AlF-sq-jsk" id="KFw-kn-84X"/>
+                <outlet property="pickedUpValue" destination="d7n-av-b3d" id="gwT-IY-zlt"/>
+                <outlet property="preppedLabel" destination="kCJ-6n-ltI" id="wLa-Tx-qfW"/>
+                <outlet property="preppedValue" destination="yG0-mW-Rvs" id="1UN-CY-bS9"/>
                 <outlet property="returnDate" destination="sAR-0k-48Q" id="v1S-hV-C6k"/>
-                <outlet property="returnedLabel" destination="R2q-lH-9mv" id="iRo-82-fwM"/>
-                <outlet property="shelvedLabel" destination="nSz-x8-ri9" id="KLA-Yi-006"/>
+                <outlet property="returnedLabel" destination="3bl-c2-W1L" id="8M7-vv-qbk"/>
+                <outlet property="returnedValue" destination="R2q-lH-9mv" id="ABu-j8-yiN"/>
+                <outlet property="shelvedLabel" destination="kwE-Jp-IAk" id="zxM-C0-HbO"/>
+                <outlet property="shelvedValue" destination="nSz-x8-ri9" id="sOB-p2-XPz"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -42,35 +47,35 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Confirmed" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DUy-uN-bQD">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Confirmed" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DUy-uN-bQD">
                     <rect key="frame" x="43" y="169" width="76" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Prepped" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kCJ-6n-ltI">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Prepped" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kCJ-6n-ltI">
                     <rect key="frame" x="43" y="197" width="76" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="PIcked Up" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AlF-sq-jsk">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Picked Up" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AlF-sq-jsk">
                     <rect key="frame" x="43" y="225" width="76" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Returned" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3bl-c2-W1L">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Returned" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3bl-c2-W1L">
                     <rect key="frame" x="43" y="253" width="76" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Shelved" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kwE-Jp-IAk">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Shelved" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kwE-Jp-IAk">
                     <rect key="frame" x="43" y="281" width="76" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>

@@ -398,7 +398,7 @@
     [self.myMasterScheduleCollectionView reloadData];
     
     //send async method to webData after assigning self as the delegate
-    webData.delegate = self;
+    webData.delegateForSchedule = self;
     
     //raise the is loading flag
     self.isLoadingEquipDataFlag = YES;
@@ -443,7 +443,7 @@
         //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
         //_________falsely showing equip joins from a previous month
         //_________remedy by disconnecting the webdata's delegate
-        self.myWebData.delegate = nil;
+        self.myWebData.delegateForSchedule = nil;
     }
     
     //add a month the current month
@@ -499,7 +499,7 @@
         //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
         //_________falsely showing equip joins from a previous month
         //_________remedy by disconnecting the webdata's delegate
-        self.myWebData.delegate = nil;
+        self.myWebData.delegateForSchedule = nil;
     }
     
     //subtract a month the current month
@@ -555,7 +555,7 @@
         //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
         //_________falsely showing equip joins from a previous month
         //_________remedy by disconnecting the webdata's delegate
-        self.myWebData.delegate = nil;
+        self.myWebData.delegateForSchedule = nil;
     }
     
     //assign date to ivar
@@ -597,7 +597,7 @@
         //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
         //_________falsely showing equip joins from a previous month
         //_________remedy by disconnecting the webdata's delegate
-        self.myWebData.delegate = nil;
+        self.myWebData.delegateForSchedule = nil;
     }
     
     //get date from the popover's content view controller, a public method
@@ -704,40 +704,47 @@
     EQRScheduleRowQuickViewVCntrllr* quickView = [[EQRScheduleRowQuickViewVCntrllr alloc] initWithNibName:@"EQRScheduleRowQuickViewVCntrllr" bundle:nil];
     self.myScheduleRowQuickView = [[UIPopoverController alloc] initWithContentViewController:quickView];
     
-    //__________****** assign userInfo dic to ivar SEEMS WEIRD  *********_______
+
+    
+    //__________****** assign userInfo dic to ivar SEEMS WEIRD but requires the dic in the showRequestEditor method *********_______
     self.temporaryDicFromNestedDayCell = [NSDictionary dictionaryWithDictionary:[note userInfo]];
     
-    //convert items in note's userInfo
-    NSDate* pickupDateAsDate = [[note userInfo] objectForKey:@"request_date_begin"];
-    NSDate* returnDateAsDate = [[note userInfo] objectForKey:@"request_date_end"];
-    NSDate* pickupTimeAsDate = [[note userInfo] objectForKey:@"request_time_begin"];
-    NSDate* returnTimeAsDate = [[note userInfo] objectForKey:@"request_time_end"];
-    
-//    NSString* key_id = [[note userInfo] objectForKey:@"key_ID"];
+    //do the busy work of creating the popOver view
+    [quickView initialSetupWithDic:self.temporaryDicFromNestedDayCell];
     
     NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
     CGRect selectedRect = [valueOfRect CGRectValue];
+    
+//    //convert items in note's userInfo
+//    NSDate* pickupDateAsDate = [[note userInfo] objectForKey:@"request_date_begin"];
+//    NSDate* returnDateAsDate = [[note userInfo] objectForKey:@"request_date_end"];
+//    NSDate* pickupTimeAsDate = [[note userInfo] objectForKey:@"request_time_begin"];
+//    NSDate* returnTimeAsDate = [[note userInfo] objectForKey:@"request_time_end"];
+//    
+////    NSString* key_id = [[note userInfo] objectForKey:@"key_ID"];
+//    
 
-    
-    //_____convert dates to strings
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [dateFormatter setLocale:usLocale];
-    
-    [dateFormatter setDateFormat:@"EEE, MMM d"];  // 'at' h:mm aaa
-    
-    NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
-    [timeFormatter setLocale:usLocale];
-    [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
-    
-    //adjust the time by adding 9 hours... or 8 hours
-    float secondsForOffset = 28800;    //this is 9 hours = 32400;
-    NSDate* newTimeBegin = [pickupTimeAsDate dateByAddingTimeInterval:secondsForOffset];
-    NSDate* newTimeEnd = [returnTimeAsDate dateByAddingTimeInterval:secondsForOffset];
-    
-    NSString* combinedDateAndTimeBegin = [NSString stringWithFormat:@"%@ at %@", [dateFormatter stringFromDate:pickupDateAsDate], [timeFormatter stringFromDate:newTimeBegin]];
-    NSString* combinedDateAndTimeEnd = [NSString stringWithFormat:@"%@ at %@", [dateFormatter stringFromDate:returnDateAsDate], [timeFormatter stringFromDate:newTimeEnd]];
-    //_______
+//
+//    
+//    //_____convert dates to strings
+//    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+//    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+//    [dateFormatter setLocale:usLocale];
+//    
+//    [dateFormatter setDateFormat:@"EEE, MMM d"];  // 'at' h:mm aaa
+//    
+//    NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
+//    [timeFormatter setLocale:usLocale];
+//    [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
+//    
+//    //adjust the time by adding 9 hours... or 8 hours
+//    float secondsForOffset = 28800;    //this is 9 hours = 32400;
+//    NSDate* newTimeBegin = [pickupTimeAsDate dateByAddingTimeInterval:secondsForOffset];
+//    NSDate* newTimeEnd = [returnTimeAsDate dateByAddingTimeInterval:secondsForOffset];
+//    
+//    NSString* combinedDateAndTimeBegin = [NSString stringWithFormat:@"%@ at %@", [dateFormatter stringFromDate:pickupDateAsDate], [timeFormatter stringFromDate:newTimeBegin]];
+//    NSString* combinedDateAndTimeEnd = [NSString stringWithFormat:@"%@ at %@", [dateFormatter stringFromDate:returnDateAsDate], [timeFormatter stringFromDate:newTimeEnd]];
+//    //_______
     
     
     //assign target of popover's "edit request" button
@@ -748,11 +755,11 @@
     //show popover
     [self.myScheduleRowQuickView presentPopoverFromRect:selectedRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
-    //assign values to quickView's ivars
-    quickView.contactName.text = [[note userInfo] objectForKey:@"contact_name"];
-//    quickView.classTitle.text = [[note userInfo] objectForKey:@"contact_name"];
-    quickView.pickUpDate.text = combinedDateAndTimeBegin;
-    quickView.returnDate.text = combinedDateAndTimeEnd;
+//    //assign values to quickView's ivars
+//    quickView.contactName.text = [[note userInfo] objectForKey:@"contact_name"];
+////    quickView.classTitle.text = [[note userInfo] objectForKey:@"contact_name"];
+//    quickView.pickUpDate.text = combinedDateAndTimeBegin;
+//    quickView.returnDate.text = combinedDateAndTimeEnd;
 
     
     

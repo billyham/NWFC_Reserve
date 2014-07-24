@@ -46,7 +46,7 @@ const int intEQREquipUniqueItem = 8;
 
 @implementation EQRWebData
 
-@synthesize delegate;
+@synthesize delegateForSchedule;
 
 
 #pragma mark - class methods
@@ -688,6 +688,12 @@ const int intEQREquipUniqueItem = 8;
         return;
     }
     
+    if ([elementName isEqualToString:@"staff_confirmation_date"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
     if ([elementName isEqualToString:@"staff_prep_date"]){
         
         self.currentProperty = elementName;
@@ -712,7 +718,41 @@ const int intEQREquipUniqueItem = 8;
         return;
     }
     
+    if ([elementName isEqualToString:@"staff_confirmation_id"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
     
+    if ([elementName isEqualToString:@"staff_prep_id"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"staff_checkout_id"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"staff_checkin_id"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"staff_shelf_id"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"notes"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
     
     
 }
@@ -744,6 +784,7 @@ const int intEQREquipUniqueItem = 8;
         [self.muteArray addObject:self.currentThing];
         
         //________********** TEST FOR ASYNC METHODS ***********___________
+        //will only do anything if it has a delegate
         [self asyncDispatchWithObject:self.currentThing];
         
         
@@ -1191,6 +1232,22 @@ const int intEQREquipUniqueItem = 8;
         return;
     }
     
+    if ([prop isEqualToString:@"staff_confirmation_date"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(staff_confirmation_date)]){
+            
+            //need to convert date string into dates
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            
+            [(EQRScheduleRequestItem*)self.currentThing setStaff_confirmation_date:[dateFormatter dateFromString:self.currentValue]];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
     if ([prop isEqualToString:@"staff_prep_date"]){
         
         if ([self.currentThing respondsToSelector:@selector(staff_prep_date)]){
@@ -1255,6 +1312,71 @@ const int intEQREquipUniqueItem = 8;
         return;
     }
     
+    if ([prop isEqualToString:@"staff_confirmation_id"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(staff_confirmation_id)]){
+            
+            [(EQRScheduleRequestItem*)self.currentThing setStaff_confirmation_id:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"staff_prep_id"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(staff_prep_id)]){
+            
+            [(EQRScheduleRequestItem*)self.currentThing setStaff_prep_id:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"staff_checkout_id"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(staff_checkout_id)]){
+            
+            [(EQRScheduleRequestItem*)self.currentThing setStaff_checkout_id:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"staff_checkin_id"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(staff_checkin_id)]){
+            
+            [(EQRScheduleRequestItem*)self.currentThing setStaff_checkin_id:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"staff_shelf_id"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(staff_shelf_id)]){
+            
+            [(EQRScheduleRequestItem*)self.currentThing setStaff_shelf_id:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"notes"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(notes)]){
+            
+            [(EQRScheduleRequestItem*)self.currentThing setNotes:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
     
     
     
@@ -1439,13 +1561,14 @@ const int intEQREquipUniqueItem = 8;
 
 -(void)asyncDispatchWithObject:(id)currentThing{
     
-    if (self.delegate != nil){
+    if (self.delegateForSchedule != nil){
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            [self.delegate addScheduleTrackingItem:currentThing];
+            [self.delegateForSchedule addScheduleTrackingItem:currentThing];
         });
-    }
+    } 
+    
     
 }
 

@@ -43,6 +43,7 @@
 @property (strong, nonatomic) NSString* station_id;
 @property (strong, nonatomic) NSDate* staff_shelf_date;
 @property (strong, nonatomic) NSString* staff_shelf_id;
+@property (strong, nonatomic) NSString* notes;
 
 
 @property (strong, nonatomic) EQRContactNameItem* contactNameItem;
