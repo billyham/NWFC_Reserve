@@ -17,6 +17,12 @@
 @property (strong, nonatomic) NSString* combinedDateAndTimeBegin;
 @property (strong, nonatomic) NSString* combinedDateAndTimeEnd;
 
+@property (strong, nonatomic) NSString* staff_confirmation_name;
+@property (strong, nonatomic) NSString* staff_prep_name;
+@property (strong, nonatomic) NSString* staff_checkout_name;
+@property (strong, nonatomic) NSString* staff_checkin_name;
+@property (strong, nonatomic) NSString* staff_shelf_name;
+
 @end
 
 @implementation EQRScheduleRowQuickViewVCntrllr
@@ -136,58 +142,103 @@
     
     //assign values to quickView's ivars
     self.contactName.text = [self.myUserData objectForKey:@"contact_name"];
-    //    quickView.classTitle.text = [[note userInfo] objectForKey:@"contact_name"];
     self.pickUpDate.text = self.combinedDateAndTimeBegin;
     self.returnDate.text = self.combinedDateAndTimeEnd;
     
     //using additional data that this object retrieved...
     
     
+    //retrieve the contact names from their ids
+    if (![self.myScheduleRequestItem.staff_confirmation_id isEqualToString:@""]) {
+        self.staff_confirmation_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_confirmation_id];
+    } else {
+        self.staff_confirmation_name = @"";
+    }
     
+    if (![self.myScheduleRequestItem.staff_prep_id isEqualToString:@""]) {
+        self.staff_prep_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_prep_id];
+    } else {
+        self.staff_prep_name = @"";
+    }
     
+//    self.staff_prep_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_prep_id];
     
+    if (![self.myScheduleRequestItem.staff_checkout_id isEqualToString:@""]) {
+        self.staff_checkout_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_checkout_id];
+    } else {
+        self.staff_checkout_name = @"";
+    }
+    
+//    self.staff_checkout_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_checkout_id];
+    
+    if (![self.myScheduleRequestItem.staff_checkin_id isEqualToString:@""]) {
+        self.staff_checkin_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_checkin_id];
+    } else {
+        self.staff_checkin_name = @"";
+    }
+    
+    if (![self.myScheduleRequestItem.staff_shelf_id isEqualToString:@""]) {
+        self.staff_shelf_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_shelf_id];
+    } else {
+        self.staff_shelf_name = @"";
+    }
+    
+//    self.staff_shelf_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_shelf_id];
+
     
     //change alpha of label when the value exists, and add a value with a name
     if (self.myScheduleRequestItem.staff_confirmation_date){
         self.confirmedLabel.alpha = 1.0;
         
-        self.confirmedValue.text = [NSString stringWithFormat:@"%@ by %@",
+        self.confirmedValue.text = [NSString stringWithFormat:@"%@ %@",
                                     [self convertDateToString:self.myScheduleRequestItem.staff_confirmation_date],
-                                    self.myScheduleRequestItem.staff_confirmation_id];
+                                    self.staff_confirmation_name];
     }
     
     if (self.myScheduleRequestItem.staff_prep_date){
         self.preppedLabel.alpha = 1.0;
         
-        self.preppedValue.text = [NSString stringWithFormat:@"%@ by %@",
+        self.preppedValue.text = [NSString stringWithFormat:@"%@ %@",
                                   [self convertDateToString:self.myScheduleRequestItem.staff_prep_date],
-                                  self.myScheduleRequestItem.staff_prep_id];
+                                  self.staff_prep_name];
     }
     
     if (self.myScheduleRequestItem.staff_checkout_date){
         self.pickedUpLabel.alpha = 1.0;
         
-        self.pickedUpValue.text = [NSString stringWithFormat:@"%@ by %@",
+        self.pickedUpValue.text = [NSString stringWithFormat:@"%@ %@",
                                    [self convertDateToString:self.myScheduleRequestItem.staff_checkout_date],
-                                   self.myScheduleRequestItem.staff_checkout_id];
+                                   self.staff_checkout_name];
     }
     
     if (self.myScheduleRequestItem.staff_checkin_date){
         self.returnedLabel.alpha = 1.0;
         
-        self.returnedValue.text = [NSString stringWithFormat:@"%@ by %@",
+        self.returnedValue.text = [NSString stringWithFormat:@"%@ %@",
                                    [self convertDateToString:self.myScheduleRequestItem.staff_checkin_date],
-                                   self.myScheduleRequestItem.staff_checkin_id];
+                                   self.staff_checkin_name];
     }
     
     if (self.myScheduleRequestItem.staff_shelf_date){
         self.shelvedLabel.alpha = 1.0;
         
-        self.shelvedValue.text = [NSString stringWithFormat:@"%@ by %@",
+        self.shelvedValue.text = [NSString stringWithFormat:@"%@ %@",
                                   [self convertDateToString:self.myScheduleRequestItem.staff_shelf_date],
-                                  self.myScheduleRequestItem.staff_shelf_id];
+                                  self.staff_shelf_name];
     }
     
+}
+
+
+-(NSString*)retrieveNameWithID:(NSString*)key_id{
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", key_id, nil];
+    NSArray* topArray = [NSArray arrayWithObject:firstArray];
+    NSString* firstAndLast = [webData queryForStringWithLink:@"EQGetContactNameWithKey.php" parameters:topArray];
+
+    return [NSString stringWithFormat:@"/ %@",firstAndLast];
 }
 
 

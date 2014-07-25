@@ -45,7 +45,7 @@
 @property (strong, nonatomic) NSString* staff_shelf_id;
 @property (strong, nonatomic) NSString* notes;
 
-
+//non-database properties
 @property (strong, nonatomic) EQRContactNameItem* contactNameItem;
 @property (strong, nonatomic) EQRClassItem* classItem;
 @property (strong, nonatomic) EQRClassRegistrationItem* classRegistrationItem;
