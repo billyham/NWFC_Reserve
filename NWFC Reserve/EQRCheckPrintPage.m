@@ -94,7 +94,7 @@
     [pickUpTimeFormatter setTimeStyle:NSDateFormatterShortStyle];
     
     //adjust the time by adding 9 hours... or 8 hours
-    float secondsForOffset = 28800;    //this is 9 hours = 32400;
+    float secondsForOffset = 0;    //this is 9 hours = 32400, this is 8 hours = 28800;
     NSDate* newTimeBegin = [self.request.request_time_begin dateByAddingTimeInterval:secondsForOffset];
     NSDate* newTimeEnd = [self.request.request_time_end dateByAddingTimeInterval:secondsForOffset];
 

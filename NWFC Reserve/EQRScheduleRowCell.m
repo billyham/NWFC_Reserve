@@ -218,9 +218,6 @@
     UICollectionViewCell* cellOfSelectedNestedDayCell = [collectionView cellForItemAtIndexPath:indexPath];
 //    CGRect rectOfSelectedNestedDayCell = cellOfSelectedNestedDayCell.frame;
     
-    
-    
-    
     //original point with offset ...  I HAVE NO IDEA WHY THE X VALUE NEEDS TO REFERENCE THE CONTENTVIEW, BUT OTHERWISE IT DON'T WORK
     CGPoint originPoint = CGPointMake(
                                       cellOfSelectedNestedDayCell.contentView.frame.origin.x + EQRScheduleLengthOfEquipUniqueLabel,
@@ -229,16 +226,14 @@
     //Size is OK
     CGSize originSize = CGSizeMake(cellOfSelectedNestedDayCell.frame.size.width, cellOfSelectedNestedDayCell.frame.size.height);
     
+    //________there is an easier option... send both the CGRect and also the View, instead of converting the point into superviews_______
     //convert values to other superview coordinates
     CGPoint convertedPointForX = [cellOfSelectedNestedDayCell convertPoint:originPoint toView:cellOfSelectedNestedDayCell.superview];
     CGPoint convertedPointForY = [cellOfSelectedNestedDayCell convertPoint:convertedPointForX toView:cellOfSelectedNestedDayCell.superview.superview.superview.superview.superview];
     
     //final CGRect
     CGRect frameSizeInSuperViewCooridnates = CGRectMake(convertedPointForX.x, convertedPointForY.y, originSize.width, originSize.height);
-    
-    
-
-    
+ 
     NSValue* valueOfRect = [NSValue valueWithCGRect:frameSizeInSuperViewCooridnates];
     
     //bring up editor view with notification

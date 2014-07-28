@@ -11,11 +11,14 @@
 #import "EQRWebData.h"
 #import "EQRGlobals.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
+#import "EQRScheduleRowQuickViewVCntrllr.h"
+#import "EQRDayDatePickerVCntrllr.h"
 
 @interface EQRItineraryCellContentVCntrllr ()
 
 @property (strong, nonatomic) UIColor* myAssignedColor;
-
+@property (strong, nonatomic) UIButton* myQuickViewButton;
+@property (strong, nonatomic) UIPopoverController* myPopOver;
 
 
 @end
@@ -47,7 +50,7 @@
     EQRColors* colors = [EQRColors sharedInstance];
     
     //______create tap radio "buttons"
-    CGRect thisFirstRect = CGRectMake(354, 8, 30, 30);
+    CGRect thisFirstRect = CGRectMake(314, 8, 30, 30);
     self.switchTap1 = [[EQRTapRadioButtonView alloc] initWithFrame:thisFirstRect];
     self.switchTap1.opaque = NO;
     self.switchTap1.backgroundColor = [UIColor clearColor];
@@ -56,7 +59,7 @@
     //assign self as button's delegate
     self.switchTap1.delegate = self;
     
-    CGRect thisSecondRect = CGRectMake(525, 8, 30, 30);
+    CGRect thisSecondRect = CGRectMake(465, 8, 30, 30);
     self.switchTap2 = [[EQRTapRadioButtonView alloc] initWithFrame:thisSecondRect];
     self.switchTap2.opaque = NO;
     self.switchTap2.backgroundColor = [UIColor clearColor];
@@ -66,6 +69,13 @@
     self.switchTap2.delegate = self;
     
 
+    //______create quickView button
+//    CGRect thisThirdRect = CGRectMake(640, 8, 30, 30);
+    self.myQuickViewButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+    self.myQuickViewButton.frame = CGRectMake(600, 15, 30, 30);
+    [self.myQuickViewButton addTarget:self action:@selector(showQuickView:) forControlEvents:UIControlEventAllEvents];
+    
+    
     
     
     
@@ -123,6 +133,7 @@
     
     [self.view addSubview:self.switchTap1];
     [self.view addSubview:self.switchTap2];
+    [self.view addSubview:self.myQuickViewButton];
 
 }
 
@@ -162,6 +173,24 @@
                              nil];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentCheckInOut object:nil userInfo:userDic];
+    
+}
+
+
+-(IBAction)showQuickView:(id)sender{
+    
+    NSValue* rectValue = [NSValue valueWithCGRect:self.myQuickViewButton.frame];
+    UIView* thisView = self.view;
+    NSDictionary* dic = [NSDictionary dictionaryWithObjectsAndKeys:
+                         self.requestKeyId, @"key_ID",
+                         [NSNumber numberWithBool:self.markedForReturning], @"marked_for_returning",
+                         rectValue, @"rectValue",
+                         thisView, @"thisView", nil];
+    
+    
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentItineraryQuickView object:nil userInfo:dic];
+    
     
 }
 

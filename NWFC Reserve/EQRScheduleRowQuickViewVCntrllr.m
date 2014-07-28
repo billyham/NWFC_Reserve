@@ -9,6 +9,7 @@
 #import "EQRScheduleRowQuickViewVCntrllr.h"
 #import "EQRWebData.h"
 #import "EQRScheduleRequestItem.h"
+#import "EQRContactNameItem.h"
 
 @interface EQRScheduleRowQuickViewVCntrllr ()
 
@@ -65,20 +66,21 @@
     //shelf date and name
     //notes
     
+    
+    //____abort if no key_id exists
+    if (key_id == nil) return;
+    
     NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", key_id, nil];
     NSArray* secondArray = [NSArray arrayWithObject:firstArray];
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
     [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:secondArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
         
-        NSLog(@"this is the count of the quickview data array: %u", [muteArray count]);
-        
         //should just be one object...
         for (EQRScheduleRequestItem* object in muteArray){
             
             [tempMuteArray addObject:object];
         }
-        
     }];
     
     if ([tempMuteArray count] > 0){
@@ -97,6 +99,12 @@
 
 -(NSString*)convertDateToString:(NSDate*)date withTime:(NSDate*)time{
     
+    //error handling
+    if (date == nil){
+        
+        return @"";
+    }
+    
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     [dateFormatter setLocale:usLocale];
@@ -108,7 +116,7 @@
     [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
     
     //adjust the time by adding 9 hours... or 8 hours
-    float secondsForOffset = 28800;    //this is 9 hours = 32400;
+    float secondsForOffset = 0;    //this is 9 hours = 32400, this is 8 hours = 28800;
     NSDate* newTime = [time dateByAddingTimeInterval:secondsForOffset];
     
     NSString* returnString = [NSString stringWithFormat:@"%@ at %@", [dateFormatter stringFromDate:date], [timeFormatter stringFromDate:newTime]];
@@ -118,6 +126,12 @@
 
 
 -(NSString*)convertDateToString:(NSDate*)date{
+    
+    //error handling
+    if (date == nil){
+        
+        return @"";
+    }
     
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -146,45 +160,37 @@
     self.returnDate.text = self.combinedDateAndTimeEnd;
     
     //using additional data that this object retrieved...
-    
-    
     //retrieve the contact names from their ids
-    if (![self.myScheduleRequestItem.staff_confirmation_id isEqualToString:@""]) {
+    if ((![self.myScheduleRequestItem.staff_confirmation_id isEqualToString:@""]) && (self.myScheduleRequestItem.staff_confirmation_id != nil)) {
         self.staff_confirmation_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_confirmation_id];
     } else {
         self.staff_confirmation_name = @"";
     }
     
-    if (![self.myScheduleRequestItem.staff_prep_id isEqualToString:@""]) {
+    if ((![self.myScheduleRequestItem.staff_prep_id isEqualToString:@""]) && (self.myScheduleRequestItem.staff_prep_id != nil)) {
         self.staff_prep_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_prep_id];
     } else {
         self.staff_prep_name = @"";
     }
     
-//    self.staff_prep_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_prep_id];
-    
-    if (![self.myScheduleRequestItem.staff_checkout_id isEqualToString:@""]) {
+    if ((![self.myScheduleRequestItem.staff_checkout_id isEqualToString:@""]) && (self.myScheduleRequestItem.staff_checkout_id != nil)) {
         self.staff_checkout_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_checkout_id];
     } else {
         self.staff_checkout_name = @"";
     }
     
-//    self.staff_checkout_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_checkout_id];
-    
-    if (![self.myScheduleRequestItem.staff_checkin_id isEqualToString:@""]) {
+    if ((![self.myScheduleRequestItem.staff_checkin_id isEqualToString:@""])&& (self.myScheduleRequestItem.staff_checkin_id != nil)) {
         self.staff_checkin_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_checkin_id];
     } else {
         self.staff_checkin_name = @"";
     }
     
-    if (![self.myScheduleRequestItem.staff_shelf_id isEqualToString:@""]) {
+    if ((![self.myScheduleRequestItem.staff_shelf_id isEqualToString:@""]) && (self.myScheduleRequestItem.staff_shelf_date != nil)) {
         self.staff_shelf_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_shelf_id];
     } else {
         self.staff_shelf_name = @"";
     }
     
-//    self.staff_shelf_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_shelf_id];
-
     
     //change alpha of label when the value exists, and add a value with a name
     if (self.myScheduleRequestItem.staff_confirmation_date){
@@ -236,9 +242,29 @@
     
     NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", key_id, nil];
     NSArray* topArray = [NSArray arrayWithObject:firstArray];
-    NSString* firstAndLast = [webData queryForStringWithLink:@"EQGetContactNameWithKey.php" parameters:topArray];
-
-    return [NSString stringWithFormat:@"/ %@",firstAndLast];
+    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+    [webData queryWithLink:@"EQGetContactNameWithKey.php" parameters:topArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+       
+        //return the first item
+        if ([muteArray count] > 0){
+            
+            [tempMuteArray addObject:[muteArray objectAtIndex:0]];
+        }
+    }];
+    
+    if ([tempMuteArray count] > 0){
+        
+        //derive first name and last initial
+        NSString* firstName = [(EQRContactNameItem*)[tempMuteArray objectAtIndex:0] first_name];
+        NSString* lastName = [(EQRContactNameItem*)[tempMuteArray objectAtIndex:0] last_name];
+        
+        return [NSString stringWithFormat:@" – %@ %@", firstName, [lastName substringToIndex:1]];
+        
+    } else {
+        
+        //error handling when no contact is returned
+        return @"";
+    }
 }
 
 

@@ -351,7 +351,6 @@
     self.aChangeWasMade = NO;
     
     //______Get a list of tracking items (defaulting with the current month)
-    //_______*******  IS NOT GETTING REQUESTS THAT BEGIN IN THE PREVIOUS MONTH AND EXTEND INTO THIS ONE  *******______
     NSDate* todaysDate = self.dateForShow;
     NSDateFormatter* timestampFormatter = [[NSDateFormatter alloc] init];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -715,37 +714,6 @@
     NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
     CGRect selectedRect = [valueOfRect CGRectValue];
     
-//    //convert items in note's userInfo
-//    NSDate* pickupDateAsDate = [[note userInfo] objectForKey:@"request_date_begin"];
-//    NSDate* returnDateAsDate = [[note userInfo] objectForKey:@"request_date_end"];
-//    NSDate* pickupTimeAsDate = [[note userInfo] objectForKey:@"request_time_begin"];
-//    NSDate* returnTimeAsDate = [[note userInfo] objectForKey:@"request_time_end"];
-//    
-////    NSString* key_id = [[note userInfo] objectForKey:@"key_ID"];
-//    
-
-//
-//    
-//    //_____convert dates to strings
-//    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-//    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-//    [dateFormatter setLocale:usLocale];
-//    
-//    [dateFormatter setDateFormat:@"EEE, MMM d"];  // 'at' h:mm aaa
-//    
-//    NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
-//    [timeFormatter setLocale:usLocale];
-//    [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
-//    
-//    //adjust the time by adding 9 hours... or 8 hours
-//    float secondsForOffset = 28800;    //this is 9 hours = 32400;
-//    NSDate* newTimeBegin = [pickupTimeAsDate dateByAddingTimeInterval:secondsForOffset];
-//    NSDate* newTimeEnd = [returnTimeAsDate dateByAddingTimeInterval:secondsForOffset];
-//    
-//    NSString* combinedDateAndTimeBegin = [NSString stringWithFormat:@"%@ at %@", [dateFormatter stringFromDate:pickupDateAsDate], [timeFormatter stringFromDate:newTimeBegin]];
-//    NSString* combinedDateAndTimeEnd = [NSString stringWithFormat:@"%@ at %@", [dateFormatter stringFromDate:returnDateAsDate], [timeFormatter stringFromDate:newTimeEnd]];
-//    //_______
-    
     
     //assign target of popover's "edit request" button
     [quickView.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventAllEvents];
@@ -754,15 +722,6 @@
     
     //show popover
     [self.myScheduleRowQuickView presentPopoverFromRect:selectedRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    
-//    //assign values to quickView's ivars
-//    quickView.contactName.text = [[note userInfo] objectForKey:@"contact_name"];
-////    quickView.classTitle.text = [[note userInfo] objectForKey:@"contact_name"];
-//    quickView.pickUpDate.text = combinedDateAndTimeBegin;
-//    quickView.returnDate.text = combinedDateAndTimeEnd;
-
-    
-    
     
 }
 

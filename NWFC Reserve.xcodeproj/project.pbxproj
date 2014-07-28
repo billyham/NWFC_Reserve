@@ -304,9 +304,6 @@
 				54746DEA18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m */,
 				014F776B18E3B28F00C75D66 /* EQRScheduleNavBarCell.h */,
 				014F776C18E3B28F00C75D66 /* EQRScheduleNavBarCell.m */,
-				54314568197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.h */,
-				54314569197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.m */,
-				5431456A197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.xib */,
 			);
 			name = "Schedule Display";
 			sourceTree = "<group>";
@@ -487,6 +484,9 @@
 		542CC23A197CECA800BFD581 /* shared nibs */ = {
 			isa = PBXGroup;
 			children = (
+				54314568197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.h */,
+				54314569197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.m */,
+				5431456A197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.xib */,
 				542CC23B197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.h */,
 				542CC23C197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.m */,
 				542CC23D197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.xib */,

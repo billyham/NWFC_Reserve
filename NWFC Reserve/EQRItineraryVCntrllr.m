@@ -15,6 +15,8 @@
 #import "EQRWebData.h"
 #import "EQRCheckVCntrllr.h"
 #import "EQRDayDatePickerVCntrllr.h"
+#import "EQRScheduleRowQuickViewVCntrllr.h"
+#import "EQREditorTopVCntrllr.h"
 
 @interface EQRItineraryVCntrllr ()
 
@@ -38,6 +40,8 @@
 @property (strong, nonatomic) IBOutlet UIButton* buttonReturningShelved;
 
 @property (strong, nonatomic) UIPopoverController* myDayDatePicker;
+@property (strong, nonatomic) UIPopoverController* myQuickView;
+@property (strong, nonatomic) NSDictionary* temporaryDicFromQuickView;
 
 -(IBAction)moveToNextDay:(id)sender;
 -(IBAction)moveToPreviousDay:(id)sender;
@@ -67,6 +71,8 @@
     [nc addObserver:self selector:@selector(partialRefreshToUpdateTheArrayOfRequests:) name:EQRPartialRefreshToItineraryArray object:nil];
     //receive note from cellContentView to show check in out v controllr
     [nc addObserver:self selector:@selector(showCheckInOut:) name:EQRPresentCheckInOut object:nil];
+    //receive note from itinerary row to show quick view
+    [nc addObserver:self selector:@selector(showQuickView:) name:EQRPresentItineraryQuickView object:nil];
     
     //register collection view cell
     [self.myMasterItineraryCollection registerClass:[EQRItineraryRowCell class] forCellWithReuseIdentifier:@"Cell"];
@@ -234,9 +240,11 @@
             NSLog(@"this is the prep date: %@", [(EQRScheduleRequestItem*)object staff_prep_date]);
             
             //adjust the begin date by adding 9 hours... or 8 hours
-            float secondsForOffset = 28800;    //this is 9 hours = 32400;
+            float secondsForOffset = 0;    //this is 9 hours = 32400, this is 8 hours = 28800;
             NSDate* newTimeBegin = [[(EQRScheduleRequestItem*)object request_time_begin] dateByAddingTimeInterval:secondsForOffset];
+            NSDate* newTimeEnd = [[(EQRScheduleRequestItem*)object request_time_end] dateByAddingTimeInterval:secondsForOffset];
             [(EQRScheduleRequestItem*)object setRequest_time_begin:newTimeBegin];
+            [(EQRScheduleRequestItem*)object setRequest_time_end:newTimeEnd];
             
             [tempMuteArray addObject:object];
         }
@@ -249,8 +257,10 @@
         for (id object in muteArray){
             
             //adjust the date by adding 9 hours... or 8 hours
-            float secondsForOffset = 28800;    //this is 9 hours = 32400;
+            float secondsForOffset = 0;    //this is 9 hours = 32400, this is 8 hours = 28800;
+            NSDate* newTimeBegin = [[(EQRScheduleRequestItem*)object request_time_begin] dateByAddingTimeInterval:secondsForOffset];
             NSDate* newTimeEnd = [[(EQRScheduleRequestItem*)object request_time_end] dateByAddingTimeInterval:secondsForOffset];
+            [(EQRScheduleRequestItem*)object setRequest_time_begin:newTimeBegin];
             [(EQRScheduleRequestItem*)object setRequest_time_end:newTimeEnd];
             
             //mark the request item as a return object
@@ -331,6 +341,127 @@
     [self presentViewController:newNavController animated:YES completion:^{
         
     }];
+}
+
+
+#pragma mark - showQuickView
+
+-(void)showQuickView:(NSNotification*)note{
+    
+    EQRScheduleRowQuickViewVCntrllr* quickViewController = [[EQRScheduleRowQuickViewVCntrllr alloc] initWithNibName:@"EQRScheduleRowQuickViewVCntrllr" bundle:nil];
+    
+    self.myQuickView = [[UIPopoverController alloc] initWithContentViewController:quickViewController];
+    
+    //empty the temp array
+    if ([self.temporaryDicFromQuickView count] > 0){
+        
+        self.temporaryDicFromQuickView = nil;
+    }
+    
+    EQRScheduleRequestItem* myItem;
+    for (EQRScheduleRequestItem* thisItem in self.arrayOfScheduleRequests){
+        
+        //marked_for_returning
+        BOOL marked_for_returning = [[[note userInfo] objectForKey:@"marked_for_returning"] boolValue];
+        
+        if (([thisItem.key_id isEqualToString:[[note userInfo] objectForKey:@"key_ID"]]) && (marked_for_returning == thisItem.markedForReturn)){
+            
+            myItem = thisItem;
+            
+            //undo the adjustment to the time difference
+//            //adjust the time by adding 9 hours... or 8 hours
+//            float secondsForOffset = 28800;    //this is 9 hours = 32400;
+//            myItem.request_time_begin = [myItem.request_time_begin dateByAddingTimeInterval:secondsForOffset];
+//            myItem.request_time_end = [myItem.request_time_end dateByAddingTimeInterval:secondsForOffset];
+            
+        }
+    }
+    
+    //instantiate with details
+    NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                         [[note userInfo] objectForKey: @"key_ID"],@"key_ID",
+                         myItem.contact_name , @"contact_name",
+                         myItem.renter_type, @"renter_type",
+                         myItem.request_date_begin, @"request_date_begin",
+                         myItem.request_date_end, @"request_date_end",
+                         myItem.request_time_begin, @"request_time_begin",
+                         myItem.request_time_end, @"request_time_end",
+                         nil];
+    
+
+    //undo the adjustment to the time difference
+    //adjust the time by adding 9 hours... or 8 hours
+    float secondsForOffset = 0 * 2;    //this is 9 hours = 32400, this is 8 hour = 28800;
+    [dic setValue:[myItem.request_time_begin dateByAddingTimeInterval:secondsForOffset] forKey:@"request_time_begin"];
+    [dic setValue:[myItem.request_time_end dateByAddingTimeInterval:secondsForOffset] forKey:@"request_time_end"];
+    
+    
+    //pass dic to ivar to use in editor request
+    self.temporaryDicFromQuickView = [NSDictionary dictionaryWithDictionary:dic];
+    
+    //setup for quickViewController
+    [quickViewController initialSetupWithDic:dic];
+    
+    //assign target for edit request button
+    [quickViewController.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:) forControlEvents:UIControlEventAllEvents];
+    
+    //_____presenting the popover must be delayed (why?????)
+    [self performSelector:@selector(mustDelayThePresentationOfAPopOver:) withObject:[note userInfo] afterDelay:0.1];
+}
+
+
+-(void)mustDelayThePresentationOfAPopOver:(NSDictionary*)userInfo{
+    
+    NSValue* rectValue = [userInfo objectForKey:@"rectValue"];
+    CGRect thisRect = [rectValue CGRectValue];
+    UIView* thisView = [userInfo objectForKey:@"thisView"];
+    
+    
+    [self.myQuickView presentPopoverFromRect:thisRect inView:thisView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
+    
+}
+
+
+-(IBAction)showRequestEditorFromQuickView:(id)sender{
+    
+    //dismiss the quickView popover
+    [self.myQuickView dismissPopoverAnimated:YES];
+    
+    EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
+    
+    //prevent edges from extending beneath nav and tab bars
+    editorViewController.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    //_______******* THIS IS WEIRD need to subtract a day off the the dates
+    float secondsForOffset = 0 * -3;
+    NSDate* newBeginDate = [[self.temporaryDicFromQuickView objectForKey:@"request_date_begin"] dateByAddingTimeInterval:secondsForOffset];
+    NSDate* newEndDate = [[self.temporaryDicFromQuickView objectForKey:@"request_date_end"] dateByAddingTimeInterval:secondsForOffset];
+    
+    NSMutableDictionary* newDic = [NSMutableDictionary dictionaryWithDictionary:self.temporaryDicFromQuickView];
+    
+    [newDic setValue:newBeginDate forKey:@"request_date_begin"];
+    [newDic setValue:newEndDate forKey:@"reqeust_date_end"];
+    
+    //initial setup
+    [editorViewController initialSetupWithInfo:newDic];
+    
+    //assign editor's keyID property
+    //    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
+    
+    
+    
+    //______1_______pushes from the side and preserves navigation controller
+    //    [self.navigationController pushViewController:editorViewController animated:YES];
+    
+    
+    //______2_______model pops up from below, removes navigiation controller
+    UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
+    //add cancel button
+    
+    [self presentViewController:newNavController animated:YES completion:^{
+        
+    }];
+    
 }
 
 

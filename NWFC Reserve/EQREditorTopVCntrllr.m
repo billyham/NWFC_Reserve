@@ -231,7 +231,12 @@
     //add times to dates
     self.pickUpDateDate = [self.pickUpDateDate dateByAddingTimeInterval: [self.pickUpTime timeIntervalSinceReferenceDate]];
     self.returnDateDate = [self.returnDateDate dateByAddingTimeInterval:[self.returnTime timeIntervalSinceReferenceDate]];
-        
+    
+    //______adjust by subtracting 8 hours
+    float secondsForOffset = -28800;    //this is 9 hours = 32400, this is 8 hours = 28800;
+    self.pickUpDateDate = [self.pickUpDateDate dateByAddingTimeInterval:secondsForOffset];
+    self.returnDateDate = [self.returnDateDate dateByAddingTimeInterval:secondsForOffset];
+    
     //instantiate the request item in ivar requestManager
     self.privateRequesetManager.request = [[EQRScheduleRequestItem alloc] init];
     
@@ -481,7 +486,7 @@
     //set dates in the view
     NSDateFormatter* dateFormatterLookinNice = [[NSDateFormatter alloc] init];
     dateFormatterLookinNice.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    dateFormatterLookinNice.dateFormat = @"EEE, MMM d h:mm a";
+    dateFormatterLookinNice.dateFormat = @"EEE, MMM d, h:mm a";
     
     self.pickUpDateDate = self.myDateViewController.pickupDateField.date;
     self.returnDateDate = self.myDateViewController.returnDateField.date;

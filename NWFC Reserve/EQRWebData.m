@@ -529,6 +529,18 @@ const int intEQREquipUniqueItem = 8;
     }
     
     //Properties for Contact Item
+    if ([elementName isEqualToString:@"last_name"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"first_name"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
     if ([elementName isEqualToString:@"first_and_last"]){
         
         self.currentProperty = elementName;
@@ -909,6 +921,28 @@ const int intEQREquipUniqueItem = 8;
     
     
     //Properties for Contact
+    if ([prop isEqualToString:@"first_name"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(first_name)]){
+            
+            [(EQRContactNameItem*)self.currentThing setFirst_name:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"last_name"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(last_name)]){
+            
+            [(EQRContactNameItem*)self.currentThing setLast_name:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
     if ([prop isEqualToString:@"first_and_last"]){
         
         if ([self.currentThing respondsToSelector:@selector(first_and_last)]){
@@ -1124,7 +1158,11 @@ const int intEQREquipUniqueItem = 8;
             float combinedSeconds = secondsFromHours + secondsFromMinutes;
             NSDate* referenceDate = [NSDate dateWithTimeIntervalSinceReferenceDate:combinedSeconds];
             
-            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_time_begin:referenceDate];
+            //______adjust by 8 hours
+            float secondsForOffset = 28800;    //this is 9 hours = 32400, this is 8 hours = 28800;
+            NSDate* timeAdjustedReferenceDate = [referenceDate dateByAddingTimeInterval:secondsForOffset];
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_time_begin:timeAdjustedReferenceDate];
                         
             self.currentValue = nil;
         }
@@ -1140,7 +1178,11 @@ const int intEQREquipUniqueItem = 8;
             float combinedSeconds = secondsFromHours + secondsFromMinutes;
             NSDate* referenceDate = [NSDate dateWithTimeIntervalSinceReferenceDate:combinedSeconds];
 
-            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_time_end:referenceDate];
+            //______adjust by 8 hours
+            float secondsForOffset = 28800;    //this is 9 hours = 32400, this is 8 hours = 28800;
+            NSDate* timeAdjustedReferenceDate = [referenceDate dateByAddingTimeInterval:secondsForOffset];
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRequest_time_end:timeAdjustedReferenceDate];
             
             self.currentValue = nil;
         }
