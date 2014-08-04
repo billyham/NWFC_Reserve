@@ -21,6 +21,7 @@
 #import "EQRColors.h"
 #import "EQRDayDatePickerVCntrllr.h"
 #import "EQRScheduleRowQuickViewVCntrllr.h"
+#import "EQRQuickViewScrollVCntrllr.h"
 
 
 @interface EQRScheduleTopVCntrllr ()
@@ -52,6 +53,7 @@
 @property (strong, nonatomic) UIPopoverController* myDayDatePicker;
 @property (strong, nonatomic) UIPopoverController* myScheduleRowQuickView;
 @property (strong, nonatomic) NSDictionary* temporaryDicFromNestedDayCell;
+@property (strong, nonatomic) EQRQuickViewScrollVCntrllr* myQuickViewScrollVCntrllr;
 
 
 
@@ -166,14 +168,37 @@
     //___________
     
     //add gesture recognizers for swiping
-    UISwipeGestureRecognizer* swipeRightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(moveToPreviousMonth:)];
-    swipeRightGesture.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.view addGestureRecognizer:swipeRightGesture];
+//    UISwipeGestureRecognizer* swipeRightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(moveToPreviousMonth:)];
+//    swipeRightGesture.direction = UISwipeGestureRecognizerDirectionRight;
+//    [self.view addGestureRecognizer:swipeRightGesture];
+//    
+//    UISwipeGestureRecognizer* swipeLeftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(moveToNextMonth:)];
+//    swipeLeftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
+//    [self.view addGestureRecognizer:swipeLeftGesture];
     
-    UISwipeGestureRecognizer* swipeLeftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(moveToNextMonth:)];
-    swipeLeftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.view addGestureRecognizer:swipeLeftGesture];
     
+    
+    
+    
+    
+    
+    //__________ ********* DELETE ME  ***___________
+    
+    //create quickview scroll view
+//    EQRQuickViewScrollVCntrllr* quickView = [[EQRQuickViewScrollVCntrllr alloc] initWithNibName:@"EQRQuickViewScrollVCntrllr" bundle:nil];
+//    self.myQuickViewScrollVCntrllr = quickView;
+//    
+//    [self.view addSubview: self.myQuickViewScrollVCntrllr.view];
+//    
+//    UISwipeGestureRecognizer* swipeLeftGestureOnQuickview = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideLeft:)];
+//    swipeLeftGestureOnQuickview.direction = UISwipeGestureRecognizerDirectionLeft;
+//    [self.myQuickViewScrollVCntrllr.myContentPage1 addGestureRecognizer:swipeLeftGestureOnQuickview];
+//    
+//    UISwipeGestureRecognizer* swipeRightGestureOnQuickview = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideRight:)];
+//    swipeRightGestureOnQuickview.direction = UISwipeGestureRecognizerDirectionRight;
+//    [self.myQuickViewScrollVCntrllr.myContentPage1 addGestureRecognizer:swipeRightGestureOnQuickview];
+//                                              
+
 }
 
 
@@ -700,8 +725,17 @@
 
 -(void)showScheduleRowQuickView:(NSNotification*)note{
     
-    EQRScheduleRowQuickViewVCntrllr* quickView = [[EQRScheduleRowQuickViewVCntrllr alloc] initWithNibName:@"EQRScheduleRowQuickViewVCntrllr" bundle:nil];
-    self.myScheduleRowQuickView = [[UIPopoverController alloc] initWithContentViewController:quickView];
+    //create quickview scroll view
+    EQRQuickViewScrollVCntrllr* quickView = [[EQRQuickViewScrollVCntrllr alloc] initWithNibName:@"EQRQuickViewScrollVCntrllr" bundle:nil];
+    self.myQuickViewScrollVCntrllr = quickView;
+    
+    //instatiate first page subview
+    EQRScheduleRowQuickViewVCntrllr* quickViewPage1 = [[EQRScheduleRowQuickViewVCntrllr alloc] initWithNibName:@"EQRScheduleRowQuickViewVCntrllr" bundle:nil];
+    
+    self.myQuickViewScrollVCntrllr.myScheduleRowQuickView = quickViewPage1;
+    
+    self.myScheduleRowQuickView = [[UIPopoverController alloc] initWithContentViewController:self.myQuickViewScrollVCntrllr];
+    [self.myScheduleRowQuickView setPopoverContentSize:CGSizeMake(300.f, 502.f)];
     
 
     
@@ -709,19 +743,32 @@
     self.temporaryDicFromNestedDayCell = [NSDictionary dictionaryWithDictionary:[note userInfo]];
     
     //do the busy work of creating the popOver view
-    [quickView initialSetupWithDic:self.temporaryDicFromNestedDayCell];
+    [quickViewPage1 initialSetupWithDic:self.temporaryDicFromNestedDayCell];
     
     NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
     CGRect selectedRect = [valueOfRect CGRectValue];
     
     
     //assign target of popover's "edit request" button
-    [quickView.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventAllEvents];
+    [self.myQuickViewScrollVCntrllr.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventAllEvents];
 
     
+    //show popover  MUST use NOT allow using the arrow directin from below, keyboard may cover the textview
+    [self.myScheduleRowQuickView presentPopoverFromRect:selectedRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight animated:YES];
     
-    //show popover
-    [self.myScheduleRowQuickView presentPopoverFromRect:selectedRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    //attach page 1
+    [self.myQuickViewScrollVCntrllr.myContentPage1 addSubview:quickViewPage1.view];
+    
+    
+    //add gesture recognizers
+    UISwipeGestureRecognizer* swipeLeftGestureOnQuickview = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideLeft:)];
+    swipeLeftGestureOnQuickview.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.myQuickViewScrollVCntrllr.myContentPage1 addGestureRecognizer:swipeLeftGestureOnQuickview];
+    
+    UISwipeGestureRecognizer* swipeRightGestureOnQuickview = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideRight:)];
+    swipeRightGestureOnQuickview.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.myQuickViewScrollVCntrllr.myContentPage2 addGestureRecognizer:swipeRightGestureOnQuickview];
+    
     
 }
 

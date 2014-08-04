@@ -16,6 +16,7 @@
 #import "EQRCheckVCntrllr.h"
 #import "EQRDayDatePickerVCntrllr.h"
 #import "EQRScheduleRowQuickViewVCntrllr.h"
+#import "EQRQuickViewScrollVCntrllr.h"
 #import "EQREditorTopVCntrllr.h"
 
 @interface EQRItineraryVCntrllr ()
@@ -41,6 +42,7 @@
 
 @property (strong, nonatomic) UIPopoverController* myDayDatePicker;
 @property (strong, nonatomic) UIPopoverController* myQuickView;
+@property (strong, nonatomic) EQRQuickViewScrollVCntrllr* myQuickViewScrollVCntrllr;
 @property (strong, nonatomic) NSDictionary* temporaryDicFromQuickView;
 
 -(IBAction)moveToNextDay:(id)sender;
@@ -348,9 +350,30 @@
 
 -(void)showQuickView:(NSNotification*)note{
     
-    EQRScheduleRowQuickViewVCntrllr* quickViewController = [[EQRScheduleRowQuickViewVCntrllr alloc] initWithNibName:@"EQRScheduleRowQuickViewVCntrllr" bundle:nil];
+//    EQRScheduleRowQuickViewVCntrllr* quickViewController = [[EQRScheduleRowQuickViewVCntrllr alloc] initWithNibName:@"EQRScheduleRowQuickViewVCntrllr" bundle:nil];
+//    
+//    self.myQuickView = [[UIPopoverController alloc] initWithContentViewController:quickViewController];
     
-    self.myQuickView = [[UIPopoverController alloc] initWithContentViewController:quickViewController];
+    
+    
+    
+    //create quickview scroll view
+    EQRQuickViewScrollVCntrllr* quickView = [[EQRQuickViewScrollVCntrllr alloc] initWithNibName:@"EQRQuickViewScrollVCntrllr" bundle:nil];
+    self.myQuickViewScrollVCntrllr = quickView;
+    
+    //instatiate first page subview
+    EQRScheduleRowQuickViewVCntrllr* quickViewPage1 = [[EQRScheduleRowQuickViewVCntrllr alloc] initWithNibName:@"EQRScheduleRowQuickViewVCntrllr" bundle:nil];
+    
+    self.myQuickViewScrollVCntrllr.myScheduleRowQuickView = quickViewPage1;
+    
+    self.myQuickView = [[UIPopoverController alloc] initWithContentViewController:self.myQuickViewScrollVCntrllr];
+    [self.myQuickView setPopoverContentSize:CGSizeMake(300.f, 502.f)];
+    
+    
+    
+    
+    
+    
     
     //empty the temp array
     if ([self.temporaryDicFromQuickView count] > 0){
@@ -395,15 +418,41 @@
     [dic setValue:[myItem.request_time_begin dateByAddingTimeInterval:secondsForOffset] forKey:@"request_time_begin"];
     [dic setValue:[myItem.request_time_end dateByAddingTimeInterval:secondsForOffset] forKey:@"request_time_end"];
     
-    
     //pass dic to ivar to use in editor request
     self.temporaryDicFromQuickView = [NSDictionary dictionaryWithDictionary:dic];
     
-    //setup for quickViewController
-    [quickViewController initialSetupWithDic:dic];
+
     
-    //assign target for edit request button
-    [quickViewController.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:) forControlEvents:UIControlEventAllEvents];
+    
+    
+   
+    //do the busy work of creating the popOver view
+    [quickViewPage1 initialSetupWithDic:dic];
+    
+//    NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
+//    CGRect selectedRect = [valueOfRect CGRectValue];
+    
+    
+    //assign target of popover's "edit request" button
+    [self.myQuickViewScrollVCntrllr.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventAllEvents];
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+//    //setup for quickViewController
+//    [quickViewController initialSetupWithDic:dic];
+//    
+//    //assign target for edit request button
+//    [quickViewController.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:) forControlEvents:UIControlEventAllEvents];
     
     //_____presenting the popover must be delayed (why?????)
     [self performSelector:@selector(mustDelayThePresentationOfAPopOver:) withObject:[note userInfo] afterDelay:0.1];
@@ -417,7 +466,34 @@
     UIView* thisView = [userInfo objectForKey:@"thisView"];
     
     
-    [self.myQuickView presentPopoverFromRect:thisRect inView:thisView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
+    
+    
+    //show popover  MUST use NOT allow using the arrow directin from below, keyboard may cover the textview
+    [self.myQuickView presentPopoverFromRect:thisRect inView:thisView permittedArrowDirections:UIPopoverArrowDirectionRight animated:YES];
+    
+    //attach page 1
+    [self.myQuickViewScrollVCntrllr.myContentPage1 addSubview:self.myQuickViewScrollVCntrllr.myScheduleRowQuickView.view];
+    
+    
+    //add gesture recognizers
+    UISwipeGestureRecognizer* swipeLeftGestureOnQuickview = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideLeft:)];
+    swipeLeftGestureOnQuickview.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.myQuickViewScrollVCntrllr.myContentPage1 addGestureRecognizer:swipeLeftGestureOnQuickview];
+    
+    UISwipeGestureRecognizer* swipeRightGestureOnQuickview = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideRight:)];
+    swipeRightGestureOnQuickview.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.myQuickViewScrollVCntrllr.myContentPage2 addGestureRecognizer:swipeRightGestureOnQuickview];
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+//    [self.myQuickView presentPopoverFromRect:thisRect inView:thisView permittedArrowDirections:UIPopoverArrowDirectionAny animated:NO];
     
 }
 

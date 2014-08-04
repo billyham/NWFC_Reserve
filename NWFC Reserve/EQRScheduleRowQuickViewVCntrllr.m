@@ -86,6 +86,7 @@
     if ([tempMuteArray count] > 0){
         
         self.myScheduleRequestItem = [tempMuteArray objectAtIndex:0];
+        
     } else {
         
         //______error handling when no item is returned
@@ -160,6 +161,10 @@
     self.returnDate.text = self.combinedDateAndTimeEnd;
     
     //using additional data that this object retrieved...
+    
+    //set notes view text
+    self.notesView.text = self.myScheduleRequestItem.notes;
+    
     //retrieve the contact names from their ids
     if ((![self.myScheduleRequestItem.staff_confirmation_id isEqualToString:@""]) && (self.myScheduleRequestItem.staff_confirmation_id != nil)) {
         self.staff_confirmation_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_confirmation_id];
@@ -233,6 +238,9 @@
                                   self.staff_shelf_name];
     }
     
+    //put notes field on top
+    [self.view bringSubviewToFront:self.notesView];
+    
 }
 
 
@@ -274,6 +282,26 @@
 //    
 //    
 //}
+
+
+#pragma mark - uiscrollview delegate methods
+
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView{
+    
+    return YES;
+}
+
+
+- (void)textViewDidEndEditing:(UITextView *)textView{
+    
+    //make change to data model, save notes to db
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSArray* firstArray = [NSArray arrayWithObjects:@"notes", self.notesView.text, nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:@"key_id", [self.myUserData objectForKey:@"key_ID"], nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+    [webData queryForStringWithLink:@"EQAlterNotesInScheduleRequest.php" parameters:topArray];
+    
+}
 
 
 #pragma mark - memory warning

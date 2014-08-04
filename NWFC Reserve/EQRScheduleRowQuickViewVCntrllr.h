@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQRScheduleRowQuickViewVCntrllr : UIViewController
+@interface EQRScheduleRowQuickViewVCntrllr : UIViewController <UITextViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel* contactName;
 @property (strong, nonatomic) IBOutlet UILabel* pickUpDate;
@@ -29,6 +29,11 @@
 
 
 -(void)initialSetupWithDic:(NSDictionary*)dictionary;
+
+//text view delegate methods
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView;
+- (void)textViewDidEndEditing:(UITextView *)textView;
+
 
 //-(IBAction)editRequest:(id)sender;
 
