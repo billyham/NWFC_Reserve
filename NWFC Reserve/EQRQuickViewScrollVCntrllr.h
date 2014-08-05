@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EQRScheduleRowQuickViewVCntrllr.h"
+#import "EQRQuickViewPage1VCntrllr.h"
 
 @interface EQRQuickViewScrollVCntrllr : UIViewController <UIScrollViewDelegate>
 
 @property (nonatomic, strong) IBOutlet UIScrollView* myScrollView;
 @property (nonatomic, strong) IBOutlet UIView* myContentView;
-@property (nonatomic, strong) EQRScheduleRowQuickViewVCntrllr* myScheduleRowQuickView;
+@property (nonatomic, strong) EQRQuickViewPage1VCntrllr* myScheduleRowQuickView;
 @property (nonatomic, strong) IBOutlet UIView* myContentPage1;
 @property (nonatomic, strong) IBOutlet UIView* myContentPage2;
 @property (nonatomic, strong) IBOutlet UIView* myContentPage3;

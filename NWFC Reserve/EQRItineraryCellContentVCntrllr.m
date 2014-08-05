@@ -11,7 +11,7 @@
 #import "EQRWebData.h"
 #import "EQRGlobals.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
-#import "EQRScheduleRowQuickViewVCntrllr.h"
+#import "EQRQuickViewPage1VCntrllr.h"
 #import "EQRDayDatePickerVCntrllr.h"
 
 @interface EQRItineraryCellContentVCntrllr ()

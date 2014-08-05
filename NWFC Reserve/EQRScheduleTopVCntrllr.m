@@ -20,7 +20,7 @@
 #import "EQREditorTopVCntrllr.h"
 #import "EQRColors.h"
 #import "EQRDayDatePickerVCntrllr.h"
-#import "EQRScheduleRowQuickViewVCntrllr.h"
+#import "EQRQuickViewPage1VCntrllr.h"
 #import "EQRQuickViewScrollVCntrllr.h"
 
 
@@ -730,7 +730,7 @@
     self.myQuickViewScrollVCntrllr = quickView;
     
     //instatiate first page subview
-    EQRScheduleRowQuickViewVCntrllr* quickViewPage1 = [[EQRScheduleRowQuickViewVCntrllr alloc] initWithNibName:@"EQRScheduleRowQuickViewVCntrllr" bundle:nil];
+    EQRQuickViewPage1VCntrllr* quickViewPage1 = [[EQRQuickViewPage1VCntrllr alloc] initWithNibName:@"EQRScheduleRowQuickViewVCntrllr" bundle:nil];
     
     self.myQuickViewScrollVCntrllr.myScheduleRowQuickView = quickViewPage1;
     
@@ -754,7 +754,7 @@
 
     
     //show popover  MUST use NOT allow using the arrow directin from below, keyboard may cover the textview
-    [self.myScheduleRowQuickView presentPopoverFromRect:selectedRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight animated:YES];
+    [self.myScheduleRowQuickView presentPopoverFromRect:selectedRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionDown animated:YES];
     
     //attach page 1
     [self.myQuickViewScrollVCntrllr.myContentPage1 addSubview:quickViewPage1.view];

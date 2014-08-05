@@ -68,8 +68,8 @@
 		542F5FF8192355E6001C28CA /* EQRItineraryVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 542F5FF7192355E6001C28CA /* EQRItineraryVCntrllr.m */; };
 		542F5FFD192357AF001C28CA /* EQRCheckVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 542F5FFB192357AF001C28CA /* EQRCheckVCntrllr.m */; };
 		542F5FFE192357AF001C28CA /* EQRCheckVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 542F5FFC192357AF001C28CA /* EQRCheckVCntrllr.xib */; };
-		5431456B197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54314569197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.m */; };
-		5431456C197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5431456A197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.xib */; };
+		5431456B197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54314569197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m */; };
+		5431456C197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5431456A197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib */; };
 		543CF39E198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 543CF39C198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.m */; };
 		543CF39F198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 543CF39D198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.xib */; };
 		54457ECD1935B78E00E9061A /* EQRCheckRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54457ECC1935B78E00E9061A /* EQRCheckRowCell.m */; };
@@ -89,6 +89,8 @@
 		54746DEB18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 54746DEA18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m */; };
 		54882BD21900D588005A4D5A /* EQREditorRenterVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54882BD01900D588005A4D5A /* EQREditorRenterVCntrllr.m */; };
 		54882BD31900D588005A4D5A /* EQREditorRenterVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54882BD11900D588005A4D5A /* EQREditorRenterVCntrllr.xib */; };
+		5493CA8E1990942F008A9221 /* EQRStaffUserPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5493CA8C1990942F008A9221 /* EQRStaffUserPickerViewController.m */; };
+		5493CA8F1990942F008A9221 /* EQRStaffUserPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5493CA8D1990942F008A9221 /* EQRStaffUserPickerViewController.xib */; };
 		549BF3BC191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 549BF3BA191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m */; };
 		549BF3BD191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 549BF3BB191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib */; };
 		54BBC193193D9DEA004D5DFE /* EQRCheckPageRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 54BBC192193D9DEA004D5DFE /* EQRCheckPageRenderer.m */; };
@@ -215,9 +217,9 @@
 		542F5FFA192357AF001C28CA /* EQRCheckVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRCheckVCntrllr.h; sourceTree = "<group>"; };
 		542F5FFB192357AF001C28CA /* EQRCheckVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRCheckVCntrllr.m; sourceTree = "<group>"; };
 		542F5FFC192357AF001C28CA /* EQRCheckVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRCheckVCntrllr.xib; sourceTree = "<group>"; };
-		54314568197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleRowQuickViewVCntrllr.h; sourceTree = "<group>"; };
-		54314569197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleRowQuickViewVCntrllr.m; sourceTree = "<group>"; };
-		5431456A197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRScheduleRowQuickViewVCntrllr.xib; sourceTree = "<group>"; };
+		54314568197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRQuickViewPage1VCntrllr.h; sourceTree = "<group>"; };
+		54314569197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRQuickViewPage1VCntrllr.m; sourceTree = "<group>"; };
+		5431456A197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRQuickViewPage1VCntrllr.xib; sourceTree = "<group>"; };
 		543CF39B198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRQuickViewScrollVCntrllr.h; sourceTree = "<group>"; };
 		543CF39C198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRQuickViewScrollVCntrllr.m; sourceTree = "<group>"; };
 		543CF39D198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRQuickViewScrollVCntrllr.xib; sourceTree = "<group>"; };
@@ -245,6 +247,9 @@
 		54882BCF1900D588005A4D5A /* EQREditorRenterVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREditorRenterVCntrllr.h; sourceTree = "<group>"; };
 		54882BD01900D588005A4D5A /* EQREditorRenterVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREditorRenterVCntrllr.m; sourceTree = "<group>"; };
 		54882BD11900D588005A4D5A /* EQREditorRenterVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREditorRenterVCntrllr.xib; sourceTree = "<group>"; };
+		5493CA8B1990942F008A9221 /* EQRStaffUserPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRStaffUserPickerViewController.h; sourceTree = "<group>"; };
+		5493CA8C1990942F008A9221 /* EQRStaffUserPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRStaffUserPickerViewController.m; sourceTree = "<group>"; };
+		5493CA8D1990942F008A9221 /* EQRStaffUserPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRStaffUserPickerViewController.xib; sourceTree = "<group>"; };
 		549BF3B9191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSummaryGenericVCntrllr.h; sourceTree = "<group>"; };
 		549BF3BA191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipSummaryGenericVCntrllr.m; sourceTree = "<group>"; };
 		549BF3BB191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREquipSummaryGenericVCntrllr.xib; sourceTree = "<group>"; };
@@ -490,12 +495,12 @@
 		542CC23A197CECA800BFD581 /* shared nibs */ = {
 			isa = PBXGroup;
 			children = (
-				54314568197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.h */,
-				54314569197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.m */,
-				5431456A197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.xib */,
 				542CC23B197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.h */,
 				542CC23C197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.m */,
 				542CC23D197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.xib */,
+				5493CA8B1990942F008A9221 /* EQRStaffUserPickerViewController.h */,
+				5493CA8C1990942F008A9221 /* EQRStaffUserPickerViewController.m */,
+				5493CA8D1990942F008A9221 /* EQRStaffUserPickerViewController.xib */,
 			);
 			name = "shared nibs";
 			sourceTree = "<group>";
@@ -543,6 +548,7 @@
 				543CF39B198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.h */,
 				543CF39C198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.m */,
 				543CF39D198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.xib */,
+				5493CA8A19909327008A9221 /* sub page views */,
 			);
 			name = "quickview nav cntrllr";
 			sourceTree = "<group>";
@@ -556,6 +562,16 @@
 				01C79938189C723300D29625 /* EQREquipSummaryVCntrllr.m */,
 			);
 			name = deprecated;
+			sourceTree = "<group>";
+		};
+		5493CA8A19909327008A9221 /* sub page views */ = {
+			isa = PBXGroup;
+			children = (
+				54314568197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.h */,
+				54314569197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m */,
+				5431456A197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib */,
+			);
+			name = "sub page views";
 			sourceTree = "<group>";
 		};
 		54CE45A9186AF3680023FDA4 /* collectionViewCells */ = {
@@ -691,8 +707,9 @@
 				542CC23F197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.xib in Resources */,
 				542F5FFE192357AF001C28CA /* EQRCheckVCntrllr.xib in Resources */,
 				0119D30018DBB25D009126CB /* EQRScheduleCellContentVCntrllr.xib in Resources */,
+				5493CA8F1990942F008A9221 /* EQRStaffUserPickerViewController.xib in Resources */,
 				54457ED21935B7B900E9061A /* EQRCheckCellContentVCntrllr.xib in Resources */,
-				5431456C197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.xib in Resources */,
+				5431456C197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib in Resources */,
 				545547CC197F987C001AC986 /* GenericLeftArrow.png in Resources */,
 				01A5D7C418EBA85900EE99EF /* EQREditorTopVCntrllr.xib in Resources */,
 				01735F1E193FAC38007E85C1 /* EQRCheckPrintPage.xib in Resources */,
@@ -751,7 +768,8 @@
 				54032FE21872AC9000481D86 /* EQREquipDateVCntrllr.m in Sources */,
 				542F5FFD192357AF001C28CA /* EQRCheckVCntrllr.m in Sources */,
 				545661DF18323ABC0067B40D /* EQREquipItem.m in Sources */,
-				5431456B197E3E75008ED609 /* EQRScheduleRowQuickViewVCntrllr.m in Sources */,
+				5431456B197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m in Sources */,
+				5493CA8E1990942F008A9221 /* EQRStaffUserPickerViewController.m in Sources */,
 				54CE45AC186AF4680023FDA4 /* EQREquipItemCell.m in Sources */,
 				018EB75A18E5DCD500FBDEA0 /* EQREditorTopVCntrllr.m in Sources */,
 				015B7C6A18EA22B3002F5B6D /* EQREditorEquipListCell.m in Sources */,

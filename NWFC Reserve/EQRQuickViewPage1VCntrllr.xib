@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRScheduleRowQuickViewVCntrllr">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRQuickViewPage1VCntrllr">
             <connections>
                 <outlet property="classTitle" destination="gjc-jS-PhS" id="cxU-PE-0KD"/>
                 <outlet property="confirmedLabel" destination="DUy-uN-bQD" id="jXI-tS-TY8"/>

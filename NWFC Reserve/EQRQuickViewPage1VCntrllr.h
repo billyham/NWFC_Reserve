@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQRScheduleRowQuickViewVCntrllr : UIViewController <UITextViewDelegate>
+@interface EQRQuickViewPage1VCntrllr : UIViewController <UITextViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel* contactName;
 @property (strong, nonatomic) IBOutlet UILabel* pickUpDate;

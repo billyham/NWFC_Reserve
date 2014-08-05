@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 Ham Again LLC. All rights reserved.
 //
 
-#import "EQRScheduleRowQuickViewVCntrllr.h"
+#import "EQRQuickViewPage1VCntrllr.h"
 #import "EQRWebData.h"
 #import "EQRScheduleRequestItem.h"
 #import "EQRContactNameItem.h"
 
-@interface EQRScheduleRowQuickViewVCntrllr ()
+@interface EQRQuickViewPage1VCntrllr ()
 
 @property (strong, nonatomic) NSDictionary* myUserData;
 @property (strong, nonatomic) EQRScheduleRequestItem* myScheduleRequestItem;
@@ -26,7 +26,7 @@
 
 @end
 
-@implementation EQRScheduleRowQuickViewVCntrllr
+@implementation EQRQuickViewPage1VCntrllr
 
 #pragma mark - initialize
 
