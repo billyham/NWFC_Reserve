@@ -18,6 +18,7 @@
 #import "EQRQuickViewPage1VCntrllr.h"
 #import "EQRQuickViewScrollVCntrllr.h"
 #import "EQREditorTopVCntrllr.h"
+#import "EQRStaffUserPickerViewController.h"
 
 @interface EQRItineraryVCntrllr ()
 
@@ -41,6 +42,7 @@
 @property (strong, nonatomic) IBOutlet UIButton* buttonReturningShelved;
 
 @property (strong, nonatomic) UIPopoverController* myDayDatePicker;
+@property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
 @property (strong, nonatomic) UIPopoverController* myQuickView;
 @property (strong, nonatomic) EQRQuickViewScrollVCntrllr* myQuickViewScrollVCntrllr;
 @property (strong, nonatomic) NSDictionary* temporaryDicFromQuickView;
@@ -115,19 +117,29 @@
     UIBarButtonItem* leftBarButtonArrow =[[UIBarButtonItem alloc] initWithImage:leftArrow style:UIBarButtonItemStylePlain target:self action:@selector(moveToPreviousDay:)];
     UIBarButtonItem* todayBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Today" style:UIBarButtonItemStylePlain target:self action:@selector(moveToToday:)];
     UIBarButtonItem* rightBarButtonArrow = [[UIBarButtonItem alloc] initWithImage:rightArrow style:UIBarButtonItemStylePlain target:self action:@selector(moveToNextDay:)];
+    UIBarButtonItem* searchBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(showDatePicker)];
     
     //array that shit
-    NSArray* arrayOfLeftButtons = [NSArray arrayWithObjects:twentySpace, leftBarButtonArrow, thirtySpace, todayBarButton, thirtySpace, rightBarButtonArrow, nil];
+    NSArray* arrayOfLeftButtons = [NSArray arrayWithObjects:twentySpace, searchBarButton, thirtySpace, leftBarButtonArrow, thirtySpace, todayBarButton, thirtySpace, rightBarButtonArrow, nil];
     
     //set leftBarButton item on SELF
     [self.navigationItem setLeftBarButtonItems:arrayOfLeftButtons];
     
     
+
+    
+    
+    
     //right button
-    UIBarButtonItem* rightBarButtonSearch = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(showDatePicker)];
+    UIBarButtonItem* staffUserBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Logged in as Trevor" style:UIBarButtonItemStylePlain target:self action:@selector(showStaffUserPicker)];
+    
+    //array that shit
+    NSArray* arrayOfRightButtons = [NSArray arrayWithObjects:staffUserBarButton, nil];
     
     //set rightBarButton item in SELF
-    [self.navigationItem setRightBarButtonItem:rightBarButtonSearch];
+    [self.navigationItem setRightBarButtonItems:arrayOfRightButtons];
+    
+    
     //___________
 
     
@@ -344,6 +356,42 @@
         
     }];
 }
+
+
+#pragma mark - showStaffUser view
+
+
+-(void)showStaffUserPicker{
+    
+    EQRStaffUserPickerViewController* staffUserPicker = [[EQRStaffUserPickerViewController alloc] initWithNibName:@"EQRStaffUserPickerViewController" bundle:nil];
+    self.myStaffUserPicker = [[UIPopoverController alloc] initWithContentViewController:staffUserPicker];
+    
+    //set size
+    [self.myStaffUserPicker setPopoverContentSize:CGSizeMake(400, 400)];
+    
+    //present popover
+    [self.myStaffUserPicker presentPopoverFromBarButtonItem:[self.navigationItem.rightBarButtonItems objectAtIndex:0]  permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    //set target of continue button
+    [staffUserPicker.continueButton addTarget:self action:@selector(dismissStaffUserPicker) forControlEvents:UIControlEventAllEvents];
+    
+}
+
+
+-(void)dismissStaffUserPicker{
+    
+    //do stuff with the iboutlet of the
+    EQRStaffUserPickerViewController* thisStaffUserPicker = (EQRStaffUserPickerViewController*)[self.myStaffUserPicker contentViewController];
+    int selectedRow = (int)[thisStaffUserPicker.myPicker selectedRowInComponent:0];
+    NSLog(@"this is the selected name: %@", [thisStaffUserPicker.arrayOfContactObjects objectAtIndex:selectedRow]);
+    
+    
+    //dismiss the picker
+    [self.myStaffUserPicker dismissPopoverAnimated:YES];
+    
+}
+
+
 
 
 #pragma mark - showQuickView
@@ -572,8 +620,11 @@
     EQRDayDatePickerVCntrllr* dayDateView = [[EQRDayDatePickerVCntrllr alloc] initWithNibName:@"EQRDayDatePickerVCntrllr" bundle:nil];
     self.myDayDatePicker = [[UIPopoverController alloc] initWithContentViewController:dayDateView];
     
+    //set size
+    [self.myDayDatePicker setPopoverContentSize:CGSizeMake(400, 400)];
+    
     //present popover
-    [self.myDayDatePicker presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self.myDayDatePicker presentPopoverFromBarButtonItem:[self.navigationItem.leftBarButtonItems objectAtIndex:1]  permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
     //set target of continue button
     [dayDateView.myContinueButton addTarget:self action:@selector(dismissShowDatePicker:) forControlEvents:UIControlEventAllEvents];
