@@ -18,7 +18,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        
+        _arrayOfContactObjects = [NSArray arrayWithObjects:@"Tommy", @"Billy", @"Randall", nil];
     }
     return self;
 }
@@ -35,7 +36,7 @@
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
     
     
-    return @"Bobby Lee";
+    return [self.arrayOfContactObjects objectAtIndex:row];
 }
 
 
@@ -52,7 +53,7 @@
     
     
     
-    return 5;
+    return [self.arrayOfContactObjects count];
     
 }
 

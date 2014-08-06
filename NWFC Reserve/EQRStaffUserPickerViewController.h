@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRContactNameItem.h"
 
 @interface EQRStaffUserPickerViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate>
+
+@property (strong, nonatomic) NSArray* arrayOfContactObjects;
+@property (strong, nonatomic) IBOutlet UIButton* continueButton;
+@property (strong, nonatomic) IBOutlet UIPickerView* myPicker;
 
 @end

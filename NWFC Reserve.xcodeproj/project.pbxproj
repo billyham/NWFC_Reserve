@@ -391,6 +391,7 @@
 				542F5FF51923559C001C28CA /* Itinerary */,
 				542F5FF919235784001C28CA /* Check Out/In */,
 				542CC203197B514B00BFD581 /* Inbox */,
+				5406F5F8199226D7007C0A5C /* Inbox Splitview */,
 				438EDCF4182B7ABE0090F882 /* EQRReserveTopVCntrllr.h */,
 				438EDCF5182B7ABE0090F882 /* EQRReserveTopVCntrllr.m */,
 				438EDCF7182B7ABE0090F882 /* EQRSecondViewController.h */,
@@ -452,6 +453,13 @@
 				54032FE81872D39E00481D86 /* EQRScheduleRequestManager.m */,
 			);
 			name = "Schedule objects";
+			sourceTree = "<group>";
+		};
+		5406F5F8199226D7007C0A5C /* Inbox Splitview */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Inbox Splitview";
 			sourceTree = "<group>";
 		};
 		541167BA18E545630059BA3C /* art */ = {
