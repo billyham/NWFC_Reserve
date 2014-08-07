@@ -8,6 +8,9 @@
 
 #import "EQRAppDelegate.h"
 #import "EQRColors.h"
+#import "EQRStaffUserManager.h"
+#import "EQRWebData.h"
+#import "EQRContactNameItem.h"
 
 @implementation EQRAppDelegate
 
@@ -27,11 +30,16 @@
                                             @"SC14", @"campTerm",
                                             nil];
     
+    NSDictionary* EQRDefaultStaffUserKeyID = [NSDictionary dictionaryWithObjectsAndKeys:
+                                              @"", @"staffUserKey"
+                                              , nil];
+    
     
     NSDictionary* appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
                                  EQRWebDataUrl, @"url",
                                  EQRCurrentTermCode, @"term",
-                                 EQRCurrentCampTermCode, @"campTerm"
+                                 EQRCurrentCampTermCode, @"campTerm",
+                                 EQRDefaultStaffUserKeyID, @"staffUserKey"
                                  , nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
@@ -41,6 +49,28 @@
     EQRColors* myColors = [EQRColors sharedInstance];
     [myColors loadColors];
     
+    NSString* keyID = [[[NSUserDefaults standardUserDefaults] objectForKey:@"staffUserKey"] objectForKey:@"staffUserKey"];
+    
+    if (![keyID isEqualToString:@""]){
+        
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        
+        NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", keyID, nil];
+        NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
+        __block EQRContactNameItem* contactObject;
+        [webData queryWithLink:@"EQGetContactNameWithKey.php" parameters:topArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+            
+            if (muteArray > 0){
+                
+                contactObject = (EQRContactNameItem*)[muteArray objectAtIndex:0];
+            }
+        }];
+        
+        //set the current staffUser as the last previous user
+        EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+        
+        staffUserManager.currentStaffUser = contactObject;
+    }
     
     return YES;
 }

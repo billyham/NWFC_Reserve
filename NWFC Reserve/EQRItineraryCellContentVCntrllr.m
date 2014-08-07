@@ -13,6 +13,7 @@
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRQuickViewPage1VCntrllr.h"
 #import "EQRDayDatePickerVCntrllr.h"
+#import "EQRStaffUserManager.h"
 
 @interface EQRItineraryCellContentVCntrllr ()
 
@@ -262,6 +263,7 @@
                 
                 //update the model
                 EQRWebData* webData = [EQRWebData sharedInstance];
+                EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
                 
                 NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
                 dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -274,7 +276,8 @@
                 }else {
                     secondArray = [NSArray arrayWithObjects:@"staff_checkin_date",  [dateFormatter stringFromDate:[NSDate date]], nil];
                 }
-                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+                NSArray* thirdArray = [NSArray arrayWithObjects:@"staff_id", staffUserManager.currentStaffUser.key_id, nil];
+                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
                 
                 NSString* resultString = [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
                 NSLog(@"%@", resultString);
@@ -318,6 +321,8 @@
                 
                 //update the model
                 EQRWebData* webData = [EQRWebData sharedInstance];
+                EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+
                 
                 NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
                 dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -330,7 +335,8 @@
                 }else{
                     secondArray = [NSArray arrayWithObjects:@"staff_shelf_date",  [dateFormatter stringFromDate:[NSDate date]], nil];
                 }
-                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+                NSArray* thirdArray = [NSArray arrayWithObjects:@"staff_id", staffUserManager.currentStaffUser.key_id, nil];
+                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
                 
                 NSString* resultString = [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
                 NSLog(@"%@", resultString);
@@ -379,6 +385,8 @@
                 
                 //update the model
                 EQRWebData* webData = [EQRWebData sharedInstance];
+                EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+
                 
                 NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.requestKeyId, nil];
                 NSArray* secondArray;
@@ -387,7 +395,8 @@
                 }else {
                     secondArray = [NSArray arrayWithObjects:@"staff_checkin_date",  @"nix", nil];
                 }
-                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+                NSArray* thirdArray = [NSArray arrayWithObjects:@"staff_id", staffUserManager.currentStaffUser.key_id, nil];
+                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
                 
                 NSString* resultString = [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
                 NSLog(@"%@", resultString);
@@ -442,6 +451,8 @@
                 
                 //update the model
                 EQRWebData* webData = [EQRWebData sharedInstance];
+                EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+
                 
                 NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.requestKeyId, nil];
                 NSArray* secondArray;
@@ -450,7 +461,8 @@
                 }else{
                     secondArray = [NSArray arrayWithObjects:@"staff_shelf_date",  @"nix", nil];
                 }
-                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+                NSArray* thirdArray = [NSArray arrayWithObjects:@"staff_id", staffUserManager.currentStaffUser.key_id, nil];
+                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
                 
                 [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
                 

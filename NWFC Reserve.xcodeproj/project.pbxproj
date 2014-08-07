@@ -99,6 +99,7 @@
 		54E046EF192499E9006912F9 /* EQRItineraryRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54E046EE192499E9006912F9 /* EQRItineraryRowCell.m */; };
 		54E046F31924A062006912F9 /* EQRItineraryCellContentVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54E046F11924A062006912F9 /* EQRItineraryCellContentVCntrllr.m */; };
 		54E046F41924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54E046F21924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib */; };
+		54E9DB18199353590080FF1B /* EQRStaffUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 54E9DB17199353590080FF1B /* EQRStaffUserManager.m */; };
 		54F73784196D360F005BE295 /* EQRTapRadioButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F73783196D360F005BE295 /* EQRTapRadioButtonView.m */; };
 /* End PBXBuildFile section */
 
@@ -264,6 +265,8 @@
 		54E046F01924A062006912F9 /* EQRItineraryCellContentVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRItineraryCellContentVCntrllr.h; sourceTree = "<group>"; };
 		54E046F11924A062006912F9 /* EQRItineraryCellContentVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRItineraryCellContentVCntrllr.m; sourceTree = "<group>"; };
 		54E046F21924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRItineraryCellContentVCntrllr.xib; sourceTree = "<group>"; };
+		54E9DB16199353590080FF1B /* EQRStaffUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRStaffUserManager.h; sourceTree = "<group>"; };
+		54E9DB17199353590080FF1B /* EQRStaffUserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRStaffUserManager.m; sourceTree = "<group>"; };
 		54F73782196D360F005BE295 /* EQRTapRadioButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRTapRadioButtonView.h; sourceTree = "<group>"; };
 		54F73783196D360F005BE295 /* EQRTapRadioButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRTapRadioButtonView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -385,6 +388,7 @@
 				438EDCF1182B7ABE0090F882 /* Main.storyboard */,
 				543CF39A198EF4E200A00E5E /* quickview nav cntrllr */,
 				542CC23A197CECA800BFD581 /* shared nibs */,
+				54E9DB151993531B0080FF1B /* shared singletons */,
 				54032FE31872D2EA00481D86 /* Schedule objects */,
 				01600B3918CA51D70006D75A /* Schedule Display */,
 				018EB75618E5DC8600FBDEA0 /* Request Editor */,
@@ -623,6 +627,15 @@
 			name = "collectionView objects";
 			sourceTree = "<group>";
 		};
+		54E9DB151993531B0080FF1B /* shared singletons */ = {
+			isa = PBXGroup;
+			children = (
+				54E9DB16199353590080FF1B /* EQRStaffUserManager.h */,
+				54E9DB17199353590080FF1B /* EQRStaffUserManager.m */,
+			);
+			name = "shared singletons";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -787,6 +800,7 @@
 				542CC209197B531100BFD581 /* EQRInboxRowCell.m in Sources */,
 				543CF39E198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.m in Sources */,
 				01600B3818CA51CA0006D75A /* EQRScheduleTopVCntrllr.m in Sources */,
+				54E9DB18199353590080FF1B /* EQRStaffUserManager.m in Sources */,
 				016C3F7E18ADBDAD00B2A692 /* EQREquipUniqueItem.m in Sources */,
 				54746DEB18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m in Sources */,
 				54DFE0F0186ECD610089B9EA /* EQRClassRegistrationItem.m in Sources */,

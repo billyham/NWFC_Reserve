@@ -19,6 +19,7 @@
 #import "EQRQuickViewScrollVCntrllr.h"
 #import "EQREditorTopVCntrllr.h"
 #import "EQRStaffUserPickerViewController.h"
+#import "EQRStaffUserManager.h"
 
 @interface EQRItineraryVCntrllr ()
 
@@ -100,6 +101,9 @@
     //assign date to nav bar title
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
     
+    //derive the current user name
+    EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+    NSString* logText = [NSString stringWithFormat:@"Logged in as %@", staffUserManager.currentStaffUser.first_name];
     
     //_______custom bar buttons
     //create uiimages
@@ -131,7 +135,7 @@
     
     
     //right button
-    UIBarButtonItem* staffUserBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Logged in as Trevor" style:UIBarButtonItemStylePlain target:self action:@selector(showStaffUserPicker)];
+    UIBarButtonItem* staffUserBarButton = [[UIBarButtonItem alloc] initWithTitle:logText style:UIBarButtonItemStylePlain target:self action:@selector(showStaffUserPicker)];
     
     //array that shit
     NSArray* arrayOfRightButtons = [NSArray arrayWithObjects:staffUserBarButton, nil];
@@ -169,6 +173,11 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
+    EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+    
+    //set title on bar button item
+    NSString* newUserString = [NSString stringWithFormat:@"Logged in as %@", staffUserManager.currentStaffUser.first_name];
+    [[self.navigationItem.rightBarButtonItems objectAtIndex:0] setTitle:newUserString];
     
     
 }
@@ -383,8 +392,20 @@
     //do stuff with the iboutlet of the
     EQRStaffUserPickerViewController* thisStaffUserPicker = (EQRStaffUserPickerViewController*)[self.myStaffUserPicker contentViewController];
     int selectedRow = (int)[thisStaffUserPicker.myPicker selectedRowInComponent:0];
-    NSLog(@"this is the selected name: %@", [thisStaffUserPicker.arrayOfContactObjects objectAtIndex:selectedRow]);
+
+    //assign contact name object to shared staffUserManager
+    EQRContactNameItem* selectedNameObject = (EQRContactNameItem*)[thisStaffUserPicker.arrayOfContactObjects objectAtIndex:selectedRow];
     
+    EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+    staffUserManager.currentStaffUser = selectedNameObject;
+    
+    //set title on bar button item
+    NSString* newUserString = [NSString stringWithFormat:@"Logged in as %@", selectedNameObject.first_name];
+    [[self.navigationItem.rightBarButtonItems objectAtIndex:0] setTitle:newUserString];
+    
+    //save as default
+    NSDictionary* newDic = [NSDictionary dictionaryWithObject:selectedNameObject.key_id forKey:@"staffUserKey"];
+    [[NSUserDefaults standardUserDefaults] setObject:newDic forKey:@"staffUserKey"];
     
     //dismiss the picker
     [self.myStaffUserPicker dismissPopoverAnimated:YES];

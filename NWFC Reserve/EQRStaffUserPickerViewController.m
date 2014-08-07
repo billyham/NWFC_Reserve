@@ -7,8 +7,12 @@
 //
 
 #import "EQRStaffUserPickerViewController.h"
+#import "EQRWebData.h"
+#import "EQRContactNameItem.h"
 
 @interface EQRStaffUserPickerViewController ()
+
+
 
 @end
 
@@ -19,15 +23,32 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         
-        _arrayOfContactObjects = [NSArray arrayWithObjects:@"Tommy", @"Billy", @"Randall", nil];
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        
+        NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+        
+        //get array of staff and interns
+        [webData queryWithLink:@"EQGetEQRoomStaffAndInterns.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+            
+            for (id object in muteArray){
+                
+                [tempMuteArray addObject:object];
+            }
+        }];
+        
+        _arrayOfContactObjects = [NSArray arrayWithArray:tempMuteArray];
     }
+    
     return self;
 }
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    
+    
+    
 }
 
 
@@ -36,7 +57,7 @@
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
     
     
-    return [self.arrayOfContactObjects objectAtIndex:row];
+    return [(EQRContactNameItem*)[self.arrayOfContactObjects objectAtIndex:row] first_and_last];
 }
 
 

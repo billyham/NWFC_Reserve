@@ -17,6 +17,7 @@
 #import "EQREquipUniqueItem.h"
 #import "EQRCheckPageRenderer.h"
 #import "EQRCheckPrintPage.h"
+#import "EQRStaffUserManager.h"
 
 
 @interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate>
