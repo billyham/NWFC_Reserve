@@ -21,6 +21,7 @@
 #import "EQRColors.h"
 #import "EQRDayDatePickerVCntrllr.h"
 #import "EQRQuickViewPage1VCntrllr.h"
+#import "EQRQuickViewPage2VCntrllr.h"
 #import "EQRQuickViewScrollVCntrllr.h"
 #import "EQRStaffUserPickerViewController.h"
 #import "EQRStaffUserManager.h"
@@ -775,9 +776,11 @@
     self.myQuickViewScrollVCntrllr = quickView;
     
     //instatiate first page subview
-    EQRQuickViewPage1VCntrllr* quickViewPage1 = [[EQRQuickViewPage1VCntrllr alloc] initWithNibName:@"EQRScheduleRowQuickViewVCntrllr" bundle:nil];
+    EQRQuickViewPage1VCntrllr* quickViewPage1 = [[EQRQuickViewPage1VCntrllr alloc] initWithNibName:@"EQRQuickViewPage1VCntrllr" bundle:nil];
+    EQRQuickViewPage2VCntrllr* quickViewPage2 = [[EQRQuickViewPage2VCntrllr alloc] initWithNibName:@"EQRQuickViewPage2VCntrllr" bundle:nil];
     
-    self.myQuickViewScrollVCntrllr.myScheduleRowQuickView = quickViewPage1;
+    self.myQuickViewScrollVCntrllr.myQuickViewPage1 = quickViewPage1;
+    self.myQuickViewScrollVCntrllr.myQuickViewPage2 = quickViewPage2;
     
     self.myScheduleRowQuickView = [[UIPopoverController alloc] initWithContentViewController:self.myQuickViewScrollVCntrllr];
     [self.myScheduleRowQuickView setPopoverContentSize:CGSizeMake(300.f, 502.f)];
@@ -801,8 +804,9 @@
     //show popover  MUST use NOT allow using the arrow directin from below, keyboard may cover the textview
     [self.myScheduleRowQuickView presentPopoverFromRect:selectedRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionDown animated:YES];
     
-    //attach page 1
+    //attach page 1 & 2
     [self.myQuickViewScrollVCntrllr.myContentPage1 addSubview:quickViewPage1.view];
+    [self.myQuickViewScrollVCntrllr.myContentPage2 addSubview:quickViewPage2.view];
     
     
     //add gesture recognizers

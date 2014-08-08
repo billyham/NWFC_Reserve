@@ -61,12 +61,12 @@
 
 -(void)keyboardDidAppear{
     
-    CGRect originalRect = self.myScheduleRowQuickView.notesView.frame;
+    CGRect originalRect = self.myQuickViewPage1.notesView.frame;
     CGRect newRect = CGRectMake(originalRect.origin.x, originalRect.origin.y - 250, originalRect.size.width, originalRect.size.height + 250);
     
     [UIView animateWithDuration:0.25 animations:^{
         
-        self.myScheduleRowQuickView.notesView.frame = newRect;
+        self.myQuickViewPage1.notesView.frame = newRect;
     }];
     
 }
@@ -74,12 +74,12 @@
 
 -(void)keyboardDidDisappear{
     
-    CGRect originalRect = self.myScheduleRowQuickView.notesView.frame;
+    CGRect originalRect = self.myQuickViewPage1.notesView.frame;
     CGRect newRect = CGRectMake(originalRect.origin.x, originalRect.origin.y + 250, originalRect.size.width, originalRect.size.height - 250);
     
     [UIView animateWithDuration:0.25 animations:^{
         
-        self.myScheduleRowQuickView.notesView.frame = newRect;
+        self.myQuickViewPage1.notesView.frame = newRect;
     }];
 }
 
@@ -88,7 +88,6 @@
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     
-    NSLog(@"scroll view says scrollig will begin dragging");
 }
 
 - (void)didReceiveMemoryWarning
