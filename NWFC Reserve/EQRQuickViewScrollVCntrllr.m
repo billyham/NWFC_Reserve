@@ -40,9 +40,21 @@
 
 -(IBAction)slideRight:(id)sender{
     
-    if (self.myScrollView.contentOffset.x > 150.f){
+    if (self.myScrollView.contentOffset.x > 450.f){
+        
+        [self.myScrollView setContentOffset:CGPointMake(300, 0) animated:YES];
+        
+        //update page control
+        self.myPageControl.currentPage = self.myPageControl.currentPage - 1;
+        [self.myPageControl updateCurrentPageDisplay];
+        
+    }else if ((self.myScrollView.contentOffset.x > 150.f) && (self.myScrollView.contentOffset.x < 450.f)){
         
         [self.myScrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+        
+        //update page control
+        self.myPageControl.currentPage = self.myPageControl.currentPage - 1;
+        [self.myPageControl updateCurrentPageDisplay];
     }
     
     
@@ -50,10 +62,22 @@
 
 
 -(IBAction)slideLeft:(id)sender{
+    
+    if ((self.myScrollView.contentOffset.x < 450.f) && (self.myScrollView.contentOffset.x > 150)){
         
-    if (self.myScrollView.contentOffset.x < 150.f){
+        [self.myScrollView setContentOffset:CGPointMake(600, 0) animated:YES];
+        
+        //update page control
+        self.myPageControl.currentPage = self.myPageControl.currentPage + 1;
+        [self.myPageControl updateCurrentPageDisplay];
+        
+    }else if (self.myScrollView.contentOffset.x < 150.f){
     
         [self.myScrollView setContentOffset:CGPointMake(300, 0) animated:YES];
+        
+        //update page control
+        self.myPageControl.currentPage = self.myPageControl.currentPage + 1;
+        [self.myPageControl updateCurrentPageDisplay];
     }
     
 }

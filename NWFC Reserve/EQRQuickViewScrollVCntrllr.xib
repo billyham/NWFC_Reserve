@@ -9,6 +9,8 @@
                 <outlet property="editRequestButton" destination="MJC-A4-DTf" id="9Tc-2l-ehI"/>
                 <outlet property="myContentPage1" destination="xzJ-bb-uUm" id="rYj-Aq-0Ib"/>
                 <outlet property="myContentPage2" destination="Pf5-Td-rgf" id="j2U-rX-LHC"/>
+                <outlet property="myContentPage3" destination="fKg-Bj-Gah" id="bPR-6x-gnZ"/>
+                <outlet property="myPageControl" destination="FiL-XC-rJZ" id="FV3-M7-cKt"/>
                 <outlet property="myScrollView" destination="53C-od-KtK" id="U16-BA-3Bk"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -38,12 +40,24 @@
                                 <constraint firstAttribute="width" constant="300" id="JpH-1e-afo"/>
                             </constraints>
                         </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fKg-Bj-Gah">
+                            <rect key="frame" x="600" y="0.0" width="300" height="502"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="300" id="d0o-qh-NcD"/>
+                            </constraints>
+                        </view>
                     </subviews>
                     <constraints>
+                        <constraint firstItem="Pf5-Td-rgf" firstAttribute="top" secondItem="fKg-Bj-Gah" secondAttribute="top" id="2I6-hP-Tev"/>
                         <constraint firstItem="Pf5-Td-rgf" firstAttribute="top" secondItem="xzJ-bb-uUm" secondAttribute="top" id="3If-fS-4ll"/>
+                        <constraint firstAttribute="trailing" secondItem="fKg-Bj-Gah" secondAttribute="trailing" constant="-600" id="4R1-I0-mm2"/>
                         <constraint firstItem="Pf5-Td-rgf" firstAttribute="leading" secondItem="xzJ-bb-uUm" secondAttribute="trailing" id="7Km-IA-Txz"/>
                         <constraint firstItem="xzJ-bb-uUm" firstAttribute="top" secondItem="53C-od-KtK" secondAttribute="top" id="Hd6-Jm-yFT"/>
+                        <constraint firstItem="fKg-Bj-Gah" firstAttribute="leading" secondItem="Pf5-Td-rgf" secondAttribute="trailing" id="I1e-z8-3HV"/>
                         <constraint firstAttribute="trailing" secondItem="Pf5-Td-rgf" secondAttribute="trailing" constant="-300" id="RCT-hh-nde"/>
+                        <constraint firstItem="Pf5-Td-rgf" firstAttribute="bottom" secondItem="fKg-Bj-Gah" secondAttribute="bottom" id="VO6-lJ-7Pw"/>
                         <constraint firstAttribute="bottom" secondItem="xzJ-bb-uUm" secondAttribute="bottom" id="dM9-JS-faw"/>
                         <constraint firstItem="xzJ-bb-uUm" firstAttribute="leading" secondItem="53C-od-KtK" secondAttribute="leading" id="dpN-co-emo"/>
                         <constraint firstAttribute="centerY" secondItem="xzJ-bb-uUm" secondAttribute="centerY" id="iHz-j0-3ib"/>
@@ -63,6 +77,12 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
+                <pageControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="FiL-XC-rJZ">
+                    <rect key="frame" x="130" y="467" width="39" height="37"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="pageIndicatorTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="currentPageIndicatorTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                </pageControl>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>

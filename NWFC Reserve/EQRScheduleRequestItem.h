@@ -12,7 +12,7 @@
 #import "EQRClassRegistrationItem.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 
-@interface EQRScheduleRequestItem : NSObject
+@interface EQRScheduleRequestItem : NSObject <NSCopying>
 
 @property (strong, nonatomic) NSString* key_id;
 @property (strong, nonatomic) NSString* contact_foreignKey;
@@ -54,5 +54,7 @@
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipmentJoins;
 
 @property BOOL markedForReturn;
+
+//-(id)copyWithZone:(NSZone *)zone;
 
 @end

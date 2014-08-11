@@ -22,6 +22,7 @@
 #import "EQRDayDatePickerVCntrllr.h"
 #import "EQRQuickViewPage1VCntrllr.h"
 #import "EQRQuickViewPage2VCntrllr.h"
+#import "EQRQuickViewPage3VCntrllr.h"
 #import "EQRQuickViewScrollVCntrllr.h"
 #import "EQRStaffUserPickerViewController.h"
 #import "EQRStaffUserManager.h"
@@ -778,9 +779,11 @@
     //instatiate first page subview
     EQRQuickViewPage1VCntrllr* quickViewPage1 = [[EQRQuickViewPage1VCntrllr alloc] initWithNibName:@"EQRQuickViewPage1VCntrllr" bundle:nil];
     EQRQuickViewPage2VCntrllr* quickViewPage2 = [[EQRQuickViewPage2VCntrllr alloc] initWithNibName:@"EQRQuickViewPage2VCntrllr" bundle:nil];
+    EQRQuickViewPage3VCntrllr* quickViewPage3 = [[EQRQuickViewPage3VCntrllr alloc] initWithNibName:@"EQRQuickViewPage3VCntrllr" bundle:nil];
     
     self.myQuickViewScrollVCntrllr.myQuickViewPage1 = quickViewPage1;
     self.myQuickViewScrollVCntrllr.myQuickViewPage2 = quickViewPage2;
+    self.myQuickViewScrollVCntrllr.myQuickViewPage3 = quickViewPage3;
     
     self.myScheduleRowQuickView = [[UIPopoverController alloc] initWithContentViewController:self.myQuickViewScrollVCntrllr];
     [self.myScheduleRowQuickView setPopoverContentSize:CGSizeMake(300.f, 502.f)];
@@ -790,8 +793,10 @@
     //__________****** assign userInfo dic to ivar SEEMS WEIRD but requires the dic in the showRequestEditor method *********_______
     self.temporaryDicFromNestedDayCell = [NSDictionary dictionaryWithDictionary:[note userInfo]];
     
-    //do the busy work of creating the popOver view
+    
+    //initial setup for pages
     [quickViewPage1 initialSetupWithDic:self.temporaryDicFromNestedDayCell];
+    [quickViewPage2 initialSetupWithKeyID:[self.temporaryDicFromNestedDayCell objectForKey:@"key_ID"]];
     
     NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
     CGRect selectedRect = [valueOfRect CGRectValue];
@@ -800,13 +805,13 @@
     //assign target of popover's "edit request" button
     [self.myQuickViewScrollVCntrllr.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventAllEvents];
 
-    
     //show popover  MUST use NOT allow using the arrow directin from below, keyboard may cover the textview
     [self.myScheduleRowQuickView presentPopoverFromRect:selectedRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionDown animated:YES];
     
     //attach page 1 & 2
     [self.myQuickViewScrollVCntrllr.myContentPage1 addSubview:quickViewPage1.view];
     [self.myQuickViewScrollVCntrllr.myContentPage2 addSubview:quickViewPage2.view];
+    [self.myQuickViewScrollVCntrllr.myContentPage3 addSubview:quickViewPage3.view];
     
     
     //add gesture recognizers
@@ -814,9 +819,17 @@
     swipeLeftGestureOnQuickview.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.myQuickViewScrollVCntrllr.myContentPage1 addGestureRecognizer:swipeLeftGestureOnQuickview];
     
+    UISwipeGestureRecognizer* swipeLeftGestureOnQuickview2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideLeft:)];
+    swipeLeftGestureOnQuickview2.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.myQuickViewScrollVCntrllr.myContentPage2 addGestureRecognizer:swipeLeftGestureOnQuickview2];
+    
     UISwipeGestureRecognizer* swipeRightGestureOnQuickview = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideRight:)];
     swipeRightGestureOnQuickview.direction = UISwipeGestureRecognizerDirectionRight;
     [self.myQuickViewScrollVCntrllr.myContentPage2 addGestureRecognizer:swipeRightGestureOnQuickview];
+    
+    UISwipeGestureRecognizer* swipeRightGestureOnQuickview2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideRight:)];
+    swipeRightGestureOnQuickview2.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.myQuickViewScrollVCntrllr.myContentPage3 addGestureRecognizer:swipeRightGestureOnQuickview2];
     
     
 }

@@ -9,13 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "EQRQuickViewPage1VCntrllr.h"
 #import "EQRQuickViewPage2VCntrllr.h"
+#import "EQRQuickViewPage3VCntrllr.h"
 
 @interface EQRQuickViewScrollVCntrllr : UIViewController <UIScrollViewDelegate>
 
 @property (nonatomic, strong) IBOutlet UIScrollView* myScrollView;
-@property (nonatomic, strong) IBOutlet UIView* myContentView;
+@property (nonatomic, strong) IBOutlet UIPageControl* myPageControl;
+
 @property (nonatomic, strong) EQRQuickViewPage1VCntrllr* myQuickViewPage1;
 @property (nonatomic, strong) EQRQuickViewPage2VCntrllr* myQuickViewPage2;
+@property (nonatomic, strong) EQRQuickViewPage3VCntrllr* myQuickViewPage3;
 @property (nonatomic, strong) IBOutlet UIView* myContentPage1;
 @property (nonatomic, strong) IBOutlet UIView* myContentPage2;
 @property (nonatomic, strong) IBOutlet UIView* myContentPage3;

@@ -102,6 +102,9 @@
 		54E046F31924A062006912F9 /* EQRItineraryCellContentVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54E046F11924A062006912F9 /* EQRItineraryCellContentVCntrllr.m */; };
 		54E046F41924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54E046F21924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib */; };
 		54E9DB18199353590080FF1B /* EQRStaffUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 54E9DB17199353590080FF1B /* EQRStaffUserManager.m */; };
+		54ECF1E41998A7E100298996 /* EQRModeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 54ECF1E31998A7E100298996 /* EQRModeManager.m */; };
+		54ECF1E81998A9D900298996 /* EQRQuickViewPage3VCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54ECF1E61998A9D900298996 /* EQRQuickViewPage3VCntrllr.m */; };
+		54ECF1E91998A9D900298996 /* EQRQuickViewPage3VCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54ECF1E71998A9D900298996 /* EQRQuickViewPage3VCntrllr.xib */; };
 		54F73784196D360F005BE295 /* EQRTapRadioButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F73783196D360F005BE295 /* EQRTapRadioButtonView.m */; };
 /* End PBXBuildFile section */
 
@@ -272,6 +275,11 @@
 		54E046F21924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRItineraryCellContentVCntrllr.xib; sourceTree = "<group>"; };
 		54E9DB16199353590080FF1B /* EQRStaffUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRStaffUserManager.h; sourceTree = "<group>"; };
 		54E9DB17199353590080FF1B /* EQRStaffUserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRStaffUserManager.m; sourceTree = "<group>"; };
+		54ECF1E21998A7E100298996 /* EQRModeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRModeManager.h; sourceTree = "<group>"; };
+		54ECF1E31998A7E100298996 /* EQRModeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRModeManager.m; sourceTree = "<group>"; };
+		54ECF1E51998A9D900298996 /* EQRQuickViewPage3VCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRQuickViewPage3VCntrllr.h; sourceTree = "<group>"; };
+		54ECF1E61998A9D900298996 /* EQRQuickViewPage3VCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRQuickViewPage3VCntrllr.m; sourceTree = "<group>"; };
+		54ECF1E71998A9D900298996 /* EQRQuickViewPage3VCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRQuickViewPage3VCntrllr.xib; sourceTree = "<group>"; };
 		54F73782196D360F005BE295 /* EQRTapRadioButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRTapRadioButtonView.h; sourceTree = "<group>"; };
 		54F73783196D360F005BE295 /* EQRTapRadioButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRTapRadioButtonView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -604,6 +612,9 @@
 				0115506819956B9A009A459F /* EQRQuickViewPage2VCntrllr.h */,
 				0115506919956B9A009A459F /* EQRQuickViewPage2VCntrllr.m */,
 				0115506A19956B9A009A459F /* EQRQuickViewPage2VCntrllr.xib */,
+				54ECF1E51998A9D900298996 /* EQRQuickViewPage3VCntrllr.h */,
+				54ECF1E61998A9D900298996 /* EQRQuickViewPage3VCntrllr.m */,
+				54ECF1E71998A9D900298996 /* EQRQuickViewPage3VCntrllr.xib */,
 			);
 			name = "Page VCs";
 			sourceTree = "<group>";
@@ -656,6 +667,8 @@
 				010E2CFA18E6293B000B7711 /* EQRColors.m */,
 				54E9DB16199353590080FF1B /* EQRStaffUserManager.h */,
 				54E9DB17199353590080FF1B /* EQRStaffUserManager.m */,
+				54ECF1E21998A7E100298996 /* EQRModeManager.h */,
+				54ECF1E31998A7E100298996 /* EQRModeManager.m */,
 			);
 			name = "shared singletons";
 			sourceTree = "<group>";
@@ -748,6 +761,7 @@
 				438EDCEA182B7ABE0090F882 /* InfoPlist.strings in Resources */,
 				438EDCF3182B7ABE0090F882 /* Main.storyboard in Resources */,
 				542CC20E197B56B100BFD581 /* EQRInboxCellContentVCntrllr.xib in Resources */,
+				54ECF1E91998A9D900298996 /* EQRQuickViewPage3VCntrllr.xib in Resources */,
 				5402B7D6187586F400F0888B /* EQREquipContentViewVCntrllr.xib in Resources */,
 				542CC23F197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.xib in Resources */,
 				542F5FFE192357AF001C28CA /* EQRCheckVCntrllr.xib in Resources */,
@@ -832,10 +846,12 @@
 				54DFE0F0186ECD610089B9EA /* EQRClassRegistrationItem.m in Sources */,
 				01A4755A18EB9BDF006F32EB /* EQREditorDateVCntrllr.m in Sources */,
 				0190DAE218E234EA00B55D82 /* EQRScheduleNestedDayCell.m in Sources */,
+				54ECF1E41998A7E100298996 /* EQRModeManager.m in Sources */,
 				5402D237186C24A50091C080 /* EQRClassCell.m in Sources */,
 				01600B3C18CA53080006D75A /* EQRHeaderCellTemplate.m in Sources */,
 				438EDCF0182B7ABE0090F882 /* EQRAppDelegate.m in Sources */,
 				5402D234186C242F0091C080 /* EQRClassItem.m in Sources */,
+				54ECF1E81998A9D900298996 /* EQRQuickViewPage3VCntrllr.m in Sources */,
 				010E2CFB18E6293B000B7711 /* EQRColors.m in Sources */,
 				54882BD21900D588005A4D5A /* EQREditorRenterVCntrllr.m in Sources */,
 				0119D2FF18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m in Sources */,

@@ -15,8 +15,8 @@
             <rect key="frame" x="0.0" y="0.0" width="300" height="502"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Eij-iK-DEn">
-                    <rect key="frame" x="0.0" y="50" width="300" height="452"/>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="26" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Eij-iK-DEn">
+                    <rect key="frame" x="0.0" y="50" width="300" height="422"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <connections>
@@ -26,6 +26,12 @@
                 </tableView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="Eij-iK-DEn" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="50" id="FFQ-lI-IQd"/>
+                <constraint firstItem="Eij-iK-DEn" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="H6N-9X-fhx"/>
+                <constraint firstAttribute="bottom" secondItem="Eij-iK-DEn" secondAttribute="bottom" constant="30" id="Ijw-U5-aoz"/>
+                <constraint firstAttribute="trailing" secondItem="Eij-iK-DEn" secondAttribute="trailing" id="PXs-mZ-kTE"/>
+            </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
     </objects>
