@@ -12,6 +12,9 @@
 
 @interface EQRQuickViewPage2VCntrllr ()
 
+@property (strong, nonatomic) IBOutlet UITableView* myTable;
+@property (strong, nonatomic) NSArray* myArray;
+
 @end
 
 @implementation EQRQuickViewPage2VCntrllr

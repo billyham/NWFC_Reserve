@@ -7,12 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EQRScheduleRequestItem.h"
 
 
 @interface EQRQuickViewPage3VCntrllr : UIViewController
 
--(void)initialSetupWithScheduleItem:(EQRScheduleRequestItem*)scheduleRequest;
+-(void)initialSetupWithKeyID:(NSString*)keyID;
 
 -(IBAction)duplicate:(id)sender;
 -(IBAction)split:(id)sender;

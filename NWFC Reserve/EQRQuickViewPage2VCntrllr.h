@@ -10,8 +10,7 @@
 
 @interface EQRQuickViewPage2VCntrllr : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
-@property (strong, nonatomic) IBOutlet UITableView* myTable;
-@property (strong, nonatomic) NSArray* myArray;
+
 //@property (strong, nonatomic) NSString* scheduleKeyID;
 
 -(void)initialSetupWithKeyID:(NSString*)keyID;
