@@ -254,7 +254,7 @@
     
     //sends note to scheduleTopVCntrllr
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentScheduleRowQuickView object:nil userInfo:dic];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditor object:nil userInfo:dic];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditorFromSchedule object:nil userInfo:dic];
     
     
 }

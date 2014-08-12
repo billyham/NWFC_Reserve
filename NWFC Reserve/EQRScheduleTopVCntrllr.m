@@ -105,7 +105,7 @@
     //receive note from scheduleRowCell to present schedule row quick view
     [nc addObserver:self selector:@selector(showScheduleRowQuickView:) name:EQRPresentScheduleRowQuickView object:nil];
     //receives from scheduleRowCell command to present a requestEditor vcntrllr
-    [nc addObserver:self selector:@selector(showRequestEditor:) name:EQRPresentRequestEditor object:nil];
+    [nc addObserver:self selector:@selector(showRequestEditor:) name:EQRPresentRequestEditorFromSchedule object:nil];
     //receive notes from requestEditor and EquipSummaryVCntrllr when a change has been made and needs to refresh the view
     [nc addObserver:self selector:@selector(raiseFlagThatAChangeHasBeenMade:) name:EQRAChangeWasMadeToTheSchedule object:nil];
     //receive note from nestedDayCell about long press actions
@@ -797,6 +797,7 @@
     //initial setup for pages
     [quickViewPage1 initialSetupWithDic:self.temporaryDicFromNestedDayCell];
     [quickViewPage2 initialSetupWithKeyID:[self.temporaryDicFromNestedDayCell objectForKey:@"key_ID"]];
+    [quickViewPage3 initialSetupWithKeyID:[self.temporaryDicFromNestedDayCell objectForKey:@"key_ID"] andUserInfoDic:self.temporaryDicFromNestedDayCell];
     
     NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
     CGRect selectedRect = [valueOfRect CGRectValue];
@@ -836,6 +837,12 @@
 
 
 -(void) showRequestEditor:(NSNotification*)note{
+    
+    //dismiss any popovers that may exist (ie the quickview when "duplicate" is tapped)
+    [self.myScheduleRowQuickView dismissPopoverAnimated:YES];
+    
+    
+   
     
     EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
     
@@ -895,6 +902,7 @@
     }];
     
 }
+
 
 
 #pragma mark - handle movement of nested day cells

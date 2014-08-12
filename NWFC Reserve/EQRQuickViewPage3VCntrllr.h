@@ -11,7 +11,9 @@
 
 @interface EQRQuickViewPage3VCntrllr : UIViewController
 
--(void)initialSetupWithKeyID:(NSString*)keyID;
+@property BOOL fromItinerary;
+
+-(void)initialSetupWithKeyID:(NSString*)keyID andUserInfoDic:(NSDictionary*)userInfo;
 
 -(IBAction)duplicate:(id)sender;
 -(IBAction)split:(id)sender;

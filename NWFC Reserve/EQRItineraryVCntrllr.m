@@ -78,6 +78,8 @@
     [nc addObserver:self selector:@selector(showCheckInOut:) name:EQRPresentCheckInOut object:nil];
     //receive note from itinerary row to show quick view
     [nc addObserver:self selector:@selector(showQuickView:) name:EQRPresentItineraryQuickView object:nil];
+    //show request editor (from quick view duplicate button)
+    [nc addObserver:self selector:@selector(showRequestEditor:) name:EQRPresentRequestEditorFromItinerary object:nil];
     
     //register collection view cell
     [self.myMasterItineraryCollection registerClass:[EQRItineraryRowCell class] forCellWithReuseIdentifier:@"Cell"];
@@ -414,6 +416,85 @@
 
 
 
+#pragma mark - show request editor
+
+-(void) showRequestEditor:(NSNotification*)note{
+    
+    //dismiss any popovers that may exist (ie the quickview when "duplicate" is tapped)
+    [self.myQuickView dismissPopoverAnimated:YES];
+    
+    
+    
+    
+    EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
+    
+    //prevent edges from extending beneath nav and tab bars
+    editorViewController.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    //initial setup
+    [editorViewController initialSetupWithInfo:[NSDictionary dictionaryWithDictionary:note.userInfo]];
+    
+    //assign editor's keyID property
+    //    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
+    
+    
+    
+    //______1_______pushes from the side and preserves navigation controller
+    //    [self.navigationController pushViewController:editorViewController animated:YES];
+    
+    
+    //______2_______model pops up from below, removes navigiation controller
+    UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
+    //add cancel button
+    
+    [self presentViewController:newNavController animated:YES completion:^{
+        
+    }];
+}
+
+
+-(IBAction)showRequestEditorFromQuickView:(id)sender{
+    
+    //dismiss the quickView popover
+    [self.myQuickView dismissPopoverAnimated:YES];
+    
+    EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
+    
+    //prevent edges from extending beneath nav and tab bars
+    editorViewController.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    //_______******* THIS IS WEIRD need to subtract a day off the the dates
+    float secondsForOffset = 0 * -3;
+    NSDate* newBeginDate = [[self.temporaryDicFromQuickView objectForKey:@"request_date_begin"] dateByAddingTimeInterval:secondsForOffset];
+    NSDate* newEndDate = [[self.temporaryDicFromQuickView objectForKey:@"request_date_end"] dateByAddingTimeInterval:secondsForOffset];
+    
+    NSMutableDictionary* newDic = [NSMutableDictionary dictionaryWithDictionary:self.temporaryDicFromQuickView];
+    
+    [newDic setValue:newBeginDate forKey:@"request_date_begin"];
+    [newDic setValue:newEndDate forKey:@"reqeust_date_end"];
+    
+    //initial setup
+    [editorViewController initialSetupWithInfo:newDic];
+    
+    //assign editor's keyID property
+    //    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
+    
+    
+    
+    //______1_______pushes from the side and preserves navigation controller
+    //    [self.navigationController pushViewController:editorViewController animated:YES];
+    
+    
+    //______2_______model pops up from below, removes navigiation controller
+    UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
+    //add cancel button
+    
+    [self presentViewController:newNavController animated:YES completion:^{
+        
+    }];
+    
+}
+
 
 #pragma mark - showQuickView
 
@@ -486,6 +567,8 @@
     //initial infor
     [quickViewPage1 initialSetupWithDic:dic];
     [quickViewPage2 initialSetupWithKeyID:[[note userInfo] objectForKey: @"key_ID"]];
+    [quickViewPage3 initialSetupWithKeyID:[[note userInfo] objectForKey: @"key_ID"] andUserInfoDic:dic];
+    quickViewPage3.fromItinerary = YES;
     
 //    NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
 //    CGRect selectedRect = [valueOfRect CGRectValue];
@@ -536,47 +619,7 @@
 }
 
 
--(IBAction)showRequestEditorFromQuickView:(id)sender{
-    
-    //dismiss the quickView popover
-    [self.myQuickView dismissPopoverAnimated:YES];
-    
-    EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
-    
-    //prevent edges from extending beneath nav and tab bars
-    editorViewController.edgesForExtendedLayout = UIRectEdgeNone;
-    
-    //_______******* THIS IS WEIRD need to subtract a day off the the dates
-    float secondsForOffset = 0 * -3;
-    NSDate* newBeginDate = [[self.temporaryDicFromQuickView objectForKey:@"request_date_begin"] dateByAddingTimeInterval:secondsForOffset];
-    NSDate* newEndDate = [[self.temporaryDicFromQuickView objectForKey:@"request_date_end"] dateByAddingTimeInterval:secondsForOffset];
-    
-    NSMutableDictionary* newDic = [NSMutableDictionary dictionaryWithDictionary:self.temporaryDicFromQuickView];
-    
-    [newDic setValue:newBeginDate forKey:@"request_date_begin"];
-    [newDic setValue:newEndDate forKey:@"reqeust_date_end"];
-    
-    //initial setup
-    [editorViewController initialSetupWithInfo:newDic];
-    
-    //assign editor's keyID property
-    //    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
-    
-    
-    
-    //______1_______pushes from the side and preserves navigation controller
-    //    [self.navigationController pushViewController:editorViewController animated:YES];
-    
-    
-    //______2_______model pops up from below, removes navigiation controller
-    UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
-    //add cancel button
-    
-    [self presentViewController:newNavController animated:YES completion:^{
-        
-    }];
-    
-}
+
 
 
 //-(void)dismissedCheckInOut:(NSNotification*)note{

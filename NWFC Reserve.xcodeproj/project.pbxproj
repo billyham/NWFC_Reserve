@@ -198,8 +198,8 @@
 		54032FE51872D36F00481D86 /* EQRScheduleRequestItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleRequestItem.m; sourceTree = "<group>"; };
 		54032FE71872D39E00481D86 /* EQRScheduleRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleRequestManager.h; sourceTree = "<group>"; };
 		54032FE81872D39E00481D86 /* EQRScheduleRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleRequestManager.m; sourceTree = "<group>"; };
-		540B5518187687D60025FDEE /* EQRGlobals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRGlobals.h; sourceTree = "<group>"; };
-		540B5519187687D60025FDEE /* EQRGlobals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRGlobals.m; sourceTree = "<group>"; };
+		540B5518187687D60025FDEE /* EQRGlobals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EQRGlobals.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		540B5519187687D60025FDEE /* EQRGlobals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EQRGlobals.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		540B551B18769CCE0025FDEE /* EQRStaffPage1VCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRStaffPage1VCntrllr.h; sourceTree = "<group>"; };
 		540B551C18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRStaffPage1VCntrllr.m; sourceTree = "<group>"; };
 		541167BB18E5458A0059BA3C /* EQRNavBarDatesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRNavBarDatesView.h; sourceTree = "<group>"; };
@@ -278,7 +278,7 @@
 		54ECF1E21998A7E100298996 /* EQRModeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRModeManager.h; sourceTree = "<group>"; };
 		54ECF1E31998A7E100298996 /* EQRModeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRModeManager.m; sourceTree = "<group>"; };
 		54ECF1E51998A9D900298996 /* EQRQuickViewPage3VCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRQuickViewPage3VCntrllr.h; sourceTree = "<group>"; };
-		54ECF1E61998A9D900298996 /* EQRQuickViewPage3VCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRQuickViewPage3VCntrllr.m; sourceTree = "<group>"; };
+		54ECF1E61998A9D900298996 /* EQRQuickViewPage3VCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EQRQuickViewPage3VCntrllr.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		54ECF1E71998A9D900298996 /* EQRQuickViewPage3VCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRQuickViewPage3VCntrllr.xib; sourceTree = "<group>"; };
 		54F73782196D360F005BE295 /* EQRTapRadioButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRTapRadioButtonView.h; sourceTree = "<group>"; };
 		54F73783196D360F005BE295 /* EQRTapRadioButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRTapRadioButtonView.m; sourceTree = "<group>"; };
