@@ -10,6 +10,7 @@
 #import "EQRWebData.h"
 #import "EQRScheduleRequestItem.h"
 #import "EQRContactNameItem.h"
+#import "EQRGlobals.h"
 
 @interface EQRQuickViewPage1VCntrllr ()
 
@@ -23,6 +24,7 @@
 @property (strong, nonatomic) NSString* staff_checkout_name;
 @property (strong, nonatomic) NSString* staff_checkin_name;
 @property (strong, nonatomic) NSString* staff_shelf_name;
+@property (strong, nonatomic) NSString* classCatalogTitle;
 
 @end
 
@@ -90,6 +92,25 @@
     } else {
         
         //______error handling when no item is returned
+    }
+    
+    NSLog(@"this is the classTitle_foreignKey: %@",self.myScheduleRequestItem.classTitle_foreignKey);
+    
+    //also get class title if a titleKey exists
+    if (self.myScheduleRequestItem.classTitle_foreignKey){
+        
+        NSLog(@"step one");
+        
+        if ((![self.myScheduleRequestItem.classTitle_foreignKey isEqualToString:@""]) && (![self.myScheduleRequestItem.classTitle_foreignKey isEqualToString:EQRErrorCode88888888])){
+        
+            NSLog(@"step two");
+            
+            NSArray* ayaArray = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequestItem.classTitle_foreignKey, nil];
+            NSArray* beeArray = [NSArray arrayWithObjects:ayaArray, nil];
+            NSString* classTitleString = [webData queryForStringWithLink:@"EQGetClassCatalogTitleWithKey.php" parameters:beeArray];
+            self.classCatalogTitle = classTitleString;
+            NSLog(@"set classCatalogTitle: %@", classTitleString);
+        }
     }
     
     
@@ -165,6 +186,8 @@
     //set notes view text
     self.notesView.text = self.myScheduleRequestItem.notes;
     
+    
+    
     //retrieve the contact names from their ids
     if ((![self.myScheduleRequestItem.staff_confirmation_id isEqualToString:@""]) && (self.myScheduleRequestItem.staff_confirmation_id != nil)) {
         self.staff_confirmation_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_confirmation_id];
@@ -196,6 +219,17 @@
         self.staff_shelf_name = @"";
     }
     
+    
+    //set class title if it exists
+    if (self.classCatalogTitle){
+        
+        if ((![self.classCatalogTitle isEqualToString:@""]) && (![self.classCatalogTitle isEqualToString:EQRErrorCode88888888])){
+            
+            self.classTitle.hidden = NO;
+            
+            self.classTitle.text = self.classCatalogTitle;
+        }
+    }
     
     //change alpha of label when the value exists, and add a value with a name
     if (self.myScheduleRequestItem.staff_confirmation_date){

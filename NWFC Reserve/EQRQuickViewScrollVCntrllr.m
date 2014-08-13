@@ -86,7 +86,7 @@
 -(void)keyboardDidAppear{
     
     CGRect originalRect = self.myQuickViewPage1.notesView.frame;
-    CGRect newRect = CGRectMake(originalRect.origin.x, originalRect.origin.y - 250, originalRect.size.width, originalRect.size.height + 250);
+    CGRect newRect = CGRectMake(originalRect.origin.x, originalRect.origin.y - 260, originalRect.size.width, originalRect.size.height + 260);
     
     [UIView animateWithDuration:0.25 animations:^{
         
@@ -99,7 +99,7 @@
 -(void)keyboardDidDisappear{
     
     CGRect originalRect = self.myQuickViewPage1.notesView.frame;
-    CGRect newRect = CGRectMake(originalRect.origin.x, originalRect.origin.y + 250, originalRect.size.width, originalRect.size.height - 250);
+    CGRect newRect = CGRectMake(originalRect.origin.x, originalRect.origin.y + 260, originalRect.size.width, originalRect.size.height - 260);
     
     [UIView animateWithDuration:0.25 animations:^{
         

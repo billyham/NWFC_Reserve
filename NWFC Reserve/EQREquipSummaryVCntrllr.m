@@ -267,12 +267,12 @@
     
     //must not include nil objects in array
     //cycle though all inputs and ensure some object is included. use @"88888888" as an error code
-    if (!request.contact_foreignKey) request.contact_foreignKey = @"88888888";
-    if (!request.classSection_foreignKey) request.classSection_foreignKey = @"88888888";
-    if (!request.classTitle_foreignKey) request.classTitle_foreignKey = @"88888888";
+    if (!request.contact_foreignKey) request.contact_foreignKey = EQRErrorCode88888888;
+    if (!request.classSection_foreignKey) request.classSection_foreignKey = EQRErrorCode88888888;
+    if (!request.classTitle_foreignKey) request.classTitle_foreignKey = EQRErrorCode88888888;
     if (!request.request_date_begin) request.request_date_begin = [NSDate date];
     if (!request.request_date_end) request.request_date_end = [NSDate date];
-    if (!request.contact_name) request.contact_name = @"88888888";
+    if (!request.contact_name) request.contact_name = EQRErrorCode88888888;
     
     //format the nsdates to a mysql compatible string
     NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];

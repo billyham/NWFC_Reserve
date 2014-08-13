@@ -19,6 +19,8 @@ NSString* EQRRenterYouth = @"youth";
 //______******* if any change is made to these, be sure to update existing renter_type rows in BOTH
 //______******* scheduleTracking AND scheduleTracking_uniqueItem_join tables
 
+//error string
+NSString* EQRErrorCode88888888 = @"88888888";
 
 //Notification selectors
 NSString* EQRVoidScheduleItemObjects = @"EQRVoidScheduleItemObjects";

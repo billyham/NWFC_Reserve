@@ -540,6 +540,7 @@
 				5493CA8B1990942F008A9221 /* EQRStaffUserPickerViewController.h */,
 				5493CA8C1990942F008A9221 /* EQRStaffUserPickerViewController.m */,
 				5493CA8D1990942F008A9221 /* EQRStaffUserPickerViewController.xib */,
+				54ED1906199B403A00CF1A8F /* print renderers */,
 			);
 			name = "shared nibs";
 			sourceTree = "<group>";
@@ -572,11 +573,6 @@
 				54457ECE1935B7B900E9061A /* EQRCheckCellContentVCntrllr.h */,
 				54457ECF1935B7B900E9061A /* EQRCheckCellContentVCntrllr.m */,
 				54457ED01935B7B900E9061A /* EQRCheckCellContentVCntrllr.xib */,
-				54BBC191193D9DEA004D5DFE /* EQRCheckPageRenderer.h */,
-				54BBC192193D9DEA004D5DFE /* EQRCheckPageRenderer.m */,
-				01735F1A193FAC38007E85C1 /* EQRCheckPrintPage.h */,
-				01735F1B193FAC38007E85C1 /* EQRCheckPrintPage.m */,
-				01735F1C193FAC38007E85C1 /* EQRCheckPrintPage.xib */,
 			);
 			name = "Check Out/In";
 			sourceTree = "<group>";
@@ -671,6 +667,18 @@
 				54ECF1E31998A7E100298996 /* EQRModeManager.m */,
 			);
 			name = "shared singletons";
+			sourceTree = "<group>";
+		};
+		54ED1906199B403A00CF1A8F /* print renderers */ = {
+			isa = PBXGroup;
+			children = (
+				54BBC191193D9DEA004D5DFE /* EQRCheckPageRenderer.h */,
+				54BBC192193D9DEA004D5DFE /* EQRCheckPageRenderer.m */,
+				01735F1A193FAC38007E85C1 /* EQRCheckPrintPage.h */,
+				01735F1B193FAC38007E85C1 /* EQRCheckPrintPage.m */,
+				01735F1C193FAC38007E85C1 /* EQRCheckPrintPage.xib */,
+			);
+			name = "print renderers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -17,6 +17,9 @@ extern NSString* EQRRenterStaff;
 extern NSString* EQRRenterPublic;
 extern NSString* EQRRenterYouth;
 
+//error string
+extern NSString* EQRErrorCode88888888;
+
 //Notification selectors
 extern NSString* EQRVoidScheduleItemObjects;
 extern NSString* EQRRefreshEquipTable;

@@ -304,13 +304,13 @@
     
     //must not include nil objects in array
     //cycle though all inputs and ensure some object is included. use @"88888888" as an error code
-    if (!self.privateRequesetManager.request.contact_foreignKey) self.privateRequesetManager.request.contact_foreignKey = @"88888888";
-    if (!self.privateRequesetManager.request.classSection_foreignKey) self.privateRequesetManager.request.classSection_foreignKey = @"88888888";
-    if ([self.privateRequesetManager.request.classSection_foreignKey isEqualToString:@""]) self.privateRequesetManager.request.classSection_foreignKey = @"88888888";
-    if (!self.privateRequesetManager.request.classTitle_foreignKey) self.privateRequesetManager.request.classTitle_foreignKey = @"88888888";
+    if (!self.privateRequesetManager.request.contact_foreignKey) self.privateRequesetManager.request.contact_foreignKey = EQRErrorCode88888888;
+    if (!self.privateRequesetManager.request.classSection_foreignKey) self.privateRequesetManager.request.classSection_foreignKey = EQRErrorCode88888888;
+    if ([self.privateRequesetManager.request.classSection_foreignKey isEqualToString:@""]) self.privateRequesetManager.request.classSection_foreignKey = EQRErrorCode88888888;
+    if (!self.privateRequesetManager.request.classTitle_foreignKey) self.privateRequesetManager.request.classTitle_foreignKey = EQRErrorCode88888888;
     if (!self.privateRequesetManager.request.request_date_begin) self.privateRequesetManager.request.request_date_begin = [NSDate date];
     if (!self.privateRequesetManager.request.request_date_end) self.privateRequesetManager.request.request_date_end = [NSDate date];
-    if (!self.privateRequesetManager.request.contact_name) self.privateRequesetManager.request.contact_name = @"88888888";
+    if (!self.privateRequesetManager.request.contact_name) self.privateRequesetManager.request.contact_name = EQRErrorCode88888888;
     if (!self.privateRequesetManager.request.time_of_request) self.privateRequesetManager.request.time_of_request = [NSDate date];
 
     
@@ -466,6 +466,8 @@
     
     UIPopoverController* popOverC = [[UIPopoverController alloc] initWithContentViewController:self.myDateViewController];
     self.theDatePopOver = popOverC;
+    self.theDatePopOver.popoverContentSize = CGSizeMake(320.f, 520.f);
+
     
     [self.theDatePopOver presentPopoverFromRect:self.pickupDateField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     

@@ -35,9 +35,10 @@
 @property (strong, nonatomic) NSString* status_level;
 //
 ////from equipTitleItem record
+//or more likely the method to create structured array for the quickViewPage2
 //@property (strong, nonatomic) NSString* category;
 //@property (strong, nonatomic) NSString* subcategory;
-//@property (strong, nonatomic) NSString* schedule_grouping;
+@property (strong, nonatomic) NSString* schedule_grouping;
 
 
 @end

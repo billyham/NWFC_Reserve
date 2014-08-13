@@ -12,6 +12,7 @@
 #import "EQRGlobals.h"
 #import "EQREditorTopVCntrllr.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
+#import "EQRCheckPrintPage.h"
 
 @interface EQRQuickViewPage3VCntrllr ()
 
@@ -58,10 +59,6 @@
 
 -(IBAction)duplicate:(id)sender{
     
-    
-    //____show request editor and launch edit date popover?
-     
-    
     //webdata query
     EQRWebData* webData = [EQRWebData sharedInstance];
     
@@ -87,14 +84,14 @@
     //a complete schedule reqeust object, the one to be copied
     EQRScheduleRequestItem* currentRequestItem = [tempMuteArray objectAtIndex:0];
     
-    
     //get a new schedule request key_id, the proper way...
     NSString* myDeviceName = [[UIDevice currentDevice] name];
     
     NSArray* firstArray2  = [NSArray arrayWithObjects:@"myDeviceName", myDeviceName, nil];
     NSArray* topArray2 = [NSArray arrayWithObjects:firstArray2, nil];
     
-    NSString* newKeyID = [webData queryForStringWithLink:@"EQRegisterScheduleRequest" parameters:topArray2];
+    NSString* newKeyID = [webData queryForStringWithLink:@"EQRegisterScheduleRequest.php" parameters:topArray2];
+    NSLog(@"this is the newKeyId: %@", newKeyID);
     
     //time of request
     NSDateFormatter* timeStampFormatter = [[NSDateFormatter alloc] init];
@@ -140,10 +137,8 @@
     NSLog(@"this is the returnString: %@", returnString);
     
 
-    
-    //EQGetScheduleEquipJoins  with  scheduleTracking_foreignKey
-    //loop with scheduleTracking_foreignKey, equipUniqueItem_foreignKey, equipTitleItem_foreignKey
-    //EQSetNewScheduleEquipJoin
+
+    //Get all of the equipment joins
     
     NSArray* aArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.mykeyID, nil];
     NSArray* zArray = [NSArray arrayWithObjects:aArray, nil];
@@ -169,13 +164,11 @@
     }
     
     
-    
-    
     //replace the key_id in the userInfo
     [self.userInfo setValue:newKeyID forKey:@"key_ID"];
     
-    
-    //__1_______________show request editor__________________
+    //the date should change...
+    //show request editor
     if (self.fromItinerary == YES){
         
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditorFromItinerary object:nil userInfo:self.userInfo];
@@ -184,35 +177,6 @@
         
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditorFromSchedule object:nil userInfo:self.userInfo];
     }
-    
-    
-    //__2_______________show request editor____________________
-//    EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
-//    
-//    //prevent edges from extending beneath nav and tab bars
-//    editorViewController.edgesForExtendedLayout = UIRectEdgeNone;
-//    
-//    //initial setup
-//    [editorViewController initialSetupWithInfo:[NSDictionary dictionaryWithDictionary:self.userInfo]];
-//    
-//    //assign editor's keyID property
-//    //    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
-//    
-//    
-//    
-//    //______1_______pushes from the side and preserves navigation controller
-//    //    [self.navigationController pushViewController:editorViewController animated:YES];
-//    
-//    
-//    //______2_______model pops up from below, removes navigiation controller
-//    UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
-//    //add cancel button
-//    
-//    //_____*******   must dismiss popover before presenting the request editor view   ******__________    
-//    [self presentViewController:newNavController animated:YES completion:^{
-//        
-//    }];
-    
 }
 
 
@@ -224,7 +188,40 @@
 
 -(IBAction)print:(id)sender{
     
+    //get complete scheduleRequest item info
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", self.mykeyID, nil];
+    NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+    __block EQRScheduleRequestItem* chosenItem;
+    [webData queryWithLink:@"EQGetScheduleRequestComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        if ([muteArray count] > 0){
+            
+            chosenItem = [muteArray objectAtIndex:0];
+        } else {
+            
+            NSLog(@"no request found for key id: %@. Abort printing.", self.mykeyID);
+            return;
+        }
+    }];
     
+    
+    //create printable page view controller
+    EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
+    
+    //add the request item to the view controller
+    [pageForPrint initialSetupWithScheduleRequestItem:chosenItem];
+    
+    //assign ivar variables
+    pageForPrint.rentorNameAtt = chosenItem.contact_name;
+    pageForPrint.rentorEmailAtt = @"test email address";
+    pageForPrint.rentorPhoneAtt = @"test phone";
+    
+    
+    //show the view controller
+    [self presentViewController:pageForPrint animated:YES completion:^{
+        
+    }];
 }
 
 

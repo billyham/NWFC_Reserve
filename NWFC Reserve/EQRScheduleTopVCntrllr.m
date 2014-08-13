@@ -318,6 +318,7 @@
             if ([(NSString*)[(EQREquipUniqueItem*)obj1 distinquishing_id] length] < 2){
                 
                 newDist1 = [NSString stringWithFormat:@"0%@", (NSString*)[(EQREquipUniqueItem*)obj1 distinquishing_id]];
+                
             }else{
                 
                 newDist1 =(NSString*)[(EQREquipUniqueItem*)obj1 distinquishing_id];
@@ -327,6 +328,7 @@
             if ([(NSString*)[(EQREquipUniqueItem*)obj2 distinquishing_id] length] < 2){
                 
                 newDist2 = [NSString stringWithFormat:@"0%@", (NSString*)[(EQREquipUniqueItem*)obj2 distinquishing_id]];
+                
             }else{
                 
                 newDist2 =(NSString*)[(EQREquipUniqueItem*)obj2 distinquishing_id];

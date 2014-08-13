@@ -31,7 +31,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ga4-UI-EFM">
-                    <rect key="frame" x="20" y="58" width="260" height="21"/>
+                    <rect key="frame" x="20" y="54" width="260" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="y5e-Db-EKH"/>
@@ -41,7 +41,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Pick up:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m7Z-ya-eDu">
-                    <rect key="frame" x="20" y="109" width="58" height="21"/>
+                    <rect key="frame" x="20" y="111" width="58" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -100,7 +100,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Return:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tpv-eI-fKZ">
-                    <rect key="frame" x="20" y="138" width="51" height="21"/>
+                    <rect key="frame" x="20" y="139" width="51" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -116,22 +116,25 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gjc-jS-PhS">
-                    <rect key="frame" x="43" y="80" width="234" height="21"/>
+                <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Class" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gjc-jS-PhS">
+                    <rect key="frame" x="20" y="79" width="260" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="XRh-Eg-nXj"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Pick up date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LO9-yt-SDu">
-                    <rect key="frame" x="86" y="109" width="194" height="21"/>
+                    <rect key="frame" x="86" y="111" width="194" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Return date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sAR-0k-48Q">
-                    <rect key="frame" x="84" y="138" width="196" height="21"/>
+                    <rect key="frame" x="84" y="139" width="196" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -175,11 +178,14 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="ga4-UI-EFM" firstAttribute="top" secondItem="iGQ-AE-SRP" secondAttribute="bottom" constant="10" id="1Fd-U4-Xvp"/>
+                <constraint firstItem="ga4-UI-EFM" firstAttribute="top" secondItem="iGQ-AE-SRP" secondAttribute="bottom" constant="6" id="1Fd-U4-Xvp"/>
+                <constraint firstItem="gjc-jS-PhS" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="HaI-ww-LcR"/>
+                <constraint firstItem="gjc-jS-PhS" firstAttribute="top" secondItem="ga4-UI-EFM" secondAttribute="bottom" constant="4" id="L3m-5w-sT0"/>
                 <constraint firstItem="ga4-UI-EFM" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="SMq-ia-kdt"/>
                 <constraint firstAttribute="centerX" secondItem="iGQ-AE-SRP" secondAttribute="centerX" id="cWC-zu-5tt"/>
                 <constraint firstAttribute="trailing" secondItem="ga4-UI-EFM" secondAttribute="trailing" constant="20" id="eLD-g6-LDi"/>
                 <constraint firstItem="iGQ-AE-SRP" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="18" id="fHl-Xi-ymE"/>
+                <constraint firstAttribute="trailing" secondItem="gjc-jS-PhS" secondAttribute="trailing" constant="20" id="vih-5e-MSP"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
