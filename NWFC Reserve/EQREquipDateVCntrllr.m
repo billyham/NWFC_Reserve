@@ -11,18 +11,26 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRGlobals.h"
 #import "EQREquipSelectionGenericVCntrllr.h"
+#import "EQREditorDateVCntrllr.h"
+#import "EQREditorExtendedDateVC.h"
 
 
 @interface EQREquipDateVCntrllr ()
 
+//remove from xib and then delete these
 @property (strong, nonatomic) IBOutlet UIDatePicker* pickUpDatePicker;
 @property (strong, nonatomic) IBOutlet UIDatePicker* pickUpTimePicker;
 @property (strong, nonatomic) IBOutlet UIDatePicker* returnDatePicker;
 @property (strong, nonatomic) IBOutlet UIDatePicker* returnTimePicker;
+//
+
 @property BOOL datePickupSelectionFlag;
 @property BOOL dateReturnSelectionFlag;
 
 @property (strong, nonatomic) IBOutlet UIButton* showAllEquipmentButton;
+
+@property (strong, nonatomic) IBOutlet UIView* containerViewForDatePicker;
+
 
 
 @end
@@ -65,6 +73,29 @@
     requestManager.request.request_date_begin = self.pickUpDate;
     requestManager.request.request_date_end = self.returnDate;
     
+    
+    
+    //________Accessing childviewcontrollers
+    NSArray* arrayOfChildVCs = [self childViewControllers];
+    
+    if ([arrayOfChildVCs count] > 0){
+        
+        EQREditorDateVCntrllr* myDateViewVCntrllr = (EQREditorDateVCntrllr*)[arrayOfChildVCs objectAtIndex:0];
+        
+        //set button targets
+        [myDateViewVCntrllr.saveButton addTarget:self action:@selector(receiveContinueAction:) forControlEvents:UIControlEventTouchUpInside];
+        [myDateViewVCntrllr.showOrHideExtendedButton addTarget:self action:@selector(showOrHidExtendedPicker:) forControlEvents:UIControlEventTouchUpInside];
+        
+        //set actions from pickers
+        [myDateViewVCntrllr.pickupDateField addTarget:self action:@selector(receivePickUpDate:) forControlEvents:UIControlEventValueChanged];
+        [myDateViewVCntrllr.returnDateField addTarget:self action:@selector(receiveReturnDate:) forControlEvents:UIControlEventValueChanged];
+        
+        
+    }else{
+        
+        //error handling
+    }
+    
 }
 
 
@@ -77,7 +108,7 @@
 }
 
 
-#pragma mark - continue
+#pragma mark - childviewcontroller for dateview
 
 -(IBAction)receiveContinueAction:(id)sender{
 
@@ -86,6 +117,13 @@
     genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeAll;
     
     [self.navigationController pushViewController:genericEquipVCntrllr animated:YES];
+    
+}
+
+
+-(IBAction)showOrHidExtendedPicker:(id)sender{
+    
+    
     
 }
 
@@ -122,37 +160,83 @@
 
 -(IBAction)receivePickUpDate:(id)sender{
     
+//    //set pick up date
+////    self.pickUpDate = [sender date];
+//    
+//    //max time by adding  three days to the pickup date
+//    NSDate* datePlusThree = [self.pickUpDate dateByAddingTimeInterval:259200]; //25920 is three days
+//    
+//    //max return date
+//    if (EQRDisableTimeLimitForRequest){
+//        
+//        self.returnDatePicker.maximumDate = nil;
+//   
+//    } else {
+//        
+//        self.returnDatePicker.maximumDate = datePlusThree;
+//    }
+//    
+//    //min time for return date is the pick up date
+//    self.returnDatePicker.minimumDate = self.pickUpDate;
+//    
+//    //move return date to pick up date, unless it has already by set
+//    if (!self.datePickupSelectionFlag){
+//        
+//        [self.returnDatePicker setDate:self.pickUpDate animated:YES];
+//    }
+    
+    
+    
+    
     //set pick up date
-    self.pickUpDate = [sender date];
+    //____*****   error handling for NULL tempReturnDate   *****_____
+    NSDate* tempReturnDate;
     
-    //max time by adding  three days to the pickup date
-    NSDate* datePlusThree = [self.pickUpDate dateByAddingTimeInterval:259200]; //25920 is three days
-    
-    //max return date
-    if (EQRDisableTimeLimitForRequest){
+    NSArray* arrayOfChildVCs = [self childViewControllers];
+    if ([arrayOfChildVCs count] > 0){
         
-        self.returnDatePicker.maximumDate = nil;
-   
-    } else {
+        EQREditorDateVCntrllr* dateVCntrllr = (EQREditorDateVCntrllr*)[arrayOfChildVCs objectAtIndex:0];
+
         
-        self.returnDatePicker.maximumDate = datePlusThree;
+        //get pick up date
+        self.pickUpDate = [dateVCntrllr retrievePickUpDate];
+        
+        //get the return date
+        tempReturnDate = [dateVCntrllr retrieveReturnDate];
+        
+        
+        //max time by adding  three days to the pickup date
+        NSDate* datePlusThree = [self.pickUpDate dateByAddingTimeInterval:259200]; //25920 is three days
+        
+        //max return date
+        if (EQRDisableTimeLimitForRequest){
+            
+            dateVCntrllr.returnDateField.maximumDate = nil;
+            
+        }else {
+            
+            dateVCntrllr.returnDateField.maximumDate = datePlusThree;
+        }
+        
+        //min time for return date is the pick up date
+        dateVCntrllr.returnDateField.minimumDate = self.pickUpDate;
+        
+        //move return date to pick up date, unless it has already by set
+        if (!self.datePickupSelectionFlag){
+            
+            [dateVCntrllr.returnDateField setDate:self.pickUpDate animated:YES];
+        }
     }
     
-    //min time for return date is the pick up date
-    self.returnDatePicker.minimumDate = self.pickUpDate;
     
-    //move return date to pick up date, unless it has already by set
-    if (!self.datePickupSelectionFlag){
-        
-        [self.returnDatePicker setDate:self.pickUpDate animated:YES];
-    }
+    
     
     //assign pu date to the scheduleRequest
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     requestManager.request.request_date_begin = self.pickUpDate;
     
     //MUST also send returnd date because it always change due to the minimumDate property
-    requestManager.request.request_date_end = self.returnDatePicker.date;
+    requestManager.request.request_date_end = tempReturnDate;
     
     self.datePickupSelectionFlag = YES;
 }
@@ -160,9 +244,23 @@
 
 -(IBAction)receiveReturnDate:(id)sender{
     
-//    self.dateReturnSelectionFlag = YES;
     
-    self.returnDate = [sender date];
+//    self.returnDate = [sender date];
+    
+    
+    
+    
+    
+    NSArray* arrayOfChildVCs = [self childViewControllers];
+    if ([arrayOfChildVCs count] > 0){
+        
+        EQREditorDateVCntrllr* dateVCntrllr = (EQREditorDateVCntrllr*)[arrayOfChildVCs objectAtIndex:0];
+        
+        self.returnDate = [dateVCntrllr retrieveReturnDate];
+
+        
+    }
+    
     
     //assign return date to the scheduleRequest
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];

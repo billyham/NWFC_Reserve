@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -9,16 +9,17 @@
                 <outlet property="pickupDateField" destination="Euf-zO-pE7" id="U7M-ny-bbk"/>
                 <outlet property="returnDateField" destination="jZK-n4-s4k" id="8U8-gf-DsQ"/>
                 <outlet property="saveButton" destination="RWJ-Dn-L1s" id="vh0-Fv-0P4"/>
+                <outlet property="showOrHideExtendedButton" destination="QKs-OE-0rU" id="yaY-oE-OcX"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="520"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="570"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="Euf-zO-pE7">
-                    <rect key="frame" x="0.0" y="26" width="320" height="216"/>
+                    <rect key="frame" x="0.0" y="72" width="320" height="216"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="216" id="bGs-Uf-009"/>
@@ -49,7 +50,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     </timeZone>
                 </datePicker>
                 <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="jZK-n4-s4k">
-                    <rect key="frame" x="0.0" y="265" width="320" height="216"/>
+                    <rect key="frame" x="0.0" y="311" width="320" height="216"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="216" id="yV6-0S-cnZ"/>
@@ -80,7 +81,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     </timeZone>
                 </datePicker>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pick Up Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LuG-id-ygW">
-                    <rect key="frame" x="123" y="10" width="74" height="21"/>
+                    <rect key="frame" x="123" y="52" width="74" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="YrO-EV-Q8N"/>
@@ -90,7 +91,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Return Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jq4-9z-jk3">
-                    <rect key="frame" x="127" y="245" width="67" height="21"/>
+                    <rect key="frame" x="127" y="291" width="67" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="1zG-cS-k3m"/>
@@ -100,31 +101,43 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RWJ-Dn-L1s">
-                    <rect key="frame" x="143" y="480" width="34" height="30"/>
+                    <rect key="frame" x="129" y="12" width="62" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="30" id="gpm-gU-JTV"/>
+                        <constraint firstAttribute="height" constant="30" id="8as-YW-feJ"/>
                     </constraints>
-                    <state key="normal" title="Save">
+                    <state key="normal" title="Continue">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
                         <action selector="saveAction:" destination="-1" eventType="touchUpInside" id="1bz-6N-nPQ"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QKs-OE-0rU">
+                    <rect key="frame" x="85" y="536" width="151" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="yu9-OP-GBl"/>
+                    </constraints>
+                    <state key="normal" title="Show month and year">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="centerX" secondItem="Jq4-9z-jk3" secondAttribute="centerX" id="66M-tZ-nYO"/>
                 <constraint firstAttribute="centerX" secondItem="LuG-id-ygW" secondAttribute="centerX" id="B9T-0h-vSh"/>
-                <constraint firstAttribute="centerX" secondItem="RWJ-Dn-L1s" secondAttribute="centerX" id="H0R-4L-flg"/>
-                <constraint firstItem="LuG-id-ygW" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="10" id="LqC-jd-U8h"/>
+                <constraint firstItem="LuG-id-ygW" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="52" id="LqC-jd-U8h"/>
                 <constraint firstAttribute="centerX" secondItem="jZK-n4-s4k" secondAttribute="centerX" id="Qil-pA-tbt"/>
                 <constraint firstAttribute="centerX" secondItem="Euf-zO-pE7" secondAttribute="centerX" id="SXG-E0-syn"/>
-                <constraint firstAttribute="bottom" secondItem="RWJ-Dn-L1s" secondAttribute="bottom" constant="10" id="T4U-i8-9RF"/>
-                <constraint firstAttribute="bottom" secondItem="jZK-n4-s4k" secondAttribute="bottom" constant="39" id="U1C-kX-N0J"/>
-                <constraint firstItem="Euf-zO-pE7" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="26" id="gf2-5c-1hh"/>
+                <constraint firstAttribute="bottom" secondItem="jZK-n4-s4k" secondAttribute="bottom" constant="43" id="U1C-kX-N0J"/>
+                <constraint firstItem="RWJ-Dn-L1s" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="12" id="dQl-6t-Lj5"/>
+                <constraint firstItem="Euf-zO-pE7" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="72" id="gf2-5c-1hh"/>
+                <constraint firstAttribute="centerX" secondItem="RWJ-Dn-L1s" secondAttribute="centerX" id="o0M-yY-N0r"/>
+                <constraint firstAttribute="centerX" secondItem="QKs-OE-0rU" secondAttribute="centerX" id="oZG-Dk-BNE"/>
                 <constraint firstItem="Jq4-9z-jk3" firstAttribute="top" secondItem="Euf-zO-pE7" secondAttribute="bottom" constant="3" id="tOL-f3-Ykp"/>
+                <constraint firstItem="QKs-OE-0rU" firstAttribute="top" secondItem="jZK-n4-s4k" secondAttribute="bottom" constant="9" id="wPo-vU-NAx"/>
             </constraints>
         </view>
     </objects>

@@ -32,6 +32,21 @@
 }
 
 
+
+
+-(NSDate*)retrievePickUpDate{
+    
+    return self.pickupDateField.date;
+}
+
+
+-(NSDate*)retrieveReturnDate{
+    
+    return self.returnDateField.date;
+}
+
+
+
 #pragma mark - popover view controller delegate
 
 

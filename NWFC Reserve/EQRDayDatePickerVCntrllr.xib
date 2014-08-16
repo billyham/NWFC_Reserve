@@ -8,6 +8,7 @@
             <connections>
                 <outlet property="myContinueButton" destination="cyS-Rd-29l" id="ChG-4g-dWk"/>
                 <outlet property="myDatePicker" destination="EUF-dy-26U" id="Dwz-IV-x5m"/>
+                <outlet property="myExtendedButton" destination="IBB-Jg-lW2" id="q9Z-Ie-Eij"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -57,11 +58,23 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IBB-Jg-lW2">
+                    <rect key="frame" x="125" y="350" width="151" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="zCG-RI-xqD"/>
+                    </constraints>
+                    <state key="normal" title="Show month and year">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="EUF-dy-26U" secondAttribute="trailing" id="2LF-qw-GxU"/>
                 <constraint firstAttribute="bottom" secondItem="cyS-Rd-29l" secondAttribute="bottom" constant="350" id="IKF-UN-GDY"/>
+                <constraint firstAttribute="centerX" secondItem="IBB-Jg-lW2" secondAttribute="centerX" id="NpO-zy-C4n"/>
+                <constraint firstItem="IBB-Jg-lW2" firstAttribute="top" secondItem="EUF-dy-26U" secondAttribute="bottom" constant="49" id="R8Q-qd-4ex"/>
                 <constraint firstAttribute="centerX" secondItem="cyS-Rd-29l" secondAttribute="centerX" id="Vvc-9F-2qe"/>
                 <constraint firstItem="EUF-dy-26U" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="85" id="d9e-ZY-HoS"/>
                 <constraint firstItem="EUF-dy-26U" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="qEp-iq-Tqb"/>

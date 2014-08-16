@@ -75,8 +75,8 @@
                             <constraint firstAttribute="trailing" secondItem="Med-QV-Ko0" secondAttribute="trailing" id="O4A-52-mQe"/>
                             <constraint firstItem="utD-MW-RKI" firstAttribute="leading" secondItem="6nf-Uj-jLg" secondAttribute="leading" id="Pc6-vr-mCd"/>
                             <constraint firstItem="Med-QV-Ko0" firstAttribute="top" secondItem="6nf-Uj-jLg" secondAttribute="top" constant="64" id="PeE-Nt-jNs"/>
-                            <constraint firstItem="xKD-Fy-biV" firstAttribute="top" secondItem="utD-MW-RKI" secondAttribute="bottom" id="av8-sG-6Ve"/>
-                            <constraint firstItem="utD-MW-RKI" firstAttribute="top" secondItem="8nY-ay-azF" secondAttribute="bottom" id="kEO-FY-4kN"/>
+                            <constraint firstItem="xKD-Fy-biV" firstAttribute="top" secondItem="utD-MW-RKI" secondAttribute="bottom" constant="49" id="av8-sG-6Ve"/>
+                            <constraint firstItem="utD-MW-RKI" firstAttribute="top" secondItem="8nY-ay-azF" secondAttribute="bottom" constant="44" id="kEO-FY-4kN"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Request Inbox" id="4e6-BN-ATv"/>
@@ -304,6 +304,14 @@
             </objects>
             <point key="canvasLocation" x="4020" y="1434"/>
         </scene>
+        <!--Editor DateV Cntrllr-->
+        <scene sceneID="TMf-Tu-5HE">
+            <objects>
+                <viewController id="6I4-be-jV0" customClass="EQREditorDateVCntrllr" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q3i-vh-dKX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6210" y="610"/>
+        </scene>
         <!--Equip SelectionV Cntrllr - Equipment-->
         <scene sceneID="9wX-Gh-ZIP">
             <objects>
@@ -403,7 +411,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hxf-6c-cBQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6034" y="150"/>
+            <point key="canvasLocation" x="7002" y="322"/>
         </scene>
         <!--Equip SummaryV Cntrllr - Summary-->
         <scene sceneID="YE5-Ar-BNN">
@@ -481,7 +489,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d1C-9j-gkt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6954" y="150"/>
+            <point key="canvasLocation" x="7922" y="322"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="hBo-2Z-uVE">
@@ -586,7 +594,7 @@
                                     <action selector="receiveContinueAction:" destination="W9r-1m-gIx" eventType="touchUpInside" id="9zf-Tx-is9"/>
                                 </connections>
                             </button>
-                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="JKh-Fc-SNU">
+                            <datePicker hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="JKh-Fc-SNU">
                                 <rect key="frame" x="224" y="151" width="320" height="216"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <date key="date" timeIntervalSinceReferenceDate="410169188.53517598">
@@ -617,7 +625,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <action selector="receivePickUpDate:" destination="W9r-1m-gIx" eventType="valueChanged" id="WtO-1V-fsx"/>
                                 </connections>
                             </datePicker>
-                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="hRx-uz-EVI">
+                            <datePicker hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="hRx-uz-EVI">
                                 <rect key="frame" x="224" y="455" width="320" height="216"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <date key="date" timeIntervalSinceReferenceDate="410169200.87450302">
@@ -648,13 +656,13 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <action selector="receiveReturnDate:" destination="W9r-1m-gIx" eventType="valueChanged" id="Hto-Ff-lUb"/>
                                 </connections>
                             </datePicker>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pick Up Date and Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B3X-jM-y6Z">
+                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pick Up Date and Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B3X-jM-y6Z">
                                 <rect key="frame" x="296" y="122" width="177" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Return Date and Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tu2-Wb-pwg">
+                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Return Date and Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tu2-Wb-pwg">
                                 <rect key="frame" x="300" y="426" width="168" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -674,6 +682,18 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <action selector="showAllEquipment:" destination="W9r-1m-gIx" eventType="touchUpInside" id="Qis-EH-N1r"/>
                                 </connections>
                             </button>
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LIP-aV-oGF">
+                                <rect key="frame" x="224" y="84" width="320" height="570"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="570" id="Vwo-vq-ICw"/>
+                                    <constraint firstAttribute="width" constant="320" id="wPu-m0-n0s"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="6I4-be-jV0" kind="embed" id="YpU-Ci-D7c"/>
+                                </connections>
+                            </containerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -681,6 +701,8 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                             <constraint firstAttribute="centerX" secondItem="B3X-jM-y6Z" secondAttribute="centerX" id="8MR-EU-4n6"/>
                             <constraint firstAttribute="centerX" secondItem="PJk-Zf-mhU" secondAttribute="centerX" id="DKx-KG-RxA"/>
                             <constraint firstAttribute="trailing" secondItem="4xw-pC-OF8" secondAttribute="trailing" constant="20" id="HBj-SL-C1O"/>
+                            <constraint firstItem="LIP-aV-oGF" firstAttribute="top" secondItem="ZFw-oD-JEm" secondAttribute="bottom" constant="20" id="Ifs-Vx-fxW"/>
+                            <constraint firstAttribute="centerX" secondItem="LIP-aV-oGF" secondAttribute="centerX" id="Ldt-Fu-jGo"/>
                             <constraint firstAttribute="centerX" secondItem="hRx-uz-EVI" secondAttribute="centerX" id="QH7-Dw-LMz"/>
                             <constraint firstItem="B3X-jM-y6Z" firstAttribute="top" secondItem="PJk-Zf-mhU" secondAttribute="bottom" constant="8" id="UCT-sD-uN6"/>
                             <constraint firstItem="Tu2-Wb-pwg" firstAttribute="top" secondItem="JKh-Fc-SNU" secondAttribute="bottom" constant="59" id="XJr-5C-91O"/>
@@ -701,30 +723,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     <connections>
                         <outlet property="pickUpDatePicker" destination="JKh-Fc-SNU" id="yhu-K4-uxl"/>
                         <outlet property="returnDatePicker" destination="hRx-uz-EVI" id="ofN-qX-XMV"/>
-                        <segue destination="6J7-6P-8d8" kind="modal" identifier="staffApproval" id="9gD-Tf-DLb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UDj-3Q-5v2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5059" y="270"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="rUh-jI-DwO">
-            <objects>
-                <viewController id="6J7-6P-8d8" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="ht6-PU-aOk"/>
-                        <viewControllerLayoutGuide type="bottom" id="MnH-5g-esc"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="nnL-bW-S6J">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Hxt-hH-U5G" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="6658" y="-1115"/>
         </scene>
         <!--Navigation Controller - Settings-->
         <scene sceneID="1um-j7-ZW7">
