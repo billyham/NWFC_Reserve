@@ -8,6 +8,7 @@
 
 #import "EQREditorTopVCntrllr.h"
 #import "EQREditorEquipListCell.h"
+#import "EQREditorHeaderCell.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQREquipUniqueItem.h"
 #import "EQRScheduleRequestManager.h"
@@ -46,8 +47,9 @@
 @property (strong, nonatomic) IBOutlet UIButton* addEquipItemButton;
 
 @property (strong, nonatomic) NSMutableArray* arrayOfSchedule_Unique_Joins;
-@property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItems;
 @property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedEquipIDs;
+@property (strong, nonatomic) NSArray* arrayOfEquipUniqueItemsWithStructure;
+
 
 @end
 
@@ -82,17 +84,9 @@
     
     //register collection view cell
     [self.equipList registerClass:[EQREditorEquipListCell class] forCellWithReuseIdentifier:@"Cell"];
+    [self.equipList registerClass:[EQREditorHeaderCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SuppCell"];
     
     //initialze ivar arrays
-    if (!self.arrayOfEquipUniqueItems){
-        
-        self.arrayOfEquipUniqueItems = [NSMutableArray arrayWithCapacity:1];
-        
-    }else {
-        
-        [self.arrayOfEquipUniqueItems removeAllObjects];
-    }
-    
     if (!self.arrayOfSchedule_Unique_Joins){
         
         self.arrayOfSchedule_Unique_Joins = [NSMutableArray arrayWithCapacity:1];
@@ -196,10 +190,9 @@
         
     }];
     
-    self.arrayOfEquipUniqueItems = [NSMutableArray arrayWithArray: tempMuteArrayAlpha];
+    //expand array of EquipUniques to structred array of EquipUniques
+    self.arrayOfEquipUniqueItemsWithStructure = [self turnFlatArrayToStructuredArray:tempMuteArrayAlpha];
     
-//    [self.arrayOfEquipUniqueItems addObjectsFromArray:arrayToReturn];
-
     //reload collection view
     [self.equipList reloadData];
     
@@ -395,8 +388,8 @@
     
     //empty the arrays
     [self.arrayOfSchedule_Unique_Joins removeAllObjects];
-    [self.arrayOfEquipUniqueItems removeAllObjects];
     [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+    self.arrayOfEquipUniqueItemsWithStructure = nil;
 
     //send note to schedule that a change has been saved
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
@@ -418,6 +411,102 @@
     
     
 }
+
+
+//_______this is repeated in EQRQuickViewPage2VCntrllr.m________
+//_______works with an array of ScheduleTracking_EquipUnique_Joins, should also work with array of EquipUniqueItems_____
+#pragma mark - create structured array of equipment
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+
+-(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray{
+    
+    //first get array of grouping objects
+    //get title items EQGetEquipmentTitlesAll (except items with hide_from_public set to YES)
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    __block NSMutableSet* tempMuteSetOfGroupingStrings = [NSMutableSet setWithCapacity:1];
+    __block NSMutableDictionary* tempMuteDicOfTitleKeysToGrouping = [NSMutableDictionary dictionaryWithCapacity:1];
+    
+    
+    [webData queryWithLink:@"EQGetEquipmentTitlesAll.php" parameters:nil class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
+        
+        //loop through entire title item array
+        for (EQREquipItem* item in muteArray){
+            
+            //add item's schedule_grouping to the dictionary
+            [tempMuteDicOfTitleKeysToGrouping setValue:[item performSelector:NSSelectorFromString(EQRScheduleGrouping)]forKey:item.key_id];
+            
+            BOOL foundTitleDontAdd = NO;
+            
+            for (NSString* titleString in tempMuteSetOfGroupingStrings){
+                
+                //identify items with schedule _grouping already in our muteable array
+                if ([[item performSelector:NSSelectorFromString(EQRScheduleGrouping)] isEqualToString:titleString]){
+                    
+                    foundTitleDontAdd = YES;
+                }
+            }
+            
+            //advance to next title item
+            if (foundTitleDontAdd == NO){
+                
+                //otherwise add grouping in set
+                [tempMuteSetOfGroupingStrings addObject:[item performSelector:NSSelectorFromString(EQRScheduleGrouping)]];
+            }
+        }
+    }];
+    
+    NSMutableArray* tempTopArray = [NSMutableArray arrayWithCapacity:1];
+    
+    //loop through ivar array of joins
+    for (EQRScheduleTracking_EquipmentUnique_Join* join in flatArray){
+        
+        //find a matching key_id
+        NSString* groupingString = [tempMuteDicOfTitleKeysToGrouping objectForKey:join.equipTitleItem_foreignKey];
+        
+        //assign to join object
+        join.schedule_grouping = groupingString;
+        
+        BOOL createNewSubArray = YES;
+        
+        for (NSMutableArray* subArray in tempTopArray){
+            
+            if ([join.schedule_grouping isEqualToString:[(EQRScheduleTracking_EquipmentUnique_Join*)[subArray objectAtIndex:0] schedule_grouping]]){
+                
+                createNewSubArray = NO;
+                
+                //add join to this subArray
+                [subArray addObject:join];
+            }
+        }
+        
+        if (createNewSubArray == YES){
+            
+            //create a new array
+            NSMutableArray* newArray = [NSMutableArray arrayWithObject:join];
+            
+            //add the subarray to the top array
+            [tempTopArray addObject:newArray];
+        }
+        
+    }
+    
+    NSArray* arrayToReturn = [NSArray arrayWithArray:tempTopArray];
+    
+    //sort the array alphabetically
+    NSArray* sortedTopArray = [arrayToReturn sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        return [[(EQRScheduleTracking_EquipmentUnique_Join*)[obj1 objectAtIndex:0] schedule_grouping]
+                compare:[(EQRScheduleTracking_EquipmentUnique_Join*)[obj2 objectAtIndex:0] schedule_grouping]];
+    }];
+    
+    return sortedTopArray;
+}
+
+#pragma clang diagnostic pop
+
+
 
 #pragma mark - alert view delegate methods
 
@@ -444,8 +533,8 @@
         
         //empty the arrays
         [self.arrayOfSchedule_Unique_Joins removeAllObjects];
-        [self.arrayOfEquipUniqueItems removeAllObjects];
         [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+        self.arrayOfEquipUniqueItemsWithStructure = nil;
         
         //send note to schedule that a change has been saved
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
@@ -628,8 +717,8 @@
     
     //_________***  need to update self.arrayOfEquipUniqueItems
     //empty arrays first
-    [self.arrayOfEquipUniqueItems removeAllObjects];
     [self.arrayOfSchedule_Unique_Joins removeAllObjects];
+    self.arrayOfEquipUniqueItemsWithStructure = nil;
     
     NSMutableArray* arrayToReturn = [NSMutableArray arrayWithCapacity:1];
     NSMutableArray* arrayToReturnJoins = [NSMutableArray arrayWithCapacity:1];
@@ -654,7 +743,8 @@
         [arrayToReturn addObjectsFromArray:muteArray];
     }];
     
-    [self.arrayOfEquipUniqueItems addObjectsFromArray:arrayToReturn];
+    //add structure to the array
+    self.arrayOfEquipUniqueItemsWithStructure = [self turnFlatArrayToStructuredArray:arrayToReturn];
     
     //reload collection view
     [self.equipList reloadData];
@@ -698,20 +788,24 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
-    return [self.arrayOfEquipUniqueItems count];
+//    return [self.arrayOfEquipUniqueItems count];
+    
+    return [[self.arrayOfEquipUniqueItemsWithStructure objectAtIndex:section] count];
+    
 }
 
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
 
-    return 1;
+//    return 1;
+    
+    return [self.arrayOfEquipUniqueItemsWithStructure count];
 }
 
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     static NSString* CellIdentifier = @"Cell";
-    
     
     EQREditorEquipListCell* cell = [self.equipList dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
     
@@ -720,21 +814,43 @@
         [view removeFromSuperview];
     }
     
-    NSString* thisName = [[self.arrayOfEquipUniqueItems objectAtIndex:indexPath.row] name];
-    NSString* thisDistNumber = [[self.arrayOfEquipUniqueItems objectAtIndex:indexPath.row] distinquishing_id];
+    NSString* thisName = [[[self.arrayOfEquipUniqueItemsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name];
+    NSString* thisDistNumber = [[[self.arrayOfEquipUniqueItemsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id];
     NSString* thisTitle = [NSString stringWithFormat:@"%@: #%@", thisName, thisDistNumber];
     
     
     BOOL toBeDeleted = NO;
     for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
-        if ([keyToDelete isEqualToString:[[self.arrayOfEquipUniqueItems objectAtIndex:indexPath.row] key_id]]){
+        
+        if ([keyToDelete isEqualToString:[[[self.arrayOfEquipUniqueItemsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]]){
+            
             toBeDeleted = YES;
         }
     }
     
-    [cell initialSetupWithTitle:thisTitle keyID:[[self.arrayOfEquipUniqueItems objectAtIndex:indexPath.row] key_id] deleteFlag:toBeDeleted];
+    [cell initialSetupWithTitle:thisTitle keyID:[[[self.arrayOfEquipUniqueItemsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id] deleteFlag:toBeDeleted];
     
     return cell;
+}
+
+
+-(UICollectionReusableView*)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
+    
+    static NSString* CellIdentifier = @"SuppCell";
+    
+    EQREditorHeaderCell* cell = [self.equipList dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    for (UIView* view in cell.contentView.subviews){
+        
+        [view removeFromSuperview];
+    }
+    
+    [cell initialSetupWithTitle: [(EQREquipUniqueItem*)[[self.arrayOfEquipUniqueItemsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] schedule_grouping]];
+    
+    
+    
+    return cell;
+    
 }
 
 

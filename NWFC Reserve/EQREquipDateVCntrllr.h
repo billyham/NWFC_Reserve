@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQREquipDateVCntrllr : UIViewController
+@interface EQREquipDateVCntrllr : UIViewController <UINavigationControllerDelegate>
 
 @property (strong, nonatomic) NSDate* pickUpDate;
 @property (strong, nonatomic) NSDate* returnDate;

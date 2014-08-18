@@ -73,14 +73,19 @@
     requestManager.request.request_date_begin = self.pickUpDate;
     requestManager.request.request_date_end = self.returnDate;
     
+}
+
+
+-(void)viewDidLayoutSubviews{
     
+    //doesn't work in viewDidLoad
     
     //________Accessing childviewcontrollers
     NSArray* arrayOfChildVCs = [self childViewControllers];
     
     if ([arrayOfChildVCs count] > 0){
         
-        EQREditorDateVCntrllr* myDateViewVCntrllr = (EQREditorDateVCntrllr*)[arrayOfChildVCs objectAtIndex:0];
+        EQREditorDateVCntrllr* myDateViewVCntrllr = (EQREditorDateVCntrllr*)[(UINavigationController*)[arrayOfChildVCs objectAtIndex:0] topViewController];
         
         //set button targets
         [myDateViewVCntrllr.saveButton addTarget:self action:@selector(receiveContinueAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -95,9 +100,7 @@
         
         //error handling
     }
-    
 }
-
 
 -(IBAction)showAllEquipment:(id)sender{
     
@@ -111,7 +114,7 @@
 #pragma mark - childviewcontroller for dateview
 
 -(IBAction)receiveContinueAction:(id)sender{
-
+    
     EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
     
     genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeAll;
@@ -123,7 +126,50 @@
 
 -(IBAction)showOrHidExtendedPicker:(id)sender{
     
+    if ([self.childViewControllers count] > 0){
+        
+        UINavigationController* navController = [self.childViewControllers objectAtIndex:0];
+        
+        if ([navController.topViewController class] == [EQREditorExtendedDateVC class]){
+            
+            //pop back to standard view controller
+            [navController popToRootViewControllerAnimated:YES];
+            
+        }else{
+            
+            EQREditorExtendedDateVC* extendedVC = [[EQREditorExtendedDateVC alloc] initWithNibName:@"EQREditorExtendedDateVC" bundle:nil];
+            
+            //push to extended view controller
+            [navController pushViewController:extendedVC  animated:YES];
+            
+            
+            //set delegate for navcontroller to self
+            //______because I can't set the targets of the new  view controller until they view is loaded
+            [navController setDelegate:self];
+        }
+    }
+}
+
+
+#pragma mark - uinavigationcontroller delegate methods
+
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated{
     
+    if ([viewController class] == [EQREditorExtendedDateVC class]){
+        
+        //assign targets of extended vc
+        //set button targets
+        [[(EQREditorExtendedDateVC*)viewController saveButton] addTarget:self action:@selector(receiveContinueAction:) forControlEvents:UIControlEventTouchUpInside];
+        [[(EQREditorExtendedDateVC*)viewController showOrHideExtendedButton] addTarget:self action:@selector(showOrHidExtendedPicker:) forControlEvents:UIControlEventTouchUpInside];
+        
+        //set actions from date pickers
+        [[(EQREditorExtendedDateVC*)viewController pickupDateField] addTarget:self action:@selector(receivePickUpDate:) forControlEvents:UIControlEventValueChanged];
+        [[(EQREditorExtendedDateVC*)viewController returnDateField] addTarget:self action:@selector(receiveReturnDate:) forControlEvents:UIControlEventValueChanged];
+        
+        //also receive actions from time pickers
+        [[(EQREditorExtendedDateVC*)viewController pickupTimeField] addTarget:self action:@selector(receivePickUpDate:) forControlEvents:UIControlEventValueChanged];
+        [[(EQREditorExtendedDateVC*)viewController returnTimeField] addTarget:self action:@selector(receiveReturnDate:) forControlEvents:UIControlEventValueChanged];
+    }
     
 }
 
@@ -195,7 +241,7 @@
     NSArray* arrayOfChildVCs = [self childViewControllers];
     if ([arrayOfChildVCs count] > 0){
         
-        EQREditorDateVCntrllr* dateVCntrllr = (EQREditorDateVCntrllr*)[arrayOfChildVCs objectAtIndex:0];
+        EQREditorDateVCntrllr* dateVCntrllr = (EQREditorDateVCntrllr*) [(UINavigationController*)[arrayOfChildVCs objectAtIndex:0] topViewController];
 
         
         //get pick up date
@@ -254,7 +300,7 @@
     NSArray* arrayOfChildVCs = [self childViewControllers];
     if ([arrayOfChildVCs count] > 0){
         
-        EQREditorDateVCntrllr* dateVCntrllr = (EQREditorDateVCntrllr*)[arrayOfChildVCs objectAtIndex:0];
+        EQREditorDateVCntrllr* dateVCntrllr = (EQREditorDateVCntrllr*) [(UINavigationController*)[arrayOfChildVCs objectAtIndex:0] topViewController];
         
         self.returnDate = [dateVCntrllr retrieveReturnDate];
 

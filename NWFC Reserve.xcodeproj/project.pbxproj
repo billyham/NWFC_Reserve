@@ -58,6 +58,7 @@
 		54032FE21872AC9000481D86 /* EQREquipDateVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54032FE11872AC9000481D86 /* EQREquipDateVCntrllr.m */; };
 		54032FE61872D36F00481D86 /* EQRScheduleRequestItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 54032FE51872D36F00481D86 /* EQRScheduleRequestItem.m */; };
 		54032FE91872D39E00481D86 /* EQRScheduleRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 54032FE81872D39E00481D86 /* EQRScheduleRequestManager.m */; };
+		540AEA1A19A02FD50092522D /* EQREditorHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 540AEA1919A02FD50092522D /* EQREditorHeaderCell.m */; };
 		540B551A187687D60025FDEE /* EQRGlobals.m in Sources */ = {isa = PBXBuildFile; fileRef = 540B5519187687D60025FDEE /* EQRGlobals.m */; };
 		540B551D18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 540B551C18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m */; };
 		541167BD18E5458A0059BA3C /* EQRNavBarDatesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 541167BC18E5458A0059BA3C /* EQRNavBarDatesView.m */; };
@@ -208,6 +209,8 @@
 		54032FE51872D36F00481D86 /* EQRScheduleRequestItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleRequestItem.m; sourceTree = "<group>"; };
 		54032FE71872D39E00481D86 /* EQRScheduleRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleRequestManager.h; sourceTree = "<group>"; };
 		54032FE81872D39E00481D86 /* EQRScheduleRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleRequestManager.m; sourceTree = "<group>"; };
+		540AEA1819A02FD50092522D /* EQREditorHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREditorHeaderCell.h; sourceTree = "<group>"; };
+		540AEA1919A02FD50092522D /* EQREditorHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREditorHeaderCell.m; sourceTree = "<group>"; };
 		540B5518187687D60025FDEE /* EQRGlobals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EQRGlobals.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		540B5519187687D60025FDEE /* EQRGlobals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EQRGlobals.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		540B551B18769CCE0025FDEE /* EQRStaffPage1VCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRStaffPage1VCntrllr.h; sourceTree = "<group>"; };
@@ -378,6 +381,8 @@
 				01A5D7C318EBA85900EE99EF /* EQREditorTopVCntrllr.xib */,
 				015B7C6818EA22B3002F5B6D /* EQREditorEquipListCell.h */,
 				015B7C6918EA22B3002F5B6D /* EQREditorEquipListCell.m */,
+				540AEA1819A02FD50092522D /* EQREditorHeaderCell.h */,
+				540AEA1919A02FD50092522D /* EQREditorHeaderCell.m */,
 				01A4755718EB9BDF006F32EB /* EQREditorDateVCntrllr.h */,
 				01A4755818EB9BDF006F32EB /* EQREditorDateVCntrllr.m */,
 				01A4755918EB9BDF006F32EB /* EQREditorDateVCntrllr.xib */,
@@ -843,6 +848,7 @@
 				542CC23E197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.m in Sources */,
 				54457ECD1935B78E00E9061A /* EQRCheckRowCell.m in Sources */,
 				540B551A187687D60025FDEE /* EQRGlobals.m in Sources */,
+				540AEA1A19A02FD50092522D /* EQREditorHeaderCell.m in Sources */,
 				438EDCF6182B7ABE0090F882 /* EQRReserveTopVCntrllr.m in Sources */,
 				541167BD18E5458A0059BA3C /* EQRNavBarDatesView.m in Sources */,
 				0109F95E18E11A8B0069BE6A /* EQRHeaderCellForSchedule.m in Sources */,

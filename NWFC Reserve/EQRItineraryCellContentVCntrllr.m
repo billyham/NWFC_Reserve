@@ -74,7 +74,7 @@
 //    CGRect thisThirdRect = CGRectMake(640, 8, 30, 30);
     self.myQuickViewButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
     self.myQuickViewButton.frame = CGRectMake(600, 15, 30, 30);
-    [self.myQuickViewButton addTarget:self action:@selector(showQuickView:) forControlEvents:UIControlEventAllEvents];
+    [self.myQuickViewButton addTarget:self action:@selector(showQuickView:) forControlEvents:UIControlEventTouchUpInside];
     
     
     

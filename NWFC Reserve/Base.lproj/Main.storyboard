@@ -307,10 +307,25 @@
         <!--Editor DateV Cntrllr-->
         <scene sceneID="TMf-Tu-5HE">
             <objects>
-                <viewController id="6I4-be-jV0" customClass="EQREditorDateVCntrllr" sceneMemberID="viewController"/>
+                <viewController id="6I4-be-jV0" customClass="EQREditorDateVCntrllr" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="MmE-Lc-2Ij"/>
+                    <connections>
+                        <segue destination="fMF-vV-5do" kind="push" identifier="pushToExtendedDate" id="EEt-kd-wOH"/>
+                    </connections>
+                </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q3i-vh-dKX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6210" y="610"/>
+            <point key="canvasLocation" x="6682" y="497"/>
+        </scene>
+        <!--Editor Extended DateVC-->
+        <scene sceneID="Vf6-WJ-aWU">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KUg-4R-fiT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="fMF-vV-5do" customClass="EQREditorExtendedDateVC" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="C2P-Ex-Vkc"/>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="7412" y="497"/>
         </scene>
         <!--Equip SelectionV Cntrllr - Equipment-->
         <scene sceneID="9wX-Gh-ZIP">
@@ -411,7 +426,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hxf-6c-cBQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7002" y="322"/>
+            <point key="canvasLocation" x="6308" y="-734"/>
         </scene>
         <!--Equip SummaryV Cntrllr - Summary-->
         <scene sceneID="YE5-Ar-BNN">
@@ -489,7 +504,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d1C-9j-gkt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7922" y="322"/>
+            <point key="canvasLocation" x="7228" y="-734"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="hBo-2Z-uVE">
@@ -683,15 +698,15 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 </connections>
                             </button>
                             <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LIP-aV-oGF">
-                                <rect key="frame" x="224" y="84" width="320" height="570"/>
+                                <rect key="frame" x="84" y="84" width="600" height="570"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="570" id="Vwo-vq-ICw"/>
-                                    <constraint firstAttribute="width" constant="320" id="wPu-m0-n0s"/>
+                                    <constraint firstAttribute="width" constant="600" id="Wji-C5-cAk"/>
                                 </constraints>
                                 <connections>
-                                    <segue destination="6I4-be-jV0" kind="embed" id="YpU-Ci-D7c"/>
+                                    <segue destination="psz-5p-amq" kind="embed" id="YpU-Ci-D7c"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -1295,6 +1310,25 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Bi-CU-b2P" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3041" y="150"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="KPU-9H-Ndf">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="psz-5p-amq" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="W0Q-TT-ctx">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="6I4-be-jV0" kind="relationship" relationship="rootViewController" id="bpJ-Ma-eoS"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="v3U-OO-xtl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5974" y="497"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

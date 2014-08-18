@@ -37,7 +37,7 @@ typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
 - (void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock;
 -(NSString*)queryForStringWithLink:(NSString*)link parameters:(NSArray*)para;
 
-//try with asynchronous methods
+//asynchronous methods
 -(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithBool)completeBlock;
 
 @end

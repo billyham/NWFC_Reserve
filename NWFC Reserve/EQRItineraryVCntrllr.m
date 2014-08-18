@@ -384,7 +384,7 @@
     [self.myStaffUserPicker presentPopoverFromBarButtonItem:[self.navigationItem.rightBarButtonItems objectAtIndex:0]  permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
     //set target of continue button
-    [staffUserPicker.continueButton addTarget:self action:@selector(dismissStaffUserPicker) forControlEvents:UIControlEventAllEvents];
+    [staffUserPicker.continueButton addTarget:self action:@selector(dismissStaffUserPicker) forControlEvents:UIControlEventTouchUpInside];
     
 }
 
@@ -575,7 +575,7 @@
     
     
     //assign target of popover's "edit request" button
-    [self.myQuickViewScrollVCntrllr.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventAllEvents];
+    [self.myQuickViewScrollVCntrllr.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventTouchUpInside];
     
     
     //_____presenting the popover must be delayed (why?????)
@@ -706,7 +706,7 @@
     [self.myDayDatePicker presentPopoverFromBarButtonItem:[self.navigationItem.leftBarButtonItems objectAtIndex:1]  permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
     //set target of continue button
-    [dayDateView.myContinueButton addTarget:self action:@selector(dismissShowDatePicker:) forControlEvents:UIControlEventAllEvents];
+    [dayDateView.myContinueButton addTarget:self action:@selector(dismissShowDatePicker:) forControlEvents:UIControlEventTouchUpInside];
     
     
 }
