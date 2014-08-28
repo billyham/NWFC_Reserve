@@ -80,6 +80,7 @@
 		542F5FFE192357AF001C28CA /* EQRCheckVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 542F5FFC192357AF001C28CA /* EQRCheckVCntrllr.xib */; };
 		5431456B197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54314569197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m */; };
 		5431456C197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5431456A197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib */; };
+		5439B08D19AEC835007CC11C /* EQInboxLeftTopVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439B08C19AEC835007CC11C /* EQInboxLeftTopVC.m */; };
 		543CF39E198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 543CF39C198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.m */; };
 		543CF39F198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 543CF39D198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.xib */; };
 		54457ECD1935B78E00E9061A /* EQRCheckRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54457ECC1935B78E00E9061A /* EQRCheckRowCell.m */; };
@@ -250,6 +251,8 @@
 		54314568197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRQuickViewPage1VCntrllr.h; sourceTree = "<group>"; };
 		54314569197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRQuickViewPage1VCntrllr.m; sourceTree = "<group>"; };
 		5431456A197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRQuickViewPage1VCntrllr.xib; sourceTree = "<group>"; };
+		5439B08B19AEC835007CC11C /* EQInboxLeftTopVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQInboxLeftTopVC.h; sourceTree = "<group>"; };
+		5439B08C19AEC835007CC11C /* EQInboxLeftTopVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQInboxLeftTopVC.m; sourceTree = "<group>"; };
 		543CF39B198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRQuickViewScrollVCntrllr.h; sourceTree = "<group>"; };
 		543CF39C198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRQuickViewScrollVCntrllr.m; sourceTree = "<group>"; };
 		543CF39D198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRQuickViewScrollVCntrllr.xib; sourceTree = "<group>"; };
@@ -471,7 +474,6 @@
 				542F5FF51923559C001C28CA /* Itinerary */,
 				542F5FF919235784001C28CA /* Check Out/In */,
 				542CC203197B514B00BFD581 /* Inbox */,
-				5406F5F8199226D7007C0A5C /* Inbox Splitview */,
 				0115506619956A03009A459F /* Request */,
 				438EDCF7182B7ABE0090F882 /* EQRSecondViewController.h */,
 				438EDCF8182B7ABE0090F882 /* EQRSecondViewController.m */,
@@ -526,13 +528,6 @@
 			name = "Schedule objects";
 			sourceTree = "<group>";
 		};
-		5406F5F8199226D7007C0A5C /* Inbox Splitview */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Inbox Splitview";
-			sourceTree = "<group>";
-		};
 		541167BA18E545630059BA3C /* Art */ = {
 			isa = PBXGroup;
 			children = (
@@ -560,6 +555,8 @@
 		542CC203197B514B00BFD581 /* Inbox */ = {
 			isa = PBXGroup;
 			children = (
+				5439B08B19AEC835007CC11C /* EQInboxLeftTopVC.h */,
+				5439B08C19AEC835007CC11C /* EQInboxLeftTopVC.m */,
 				01B4830319AE8290009F15F6 /* EQRInboxLeftTableVC.h */,
 				01B4830419AE8290009F15F6 /* EQRInboxLeftTableVC.m */,
 				01B4830619AE82B1009F15F6 /* EQRInboxRightVC.h */,
@@ -891,6 +888,7 @@
 				018EB75A18E5DCD500FBDEA0 /* EQREditorTopVCntrllr.m in Sources */,
 				015B7C6A18EA22B3002F5B6D /* EQREditorEquipListCell.m in Sources */,
 				5402D231186C01440091C080 /* EQRContactNameItem.m in Sources */,
+				5439B08D19AEC835007CC11C /* EQInboxLeftTopVC.m in Sources */,
 				54032FE91872D39E00481D86 /* EQRScheduleRequestManager.m in Sources */,
 				54243D6B192DC40500C91925 /* EQRStatusBarView.m in Sources */,
 				542CC209197B531100BFD581 /* EQRInboxRowCell.m in Sources */,

@@ -1,21 +1,20 @@
 //
-//  EQRInboxLeftTableVC.m
+//  EQInboxLeftTopVC.m
 //  NWFC Reserve
 //
-//  Created by Dave Hanagan on 8/27/14.
+//  Created by Ray Smith on 8/27/14.
 //  Copyright (c) 2014 Ham Again LLC. All rights reserved.
 //
 
-#import "EQRInboxLeftTableVC.h"
+#import "EQInboxLeftTopVC.h"
 
-@interface EQRInboxLeftTableVC ()
+@interface EQInboxLeftTopVC ()
 
 @end
 
-@implementation EQRInboxLeftTableVC
+@implementation EQInboxLeftTopVC
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
+- (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
@@ -23,8 +22,8 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     // Uncomment the following line to preserve selection between presentations.
@@ -34,51 +33,54 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+//    // Get the new view controller using [segue destinationViewController].
+//    // Pass the selected object to the new view controller.
+//    
+//    NSLog(@"this is the seque: %@", segue.identifier);
+//}
+
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
+    NSLog(@"this is the did select method with section: %u  and row: %u",(int)indexPath.section, (int)indexPath.row);
+    
+    
+    
+    
 }
 
-#pragma mark - Table view data source
+//#pragma mark - Table view data source
+//
+//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+//{
+//#warning Potentially incomplete method implementation.
+//    // Return the number of sections.
+//    return 0;
+//}
+//
+//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+//{
+//#warning Incomplete method implementation.
+//    // Return the number of rows in the section.
+//    return 0;
+//}
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-
-    // Return the number of sections.
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-
-    // Return the number of rows in the section.
-    return 10;
-}
-
-
+/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    
-    
-    cell.textLabel.text = @"text label";
-    
-    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
     
     // Configure the cell...
     
     return cell;
 }
-
-
-#pragma mark - table delegate methods
-
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-
-}
-
+*/
 
 /*
 // Override to support conditional editing of the table view.
@@ -119,28 +121,10 @@
 */
 
 
-#pragma mark - InboxRightDelegate methods
-
--(void)selectedRequest:(EQRScheduleRequestItem *)request{
-    
-    NSLog(@"selectedRequest method did fire");
-
-}
-
-
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (void)didReceiveMemoryWarning
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-    
-    NSLog(@"this is the segue: %@", segue.identifier);
-    
-
-
-
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 

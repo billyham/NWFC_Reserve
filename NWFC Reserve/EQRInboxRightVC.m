@@ -29,17 +29,54 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    
+
+    
+    
+    
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    
+    
+    
+    
+    //________********* THIS ISN'T WOKRING AT ALL  *******______
+    UISplitViewController *splitViewController = self.splitViewController;
+    splitViewController.delegate = self;
+    
+    [super viewDidAppear:animated];
+    
 }
 
 
-#pragma mark - delegate methods
+-(void)renewTheView{
+    
+    [self.delegateForRightSide selectedRequest:nil];
+    
+    NSLog(@"Yup, this is stupid alright");
+}
 
 
--(void)selectedRequest:(EQRScheduleRequestItem*)request{
+#pragma mark - split view delegate methods
+
+-(void)splitViewController:(UISplitViewController *)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)pc{
+    
+    barButtonItem.title = @"Filters";
+    [self.navigationController.navigationItem setLeftBarButtonItem:barButtonItem];
+    
+    self.popover = pc;
     
     
     
+}
+
+-(void)splitViewController:(UISplitViewController *)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem{
+    
+    [self.navigationController.navigationItem setLeftBarButtonItem:nil];
+    
+    self.popover = nil;
 }
 
 
