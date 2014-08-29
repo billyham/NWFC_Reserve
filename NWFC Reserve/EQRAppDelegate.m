@@ -18,6 +18,10 @@
 {
     
     //set system user defaults
+//    NSDictionary* EQRWebDataUrl = [NSDictionary dictionaryWithObjectsAndKeys:
+//                                   @"http://dhanagan02262.local/nwfc/", @"url",
+//                                   nil];
+    
     NSDictionary* EQRWebDataUrl = [NSDictionary dictionaryWithObjectsAndKeys:
                                    @"http://EducationAssistant-5.local/nwfc/", @"url",
                                    nil];

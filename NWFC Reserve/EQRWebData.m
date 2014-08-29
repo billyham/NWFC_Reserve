@@ -258,11 +258,13 @@ const int intEQREquipUniqueItem = 8;
     
     //add a cache killer!!!
     //a combination of timestamp and a random number
-    NSDate* ckDate = [NSDate date];
-    NSString* thisFormattedDate= [NSDateFormatter localizedStringFromDate:ckDate dateStyle:NSDateFormatterNoStyle
-                                                                timeStyle:NSDateFormatterLongStyle ];
+//    NSDate* ckDate = [NSDate date];
+//    NSString* thisFormattedDate= [NSDateFormatter localizedStringFromDate:ckDate dateStyle:NSDateFormatterNoStyle
+//                                                                timeStyle:NSDateFormatterLongStyle ];
     float ckFloat = arc4random() % 100000;
-    NSString* ck = [NSString stringWithFormat:@"ck=%5.0f%@", ckFloat, thisFormattedDate];
+//    NSString* ck = [NSString stringWithFormat:@"ck=%5.0f%@", ckFloat, thisFormattedDate];
+    NSString* ck = [NSString stringWithFormat:@"ck=%5.0f", ckFloat];
+
     
     //test if any parameters exist
     if ([para count] > 0){
@@ -294,8 +296,7 @@ const int intEQREquipUniqueItem = 8;
 	NSString* urlString = [inputString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     //remove new line commands
-    NSString* newUrlString = [urlString stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
-
+    NSString* newUrlString = [urlString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     
     NSLog(@"this is the inputstring: %@", newUrlString);
 
@@ -304,7 +305,7 @@ const int intEQREquipUniqueItem = 8;
 	NSURL* url = [NSURL URLWithString:urlString];
 	NSURLRequest* urlRequest = [NSURLRequest requestWithURL:url
 												cachePolicy:NSURLRequestReturnCacheDataElseLoad
-											timeoutInterval:120];
+											timeoutInterval:30];
 	
 	NSData* urlData;
 	NSURLResponse* response;
@@ -315,7 +316,7 @@ const int intEQREquipUniqueItem = 8;
     
     if (!urlData) {
         
-        NSLog(@"NSURLConnection failure");
+        NSLog(@"NSURLConnection failure with error: %@", error);
         
         return;
     }
