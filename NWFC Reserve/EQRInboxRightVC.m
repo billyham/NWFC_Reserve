@@ -17,6 +17,8 @@
 @synthesize delegateForRightSide;
 
 
+#pragma mark - methods
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -30,26 +32,13 @@
 {
     [super viewDidLoad];
     
-
-    
-    
-    
 }
 
--(void)viewDidAppear:(BOOL)animated{
+-(void)awakeFromNib{
     
-    
-    
-    
-    
-    //________********* THIS ISN'T WOKRING AT ALL  *******______
-    UISplitViewController *splitViewController = self.splitViewController;
-    splitViewController.delegate = self;
-    
-    [super viewDidAppear:animated];
-    
+    [super awakeFromNib];
+    [self.splitViewController setDelegate:self];
 }
-
 
 -(void)renewTheView{
     
@@ -63,23 +52,24 @@
 
 -(void)splitViewController:(UISplitViewController *)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)pc{
     
+    NSLog(@"inside willHide split view delegate method");
+    
     barButtonItem.title = @"Filters";
-    [self.navigationController.navigationItem setLeftBarButtonItem:barButtonItem];
+    [self.navigationItem setLeftBarButtonItem:barButtonItem];
     
     self.popover = pc;
-    
-    
     
 }
 
 -(void)splitViewController:(UISplitViewController *)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem{
     
-    [self.navigationController.navigationItem setLeftBarButtonItem:nil];
+    [self.navigationItem setLeftBarButtonItem:nil];
     
     self.popover = nil;
 }
 
 
+#pragma mark - memory warning
 
 - (void)didReceiveMemoryWarning
 {
