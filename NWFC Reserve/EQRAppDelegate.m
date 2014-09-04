@@ -8,6 +8,7 @@
 
 #import "EQRAppDelegate.h"
 #import "EQRColors.h"
+#import "EQRGlobals.h"
 #import "EQRStaffUserManager.h"
 #import "EQRWebData.h"
 #import "EQRContactNameItem.h"
@@ -70,11 +71,24 @@
             }
         }];
         
+        //__________ERROR HANDLING WHEN NO CURRENTSTAFFUSER EXISTS______________
+        //This isn't doing it...
+//        if (contactObject == nil){
+//            
+//            contactObject = [[EQRContactNameItem alloc] init];
+//            contactObject.key_id = EQRErrorCode88888888;
+//        }
+        
         //set the current staffUser as the last previous user
         EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
         
         staffUserManager.currentStaffUser = contactObject;
+        
+        
+        
+            
     }
+    
     
     return YES;
 }

@@ -7,15 +7,22 @@
 //
 
 #import "EQRInboxLeftTableVC.h"
+#import "EQRGlobals.h"
+#import "EQRWebData.h"
+#import "EQRScheduleRequestItem.h"
+
 
 @interface EQRInboxLeftTableVC ()
+
+@property (strong, nonatomic) NSArray* arrayOfRequests;
+
 
 @end
 
 @implementation EQRInboxLeftTableVC
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
+- (id)initWithStyle:(UITableViewStyle)style {
+    
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
@@ -23,18 +30,63 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+
+- (void)viewDidLoad {
+    
     [super viewDidLoad];
+    
     
     
 }
 
-- (void)didReceiveMemoryWarning
-{
+
+- (void)viewWillAppear:(BOOL)animated{
+    
+    [self renewTheView];
+    
+    [super viewWillAppear:animated];
+}
+
+
+-(void)renewTheView{
+    
+    //load the local array ONLY with upcoming unconfirmed requests
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    NSMutableArray* tempMuteArray = [[NSMutableArray alloc] initWithCapacity:1];
+    
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dateFormatter.locale = thisLocale;
+    dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    
+    NSArray* firstArray = [NSArray arrayWithObjects:@"request_date_begin", [dateFormatter stringFromDate:[NSDate date]], nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
+    
+    [webData queryWithLink:@"EQGetScheduleRequestsUpcomingUnconfirmed.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        for (id object in muteArray){
+            
+            [tempMuteArray addObject: object];
+        }
+    }];
+    
+    
+    //______*****   sort on date   ******______
+    
+    self.arrayOfRequests = [NSArray arrayWithArray:tempMuteArray];
+    
+    [self.tableView reloadData];
+    
+}
+
+
+- (void)didReceiveMemoryWarning {
+    
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 #pragma mark - Table view data source
 
@@ -49,7 +101,7 @@
 {
 
     // Return the number of rows in the section.
-    return 10;
+    return [self.arrayOfRequests count];
 }
 
 
@@ -57,10 +109,32 @@
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
+    //get date in format
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dateFormatter.locale = thisLocale;
+    dateFormatter.dateFormat = @"EEEE, MMM d";
     
-    cell.textLabel.text = @"text label";
+    NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
+    timeFormatter.locale = thisLocale;
+    timeFormatter.dateFormat = @"h:mm aaa";
+    
+    NSDate* beginDate = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] request_date_begin];
+    NSDate* beginTime = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] request_time_begin];
+    NSString* dateString = [dateFormatter stringFromDate:beginDate];
+    NSString* timeString = [timeFormatter stringFromDate:beginTime];
     
     
+    //name
+    NSString* nameString = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] contact_name];
+    
+    //string for title
+    NSString* titleString = [NSString stringWithFormat:@"%@\n %@, %@", nameString, dateString, timeString];
+
+    //assign title to cell
+    cell.textLabel.numberOfLines = 2;
+    cell.textLabel.text = titleString;
+    cell.textLabel.font = [UIFont systemFontOfSize:12];
     
     // Configure the cell...
     

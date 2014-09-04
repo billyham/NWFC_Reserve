@@ -395,8 +395,11 @@
                 }else {
                     secondArray = [NSArray arrayWithObjects:@"staff_checkin_date",  @"nix", nil];
                 }
+                
                 NSArray* thirdArray = [NSArray arrayWithObjects:@"staff_id", staffUserManager.currentStaffUser.key_id, nil];
                 NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
+                
+                NSLog(@"this is the array 1: %@, 2: %@, 3: %@", firstArray, secondArray, thirdArray);
                 
                 NSString* resultString = [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
                 NSLog(@"%@", resultString);

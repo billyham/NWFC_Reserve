@@ -434,6 +434,21 @@
 
 -(IBAction)markAsComplete:(id)sender{
     
+    //MUST CHECK THAT THE USER HAS LOGGED IN FIRST:
+    EQRStaffUserManager* staffManager = [EQRStaffUserManager sharedInstance];
+    if (!staffManager.currentStaffUser){
+        
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Current User" message:@"Please log in as a user before marking an item complete or incomplete" delegate:[self presentingViewController] cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+            
+            [alert show];
+        }];
+        
+        return;
+    }
+    
+    
     //make special note if any of the joins in the ivar array are not complete
     BOOL foundOutstandingItem = NO;
     
@@ -525,6 +540,21 @@
 
 
 -(IBAction)markAsIncomplete:(id)sender{
+    
+    //MUST CHECK THAT THE USER HAS LOGGED IN FIRST:
+    EQRStaffUserManager* staffManager = [EQRStaffUserManager sharedInstance];
+    if (!staffManager.currentStaffUser){
+        
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Current User" message:@"Please log in as a user before marking an item complete or incomplete" delegate:[self presentingViewController] cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+            
+            [alert show];
+        }];
+        
+        return;
+    }
+    
     
     NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
                              self.scheduleRequestKeyID, @"scheduleKey",
