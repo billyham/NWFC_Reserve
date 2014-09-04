@@ -32,6 +32,9 @@
 {
     [super viewDidLoad];
     
+    //add right side buttons in nav item
+    [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(sendEmail)]];
+    
 }
 
 -(void)awakeFromNib{
@@ -45,6 +48,71 @@
     [self.delegateForRightSide selectedRequest:nil];
     
     NSLog(@"Yup, this is stupid alright");
+}
+
+
+
+
+
+#pragma mark - button methods
+
+-(void)sendEmail{
+    
+    
+    NSString* messageTitle = @"subject title";
+    NSString* messageBody = @"body";
+    NSArray* messageRecipients = [NSArray arrayWithObjects: @"dave@nwfilm.org", nil];
+    
+    MFMailComposeViewController* mfVC = [[MFMailComposeViewController alloc] init];
+    mfVC.mailComposeDelegate = self;
+    
+    [mfVC setSubject:messageTitle];
+    [mfVC setMessageBody:messageBody isHTML:NO];
+    [mfVC setToRecipients:messageRecipients];
+    
+    [self presentViewController:mfVC animated:YES completion:^{
+        
+        
+    }];
+    
+    
+    
+    
+}
+
+
+#pragma mark - mail compose delegate methods
+
+-(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
+    
+    switch (result) {
+            
+        case MFMailComposeResultCancelled:
+            
+            
+            break;
+            
+        case MFMailComposeResultFailed:
+            
+            break;
+            
+        case MFMailComposeResultSaved:
+            
+            break;
+            
+        case MFMailComposeResultSent:
+            
+            break;
+            
+        default:
+            break;
+    }
+    
+    //dismiss email compose
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        
+    }];
 }
 
 

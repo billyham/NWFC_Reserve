@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRInboxLeftTableVC.h"
 
-@interface EQInboxLeftTopVC : UITableViewController
+@interface EQRInboxLeftTopVC : UITableViewController <EQRInboxLeftTableDelegate>
 
 @end

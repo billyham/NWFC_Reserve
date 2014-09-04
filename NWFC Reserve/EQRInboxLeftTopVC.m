@@ -6,13 +6,16 @@
 //  Copyright (c) 2014 Ham Again LLC. All rights reserved.
 //
 
-#import "EQInboxLeftTopVC.h"
+#import "EQRInboxLeftTopVC.h"
+#import "EQRInboxLeftTableVC.h"
 
-@interface EQInboxLeftTopVC ()
+@interface EQRInboxLeftTopVC ()
+
+@property (strong, nonatomic) NSString* segueSelectionType;
 
 @end
 
-@implementation EQInboxLeftTopVC
+@implementation EQRInboxLeftTopVC
 
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
@@ -54,6 +57,39 @@
     
     
 }
+
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    
+    if ([segue.identifier isEqualToString:@"NeedsConfirmation"]){
+        
+        self.segueSelectionType = @"NeedsConfirmation";
+    }
+    
+    if ([segue.identifier isEqualToString:@"AllRequests"]){
+        
+        self.segueSelectionType = @"AllRequests";
+    }
+    
+    
+    //assign this class as the delegate for the presented VC
+    EQRInboxLeftTableVC* viewController = [segue destinationViewController];
+    
+    viewController.delegateForLeftSide = self;
+    
+}
+
+
+
+#pragma mark - delegate methods
+
+-(NSString*)selectedInboxOrArchive{
+    
+    return self.segueSelectionType;
+}
+
+
+
 
 //#pragma mark - Table view data source
 //

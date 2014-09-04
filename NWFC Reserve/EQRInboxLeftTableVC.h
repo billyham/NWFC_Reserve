@@ -9,6 +9,24 @@
 #import <UIKit/UIKit.h>
 #import "EQRInboxRightVC.h"
 
-@interface EQRInboxLeftTableVC : UITableViewController <EQRInboxRightDelegate>
+@protocol EQRInboxLeftTableDelegate;
+
+
+@interface EQRInboxLeftTableVC : UITableViewController <EQRInboxRightDelegate>{
+    
+    __weak id <EQRInboxLeftTableDelegate> delegateForLeftSide;
+
+}
+
+@property (weak, nonatomic) id <EQRInboxLeftTableDelegate> delegateForLeftSide;
+
+@end
+
+
+
+
+@protocol EQRInboxLeftTableDelegate <NSObject>
+
+-(NSString*)selectedInboxOrArchive;
 
 @end

@@ -9,12 +9,13 @@
 
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 #import "EQRScheduleRequestItem.h"
 
 @protocol EQRInboxRightDelegate;
 
 
-@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate> {
+@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate> {
     
     __weak id <EQRInboxRightDelegate> delegateForRightSide;
 }

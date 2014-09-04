@@ -21,6 +21,10 @@
 
 @implementation EQRInboxLeftTableVC
 
+@synthesize delegateForLeftSide;
+
+
+
 - (id)initWithStyle:(UITableViewStyle)style {
     
     self = [super initWithStyle:style];
@@ -60,16 +64,45 @@
     dateFormatter.locale = thisLocale;
     dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
     
-    NSArray* firstArray = [NSArray arrayWithObjects:@"request_date_begin", [dateFormatter stringFromDate:[NSDate date]], nil];
+    //need to subtract a day off of the date (strange)
+    NSDate* adjustedDate = [[NSDate date] dateByAddingTimeInterval:-86400]; //86400 seconds is one day
+    
+    NSArray* firstArray = [NSArray arrayWithObjects:@"request_date_begin", [dateFormatter stringFromDate:adjustedDate], nil];
     NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
     
-    [webData queryWithLink:@"EQGetScheduleRequestsUpcomingUnconfirmed.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+    
+    //_________determine which selection was made from top VC (Inbox or Archive)
+    NSString* selectionType = [delegateForLeftSide selectedInboxOrArchive];
+    
+    //get only needs confirmation
+    if ([selectionType isEqualToString:@"NeedsConfirmation"]){
         
-        for (id object in muteArray){
+        [webData queryWithLink:@"EQGetScheduleRequestsUpcomingUnconfirmed.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
             
-            [tempMuteArray addObject: object];
-        }
-    }];
+            for (id object in muteArray){
+                
+                [tempMuteArray addObject: object];
+            }
+        }];
+        
+        //get ALL requests
+    }else if ([selectionType isEqualToString:@"AllRequests"]){
+        
+        [webData queryWithLink:@"EQGetScheduleRequestsAll.php" parameters:nil class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+            
+            for (id object in muteArray){
+                
+                [tempMuteArray addObject: object];
+            }
+        }];
+        
+        //error handling
+    }else{
+        
+        //error handling when failed to create deleage or idenfity the segue
+    }
+    
+    
     
     
     //______*****   sort on date   ******______
@@ -112,23 +145,26 @@
         
         //________
         
-        
         return [date1 compare:date2];
-        
     }];
     
-    self.arrayOfRequests = [NSArray arrayWithArray:tempMuteArrayAlpha];
     
+    //reverse the ascending order to descending order
+    //_____There's probably a better way to do this reverse sorting...
+    NSMutableArray* tempMuteArrayAlphaDescending = [NSMutableArray arrayWithCapacity:1];
+    for (id item in tempMuteArrayAlpha){
+        
+        [tempMuteArrayAlphaDescending insertObject:item atIndex: 0];
+    }
+    
+    //assign array to ivar
+    self.arrayOfRequests = [NSArray arrayWithArray:tempMuteArrayAlphaDescending];
+    
+    //reload the table
     [self.tableView reloadData];
     
 }
 
-
-- (void)didReceiveMemoryWarning {
-    
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 
 #pragma mark - Table view data source
@@ -180,7 +216,7 @@
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     dateFormatter.locale = thisLocale;
-    dateFormatter.dateFormat = @"EEEE, MMM d, h:mm aaa";
+    dateFormatter.dateFormat = @"EEEE, MMM d, yyyy - h:mm aaa";
     
     NSString* dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
     
@@ -273,6 +309,14 @@
  }
  */
 
+
+#pragma mark - memory warning
+
+- (void)didReceiveMemoryWarning {
+    
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 
 
 @end

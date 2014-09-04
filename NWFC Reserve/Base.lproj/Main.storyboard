@@ -541,18 +541,18 @@
             </objects>
             <point key="canvasLocation" x="7966" y="-844"/>
         </scene>
-        <!--Inbox Left TopVC - Filter-->
+        <!--Inbox Left TopVC - Inbox & Archive-->
         <scene sceneID="YgO-Bd-FHK">
             <objects>
-                <tableViewController clearsSelectionOnViewWillAppear="NO" id="mpR-7h-tmx" customClass="EQInboxLeftTopVC" sceneMemberID="viewController">
+                <tableViewController clearsSelectionOnViewWillAppear="NO" id="mpR-7h-tmx" customClass="EQRInboxLeftTopVC" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" rowHeight="44" sectionHeaderHeight="62" sectionFooterHeight="40" id="tbw-V6-6yY">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <sections>
-                            <tableViewSection headerTitle="Filter by Confirmation" id="SKV-cX-DJr">
+                            <tableViewSection headerTitle="Inbox" id="SKV-cX-DJr">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="DJF-g9-mIT" style="IBUITableViewCellStyleDefault" id="H2M-fN-odL">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="DJF-g9-mIT" style="IBUITableViewCellStyleDefault" id="H2M-fN-odL">
                                         <rect key="frame" x="0.0" y="126" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="H2M-fN-odL" id="kKr-JR-GZv">
@@ -569,61 +569,21 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="1km-hA-Moz" kind="push" identifier="Inbox Top Needs ID" id="SjM-QY-fWo"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="gk7-Zf-g7m" style="IBUITableViewCellStyleDefault" id="unh-0g-fYG">
-                                        <rect key="frame" x="0.0" y="170" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="unh-0g-fYG" id="JiP-zt-DXb">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="All" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gk7-Zf-g7m">
-                                                    <rect key="frame" x="15" y="0.0" width="270" height="43"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="1km-hA-Moz" kind="push" identifier="Inbox Top All" id="2oo-sO-UWe"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="Z23-9B-6gI" style="IBUITableViewCellStyleDefault" id="PlQ-qO-oY9">
-                                        <rect key="frame" x="0.0" y="214" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PlQ-qO-oY9" id="r9T-dF-Hw4">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="All Upcoming" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Z23-9B-6gI">
-                                                    <rect key="frame" x="15" y="0.0" width="270" height="43"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="1km-hA-Moz" kind="push" identifier="Inbox Top All Upcoming" id="Hjp-3i-Sfd"/>
+                                            <segue destination="1km-hA-Moz" kind="push" identifier="NeedsConfirmation" id="SjM-QY-fWo"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="Filter by Type" id="M9U-y9-mof">
+                            <tableViewSection headerTitle="Archive" id="M9U-y9-mof">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="Uc9-at-ZBM" style="IBUITableViewCellStyleDefault" id="agT-Fk-zcG">
-                                        <rect key="frame" x="0.0" y="320" width="320" height="44"/>
+                                    <tableViewCell tag="1" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="Uc9-at-ZBM" style="IBUITableViewCellStyleDefault" id="agT-Fk-zcG">
+                                        <rect key="frame" x="0.0" y="232" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="agT-Fk-zcG" id="D7c-V9-62I">
                                             <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Student" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Uc9-at-ZBM">
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="All Requests" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Uc9-at-ZBM">
                                                     <rect key="frame" x="15" y="0.0" width="270" height="43"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -633,87 +593,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="1km-hA-Moz" kind="push" id="oNi-Ze-s1k"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="QVQ-l4-OsD" style="IBUITableViewCellStyleDefault" id="7dU-la-z3b">
-                                        <rect key="frame" x="0.0" y="364" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7dU-la-z3b" id="iO1-0O-516">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Classes" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="QVQ-l4-OsD">
-                                                    <rect key="frame" x="15" y="0.0" width="270" height="43"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="1km-hA-Moz" kind="push" id="glP-wm-U7v"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="ndh-IE-YNS" style="IBUITableViewCellStyleDefault" id="dWZ-he-Ebg">
-                                        <rect key="frame" x="0.0" y="408" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dWZ-he-Ebg" id="dAR-Fd-EUV">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Camps" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ndh-IE-YNS">
-                                                    <rect key="frame" x="15" y="0.0" width="270" height="43"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="1km-hA-Moz" kind="push" id="Hpc-A4-4Lq"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="Cmw-XW-AcF" style="IBUITableViewCellStyleDefault" id="YGh-WJ-iIR">
-                                        <rect key="frame" x="0.0" y="452" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YGh-WJ-iIR" id="d8b-Ql-4os">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Staff" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Cmw-XW-AcF">
-                                                    <rect key="frame" x="15" y="0.0" width="270" height="43"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="1km-hA-Moz" kind="push" id="qxM-Vy-9eG"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="nNp-g3-Fbn" style="IBUITableViewCellStyleDefault" id="3tD-O0-OJ1">
-                                        <rect key="frame" x="0.0" y="496" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3tD-O0-OJ1" id="08g-ow-iKx">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Public" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nNp-g3-Fbn">
-                                                    <rect key="frame" x="15" y="0.0" width="270" height="43"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="1km-hA-Moz" kind="push" id="TjA-mv-sMr"/>
+                                            <segue destination="1km-hA-Moz" kind="push" identifier="AllRequests" id="oNi-Ze-s1k"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -724,13 +604,15 @@
                             <outlet property="delegate" destination="mpR-7h-tmx" id="ZXu-e2-Iu2"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Filter" id="2GN-9c-boz"/>
+                    <navigationItem key="navigationItem" title="Inbox &amp; Archive" id="2GN-9c-boz">
+                        <barButtonItem key="backBarButtonItem" title="Inbox &amp; Archive" id="3y0-oY-zOW"/>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yFR-0e-XAp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5584" y="-2000"/>
         </scene>
-        <!--Inbox Left TableVC-->
+        <!--Inbox Left TableVC - Inbox-->
         <scene sceneID="2YE-l0-E4u">
             <objects>
                 <tableViewController id="1km-hA-Moz" customClass="EQRInboxLeftTableVC" sceneMemberID="viewController">
@@ -761,7 +643,7 @@
                             <outlet property="delegate" destination="1km-hA-Moz" id="U4o-hZ-3EM"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="Sbk-L0-h6r"/>
+                    <navigationItem key="navigationItem" title="Inbox" id="Sbk-L0-h6r"/>
                     <connections>
                         <outlet property="searchDisplayController" destination="uwy-Qo-YZd" id="gdW-HT-pHq"/>
                     </connections>
@@ -1562,6 +1444,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Hjp-3i-Sfd"/>
+        <segue reference="oNi-Ze-s1k"/>
     </inferredMetricsTieBreakers>
 </document>
