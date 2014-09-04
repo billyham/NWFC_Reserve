@@ -73,8 +73,51 @@
     
     
     //______*****   sort on date   ******______
+    //alphabatize the list of unique items
+    NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        
+        //__1.___________SORT BASED ON PICK UP DATE AND TIME_______________
+        //compile date and time
+//        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+//        NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+//        dateFormatter.locale = thisLocale;
+//        dateFormatter.dateFormat = @"yyyy-MM-dd";
+//        
+//        NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
+//        timeFormatter.locale = thisLocale;
+//        timeFormatter.dateFormat = @"HH:mm:ss";
+//        
+//        //convert dates and times to timestamp strings
+//        NSString* dateAsString1 = [NSString stringWithFormat:@"%@ %@",
+//                                   [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)obj1 request_date_begin]],
+//                                    [timeFormatter stringFromDate:[(EQRScheduleRequestItem*)obj1 request_time_begin]]];
+//        NSString* dateAsString2 = [NSString stringWithFormat:@"%@ %@",
+//                                   [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)obj2 request_date_begin]],
+//                                   [timeFormatter stringFromDate:[(EQRScheduleRequestItem*)obj2 request_time_begin]]];
+//        
+//        //convert timestamp strings back to dates
+//        NSDateFormatter* dateFormatter2 = [[NSDateFormatter alloc] init];
+//        dateFormatter2.locale = thisLocale;
+//        dateFormatter2.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+//        
+//        NSDate* date1 = [dateFormatter2 dateFromString:dateAsString1];
+//        NSDate* date2 = [dateFormatter2 dateFromString:dateAsString2];
+        
+        
+        //__2._____________SORT BASED ON TIME OF REQUEST_________________
+        
+        NSDate* date1 = [(EQRScheduleRequestItem*)obj1 time_of_request];
+        NSDate* date2 = [(EQRScheduleRequestItem*)obj2 time_of_request];
+        
+        //________
+        
+        
+        return [date1 compare:date2];
+        
+    }];
     
-    self.arrayOfRequests = [NSArray arrayWithArray:tempMuteArray];
+    self.arrayOfRequests = [NSArray arrayWithArray:tempMuteArrayAlpha];
     
     [self.tableView reloadData];
     
@@ -109,27 +152,44 @@
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
-    //get date in format
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    dateFormatter.locale = thisLocale;
-    dateFormatter.dateFormat = @"EEEE, MMM d";
-    
-    NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
-    timeFormatter.locale = thisLocale;
-    timeFormatter.dateFormat = @"h:mm aaa";
-    
-    NSDate* beginDate = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] request_date_begin];
-    NSDate* beginTime = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] request_time_begin];
-    NSString* dateString = [dateFormatter stringFromDate:beginDate];
-    NSString* timeString = [timeFormatter stringFromDate:beginTime];
-    
-    
     //name
     NSString* nameString = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] contact_name];
     
+    //__1.___________DISPLAY PICK UP DATE AND TIME____________
+    //get date in format
+//    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+//    NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+//    dateFormatter.locale = thisLocale;
+//    dateFormatter.dateFormat = @"EEEE, MMM d";
+//    
+//    NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
+//    timeFormatter.locale = thisLocale;
+//    timeFormatter.dateFormat = @"h:mm aaa";
+//    
+//    NSDate* beginDate = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] request_date_begin];
+//    NSDate* beginTime = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] request_time_begin];
+//    NSString* dateString = [dateFormatter stringFromDate:beginDate];
+//    NSString* timeString = [timeFormatter stringFromDate:beginTime];
+//
+//    //string for title
+//    NSString* titleString = [NSString stringWithFormat:@"%@\n For Pick Up: %@, %@", nameString, dateString, timeString];
+
+    
+    
+    //__2.______________DISPLAY TIME OF REQUEST___________
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dateFormatter.locale = thisLocale;
+    dateFormatter.dateFormat = @"EEEE, MMM d, h:mm aaa";
+    
+    NSString* dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
+    
     //string for title
-    NSString* titleString = [NSString stringWithFormat:@"%@\n %@, %@", nameString, dateString, timeString];
+    NSString* titleString = [NSString stringWithFormat:@"%@\n Submitted: %@", nameString, dateString];
+    
+    //__________
+    
+    
 
     //assign title to cell
     cell.textLabel.numberOfLines = 2;

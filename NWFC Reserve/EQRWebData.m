@@ -1265,8 +1265,7 @@ const int intEQREquipUniqueItem = 8;
             //need to convert date string into dates
             NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
             dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-            dateFormatter.dateFormat = @"yyyy-MM-dd";
-            // HH:mm:ss
+            dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
             
             [(EQRScheduleRequestItem*)self.currentThing setTime_of_request:[dateFormatter dateFromString:self.currentValue]];
             
