@@ -107,6 +107,8 @@
     //make subview visible
     [self.rightView setHidden:NO];
     [self.leftView setHidden:NO];
+    
+    NSLog(@"a small inconsequential change");
 }
 
 
