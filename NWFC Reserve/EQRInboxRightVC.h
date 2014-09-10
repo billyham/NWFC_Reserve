@@ -31,6 +31,6 @@
 
 @protocol EQRInboxRightDelegate <NSObject>
 
--(EQRScheduleRequestItem*)selectedRequest;
+//-(EQRScheduleRequestItem*)selectedRequest;
 
 @end
