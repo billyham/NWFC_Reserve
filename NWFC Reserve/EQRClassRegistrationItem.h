@@ -10,7 +10,7 @@
 
 @interface EQRClassRegistrationItem : NSObject
 
-@property (strong, nonatomic) NSString* key_iD;
+@property (strong, nonatomic) NSString* key_id;
 @property (strong, nonatomic) NSString* contact_foreignKey;
 @property (strong, nonatomic) NSString* classSection_foreignKey;
 @property (strong, nonatomic) NSString* payment_tendered;
