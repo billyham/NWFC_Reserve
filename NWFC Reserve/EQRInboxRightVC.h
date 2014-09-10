@@ -15,7 +15,7 @@
 @protocol EQRInboxRightDelegate;
 
 
-@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate> {
+@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UITableViewDelegate, UITableViewDataSource> {
     
     __weak id <EQRInboxRightDelegate> delegateForRightSide;
 }
@@ -23,13 +23,14 @@
 @property (weak, nonatomic) id <EQRInboxRightDelegate> delegateForRightSide;
 @property (nonatomic, strong) UIPopoverController *popover;
 
--(void)renewTheView;
+-(void)renewTheViewWithRequest:(EQRScheduleRequestItem*)request;
+
 
 @end
 
 
 @protocol EQRInboxRightDelegate <NSObject>
 
--(void)selectedRequest:(EQRScheduleRequestItem*)request;
+-(EQRScheduleRequestItem*)selectedRequest;
 
 @end

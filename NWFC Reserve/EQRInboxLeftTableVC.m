@@ -15,7 +15,7 @@
 @interface EQRInboxLeftTableVC ()
 
 @property (strong, nonatomic) NSArray* arrayOfRequests;
-
+@property (strong, nonatomic) EQRScheduleRequestItem* chosenRequest;
 
 @end
 
@@ -242,6 +242,12 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
+    //identify the selected request for later
+    self.chosenRequest = [self.arrayOfRequests objectAtIndex:indexPath.row];
+    
+    //send message to InboxRightVC to renew the view
+    [(EQRInboxRightVC*) [[(UINavigationController*) [self.splitViewController.viewControllers objectAtIndex:1] viewControllers] objectAtIndex:0] renewTheViewWithRequest:self.chosenRequest];
+    
 
 }
 
@@ -249,11 +255,14 @@
 
 #pragma mark - InboxRightDelegate methods
 
--(void)selectedRequest:(EQRScheduleRequestItem *)request{
-    
-    NSLog(@"selectedRequest method did fire");
-
-}
+//-(EQRScheduleRequestItem*)selectedRequest{
+//    
+//    //return the schedule request object that has been selected
+//    
+//    NSLog(@"selectedRequest method did fire with self.selectedRequest:contatName: %@", self.selectedRequest.contact_name);
+//    
+//    return self.chosenRequest;
+//}
 
 
 #pragma mark - Navigation

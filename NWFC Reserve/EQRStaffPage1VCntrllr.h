@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQRStaffPage1VCntrllr : UIViewController
+@interface EQRStaffPage1VCntrllr : UIViewController 
 
 -(IBAction)urlTextFieldDidChange:(id)sender;
 -(IBAction)termTextFieldDidChange:(id)sender;
