@@ -461,7 +461,7 @@
     EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
     
     //prevent edges from extending beneath nav and tab bars
-    editorViewController.edgesForExtendedLayout = UIRectEdgeNone;
+    editorViewController.edgesForExtendedLayout = UIRectEdgeTop;
     
     //_______******* THIS IS WEIRD need to subtract a day off the the dates
     float secondsForOffset = 0 * -3;

@@ -118,10 +118,12 @@
     //register for header cell
     [self.myMasterScheduleCollectionView registerClass:[EQRHeaderCellForSchedule class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
     
-    //adjust content and scroll insets if edges are extended
+    //____________*******  THIS DOESN'T WORK BECUASE IT'S TOO EARLY, IT NEEDS TO HAPPEN AFTER THE VIEW APPEARS  ****_____
+    //____________adjust content and scroll insets if edges are extended
     //______this is janky!!!!
 //    self.myMasterScheduleCollectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
 //    self.myMasterScheduleCollectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+    self.myMasterScheduleCollectionView.contentOffset = CGPointMake(0, 0);
     
     //initial month is the current month
     self.dateForShow = [NSDate date];
@@ -363,6 +365,18 @@
     
 
     
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    [super viewDidAppear:animated];
+    
+//    self.myMasterScheduleCollectionView.contentOffset = CGPointMake(0, 0);
+    
+    //__________   THIS WORKS!!!   _______
+    self.myMasterScheduleCollectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    self.myMasterScheduleCollectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+
 }
 
 
@@ -881,7 +895,7 @@
     EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
     
     //prevent edges from extending beneath nav and tab bars
-    editorViewController.edgesForExtendedLayout = UIRectEdgeNone;
+    editorViewController.edgesForExtendedLayout = UIRectEdgeTop;
     
     //initial setup
     [editorViewController initialSetupWithInfo:self.temporaryDicFromNestedDayCell];;
@@ -983,10 +997,10 @@
         //_______Use the center of the moving nested cell view_______
         CGPoint thatPoint = self.movingNestedCellView.center;
         
-        //80 is the distance between the collectionView and the top of the view
+        //144 is the distance between the collectionView and the top of the view  //80 is original value
         //must also add in the collection view offset
         CGPoint offsetPoint = self.myMasterScheduleCollectionView.contentOffset;
-        int newRowInt = ((thatPoint.y - 80) + offsetPoint.y) / EQRScheduleItemHeightForDay;
+        int newRowInt = ((thatPoint.y - 144) + offsetPoint.y) / EQRScheduleItemHeightForDay;
         
         for (EQRScheduleTracking_EquipmentUnique_Join* thisJoin in requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins){
             
