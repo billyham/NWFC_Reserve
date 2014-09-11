@@ -84,6 +84,7 @@
     [self.leftView setHidden:YES];
     [self.rightView setHidden:YES];
     
+    NSLog(@"a nominal change");
     
 }
 
