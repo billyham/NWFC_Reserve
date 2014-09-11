@@ -14,6 +14,7 @@
 #import "EQRContactNameItem.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRDataStructure.h"
+#import "EQRGlobals.h"
 
 @interface EQRInboxRightVC ()
 
@@ -102,7 +103,7 @@
     //set label values
     self.firstLastNameValue.text = self.myScheduleRequest.contact_name;
     self.typeValue.text = self.myScheduleRequest.renter_type;
-    self.classValue.text = self.myScheduleRequest.classTitle_foreignKey;
+//    self.classValue.text = self.myScheduleRequest.classTitle_foreignKey;
     
     //date formats
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
@@ -127,9 +128,25 @@
     self.pickUpTimeValue.text = [NSString stringWithFormat:@"%@ - %@", pickUpDateString, pickUpTimeString];
     self.returnTimeValue.text = [NSString stringWithFormat:@"%@ - %@", returnDateString, returnTimeString];
     
-    
-    //table of joins
     EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    //get class name using key
+    if (([self.myScheduleRequest.classTitle_foreignKey isEqualToString:EQRErrorCode88888888]) ||
+        ([self.myScheduleRequest.classTitle_foreignKey isEqualToString:@""]) ||
+        (!self.myScheduleRequest.classTitle_foreignKey)) {
+        
+        [self.classValue setHidden:YES];
+        
+    }else{
+        
+        NSArray* first2Array = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequest.classTitle_foreignKey, nil];
+        NSArray* top2Array = [NSArray arrayWithObjects:first2Array, nil];
+        self.classValue.text = [webData queryForStringWithLink:@"EQGetClassCatalogTitleWithKey.php" parameters:top2Array];
+        
+        [self.classValue setHidden:NO];
+    }
+    
+    //get table of joins
     NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
     
     NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id, nil];
@@ -412,8 +429,9 @@
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
+    NSString* stringWithDistID = [NSString stringWithFormat:@"%@  # %@",[(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name], [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id ]];
 
-    cell.textLabel.text = [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name];
+    cell.textLabel.text = stringWithDistID;
     return cell;
 }
 
