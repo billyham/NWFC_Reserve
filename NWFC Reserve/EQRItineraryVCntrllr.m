@@ -563,7 +563,6 @@
     //pass dic to ivar to use in editor request
     self.temporaryDicFromQuickView = [NSDictionary dictionaryWithDictionary:dic];
     
-   
     //initial infor
     [quickViewPage1 initialSetupWithDic:dic];
     [quickViewPage2 initialSetupWithKeyID:[[note userInfo] objectForKey: @"key_ID"]];
@@ -572,11 +571,6 @@
     
 //    NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
 //    CGRect selectedRect = [valueOfRect CGRectValue];
-    
-    
-    //assign target of popover's "edit request" button
-    [self.myQuickViewScrollVCntrllr.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventTouchUpInside];
-    
     
     //_____presenting the popover must be delayed (why?????)
     [self performSelector:@selector(mustDelayThePresentationOfAPopOver:) withObject:[note userInfo] afterDelay:0.1];
@@ -597,6 +591,11 @@
     [self.myQuickViewScrollVCntrllr.myContentPage1 addSubview:self.myQuickViewScrollVCntrllr.myQuickViewPage1.view];
     [self.myQuickViewScrollVCntrllr.myContentPage2 addSubview:self.myQuickViewScrollVCntrllr.myQuickViewPage2.view];
     [self.myQuickViewScrollVCntrllr.myContentPage3 addSubview:self.myQuickViewScrollVCntrllr.myQuickViewPage3.view];
+    
+    
+    //__________needs a delay before assigning button target____________
+    //assign target of popover's "edit request" button
+    [self.myQuickViewScrollVCntrllr.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventTouchUpInside];
     
     
     //add gesture recognizers

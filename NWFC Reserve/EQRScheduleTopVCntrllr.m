@@ -817,10 +817,6 @@
     
     NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
     CGRect selectedRect = [valueOfRect CGRectValue];
-    
-    
-    //assign target of popover's "edit request" button
-    [self.myQuickViewScrollVCntrllr.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventTouchUpInside];
 
     //show popover  MUST use NOT allow using the arrow directin from below, keyboard may cover the textview
     [self.myScheduleRowQuickView presentPopoverFromRect:selectedRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionDown animated:YES];
@@ -847,6 +843,21 @@
     UISwipeGestureRecognizer* swipeRightGestureOnQuickview2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideRight:)];
     swipeRightGestureOnQuickview2.direction = UISwipeGestureRecognizerDirectionRight;
     [self.myQuickViewScrollVCntrllr.myContentPage3 addGestureRecognizer:swipeRightGestureOnQuickview2];
+    
+    
+    //_____presenting the popover must be delayed (why?????)
+    [self performSelector:@selector(mustDelayThePresentationOfAPopOver:) withObject:[note userInfo] afterDelay:0.1];
+    
+}
+
+
+-(void)mustDelayThePresentationOfAPopOver:(NSDictionary*)userInfo{
+    
+    //it just doesn't work without a delay
+    
+    //assign target of popover's "edit request" button
+    [self.myQuickViewScrollVCntrllr.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventTouchUpInside];
+    
     
     
 }
