@@ -18,6 +18,7 @@ extern NSString* EQRColorCalYouth;
 extern NSString* EQRColorNeedsPrep;
 extern NSString* EQRColorDonePrep;
 extern NSString* EQRColorFilterOn;
+extern NSString* EQRColorCoolGreen;
 
 extern NSString* EQRColorStatusNil;
 extern NSString* EQRColorStatusGoing;

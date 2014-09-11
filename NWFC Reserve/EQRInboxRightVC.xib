@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <deployment defaultVersion="1792" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRInboxRightVC">
@@ -166,7 +167,7 @@
                         </label>
                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1e6-uK-hFI">
                             <rect key="frame" x="78" y="476" width="315" height="191"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="0.8717951263" green="0.92085597829999999" blue="0.91911688970000005" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="191" id="vra-4f-tHt"/>
                             </constraints>
@@ -205,7 +206,7 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" red="0.8717951263" green="0.92085597829999999" blue="0.91911688970000005" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="u0E-eI-hJR" firstAttribute="top" secondItem="s9K-Cg-cYc" secondAttribute="bottom" constant="37" id="0rY-VJ-cvb"/>
                         <constraint firstAttribute="trailing" secondItem="FTv-bn-yfJ" secondAttribute="trailing" constant="8" id="1b8-7c-L17"/>
@@ -284,6 +285,12 @@
                 <constraint firstItem="zZA-FD-EOX" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="oNf-07-5J3"/>
                 <constraint firstAttribute="bottom" secondItem="gRA-am-cUZ" secondAttribute="bottom" constant="60" id="xp2-tX-lmk"/>
             </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
         </view>
     </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
 </document>

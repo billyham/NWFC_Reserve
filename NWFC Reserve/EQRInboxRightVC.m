@@ -12,6 +12,8 @@
 #import "EQRWebData.h"
 #import "EQRStaffUserPickerViewController.h"
 #import "EQRContactNameItem.h"
+#import "EQRScheduleTracking_EquipmentUnique_Join.h"
+#import "EQRDataStructure.h"
 
 @interface EQRInboxRightVC ()
 
@@ -29,8 +31,10 @@
 @property (strong, nonatomic) IBOutlet UILabel* returnTimeValue;
 
 @property (strong, nonatomic) NSArray* arrayOfJoins;
+@property (strong, nonatomic) NSArray* arrayOfJoinsWithStructure;
 
 @property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
+
 
 @end
 
@@ -71,11 +75,9 @@
     //set rightBarButton item in SELF
     [self.navigationItem setRightBarButtonItems:arrayOfRightButtons];
     
-    
     //register cells
     [self.myTable registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
     [self.myTable registerClass:[UITableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:@"SuppCell"];
-    
     
     //initially hide everything
     [self.leftView setHidden:YES];
@@ -125,11 +127,36 @@
     self.pickUpTimeValue.text = [NSString stringWithFormat:@"%@ - %@", pickUpDateString, pickUpTimeString];
     self.returnTimeValue.text = [NSString stringWithFormat:@"%@ - %@", returnDateString, returnTimeString];
     
+    
+    //table of joins
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+    
+    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id, nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
+    
+    [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+        
+        for (id join in muteArray){
+            
+            [tempMuteArray addObject:join];
+        }
+    }];
+    
+    
+    //_____******   error checking when no joins exist   *******____
+    
+    self.arrayOfJoins = [NSArray arrayWithArray:tempMuteArray];
+    
+    //add structure to that array
+    self.arrayOfJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfJoins];
+    
+    //refresh the data in table
+    [self.myTable reloadData];
+    
     //make subview visible
     [self.rightView setHidden:NO];
     [self.leftView setHidden:NO];
-    
-    NSLog(@"a small inconsequential change");
 }
 
 
@@ -350,7 +377,7 @@
     
     NSLog(@"inside willHide split view delegate method");
     
-    barButtonItem.title = @"Filters";
+    barButtonItem.title = @"Requests";
     [self.navigationItem setLeftBarButtonItem:barButtonItem];
     
     self.popover = pc;
@@ -371,15 +398,13 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     
-    // Return the number of sections.
-    return 1;
+    return [self.arrayOfJoinsWithStructure count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     
-    // Return the number of rows in the section.
-    return 10;
+    return [(NSArray*)[self.arrayOfJoinsWithStructure objectAtIndex:section] count];
 }
 
 
@@ -388,9 +413,14 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
 
-    cell.textLabel.text = @"Cell Text";
-    
+    cell.textLabel.text = [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name];
     return cell;
+}
+
+
+-(NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+    
+    return [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:section] objectAtIndex:0] schedule_grouping];
 }
 
 
