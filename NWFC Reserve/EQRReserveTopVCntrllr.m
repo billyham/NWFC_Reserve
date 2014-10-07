@@ -575,7 +575,7 @@
                 
                 EQRWebData* webData2 = [EQRWebData sharedInstance];
                 
-                //pull a list of names, only ones with faculty bool set to 1
+                //pull a list of names where rentor_type_staff = 1 
                 [webData2 queryWithLink:@"EQGetStaffNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
                     
                     for (id obj in muteArray){
@@ -584,7 +584,7 @@
                     }
                 }];
                 
-                //alphabatize the class list
+                //alphabatize the list
                 NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
                     
                     NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
@@ -623,6 +623,39 @@
                 self.classArray = nil;
                 [self.classListTable reloadData];
                 self.contactNameArray = nil;
+                [self.nameListTable reloadData];
+                
+                //_____populate with list of ALL names in database____?
+                //instantiate mute array
+                NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+                
+                EQRWebData* webData2 = [EQRWebData sharedInstance];
+                
+                //pull a list of all names
+                [webData2 queryWithLink:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+                    
+                    for (id obj in muteArray){
+                        
+                        [tempMuteArray  addObject:obj];
+                    }
+                }];
+                
+                //alphabatize the list
+                NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                    
+                    NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
+                    NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
+                    
+                    return [string1 compare:string2];
+                    
+                }];
+                
+                self.contactNameArray = tempMuteArrayAlpha;
+                
+                //********  reveal name list  **********
+                self.hideNameListFlag = NO;
+                
+                //is this necessary_____???
                 [self.nameListTable reloadData];
                 
                 break;

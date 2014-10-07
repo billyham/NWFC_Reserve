@@ -16,8 +16,8 @@
 #import "EQRWebData.h"
 #import "EQRGlobals.h"
 #import "EQREquipUniqueItem.h"
-
 #import "EQRCheckPageRenderer.h"
+#import "EQRDataStructure.h"
 
 @interface EQREquipSummaryGenericVCntrllr ()
 
@@ -76,8 +76,9 @@
     self.rentorEmailAtt = contactItem.email;
     
     //nsattributedstrings
-    UIFont* normalFont = [UIFont systemFontOfSize:10];
-    UIFont* boldFont = [UIFont boldSystemFontOfSize:10];
+    UIFont* smallFont = [UIFont boldSystemFontOfSize:10];
+    UIFont* normalFont = [UIFont systemFontOfSize:12];
+    UIFont* boldFont = [UIFont boldSystemFontOfSize:14];
     
     //begin the total attribute string
     self.summaryTotalAtt = [[NSMutableAttributedString alloc] initWithString:@""];
@@ -86,25 +87,25 @@
     
     
 //    //________NAME_________
-//    NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-//    NSAttributedString* nameHead = [[NSAttributedString alloc] initWithString:@"Name\r" attributes:arrayAttA];
-//    
-//    //initiate the total attributed string
-//    [self.summaryTotalAtt appendAttributedString:nameHead];
-//    
-//    //assign the name
-//    NSDictionary* arrayAtt = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-//    
-//    //________contactNameItem maybe nil. error handling when that's the case
-//    NSAttributedString* nameAtt;
-//    if (contactItem != nil){
-//        nameAtt = [[NSAttributedString alloc] initWithString:contactItem.first_and_last attributes:arrayAtt];
-//    }else{
-//        nameAtt = [[NSAttributedString alloc] initWithString:contactCondensedName attributes:arrayAtt];
-//    }
-//    [self.summaryTotalAtt appendAttributedString:nameAtt];
-//    
-//    
+    NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+    NSAttributedString* nameHead = [[NSAttributedString alloc] initWithString:@"Name\r" attributes:arrayAttA];
+    
+    //initiate the total attributed string
+    [self.summaryTotalAtt appendAttributedString:nameHead];
+    
+    //assign the name
+    NSDictionary* arrayAtt = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
+    
+    //________contactNameItem maybe nil. error handling when that's the case
+    NSAttributedString* nameAtt;
+    if (contactItem != nil){
+        nameAtt = [[NSAttributedString alloc] initWithString:contactItem.first_and_last attributes:arrayAtt];
+    }else{
+        nameAtt = [[NSAttributedString alloc] initWithString:contactCondensedName attributes:arrayAtt];
+    }
+    [self.summaryTotalAtt appendAttributedString:nameAtt];
+
+
 //    //____EMAIL____
 //    //add to the attributed string
 //    NSDictionary* arrayAtt2 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
@@ -139,7 +140,7 @@
     
     //_______PICKUP DATE_____
     NSDictionary* arrayAtt6 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-    NSAttributedString* pickupHead = [[NSAttributedString alloc] initWithString:@"Pick Up: " attributes:arrayAtt6];
+    NSAttributedString* pickupHead = [[NSAttributedString alloc] initWithString:@"\r\rPick Up: " attributes:arrayAtt6];
     [self.summaryTotalAtt appendAttributedString:pickupHead];
     
     NSDictionary* arrayAtt7 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
@@ -158,7 +159,7 @@
     //________EQUIP LIST________
     
     NSDictionary* arrayAtt10 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* equipHead = [[NSAttributedString alloc] initWithString:@"\r\r\r Pick Up | Return   Equipment Items:\r\r" attributes:arrayAtt10];
+    NSAttributedString* equipHead = [[NSAttributedString alloc] initWithString:@"\r\rEquipment Items:\r" attributes:arrayAtt10];
     [self.summaryTotalAtt appendAttributedString:equipHead];
     
     //cycle through array of equipItems and build a string
@@ -191,23 +192,35 @@
     //    }
     
     // 2. first, cycle through scheduleTracking_equip_joins
-    for (EQRScheduleTracking_EquipmentUnique_Join* joinItem in requestManager.request.arrayOfEquipmentJoins){
+    //add structure to the array
+    NSArray* arrayOfEquipmentJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:requestManager.request.arrayOfEquipmentJoins];
+    
+    for (NSArray* innerArray in arrayOfEquipmentJoinsWithStructure){
         
-        NSArray* thisArray1 = [NSArray arrayWithObjects:@"key_id", joinItem.equipTitleItem_foreignKey, Nil];
-        NSArray* thisArray2 = [NSArray arrayWithObject:thisArray1];
-        [webData queryWithLink:@"EQGetEquipmentTitles.php" parameters:thisArray2 class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
-            
-            //add the text of the equip item names to the textField's attributed string
-            for (EQREquipItem* equipItemObj in muteArray){
-                
-                NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-                NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"   ______ | ______   %@\r", equipItemObj.shortname] attributes:arrayAtt11];
-                
-                [self.summaryTotalAtt appendAttributedString:thisHereAttString];
-            }
-            
-        }];
+        //print equipment category
+        NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:smallFont forKey:NSFontAttributeName];
+        NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r   %@\r", [(EQRScheduleTracking_EquipmentUnique_Join*)[innerArray objectAtIndex:0] schedule_grouping]] attributes:arrayAtt11];
         
+        [self.summaryTotalAtt appendAttributedString:thisHereAttString];
+        
+        for (EQRScheduleTracking_EquipmentUnique_Join* joinItem in innerArray){
+            
+            NSArray* thisArray1 = [NSArray arrayWithObjects:@"key_id", joinItem.equipTitleItem_foreignKey, Nil];
+            NSArray* thisArray2 = [NSArray arrayWithObject:thisArray1];
+            [webData queryWithLink:@"EQGetEquipmentTitles.php" parameters:thisArray2 class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
+                
+                //add the text of the equip item names to the textField's attributed string
+                for (EQREquipItem* equipItemObj in muteArray){
+                    
+                    NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+                    NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", equipItemObj.shortname] attributes:arrayAtt11];
+                    
+                    [self.summaryTotalAtt appendAttributedString:thisHereAttString];
+                }
+                
+            }];
+            
+        }
     }
     
     

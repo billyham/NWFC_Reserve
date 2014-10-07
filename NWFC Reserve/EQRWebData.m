@@ -1153,7 +1153,11 @@ const int intEQREquipUniqueItem = 8;
         
         if ([self.currentThing respondsToSelector:@selector(request_time_begin)]){
             
-            //________******* Need error handling when request_time_begin has no value, substring will crash ********_______
+            //________error handling. when request_time_begin has no value, substring will crash _______
+            if ([self.currentValue length] < 5){
+                [self.currentValue setString:@"00:01:00"];
+            }
+            
             //piggy back the time by adding it to the system reference date
             float secondsFromHours = [[self.currentValue substringToIndex:2] floatValue] * 60 * 60;
             float secondsFromMinutes = [[self.currentValue substringWithRange:NSMakeRange(3, 2)] floatValue] * 60;
@@ -1174,7 +1178,11 @@ const int intEQREquipUniqueItem = 8;
         
         if ([self.currentThing respondsToSelector:@selector(request_time_end)]){
             
-            //________******* Need error handling when request_time_begin has no value, substring will crash ********_______
+            //________error handling when request_time_begin has no value, substring will crash_______
+            if ([self.currentValue length] < 5){
+                [self.currentValue setString:@"00:01:00"];
+            }
+            
             //piggy back the time by adding it to the system reference date
             float secondsFromHours = [[self.currentValue substringToIndex:2] floatValue] * 60 * 60;
             float secondsFromMinutes = [[self.currentValue substringWithRange:NSMakeRange(3, 2)] floatValue] * 60;

@@ -10,4 +10,16 @@
 
 @interface EQRModeManager : NSObject
 
+@property BOOL isInKioskMode;
+@property BOOL isInManagerMode;
+@property BOOL isInDemoMode;
+
++(EQRModeManager*)sharedInstance;
+
+-(void)enableKioskMode;
+-(void)enableStaffMode;
+-(void)enableManagerMode;
+
+-(void)enableDemoMode;
+
 @end

@@ -15,6 +15,7 @@
 @interface EQRInboxLeftTableVC ()
 
 @property (strong, nonatomic) NSArray* arrayOfRequests;
+@property (strong, nonatomic) NSArray* searchResultArrayOfRequests;
 @property (strong, nonatomic) EQRScheduleRequestItem* chosenRequest;
 
 @end
@@ -39,7 +40,10 @@
     
     [super viewDidLoad];
     
-    
+    //this didn't help...
+    //register cells
+//    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
+
     
 }
 
@@ -166,30 +170,86 @@
 }
 
 
+#pragma mark - search box methods
+
+//Basically, a predicate is an expression that returns a Boolean value (true or false). You specify the search criteria in the format of NSPredicate and use it to filter data in the array. As the search is on the name of recipe, we specify the predicate as “name contains[c] %@”. The “name” refers to the name property of the Recipe object. NSPredicate supports a wide range of filters including: BEGINSWITH, ENDSWITH, LIKE, MATCHES, CONTAINS. Here we choose to use the “contains” filter. The operator “[c]” means the comparison is case-insensitive.
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+    
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"contact_name contains[c] %@", searchText];
+    self.searchResultArrayOfRequests = [self.arrayOfRequests filteredArrayUsingPredicate:resultPredicate];
+}
+
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    
+    [self filterContentForSearchText:searchString
+                               scope:[[self.searchDisplayController.searchBar scopeButtonTitles]
+                                      objectAtIndex:[self.searchDisplayController.searchBar
+                                                     selectedScopeButtonIndex]]];
+    
+    return YES;
+}
+
+
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-
-    // Return the number of sections.
-    return 1;
+    
+    //determine either search results table or normal table
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        
+        return 1;
+        
+    }else{
+        
+        // Return the number of sections.
+        return 1;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-
+    
+    //determine either search results table or normal table
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        
+        return [self.searchResultArrayOfRequests count];
+        
+    }else{
+        
     // Return the number of rows in the section.
     return [self.arrayOfRequests count];
+    }
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+
+    //determine either search results table or normal table
+    
+    
+    
+    static NSString *CellIdentifier = @"Cell";
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     //name
-    NSString* nameString = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] contact_name];
+    NSString* nameString;
+    
+    //_______determine either search results table or normal table
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    
+        nameString = [(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] contact_name];
+        
+    }else{
+        
+        nameString = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] contact_name];
+    }
     
     //__1.___________DISPLAY PICK UP DATE AND TIME____________
     //get date in format
@@ -218,7 +278,17 @@
     dateFormatter.locale = thisLocale;
     dateFormatter.dateFormat = @"EEEE, MMM d, yyyy - h:mm aaa";
     
-    NSString* dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
+    NSString* dateString;
+    
+    //_______determine either search results table or normal table
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        
+        dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
+        
+    }else{
+        
+        dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
+    }
     
     //string for title
     NSString* titleString = [NSString stringWithFormat:@"%@\n Submitted: %@", nameString, dateString];
@@ -243,7 +313,15 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     //identify the selected request for later
-    self.chosenRequest = [self.arrayOfRequests objectAtIndex:indexPath.row];
+    //____determine if search view is present
+    if (self.searchDisplayController.active) {
+        
+        self.chosenRequest = [self.searchResultArrayOfRequests objectAtIndex:indexPath.row];
+        
+    }else{
+        
+        self.chosenRequest = [self.arrayOfRequests objectAtIndex:indexPath.row];
+    }
     
     //send message to InboxRightVC to renew the view
     [(EQRInboxRightVC*) [[(UINavigationController*) [self.splitViewController.viewControllers objectAtIndex:1] viewControllers] objectAtIndex:0] renewTheViewWithRequest:self.chosenRequest];

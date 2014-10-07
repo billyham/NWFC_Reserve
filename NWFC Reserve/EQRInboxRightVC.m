@@ -83,9 +83,7 @@
     //initially hide everything
     [self.leftView setHidden:YES];
     [self.rightView setHidden:YES];
-    
-    NSLog(@"a nominal change");
-    
+        
 }
 
 -(void)awakeFromNib{

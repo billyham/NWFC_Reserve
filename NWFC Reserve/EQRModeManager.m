@@ -10,4 +10,43 @@
 
 @implementation EQRModeManager
 
+
++(EQRModeManager*)sharedInstance{
+    
+    static EQRModeManager* myInstance = nil;
+    
+    if (!myInstance){
+        
+        myInstance = [[EQRModeManager alloc] init];
+    }
+    
+    return myInstance;
+}
+
+
+-(void)enableKioskMode{
+    
+    
+}
+
+
+-(void)enableStaffMode{
+    
+    
+}
+
+
+-(void)enableManagerMode{
+    
+    
+}
+
+
+-(void)enableDemoMode{
+    
+    
+}
+
+
+
 @end
