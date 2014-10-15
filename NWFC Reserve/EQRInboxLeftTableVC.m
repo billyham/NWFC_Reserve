@@ -92,6 +92,10 @@
         //get ALL requests
     }else if ([selectionType isEqualToString:@"AllRequests"]){
         
+        //set nav bar title (override nav bar title from nib)
+        self.navigationItem.title = @"Archive";
+        
+        //populate array
         [webData queryWithLink:@"EQGetScheduleRequestsAll.php" parameters:nil class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
             
             for (id object in muteArray){
@@ -103,7 +107,7 @@
         //error handling
     }else{
         
-        //error handling when failed to create deleage or idenfity the segue
+        //error handling when failed to create delegate or idenfity the segue
     }
     
     
@@ -234,7 +238,7 @@
     //determine either search results table or normal table
     
     
-    
+    //____________  NOTICE A KEY FEATURE: USING self.tableview INSTEAD OF tableview  !!!!!!_______________
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     

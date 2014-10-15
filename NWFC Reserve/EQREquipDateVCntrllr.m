@@ -102,13 +102,13 @@
     }
 }
 
--(IBAction)showAllEquipment:(id)sender{
-    
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-    
-    requestManager.request.showAllEquipmentFlag = YES;
-    
-}
+//-(IBAction)showAllEquipment:(id)sender{
+//    
+//    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+//    
+//    requestManager.request.showAllEquipmentFlag = YES;
+//    
+//}
 
 
 #pragma mark - childviewcontroller for dateview

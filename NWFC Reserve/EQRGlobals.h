@@ -17,6 +17,8 @@ extern NSString* EQRRenterStaff;
 extern NSString* EQRRenterPublic;
 extern NSString* EQRRenterYouth;
 
+extern NSString* EQRRenterInClass;
+
 //error string
 extern NSString* EQRErrorCode88888888;
 

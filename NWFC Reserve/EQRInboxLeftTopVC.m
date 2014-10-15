@@ -29,6 +29,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    //immediately go to the needs confirmation option when first loading
+    [self performSegueWithIdentifier:@"NeedsConfirmation" sender:self];
+    
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     

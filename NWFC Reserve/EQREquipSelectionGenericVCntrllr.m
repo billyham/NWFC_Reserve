@@ -16,6 +16,7 @@
 @property (strong, nonatomic) NSMutableArray* equipTitleArrayWithSections;
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
 @property BOOL privateRequestManagerFlag;
+@property (strong, nonatomic) IBOutlet UIButton* listAllEquipButton;
 
 @end
 
@@ -79,7 +80,6 @@
     //add button to the current navigation item
     [self.navigationItem setRightBarButtonItem:cancelButton];
     
-    
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
         
@@ -96,6 +96,14 @@
         self.equipCollectionView.scrollIndicatorInsets = UIEdgeInsetsMake(-60, 0, 0, 0);
         self.equipCollectionView.contentInset = UIEdgeInsetsMake(-60, 0, 0, 0);
     }
+    
+    //do everything else
+    [self renewTheViewWithRequestManager:requestManager];
+  
+}
+
+
+-(void)renewTheViewWithRequestManager:(EQRScheduleRequestManager*)requestManager{
     
     //_______********  try allocating the gear list here... *****______
     
@@ -119,7 +127,7 @@
     //______*****  USE BETTER ERROR HANDLING IN THE WEBDATA METHOD  *******__________
     NSString* classTitleKey;
     if (requestManager.request.classTitle_foreignKey){
-         classTitleKey = requestManager.request.classTitle_foreignKey;
+        classTitleKey = requestManager.request.classTitle_foreignKey;
     } else {
         classTitleKey = @"";
     };
@@ -293,6 +301,7 @@
     
     //is this necessary_____???
     [self.equipCollectionView reloadData];
+    
 }
 
 
@@ -326,6 +335,21 @@
     [requestManager dismissRequest];
     
 }
+
+
+#pragma mark - list all buttons (only for staff user)
+
+-(IBAction)listAllEquipment:(id)sender{
+    
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
+    requestManager.request.showAllEquipmentFlag = YES;
+    
+    //reload the view
+    [self renewTheViewWithRequestManager:requestManager];
+    
+}
+
 
 #pragma mark - equipment cell buttons
 
