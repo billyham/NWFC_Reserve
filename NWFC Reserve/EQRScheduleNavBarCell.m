@@ -25,8 +25,12 @@
     
         self.clipsToBounds = YES;
     
+    //____did this via nib instead___
     UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
     self.titleLabel = thisLabel;
+    
+    //center label text
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
     
     self.titleLabel.text = titleName;
     self.titleLabel.numberOfLines = 2;
@@ -35,10 +39,39 @@
     //set text color
     self.titleLabel.backgroundColor = [UIColor clearColor];
     
-    //center label text
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
-    
     [self.contentView addSubview:self.titleLabel];
+    
+    
+    //add constraints.... this works, huzzah!
+    self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *viewsDictionary = @{@"titleView":self.titleLabel};
+    
+    NSArray *constraint_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-1-[titleView]"
+                                                                       options:0
+                                                                       metrics:nil
+                                                                         views:viewsDictionary];
+    
+    NSArray *constraint_POS_H = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-1-[titleView]"
+                                                                        options:0
+                                                                        metrics:nil
+                                                                          views:viewsDictionary];
+    NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[titleView]-1-|"
+                                                                        options:0
+                                                                        metrics:nil
+                                                                          views:viewsDictionary];
+    
+    NSArray *constraint_POS_HB = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[titleView]-1-|"
+                                                                        options:0
+                                                                        metrics:nil
+                                                                          views:viewsDictionary];
+    
+    [[self.titleLabel superview] addConstraints:constraint_POS_H];
+    [[self.titleLabel superview] addConstraints:constraint_POS_V];
+    [[self.titleLabel superview] addConstraints:constraint_POS_HB];
+    [[self.titleLabel superview] addConstraints:constraint_POS_VB];
+
+    
+    
     
     //if the button is selected, highlight it
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];

@@ -51,6 +51,7 @@ float EQRRentorTypeLeadingSpace = 80;
 
 //Schedule sizes
 float EQRScheduleItemWidthForDay = 26;
+float EQRScheduleItemWidthForDayNarrow = 18;
 float EQRScheduleItemHeightForDay = 30;
 float EQRScheduleLengthOfEquipUniqueLabel = 200;
 

@@ -19,7 +19,10 @@
 @property (strong, nonatomic) NSString* price_student;
 @property (strong, nonatomic) NSString* category;
 @property (strong, nonatomic) NSString* subcategory;
-@property (strong, nonatomic) NSString* description;
+//
+//need to change the name of this from 'description' cuz it conflicts with the system??
+@property (strong, nonatomic) NSString* description_long;
+//
 @property (strong, nonatomic) NSString* description_short;
 @property (strong, nonatomic) NSString* price_deposit;
 @property (strong, nonatomic) NSString* hide_from_public;

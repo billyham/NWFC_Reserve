@@ -1314,15 +1314,24 @@
 
 #pragma mark - change in orientation methods
 
+
+//!!!!_______       THESE METHODS ARE DEPRECATED IN IOS 8!!!  _______________
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
+    
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
     
-    [self.myMasterScheduleCollectionView reloadData];
-    [self.myNavBarCollectionView reloadData];
+    [self.myMasterScheduleCollectionView performBatchUpdates:nil completion:nil];
+    [self.myNavBarCollectionView performBatchUpdates:nil completion:nil];
+    
+//    [self.myMasterScheduleCollectionView reloadData];
+//    [self.myNavBarCollectionView reloadData];
+    
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
 
 
@@ -1383,11 +1392,11 @@
         
         if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
             
-            widthOfMe = 768 / [self.equipUniqueCategoriesList count];
+            widthOfMe = 768.f / [self.equipUniqueCategoriesList count];
             
         }else{
             
-            widthOfMe = 1024 / [self.equipUniqueCategoriesList count];
+            widthOfMe = 1024.f / [self.equipUniqueCategoriesList count];
 
         }
         

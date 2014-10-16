@@ -51,6 +51,7 @@ extern float EQRRentorTypeLeadingSpace;
 
 //Schedule collection view cell size
 extern float EQRScheduleItemWidthForDay;
+extern float EQRScheduleItemWidthForDayNarrow;
 extern float EQRScheduleItemHeightForDay;
 extern float EQRScheduleLengthOfEquipUniqueLabel;
 

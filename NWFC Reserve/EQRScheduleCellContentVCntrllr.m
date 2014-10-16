@@ -53,6 +53,44 @@
 }
 
 
+
+#pragma mark - change in orientation methods
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    
+    NSLog(@"the princely prince is prancing about");
+
+    //depending on the orientaiton, it will draw regular lines or narrow lines
+    
+    if ((toInterfaceOrientation == UIInterfaceOrientationMaskPortrait) || (toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)){
+        
+        NSLog(@"and that prince is such a handsome prince!");
+        
+        self.navBarDates.isNarrowFlag = YES;
+        
+        [self.navBarDates setNeedsDisplay];
+        
+    }else{
+        
+        self.navBarDates.isNarrowFlag = NO;
+        
+        [self.navBarDates setNeedsDisplay];
+    }
+    
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+}
+
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    
+    NSLog(@"the princely prince is prancing about");
+    
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    
+}
+
+
+
 //
 //#pragma mark - collection view data source methods
 //

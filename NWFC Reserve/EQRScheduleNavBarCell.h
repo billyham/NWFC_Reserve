@@ -7,9 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "EQRCellTemplate.h"
 
-@interface EQRScheduleNavBarCell : EQRCellTemplate
+@interface EQRScheduleNavBarCell : UICollectionViewCell
 
+@property (strong, nonatomic) IBOutlet UILabel* titleLabel;
+
+-(void)initialSetupWithTitle:(NSString*) titleName;
 
 @end
