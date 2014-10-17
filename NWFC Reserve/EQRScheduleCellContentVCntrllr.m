@@ -9,12 +9,10 @@
 #import "EQRScheduleCellContentVCntrllr.h"
 #import "EQRCellTemplate.h"
 #import "EQRGlobals.h"
-#import "EQRNavBarDatesView.h"
 
 @interface EQRScheduleCellContentVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myUniqueItemCollectionView;
-@property (strong, nonatomic) IBOutlet EQRNavBarDatesView* navBarDates;
 
 @end
 
@@ -31,9 +29,22 @@
 
 - (void)viewDidLoad
 {
+        
+    //register for notifications
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(changeInOrientation:) name:EQRRefreshViewWhenOrientationRotates object:nil];
+    
+    //make opacity of navBarDates less if in portrain orientation
+    UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
+    if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
+        
+        self.navBarDates.alpha = 0.5;
+    }
+    
+    
     [super viewDidLoad];
     
-    
+ 
     
     
 //    //register collection view cell
@@ -53,20 +64,18 @@
 }
 
 
+#pragma mark - notifications
 
-#pragma mark - change in orientation methods
-
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+-(void)changeInOrientation:(NSNotification*)note{
     
-    NSLog(@"the princely prince is prancing about");
-
-    //depending on the orientaiton, it will draw regular lines or narrow lines
+    NSNumber* orientationNumber = [[note userInfo] objectForKey:@"orientation"];
+    int orientationInt = [orientationNumber integerValue];
     
-    if ((toInterfaceOrientation == UIInterfaceOrientationMaskPortrait) || (toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)){
-        
-        NSLog(@"and that prince is such a handsome prince!");
+    if ((orientationInt == UIInterfaceOrientationPortrait) || (orientationInt == UIInterfaceOrientationPortraitUpsideDown)){
         
         self.navBarDates.isNarrowFlag = YES;
+        
+        self.navBarDates.alpha = 0.5;
         
         [self.navBarDates setNeedsDisplay];
         
@@ -74,18 +83,10 @@
         
         self.navBarDates.isNarrowFlag = NO;
         
+        self.navBarDates.alpha = 1.0;
+        
         [self.navBarDates setNeedsDisplay];
     }
-    
-    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-}
-
-
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-    
-    NSLog(@"the princely prince is prancing about");
-    
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     
 }
 
@@ -127,7 +128,14 @@
 //#pragma mark - collection view delegate methods
 
 
+#pragma mark - view disappear methods
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 
 

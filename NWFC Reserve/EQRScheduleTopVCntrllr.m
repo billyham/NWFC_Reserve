@@ -1197,6 +1197,9 @@
         for (UIView* view in cell.contentView.subviews){
             
             [view removeFromSuperview];
+            
+            //also remove notifications
+            [[NSNotificationCenter defaultCenter] removeObserver:cell];
         }
         
         //and reset the cell's background color...
@@ -1220,11 +1223,15 @@
         //add content view from xib
         EQRScheduleCellContentVCntrllr* myContentViewController = [[EQRScheduleCellContentVCntrllr alloc] initWithNibName:@"EQRScheduleCellContentVCntrllr" bundle:nil];
         
+        //assign to cell's ivar
+        cell.cellContentVC = myContentViewController;
         //add subview
         [cell.contentView addSubview:myContentViewController.view];
         //move to rear
         [cell.contentView sendSubviewToBack:myContentViewController.view];
         
+        //define if narrow or not
+        [cell signalToAssignNarrow];
         
         //change label AFTER adding it to the view else defaults to XIB file
         myContentViewController.myRowLabel.text = myTitleString;
@@ -1317,7 +1324,10 @@
 
 //!!!!_______       THESE METHODS ARE DEPRECATED IN IOS 8!!!  _______________
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
-    
+        
+    //inform schedulecellcontentVcntrllrs about change in orientation
+    NSDictionary* dic = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:toInterfaceOrientation] forKey:@"orientation"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshViewWhenOrientationRotates object:nil userInfo:dic];
     
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
@@ -1327,10 +1337,20 @@
     
     [self.myMasterScheduleCollectionView performBatchUpdates:nil completion:nil];
     [self.myNavBarCollectionView performBatchUpdates:nil completion:nil];
+
+    //enumerate through visible cells and invalidate the layout to force the update of nested cells
+    [[self.myMasterScheduleCollectionView visibleCells] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+       
+        [[[(EQRScheduleRowCell*)obj myUniqueItemCollectionView] collectionViewLayout] invalidateLayout];
+    }];
+    
+    
     
 //    [self.myMasterScheduleCollectionView reloadData];
 //    [self.myNavBarCollectionView reloadData];
     
+    
+
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
 

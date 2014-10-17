@@ -41,6 +41,7 @@ NSString* EQREquipUniqueToBeDeletedCancel = @"EQREquipUniqueToBeDeletedCancel";
 NSString* EQRLongPressOnNestedDayCell = @"EQRLongPressOnNestedDayCell";
 NSString* EQRPartialRefreshToItineraryArray = @"EQRPartialRefreshToItineraryArray";
 NSString* EQRQRCodeFlipsSwitchInRowCellContent = @"EQRQRCodeFlipsSwitchInRowCellContent";
+NSString* EQRRefreshViewWhenOrientationRotates = @"EQRRefreshViewWhenOrientationRotates";
 
 //Timing
 float EQRHighlightTappingTime = 0.125;

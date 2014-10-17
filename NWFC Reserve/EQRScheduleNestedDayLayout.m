@@ -150,11 +150,25 @@
     }
     
     
-    int distanceOffset = (startDayInt - 1) * EQRScheduleItemWidthForDay;
+    int distanceOffset;
+    int objectWidth;
+    UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
+    if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
+        
+        distanceOffset = (startDayInt - 1) * EQRScheduleItemWidthForDayNarrow;
+        
+        //trim 2 points off the end otherwise two objects next to each other blend as one long object
+        objectWidth = (((endDayInt + 1) - startDayInt) * EQRScheduleItemWidthForDayNarrow) - 1 ;  //originally - 2
+        
+    }else{
+        
+        distanceOffset = (startDayInt - 1) * EQRScheduleItemWidthForDay;
+        
+        //trim 2 points off the end otherwise two objects next to each other blend as one long object
+        objectWidth = (((endDayInt + 1) - startDayInt) * EQRScheduleItemWidthForDay) - 1 ;  //originally - 2
+    }
     
-    //trim 2 points off the end otherwise two objects next to each other blend as one long object
-    int objectWidth = (((endDayInt + 1) - startDayInt) * EQRScheduleItemWidthForDay) - 1 ;  //originally - 2
-    
+
     
     //SIZE
     CGSize newSize = CGSizeMake(objectWidth, EQRScheduleItemHeightForDay);

@@ -41,6 +41,7 @@ extern NSString* EQREquipUniqueToBeDeletedCancel;
 extern NSString* EQRLongPressOnNestedDayCell;
 extern NSString* EQRPartialRefreshToItineraryArray;
 extern NSString* EQRQRCodeFlipsSwitchInRowCellContent;
+extern NSString* EQRRefreshViewWhenOrientationRotates;
 
 //Timing
 extern float EQRHighlightTappingTime;

@@ -7,10 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRNavBarDatesView.h"
+
 
 @interface EQRScheduleCellContentVCntrllr : UIViewController 
 
 @property (strong, nonatomic) IBOutlet UILabel* myRowLabel;
+@property (strong, nonatomic) IBOutlet EQRNavBarDatesView* navBarDates;
+
 
 
 @end

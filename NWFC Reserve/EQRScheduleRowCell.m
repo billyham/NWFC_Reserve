@@ -17,7 +17,6 @@
 
 @interface EQRScheduleRowCell()
 
-@property (nonatomic, strong) UICollectionView* myUniqueItemCollectionView;
 @property (nonatomic, strong) NSIndexPath* rowCellIndexPath;
 @property (strong, nonatomic) NSMutableArray* temporaryArrayOfEquipUniqueJoins;
 
@@ -88,12 +87,29 @@
     //__*******  register its rect in an array that the flow layout can see???   *****____
     
     
-    
-    
 }
 
 
-#pragma mark - notifications???
+//this is separate from initialSetup because the navBar subview (in the cell content nib) must exist before it can be called
+-(void)signalToAssignNarrow{
+    
+    //indicate for the cell content if orientation is portrait
+    UIInterfaceOrientation orientationOnLaunch = [[UIApplication sharedApplication] statusBarOrientation];
+    if (UIInterfaceOrientationIsPortrait(orientationOnLaunch)) {
+        
+        self.cellContentVC.navBarDates.isNarrowFlag = YES;
+        
+    }else{
+        
+        self.cellContentVC.navBarDates.isNarrowFlag = NO;
+    }
+    
+    //refresh the view
+    [self.cellContentVC.navBarDates setNeedsDisplay];
+}
+
+
+#pragma mark - notifications
 
 //-(void)showScheduleRowQuickView:(NSNotification*)note{
 //    
