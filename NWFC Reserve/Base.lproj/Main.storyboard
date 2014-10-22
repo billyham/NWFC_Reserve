@@ -585,7 +585,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kOp-x7-tiU">
-                                <rect key="frame" x="234" y="352" width="300" height="30"/>
+                                <rect key="frame" x="234" y="351" width="300" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="4Is-Tx-DoR"/>
                                     <constraint firstAttribute="width" constant="300" id="9dH-UR-VB2"/>
@@ -597,13 +597,13 @@
                                 </connections>
                             </textField>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Database Url" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yIg-Iv-qyn">
-                                <rect key="frame" x="334" y="323" width="100" height="21"/>
+                                <rect key="frame" x="334" y="323" width="100" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Adult Term" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xkv-aJ-mgn">
-                                <rect key="frame" x="312" y="152" width="145" height="21"/>
+                                <rect key="frame" x="312" y="152" width="144.5" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="VcI-yN-aDk"/>
                                 </constraints>
@@ -645,6 +645,24 @@
                                     <action selector="campTermTextFieldDidChange:" destination="6G1-gm-2lt" eventType="editingDidEnd" id="21T-KW-1uj"/>
                                 </connections>
                             </textField>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo Mode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f9S-ZZ-XgU">
+                                <rect key="frame" x="337" y="417.5" width="94.5" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="Qpj-FB-VBi"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="bEk-sq-19R">
+                                <rect key="frame" x="360" y="447" width="51" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="31" id="XbH-0T-5r7"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="demoModeDidChange:" destination="6G1-gm-2lt" eventType="valueChanged" id="CBw-Qd-7MM"/>
+                                </connections>
+                            </switch>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -653,6 +671,10 @@
                             <constraint firstAttribute="centerX" secondItem="imb-2J-3xE" secondAttribute="centerX" id="BLF-pJ-onn"/>
                             <constraint firstItem="yIg-Iv-qyn" firstAttribute="top" secondItem="imb-2J-3xE" secondAttribute="bottom" constant="112" id="BUW-vK-7if"/>
                             <constraint firstAttribute="centerX" secondItem="yIg-Iv-qyn" secondAttribute="centerX" id="DSh-SW-erT"/>
+                            <constraint firstAttribute="centerX" secondItem="f9S-ZZ-XgU" secondAttribute="centerX" id="MJ4-Lf-q8E"/>
+                            <constraint firstAttribute="centerX" secondItem="bEk-sq-19R" secondAttribute="centerX" id="P8d-pA-HOw"/>
+                            <constraint firstItem="bEk-sq-19R" firstAttribute="top" secondItem="f9S-ZZ-XgU" secondAttribute="bottom" constant="8.5" id="RDx-U9-VZm"/>
+                            <constraint firstItem="f9S-ZZ-XgU" firstAttribute="top" secondItem="kOp-x7-tiU" secondAttribute="bottom" constant="36" id="Ti6-NU-hkf"/>
                             <constraint firstAttribute="centerX" secondItem="kOp-x7-tiU" secondAttribute="centerX" id="bFy-Ob-3qQ"/>
                             <constraint firstItem="uEZ-Z9-nGl" firstAttribute="top" secondItem="imb-2J-3xE" secondAttribute="bottom" constant="26" id="cF4-y7-UNP"/>
                             <constraint firstAttribute="centerX" secondItem="vVA-7f-kPL" secondAttribute="centerX" id="fYS-IU-Fpg"/>
@@ -665,6 +687,7 @@
                     <navigationItem key="navigationItem" title="Settings" id="t24-ER-jgh"/>
                     <connections>
                         <outlet property="campTermString" destination="vVA-7f-kPL" id="UXk-Lp-bhx"/>
+                        <outlet property="demoModeSwitch" destination="bEk-sq-19R" id="7Nl-p6-dAf"/>
                         <outlet property="termString" destination="imb-2J-3xE" id="XlP-kl-34S"/>
                         <outlet property="urlString" destination="kOp-x7-tiU" id="ruN-xK-cld"/>
                     </connections>

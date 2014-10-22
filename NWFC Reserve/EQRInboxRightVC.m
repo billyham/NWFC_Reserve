@@ -15,6 +15,7 @@
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRDataStructure.h"
 #import "EQRGlobals.h"
+#import "EQRModeManager.h"
 
 @interface EQRInboxRightVC ()
 
@@ -91,6 +92,35 @@
     [super awakeFromNib];
     [self.splitViewController setDelegate:self];
     
+}
+
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    //set title on bar button item
+    EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+
+    NSString* newUserString = [NSString stringWithFormat:@"Logged in as %@", staffUserManager.currentStaffUser.first_name];
+    [[self.navigationItem.rightBarButtonItems objectAtIndex:0] setTitle:newUserString];
+    
+    //update navigation bar
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    if (modeManager.isInDemoMode){
+        
+        //set prompt
+        self.navigationItem.prompt = @"";
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        
+    }else{
+        
+        //set prompt
+        self.navigationItem.prompt = nil;
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = nil;
+    }
 }
 
 

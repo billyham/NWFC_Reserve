@@ -10,6 +10,7 @@
 #import "EQRGlobals.h"
 #import "EQRWebData.h"
 #import "EQRScheduleRequestItem.h"
+#import "EQRModeManager.h"
 
 
 @interface EQRInboxLeftTableVC ()
@@ -52,7 +53,35 @@
     
     [self renewTheView];
     
+    
+    //update navigation bar
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    if (modeManager.isInDemoMode){
+        
+        //set prompt
+        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        
+    }else{
+        
+        //set prompt
+        self.navigationItem.prompt = nil;
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = nil;
+    }
+    
+    
+    
     [super viewWillAppear:animated];
+}
+
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    
 }
 
 

@@ -20,6 +20,7 @@
 #import "EQREditorTopVCntrllr.h"
 #import "EQRStaffUserPickerViewController.h"
 #import "EQRStaffUserManager.h"
+#import "EQRModeManager.h"
 
 @interface EQRItineraryVCntrllr ()
 
@@ -181,6 +182,24 @@
     NSString* newUserString = [NSString stringWithFormat:@"Logged in as %@", staffUserManager.currentStaffUser.first_name];
     [[self.navigationItem.rightBarButtonItems objectAtIndex:0] setTitle:newUserString];
     
+    //update navigation bar
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    if (modeManager.isInDemoMode){
+        
+        //set prompt
+        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        
+    }else{
+        
+        //set prompt
+        self.navigationItem.prompt = nil;
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = nil;
+    }
     
 }
 

@@ -26,6 +26,7 @@
 #import "EQRQuickViewScrollVCntrllr.h"
 #import "EQRStaffUserPickerViewController.h"
 #import "EQRStaffUserManager.h"
+#import "EQRModeManager.h"
 
 
 @interface EQRScheduleTopVCntrllr ()
@@ -376,6 +377,25 @@
     //__________   THIS WORKS!!!   _______
     self.myMasterScheduleCollectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     self.myMasterScheduleCollectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+    
+    //update navigation bar
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    if (modeManager.isInDemoMode){
+        
+        //set prompt
+        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        
+    }else{
+        
+        //set prompt
+        self.navigationItem.prompt = nil;
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = nil;
+    }
 
 }
 

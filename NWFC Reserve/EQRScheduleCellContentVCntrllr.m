@@ -69,7 +69,7 @@
 -(void)changeInOrientation:(NSNotification*)note{
     
     NSNumber* orientationNumber = [[note userInfo] objectForKey:@"orientation"];
-    int orientationInt = [orientationNumber integerValue];
+    int orientationInt = (int)[orientationNumber integerValue];
     
     if ((orientationInt == UIInterfaceOrientationPortrait) || (orientationInt == UIInterfaceOrientationPortraitUpsideDown)){
         

@@ -7,12 +7,14 @@
 //
 
 #import "EQRStaffPage1VCntrllr.h"
+#import "EQRModeManager.h"
 
 @interface EQRStaffPage1VCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UITextField* urlString;
 @property (strong, nonatomic) IBOutlet UITextField* termString;
 @property (strong, nonatomic) IBOutlet UITextField* campTermString;
+@property (strong, nonatomic) IBOutlet UISwitch* demoModeSwitch;
 
 @end
 
@@ -83,6 +85,36 @@
     [defaults setObject:newDic forKey:@"campTerm"];
     [defaults synchronize];
     
+}
+
+
+-(IBAction)demoModeDidChange:(id)sender{
+        
+    if (self.demoModeSwitch.on){
+        
+        //set prompt
+        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        
+        //set singleton
+        EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+        modeManager.isInDemoMode = YES;
+        
+        
+    }else{
+        
+        //set prompt
+        self.navigationItem.prompt = nil;
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = nil;
+        
+        //set singleton
+        EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+        modeManager.isInDemoMode = NO;
+    }
 }
 
 
