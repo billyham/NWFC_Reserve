@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:NWFC Reserve.xcodeproj">
+      location = "self:Gear.xcodeproj">
    </FileRef>
 </Workspace>

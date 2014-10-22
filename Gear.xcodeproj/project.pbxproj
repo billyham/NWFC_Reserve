@@ -180,14 +180,14 @@
 		01C83A7E199E818C00CD5E9C /* EQREditorExtendedDateVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREditorExtendedDateVC.xib; sourceTree = "<group>"; };
 		01FDEA94188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EQRScheduleTracking_EquipmentUnique_Join.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		01FDEA95188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleTracking_EquipmentUnique_Join.m; sourceTree = "<group>"; };
-		438EDCDC182B7ABD0090F882 /* NWFC Reserve.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NWFC Reserve.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		438EDCDC182B7ABD0090F882 /* Gear.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gear.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		438EDCDF182B7ABD0090F882 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		438EDCE1182B7ABE0090F882 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		438EDCE3182B7ABE0090F882 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		438EDCE7182B7ABE0090F882 /* NWFC Reserve-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NWFC Reserve-Info.plist"; sourceTree = "<group>"; };
+		438EDCE7182B7ABE0090F882 /* Gear-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Gear-Info.plist"; sourceTree = "<group>"; };
 		438EDCE9182B7ABE0090F882 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		438EDCEB182B7ABE0090F882 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		438EDCED182B7ABE0090F882 /* NWFC Reserve-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NWFC Reserve-Prefix.pch"; sourceTree = "<group>"; };
+		438EDCED182B7ABE0090F882 /* Gear-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Gear-Prefix.pch"; sourceTree = "<group>"; };
 		438EDCEE182B7ABE0090F882 /* EQRAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EQRAppDelegate.h; sourceTree = "<group>"; };
 		438EDCEF182B7ABE0090F882 /* EQRAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EQRAppDelegate.m; sourceTree = "<group>"; };
 		438EDCF2182B7ABE0090F882 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -196,9 +196,9 @@
 		438EDCF7182B7ABE0090F882 /* EQRSecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EQRSecondViewController.h; sourceTree = "<group>"; };
 		438EDCF8182B7ABE0090F882 /* EQRSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EQRSecondViewController.m; sourceTree = "<group>"; };
 		438EDCFA182B7ABE0090F882 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		438EDD00182B7ABE0090F882 /* NWFC ReserveTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NWFC ReserveTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		438EDD00182B7ABE0090F882 /* GearTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GearTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		438EDD01182B7ABE0090F882 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		438EDD09182B7ABE0090F882 /* NWFC ReserveTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NWFC ReserveTests-Info.plist"; sourceTree = "<group>"; };
+		438EDD09182B7ABE0090F882 /* GearTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GearTests-Info.plist"; sourceTree = "<group>"; };
 		438EDD0B182B7ABE0090F882 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		438EDD0D182B7ABE0090F882 /* NWFC_ReserveTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NWFC_ReserveTests.m; sourceTree = "<group>"; };
 		5402B7CD1875446D00F0888B /* EQRClassCatalog_EquipTitleItem_Join.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRClassCatalog_EquipTitleItem_Join.h; sourceTree = "<group>"; };
@@ -443,8 +443,8 @@
 		438EDCDD182B7ABD0090F882 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				438EDCDC182B7ABD0090F882 /* NWFC Reserve.app */,
-				438EDD00182B7ABE0090F882 /* NWFC ReserveTests.xctest */,
+				438EDCDC182B7ABD0090F882 /* Gear.app */,
+				438EDD00182B7ABE0090F882 /* GearTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -501,10 +501,10 @@
 		438EDCE6182B7ABE0090F882 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				438EDCE7182B7ABE0090F882 /* NWFC Reserve-Info.plist */,
+				438EDCE7182B7ABE0090F882 /* Gear-Info.plist */,
 				438EDCE8182B7ABE0090F882 /* InfoPlist.strings */,
 				438EDCEB182B7ABE0090F882 /* main.m */,
-				438EDCED182B7ABE0090F882 /* NWFC Reserve-Prefix.pch */,
+				438EDCED182B7ABE0090F882 /* Gear-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -521,7 +521,7 @@
 		438EDD08182B7ABE0090F882 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				438EDD09182B7ABE0090F882 /* NWFC ReserveTests-Info.plist */,
+				438EDD09182B7ABE0090F882 /* GearTests-Info.plist */,
 				438EDD0A182B7ABE0090F882 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -737,9 +737,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		438EDCDB182B7ABD0090F882 /* NWFC Reserve */ = {
+		438EDCDB182B7ABD0090F882 /* Gear */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 438EDD11182B7ABE0090F882 /* Build configuration list for PBXNativeTarget "NWFC Reserve" */;
+			buildConfigurationList = 438EDD11182B7ABE0090F882 /* Build configuration list for PBXNativeTarget "Gear" */;
 			buildPhases = (
 				438EDCD8182B7ABD0090F882 /* Sources */,
 				438EDCD9182B7ABD0090F882 /* Frameworks */,
@@ -749,14 +749,14 @@
 			);
 			dependencies = (
 			);
-			name = "NWFC Reserve";
+			name = Gear;
 			productName = "NWFC Reserve";
-			productReference = 438EDCDC182B7ABD0090F882 /* NWFC Reserve.app */;
+			productReference = 438EDCDC182B7ABD0090F882 /* Gear.app */;
 			productType = "com.apple.product-type.application";
 		};
-		438EDCFF182B7ABE0090F882 /* NWFC ReserveTests */ = {
+		438EDCFF182B7ABE0090F882 /* GearTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 438EDD14182B7ABE0090F882 /* Build configuration list for PBXNativeTarget "NWFC ReserveTests" */;
+			buildConfigurationList = 438EDD14182B7ABE0090F882 /* Build configuration list for PBXNativeTarget "GearTests" */;
 			buildPhases = (
 				438EDCFC182B7ABE0090F882 /* Sources */,
 				438EDCFD182B7ABE0090F882 /* Frameworks */,
@@ -767,9 +767,9 @@
 			dependencies = (
 				438EDD06182B7ABE0090F882 /* PBXTargetDependency */,
 			);
-			name = "NWFC ReserveTests";
+			name = GearTests;
 			productName = "NWFC ReserveTests";
-			productReference = 438EDD00182B7ABE0090F882 /* NWFC ReserveTests.xctest */;
+			productReference = 438EDD00182B7ABE0090F882 /* GearTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -790,7 +790,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 438EDCD7182B7ABD0090F882 /* Build configuration list for PBXProject "NWFC Reserve" */;
+			buildConfigurationList = 438EDCD7182B7ABD0090F882 /* Build configuration list for PBXProject "Gear" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -803,8 +803,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				438EDCDB182B7ABD0090F882 /* NWFC Reserve */,
-				438EDCFF182B7ABE0090F882 /* NWFC ReserveTests */,
+				438EDCDB182B7ABD0090F882 /* Gear */,
+				438EDCFF182B7ABE0090F882 /* GearTests */,
 			);
 		};
 /* End PBXProject section */
@@ -946,7 +946,7 @@
 /* Begin PBXTargetDependency section */
 		438EDD06182B7ABE0090F882 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 438EDCDB182B7ABD0090F882 /* NWFC Reserve */;
+			target = 438EDCDB182B7ABD0090F882 /* Gear */;
 			targetProxy = 438EDD05182B7ABE0090F882 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1059,9 +1059,9 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NWFC Reserve/NWFC Reserve-Prefix.pch";
-				INFOPLIST_FILE = "NWFC Reserve/NWFC Reserve-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "NWFC Reserve/Gear-Prefix.pch";
+				INFOPLIST_FILE = "NWFC Reserve/Gear-Info.plist";
+				PRODUCT_NAME = Gear;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1075,9 +1075,9 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NWFC Reserve/NWFC Reserve-Prefix.pch";
-				INFOPLIST_FILE = "NWFC Reserve/NWFC Reserve-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "NWFC Reserve/Gear-Prefix.pch";
+				INFOPLIST_FILE = "NWFC Reserve/Gear-Info.plist";
+				PRODUCT_NAME = Gear;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1098,8 +1098,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "NWFC ReserveTests/NWFC ReserveTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "NWFC ReserveTests/GearTests-Info.plist";
+				PRODUCT_NAME = GearTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -1116,8 +1116,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NWFC Reserve/NWFC Reserve-Prefix.pch";
-				INFOPLIST_FILE = "NWFC ReserveTests/NWFC ReserveTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "NWFC ReserveTests/GearTests-Info.plist";
+				PRODUCT_NAME = GearTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -1126,7 +1126,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		438EDCD7182B7ABD0090F882 /* Build configuration list for PBXProject "NWFC Reserve" */ = {
+		438EDCD7182B7ABD0090F882 /* Build configuration list for PBXProject "Gear" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				438EDD0F182B7ABE0090F882 /* Debug */,
@@ -1135,7 +1135,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		438EDD11182B7ABE0090F882 /* Build configuration list for PBXNativeTarget "NWFC Reserve" */ = {
+		438EDD11182B7ABE0090F882 /* Build configuration list for PBXNativeTarget "Gear" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				438EDD12182B7ABE0090F882 /* Debug */,
@@ -1144,7 +1144,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		438EDD14182B7ABE0090F882 /* Build configuration list for PBXNativeTarget "NWFC ReserveTests" */ = {
+		438EDD14182B7ABE0090F882 /* Build configuration list for PBXNativeTarget "GearTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				438EDD15182B7ABE0090F882 /* Debug */,
