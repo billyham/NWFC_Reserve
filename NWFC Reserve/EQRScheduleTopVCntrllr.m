@@ -360,23 +360,6 @@
         
     }
     
-    //yes, this is necesary
-    [self.myMasterScheduleCollectionView reloadData];
-    [self.myNavBarCollectionView reloadData];
-    
-
-    
-}
-
--(void)viewDidAppear:(BOOL)animated{
-    
-    [super viewDidAppear:animated];
-    
-//    self.myMasterScheduleCollectionView.contentOffset = CGPointMake(0, 0);
-    
-    //__________   THIS WORKS!!!   _______
-    self.myMasterScheduleCollectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-    self.myMasterScheduleCollectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     
     //update navigation bar
     EQRModeManager* modeManager = [EQRModeManager sharedInstance];
@@ -396,6 +379,22 @@
         //set color of navigation bar
         self.navigationController.navigationBar.barTintColor = nil;
     }
+    
+    //yes, this is necesary
+    [self.myMasterScheduleCollectionView reloadData];
+    [self.myNavBarCollectionView reloadData];
+    
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    [super viewDidAppear:animated];
+    
+//    self.myMasterScheduleCollectionView.contentOffset = CGPointMake(0, 0);
+    
+    //__________   THIS WORKS!!!   _______
+    self.myMasterScheduleCollectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    self.myMasterScheduleCollectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 0);
 
 }
 
@@ -1030,8 +1029,15 @@
         
         //144 is the distance between the collectionView and the top of the view  //80 is original value
         //must also add in the collection view offset
+        //______!!!!!!  need to add in the added distance of the VC prompt with in demo mode   !!!!_______
+        int addedYValueForPromptInNavItem = 0;
+        if ([[EQRModeManager sharedInstance] isInDemoMode]){
+            
+            addedYValueForPromptInNavItem = 30;
+        }
+        
         CGPoint offsetPoint = self.myMasterScheduleCollectionView.contentOffset;
-        int newRowInt = ((thatPoint.y - 144) + offsetPoint.y) / EQRScheduleItemHeightForDay;
+        int newRowInt = (((thatPoint.y - 144) + offsetPoint.y) - addedYValueForPromptInNavItem) / EQRScheduleItemHeightForDay;
         
         for (EQRScheduleTracking_EquipmentUnique_Join* thisJoin in requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins){
             

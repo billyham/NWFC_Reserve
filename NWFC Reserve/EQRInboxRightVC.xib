@@ -167,7 +167,7 @@
                         </label>
                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1e6-uK-hFI">
                             <rect key="frame" x="78" y="476" width="315" height="191"/>
-                            <color key="backgroundColor" red="0.8717951263" green="0.92085597829999999" blue="0.91911688970000005" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" white="0.96983348540145986" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="191" id="vra-4f-tHt"/>
                             </constraints>
@@ -272,7 +272,7 @@
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="0.96983348540145986" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="zZA-FD-EOX" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Ho7-5g-Ypl"/>
                 <constraint firstAttribute="centerX" secondItem="qCN-Bz-hug" secondAttribute="centerX" id="Shz-Lu-er5"/>

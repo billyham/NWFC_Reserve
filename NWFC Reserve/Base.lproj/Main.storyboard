@@ -3,6 +3,7 @@
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--RequestInbox-->
@@ -804,22 +805,28 @@
                                     <constraint firstAttribute="height" constant="30" id="2Mn-oB-Az2"/>
                                 </constraints>
                             </view>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="2Hl-Wv-twa">
-                                <rect key="frame" x="20" y="126" width="20" height="20"/>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="2Hl-Wv-twa">
+                                <rect key="frame" x="24" y="119" width="20" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="5xP-FD-2F7"/>
+                                    <constraint firstAttribute="height" constant="20" id="cg4-vN-BnS"/>
+                                </constraints>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="kLT-RF-p4Y" secondAttribute="trailing" id="OBZ-HU-VI1"/>
+                            <constraint firstItem="2Hl-Wv-twa" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leadingMargin" constant="4" id="V6t-FA-8lX"/>
                             <constraint firstAttribute="bottom" secondItem="kLT-RF-p4Y" secondAttribute="bottom" constant="49" id="WwD-Wr-nb7"/>
-                            <constraint firstItem="kLT-RF-p4Y" firstAttribute="top" secondItem="8QP-Ue-DdR" secondAttribute="top" constant="144" id="ZAc-nn-7Wk"/>
+                            <constraint firstItem="kLT-RF-p4Y" firstAttribute="top" secondItem="DtK-sQ-FRE" secondAttribute="bottom" id="aD9-vK-eO4"/>
                             <constraint firstItem="DtK-sQ-FRE" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" constant="200" id="cyD-hk-Pn0"/>
                             <constraint firstItem="kLT-RF-p4Y" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" id="ln5-jm-a8Q"/>
                             <constraint firstAttribute="trailing" secondItem="nYS-BS-rsv" secondAttribute="trailing" id="luz-x0-wEK"/>
+                            <constraint firstItem="2Hl-Wv-twa" firstAttribute="top" secondItem="nYS-BS-rsv" secondAttribute="bottom" constant="5" id="qZr-aW-fHv"/>
                             <constraint firstAttribute="trailing" secondItem="DtK-sQ-FRE" secondAttribute="trailing" id="sgp-LO-W0a"/>
+                            <constraint firstItem="nYS-BS-rsv" firstAttribute="top" secondItem="E5Z-bZ-E8P" secondAttribute="bottom" id="uEq-kF-1tS"/>
                             <constraint firstItem="DtK-sQ-FRE" firstAttribute="top" secondItem="nYS-BS-rsv" secondAttribute="bottom" id="xdh-AC-m91"/>
                             <constraint firstItem="nYS-BS-rsv" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" id="yQk-M8-PmJ"/>
-                            <constraint firstItem="nYS-BS-rsv" firstAttribute="top" secondItem="8QP-Ue-DdR" secondAttribute="top" constant="64" id="zQt-K0-GW5"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Schedule for Month" id="TlY-ai-kDl">
@@ -1054,7 +1061,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.87058830261230469" green="0.92156869173049927" blue="0.91764712333679199" alpha="1" colorSpace="deviceRGB"/>
+                        <color key="backgroundColor" white="0.96983348540145986" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="2US-A4-610" firstAttribute="top" secondItem="Uir-bj-SIE" secondAttribute="bottom" constant="-64" id="Dzf-4r-uTY"/>
                             <constraint firstItem="gH6-Am-xOY" firstAttribute="leading" secondItem="aJZ-dd-cLe" secondAttribute="leading" id="Iuz-D2-c8g"/>

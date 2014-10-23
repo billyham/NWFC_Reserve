@@ -95,13 +95,7 @@
 }
 
 
--(void)viewDidAppear:(BOOL)animated{
-    
-    //set title on bar button item
-    EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
-
-    NSString* newUserString = [NSString stringWithFormat:@"Logged in as %@", staffUserManager.currentStaffUser.first_name];
-    [[self.navigationItem.rightBarButtonItems objectAtIndex:0] setTitle:newUserString];
+-(void)viewWillAppear:(BOOL)animated{
     
     //update navigation bar
     EQRModeManager* modeManager = [EQRModeManager sharedInstance];
@@ -121,6 +115,18 @@
         //set color of navigation bar
         self.navigationController.navigationBar.barTintColor = nil;
     }
+    
+    [super viewWillAppear:animated];
+}
+
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    //set title on bar button item
+    EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+
+    NSString* newUserString = [NSString stringWithFormat:@"Logged in as %@", staffUserManager.currentStaffUser.first_name];
+    [[self.navigationItem.rightBarButtonItems objectAtIndex:0] setTitle:newUserString];
 }
 
 
