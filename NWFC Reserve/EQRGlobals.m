@@ -9,6 +9,7 @@
 #import "EQRGlobals.h"
 
 NSString* EQRApplicationKey = @"3j654FP00o91wer";
+//delete me
 
 //renter type strings
 NSString* EQRRenterStudent = @"student";

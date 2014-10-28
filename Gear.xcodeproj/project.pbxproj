@@ -1094,14 +1094,14 @@
 		438EDD15182B7ABE0090F882 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/NWFC Reserve.app/NWFC Reserve";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Gear.app/Gear";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NWFC Reserve/NWFC Reserve-Prefix.pch";
+				GCC_PREFIX_HEADER = "NWFC Reserve/Gear-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1116,14 +1116,14 @@
 		438EDD16182B7ABE0090F882 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/NWFC Reserve.app/NWFC Reserve";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Gear.app/Gear";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NWFC Reserve/NWFC Reserve-Prefix.pch";
+				GCC_PREFIX_HEADER = "NWFC Reserve/Gear-Prefix.pch";
 				INFOPLIST_FILE = "NWFC ReserveTests/GearTests-Info.plist";
 				PRODUCT_NAME = GearTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
