@@ -18,6 +18,7 @@
 #import "EQREquipUniqueItem.h"
 #import "EQRCheckPageRenderer.h"
 #import "EQRDataStructure.h"
+#import "EQRModeManager.h"
 
 @interface EQREquipSummaryGenericVCntrllr ()
 
@@ -225,6 +226,31 @@
     
     
     self.summaryTextView.attributedText = self.summaryTotalAtt;
+}
+
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    //update navigation bar
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    if (modeManager.isInDemoMode){
+        
+        //set prompt
+        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        
+    }else{
+        
+        //set prompt
+        self.navigationItem.prompt = nil;
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = nil;
+    }
+    
+    [super viewWillAppear:animated];
 }
 
 

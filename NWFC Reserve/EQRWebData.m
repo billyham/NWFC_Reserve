@@ -15,6 +15,7 @@
 #import "EQREquipUniqueItem.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRScheduleRequestItem.h"
+#import "EQRModeManager.h"
 
 @interface EQRWebData ()
 
@@ -225,6 +226,30 @@ const int intEQREquipUniqueItem = 8;
 }
 
 
+#pragma mark - create the ck
+
+-(NSString*)deriveTheCacheKillerAndThenSome{
+    
+    float ckFloat = arc4random() % 100000;
+    //    NSString* ck = [NSString stringWithFormat:@"ck=%5.0f%@", ckFloat, thisFormattedDate];
+    NSMutableString* ck = [NSMutableString stringWithFormat:@"ck=%5.0f", ckFloat];
+    
+    //______decide here if it needs to access the regular database or the alternate demo database_____
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    NSString* isInDemoMode = @"0";
+    
+    if ([modeManager isInDemoMode]){
+        
+        isInDemoMode = @"1";
+    }
+    
+    //_______add demo mode logic to the ck________
+    [ck insertString:[NSString stringWithFormat:@"is_in_demo_mode=%@&", isInDemoMode] atIndex:0];
+    
+    return ck;
+}
+
+
 #pragma mark - query methods
 
 - (void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock{
@@ -257,14 +282,7 @@ const int intEQREquipUniqueItem = 8;
     [self assignIntToClassString:classString];
     
     //add a cache killer!!!
-    //a combination of timestamp and a random number
-//    NSDate* ckDate = [NSDate date];
-//    NSString* thisFormattedDate= [NSDateFormatter localizedStringFromDate:ckDate dateStyle:NSDateFormatterNoStyle
-//                                                                timeStyle:NSDateFormatterLongStyle ];
-    float ckFloat = arc4random() % 100000;
-//    NSString* ck = [NSString stringWithFormat:@"ck=%5.0f%@", ckFloat, thisFormattedDate];
-    NSString* ck = [NSString stringWithFormat:@"ck=%5.0f", ckFloat];
-
+    NSString* ck = [self deriveTheCacheKillerAndThenSome];
     
     //test if any parameters exist
     if ([para count] > 0){
@@ -370,12 +388,7 @@ const int intEQREquipUniqueItem = 8;
     NSMutableString* paraString = [NSMutableString stringWithString:@""];
     
     //add a cache killer!!!
-    //a combination of timestamp and a random number
-    NSDate* ckDate = [NSDate date];
-    NSString* thisFormattedDate= [NSDateFormatter localizedStringFromDate:ckDate dateStyle:NSDateFormatterNoStyle
-                                                                timeStyle:NSDateFormatterLongStyle ];
-    float ckFloat = arc4random() % 100000;
-    NSString* ck = [NSString stringWithFormat:@"ck=%5.0f%@", ckFloat, thisFormattedDate];
+    NSString* ck = [self deriveTheCacheKillerAndThenSome];
     
     //test if any parameters exist
     if ([para count] > 0){
@@ -1504,12 +1517,7 @@ const int intEQREquipUniqueItem = 8;
     [self assignIntToClassString:classString];
     
     //add a cache killer!!!
-    //a combination of timestamp and a random number
-    NSDate* ckDate = [NSDate date];
-    NSString* thisFormattedDate= [NSDateFormatter localizedStringFromDate:ckDate dateStyle:NSDateFormatterNoStyle
-                                                                timeStyle:NSDateFormatterLongStyle ];
-    float ckFloat = arc4random() % 100000;
-    NSString* ck = [NSString stringWithFormat:@"ck=%5.0f%@", ckFloat, thisFormattedDate];
+    NSString* ck = [self deriveTheCacheKillerAndThenSome];
     
     //test if any parameters exist
     if ([para count] > 0){

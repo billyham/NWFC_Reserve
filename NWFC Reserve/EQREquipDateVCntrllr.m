@@ -13,6 +13,7 @@
 #import "EQREquipSelectionGenericVCntrllr.h"
 #import "EQREditorDateVCntrllr.h"
 #import "EQREditorExtendedDateVC.h"
+#import "EQRModeManager.h"
 
 
 @interface EQREquipDateVCntrllr ()
@@ -73,6 +74,31 @@
     requestManager.request.request_date_begin = self.pickUpDate;
     requestManager.request.request_date_end = self.returnDate;
     
+}
+
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    //update navigation bar
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    if (modeManager.isInDemoMode){
+        
+        //set prompt
+        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        
+    }else{
+        
+        //set prompt
+        self.navigationItem.prompt = nil;
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = nil;
+    }
+    
+    [super viewWillAppear:animated];
 }
 
 

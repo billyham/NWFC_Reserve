@@ -18,6 +18,7 @@
 #import "EQRScheduleRequestItem.h"
 #import "EQRGlobals.h"
 #import "EQREquipUniqueItem.h"
+#import "EQRModeManager.h"
 
 
 @interface EQRReserveTopVCntrllr ()
@@ -72,6 +73,31 @@
     //peform startNewDisplay (to avoid dupicating code
     [self startNewDisplay:nil];
     
+}
+
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    //update navigation bar
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    if (modeManager.isInDemoMode){
+        
+        //set prompt
+        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        
+    }else{
+        
+        //set prompt
+        self.navigationItem.prompt = nil;
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = nil;
+    }
+    
+    [super viewWillAppear:animated];
 }
 
 

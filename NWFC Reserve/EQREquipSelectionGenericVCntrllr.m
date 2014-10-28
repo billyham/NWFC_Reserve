@@ -29,6 +29,7 @@
 #import "EQREquipUniqueItem.h"
 #import "EQREquipSummaryGenericVCntrllr.h"
 #import "EQRHeaderCellTemplate.h"
+#import "EQRModeManager.h"
 
 
 
@@ -100,6 +101,31 @@
     //do everything else
     [self renewTheViewWithRequestManager:requestManager];
   
+}
+
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    //update navigation bar
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    if (modeManager.isInDemoMode){
+        
+        //set prompt
+        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        
+    }else{
+        
+        //set prompt
+        self.navigationItem.prompt = nil;
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = nil;
+    }
+    
+    [super viewWillAppear:animated];
 }
 
 

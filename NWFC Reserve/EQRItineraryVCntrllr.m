@@ -201,6 +201,8 @@
         self.navigationController.navigationBar.barTintColor = nil;
     }
     
+    [super viewWillAppear:animated];
+    
 }
 
 

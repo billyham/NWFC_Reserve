@@ -8,6 +8,7 @@
 
 #import "EQRStaffPage1VCntrllr.h"
 #import "EQRModeManager.h"
+#import "EQRGlobals.h"
 
 @interface EQRStaffPage1VCntrllr ()
 
@@ -115,6 +116,9 @@
         EQRModeManager* modeManager = [EQRModeManager sharedInstance];
         modeManager.isInDemoMode = NO;
     }
+    
+    //inform other VCs that they need to reload their data
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
 }
 
 
