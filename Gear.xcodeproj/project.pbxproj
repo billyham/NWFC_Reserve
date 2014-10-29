@@ -76,6 +76,7 @@
 		542CC20E197B56B100BFD581 /* EQRInboxCellContentVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 542CC20C197B56B100BFD581 /* EQRInboxCellContentVCntrllr.xib */; };
 		542CC23E197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 542CC23C197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.m */; };
 		542CC23F197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 542CC23D197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.xib */; };
+		542D59B61A00DD8800989617 /* EQRTextEmailStudent.m in Sources */ = {isa = PBXBuildFile; fileRef = 542D59B51A00DD8800989617 /* EQRTextEmailStudent.m */; };
 		542F5FF8192355E6001C28CA /* EQRItineraryVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 542F5FF7192355E6001C28CA /* EQRItineraryVCntrllr.m */; };
 		542F5FFD192357AF001C28CA /* EQRCheckVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 542F5FFB192357AF001C28CA /* EQRCheckVCntrllr.m */; };
 		542F5FFE192357AF001C28CA /* EQRCheckVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 542F5FFC192357AF001C28CA /* EQRCheckVCntrllr.xib */; };
@@ -249,6 +250,8 @@
 		542CC23B197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRDayDatePickerVCntrllr.h; sourceTree = "<group>"; };
 		542CC23C197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRDayDatePickerVCntrllr.m; sourceTree = "<group>"; };
 		542CC23D197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRDayDatePickerVCntrllr.xib; sourceTree = "<group>"; };
+		542D59B41A00DD8800989617 /* EQRTextEmailStudent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRTextEmailStudent.h; sourceTree = "<group>"; };
+		542D59B51A00DD8800989617 /* EQRTextEmailStudent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRTextEmailStudent.m; sourceTree = "<group>"; };
 		542F5FF6192355E6001C28CA /* EQRItineraryVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRItineraryVCntrllr.h; sourceTree = "<group>"; };
 		542F5FF7192355E6001C28CA /* EQRItineraryVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRItineraryVCntrllr.m; sourceTree = "<group>"; };
 		542F5FFA192357AF001C28CA /* EQRCheckVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRCheckVCntrllr.h; sourceTree = "<group>"; };
@@ -496,8 +499,9 @@
 				438EDCF8182B7ABE0090F882 /* EQRSecondViewController.m */,
 				540B551B18769CCE0025FDEE /* EQRStaffPage1VCntrllr.h */,
 				540B551C18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m */,
-				54CE45AD186AF4790023FDA4 /* collectionView objects */,
+				54CE45AD186AF4790023FDA4 /* collection objects */,
 				54CE45A9186AF3680023FDA4 /* collectionViewCells */,
+				542D59B71A00DD9100989617 /* Text Elements */,
 				54482499191CC8A300E285E2 /* deprecated */,
 				438EDCFA182B7ABE0090F882 /* Images.xcassets */,
 				438EDCE6182B7ABE0090F882 /* Supporting Files */,
@@ -603,6 +607,15 @@
 			name = "shared nibs";
 			sourceTree = "<group>";
 		};
+		542D59B71A00DD9100989617 /* Text Elements */ = {
+			isa = PBXGroup;
+			children = (
+				542D59B41A00DD8800989617 /* EQRTextEmailStudent.h */,
+				542D59B51A00DD8800989617 /* EQRTextEmailStudent.m */,
+			);
+			name = "Text Elements";
+			sourceTree = "<group>";
+		};
 		542F5FF51923559C001C28CA /* Itinerary */ = {
 			isa = PBXGroup;
 			children = (
@@ -693,7 +706,7 @@
 			name = collectionViewCells;
 			sourceTree = "<group>";
 		};
-		54CE45AD186AF4790023FDA4 /* collectionView objects */ = {
+		54CE45AD186AF4790023FDA4 /* collection objects */ = {
 			isa = PBXGroup;
 			children = (
 				545661DD18323ABC0067B40D /* EQREquipItem.h */,
@@ -711,7 +724,7 @@
 				016C3F7C18ADBDAD00B2A692 /* EQREquipUniqueItem.h */,
 				016C3F7D18ADBDAD00B2A692 /* EQREquipUniqueItem.m */,
 			);
-			name = "collectionView objects";
+			name = "collection objects";
 			sourceTree = "<group>";
 		};
 		54E9DB151993531B0080FF1B /* shared singletons */ = {
@@ -935,6 +948,7 @@
 				010E2CFB18E6293B000B7711 /* EQRColors.m in Sources */,
 				54882BD21900D588005A4D5A /* EQREditorRenterVCntrllr.m in Sources */,
 				0119D2FF18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m in Sources */,
+				542D59B61A00DD8800989617 /* EQRTextEmailStudent.m in Sources */,
 				540B551D18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m in Sources */,
 				438EDCF9182B7ABE0090F882 /* EQRSecondViewController.m in Sources */,
 				542F5FF8192355E6001C28CA /* EQRItineraryVCntrllr.m in Sources */,
