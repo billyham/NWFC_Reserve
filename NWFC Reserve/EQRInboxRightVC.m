@@ -16,6 +16,7 @@
 #import "EQRDataStructure.h"
 #import "EQRGlobals.h"
 #import "EQRModeManager.h"
+#import "EQRTextEmailStudent.h"
 
 @interface EQRInboxRightVC ()
 
@@ -312,8 +313,37 @@
         NSLog(@"email is non existent");
     }
     
-    NSString* messageTitle = @"subject title";
-    NSString* messageBody = @"body";
+    
+    
+    
+    //_______compose message body________
+    EQRTextEmailStudent* emailBody = [[EQRTextEmailStudent alloc] init];
+    
+    emailBody.renterEmail = contactItem.email;
+    emailBody.renterFirstName = contactItem.first_name;
+    emailBody.pickupDateAsDate = self.myScheduleRequest.request_date_begin;
+    emailBody.pickupTimeAsDate = self.myScheduleRequest.request_time_begin;
+    emailBody.returnDateAsDate = self.myScheduleRequest.request_date_end;
+    emailBody.returnTimeAsDate = self.myScheduleRequest.request_time_end;
+    
+    //get staff name
+    EQRStaffUserManager* staffUser = [EQRStaffUserManager sharedInstance];
+    emailBody.staffFirstName = staffUser.currentStaffUser.first_name;
+    
+    //decompose array of joins to title items with quantities
+    emailBody.arrayOfEquipTitlesAndQtys = [EQRDataStructure decomposeJoinsToEquipTitlesWithQuantities:self.arrayOfJoins];
+    
+    
+    
+    
+    
+    NSString* finalSubjectLine = [emailBody composeEmailSubjectLine];
+    //_______!!!!!!  Nuts, have to convert the attributed string to a regular string   !!!!_______
+    NSString* finalBodyText = [[emailBody composeEmailText] string];
+    
+
+    NSString* messageTitle = finalSubjectLine;
+    NSString* messageBody = finalBodyText;
     NSArray* messageRecipients = [NSArray arrayWithObjects: contactEmail, nil];
     
     MFMailComposeViewController* mfVC = [[MFMailComposeViewController alloc] init];

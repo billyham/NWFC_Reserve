@@ -120,4 +120,20 @@
 #pragma clang diagnostic pop
 
 
++(NSArray*)decomposeJoinsToEquipTitlesWithQuantities:(NSArray*)EquipUniques{
+    
+    NSMutableArray* arrayToReturn = [NSMutableArray arrayWithCapacity:1];
+    
+    
+    
+    
+    
+    return [NSArray arrayWithArray:arrayToReturn];
+}
+
+
+
+
+
+
 @end

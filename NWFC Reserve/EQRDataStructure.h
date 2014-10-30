@@ -12,5 +12,6 @@
 
 +(EQRDataStructure*)sharedInstance;
 +(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray;
++(NSArray*)decomposeJoinsToEquipTitlesWithQuantities:(NSArray*)EquipUniques;
 
 @end
