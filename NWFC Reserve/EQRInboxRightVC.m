@@ -17,6 +17,7 @@
 #import "EQRGlobals.h"
 #import "EQRModeManager.h"
 #import "EQRTextEmailStudent.h"
+#import "EQREquipItem.h"
 
 @interface EQRInboxRightVC ()
 
@@ -333,9 +334,7 @@
     //decompose array of joins to title items with quantities
     emailBody.arrayOfEquipTitlesAndQtys = [EQRDataStructure decomposeJoinsToEquipTitlesWithQuantities:self.arrayOfJoins];
     
-    
-    
-    
+//    NSLog(@"this is the count of equipTitle objects: %lu", (unsigned long)[emailBody.arrayOfEquipTitlesAndQtys count]);
     
     NSString* finalSubjectLine = [emailBody composeEmailSubjectLine];
     //_______!!!!!!  Nuts, have to convert the attributed string to a regular string   !!!!_______

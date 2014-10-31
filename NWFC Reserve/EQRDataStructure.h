@@ -12,6 +12,10 @@
 
 +(EQRDataStructure*)sharedInstance;
 +(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray;
-+(NSArray*)decomposeJoinsToEquipTitlesWithQuantities:(NSArray*)EquipUniques;
+
+//enter arary of Schedule_Equip_Joins and get array of dictionaries with two items:
+//key "equipTitleObject" and value is EquipTitleItem object
+//key "quantity" and value is NSNumber
++(NSArray*)decomposeJoinsToEquipTitlesWithQuantities:(NSArray*)EquipJoins;
 
 @end

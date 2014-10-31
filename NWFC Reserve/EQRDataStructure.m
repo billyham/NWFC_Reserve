@@ -11,6 +11,8 @@
 #import "EQREquipItem.h"
 #import "EQRGlobals.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
+#import "EQREquipItem.h"
+#import "EQREquipUniqueItem.h"
 
 @implementation EQRDataStructure
 
@@ -120,13 +122,93 @@
 #pragma clang diagnostic pop
 
 
-+(NSArray*)decomposeJoinsToEquipTitlesWithQuantities:(NSArray*)EquipUniques{
+//enter arary of Schedule_Equip_Joins and get array of dictionaries with two items:
+//key "equipTitleObject" and value is EquipTitleItem object
+//key "quantity" and value is NSNumber
++(NSArray*)decomposeJoinsToEquipTitlesWithQuantities:(NSArray*)EquipJoins{
+    
+    
+    //arrayOfJoins, use equipTitleItem_foreignKey
+    
+    //1.
+    //create a mutearray with mutearrays as its objects, the sub array has equipTitle_ForeignKeys
+    NSMutableArray* tempArrayOfArrays = [NSMutableArray arrayWithCapacity:1];
+    
+    //loop through the array of joins
+    for (EQRScheduleTracking_EquipmentUnique_Join* join in EquipJoins){
+        
+        //test if the titleKey is currently in the tempArray
+        BOOL isAnExistingTitle = NO;
+        
+        //loop through tempArray
+        for (NSMutableArray* subArray in tempArrayOfArrays){
+            
+            if ([join.equipTitleItem_foreignKey isEqualToString:(NSString*)[subArray objectAtIndex:0]]){
+                
+                //found a match, add this join's equipTitle_foreignKey as another object in the subarray
+                isAnExistingTitle = YES;
+                
+                //try adding it here and now???
+                [subArray addObject:join.equipTitleItem_foreignKey];
+                
+                //_____????  Is this break OK???_____
+                break;
+            }
+        }
+    
+        //if no match was found, create a new muteArray with this key
+        if (isAnExistingTitle == NO){
+            
+            [tempArrayOfArrays addObject:[NSMutableArray arrayWithObject:join.equipTitleItem_foreignKey]];
+        }
+    }
+    
+
+    //2.
+    //now enumerate through that array and count up the objects in each subarray and query for the object from the foreign key
     
     NSMutableArray* arrayToReturn = [NSMutableArray arrayWithCapacity:1];
-    
-    
-    
-    
+
+    for (NSMutableArray* subMuteArray in tempArrayOfArrays){
+        
+        NSNumber* qty = [NSNumber numberWithInt:(int)[subMuteArray count]];
+        
+        NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", [subMuteArray objectAtIndex:0], nil];
+        NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
+        NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+        
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetEquipmentTitles.php" parameters:topArray class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
+           
+            for (EQREquipItem* item in muteArray){
+                
+                [tempMuteArray addObject:item];
+            }
+        }];
+        
+        //declare the equipItem
+        EQREquipItem* equipItem;
+        
+        if ([tempMuteArray count] > 0){
+            
+            equipItem = [tempMuteArray objectAtIndex:0];
+        } else {
+            
+            //error handling an object is not returned
+            NSLog(@"DataStructure > decomposeJoins failed to find a matching title item");
+            
+            return nil;
+        }
+        
+        NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                equipItem, @"equipTitleObject",
+                                qty, @"quantity",
+                                nil];
+        
+        //add this dic to the returnArray
+        [arrayToReturn addObject:newDic];
+        
+    }
     
     return [NSArray arrayWithArray:arrayToReturn];
 }
