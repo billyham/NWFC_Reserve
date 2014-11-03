@@ -126,14 +126,9 @@
         self.navigationController.navigationBar.barTintColor = nil;
     }
     
-    [super viewWillAppear:animated];
-}
-
-
--(void)viewDidAppear:(BOOL)animated{
     
     //add constraints
-    //______this MUST be added programmatically because you CANNOT specifiy the topLayoutGuide of a VC in a nib______
+    //______this MUST be added programmatically because you CANNOT specify the topLayoutGuide of a VC in a nib______
     
     self.mainSubView.translatesAutoresizingMaskIntoConstraints = NO;
     id topGuide = self.topLayoutGuide;
@@ -146,24 +141,32 @@
                                                                         metrics:nil
                                                                           views:viewsDictionary];
     
-//    NSArray *constraint_POS_H = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[table1]"
-//                                                                        options:0
-//                                                                        metrics:nil
-//                                                                          views:viewsDictionary];
+    //    NSArray *constraint_POS_H = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[table1]"
+    //                                                                        options:0
+    //                                                                        metrics:nil
+    //                                                                          views:viewsDictionary];
     
     NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[mainSubView]-0-[bottomGuide]"
                                                                          options:0
                                                                          metrics:nil
                                                                            views:viewsDictionary];
-//
-//    NSArray *constraint_POS_HB = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[table1]-343-|"
-//                                                                         options:0
-//                                                                         metrics:nil
-//                                                                           views:viewsDictionary];
+    //
+    //    NSArray *constraint_POS_HB = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[table1]-343-|"
+    //                                                                         options:0
+    //                                                                         metrics:nil
+    //                                                                           views:viewsDictionary];
     [[self.mainSubView superview] addConstraints:constraint_POS_V];
-//    [[self.table1 superview] addConstraints:constraint_POS_H];
+    //    [[self.table1 superview] addConstraints:constraint_POS_H];
     [[self.mainSubView superview] addConstraints:constraint_POS_VB];
-//    [[self.table1 superview] addConstraints:constraint_POS_HB];
+    //    [[self.table1 superview] addConstraints:constraint_POS_HB];
+    
+    [super viewWillAppear:animated];
+}
+
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+
     
 }
 
