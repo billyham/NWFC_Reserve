@@ -11,6 +11,7 @@
 
 @interface EQREquipSelectionGenericVCntrllr ()
 
+@property (strong, nonatomic) IBOutlet UIView* mainSubView;
 @property (strong, nonatomic) NSArray* equipTitleArray;
 @property (strong, nonatomic) NSMutableArray* equipTitleCategoriesList;
 @property (strong, nonatomic) NSMutableArray* equipTitleArrayWithSections;
@@ -94,8 +95,8 @@
         
         //correct the scroll view's scroll indicator position
         //_________these two work, but man, this seems janky!!!
-        self.equipCollectionView.scrollIndicatorInsets = UIEdgeInsetsMake(-60, 0, 0, 0);
-        self.equipCollectionView.contentInset = UIEdgeInsetsMake(-60, 0, 0, 0);
+//        self.equipCollectionView.scrollIndicatorInsets = UIEdgeInsetsMake(-60, 0, 0, 0);
+//        self.equipCollectionView.contentInset = UIEdgeInsetsMake(-60, 0, 0, 0);
     }
     
     //do everything else
@@ -126,6 +127,44 @@
     }
     
     [super viewWillAppear:animated];
+}
+
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    //add constraints
+    //______this MUST be added programmatically because you CANNOT specifiy the topLayoutGuide of a VC in a nib______
+    
+    self.mainSubView.translatesAutoresizingMaskIntoConstraints = NO;
+    id topGuide = self.topLayoutGuide;
+    id bottomGuide = self.bottomLayoutGuide;
+    
+    NSDictionary *viewsDictionary = @{@"mainSubView":self.mainSubView, @"topGuide":topGuide, @"bottomGuide":bottomGuide};
+    
+    NSArray *constraint_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-0-[mainSubView]"
+                                                                        options:0
+                                                                        metrics:nil
+                                                                          views:viewsDictionary];
+    
+//    NSArray *constraint_POS_H = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[table1]"
+//                                                                        options:0
+//                                                                        metrics:nil
+//                                                                          views:viewsDictionary];
+    
+    NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[mainSubView]-0-[bottomGuide]"
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:viewsDictionary];
+//
+//    NSArray *constraint_POS_HB = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[table1]-343-|"
+//                                                                         options:0
+//                                                                         metrics:nil
+//                                                                           views:viewsDictionary];
+    [[self.mainSubView superview] addConstraints:constraint_POS_V];
+//    [[self.table1 superview] addConstraints:constraint_POS_H];
+    [[self.mainSubView superview] addConstraints:constraint_POS_VB];
+//    [[self.table1 superview] addConstraints:constraint_POS_HB];
+    
 }
 
 
