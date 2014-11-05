@@ -23,6 +23,9 @@
 @interface EQREquipSummaryGenericVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UIButton* printAndConfirmButton;
+@property (strong, nonatomic) IBOutlet UIView* mainSubView;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* topLayoutGuideConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* bottomLayoutGuideConstraint;
 
 @end
 
@@ -141,7 +144,7 @@
     
     //_______PICKUP DATE_____
     NSDictionary* arrayAtt6 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-    NSAttributedString* pickupHead = [[NSAttributedString alloc] initWithString:@"\r\rPick Up: " attributes:arrayAtt6];
+    NSAttributedString* pickupHead = [[NSAttributedString alloc] initWithString:@"\r\r\rPick Up: " attributes:arrayAtt6];
     [self.summaryTotalAtt appendAttributedString:pickupHead];
     
     NSDictionary* arrayAtt7 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
@@ -160,7 +163,7 @@
     //________EQUIP LIST________
     
     NSDictionary* arrayAtt10 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* equipHead = [[NSAttributedString alloc] initWithString:@"\r\rEquipment Items:\r" attributes:arrayAtt10];
+    NSAttributedString* equipHead = [[NSAttributedString alloc] initWithString:@"\r\r\rEquipment Items:\r" attributes:arrayAtt10];
     [self.summaryTotalAtt appendAttributedString:equipHead];
     
     //cycle through array of equipItems and build a string
@@ -232,6 +235,8 @@
 -(void)viewWillAppear:(BOOL)animated{
     
     //update navigation bar
+    self.navigationItem.title = @"Summary";
+    
     EQRModeManager* modeManager = [EQRModeManager sharedInstance];
     if (modeManager.isInDemoMode){
         
@@ -250,6 +255,38 @@
         self.navigationController.navigationBar.barTintColor = nil;
     }
     
+    
+    //add constraints
+    //______this MUST be added programmatically because you CANNOT specify the topLayoutGuide of a VC in a nib______
+    
+    self.mainSubView.translatesAutoresizingMaskIntoConstraints = NO;
+    id topGuide = self.topLayoutGuide;
+    id bottomGuide = self.bottomLayoutGuide;
+    
+    NSDictionary *viewsDictionary = @{@"mainSubView":self.mainSubView, @"topGuide":topGuide, @"bottomGuide":bottomGuide};
+    
+    NSArray *constraint_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-0-[mainSubView]"
+                                                                        options:0
+                                                                        metrics:nil
+                                                                          views:viewsDictionary];
+    
+    
+    
+    NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[mainSubView]-0-[bottomGuide]"
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:viewsDictionary];
+    
+    //drop exisiting constraints
+    //_____THIS IS NECESSARY BECAUSE NIBS REALLY HATE IT IF YOU LEAVE OUT ANY CONSTRAINTS __
+    //_____THESE WERE ONLY TEMPORARY TO SATISIFY THE NIB FROM SCREAMING ERROR MESSAGES____
+    [[self.mainSubView superview] removeConstraints:[NSArray arrayWithObjects:self.topLayoutGuideConstraint, self.bottomLayoutGuideConstraint, nil]];
+    
+    //add replacement constraints
+    [[self.mainSubView superview] addConstraints:constraint_POS_V];
+    [[self.mainSubView superview] addConstraints:constraint_POS_VB];
+    
+        
     [super viewWillAppear:animated];
 }
 

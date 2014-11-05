@@ -18,6 +18,8 @@
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
 @property BOOL privateRequestManagerFlag;
 @property (strong, nonatomic) IBOutlet UIButton* listAllEquipButton;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* topGuideLayoutThingy;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* bottomGuideLayoutThingy;
 
 @end
 
@@ -108,6 +110,8 @@
 -(void)viewWillAppear:(BOOL)animated{
     
     //update navigation bar
+    self.navigationItem.title = @"Equipment Selection";
+    
     EQRModeManager* modeManager = [EQRModeManager sharedInstance];
     if (modeManager.isInDemoMode){
         
@@ -141,24 +145,21 @@
                                                                         metrics:nil
                                                                           views:viewsDictionary];
     
-    //    NSArray *constraint_POS_H = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[table1]"
-    //                                                                        options:0
-    //                                                                        metrics:nil
-    //                                                                          views:viewsDictionary];
+    
     
     NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[mainSubView]-0-[bottomGuide]"
                                                                          options:0
                                                                          metrics:nil
                                                                            views:viewsDictionary];
-    //
-    //    NSArray *constraint_POS_HB = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[table1]-343-|"
-    //                                                                         options:0
-    //                                                                         metrics:nil
-    //                                                                           views:viewsDictionary];
+    
+    //drop exisiting constraints
+    //_____THIS IS NECESSARY BECAUSE NIBS REALLY HATE IT IF YOU LEAVE OUT ANY CONSTRAINTS __
+    //_____THESE WERE ONLY TEMPORARY TO SATISIFY THE NIB FROM SCREAMING ERROR MESSAGES____
+    [[self.mainSubView superview] removeConstraints:[NSArray arrayWithObjects:self.topGuideLayoutThingy, self.bottomGuideLayoutThingy, nil]];
+
+    //add replacement constraints
     [[self.mainSubView superview] addConstraints:constraint_POS_V];
-    //    [[self.table1 superview] addConstraints:constraint_POS_H];
     [[self.mainSubView superview] addConstraints:constraint_POS_VB];
-    //    [[self.table1 superview] addConstraints:constraint_POS_HB];
     
     [super viewWillAppear:animated];
 }
@@ -167,7 +168,7 @@
 -(void)viewDidAppear:(BOOL)animated{
     
 
-    
+
 }
 
 
@@ -790,5 +791,42 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+#pragma mark - collection view flow layout delegate methods
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
+                        layout:(UICollectionViewLayout *)collectionViewLayout
+        insetForSectionAtIndex:(NSInteger)section{
+    
+    UIEdgeInsets edgeInsets;
+    
+    //test if in portrait or landscape view
+    //______******   a better implementation of this is here:   ******_______
+    //  http://stackoverflow.com/questions/13556554/change-uicollectionviewcell-size-on-different-device-orientations
+    //uses two different flowlayout objects, one for each orientation
+    
+    UIInterfaceOrientation orientationOnLaunch = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    if (UIInterfaceOrientationIsPortrait(orientationOnLaunch)) {
+        
+        edgeInsets = UIEdgeInsetsMake(4.f, 4.f, 8.f, 4.f);
+        
+    }else{
+        
+        edgeInsets = UIEdgeInsetsMake(4.f, 132.f, 8.f, 132.f);
+        
+    }
+    
+    return edgeInsets;
+    
+}
+
+
+
+
+
+
+
 
 @end

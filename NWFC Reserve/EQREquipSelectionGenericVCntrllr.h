@@ -11,7 +11,7 @@
 #import "EQREquipItemCell.h"
 
 
-@interface EQREquipSelectionGenericVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>{
+@interface EQREquipSelectionGenericVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>{
     
     
 }

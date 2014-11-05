@@ -23,6 +23,10 @@
 
 @property (strong, nonatomic) EQRScheduleRequestItem* myScheduleRequest;
 
+@property (strong, nonatomic) IBOutlet UIView* mainSubView;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* topLayoutGuideConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* bottomLayoutGuideConstraint;
+
 @property (strong, nonatomic) IBOutlet UITableView* myTable;
 @property (strong, nonatomic) IBOutlet UIView* rightView;
 @property (strong, nonatomic) IBOutlet UIView* leftView;
@@ -117,6 +121,39 @@
         //set color of navigation bar
         self.navigationController.navigationBar.barTintColor = nil;
     }
+    
+    
+    //add constraints
+    //______this MUST be added programmatically because you CANNOT specify the topLayoutGuide of a VC in a nib______
+    
+    self.mainSubView.translatesAutoresizingMaskIntoConstraints = NO;
+    id topGuide = self.topLayoutGuide;
+    id bottomGuide = self.bottomLayoutGuide;
+    
+    NSDictionary *viewsDictionary = @{@"mainSubView":self.mainSubView, @"topGuide":topGuide, @"bottomGuide":bottomGuide};
+    
+    NSArray *constraint_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-0-[mainSubView]"
+                                                                        options:0
+                                                                        metrics:nil
+                                                                          views:viewsDictionary];
+    
+    
+    
+    NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[mainSubView]-49-[bottomGuide]"
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:viewsDictionary];
+    
+    //drop exisiting constraints
+    //_____THIS IS NECESSARY BECAUSE NIBS REALLY HATE IT IF YOU LEAVE OUT ANY CONSTRAINTS __
+    //_____THESE WERE ONLY TEMPORARY TO SATISIFY THE NIB FROM SCREAMING ERROR MESSAGES____
+    [[self.mainSubView superview] removeConstraints:[NSArray arrayWithObjects:self.topLayoutGuideConstraint, self.bottomLayoutGuideConstraint, nil]];
+    
+    //add replacement constraints
+    [[self.mainSubView superview] addConstraints:constraint_POS_V];
+    [[self.mainSubView superview] addConstraints:constraint_POS_VB];
+    
+    
     
     [super viewWillAppear:animated];
 }
