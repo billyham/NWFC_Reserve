@@ -446,6 +446,26 @@
 }
 
 
+//!!!!_______       THESE METHODS ARE DEPRECATED IN IOS 8!!!  _______________
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    
+    //invalidate the flowlayout to force it to update with the correct inset
+    [self.equipCollectionView.collectionViewLayout invalidateLayout];
+    
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+}
+
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+
+    //needs to update the headings...
+    [self.equipCollectionView reloadData];
+    
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+}
+
+
+
 #pragma mark - notifications
 
 -(void)refreshTable:(NSNotification*)note{
