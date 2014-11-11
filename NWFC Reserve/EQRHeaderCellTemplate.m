@@ -58,7 +58,7 @@
     
     //reveal button
     UIButton* thisRevealButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    CGRect thatRect = CGRectMake(self.contentView.frame.size.width - 200, self.contentView.frame.origin.y, 90, self.contentView.frame.size.height);
+    CGRect thatRect = CGRectMake((self.contentView.frame.size.width / 2) -45, self.contentView.frame.origin.y, 90, self.contentView.frame.size.height);
     thisRevealButton.frame = thatRect;
     
     if (yesHidden){
@@ -80,11 +80,11 @@
     
     //all button
     UIButton* thisAllButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    CGRect peasRect = CGRectMake(self.contentView.frame.size.width - 100, self.contentView.frame.origin.y , 90, self.contentView.frame.size.height);
+    CGRect peasRect = CGRectMake(self.contentView.frame.size.width - 150, self.contentView.frame.origin.y , 140, self.contentView.frame.size.height);
     thisAllButton.frame = peasRect;
-    [thisAllButton setTitle:@"All" forState:UIControlStateNormal];
-    [thisAllButton setTitle:@"All" forState:UIControlStateHighlighted];
-    [thisAllButton setTitle:@"All" forState:UIControlStateSelected];
+    [thisAllButton setTitle:[NSString stringWithFormat:@"%@ %@", thisRevealButton.titleLabel.text, @"All"] forState:UIControlStateNormal];
+    [thisAllButton setTitle:[NSString stringWithFormat:@"%@ %@", thisRevealButton.titleLabel.text, @"All"] forState:UIControlStateHighlighted];
+    [thisAllButton setTitle:[NSString stringWithFormat:@"%@ %@", thisRevealButton.titleLabel.text, @"All"] forState:UIControlStateSelected];
     [thisAllButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     [thisAllButton setTitleColor:[UIColor yellowColor] forState:UIControlStateHighlighted];
     //add all button

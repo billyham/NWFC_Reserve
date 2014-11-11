@@ -127,7 +127,6 @@
 //key "quantity" and value is NSNumber
 +(NSArray*)decomposeJoinsToEquipTitlesWithQuantities:(NSArray*)EquipJoins{
     
-    
     //arrayOfJoins, use equipTitleItem_foreignKey
     
     //1.

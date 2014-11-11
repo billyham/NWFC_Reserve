@@ -11,11 +11,22 @@
 @interface EQRDataStructure : NSObject
 
 +(EQRDataStructure*)sharedInstance;
+
+//enter array of ScheduleTracking_EquipmentUnique_Joins (actually any object that has values for equipTitleItem_foreignKey, schedule_grouping
+//returns array of arrays, the subarrays are grouped together based on schedule_grouping,
+//the subarrays are populated with ScheduleTracking_EquipmentUnique_Joins
 +(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray;
 
-//enter arary of Schedule_Equip_Joins and get array of dictionaries with two items:
+
+//need function to sort a subarray of schedule_equip_joins (or equipUniques) based on ascending distinguishing ids
+
+
+//enter array of ScheduleTracking_EquipmentUnique_Joins (actually, any object that has a value for equipTitleItem_foreignKey)
+//returns array of dictionaries with two items:
 //key "equipTitleObject" and value is EquipTitleItem object
 //key "quantity" and value is NSNumber
 +(NSArray*)decomposeJoinsToEquipTitlesWithQuantities:(NSArray*)EquipJoins;
+
+
 
 @end

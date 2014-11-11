@@ -168,7 +168,7 @@
     
     //cycle through array of equipItems and build a string
     
-    EQRWebData* webData = [EQRWebData sharedInstance];
+//    EQRWebData* webData = [EQRWebData sharedInstance];
     
     
     
@@ -199,34 +199,37 @@
     //add structure to the array
     NSArray* arrayOfEquipmentJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:requestManager.request.arrayOfEquipmentJoins];
     
-    for (NSArray* innerArray in arrayOfEquipmentJoinsWithStructure){
+    //  3. cycle through subarrays and decompose scheduleTracking_EquipmentUniue_Joins to dictionaries with EquipTitleItems and quantities
+    NSMutableArray* topArrayOfDecomposedEquipTitlesAndJoins = [NSMutableArray arrayWithCapacity:1];
+    for (NSArray* arrayFun in arrayOfEquipmentJoinsWithStructure){
+        
+        NSArray* subArrayOfDecomposedEquipTitlesAndJoins = [EQRDataStructure decomposeJoinsToEquipTitlesWithQuantities:arrayFun];
+        
+        [topArrayOfDecomposedEquipTitlesAndJoins addObject:subArrayOfDecomposedEquipTitlesAndJoins];
+    }
+    
+    
+    for (NSArray* innerArray in topArrayOfDecomposedEquipTitlesAndJoins){
         
         //print equipment category
         NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:smallFont forKey:NSFontAttributeName];
-        NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r   %@\r", [(EQRScheduleTracking_EquipmentUnique_Join*)[innerArray objectAtIndex:0] schedule_grouping]] attributes:arrayAtt11];
+        NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r   %@\r", [(EQREquipItem*) [(NSDictionary*)[innerArray objectAtIndex:0] objectForKey:@"equipTitleObject" ] schedule_grouping]] attributes:arrayAtt11];
         
         [self.summaryTotalAtt appendAttributedString:thisHereAttString];
         
-        for (EQRScheduleTracking_EquipmentUnique_Join* joinItem in innerArray){
+        for (NSDictionary* innerSubDictionary in innerArray){
             
-            NSArray* thisArray1 = [NSArray arrayWithObjects:@"key_id", joinItem.equipTitleItem_foreignKey, Nil];
-            NSArray* thisArray2 = [NSArray arrayWithObject:thisArray1];
-            [webData queryWithLink:@"EQGetEquipmentTitles.php" parameters:thisArray2 class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
-                
-                //add the text of the equip item names to the textField's attributed string
-                for (EQREquipItem* equipItemObj in muteArray){
-                    
-                    NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-                    NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", equipItemObj.shortname] attributes:arrayAtt11];
-                    
-                    [self.summaryTotalAtt appendAttributedString:thisHereAttString];
-                }
-                
-            }];
+            NSString* quantityFollowedByShortname = [NSString stringWithFormat:@"%@ x %@",
+                                                     [innerSubDictionary objectForKey:@"quantity"],
+                                                     [(EQREquipItem*)[innerSubDictionary objectForKey:@"equipTitleObject"] shortname]
+                                                     ];
             
+            NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+            NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", quantityFollowedByShortname] attributes:arrayAtt11];
+                    
+            [self.summaryTotalAtt appendAttributedString:thisHereAttString];
         }
     }
-    
     
     self.summaryTextView.attributedText = self.summaryTotalAtt;
 }
