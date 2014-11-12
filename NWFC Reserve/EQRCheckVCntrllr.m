@@ -18,6 +18,8 @@
 #import "EQRCheckPageRenderer.h"
 #import "EQRCheckPrintPage.h"
 #import "EQRStaffUserManager.h"
+#import "EQRCheckHeaderCell.h"
+#import "EQRDataStructure.h"
 
 
 @interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate>
@@ -29,6 +31,7 @@
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myEquipCollection;
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipJoins;
+@property (strong, nonatomic) NSArray* arrayOfEquipJoinsWithStructure;
 
 //for qr code reader
 @property(nonatomic, strong) AVCaptureSession *session;
@@ -103,6 +106,9 @@
     
     [self.arrayOfEquipJoins addObjectsFromArray:altMuteArray];
     
+    //add nested structure to the array of equup items
+    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins];
+    
 }
 
 
@@ -113,6 +119,9 @@
 
     //register collection view cell
     [self.myEquipCollection registerClass:[EQRCheckRowCell class] forCellWithReuseIdentifier:@"Cell"];
+    
+    //register for header cell
+    [self.myEquipCollection registerClass:[EQRCheckHeaderCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
     
     //register for notes
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
@@ -382,8 +391,16 @@
             newJoinToAdd.distinquishing_id = [(EQREquipUniqueItem*) [muteArray objectAtIndex:0] distinquishing_id];
         }];
         
+        
+        
+        
+        //_______!!!!!!!           MUST BE UPDATED BECAUSE NOW WE USE A STRUCTURED ARRAY           !!!!!!_______
         //add join object to array ivar
         [self.arrayOfEquipJoins addObject:newJoinToAdd];
+        //_______!!!!!!!           MUST BE UPDATED BECAUSE NOW WE USE A STRUCTURED ARRAY           !!!!!!_______
+        
+        
+        
         
         [self.myEquipCollection reloadData];
         
@@ -613,13 +630,13 @@
 
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     
-    return 1;
+    return [self.arrayOfEquipJoinsWithStructure count];
 }
 
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
-    return  [self.arrayOfEquipJoins count];
+    return  [[self.arrayOfEquipJoinsWithStructure objectAtIndex:section] count];
 }
 
 
@@ -638,11 +655,32 @@
     //and reset the cell's background color...
     cell.backgroundColor = [UIColor whiteColor];
     
-    [cell initialSetupWithEquipUnique:[self.arrayOfEquipJoins objectAtIndex:indexPath.row] marked:self.marked_for_returning switch_num:self.switch_num];
+    [cell initialSetupWithEquipUnique:[(NSArray*)[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] marked:self.marked_for_returning switch_num:self.switch_num];
     
     return cell;
 };
 
+
+#pragma mark - section header data source methods
+
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
+    
+    static NSString* CellIdentifier = @"SupplementaryCell";
+    EQRCheckHeaderCell* cell = [self.myEquipCollection dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    //remove subviews?????
+    for (UIView* view in cell.contentView.subviews){
+        
+        [view removeFromSuperview];
+    }
+
+    NSString* categoryStringValue = [(EQRScheduleTracking_EquipmentUnique_Join*)[(NSArray*)[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] schedule_grouping];
+    
+    [cell initialSetupWithCategoryText:categoryStringValue];
+    
+    
+    return cell;
+}
 
 
 #pragma mark - memory warning

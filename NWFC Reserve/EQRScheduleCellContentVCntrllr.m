@@ -34,13 +34,13 @@
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(changeInOrientation:) name:EQRRefreshViewWhenOrientationRotates object:nil];
     
-    //make opacity of navBarDates less if in portrain orientation
+    //make opacity of navBarDates less if in portrait orientation
     UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
     if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
         
         self.navBarDates.alpha = 0.5;
     }
-    
+
     
     [super viewDidLoad];
     

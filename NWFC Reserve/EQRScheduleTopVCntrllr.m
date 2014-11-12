@@ -1262,6 +1262,11 @@
         //change label AFTER adding it to the view else defaults to XIB file
         myContentViewController.myRowLabel.text = myTitleString;
         
+        //determine if service issues should be visible or hidden (default hidden)
+        myContentViewController.serviceIssuesButton.hidden = YES;
+        
+        
+        
         return cell;
         
     } else {

@@ -14,6 +14,7 @@
 
 @property (strong, nonatomic) IBOutlet UILabel* myRowLabel;
 @property (strong, nonatomic) IBOutlet EQRNavBarDatesView* navBarDates;
+@property (strong, nonatomic) IBOutlet UIButton* serviceIssuesButton;
 
 
 
