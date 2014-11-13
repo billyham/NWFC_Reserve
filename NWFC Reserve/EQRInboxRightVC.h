@@ -15,7 +15,7 @@
 @protocol EQRInboxRightDelegate;
 
 
-@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UITableViewDelegate, UITableViewDataSource> {
+@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate> {
     
     __weak id <EQRInboxRightDelegate> delegateForRightSide;
 }

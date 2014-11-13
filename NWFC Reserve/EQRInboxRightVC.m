@@ -38,6 +38,13 @@
 @property (strong, nonatomic) IBOutlet UILabel* pickUpTimeValue;
 @property (strong, nonatomic) IBOutlet UILabel* returnTimeValue;
 
+@property (strong, nonatomic) IBOutlet UIView* viewEditLeft;
+@property (strong, nonatomic) IBOutlet UITextField* nameValueField;
+@property (strong, nonatomic) IBOutlet UITextField* typeValueField;
+@property (strong, nonatomic) IBOutlet UITextField* classValueField;
+@property (strong, nonatomic) IBOutlet UITextField* pickUpTimeValueField;
+@property (strong, nonatomic) IBOutlet UITextField* returnTimeValueField;
+
 @property (strong, nonatomic) NSArray* arrayOfJoins;
 @property (strong, nonatomic) NSArray* arrayOfJoinsWithStructure;
 
@@ -74,11 +81,25 @@
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     NSString* logText = [NSString stringWithFormat:@"Logged in as %@", staffUserManager.currentStaffUser.first_name];
     
-    //right button
+    //uibar buttons
+    //create fixed spaces
+    UIBarButtonItem* twentySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+    twentySpace.width = 20;
+    UIBarButtonItem* thirtySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+    thirtySpace.width = 30;
+    
+    //right buttons
+    UIBarButtonItem* editModeBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editInboxContent)];
+    
+    UIBarButtonItem* composeEmailBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeEmail)];
+    
     UIBarButtonItem* staffUserBarButton = [[UIBarButtonItem alloc] initWithTitle:logText style:UIBarButtonItemStylePlain target:self action:@selector(showStaffUserPicker)];
     
+    UIBarButtonItem* confirmBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Confirm" style:UIBarButtonItemStylePlain target:self action:@selector(confirm:)];
+    
     //array that shit
-    NSArray* arrayOfRightButtons = [NSArray arrayWithObjects:staffUserBarButton, nil];
+    NSArray* arrayOfRightButtons = [NSArray arrayWithObjects:staffUserBarButton, thirtySpace, editModeBarButton, twentySpace, composeEmailBarButton,
+                                    twentySpace, confirmBarButton, nil];
     
     //set rightBarButton item in SELF
     [self.navigationItem setRightBarButtonItems:arrayOfRightButtons];
@@ -90,6 +111,7 @@
     //initially hide everything
     [self.leftView setHidden:YES];
     [self.rightView setHidden:YES];
+    [self.viewEditLeft setHidden:YES];
         
 }
 
@@ -220,6 +242,14 @@
         [self.classValue setHidden:NO];
     }
     
+    //copy values to edit field values
+    self.nameValueField.text = self.firstLastNameValue.text;
+    self.typeValueField.text = self.typeValue.text;
+    self.classValueField.text = self.classValue.text;
+    self.pickUpTimeValueField.text = self.pickUpTimeValue.text;
+    self.returnTimeValueField.text = self.returnTimeValue.text;
+    
+    
     //get table of joins
     NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
     
@@ -256,12 +286,60 @@
 
 #pragma mark - button methods
 
+
+-(void)composeEmail{
+    
+    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Send Email" message:@"Message options:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Student Confirmation", @"Send Blank Email", nil];
+    
+    [alertView show];
+}
+
+
 -(void)sendEmail{
     
+    //check that an email address exists for the contact
+    EQRWebData* webData = [EQRWebData sharedInstance];
     
-    NSString* messageTitle = @"subject title";
-    NSString* messageBody = @"body";
-    NSArray* messageRecipients = [NSArray arrayWithObjects: @"dave@nwfilm.org", nil];
+    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequest.contact_foreignKey, nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
+    
+    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+    [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:topArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+        
+        for (id contact in muteArray){
+            
+            [tempMuteArray addObject:contact];
+        }
+        
+    }];
+    
+    if ([tempMuteArray count] < 1){
+        
+        //_____******* error handling when no contact object is returned
+    }
+    
+    EQRContactNameItem* contactItem = [tempMuteArray objectAtIndex:0];
+    
+    NSString* contactEmail = contactItem.email;
+    
+    //_______******* error handling when no email exists for the contact
+    if ([contactEmail isEqualToString:@""]){
+        
+        NSLog(@"email is empty string");
+    }
+    if (contactEmail == nil){
+        
+        NSLog(@"email is nil");
+    }
+    if (!contactEmail){
+        
+        NSLog(@"email is non existent");
+    }
+    
+    
+    NSString* messageTitle = @"";
+    NSString* messageBody = @"";
+    NSArray* messageRecipients = [NSArray arrayWithObjects: contactEmail, nil];
     
     MFMailComposeViewController* mfVC = [[MFMailComposeViewController alloc] init];
     mfVC.mailComposeDelegate = self;
@@ -306,6 +384,7 @@
     //hide right side to indicate completion
     [self.rightView setHidden:YES];
     [self.leftView setHidden:YES];
+    [self.viewEditLeft setHidden:YES];
 }
 
 
@@ -405,6 +484,41 @@
 }
 
 
+-(void)editInboxContent{
+    
+    //show edit text fields
+    [self.viewEditLeft setHidden:NO];
+    
+
+    
+    
+}
+
+
+#pragma mark - alert view delegate methods
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    //0 is cancel, 1 is use template, 2 is blank email
+    
+    switch (buttonIndex) {
+        case 0:
+            break;
+            
+        case 1:
+            [self confirmWithEmail:self];
+            break;
+            
+        case 2:
+            [self sendEmail];
+            break;
+            
+        default:
+            break;
+    }
+    
+}
+
 
 #pragma mark - staff user
 
@@ -484,6 +598,7 @@
         //hide right side to indicate completion
         [self.rightView setHidden:YES];
         [self.leftView setHidden:YES];
+        [self.viewEditLeft setHidden:YES];
         
     }];
 }
@@ -533,6 +648,8 @@
     NSString* stringWithDistID = [NSString stringWithFormat:@"%@  # %@",[(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name], [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id ]];
 
     cell.textLabel.text = stringWithDistID;
+    cell.textLabel.font = [UIFont systemFontOfSize:13];
+    
     return cell;
 }
 
@@ -544,6 +661,19 @@
 
 
 #pragma mark - table delegate methods
+
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
+    
+    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+    
+    header.textLabel.textColor = [UIColor blackColor];
+    header.textLabel.font = [UIFont boldSystemFontOfSize:12];
+    CGRect headerFrame = header.frame;
+    header.textLabel.frame = headerFrame;
+    header.textLabel.textAlignment = NSTextAlignmentLeft;
+    
+}
+
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
