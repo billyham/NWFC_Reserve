@@ -26,6 +26,7 @@
 @property (strong, nonatomic) IBOutlet UIView* mainSubView;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* topLayoutGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* bottomLayoutGuideConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* tableTopGuideConstraint;
 
 @property (strong, nonatomic) IBOutlet UITableView* myTable;
 @property (strong, nonatomic) IBOutlet UIView* rightView;
@@ -45,10 +46,14 @@
 @property (strong, nonatomic) IBOutlet UITextField* pickUpTimeValueField;
 @property (strong, nonatomic) IBOutlet UITextField* returnTimeValueField;
 
+@property (strong, nonatomic) IBOutlet UIView* addButtonView;
+
 @property (strong, nonatomic) NSArray* arrayOfJoins;
 @property (strong, nonatomic) NSArray* arrayOfJoinsWithStructure;
 
 @property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
+
+@property BOOL inEditModeFlag;
 
 
 @end
@@ -76,6 +81,8 @@
     //add right side buttons in nav item
 //    [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(sendEmail)]];
     
+    //set local flags
+    self.inEditModeFlag = NO;
     
     //derive the current user name
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
@@ -89,7 +96,7 @@
     thirtySpace.width = 30;
     
     //right buttons
-    UIBarButtonItem* editModeBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editInboxContent)];
+    UIBarButtonItem* editModeBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditMode)];
     
     UIBarButtonItem* composeEmailBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeEmail)];
     
@@ -112,6 +119,7 @@
     [self.leftView setHidden:YES];
     [self.rightView setHidden:YES];
     [self.viewEditLeft setHidden:YES];
+    [self.addButtonView setHidden:YES];
         
 }
 
@@ -161,7 +169,7 @@
     
     
     
-    NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[mainSubView]-49-[bottomGuide]"
+    NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[mainSubView]-0-[bottomGuide]"
                                                                          options:0
                                                                          metrics:nil
                                                                            views:viewsDictionary];
@@ -174,8 +182,6 @@
     //add replacement constraints
     [[self.mainSubView superview] addConstraints:constraint_POS_V];
     [[self.mainSubView superview] addConstraints:constraint_POS_VB];
-    
-    
     
     [super viewWillAppear:animated];
 }
@@ -384,7 +390,7 @@
     //hide right side to indicate completion
     [self.rightView setHidden:YES];
     [self.leftView setHidden:YES];
-    [self.viewEditLeft setHidden:YES];
+    [self exitEditMode];
 }
 
 
@@ -484,18 +490,76 @@
 }
 
 
--(void)editInboxContent{
+-(void)toggleEditMode{
+    
+    if (self.inEditModeFlag == YES){
+        
+        [self exitEditMode];
+        
+    }else{
+        
+        [self enterEditMode];
+    }
+    
+}
+
+
+#pragma mark - edit mode methods
+
+-(void)enterEditMode{
+    
+    //if called but already in edit more, ignore
+    if (self.inEditModeFlag == YES){
+        return;
+    }
+    
+    //update flag
+    self.inEditModeFlag = YES;
     
     //show edit text fields
     [self.viewEditLeft setHidden:NO];
     
-
+    //show the add button
+    [self.addButtonView setHidden:NO];
+    
+    //lower table to reveal add button
+    self.tableTopGuideConstraint.constant = 50;
     
     
 }
 
 
-#pragma mark - alert view delegate methods
+-(void)exitEditMode{
+    
+    //if called but not in edit more, ignore
+    if (self.inEditModeFlag == NO){
+        return;
+    }
+    
+    //update flag
+    self.inEditModeFlag = NO;
+    
+    
+    
+    //hide edit text fields
+    [self.viewEditLeft setHidden:YES];
+    
+    //raise table to hide add button (NOT ANIMATE-ABLE)
+    self.tableTopGuideConstraint.constant = 0;
+    
+    //hide the add button after the change to the constraint is complete
+    [self.addButtonView setHidden:NO];
+    
+    
+    
+    
+    
+    
+    
+}
+
+
+#pragma mark - alert view delegate  / compose email
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     
@@ -598,8 +662,7 @@
         //hide right side to indicate completion
         [self.rightView setHidden:YES];
         [self.leftView setHidden:YES];
-        [self.viewEditLeft setHidden:YES];
-        
+        [self exitEditMode];
     }];
 }
 

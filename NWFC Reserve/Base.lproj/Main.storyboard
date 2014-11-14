@@ -238,7 +238,7 @@
         <!--Inbox-->
         <scene sceneID="IDo-Bi-b2P">
             <objects>
-                <viewController title="Inbox" id="lYC-Kj-zkg" customClass="EQRInboxRightVC" sceneMemberID="viewController">
+                <viewController title="Inbox" extendedLayoutIncludesOpaqueBars="YES" id="lYC-Kj-zkg" customClass="EQRInboxRightVC" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="UnT-Gl-WlN"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ajq-jd-h2Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
