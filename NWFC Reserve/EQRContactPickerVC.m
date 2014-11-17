@@ -257,7 +257,7 @@
 }
 
 
-#pragma mark - delegate method only for the SEARCH bar!
+#pragma mark - delegate method 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     

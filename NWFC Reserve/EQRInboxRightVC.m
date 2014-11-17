@@ -725,7 +725,8 @@
     EQRContactNameItem* thisNameItem = [self.myContactVC retrieveContactItem];
     
     //update view objets
-    self.nameValueField.titleLabel.text = thisNameItem.first_and_last;
+    //______or send renewTheView message____
+    [self.nameValueField setTitle:thisNameItem.first_and_last forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     self.firstLastNameValue.text = thisNameItem.first_and_last;
     
     //udpate myScheduleRequest
@@ -734,6 +735,9 @@
     self.myScheduleRequest.contact_foreignKey = thisNameItem.key_id;
     
     //____!!!!!   update data layer   !!!!!______
+    
+    //release self as delegate 
+//    self.myContactVC.delegate = nil;
     
     //dismiss the popover
     [self.myContactPicker dismissPopoverAnimated:YES];
