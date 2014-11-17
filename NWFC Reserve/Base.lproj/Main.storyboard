@@ -6,24 +6,6 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--RequestInbox-->
-        <scene sceneID="2cX-Xt-cDg">
-            <objects>
-                <navigationController title="RequestInbox" definesPresentationContext="YES" navigationBarHidden="YES" id="Dcl-rq-Ytj" sceneMemberID="viewController">
-                    <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" title="Inbox" id="jcZ-s0-nZj"/>
-                    <nil key="simulatedTopBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="64P-Og-HKR">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="4zk-cf-ufk" kind="relationship" relationship="rootViewController" id="rjU-oN-Eab"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="VQ8-VB-Tr4" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3092" y="-1173"/>
-        </scene>
         <!--Renter-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
@@ -433,10 +415,11 @@
             </objects>
             <point key="canvasLocation" x="5036" y="-2000"/>
         </scene>
-        <!--Split View Controller-->
+        <!--Inbox-->
         <scene sceneID="fbd-S5-icg">
             <objects>
-                <splitViewController id="4zk-cf-ufk" sceneMemberID="viewController">
+                <splitViewController title="Inbox" id="4zk-cf-ufk" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" tag="4" title="Inbox" id="GAl-KI-4Ib"/>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="4li-zk-mfK"/>
                     <connections>
@@ -1100,10 +1083,10 @@
                     </tabBar>
                     <connections>
                         <segue destination="PkY-gJ-1eR" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
-                        <segue destination="Dcl-rq-Ytj" kind="relationship" relationship="viewControllers" id="q5P-pL-bof"/>
                         <segue destination="xA8-l4-PwP" kind="relationship" relationship="viewControllers" id="k2F-PR-9qw"/>
                         <segue destination="hee-oI-qji" kind="relationship" relationship="viewControllers" id="skc-Dk-72s"/>
                         <segue destination="Q0m-16-1SA" kind="relationship" relationship="viewControllers" id="LrH-oW-zRK"/>
+                        <segue destination="4zk-cf-ufk" kind="relationship" relationship="viewControllers" id="tYA-sM-7dj"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>

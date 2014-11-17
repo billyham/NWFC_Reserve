@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQREditorDateVCntrllr.h"
 
-@interface EQREditorExtendedDateVC : UIViewController
+@interface EQREditorExtendedDateVC : EQREditorDateVCntrllr
 
 @property (strong, nonatomic) IBOutlet UIDatePicker* pickupDateField;
 @property (strong, nonatomic) IBOutlet UIDatePicker* returnDateField;

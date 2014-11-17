@@ -18,6 +18,9 @@
 #import "EQRModeManager.h"
 #import "EQRTextEmailStudent.h"
 #import "EQREquipItem.h"
+#import "EQREditorDateVCntrllr.h"
+#import "EQREditorExtendedDateVC.h"
+
 
 @interface EQRInboxRightVC ()
 
@@ -26,7 +29,7 @@
 @property (strong, nonatomic) IBOutlet UIView* mainSubView;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* topLayoutGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* bottomLayoutGuideConstraint;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint* tableTopGuideConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* tablebottomGuideConstraint;
 
 @property (strong, nonatomic) IBOutlet UITableView* myTable;
 @property (strong, nonatomic) IBOutlet UIView* rightView;
@@ -40,18 +43,26 @@
 @property (strong, nonatomic) IBOutlet UILabel* returnTimeValue;
 
 @property (strong, nonatomic) IBOutlet UIView* viewEditLeft;
-@property (strong, nonatomic) IBOutlet UITextField* nameValueField;
+@property (strong, nonatomic) IBOutlet UIButton* nameValueField;
 @property (strong, nonatomic) IBOutlet UITextField* typeValueField;
 @property (strong, nonatomic) IBOutlet UITextField* classValueField;
-@property (strong, nonatomic) IBOutlet UITextField* pickUpTimeValueField;
-@property (strong, nonatomic) IBOutlet UITextField* returnTimeValueField;
+@property (strong, nonatomic) IBOutlet UIButton* pickUpTimeValueField;
+@property (strong, nonatomic) IBOutlet UIButton* returnTimeValueField;
 
 @property (strong, nonatomic) IBOutlet UIView* addButtonView;
 
 @property (strong, nonatomic) NSArray* arrayOfJoins;
 @property (strong, nonatomic) NSArray* arrayOfJoinsWithStructure;
 
+//popOver controllers
 @property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
+@property (strong, nonatomic) UIPopoverController* myDayDatePicker;
+@property (strong, nonatomic) UIPopoverController* myContactPicker;
+
+//popOver root VCs
+@property (strong, nonatomic) EQREditorDateVCntrllr* myDayDateVC;
+@property (strong, nonatomic) EQRContactPickerVC* myContactVC;
+
 
 @property BOOL inEditModeFlag;
 
@@ -183,6 +194,11 @@
     [[self.mainSubView superview] addConstraints:constraint_POS_V];
     [[self.mainSubView superview] addConstraints:constraint_POS_VB];
     
+    //reassign constraint ivars!!
+    self.topLayoutGuideConstraint = [constraint_POS_V objectAtIndex:0];
+    self.bottomLayoutGuideConstraint = [constraint_POS_VB objectAtIndex:0];
+    
+    
     [super viewWillAppear:animated];
 }
 
@@ -194,6 +210,16 @@
 
     NSString* newUserString = [NSString stringWithFormat:@"Logged in as %@", staffUserManager.currentStaffUser.first_name];
     [[self.navigationItem.rightBarButtonItems objectAtIndex:0] setTitle:newUserString];
+}
+
+
+-(void)viewDidLayoutSubviews{
+    
+    //can query topLayoutGuide or bottomLayoutGuide from within this method
+    
+//    NSLog(@"this is bottomLayoutGuide length: %5.2f", self.bottomLayoutGuide.length);
+//    
+//    NSLog(@"this is the CONTAINER view's bottomLayoutGuide length: %5.2f", self.splitViewController.navigationController.bottomLayoutGuide.length);
 }
 
 
@@ -249,11 +275,11 @@
     }
     
     //copy values to edit field values
-    self.nameValueField.text = self.firstLastNameValue.text;
+    [self.nameValueField setTitle:self.firstLastNameValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     self.typeValueField.text = self.typeValue.text;
     self.classValueField.text = self.classValue.text;
-    self.pickUpTimeValueField.text = self.pickUpTimeValue.text;
-    self.returnTimeValueField.text = self.returnTimeValue.text;
+    [self.pickUpTimeValueField setTitle:self.pickUpTimeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+    [self.returnTimeValueField setTitle:self.returnTimeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     
     
     //get table of joins
@@ -522,8 +548,26 @@
     //show the add button
     [self.addButtonView setHidden:NO];
     
-    //lower table to reveal add button
-    self.tableTopGuideConstraint.constant = 50;
+    //raise table to reveal add button
+    self.tablebottomGuideConstraint.constant = 50.f;
+    
+    //lower main sub view to reveal save button
+    self.topLayoutGuideConstraint.constant = 50;
+    
+    
+    
+    //animate changes in the constraints (specifically the constraints added to mainSubView)
+    [self.mainSubView setNeedsUpdateConstraints];
+    
+    [UIView animateWithDuration:0.25f animations:^{
+        
+        //generally, use the the top most view
+        [self.view layoutIfNeeded];
+    }];
+    
+    
+   
+    
     
     
 }
@@ -544,19 +588,157 @@
     //hide edit text fields
     [self.viewEditLeft setHidden:YES];
     
-    //raise table to hide add button (NOT ANIMATE-ABLE)
-    self.tableTopGuideConstraint.constant = 0;
+    //lower table to hide add button (NOT ANIMATE-ABLE?)
+    self.tablebottomGuideConstraint.constant = 0;
+    
+    //raise main sub view to hide save button
+    self.topLayoutGuideConstraint.constant = 0;
     
     //hide the add button after the change to the constraint is complete
     [self.addButtonView setHidden:NO];
     
     
     
+    //animate changes in the constraints (specifically the constraints added to mainSubView)
+    [self.mainSubView setNeedsUpdateConstraints];
     
+    [UIView animateWithDuration:0.25f animations:^{
+        
+        //genearlly, use the top most view
+        [self.view layoutIfNeeded];
+    }];
+    
+  
+}
+
+
+-(IBAction)addItemButton:(id)sender{
+    
+    
+}
+
+
+-(IBAction)doneButton:(id)sender{
     
     
     
 }
+
+
+-(IBAction)changeNameTextField:(id)sender{
+    
+    EQRContactPickerVC* contactVC = [[EQRContactPickerVC alloc] initWithNibName:@"EQRContactPickerVC" bundle:nil];
+    self.myContactVC = contactVC;
+    
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.myContactVC];
+    self.myContactPicker = popOver;
+    
+    //set the size
+    [self.myContactPicker setPopoverContentSize:CGSizeMake(300, 500)];
+    
+    //present the popOver
+    [self.myContactPicker presentPopoverFromRect:self.nameValueField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    
+    //actions to perform AFTER presenting the popOver
+    
+    //assign self as delegate of name picker
+    self.myContactVC.delegate = self;
+
+}
+
+
+
+
+-(IBAction)changeTypeTextField:(id)sender{
+    
+    
+}
+
+-(IBAction)changeClassTextField:(id)sender{
+    
+    
+}
+
+
+-(IBAction)changeDateTextFields:(id)sender{
+    
+    //datDatePicker shared nib
+    EQREditorDateVCntrllr* datePickerVC = [[EQREditorDateVCntrllr alloc] initWithNibName:@"EQREditorDateVCntrllr" bundle:nil];
+    self.myDayDateVC = datePickerVC;
+    
+    //create the popover and assign to ivar
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:datePickerVC];
+    self.myDayDatePicker = popOver;
+    self.myDayDatePicker.popoverContentSize = CGSizeMake(320.f, 570.f);
+    
+    
+    //present the popover
+    [self.myDayDatePicker presentPopoverFromRect:self.pickUpTimeValueField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    //methods AFTER adding the popover to the view
+    
+    //enter dates into datepicker
+    NSDate* combinedPickupDate = [EQRDataStructure dateFromCombinedDay:self.myScheduleRequest.request_date_begin And8HourShiftedTime:self.myScheduleRequest.request_time_begin];
+    NSDate* combinedReturnDate = [EQRDataStructure dateFromCombinedDay:self.myScheduleRequest.request_date_end And8HourShiftedTime:self.myScheduleRequest.request_time_end];
+    
+    self.myDayDateVC.pickupDateField.date = combinedPickupDate;
+    self.myDayDateVC.returnDateField.date = combinedReturnDate;
+    
+    //assign target for datDatePicker's actions
+    [self.myDayDateVC.saveButton addTarget:self action:@selector(receiveNewPickupDate) forControlEvents:UIControlEventTouchUpInside];
+
+    
+}
+
+
+#pragma mark - receive shared nib actions
+
+-(void)receiveNewPickupDate{
+    
+    //retrieve date from picker
+    NSDate* newPickupDate = [self.myDayDateVC retrievePickUpDate];
+    NSDate* newReturnDate = [self.myDayDateVC retrieveReturnDate];
+    
+    
+    //update date in ivar myScheduleRequest
+    self.myScheduleRequest.request_date_begin = [EQRDataStructure dateByStrippingOffTime:newPickupDate];
+    self.myScheduleRequest.request_time_begin = [EQRDataStructure timeByStrippingOffDate:newPickupDate];
+    self.myScheduleRequest.request_date_end = [EQRDataStructure dateByStrippingOffTime:newReturnDate];
+    self.myScheduleRequest.request_time_end = [EQRDataStructure timeByStrippingOffDate:newReturnDate];
+    
+    //renew the view
+    [self renewTheViewWithRequest:self.myScheduleRequest];
+    
+    //_____!!!!!!  update data layer   !!!!!!______
+    
+    //dismiss the popover
+    [self.myDayDatePicker dismissPopoverAnimated:YES];
+    self.myDayDateVC = nil;
+    
+}
+
+
+//ContactPickerVC delegate method
+-(void)retrieveSelectedNameItem{
+    
+    EQRContactNameItem* thisNameItem = [self.myContactVC retrieveContactItem];
+    
+    //update view objets
+    self.nameValueField.titleLabel.text = thisNameItem.first_and_last;
+    self.firstLastNameValue.text = thisNameItem.first_and_last;
+    
+    //udpate myScheduleRequest
+    self.myScheduleRequest.contactNameItem = thisNameItem;
+    self.myScheduleRequest.contact_name = thisNameItem.first_and_last;
+    self.myScheduleRequest.contact_foreignKey = thisNameItem.key_id;
+    
+    //____!!!!!   update data layer   !!!!!______
+    
+    //dismiss the popover
+    [self.myContactPicker dismissPopoverAnimated:YES];
+}
+
 
 
 #pragma mark - alert view delegate  / compose email
@@ -740,8 +922,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    
-    
+
 }
 
 

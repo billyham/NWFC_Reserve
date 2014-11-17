@@ -28,5 +28,16 @@
 +(NSArray*)decomposeJoinsToEquipTitlesWithQuantities:(NSArray*)EquipJoins;
 
 
+//enter an NSDate and it returns MYSQL compatible string
++(NSString*)dateAsString:(NSDate*)myDate;
++(NSString*)dateAsStringSansTime:(NSDate*)myDate;
++(NSString*)timeAsString:(NSDate*)myDate;
+
++(NSDate*)dateFromCombinedDay:(NSDate*)myDay And8HourShiftedTime:(NSDate*)myTime;
+//+(NSDate*)dateFromCombinedDay:(NSDate*)myDay AndTime:(NSDate*)myTime;
+
++(NSDate*)dateByStrippingOffTime:(NSDate*)myDate;
++(NSDate*)timeByStrippingOffDate:(NSDate*)myDate;
+
 
 @end

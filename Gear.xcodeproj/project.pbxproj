@@ -103,6 +103,8 @@
 		545661DF18323ABC0067B40D /* EQREquipItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 545661DE18323ABC0067B40D /* EQREquipItem.m */; };
 		5460B69719EFA27700D3ED7B /* EQRNavBarDatesNarrowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5460B69619EFA27700D3ED7B /* EQRNavBarDatesNarrowView.m */; };
 		5464C0141A0A21A600469C45 /* EQREquipSelectionLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5464C0131A0A21A600469C45 /* EQREquipSelectionLayout.m */; };
+		546F28231A19529C00980221 /* EQRContactPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 546F28211A19529C00980221 /* EQRContactPickerVC.m */; };
+		546F28241A19529C00980221 /* EQRContactPickerVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 546F28221A19529C00980221 /* EQRContactPickerVC.xib */; };
 		54746DEB18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 54746DEA18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m */; };
 		54882BD21900D588005A4D5A /* EQREditorRenterVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54882BD01900D588005A4D5A /* EQREditorRenterVCntrllr.m */; };
 		54882BD31900D588005A4D5A /* EQREditorRenterVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54882BD11900D588005A4D5A /* EQREditorRenterVCntrllr.xib */; };
@@ -294,6 +296,9 @@
 		5460B69619EFA27700D3ED7B /* EQRNavBarDatesNarrowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRNavBarDatesNarrowView.m; sourceTree = "<group>"; };
 		5464C0121A0A21A600469C45 /* EQREquipSelectionLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSelectionLayout.h; sourceTree = "<group>"; };
 		5464C0131A0A21A600469C45 /* EQREquipSelectionLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipSelectionLayout.m; sourceTree = "<group>"; };
+		546F28201A19529C00980221 /* EQRContactPickerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRContactPickerVC.h; sourceTree = "<group>"; };
+		546F28211A19529C00980221 /* EQRContactPickerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRContactPickerVC.m; sourceTree = "<group>"; };
+		546F28221A19529C00980221 /* EQRContactPickerVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRContactPickerVC.xib; sourceTree = "<group>"; };
 		54746DE918DFF8EA0016C596 /* EQRScheduleNestedDayLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleNestedDayLayout.h; sourceTree = "<group>"; };
 		54746DEA18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EQRScheduleNestedDayLayout.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		54882BCF1900D588005A4D5A /* EQREditorRenterVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREditorRenterVCntrllr.h; sourceTree = "<group>"; };
@@ -419,12 +424,6 @@
 				015B7C6918EA22B3002F5B6D /* EQREditorEquipListCell.m */,
 				540AEA1819A02FD50092522D /* EQREditorHeaderCell.h */,
 				540AEA1919A02FD50092522D /* EQREditorHeaderCell.m */,
-				01A4755718EB9BDF006F32EB /* EQREditorDateVCntrllr.h */,
-				01A4755818EB9BDF006F32EB /* EQREditorDateVCntrllr.m */,
-				01A4755918EB9BDF006F32EB /* EQREditorDateVCntrllr.xib */,
-				01C83A7C199E818C00CD5E9C /* EQREditorExtendedDateVC.h */,
-				01C83A7D199E818C00CD5E9C /* EQREditorExtendedDateVC.m */,
-				01C83A7E199E818C00CD5E9C /* EQREditorExtendedDateVC.xib */,
 				54882BCF1900D588005A4D5A /* EQREditorRenterVCntrllr.h */,
 				54882BD01900D588005A4D5A /* EQREditorRenterVCntrllr.m */,
 				54882BD11900D588005A4D5A /* EQREditorRenterVCntrllr.xib */,
@@ -601,15 +600,14 @@
 		542CC23A197CECA800BFD581 /* shared nibs */ = {
 			isa = PBXGroup;
 			children = (
-				542CC23B197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.h */,
-				542CC23C197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.m */,
-				542CC23D197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.xib */,
-				01C83A77199E792800CD5E9C /* EQRDayExtendedPickerVC.h */,
-				01C83A78199E792800CD5E9C /* EQRDayExtendedPickerVC.m */,
-				01C83A79199E792800CD5E9C /* EQRDayExtendedPickerVC.xib */,
+				54E332011A18A1EE0035B7AD /* pickup and return day and time */,
+				54E332021A18A2070035B7AD /* just date */,
 				5493CA8B1990942F008A9221 /* EQRStaffUserPickerViewController.h */,
 				5493CA8C1990942F008A9221 /* EQRStaffUserPickerViewController.m */,
 				5493CA8D1990942F008A9221 /* EQRStaffUserPickerViewController.xib */,
+				546F28201A19529C00980221 /* EQRContactPickerVC.h */,
+				546F28211A19529C00980221 /* EQRContactPickerVC.m */,
+				546F28221A19529C00980221 /* EQRContactPickerVC.xib */,
 				54ED1906199B403A00CF1A8F /* print renderers */,
 			);
 			name = "shared nibs";
@@ -738,6 +736,32 @@
 				016C3F7D18ADBDAD00B2A692 /* EQREquipUniqueItem.m */,
 			);
 			name = "collection objects";
+			sourceTree = "<group>";
+		};
+		54E332011A18A1EE0035B7AD /* pickup and return day and time */ = {
+			isa = PBXGroup;
+			children = (
+				01A4755718EB9BDF006F32EB /* EQREditorDateVCntrllr.h */,
+				01A4755818EB9BDF006F32EB /* EQREditorDateVCntrllr.m */,
+				01A4755918EB9BDF006F32EB /* EQREditorDateVCntrllr.xib */,
+				01C83A7C199E818C00CD5E9C /* EQREditorExtendedDateVC.h */,
+				01C83A7D199E818C00CD5E9C /* EQREditorExtendedDateVC.m */,
+				01C83A7E199E818C00CD5E9C /* EQREditorExtendedDateVC.xib */,
+			);
+			name = "pickup and return day and time";
+			sourceTree = "<group>";
+		};
+		54E332021A18A2070035B7AD /* just date */ = {
+			isa = PBXGroup;
+			children = (
+				542CC23B197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.h */,
+				542CC23C197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.m */,
+				542CC23D197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.xib */,
+				01C83A77199E792800CD5E9C /* EQRDayExtendedPickerVC.h */,
+				01C83A78199E792800CD5E9C /* EQRDayExtendedPickerVC.m */,
+				01C83A79199E792800CD5E9C /* EQRDayExtendedPickerVC.xib */,
+			);
+			name = "just date";
 			sourceTree = "<group>";
 		};
 		54E9DB151993531B0080FF1B /* shared singletons */ = {
@@ -875,6 +899,7 @@
 				5416F9A01918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.xib in Resources */,
 				545547CE197F987C001AC986 /* GenericRightArrow.png in Resources */,
 				54882BD31900D588005A4D5A /* EQREditorRenterVCntrllr.xib in Resources */,
+				546F28241A19529C00980221 /* EQRContactPickerVC.xib in Resources */,
 				01C83A80199E818C00CD5E9C /* EQREditorExtendedDateVC.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -916,6 +941,7 @@
 				542CC23E197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.m in Sources */,
 				54457ECD1935B78E00E9061A /* EQRCheckRowCell.m in Sources */,
 				540B551A187687D60025FDEE /* EQRGlobals.m in Sources */,
+				546F28231A19529C00980221 /* EQRContactPickerVC.m in Sources */,
 				540AEA1A19A02FD50092522D /* EQREditorHeaderCell.m in Sources */,
 				01B4830519AE8290009F15F6 /* EQRInboxLeftTableVC.m in Sources */,
 				438EDCF6182B7ABE0090F882 /* EQRReserveTopVCntrllr.m in Sources */,

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRContactPickerVC">
+            <connections>
+                <outlet property="searchDisplayController" destination="9TX-Vl-DJz" id="7sc-ZZ-5Zy"/>
+                <outlet property="tableView" destination="s3k-NH-6My" id="0sl-uU-jJp"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="300" height="500"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gVB-SH-xSi" userLabel="main subview">
+                    <rect key="frame" x="0.0" y="0.0" width="300" height="500"/>
+                    <subviews>
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="s3k-NH-6My">
+                            <rect key="frame" x="0.0" y="0.0" width="300" height="450"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <searchBar key="tableHeaderView" contentMode="redraw" id="3ru-0p-cCV">
+                                <rect key="frame" x="0.0" y="0.0" width="300" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="-1" id="3P9-81-qe4"/>
+                                </connections>
+                            </searchBar>
+                            <connections>
+                                <outlet property="dataSource" destination="-1" id="K0S-hq-dED"/>
+                                <outlet property="delegate" destination="-1" id="Xt2-ac-Snf"/>
+                            </connections>
+                        </tableView>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qNS-DK-ngq" userLabel="add contact View">
+                            <rect key="frame" x="0.0" y="450" width="300" height="50"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="28b-Xt-A1t">
+                                    <rect key="frame" x="89" y="10" width="122" height="30"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="30" id="ZR3-qb-5fC"/>
+                                    </constraints>
+                                    <state key="normal" title="Add New Contact">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="50" id="AYo-T7-GFk"/>
+                                <constraint firstItem="28b-Xt-A1t" firstAttribute="leading" secondItem="qNS-DK-ngq" secondAttribute="leading" constant="17" id="Egf-wt-sa6"/>
+                                <constraint firstAttribute="centerX" secondItem="28b-Xt-A1t" secondAttribute="centerX" id="pkQ-fe-A8o"/>
+                                <constraint firstItem="28b-Xt-A1t" firstAttribute="top" secondItem="qNS-DK-ngq" secondAttribute="top" constant="10" id="sfH-9P-S7P"/>
+                            </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="Egf-wt-sa6"/>
+                                </mask>
+                            </variation>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="qNS-DK-ngq" secondAttribute="bottom" id="5CV-Hq-SeA"/>
+                        <constraint firstAttribute="trailing" secondItem="qNS-DK-ngq" secondAttribute="trailing" id="E1Q-93-2WV"/>
+                        <constraint firstAttribute="bottom" secondItem="s3k-NH-6My" secondAttribute="bottom" constant="50" id="Eoc-Vi-rBD"/>
+                        <constraint firstItem="s3k-NH-6My" firstAttribute="top" secondItem="gVB-SH-xSi" secondAttribute="top" id="Fu4-Ti-kkZ"/>
+                        <constraint firstAttribute="trailing" secondItem="s3k-NH-6My" secondAttribute="trailing" id="NRT-YK-Tek"/>
+                        <constraint firstItem="s3k-NH-6My" firstAttribute="leading" secondItem="gVB-SH-xSi" secondAttribute="leading" id="Yzx-bX-8It"/>
+                        <constraint firstItem="qNS-DK-ngq" firstAttribute="leading" secondItem="gVB-SH-xSi" secondAttribute="leading" id="hPv-aP-ZJd"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="gVB-SH-xSi" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="AMP-yV-vSB"/>
+                <constraint firstAttribute="trailing" secondItem="gVB-SH-xSi" secondAttribute="trailing" id="qtq-hr-2mw"/>
+                <constraint firstAttribute="bottom" secondItem="gVB-SH-xSi" secondAttribute="bottom" id="rrG-wR-36Y"/>
+                <constraint firstItem="gVB-SH-xSi" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="tk3-dR-mfR"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+        <searchDisplayController id="9TX-Vl-DJz">
+            <connections>
+                <outlet property="delegate" destination="-1" id="HUh-c4-odC"/>
+                <outlet property="searchBar" destination="3ru-0p-cCV" id="iwL-UB-WkM"/>
+                <outlet property="searchContentsController" destination="-1" id="9fB-9N-Hnm"/>
+                <outlet property="searchResultsDataSource" destination="-1" id="FqN-Dn-QOk"/>
+                <outlet property="searchResultsDelegate" destination="-1" id="k3D-DT-EfG"/>
+            </connections>
+        </searchDisplayController>
+    </objects>
+</document>

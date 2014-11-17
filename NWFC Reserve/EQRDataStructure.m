@@ -213,6 +213,102 @@
 }
 
 
++(NSString*)dateAsString:(NSDate*)myDate{
+    
+    //format the nsdates to a mysql compatible string
+    NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatForDate setLocale:usLocale];
+    [dateFormatForDate setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString* dateString = [dateFormatForDate stringFromDate:myDate];
+    
+    return dateString;
+    
+}
+
++(NSString*)dateAsStringSansTime:(NSDate*)myDate{
+    
+    //format the nsdates to a mysql compatible string
+    NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatForDate setLocale:usLocale];
+    [dateFormatForDate setDateFormat:@"yyyy-MM-dd"];
+    NSString* dateString = [dateFormatForDate stringFromDate:myDate];
+    
+    return dateString;
+    
+}
+
+
++(NSString*)timeAsString:(NSDate*)myDate{
+    
+    //format the time to a mysql compatible string, dropping the seconds
+    NSDateFormatter* dateFormatForTime = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatForTime setLocale:usLocale];
+    [dateFormatForTime setDateFormat:@"HH:mm"];
+    NSString* timeStringPartOne = [dateFormatForTime stringFromDate:myDate];
+    NSString* timeString = [NSString stringWithFormat:@"%@:00", timeStringPartOne];
+    
+    return timeString;
+    
+}
+
++(NSDate*)dateFromCombinedDay:(NSDate*)myDay And8HourShiftedTime:(NSDate*)myTime{
+    
+    //add times to dates
+    NSDate* newDate = [myDay dateByAddingTimeInterval: [myTime timeIntervalSinceReferenceDate]];
+    
+    //______adjust by subtracting 8 hours
+    float secondsForOffset = -28800;    //this is 9 hours = 32400, this is 8 hours = 28800;
+    NSDate* newAdjustedDate = [newDate dateByAddingTimeInterval:secondsForOffset];
+    
+    return newAdjustedDate;
+}
+
+
+//+(NSDate*)dateFromCombinedDay:(NSDate*)myDay AndTime:(NSDate*)myTime{
+//    
+//    //add times to dates
+//    NSDate* newDate = [myDay dateByAddingTimeInterval:[myTime timeIntervalSinceReferenceDate]];
+//    
+//    return newDate;
+//}
+
+
++(NSDate*)dateByStrippingOffTime:(NSDate*)myDate{
+    
+    NSString* dateAsString = [self dateAsStringSansTime:myDate];
+    
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    
+    NSDate* newDate = [dateFormatter dateFromString:[NSString stringWithFormat:@"%@ 00:00:00", dateAsString]];
+    
+    return newDate;
+    
+}
+
++(NSDate*)timeByStrippingOffDate:(NSDate*)myDate{
+    
+    NSString* timeAsString = [self timeAsString:myDate];
+    
+    //piggy back the time by adding it to the system reference date
+    float secondsFromHours = [[timeAsString substringToIndex:2] floatValue] * 60 * 60;
+    float secondsFromMinutes = [[timeAsString substringWithRange:NSMakeRange(3, 2)] floatValue] * 60;
+    float combinedSeconds = secondsFromHours + secondsFromMinutes;
+    NSDate* referenceDate = [NSDate dateWithTimeIntervalSinceReferenceDate:combinedSeconds];
+    
+    //______adjust by 8 hours
+    float secondsForOffset = 28800;    //this is 9 hours = 32400, this is 8 hours = 28800, this is 16 hours = 57600
+    NSDate* timeAdjustedReferenceDate = [referenceDate dateByAddingTimeInterval:secondsForOffset];
+    
+    return timeAdjustedReferenceDate;
+}
+
+
+
 
 
 

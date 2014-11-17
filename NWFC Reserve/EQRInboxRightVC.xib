@@ -15,13 +15,13 @@
                 <outlet property="leftView" destination="zZA-FD-EOX" id="dkj-7z-on8"/>
                 <outlet property="mainSubView" destination="H0Q-s1-zCE" id="ey2-DC-zLv"/>
                 <outlet property="myTable" destination="aLr-us-RSk" id="gdf-m4-72Y"/>
-                <outlet property="nameValueField" destination="EJA-tt-cMB" id="AQ7-ff-c2H"/>
+                <outlet property="nameValueField" destination="HdU-Y9-Idv" id="5ys-xs-nGe"/>
                 <outlet property="pickUpTimeValue" destination="u0E-eI-hJR" id="Jad-wb-vi9"/>
-                <outlet property="pickUpTimeValueField" destination="5Zb-h8-Sj5" id="ovF-nN-Cns"/>
+                <outlet property="pickUpTimeValueField" destination="MiT-xo-BtN" id="ibF-bl-86Z"/>
                 <outlet property="returnTimeValue" destination="jFc-lz-Nn7" id="NOx-lz-cXD"/>
-                <outlet property="returnTimeValueField" destination="OsQ-6j-xD0" id="ysh-ak-wKc"/>
+                <outlet property="returnTimeValueField" destination="f4d-wf-tFC" id="AJu-jI-UPJ"/>
                 <outlet property="rightView" destination="gRA-am-cUZ" id="IuP-zo-EqK"/>
-                <outlet property="tableTopGuideConstraint" destination="B6A-wp-RPm" id="lrk-gn-ynG"/>
+                <outlet property="tablebottomGuideConstraint" destination="roT-zw-wjM" id="GhL-XS-vOk"/>
                 <outlet property="timeOfRequestValue" destination="TfA-qg-Q3P" id="cOv-vy-dbn"/>
                 <outlet property="topLayoutGuideConstraint" destination="lkL-EB-GaJ" id="7je-Aa-k7O"/>
                 <outlet property="typeValue" destination="jcG-Tz-l46" id="2Kc-57-GHX"/>
@@ -39,7 +39,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5A4-Y1-Bad" userLabel="View add button">
-                            <rect key="frame" x="418" y="0.0" width="350" height="50"/>
+                            <rect key="frame" x="418" y="974" width="350" height="50"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oiq-77-L4S">
                                     <rect key="frame" x="16" y="10" width="79" height="30"/>
@@ -48,7 +48,7 @@
                                     </state>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" red="0.89621782255471649" green="0.93939215488016325" blue="0.97718253968253965" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="Ksi-gs-QRZ"/>
                             </constraints>
@@ -261,70 +261,82 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oqx-Zn-x5k" userLabel="View edit left">
                             <rect key="frame" x="81" y="71" width="301" height="185"/>
                             <subviews>
-                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EJA-tt-cMB">
-                                    <rect key="frame" x="8" y="0.0" width="285" height="30"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="30" id="o3D-LR-5MQ"/>
-                                    </constraints>
-                                    <color key="textColor" name="selectedMenuItemColor" catalog="System" colorSpace="catalog"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <textInputTraits key="textInputTraits"/>
-                                </textField>
                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JGi-4c-0DM">
-                                    <rect key="frame" x="8" y="34" width="285" height="30"/>
+                                    <rect key="frame" x="8" y="34" width="308" height="30"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="KMy-m8-2Nf"/>
                                     </constraints>
                                     <color key="textColor" name="selectedMenuItemColor" catalog="System" colorSpace="catalog"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </textField>
                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Qo6-XU-R1z">
-                                    <rect key="frame" x="8" y="68" width="285" height="30"/>
+                                    <rect key="frame" x="8" y="68" width="308" height="30"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="brr-TR-bLu"/>
                                     </constraints>
                                     <color key="textColor" name="selectedMenuItemColor" catalog="System" colorSpace="catalog"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </textField>
-                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5Zb-h8-Sj5">
-                                    <rect key="frame" x="8" y="113" width="285" height="30"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MiT-xo-BtN" userLabel="Button pick up date">
+                                    <rect key="frame" x="16" y="113" width="285" height="30"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="30" id="yNa-m8-9rt"/>
+                                        <constraint firstAttribute="width" constant="285" id="To0-H8-zNA"/>
+                                        <constraint firstAttribute="height" constant="30" id="bdE-dX-a1x"/>
                                     </constraints>
-                                    <color key="textColor" name="selectedMenuItemColor" catalog="System" colorSpace="catalog"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <textInputTraits key="textInputTraits"/>
-                                </textField>
-                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="OsQ-6j-xD0">
-                                    <rect key="frame" x="8" y="151" width="285" height="30"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                    <state key="normal" title="Button">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="changeDateTextFields:" destination="-1" eventType="touchUpInside" id="jrJ-Rx-rsa"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f4d-wf-tFC" userLabel="Button return date">
+                                    <rect key="frame" x="16" y="151" width="285" height="30"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="30" id="dEt-GK-9jD"/>
+                                        <constraint firstAttribute="width" constant="285" id="4A7-Ij-saZ"/>
+                                        <constraint firstAttribute="height" constant="30" id="wqb-6x-tBb"/>
                                     </constraints>
-                                    <color key="textColor" name="selectedMenuItemColor" catalog="System" colorSpace="catalog"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <textInputTraits key="textInputTraits"/>
-                                </textField>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                    <state key="normal" title="Button">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="changeDateTextFields:" destination="-1" eventType="touchUpInside" id="mHO-vx-nCk"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HdU-Y9-Idv">
+                                    <rect key="frame" x="16" y="0.0" width="285" height="30"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="30" id="WIP-26-h7B"/>
+                                        <constraint firstAttribute="width" constant="285" id="f5H-Yw-en3"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                    <state key="normal" title="Button">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="changeNameTextField:" destination="-1" eventType="touchUpInside" id="yjw-PK-Z1r"/>
+                                    </connections>
+                                </button>
                             </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="Qo6-XU-R1z" firstAttribute="leading" secondItem="Oqx-Zn-x5k" secondAttribute="leading" constant="8" id="0Am-Je-3Lc"/>
-                                <constraint firstAttribute="trailing" secondItem="OsQ-6j-xD0" secondAttribute="trailing" constant="8" id="0WH-yU-BhJ"/>
-                                <constraint firstItem="5Zb-h8-Sj5" firstAttribute="leading" secondItem="Oqx-Zn-x5k" secondAttribute="leading" constant="8" id="2YD-sb-JGK"/>
                                 <constraint firstAttribute="height" constant="185" id="6fk-Kf-vwi"/>
-                                <constraint firstItem="EJA-tt-cMB" firstAttribute="top" secondItem="Oqx-Zn-x5k" secondAttribute="top" id="81L-VR-toW"/>
-                                <constraint firstAttribute="trailing" secondItem="EJA-tt-cMB" secondAttribute="trailing" constant="8" id="APx-mn-tFi"/>
-                                <constraint firstItem="OsQ-6j-xD0" firstAttribute="leading" secondItem="Oqx-Zn-x5k" secondAttribute="leading" constant="8" id="EzS-Px-qnQ"/>
-                                <constraint firstItem="JGi-4c-0DM" firstAttribute="top" secondItem="EJA-tt-cMB" secondAttribute="bottom" constant="4" id="F8O-Kl-fZh"/>
+                                <constraint firstItem="MiT-xo-BtN" firstAttribute="leading" secondItem="Oqx-Zn-x5k" secondAttribute="leading" constant="16" id="E1Y-ib-Uxd"/>
+                                <constraint firstItem="MiT-xo-BtN" firstAttribute="top" secondItem="Qo6-XU-R1z" secondAttribute="bottom" constant="15" id="ITi-7z-ZTa"/>
                                 <constraint firstItem="Qo6-XU-R1z" firstAttribute="top" secondItem="JGi-4c-0DM" secondAttribute="bottom" constant="4" id="IxV-dl-HHv"/>
-                                <constraint firstAttribute="trailing" secondItem="JGi-4c-0DM" secondAttribute="trailing" constant="8" id="Qgf-Fd-0UU"/>
-                                <constraint firstItem="EJA-tt-cMB" firstAttribute="leading" secondItem="Oqx-Zn-x5k" secondAttribute="leading" constant="8" id="Ujh-kE-bbM"/>
-                                <constraint firstAttribute="trailing" secondItem="5Zb-h8-Sj5" secondAttribute="trailing" constant="8" id="Ulu-Wt-zJr"/>
-                                <constraint firstAttribute="trailing" secondItem="Qo6-XU-R1z" secondAttribute="trailing" constant="8" id="XEN-fI-kgv"/>
-                                <constraint firstItem="5Zb-h8-Sj5" firstAttribute="top" secondItem="Qo6-XU-R1z" secondAttribute="bottom" constant="15" id="Yd8-gn-iKs"/>
+                                <constraint firstAttribute="trailing" secondItem="JGi-4c-0DM" secondAttribute="trailing" constant="-15" id="Qgf-Fd-0UU"/>
+                                <constraint firstAttribute="trailing" secondItem="Qo6-XU-R1z" secondAttribute="trailing" constant="-15" id="XEN-fI-kgv"/>
+                                <constraint firstItem="HdU-Y9-Idv" firstAttribute="leading" secondItem="Oqx-Zn-x5k" secondAttribute="leading" constant="16" id="XN2-Me-elN"/>
+                                <constraint firstItem="JGi-4c-0DM" firstAttribute="top" secondItem="HdU-Y9-Idv" secondAttribute="bottom" constant="4" id="Ytr-dH-K2q"/>
                                 <constraint firstItem="JGi-4c-0DM" firstAttribute="leading" secondItem="Oqx-Zn-x5k" secondAttribute="leading" constant="8" id="hmj-Ww-dLb"/>
-                                <constraint firstItem="OsQ-6j-xD0" firstAttribute="top" secondItem="5Zb-h8-Sj5" secondAttribute="bottom" constant="8" id="uya-TR-JOs"/>
+                                <constraint firstItem="f4d-wf-tFC" firstAttribute="top" secondItem="MiT-xo-BtN" secondAttribute="bottom" constant="8" id="tYk-EZ-YmD"/>
+                                <constraint firstItem="f4d-wf-tFC" firstAttribute="leading" secondItem="Oqx-Zn-x5k" secondAttribute="leading" constant="16" id="zQt-YD-p1D"/>
+                                <constraint firstItem="HdU-Y9-Idv" firstAttribute="top" secondItem="Oqx-Zn-x5k" secondAttribute="top" id="zXI-e1-yhh"/>
                             </constraints>
                         </view>
                     </subviews>
@@ -334,12 +346,12 @@
                         <constraint firstAttribute="bottom" secondItem="zZA-FD-EOX" secondAttribute="bottom" id="6wA-5P-gYa"/>
                         <constraint firstItem="gRA-am-cUZ" firstAttribute="top" secondItem="H0Q-s1-zCE" secondAttribute="top" id="B6A-wp-RPm"/>
                         <constraint firstItem="gRA-am-cUZ" firstAttribute="leading" secondItem="zZA-FD-EOX" secondAttribute="trailing" id="E4n-Hl-XFk"/>
-                        <constraint firstItem="5A4-Y1-Bad" firstAttribute="top" secondItem="H0Q-s1-zCE" secondAttribute="top" id="Gf6-ix-6Yr"/>
                         <constraint firstItem="Oqx-Zn-x5k" firstAttribute="top" secondItem="H0Q-s1-zCE" secondAttribute="top" constant="71" id="Kfc-f4-CSY"/>
                         <constraint firstItem="Oqx-Zn-x5k" firstAttribute="leading" secondItem="H0Q-s1-zCE" secondAttribute="leading" constant="81" id="LW2-lR-CcE"/>
                         <constraint firstAttribute="trailing" secondItem="5A4-Y1-Bad" secondAttribute="trailing" id="Rbo-hT-pVq"/>
                         <constraint firstAttribute="centerX" secondItem="qCN-Bz-hug" secondAttribute="centerX" id="Ry6-Ij-6kD"/>
                         <constraint firstItem="gRA-am-cUZ" firstAttribute="leading" secondItem="Oqx-Zn-x5k" secondAttribute="trailing" constant="36" id="SD1-UF-U8I"/>
+                        <constraint firstAttribute="bottom" secondItem="5A4-Y1-Bad" secondAttribute="bottom" id="StN-3R-Ywx"/>
                         <constraint firstAttribute="trailing" secondItem="zZA-FD-EOX" secondAttribute="trailing" constant="350" id="Xor-N2-YeF"/>
                         <constraint firstAttribute="centerY" secondItem="qCN-Bz-hug" secondAttribute="centerY" id="ZCS-JV-I8g"/>
                         <constraint firstItem="zZA-FD-EOX" firstAttribute="leading" secondItem="H0Q-s1-zCE" secondAttribute="leading" id="foM-ML-TBD"/>
@@ -349,7 +361,7 @@
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" white="0.96983348540145986" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.89621782255471649" green="0.93939215488016325" blue="0.97718253968253965" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="H0Q-s1-zCE" secondAttribute="bottom" id="Ql3-HZ-MZV"/>
                 <constraint firstItem="H0Q-s1-zCE" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="aU5-fl-0Ev"/>

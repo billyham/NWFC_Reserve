@@ -51,6 +51,7 @@
 @property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedEquipIDs;
 @property (strong, nonatomic) NSArray* arrayOfEquipUniqueItemsWithStructure;
 
+@property (strong, nonatomic) EQREditorDateVCntrllr* myDateVC;
 
 @end
 
@@ -294,7 +295,7 @@
     //update SQL with new request information
     EQRWebData* webData = [EQRWebData sharedInstance];
     
-    NSLog(@"this is the classSection_foreignKey: %@", self.privateRequesetManager.request.classSection_foreignKey);
+//    NSLog(@"this is the classSection_foreignKey: %@", self.privateRequesetManager.request.classSection_foreignKey);
     
     //must not include nil objects in array
     //cycle though all inputs and ensure some object is included. use @"88888888" as an error code
@@ -571,52 +572,60 @@
     
     [myDateViewController.saveButton addTarget:self action:@selector(dateSaveButton:)
                               forControlEvents:UIControlEventTouchUpInside];
-    [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(showOrHideExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
+    [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(showExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
+    
+    //assign content VC as ivar
+    self.myDateVC = myDateViewController;
 }
 
 
--(IBAction)showOrHideExtendedDate:(id)sender{
+-(IBAction)showExtendedDate:(id)sender{
     
-    if ([[self.theDatePopOver contentViewController] class] == [EQREditorDateVCntrllr class]){
-        
-        //change to Extended view
-            EQREditorExtendedDateVC* myDateViewController = [[EQREditorExtendedDateVC alloc] initWithNibName:@"EQREditorExtendedDateVC" bundle:nil];
-        CGSize thisSize = CGSizeMake(600.f, 570.f);
-        
-        [self.theDatePopOver setPopoverContentSize:thisSize animated:YES];
-        [self.theDatePopOver setContentViewController:myDateViewController animated:YES];
-        
-        [myDateViewController.saveButton addTarget:self action:@selector(dateSaveButton:)
-                                  forControlEvents:UIControlEventTouchUpInside];
-        [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(showOrHideExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
-        
-        //need to set the date and time
-        myDateViewController.pickupDateField.date = self.pickUpDateDate;
-        myDateViewController.pickupTimeField.date = self.pickUpDateDate;
-        myDateViewController.returnDateField.date = self.returnDateDate;
-        myDateViewController.returnTimeField.date = self.returnDateDate;
-        
-    }else{
-        
-        //change to regular day view
-        EQREditorDateVCntrllr* myDateViewController = [[EQREditorDateVCntrllr alloc] initWithNibName:@"EQREditorDateVCntrllr" bundle:nil];
-        CGSize thisSize = CGSizeMake(320.f, 570.f);
-        
-        [self.theDatePopOver setPopoverContentSize:thisSize animated:YES];
-        [self.theDatePopOver setContentViewController:myDateViewController animated:YES];
-        
-        [myDateViewController.saveButton addTarget:self action:@selector(dateSaveButton:)
-                                  forControlEvents:UIControlEventTouchUpInside];
-        [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(showOrHideExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
-        
-        //need to set the date
-        myDateViewController.pickupDateField.date = self.pickUpDateDate;
-        myDateViewController.returnDateField.date = self.returnDateDate;
-        
-    }
+    NSLog(@"showOrHide action fires with class: %@", [[self.theDatePopOver contentViewController] class]);
     
     
+    //change to Extended view
+    EQREditorExtendedDateVC* myDateViewController = [[EQREditorExtendedDateVC alloc] initWithNibName:@"EQREditorExtendedDateVC" bundle:nil];
+    CGSize thisSize = CGSizeMake(600.f, 570.f);
     
+    [self.theDatePopOver setPopoverContentSize:thisSize animated:YES];
+    [self.theDatePopOver setContentViewController:myDateViewController animated:YES];
+    
+    [myDateViewController.saveButton addTarget:self action:@selector(dateSaveButton:)
+                              forControlEvents:UIControlEventTouchUpInside];
+    [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(returnToStandardDate:) forControlEvents:UIControlEventTouchUpInside];
+    
+    //need to set the date and time
+    myDateViewController.pickupDateField.date = self.pickUpDateDate;
+    myDateViewController.pickupTimeField.date = self.pickUpDateDate;
+    myDateViewController.returnDateField.date = self.returnDateDate;
+    myDateViewController.returnTimeField.date = self.returnDateDate;
+    
+    
+    //assign content VC as ivar (necessary, because VCs always need to be retained)
+    self.myDateVC = myDateViewController;
+}
+
+
+-(void)returnToStandardDate:(id)sender{
+    
+    //change to regular day view
+    EQREditorDateVCntrllr* myDateViewController = [[EQREditorDateVCntrllr alloc] initWithNibName:@"EQREditorDateVCntrllr" bundle:nil];
+    CGSize thisSize = CGSizeMake(320.f, 570.f);
+    
+    [self.theDatePopOver setPopoverContentSize:thisSize animated:YES];
+    [self.theDatePopOver setContentViewController:myDateViewController animated:YES];
+    
+    [myDateViewController.saveButton addTarget:self action:@selector(dateSaveButton:)
+                              forControlEvents:UIControlEventTouchUpInside];
+    [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(showExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
+    
+    //need to set the date
+    myDateViewController.pickupDateField.date = self.pickUpDateDate;
+    myDateViewController.returnDateField.date = self.returnDateDate;
+    
+    //assign content VC as ivar
+    self.myDateVC = myDateViewController;
 }
 
 
@@ -627,16 +636,14 @@
     dateFormatterLookinNice.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     dateFormatterLookinNice.dateFormat = @"EEE, MMM d, h:mm a";
     
-    self.pickUpDateDate = [(EQREditorDateVCntrllr*)[self.theDatePopOver contentViewController] retrievePickUpDate];
-    self.returnDateDate = [(EQREditorDateVCntrllr*)[self.theDatePopOver contentViewController] retrieveReturnDate];
+    self.pickUpDateDate = [self.myDateVC retrievePickUpDate];
+    self.returnDateDate = [self.myDateVC retrieveReturnDate];
     
     self.pickupDateField.text = [dateFormatterLookinNice stringFromDate:self.pickUpDateDate];
     self.returnDateField.text = [dateFormatterLookinNice stringFromDate:self.returnDateDate];
     
     self.privateRequesetManager.request.request_date_begin = self.pickUpDateDate;
     self.privateRequesetManager.request.request_date_end = self.returnDateDate;
-
-    
     
     //remove popover
     [self.theDatePopOver dismissPopoverAnimated:YES];

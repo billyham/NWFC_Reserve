@@ -32,6 +32,8 @@
 
 -(NSDate*)retrievePickUpDate{
     
+    NSLog(@"inside extended date retrievePickUpDate method");
+    
     //combine day and time pickers
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];

@@ -11,11 +11,12 @@
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
 #import "EQRScheduleRequestItem.h"
+#import "EQRContactPickerVC.h"
 
 @protocol EQRInboxRightDelegate;
 
 
-@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate> {
+@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, UISearchBarDelegate, EQRContactPickerDelegate> {
     
     __weak id <EQRInboxRightDelegate> delegateForRightSide;
 }
