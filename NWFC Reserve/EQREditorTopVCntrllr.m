@@ -655,30 +655,35 @@
 
 -(IBAction)showRenterVCntrllr:(id)sender{
     
-    self.myRenterViewController = [[EQREditorRenterVCntrllr alloc] initWithNibName:@"EQREditorRenterVCntrllr" bundle:nil];
+    EQREditorRenterVCntrllr* myRenterVC = [[EQREditorRenterVCntrllr alloc] initWithNibName:@"EQREditorRenterVCntrllr" bundle:nil];
+    self.myRenterViewController = myRenterVC;
     
     UIPopoverController* popOverC2 = [[UIPopoverController alloc] initWithContentViewController:self.myRenterViewController];
     self.theRenterPopOver= popOverC2;
     
+    //set size
+    [self.theRenterPopOver setPopoverContentSize:CGSizeMake(300.f, 500.f)];
+    
     [self.theRenterPopOver presentPopoverFromRect:self.renterTypeField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
-    //set renterViewController value ivar
-    self.myRenterViewController.renter_type = self.privateRequesetManager.request.renter_type;
-    
     //initial setup
-    [self.myRenterViewController initialSetup];
-
-    [self.myRenterViewController.saveButton addTarget:self action:@selector(renterSaveButton:) forControlEvents:UIControlEventAllTouchEvents];
+    [self.myRenterViewController initialSetupWithRenterTypeString:self.privateRequesetManager.request.renter_type];
+    
+    
+    //set self as delegate
+    self.myRenterViewController.delegate = self;
+    
     
 }
 
 
--(IBAction)renterSaveButton:(id)sender{
+-(void)initiateRetrieveRenterItem{
+    
+    NSLog(@"this is the chosen renter type: %@", [self.myRenterViewController retrieveRenterType]);
     
     //set new renter type value
-    self.renterTypeField.text = self.myRenterViewController.renter_type;
-//    self.renterTypeString = self.myRenterViewController.renter_type;
-    self.privateRequesetManager.request.renter_type = self.myRenterViewController.renter_type;
+    self.renterTypeField.text = [self.myRenterViewController retrieveRenterType];
+    self.privateRequesetManager.request.renter_type = [self.myRenterViewController retrieveRenterType];
     
     //remove popover
     [self.theRenterPopOver dismissPopoverAnimated:YES];

@@ -8,13 +8,28 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQREditorRenterVCntrllr : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate>
+@protocol EQRRenterTypeDelegate;
 
-@property (nonatomic, strong) NSString* renter_type;
-@property (nonatomic, strong) IBOutlet UIPickerView* renterTypePicker;
-@property (strong, nonatomic) IBOutlet UIButton* saveButton;
+@interface EQREditorRenterVCntrllr : UIViewController <UITableViewDataSource, UITableViewDelegate>{
+    
+    __weak id <EQRRenterTypeDelegate> delegate;
+}
+
+@property (weak, nonatomic) id <EQRRenterTypeDelegate> delegate;
 
 
--(void)initialSetup;
+//@property (nonatomic, strong) IBOutlet UIPickerView* renterTypePicker;
+//@property (strong, nonatomic) IBOutlet UIButton* saveButton;
+
+
+-(void)initialSetupWithRenterTypeString:(NSString*)presetRenter;
+-(id)retrieveRenterType;
+
+@end
+
+
+@protocol EQRRenterTypeDelegate <NSObject>
+
+-(void)initiateRetrieveRenterItem;
 
 @end

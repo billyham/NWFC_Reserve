@@ -424,9 +424,6 @@
 				015B7C6918EA22B3002F5B6D /* EQREditorEquipListCell.m */,
 				540AEA1819A02FD50092522D /* EQREditorHeaderCell.h */,
 				540AEA1919A02FD50092522D /* EQREditorHeaderCell.m */,
-				54882BCF1900D588005A4D5A /* EQREditorRenterVCntrllr.h */,
-				54882BD01900D588005A4D5A /* EQREditorRenterVCntrllr.m */,
-				54882BD11900D588005A4D5A /* EQREditorRenterVCntrllr.xib */,
 			);
 			name = "Request Editor";
 			sourceTree = "<group>";
@@ -608,6 +605,9 @@
 				546F28201A19529C00980221 /* EQRContactPickerVC.h */,
 				546F28211A19529C00980221 /* EQRContactPickerVC.m */,
 				546F28221A19529C00980221 /* EQRContactPickerVC.xib */,
+				54882BCF1900D588005A4D5A /* EQREditorRenterVCntrllr.h */,
+				54882BD01900D588005A4D5A /* EQREditorRenterVCntrllr.m */,
+				54882BD11900D588005A4D5A /* EQREditorRenterVCntrllr.xib */,
 				54ED1906199B403A00CF1A8F /* print renderers */,
 			);
 			name = "shared nibs";

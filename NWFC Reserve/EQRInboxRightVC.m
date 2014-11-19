@@ -44,7 +44,7 @@
 
 @property (strong, nonatomic) IBOutlet UIView* viewEditLeft;
 @property (strong, nonatomic) IBOutlet UIButton* nameValueField;
-@property (strong, nonatomic) IBOutlet UITextField* typeValueField;
+@property (strong, nonatomic) IBOutlet UIButton* typeValueField;
 @property (strong, nonatomic) IBOutlet UITextField* classValueField;
 @property (strong, nonatomic) IBOutlet UIButton* pickUpTimeValueField;
 @property (strong, nonatomic) IBOutlet UIButton* returnTimeValueField;
@@ -58,10 +58,12 @@
 @property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
 @property (strong, nonatomic) UIPopoverController* myDayDatePicker;
 @property (strong, nonatomic) UIPopoverController* myContactPicker;
+@property (strong, nonatomic) UIPopoverController* myRenterTypePicker;
 
 //popOver root VCs
 @property (strong, nonatomic) EQREditorDateVCntrllr* myDayDateVC;
 @property (strong, nonatomic) EQRContactPickerVC* myContactVC;
+@property (strong, nonatomic) EQREditorRenterVCntrllr* myRenterTypeVC;
 
 
 @property BOOL inEditModeFlag;
@@ -276,7 +278,7 @@
     
     //copy values to edit field values
     [self.nameValueField setTitle:self.firstLastNameValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
-    self.typeValueField.text = self.typeValue.text;
+    [self.typeValueField setTitle:self.typeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     self.classValueField.text = self.classValue.text;
     [self.pickUpTimeValueField setTitle:self.pickUpTimeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     [self.returnTimeValueField setTitle:self.returnTimeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
@@ -313,6 +315,63 @@
 }
 
 
+#pragma mark - data layer updates
+
+-(void)updateScheduleRequest{
+    
+    //update SQL with new request information
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    //must not include nil objects in array
+    //cycle though all inputs and ensure some object is included. use @"88888888" as an error code
+    if (!self.myScheduleRequest.contact_foreignKey) self.myScheduleRequest.contact_foreignKey = EQRErrorCode88888888;
+    if (!self.myScheduleRequest.classSection_foreignKey) self.myScheduleRequest.classSection_foreignKey = EQRErrorCode88888888;
+    if ([self.myScheduleRequest.classSection_foreignKey isEqualToString:@""]) self.myScheduleRequest.classSection_foreignKey = EQRErrorCode88888888;
+    if (!self.myScheduleRequest.classTitle_foreignKey) self.myScheduleRequest.classTitle_foreignKey = EQRErrorCode88888888;
+    if (!self.myScheduleRequest.request_date_begin) self.myScheduleRequest.request_date_begin = [NSDate date];
+    if (!self.myScheduleRequest.request_date_end) self.myScheduleRequest.request_date_end = [NSDate date];
+    if (!self.myScheduleRequest.contact_name) self.myScheduleRequest.contact_name = EQRErrorCode88888888;
+    if (!self.myScheduleRequest.time_of_request) self.myScheduleRequest.time_of_request = [NSDate date];
+    
+    //convert date values to strings
+    NSString* date_begin = [EQRDataStructure dateAsStringSansTime:self.myScheduleRequest.request_date_begin];
+    NSString* date_end = [EQRDataStructure dateAsStringSansTime:self.myScheduleRequest.request_date_end];
+    NSString* time_begin = [EQRDataStructure timeAsString:self.myScheduleRequest.request_time_begin];
+    NSString* time_end = [EQRDataStructure timeAsString:self.myScheduleRequest.request_time_end];
+    NSString* timeStamp_string = [EQRDataStructure dateAsString:self.myScheduleRequest.time_of_request];
+    
+    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequest.key_id, nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:@"contact_foreignKey", self.myScheduleRequest.contact_foreignKey, nil];
+    NSArray* thirdArray = [NSArray arrayWithObjects:@"classSection_foreignKey", self.myScheduleRequest.classSection_foreignKey,nil];
+    NSArray* fourthArray = [NSArray arrayWithObjects:@"classTitle_foreignKey", self.myScheduleRequest.classTitle_foreignKey,nil];
+    NSArray* fifthArray = [NSArray arrayWithObjects:@"request_date_begin", date_begin, nil];
+    NSArray* sixthArray = [NSArray arrayWithObjects:@"request_date_end", date_end, nil];
+    NSArray* seventhArray = [NSArray arrayWithObjects:@"request_time_begin", time_begin, nil];
+    NSArray* eighthArray = [NSArray arrayWithObjects:@"request_time_end", time_end, nil];
+    NSArray* ninthArray =[NSArray arrayWithObjects:@"contact_name", self.myScheduleRequest.contact_name, nil];
+    NSArray* tenthArray = [NSArray arrayWithObjects:@"renter_type", self.myScheduleRequest.renter_type, nil];
+    NSArray* eleventhArray = [NSArray arrayWithObjects:@"time_of_request", timeStamp_string, nil];
+    
+    NSArray* bigArray = [NSArray arrayWithObjects:
+                         firstArray,
+                         secondArray,
+                         thirdArray,
+                         fourthArray,
+                         fifthArray,
+                         sixthArray,
+                         seventhArray,
+                         eighthArray,
+                         ninthArray,
+                         tenthArray,
+                         eleventhArray,
+                         nil];
+    
+    NSString* returnID = [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
+    NSLog(@"this is the returnID: %@", returnID);
+    
+    //send note to schedule that a change has been saved
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
+}
 
 
 
@@ -652,6 +711,23 @@
 
 -(IBAction)changeTypeTextField:(id)sender{
     
+    EQREditorRenterVCntrllr* renterTypeVC = [[EQREditorRenterVCntrllr alloc] initWithNibName:@"EQREditorRenterVCntrllr" bundle:nil];
+    self.myRenterTypeVC = renterTypeVC;
+    
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.myRenterTypeVC];
+    self.myRenterTypePicker = popOver;
+    
+    //set the size
+    [self.myRenterTypePicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
+    
+    //present the popover
+    [self.myRenterTypePicker presentPopoverFromRect:self.typeValueField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    //tell it what renter type to have pre selected
+    [self.myRenterTypeVC initialSetupWithRenterTypeString:self.myScheduleRequest.renter_type];
+    
+    //assign self as delegate
+    self.myRenterTypeVC.delegate = self;
     
 }
 
@@ -711,6 +787,7 @@
     [self renewTheViewWithRequest:self.myScheduleRequest];
     
     //_____!!!!!!  update data layer   !!!!!!______
+    [self updateScheduleRequest];
     
     //dismiss the popover
     [self.myDayDatePicker dismissPopoverAnimated:YES];
@@ -735,6 +812,7 @@
     self.myScheduleRequest.contact_foreignKey = thisNameItem.key_id;
     
     //____!!!!!   update data layer   !!!!!______
+    [self updateScheduleRequest];
     
     //release self as delegate 
 //    self.myContactVC.delegate = nil;
@@ -743,6 +821,28 @@
     [self.myContactPicker dismissPopoverAnimated:YES];
 }
 
+
+-(void)initiateRetrieveRenterItem{
+    
+    NSString* thisRenterType = [self.myRenterTypeVC retrieveRenterType];
+    
+    //update view objects
+    self.typeValue.text = thisRenterType;
+    [self.typeValueField setTitle:thisRenterType forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+    
+    //update my Schedule Request
+    self.myScheduleRequest.renter_type = thisRenterType;
+    
+    //update data layer
+    [self updateScheduleRequest];
+    
+    //release self as delegate
+    self.myRenterTypePicker.delegate = nil;
+    
+    //dismiss popover
+    [self.myRenterTypePicker dismissPopoverAnimated:YES];
+    
+}
 
 
 #pragma mark - alert view delegate  / compose email
