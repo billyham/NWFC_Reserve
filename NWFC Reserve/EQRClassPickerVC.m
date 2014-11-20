@@ -1,95 +1,107 @@
 //
-//  EQRContactPickerVC.m
+//  EQRClassPickerVC.m
 //  Gear
 //
-//  Created by Ray Smith on 11/16/14.
+//  Created by Ray Smith on 11/19/14.
 //  Copyright (c) 2014 Ham Again LLC. All rights reserved.
 //
 
-#import "EQRContactPickerVC.h"
+#import "EQRClassPickerVC.h"
 #import "EQRWebData.h"
-#import "EQRContactNameItem.h"
+#import "EQRGlobals.h"
+#import "EQRClassItem.h"
 
-@interface EQRContactPickerVC ()
+
+
+@interface EQRClassPickerVC ()
+
 
 @property (strong, nonatomic) IBOutlet UITableView* tableView;
-@property (strong, nonatomic) NSArray* arrayOfContacts;
-@property (strong, nonatomic) NSArray* arrayOfContactsWithStructure;
+@property (strong, nonatomic) NSArray* arrayOfClasses;
+@property (strong, nonatomic) NSArray* arrayOfClassesWithAlphaStructure;
 @property (strong, nonatomic) NSArray* arrayOfIndexLetter;
-@property (strong, nonatomic) NSArray* searchResultArrayOfContacts;
-@property (strong, nonatomic) EQRContactNameItem* selectedNameItem;
+@property (strong, nonatomic) EQRClassItem* myClassItem;
+
+@property (strong, nonatomic) NSArray* searchResultsArrayOfClasses;
 
 
 @end
 
-@implementation EQRContactPickerVC
+@implementation EQRClassPickerVC
 
 @synthesize delegate;
 
-
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
     
-    //register cells
+    //register table view cell
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
-        
-    [self renewTheView];
     
-}
-
-
--(void)renewTheView{
-    
-    //get ALL contacts ???
+    //get list of classes
     EQRWebData* webData = [EQRWebData sharedInstance];
-    
     NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
     
-    [webData queryWithLink:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-       
-        for (EQRContactNameItem* nameItem in muteArray){
+    [webData queryWithLink:@"EQGetClassesAll.php" parameters:nil class:@"EQRClassItem" completion:^(NSMutableArray *muteArray) {
+        
+        for (EQRClassItem* classItem in muteArray){
             
-            [tempMuteArray addObject:nameItem];
+            [tempMuteArray addObject:classItem];
         }
     }];
     
     if ([tempMuteArray count] < 1){
         
-        //error handling if 0 is returned
+        //error handling when no objects returned
     }
+
+    self.arrayOfClasses = [self sortArrayByAlphabetical:tempMuteArray];
     
-    //_______move to expand method??_____
-    //alphabatize the name list
-    NSArray* sortedArray = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-       
-        NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
-        NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
-        
-        return [string1 compare:string2];
-    }];
-    //__________
+    self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
     
-    self.arrayOfContacts = [NSArray arrayWithArray:sortedArray];
-    
-    //put some structure on that array of namesItems
-    self.arrayOfContactsWithStructure = [NSArray arrayWithArray: [self expandFlatArrayToStructuredArray:sortedArray]];
 }
 
 
+#pragma mark - retrieval methods
+
+-(id)retrieveClassItem{
+    
+    
+    return self.myClassItem;
+}
+
+
+-(NSArray*)sortArrayByAlphabetical:(NSArray*)thisArray{
+    
+    NSArray* newArray = [thisArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+       
+        return [[(EQRClassItem*)obj1 section_name] compare:[(EQRClassItem*)obj2 section_name]];
+        
+    }];
+    
+    return newArray;
+}
+
+
+//-(NSArray*)sortArrayByChronological:(NSArray*)thisArray{
+//    
+//    
+//    
+//}
 
 
 -(NSArray*)expandFlatArrayToStructuredArray:(NSArray*)thisArray{
     
     //_______read user defaults to determine if sort should be based on first or last name_____
-//    NSString* nameSorter = @"first_and_last";
+    //    NSString* nameSorter = @"first_and_last";
     
     //an array of letters
     NSMutableArray* arrayOfLetters = [NSMutableArray arrayWithCapacity:1];
     
     //enumerate through the flat array and add the first letter
-    for (EQRContactNameItem* nameItem in thisArray){
+    for (EQRClassItem* classItem in thisArray){
         
-        NSString* firstLetterSubstring = [[nameItem performSelector:@selector(first_and_last)] substringToIndex:1];
+        NSString* firstLetterSubstring = [[classItem performSelector:@selector(section_name)] substringToIndex:1];
         
         BOOL alreadyInArray = NO;
         
@@ -118,9 +130,9 @@
     NSMutableArray* topArray = [NSMutableArray arrayWithCapacity:1];
     
     //enumerate through the chosen array again
-    for (EQRContactNameItem* nameItem in thisArray){
+    for (EQRClassItem* classItem in thisArray){
         
-        NSString* firstLetterSubstring = [[nameItem performSelector:@selector(first_and_last)] substringToIndex:1];
+        NSString* firstLetterSubstring = [[classItem performSelector:@selector(section_name)] substringToIndex:1];
         
         __block NSInteger indexOfSubArray;
         __block BOOL foundAMatch = NO;
@@ -129,7 +141,7 @@
         [topArray enumerateObjectsUsingBlock:^(NSMutableArray* obj, NSUInteger idx, BOOL *stop) {
             
             //get sample letter from subarray
-            NSString* sampleLetter = [[(EQRContactNameItem*)[obj objectAtIndex:0] performSelector:@selector(first_and_last)] substringToIndex:1];
+            NSString* sampleLetter = [[(EQRClassItem*)[obj objectAtIndex:0] performSelector:@selector(section_name)] substringToIndex:1];
             
             if ([sampleLetter caseInsensitiveCompare:firstLetterSubstring] == NSOrderedSame){
                 
@@ -142,12 +154,12 @@
         
         if (foundAMatch == YES){
             
-            [(NSMutableArray*)[topArray objectAtIndex:indexOfSubArray] addObject:nameItem];
+            [(NSMutableArray*)[topArray objectAtIndex:indexOfSubArray] addObject:classItem];
             
         } else {
             
             //create a new sub array
-            NSMutableArray* newMuteArray = [NSMutableArray arrayWithObject:nameItem];
+            NSMutableArray* newMuteArray = [NSMutableArray arrayWithObject:classItem];
             
             [topArray addObject:newMuteArray];
         }
@@ -157,54 +169,41 @@
 }
 
 
-#pragma mark - retrieve selection
-
--(id)retrieveContactItem{
-    
-    return self.selectedNameItem;
-}
-
-
-
 #pragma mark - table data source
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     
-    if (tableView == self.searchDisplayController.searchResultsTableView){
+    if (self.searchDisplayController.active) {
         
         return 1;
         
     }else{
     
-        return [self.arrayOfContactsWithStructure count];
+        return [self.arrayOfClassesWithAlphaStructure count];
     }
 }
 
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-    
-        return [self.searchResultArrayOfContacts count];
+    if (self.searchDisplayController.active) {
+        
+        return [self.searchResultsArrayOfClasses count];
         
     }else{
-        
-        return [[self.arrayOfContactsWithStructure objectAtIndex:section] count];
+    
+        return [[self.arrayOfClassesWithAlphaStructure objectAtIndex:section] count];
     }
 }
 
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    //determine either search results table or normal table
-    
-    
-    //____________  NOTICE A KEY FEATURE: USING self.tableview INSTEAD OF tableview  !!!!!!_______________
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell;
+    UITableViewCell* cell;
     
     //_______!!!!  This doesn't work with the search tool, must replace with the following...
-    //    cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+//    cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     if (cell == nil) {
         
@@ -212,42 +211,42 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    //name
-    NSString* nameString;
+    NSString* className;
     
-    //_______determine either search results table or normal table
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (self.searchDisplayController.active) {
         
-        nameString = [(EQRContactNameItem*)[self.searchResultArrayOfContacts objectAtIndex:indexPath.row] first_and_last];
+        className = [(EQRClassItem*)[self.searchResultsArrayOfClasses objectAtIndex:indexPath.row] section_name];
         
     }else{
         
-        nameString = [(EQRContactNameItem*)[(NSArray*)[self.arrayOfContactsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] first_and_last];
+        className = [(EQRClassItem*)[[self.arrayOfClassesWithAlphaStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] section_name];
     }
     
-    
-    cell.textLabel.text = nameString;
-    cell.textLabel.font = [UIFont systemFontOfSize:12];
+    cell.textLabel.text = className;
+    cell.textLabel.numberOfLines = 2;
+    cell.textLabel.font = [UIFont systemFontOfSize:13];
     
     return cell;
+    
 }
 
 
--(NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+#pragma mark - table view delegate methods
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    if (tableView == self.searchDisplayController.searchResultsTableView){
+    if (self.searchDisplayController.active) {
         
-        return @"";
+        self.myClassItem = [self.searchResultsArrayOfClasses objectAtIndex:indexPath.row];
         
     }else{
         
-        NSString* letter = [[(EQRContactNameItem*)[[self.arrayOfContactsWithStructure objectAtIndex:section] objectAtIndex:0] first_and_last] substringToIndex:1];
-        
-        NSString* letterCaseInsensitive = [letter capitalizedString];
-        
-        return letterCaseInsensitive;
-        
+        self.myClassItem = [[self.arrayOfClassesWithAlphaStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     }
+    
+    //tell delegate to retrieve the selected class item
+    [self.delegate initiateRetrieveClassItem];
+    
 }
 
 
@@ -255,35 +254,19 @@
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView{
     
+    if (self.searchDisplayController.active){
+        
+        return nil;
+    }
+    
     return self.arrayOfIndexLetter;
+
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index{
     
     return index;
-    
-}
-
-
-#pragma mark - delegate method 
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-//    NSLog(@"delegate did fire in the contact picker VC");
-    
-    //identify the selected request for later
-    //____determine if search view is present
-    if (self.searchDisplayController.active) {
-        
-        self.selectedNameItem = [self.searchResultArrayOfContacts objectAtIndex:indexPath.row];
-        
-    }else{
-        
-        self.selectedNameItem = [[self.arrayOfContactsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-    }
-    
-    [self.delegate retrieveSelectedNameItem];
     
 }
 
@@ -295,8 +278,8 @@
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
     
-    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"first_and_last contains[c] %@", searchText];
-    self.searchResultArrayOfContacts = [self.arrayOfContacts filteredArrayUsingPredicate:resultPredicate];
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"section_name contains[c] %@", searchText];
+    self.searchResultsArrayOfClasses = [self.arrayOfClasses filteredArrayUsingPredicate:resultPredicate];
 }
 
 
@@ -318,7 +301,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 
 /*
 #pragma mark - Navigation

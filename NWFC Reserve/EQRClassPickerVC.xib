@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRClassPickerVC">
+            <connections>
+                <outlet property="searchDisplayController" destination="0NV-B0-UOd" id="Y9f-Ta-GHG"/>
+                <outlet property="tableView" destination="63o-L0-Osj" id="BrJ-S0-dbn"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="300" height="500"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="63o-L0-Osj">
+                    <rect key="frame" x="0.0" y="0.0" width="300" height="450"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <searchBar key="tableHeaderView" contentMode="redraw" id="CsH-Wv-zXc">
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="44"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                        <textInputTraits key="textInputTraits"/>
+                        <connections>
+                            <outlet property="delegate" destination="-1" id="01P-fa-riE"/>
+                        </connections>
+                    </searchBar>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="jTF-4Y-6ca"/>
+                        <outlet property="delegate" destination="-1" id="Tfl-kE-1wZ"/>
+                    </connections>
+                </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hUq-wg-vjG">
+                    <rect key="frame" x="0.0" y="450" width="300" height="50"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ojn-NB-YNl">
+                            <rect key="frame" x="32.5" y="10" width="85" height="30"/>
+                            <state key="normal" title="Alphabetical">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kKw-37-xZ1">
+                            <rect key="frame" x="172.5" y="10" width="95" height="30"/>
+                            <state key="normal" title="Chronological">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="centerX" secondItem="kKw-37-xZ1" secondAttribute="centerX" constant="-70" id="2gT-cG-jQK"/>
+                        <constraint firstAttribute="centerY" secondItem="Ojn-NB-YNl" secondAttribute="centerY" id="5AH-h4-Z67"/>
+                        <constraint firstAttribute="centerY" secondItem="kKw-37-xZ1" secondAttribute="centerY" id="IlK-cI-rgX"/>
+                        <constraint firstAttribute="centerX" secondItem="Ojn-NB-YNl" secondAttribute="centerX" multiplier="2" id="fg4-kS-tHH"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="hUq-wg-vjG" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="1c0-VS-wKb"/>
+                <constraint firstAttribute="bottom" secondItem="63o-L0-Osj" secondAttribute="bottom" constant="50" id="5J3-pk-m0B"/>
+                <constraint firstAttribute="trailing" secondItem="63o-L0-Osj" secondAttribute="trailing" id="L4x-F2-NRj"/>
+                <constraint firstItem="63o-L0-Osj" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="M3a-gO-zBc"/>
+                <constraint firstItem="hUq-wg-vjG" firstAttribute="top" secondItem="63o-L0-Osj" secondAttribute="bottom" id="Yaf-qq-DHJ"/>
+                <constraint firstAttribute="trailing" secondItem="hUq-wg-vjG" secondAttribute="trailing" id="YfA-eB-vBn"/>
+                <constraint firstItem="63o-L0-Osj" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="hBO-9W-GVe"/>
+                <constraint firstAttribute="bottom" secondItem="hUq-wg-vjG" secondAttribute="bottom" id="y2h-M6-r9P"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+        <searchDisplayController id="0NV-B0-UOd">
+            <connections>
+                <outlet property="delegate" destination="-1" id="6eJ-yS-fwd"/>
+                <outlet property="searchBar" destination="CsH-Wv-zXc" id="aqv-e6-GkH"/>
+                <outlet property="searchContentsController" destination="-1" id="WLN-36-l1U"/>
+                <outlet property="searchResultsDataSource" destination="-1" id="zFx-9B-Oca"/>
+                <outlet property="searchResultsDelegate" destination="-1" id="4o6-pI-Oiu"/>
+            </connections>
+        </searchDisplayController>
+    </objects>
+</document>

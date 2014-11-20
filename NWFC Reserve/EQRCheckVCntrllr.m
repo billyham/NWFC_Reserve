@@ -394,10 +394,12 @@
         
         
         
-        //_______!!!!!!!           MUST BE UPDATED BECAUSE NOW WE USE A STRUCTURED ARRAY           !!!!!!_______
+        //_______          MUST BE UPDATED BECAUSE NOW WE USE A STRUCTURED ARRAY          _______
         //add join object to array ivar
         [self.arrayOfEquipJoins addObject:newJoinToAdd];
-        //_______!!!!!!!           MUST BE UPDATED BECAUSE NOW WE USE A STRUCTURED ARRAY           !!!!!!_______
+        
+        self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins];
+        //_______         MUST BE UPDATED BECAUSE NOW WE USE A STRUCTURED ARRAY         _______
         
         
         

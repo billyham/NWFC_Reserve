@@ -45,7 +45,7 @@
 @property (strong, nonatomic) IBOutlet UIView* viewEditLeft;
 @property (strong, nonatomic) IBOutlet UIButton* nameValueField;
 @property (strong, nonatomic) IBOutlet UIButton* typeValueField;
-@property (strong, nonatomic) IBOutlet UITextField* classValueField;
+@property (strong, nonatomic) IBOutlet UIButton* classValueField;
 @property (strong, nonatomic) IBOutlet UIButton* pickUpTimeValueField;
 @property (strong, nonatomic) IBOutlet UIButton* returnTimeValueField;
 
@@ -59,12 +59,13 @@
 @property (strong, nonatomic) UIPopoverController* myDayDatePicker;
 @property (strong, nonatomic) UIPopoverController* myContactPicker;
 @property (strong, nonatomic) UIPopoverController* myRenterTypePicker;
+@property (strong, nonatomic) UIPopoverController* myClassPicker;
 
 //popOver root VCs
 @property (strong, nonatomic) EQREditorDateVCntrllr* myDayDateVC;
 @property (strong, nonatomic) EQRContactPickerVC* myContactVC;
 @property (strong, nonatomic) EQREditorRenterVCntrllr* myRenterTypeVC;
-
+@property (strong, nonatomic) EQRClassPickerVC* myClassPickerVC;
 
 @property BOOL inEditModeFlag;
 
@@ -279,7 +280,7 @@
     //copy values to edit field values
     [self.nameValueField setTitle:self.firstLastNameValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     [self.typeValueField setTitle:self.typeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
-    self.classValueField.text = self.classValue.text;
+    [self.classValueField setTitle:self.classValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     [self.pickUpTimeValueField setTitle:self.pickUpTimeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     [self.returnTimeValueField setTitle:self.returnTimeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     
@@ -733,6 +734,20 @@
 
 -(IBAction)changeClassTextField:(id)sender{
     
+    EQRClassPickerVC* classPickerVC = [[EQRClassPickerVC alloc] initWithNibName:@"EQRClassPickerVC" bundle:nil];
+    self.myClassPickerVC = classPickerVC;
+    
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.myClassPickerVC];
+    self.myClassPicker = popOver;
+    
+    //set the size
+    [self.myClassPicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
+    
+    //present the popover
+    [self.myClassPicker presentPopoverFromRect:self.classValueField.frame inView:self.mainSubView permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    //assign as delegate
+    self.myClassPickerVC.delegate = self;
     
 }
 
@@ -844,6 +859,32 @@
     
 }
 
+
+-(void)initiateRetrieveClassItem{
+    
+    EQRClassItem* thisClassItem = [self.myClassPickerVC retrieveClassItem];
+   
+    //update view objects
+    [self.classValue setHidden:NO];
+    self.classValue.text = thisClassItem.section_name;
+    [self.classValueField setTitle:thisClassItem.section_name forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+    
+    //update schedule request
+    self.myScheduleRequest.classItem = thisClassItem;
+    self.myScheduleRequest.classSection_foreignKey = thisClassItem.key_id;
+    self.myScheduleRequest.classTitle_foreignKey = thisClassItem.catalog_foreign_key;
+    
+    //update data layer
+    [self updateScheduleRequest];
+    
+    //release self as delegate
+    self.myClassPicker.delegate = nil;
+    
+    //dismiss popover
+    [self.myClassPicker dismissPopoverAnimated:YES];
+    
+    
+}
 
 #pragma mark - alert view delegate  / compose email
 

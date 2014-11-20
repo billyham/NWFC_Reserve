@@ -111,6 +111,8 @@
 		5493CA8E1990942F008A9221 /* EQRStaffUserPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5493CA8C1990942F008A9221 /* EQRStaffUserPickerViewController.m */; };
 		5493CA8F1990942F008A9221 /* EQRStaffUserPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5493CA8D1990942F008A9221 /* EQRStaffUserPickerViewController.xib */; };
 		54974B8F19C17D88002C9DB1 /* EQRDataStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = 54974B8E19C17D88002C9DB1 /* EQRDataStructure.m */; };
+		5497F5031A1DCA79008A7E52 /* EQRClassPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5497F5011A1DCA79008A7E52 /* EQRClassPickerVC.m */; };
+		5497F5041A1DCA79008A7E52 /* EQRClassPickerVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5497F5021A1DCA79008A7E52 /* EQRClassPickerVC.xib */; };
 		549BF3BC191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 549BF3BA191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m */; };
 		549BF3BD191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 549BF3BB191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib */; };
 		54BB2D1719F77AF900CF4AE8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54BB2D1619F77AF900CF4AE8 /* CoreData.framework */; };
@@ -309,6 +311,9 @@
 		5493CA8D1990942F008A9221 /* EQRStaffUserPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRStaffUserPickerViewController.xib; sourceTree = "<group>"; };
 		54974B8D19C17D88002C9DB1 /* EQRDataStructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRDataStructure.h; sourceTree = "<group>"; };
 		54974B8E19C17D88002C9DB1 /* EQRDataStructure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRDataStructure.m; sourceTree = "<group>"; };
+		5497F5001A1DCA79008A7E52 /* EQRClassPickerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRClassPickerVC.h; sourceTree = "<group>"; };
+		5497F5011A1DCA79008A7E52 /* EQRClassPickerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRClassPickerVC.m; sourceTree = "<group>"; };
+		5497F5021A1DCA79008A7E52 /* EQRClassPickerVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRClassPickerVC.xib; sourceTree = "<group>"; };
 		549BF3B9191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSummaryGenericVCntrllr.h; sourceTree = "<group>"; };
 		549BF3BA191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipSummaryGenericVCntrllr.m; sourceTree = "<group>"; };
 		549BF3BB191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREquipSummaryGenericVCntrllr.xib; sourceTree = "<group>"; };
@@ -491,6 +496,7 @@
 				0115506719956A9C009A459F /* Data Control */,
 				543CF39A198EF4E200A00E5E /* Quickview Nav Cntrllr */,
 				542CC23A197CECA800BFD581 /* shared nibs */,
+				54ED1906199B403A00CF1A8F /* print renderers */,
 				54E9DB151993531B0080FF1B /* shared singletons */,
 				54032FE31872D2EA00481D86 /* Schedule objects */,
 				01600B3918CA51D70006D75A /* Schedule Display */,
@@ -598,7 +604,7 @@
 			isa = PBXGroup;
 			children = (
 				54E332011A18A1EE0035B7AD /* pickup and return day and time */,
-				54E332021A18A2070035B7AD /* just date */,
+				54E332021A18A2070035B7AD /* just day date */,
 				5493CA8B1990942F008A9221 /* EQRStaffUserPickerViewController.h */,
 				5493CA8C1990942F008A9221 /* EQRStaffUserPickerViewController.m */,
 				5493CA8D1990942F008A9221 /* EQRStaffUserPickerViewController.xib */,
@@ -608,7 +614,9 @@
 				54882BCF1900D588005A4D5A /* EQREditorRenterVCntrllr.h */,
 				54882BD01900D588005A4D5A /* EQREditorRenterVCntrllr.m */,
 				54882BD11900D588005A4D5A /* EQREditorRenterVCntrllr.xib */,
-				54ED1906199B403A00CF1A8F /* print renderers */,
+				5497F5001A1DCA79008A7E52 /* EQRClassPickerVC.h */,
+				5497F5011A1DCA79008A7E52 /* EQRClassPickerVC.m */,
+				5497F5021A1DCA79008A7E52 /* EQRClassPickerVC.xib */,
 			);
 			name = "shared nibs";
 			sourceTree = "<group>";
@@ -751,7 +759,7 @@
 			name = "pickup and return day and time";
 			sourceTree = "<group>";
 		};
-		54E332021A18A2070035B7AD /* just date */ = {
+		54E332021A18A2070035B7AD /* just day date */ = {
 			isa = PBXGroup;
 			children = (
 				542CC23B197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.h */,
@@ -761,7 +769,7 @@
 				01C83A78199E792800CD5E9C /* EQRDayExtendedPickerVC.m */,
 				01C83A79199E792800CD5E9C /* EQRDayExtendedPickerVC.xib */,
 			);
-			name = "just date";
+			name = "just day date";
 			sourceTree = "<group>";
 		};
 		54E9DB151993531B0080FF1B /* shared singletons */ = {
@@ -893,6 +901,7 @@
 				01A5D7C418EBA85900EE99EF /* EQREditorTopVCntrllr.xib in Resources */,
 				01735F1E193FAC38007E85C1 /* EQRCheckPrintPage.xib in Resources */,
 				01A4755B18EB9BDF006F32EB /* EQREditorDateVCntrllr.xib in Resources */,
+				5497F5041A1DCA79008A7E52 /* EQRClassPickerVC.xib in Resources */,
 				545547CF197F987C001AC986 /* GenericRightArrow@2x.png in Resources */,
 				0115506C19956B9A009A459F /* EQRQuickViewPage2VCntrllr.xib in Resources */,
 				01B4830A19AE82B1009F15F6 /* EQRInboxRightVC.xib in Resources */,
@@ -989,6 +998,7 @@
 				54ECF1E81998A9D900298996 /* EQRQuickViewPage3VCntrllr.m in Sources */,
 				010E2CFB18E6293B000B7711 /* EQRColors.m in Sources */,
 				54882BD21900D588005A4D5A /* EQREditorRenterVCntrllr.m in Sources */,
+				5497F5031A1DCA79008A7E52 /* EQRClassPickerVC.m in Sources */,
 				0119D2FF18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m in Sources */,
 				542D59B61A00DD8800989617 /* EQRTextEmailStudent.m in Sources */,
 				540B551D18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m in Sources */,

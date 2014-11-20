@@ -13,11 +13,12 @@
 #import "EQRScheduleRequestItem.h"
 #import "EQRContactPickerVC.h"
 #import "EQREditorRenterVCntrllr.h"
+#import "EQRClassPickerVC.h"
 
 @protocol EQRInboxRightDelegate;
 
 
-@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, UISearchBarDelegate, EQRContactPickerDelegate, EQRRenterTypeDelegate> {
+@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, UISearchBarDelegate, EQRContactPickerDelegate, EQRRenterTypeDelegate, EQRClassPickerDelegate> {
     
     __weak id <EQRInboxRightDelegate> delegateForRightSide;
 }
