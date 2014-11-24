@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRContactAddNewVC.h"
 
 @protocol EQRContactPickerDelegate;
 
 
-@interface EQRContactPickerVC : UIViewController <UITableViewDataSource, UITableViewDelegate>{
+@interface EQRContactPickerVC : UIViewController <UITableViewDataSource, UITableViewDelegate, EQRContactAddDelegate>{
     
     __weak id <EQRContactPickerDelegate> delegate;
 }
@@ -19,6 +20,9 @@
 @property (weak, nonatomic) id <EQRContactPickerDelegate> delegate;
 
 -(id)retrieveContactItem;
+
+//EQRContactAddDelegate method
+-(void)informAdditionHasHappended;
 
 
 @end

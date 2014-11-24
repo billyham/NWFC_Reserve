@@ -67,6 +67,9 @@
 @property (strong, nonatomic) EQREditorRenterVCntrllr* myRenterTypeVC;
 @property (strong, nonatomic) EQRClassPickerVC* myClassPickerVC;
 
+//navigation controllers
+@property (strong, nonatomic) UINavigationController* contactNavController;
+
 @property BOOL inEditModeFlag;
 
 
@@ -690,14 +693,21 @@
     EQRContactPickerVC* contactVC = [[EQRContactPickerVC alloc] initWithNibName:@"EQRContactPickerVC" bundle:nil];
     self.myContactVC = contactVC;
     
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.myContactVC];
+    //place contact VC in a nav controller
+    UINavigationController* navVC = [[UINavigationController alloc] initWithRootViewController:self.myContactVC];
+    self.contactNavController = navVC;
+    //hide nav controller nav bar
+    [self.contactNavController setNavigationBarHidden:YES];
+    
+    
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.contactNavController];
     self.myContactPicker = popOver;
     
     //set the size
-    [self.myContactPicker setPopoverContentSize:CGSizeMake(300, 500)];
+    [self.myContactPicker setPopoverContentSize:CGSizeMake(300, 550)];
     
     //present the popOver
-    [self.myContactPicker presentPopoverFromRect:self.nameValueField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self.myContactPicker presentPopoverFromRect:self.nameValueField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft & UIPopoverArrowDirectionRight animated:YES];
     
     
     //actions to perform AFTER presenting the popOver
@@ -722,7 +732,7 @@
     [self.myRenterTypePicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
     
     //present the popover
-    [self.myRenterTypePicker presentPopoverFromRect:self.typeValueField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self.myRenterTypePicker presentPopoverFromRect:self.typeValueField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft & UIPopoverArrowDirectionRight animated:YES];
     
     //tell it what renter type to have pre selected
     [self.myRenterTypeVC initialSetupWithRenterTypeString:self.myScheduleRequest.renter_type];
@@ -744,7 +754,7 @@
     [self.myClassPicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
     
     //present the popover
-    [self.myClassPicker presentPopoverFromRect:self.classValueField.frame inView:self.mainSubView permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self.myClassPicker presentPopoverFromRect:self.classValueField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft & UIPopoverArrowDirectionRight animated:YES];
     
     //assign as delegate
     self.myClassPickerVC.delegate = self;

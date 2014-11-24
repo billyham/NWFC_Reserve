@@ -9,6 +9,7 @@
 #import "EQRContactPickerVC.h"
 #import "EQRWebData.h"
 #import "EQRContactNameItem.h"
+#import "EQRContactAddNewVC.h"
 
 @interface EQRContactPickerVC ()
 
@@ -18,6 +19,8 @@
 @property (strong, nonatomic) NSArray* arrayOfIndexLetter;
 @property (strong, nonatomic) NSArray* searchResultArrayOfContacts;
 @property (strong, nonatomic) EQRContactNameItem* selectedNameItem;
+
+@property(strong, nonatomic) EQRContactAddNewVC* addContactVC;
 
 
 @end
@@ -89,6 +92,12 @@
     //enumerate through the flat array and add the first letter
     for (EQRContactNameItem* nameItem in thisArray){
         
+        //error test for when no name exists
+        if ([[nameItem performSelector:@selector(first_and_last)] length] < 1){
+            
+            nameItem.first_and_last = @" ";
+        }
+        
         NSString* firstLetterSubstring = [[nameItem performSelector:@selector(first_and_last)] substringToIndex:1];
         
         BOOL alreadyInArray = NO;
@@ -119,6 +128,11 @@
     
     //enumerate through the chosen array again
     for (EQRContactNameItem* nameItem in thisArray){
+        
+        //error test for when no name exists
+        if ([[nameItem performSelector:@selector(first_and_last)] length] < 1){
+            break;
+        }
         
         NSString* firstLetterSubstring = [[nameItem performSelector:@selector(first_and_last)] substringToIndex:1];
         
@@ -154,6 +168,26 @@
     }
     
     return topArray;
+}
+
+
+#pragma mark - add new contact selected
+
+-(IBAction)addNewContactButton:(id)sender{
+    
+    EQRContactAddNewVC* newContact = [[EQRContactAddNewVC alloc] initWithNibName:@"EQRContactAddNewVC" bundle:nil];
+    
+    self.addContactVC = newContact;
+    self.addContactVC.delegate = self;
+    
+    [self.navigationController pushViewController:newContact animated:YES];
+       
+}
+
+
+-(void)informAdditionHasHappended{
+    
+    [self renewTheView];
 }
 
 
