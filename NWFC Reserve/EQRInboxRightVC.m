@@ -704,10 +704,15 @@
     self.myContactPicker = popOver;
     
     //set the size
-    [self.myContactPicker setPopoverContentSize:CGSizeMake(300, 550)];
+    [self.myContactPicker setPopoverContentSize:CGSizeMake(320, 550)];
+    
+    //convert coordinates of textField frame to self.view
+    UIView* originalRect = self.nameValueField;
+    CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
+    CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
     
     //present the popOver
-    [self.myContactPicker presentPopoverFromRect:self.nameValueField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft & UIPopoverArrowDirectionRight animated:YES];
+    [self.myContactPicker presentPopoverFromRect:step2Rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft animated:YES];
     
     
     //actions to perform AFTER presenting the popOver
@@ -731,8 +736,14 @@
     //set the size
     [self.myRenterTypePicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
     
+    //convert coordinates of textField frame to self.view
+    UIView* originalRect = self.typeValueField;
+    CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
+    CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
+    
+    
     //present the popover
-    [self.myRenterTypePicker presentPopoverFromRect:self.typeValueField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft & UIPopoverArrowDirectionRight animated:YES];
+    [self.myRenterTypePicker presentPopoverFromRect:step2Rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
     
     //tell it what renter type to have pre selected
     [self.myRenterTypeVC initialSetupWithRenterTypeString:self.myScheduleRequest.renter_type];
@@ -753,8 +764,14 @@
     //set the size
     [self.myClassPicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
     
+    //convert coordinates of textField frame to self.view
+    UIView* originalRect = self.classValueField;
+    CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
+    CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
+    
+    
     //present the popover
-    [self.myClassPicker presentPopoverFromRect:self.classValueField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft & UIPopoverArrowDirectionRight animated:YES];
+    [self.myClassPicker presentPopoverFromRect:step2Rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
     
     //assign as delegate
     self.myClassPickerVC.delegate = self;
@@ -773,9 +790,14 @@
     self.myDayDatePicker = popOver;
     self.myDayDatePicker.popoverContentSize = CGSizeMake(320.f, 570.f);
     
+    //convert coordinates of textField frame to self.view
+    UIView* originalRect = self.pickUpTimeValueField;
+    CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
+    CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
+    
     
     //present the popover
-    [self.myDayDatePicker presentPopoverFromRect:self.pickUpTimeValueField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self.myDayDatePicker presentPopoverFromRect:step2Rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
     //methods AFTER adding the popover to the view
     
@@ -840,10 +862,13 @@
     [self updateScheduleRequest];
     
     //release self as delegate 
-//    self.myContactVC.delegate = nil;
+    self.myContactVC.delegate = nil;
     
     //dismiss the popover
     [self.myContactPicker dismissPopoverAnimated:YES];
+    
+    //release mycontactVC
+    self.myContactVC = nil;
 }
 
 

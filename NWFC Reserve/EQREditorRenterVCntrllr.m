@@ -123,8 +123,8 @@
     
     self.selectedIndexRow = indexPath.row;
     
-    NSLog(@"this is the selected indexpath row: %u", self.selectedIndexRow);
-    
+    NSLog(@"this is the selected indexpath row: %lu", (long)self.selectedIndexRow);
+
     [self.delegate initiateRetrieveRenterItem];
 }
 
