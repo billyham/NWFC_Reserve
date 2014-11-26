@@ -38,12 +38,7 @@
     self.myCheckContent = checkContent;
     self.myCheckContent.myJoinKeyID = equipJoin.key_id;
     self.myCheckContent.equipUniteItem_foreignKey = equipJoin.equipUniqueItem_foreignKey;
-    
-
-    
-    
-    
-    
+        
     
     [self.contentView addSubview:self.myCheckContent.view];
     
@@ -143,6 +138,9 @@
     
     self.myCheckContent.equipNameLabel.text = equipJoin.name;
     self.myCheckContent.distIDLabel.text = equipJoin.distinquishing_id;
+    
+    //hide service issue button
+    [self.myCheckContent.serviceIssue setHidden:YES];
     
 }
 

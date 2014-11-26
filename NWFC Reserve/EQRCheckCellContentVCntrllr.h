@@ -20,5 +20,6 @@
 @property (strong, nonatomic) IBOutlet UILabel* status1Label;
 @property (strong, nonatomic) IBOutlet UILabel* status2Label;
 @property (strong, nonatomic) IBOutlet UISwitch* statusSwitch;
+@property (strong, nonatomic) IBOutlet UIButton* serviceIssue;
 
 @end

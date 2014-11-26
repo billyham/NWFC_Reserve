@@ -21,6 +21,7 @@
                 <outlet property="returnTimeValue" destination="jFc-lz-Nn7" id="NOx-lz-cXD"/>
                 <outlet property="returnTimeValueField" destination="f4d-wf-tFC" id="AJu-jI-UPJ"/>
                 <outlet property="rightView" destination="gRA-am-cUZ" id="IuP-zo-EqK"/>
+                <outlet property="tableTopGuideConstraint" destination="fX2-5r-ABS" id="rlv-bT-b1g"/>
                 <outlet property="tablebottomGuideConstraint" destination="roT-zw-wjM" id="GhL-XS-vOk"/>
                 <outlet property="timeOfRequestValue" destination="TfA-qg-Q3P" id="cOv-vy-dbn"/>
                 <outlet property="topLayoutGuideConstraint" destination="lkL-EB-GaJ" id="7je-Aa-k7O"/>

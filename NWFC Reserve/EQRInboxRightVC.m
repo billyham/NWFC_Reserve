@@ -29,6 +29,7 @@
 @property (strong, nonatomic) IBOutlet UIView* mainSubView;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* topLayoutGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* bottomLayoutGuideConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* tableTopGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* tablebottomGuideConstraint;
 
 @property (strong, nonatomic) IBOutlet UITableView* myTable;
@@ -53,6 +54,7 @@
 
 @property (strong, nonatomic) NSArray* arrayOfJoins;
 @property (strong, nonatomic) NSArray* arrayOfJoinsWithStructure;
+@property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedEquipIDs;
 
 //popOver controllers
 @property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
@@ -98,6 +100,13 @@
     //add right side buttons in nav item
 //    [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(sendEmail)]];
     
+    //register for notes
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    
+    //register to receive delete instructions from equipList cells
+    [nc addObserver:self selector:@selector(addEquipUniqueToBeDeletedArray:) name:EQREquipUniqueToBeDeleted object:nil];
+    [nc addObserver:self selector:@selector(removeEquipUniqueToBeDeletedArray:) name:EQREquipUniqueToBeDeletedCancel object:nil];
+    
     //set local flags
     self.inEditModeFlag = NO;
     
@@ -131,6 +140,16 @@
     //register cells
     [self.myTable registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
     [self.myTable registerClass:[UITableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:@"SuppCell"];
+    
+    //initialize array of to be deleted joins
+    if (!self.arrayOfToBeDeletedEquipIDs){
+        
+        self.arrayOfToBeDeletedEquipIDs = [NSMutableArray arrayWithCapacity:1];
+        
+    } else {
+        
+        [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+    }
     
     //initially hide everything
     [self.leftView setHidden:YES];
@@ -611,11 +630,12 @@
     //show the add button
     [self.addButtonView setHidden:NO];
     
-    //raise table to reveal add button
+    //alter table to reveal add and done buttons
     self.tablebottomGuideConstraint.constant = 50.f;
+    self.tableTopGuideConstraint.constant = 50.f;
     
     //lower main sub view to reveal save button
-    self.topLayoutGuideConstraint.constant = 50;
+//    self.topLayoutGuideConstraint.constant = 50;
     
     
     
@@ -651,11 +671,12 @@
     //hide edit text fields
     [self.viewEditLeft setHidden:YES];
     
-    //lower table to hide add button (NOT ANIMATE-ABLE?)
+    //alter table to hide add and done buttons
     self.tablebottomGuideConstraint.constant = 0;
+    self.tableTopGuideConstraint.constant = 0;
     
     //raise main sub view to hide save button
-    self.topLayoutGuideConstraint.constant = 0;
+//    self.topLayoutGuideConstraint.constant = 0;
     
     //hide the add button after the change to the constraint is complete
     [self.addButtonView setHidden:NO];
@@ -683,8 +704,33 @@
 
 -(IBAction)doneButton:(id)sender{
     
+    EQRWebData* webData = [EQRWebData sharedInstance];
     
+    //_______*********  delete the delted scheduleTracking_equip_joins
+    for (NSString* thisKeyID in self.arrayOfToBeDeletedEquipIDs){
+        
+        for (EQRScheduleTracking_EquipmentUnique_Join* thisJoin in self.arrayOfJoins){
+            
+            if ([thisKeyID isEqualToString:thisJoin.equipUniqueItem_foreignKey]){
+                
+                //found a matching equipUnique item
+                
+                //send php message to detele with the join key_id
+                NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", thisJoin.key_id, nil];
+                NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
+                NSString* returnString = [webData queryForStringWithLink:@"EQRDeleteScheduleEquipJoin.php" parameters:beeArray];
+                
+                NSLog(@"this is the return string: %@", returnString);
+            }
+            
+        }
+    }
     
+    //empty the arrays
+    [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+    
+    //send note to schedule that a change has been saved
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
 }
 
 
@@ -917,9 +963,32 @@
     
     //dismiss popover
     [self.myClassPicker dismissPopoverAnimated:YES];
-    
-    
 }
+
+
+#pragma mark - equip item deletion notification methods
+
+-(void)addEquipUniqueToBeDeletedArray:(NSNotification*)note{
+    
+    [self.arrayOfToBeDeletedEquipIDs addObject:[note.userInfo objectForKey:@"key_id"]];
+}
+
+
+-(void)removeEquipUniqueToBeDeletedArray:(NSNotification*)note{
+    
+    NSString* stringToBeRemoved;
+    
+    for (NSString* thisString in self.arrayOfToBeDeletedEquipIDs){
+        
+        if ([thisString isEqualToString:[note.userInfo objectForKey:@"key_id"]]){
+            
+            stringToBeRemoved = thisString;
+        }
+    }
+    
+    [self.arrayOfToBeDeletedEquipIDs removeObject:stringToBeRemoved];
+}
+
 
 #pragma mark - alert view delegate  / compose email
 

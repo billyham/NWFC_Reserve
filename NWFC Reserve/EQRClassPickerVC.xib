@@ -8,6 +8,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRClassPickerVC">
             <connections>
+                <outlet property="mySearchDisplayController" destination="0NV-B0-UOd" id="nyO-a5-eXC"/>
                 <outlet property="searchDisplayController" destination="0NV-B0-UOd" id="Y9f-Ta-GHG"/>
                 <outlet property="tableView" destination="63o-L0-Osj" id="BrJ-S0-dbn"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>

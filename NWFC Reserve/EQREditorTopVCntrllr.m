@@ -27,7 +27,7 @@
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequesetManager;
 @property (strong, nonatomic) NSDictionary* myUserInfo;
 
-@property (strong, nonatomic) IBOutlet UITextField* nameTextField;
+@property (strong, nonatomic) IBOutlet UIButton* nameTextField;
 @property (strong, nonatomic) NSDate* pickUpDateDate;
 @property (strong, nonatomic) NSDate* returnDateDate;
 @property (strong, nonatomic) NSDate* pickUpTime;
@@ -52,6 +52,10 @@
 @property (strong, nonatomic) NSArray* arrayOfEquipUniqueItemsWithStructure;
 
 @property (strong, nonatomic) EQREditorDateVCntrllr* myDateVC;
+@property (strong, nonatomic) EQRContactPickerVC* myContactVC;
+
+//popOvers
+@property (strong, nonatomic) UIPopoverController* myContactPicker;
 
 @end
 
@@ -130,21 +134,7 @@
     //user self.scheduleRequestKeyID
     
     
-    NSDateFormatter* dateFormatterLookinNice = [[NSDateFormatter alloc] init];
-    dateFormatterLookinNice.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    dateFormatterLookinNice.dateFormat = @"EEE, MMM d, h:mm a";
     
-    //set labels with provided dictionary
-    //must do this AFTER loading the view
-    self.nameTextField.text =[self.myUserInfo objectForKey:@"contact_name"];
-    self.renterTypeString = [self.myUserInfo objectForKey:@"renter_type"];
-
-    //set date labels
-    self.pickupDateField.text = [dateFormatterLookinNice stringFromDate:self.pickUpDateDate];
-    self.returnDateField.text = [dateFormatterLookinNice stringFromDate:self.returnDateDate];
-    
-    //set the renter field....
-    self.renterTypeField.text = self.privateRequesetManager.request.renter_type;
     
 //    NSLog(@"this is the scheduleRequest key id: %@", [self.myUserInfo objectForKey:@"key_ID"]);
     
@@ -232,6 +222,8 @@
     self.pickUpDateDate = [self.pickUpDateDate dateByAddingTimeInterval:secondsForOffset];
     self.returnDateDate = [self.returnDateDate dateByAddingTimeInterval:secondsForOffset];
     
+    
+    
     //instantiate the request item in ivar requestManager
     self.privateRequesetManager.request = [[EQRScheduleRequestItem alloc] init];
     
@@ -274,6 +266,29 @@
     
     
 }
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    //set labels with provided dictionary
+    //must do this AFTER loading the view
+    [self.nameTextField setTitle:[self.myUserInfo objectForKey:@"contact_name"] forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+    self.renterTypeString = [self.myUserInfo objectForKey:@"renter_type"];
+    
+    
+    NSDateFormatter* dateFormatterLookinNice = [[NSDateFormatter alloc] init];
+    dateFormatterLookinNice.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dateFormatterLookinNice.dateFormat = @"EEE, MMM d, h:mm a";
+    
+    //set date labels
+    self.pickupDateField.text = [dateFormatterLookinNice stringFromDate:self.pickUpDateDate];
+    self.returnDateField.text = [dateFormatterLookinNice stringFromDate:self.returnDateDate];
+    
+    //set the renter field....
+    self.renterTypeField.text = self.privateRequesetManager.request.renter_type;
+    
+    [super viewWillAppear:animated];
+}
+
 
 
 -(void)cancelAction{
@@ -545,6 +560,52 @@
             
         }];
     }
+}
+
+
+#pragma mark - contact picker
+
+-(IBAction)contactButton:(id)sender{
+    
+    EQRContactPickerVC* contactPickerVC = [[EQRContactPickerVC alloc] initWithNibName:@"EQRContactPickerVC" bundle:nil];
+    self.myContactVC = contactPickerVC;
+    
+    UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:self.myContactVC];
+    [navController setNavigationBarHidden:YES];
+    
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:navController];
+    self.myContactPicker = popOver;
+    
+    //set the size
+    [self.myContactPicker setPopoverContentSize:CGSizeMake(320, 550)];
+    
+    //get coordinates in proper view
+    
+    //present popOver
+    [self.myContactPicker presentPopoverFromRect:self.nameTextField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
+    
+    //self as delegate
+    self.myContactVC.delegate = self;
+    
+}
+
+
+-(void)retrieveSelectedNameItem{
+    
+    EQRContactNameItem* nameItem = [self.myContactVC retrieveContactItem];
+    
+    [self.nameTextField setTitle:nameItem.first_and_last forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+    
+    //update data (needs to be saved)
+    self.privateRequesetManager.request.contactNameItem = nameItem;
+    self.privateRequesetManager.request.contact_name = nameItem.first_and_last;
+    self.privateRequesetManager.request.contact_foreignKey = nameItem.key_id;
+    
+    //release as delegate
+    self.myContactVC.delegate = nil;
+    
+    //dismiss popover
+    [self.myContactPicker dismissPopoverAnimated:YES];
 }
 
 
@@ -884,6 +945,10 @@
 }
 
 
+-(void)dealloc{
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 
 #pragma mark - memory warning
