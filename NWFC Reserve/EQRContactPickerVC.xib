@@ -7,8 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRContactPickerVC">
             <connections>
-                <outlet property="mySearchDisplayController" destination="9TX-Vl-DJz" id="h3a-vT-qCU"/>
-                <outlet property="searchDisplayController" destination="9TX-Vl-DJz" id="7sc-ZZ-5Zy"/>
+                <outlet property="mySearchBar" destination="3ru-0p-cCV" id="4HX-tG-zeD"/>
                 <outlet property="tableView" destination="s3k-NH-6My" id="0sl-uU-jJp"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -90,14 +89,5 @@
             <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
-        <searchDisplayController id="9TX-Vl-DJz">
-            <connections>
-                <outlet property="delegate" destination="-1" id="HUh-c4-odC"/>
-                <outlet property="searchBar" destination="3ru-0p-cCV" id="iwL-UB-WkM"/>
-                <outlet property="searchContentsController" destination="-1" id="9fB-9N-Hnm"/>
-                <outlet property="searchResultsDataSource" destination="-1" id="FqN-Dn-QOk"/>
-                <outlet property="searchResultsDelegate" destination="-1" id="k3D-DT-EfG"/>
-            </connections>
-        </searchDisplayController>
     </objects>
 </document>

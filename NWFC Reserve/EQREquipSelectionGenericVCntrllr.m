@@ -78,6 +78,9 @@
     //    self.equipCollectionView.allowsSelection = NO;
     
     
+    //set default ivars
+//    self.isInPopover = NO;
+    
     //add the cancel button
     UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelTheThing:)];
     
@@ -379,6 +382,7 @@
     self.privateRequestManager = privateRequestManager;
     self.privateRequestManagerFlag = YES;
     
+    self.isInPopover = YES;
 }
 
 
@@ -819,27 +823,34 @@
                         layout:(UICollectionViewLayout *)collectionViewLayout
         insetForSectionAtIndex:(NSInteger)section{
     
-    UIEdgeInsets edgeInsets;
-    
-    //test if in portrait or landscape view
-    //______******   a better implementation of this is here:   ******_______
-    //  http://stackoverflow.com/questions/13556554/change-uicollectionviewcell-size-on-different-device-orientations
-    //uses two different flowlayout objects, one for each orientation
-    
-    UIInterfaceOrientation orientationOnLaunch = [[UIApplication sharedApplication] statusBarOrientation];
-    
-    if (UIInterfaceOrientationIsPortrait(orientationOnLaunch)) {
+    //_______   NEED to know if it appears in a popOver, then DON'T implement this !!!!______
+    if (self.isInPopover == YES){
         
-        edgeInsets = UIEdgeInsetsMake(4.f, 4.f, 8.f, 4.f);
+        return UIEdgeInsetsMake(4.f, 0.f, 8.f, 0.f);
         
-    }else{
+    } else {
         
-        edgeInsets = UIEdgeInsetsMake(4.f, 132.f, 8.f, 132.f);
+        UIEdgeInsets edgeInsets;
         
+        //test if in portrait or landscape view
+        //______******   a better implementation of this is here:   ******_______
+        //  http://stackoverflow.com/questions/13556554/change-uicollectionviewcell-size-on-different-device-orientations
+        //uses two different flowlayout objects, one for each orientation
+        
+        UIInterfaceOrientation orientationOnLaunch = [[UIApplication sharedApplication] statusBarOrientation];
+        
+        if (UIInterfaceOrientationIsPortrait(orientationOnLaunch)) {
+            
+            edgeInsets = UIEdgeInsetsMake(4.f, 4.f, 8.f, 4.f);
+            
+        }else{
+            
+            edgeInsets = UIEdgeInsetsMake(4.f, 132.f, 8.f, 132.f);
+            
+        }
+        
+        return edgeInsets;
     }
-    
-    return edgeInsets;
-    
 }
 
 

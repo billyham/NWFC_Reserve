@@ -20,6 +20,11 @@
 #import "EQREquipItem.h"
 #import "EQREditorDateVCntrllr.h"
 #import "EQREditorExtendedDateVC.h"
+#import "EQREditorEquipListCell.h"
+#import "EQREditorHeaderCell.h"
+
+#import "EQREquipSelectionGenericVCntrllr.h"
+#import "EQRScheduleRequestManager.h"
 
 
 @interface EQRInboxRightVC ()
@@ -32,7 +37,7 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* tableTopGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* tablebottomGuideConstraint;
 
-@property (strong, nonatomic) IBOutlet UITableView* myTable;
+@property (strong, nonatomic) IBOutlet UICollectionView* myTable;
 @property (strong, nonatomic) IBOutlet UIView* rightView;
 @property (strong, nonatomic) IBOutlet UIView* leftView;
 
@@ -71,6 +76,10 @@
 
 //navigation controllers
 @property (strong, nonatomic) UINavigationController* contactNavController;
+
+//items for the add equip item function
+@property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
+@property (strong, nonatomic) UIPopoverController* theEquipSelectionPopOver;
 
 @property BOOL inEditModeFlag;
 
@@ -138,8 +147,12 @@
     [self.navigationItem setRightBarButtonItems:arrayOfRightButtons];
     
     //register cells
-    [self.myTable registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
-    [self.myTable registerClass:[UITableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:@"SuppCell"];
+    [self.myTable registerClass:[EQREditorEquipListCell class] forCellWithReuseIdentifier:@"Cell"];
+    [self.myTable registerClass:[EQREditorHeaderCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SuppCell"];
+
+    //remnants when collectionView was a table
+//    [self.myTable registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
+//    [self.myTable registerClass:[UITableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:@"SuppCell"];
     
     //initialize array of to be deleted joins
     if (!self.arrayOfToBeDeletedEquipIDs){
@@ -696,17 +709,11 @@
 }
 
 
--(IBAction)addItemButton:(id)sender{
-    
-    
-}
-
-
 -(IBAction)doneButton:(id)sender{
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     
-    //_______*********  delete the delted scheduleTracking_equip_joins
+    //_______*********  delete the deleted scheduleTracking_equip_joins
     for (NSString* thisKeyID in self.arrayOfToBeDeletedEquipIDs){
         
         for (EQRScheduleTracking_EquipmentUnique_Join* thisJoin in self.arrayOfJoins){
@@ -715,7 +722,7 @@
                 
                 //found a matching equipUnique item
                 
-                //send php message to detele with the join key_id
+                //send php message to delete with the join key_id
                 NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", thisJoin.key_id, nil];
                 NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
                 NSString* returnString = [webData queryForStringWithLink:@"EQRDeleteScheduleEquipJoin.php" parameters:beeArray];
@@ -731,6 +738,9 @@
     
     //send note to schedule that a change has been saved
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
+    
+    //need to update ivar arrays
+    [self renewTheViewWithRequest:self.myScheduleRequest];
 }
 
 
@@ -856,9 +866,88 @@
     
     //assign target for datDatePicker's actions
     [self.myDayDateVC.saveButton addTarget:self action:@selector(receiveNewPickupDate) forControlEvents:UIControlEventTouchUpInside];
-
+    
     
 }
+
+
+#pragma mark - handle add equip item
+//______!!!!!!  this is eff'd up   !!!!!_______
+
+//-(IBAction)addEquipItem:(id)sender{
+//    
+//    EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
+//    
+//    //need to specify a privateRequestManager for the equip selection v cntrllr
+//    //also sets ivar isInPopover to YES
+//    [genericEquipVCntrllr overrideSharedRequestManager:self.privateRequestManager];
+//    
+//    
+//    
+//    //    genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeNone;
+//    //    [self.navigationController pushViewController:genericEquipVCntrllr animated:NO];
+//    
+//    UIPopoverController* popOverMe = [[UIPopoverController alloc] initWithContentViewController:genericEquipVCntrllr];
+//    self.theEquipSelectionPopOver = popOverMe;
+//    //must manually set the size, cannot be wider than 600px!!!!???? But seems to work ok at 800 anyway???
+//    self.theEquipSelectionPopOver.popoverContentSize = CGSizeMake(700, 600);
+//    
+//    [self.theEquipSelectionPopOver presentPopoverFromRect:self.addButtonView.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated: YES];
+//    
+//    
+//    //need to reprogram the target of the save button
+//    [genericEquipVCntrllr.continueButton removeTarget:genericEquipVCntrllr action:NULL forControlEvents:UIControlEventAllEvents];
+//    [genericEquipVCntrllr.continueButton addTarget:self action:@selector(continueAddEquipItem:) forControlEvents:UIControlEventTouchUpInside];
+//    
+//}
+//
+//-(IBAction)continueAddEquipItem:(id)sender{
+//    
+//    //replaces the uniqueItem key from "1" to an accurate value
+//    [self.privateRequestManager justConfirm];
+//    
+//    [self.theEquipSelectionPopOver dismissPopoverAnimated:YES];
+//    
+//    
+//    //_________***  need to update self.arrayOfEquipUniqueItems
+//    //empty arrays first
+//    [self.arrayOfSchedule_Unique_Joins removeAllObjects];
+//    self.arrayOfEquipUniqueItemsWithStructure = nil;
+//    
+//    NSMutableArray* arrayToReturn = [NSMutableArray arrayWithCapacity:1];
+//    NSMutableArray* arrayToReturnJoins = [NSMutableArray arrayWithCapacity:1];
+//    
+//    EQRWebData* webData = [EQRWebData sharedInstance];
+//    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", [self.myUserInfo objectForKey:@"key_ID"],  nil];
+//    NSArray* secondArray = [NSArray arrayWithObjects:firstArray, nil];
+//    
+//    //get Scheduletracking_equipUnique_joins
+//    [webData queryWithLink:@"EQGetScheduleEquipJoins.php" parameters:secondArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+//        
+//        [arrayToReturnJoins addObjectsFromArray:muteArray];
+//        
+//    }];
+//    
+//    [self.arrayOfSchedule_Unique_Joins addObjectsFromArray:arrayToReturnJoins];
+//    
+//    
+//    //get equipUniqueItems
+//    [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys.php" parameters:secondArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
+//        
+//        [arrayToReturn addObjectsFromArray:muteArray];
+//    }];
+//    
+//    //add structure to the array
+//    self.arrayOfEquipUniqueItemsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:arrayToReturn];
+//    
+//    //reload collection view
+//    [self.myTable reloadData];
+//    
+//    //____________***
+//}
+
+
+
 
 
 #pragma mark - receive shared nib actions
@@ -1119,60 +1208,129 @@
 }
 
 
+#pragma mark - collectionView datasource
 
-#pragma mark - table datasource
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     
     return [self.arrayOfJoinsWithStructure count];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
     return [(NSArray*)[self.arrayOfJoinsWithStructure objectAtIndex:section] count];
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+-(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    NSString* stringWithDistID = [NSString stringWithFormat:@"%@  # %@",[(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name], [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id ]];
-
-    cell.textLabel.text = stringWithDistID;
-    cell.textLabel.font = [UIFont systemFontOfSize:13];
+    NSString* CellIdentifier = @"Cell";
+    EQREditorEquipListCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    for (UIView* view in cell.contentView.subviews){
+        
+        [view removeFromSuperview];
+    }
+    
+    NSString* thisName = [[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name];
+    NSString* thisDistNumber = [[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id];
+    NSString* thisTitle = [NSString stringWithFormat:@"%@: # %@", thisName, thisDistNumber];
+    
+    
+    BOOL toBeDeleted = NO;
+    for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
+        
+        if ([keyToDelete isEqualToString:[[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]]){
+            
+            toBeDeleted = YES;
+        }
+    }
+    
+    [cell initialSetupWithTitle:thisTitle keyID:[[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] equipUniqueItem_foreignKey] deleteFlag:toBeDeleted];
     
     return cell;
 }
 
 
--(NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+-(UICollectionReusableView*)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
     
-    return [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:section] objectAtIndex:0] schedule_grouping];
+    static NSString* CellIdentifier = @"SuppCell";
+    
+    EQREditorHeaderCell* cell = [self.myTable dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    for (UIView* view in cell.contentView.subviews){
+        
+        [view removeFromSuperview];
+    }
+    
+    [cell initialSetupWithTitle: [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] schedule_grouping]];
+    
+    return cell;
 }
+
+
+#pragma mark - table datasource
+
+//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+//{
+//    
+//    return [self.arrayOfJoinsWithStructure count];
+//}
+//
+//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+//{
+//    
+//    return [(NSArray*)[self.arrayOfJoinsWithStructure objectAtIndex:section] count];
+//}
+//
+//
+//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+//    
+//    NSString* stringWithDistID = [NSString stringWithFormat:@"%@  # %@",[(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name], [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id ]];
+//
+//    cell.textLabel.text = stringWithDistID;
+//    cell.textLabel.font = [UIFont systemFontOfSize:13];
+//    
+//    return cell;
+//}
+//
+//
+//-(NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+//    
+//    return [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:section] objectAtIndex:0] schedule_grouping];
+//}
+
+
+#pragma mark - collection view delegate methods
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
+}
+
 
 
 #pragma mark - table delegate methods
 
-- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
-    
-    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
-    
-    header.textLabel.textColor = [UIColor blackColor];
-    header.textLabel.font = [UIFont boldSystemFontOfSize:12];
-    CGRect headerFrame = header.frame;
-    header.textLabel.frame = headerFrame;
-    header.textLabel.textAlignment = NSTextAlignmentLeft;
-    
-}
-
-
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-
-}
+//- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
+//    
+//    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+//    
+//    header.textLabel.textColor = [UIColor blackColor];
+//    header.textLabel.font = [UIFont boldSystemFontOfSize:12];
+//    CGRect headerFrame = header.frame;
+//    header.textLabel.frame = headerFrame;
+//    header.textLabel.textAlignment = NSTextAlignmentLeft;
+//    
+//}
+//
+//
+//-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+//    
+//
+//}
 
 
 #pragma mark - memory warning

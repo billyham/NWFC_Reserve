@@ -12,7 +12,7 @@
 @protocol EQRContactPickerDelegate;
 
 
-@interface EQRContactPickerVC : UIViewController <UITableViewDataSource, UITableViewDelegate, EQRContactAddDelegate>{
+@interface EQRContactPickerVC : UIViewController <UITableViewDataSource, UITableViewDelegate, EQRContactAddDelegate, UISearchDisplayDelegate>{
     
     __weak id <EQRContactPickerDelegate> delegate;
 }

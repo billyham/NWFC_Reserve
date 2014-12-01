@@ -22,7 +22,9 @@
 
 @property (strong, nonatomic) EQRContactAddNewVC* addContactVC;
 
-@property (strong, nonatomic) IBOutlet UISearchDisplayController* mySearchDisplayController;
+@property (strong, nonatomic) IBOutlet UISearchBar* mySearchBar;
+@property (strong, nonatomic) UISearchDisplayController* mySearchDisplayController;
+
 
 
 @end
@@ -41,9 +43,19 @@
     //_______some messed up shit_______
     //bug in ios7 needs the retain count for the UISearchDisplayController bumped up by 1
     //http://stackoverflow.com/questions/19214286/having-a-zombie-issue-on-uisearchdisplaycontroller
-    self.mySearchDisplayController = (__bridge UISearchDisplayController *)(CFBridgingRetain(self.searchDisplayController));
-
-        
+//    self.mySearchDisplayController = (__bridge UISearchDisplayController *)(CFBridgingRetain(self.searchDisplayController));
+    //_______!!!!!! AAUUUGGGHHHH this is not a fix because it prevents self (the view controller from getting deallocated properly
+    //________!!!!! as evidenced when rotating the device after opening the contact VC at least twice
+    //_______!!!!!!! DAmned if you do, damned if you don't
+    
+    UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.mySearchBar contentsController:self];
+    [searchController setDelegate:self];
+    [searchController setSearchResultsDelegate:self];
+    [searchController setSearchResultsDataSource:self];
+    [self setMySearchDisplayController:searchController];
+    
+    
+    
     [self renewTheView];
     
 }
@@ -363,7 +375,12 @@
 
 -(void)dealloc{
     
+    //_______this doesn't help_________
+    //must do this to lower the retain count as an offset for when we upped the retain count in viewDidLoad
+//    self.mySearchDisplayController = CFBridgingRelease((__bridge void*)(self.mySearchDisplayController));
+    
     self.mySearchDisplayController = nil;
+    
 }
 
 

@@ -18,6 +18,7 @@
 
 @property (nonatomic, strong) IBOutlet UICollectionView* equipCollectionView;
 @property (nonatomic, strong) IBOutlet UIButton* continueButton;
+@property BOOL isInPopover;
 
 -(void)overrideSharedRequestManager:(id)privateRequestManager;
 

@@ -606,6 +606,9 @@
     
     //dismiss popover
     [self.myContactPicker dismissPopoverAnimated:YES];
+    
+    //release content view controller
+    self.myContactVC = nil;
 }
 
 
@@ -758,6 +761,7 @@
     EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
     
     //need to specify a privateRequestManager for the equip selection v cntrllr
+    //also sets ivar isInPopover to YES
     [genericEquipVCntrllr overrideSharedRequestManager:self.privateRequesetManager];
     
     
@@ -768,7 +772,7 @@
     UIPopoverController* popOverMe = [[UIPopoverController alloc] initWithContentViewController:genericEquipVCntrllr];
     self.theEquipSelectionPopOver = popOverMe;
     //must manually set the size, cannot be wider than 600px!!!!???? But seems to work ok at 800 anyway???
-    self.theEquipSelectionPopOver.popoverContentSize = CGSizeMake(800, 600);
+    self.theEquipSelectionPopOver.popoverContentSize = CGSizeMake(700, 600);
     
     [self.theEquipSelectionPopOver presentPopoverFromRect:self.addEquipItemButton.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated: YES];
     
@@ -921,15 +925,26 @@
     
     [cell initialSetupWithTitle: [(EQREquipUniqueItem*)[[self.arrayOfEquipUniqueItemsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] schedule_grouping]];
     
-    
-    
     return cell;
-    
 }
 
 
 #pragma mark - collection view delegate methods
 
+
+#pragma mark - popover delegate methods
+
+-(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
+    
+    //release delegate
+    self.myContactVC.delegate = self;
+    
+    //release content view controller
+    self.myContactVC = nil;
+    
+    //release popover
+    self.myContactPicker = nil;
+}
 
 
 #pragma mark - change in orientation methods

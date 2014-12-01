@@ -10,7 +10,7 @@
 #import "EQREditorRenterVCntrllr.h"
 #import "EQRContactPickerVC.h"
 
-@interface EQREditorTopVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRRenterTypeDelegate, EQRContactPickerDelegate>
+@interface EQREditorTopVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRRenterTypeDelegate, EQRContactPickerDelegate, UIPopoverControllerDelegate>
 
 @property (strong, nonatomic) NSString* scheduleRequestKeyID;
 @property BOOL saveButtonTappedFlag;

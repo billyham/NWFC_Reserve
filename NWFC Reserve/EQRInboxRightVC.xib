@@ -14,15 +14,15 @@
                 <outlet property="firstLastNameValue" destination="FTv-bn-yfJ" id="fdH-9z-WXh"/>
                 <outlet property="leftView" destination="zZA-FD-EOX" id="dkj-7z-on8"/>
                 <outlet property="mainSubView" destination="H0Q-s1-zCE" id="ey2-DC-zLv"/>
-                <outlet property="myTable" destination="aLr-us-RSk" id="gdf-m4-72Y"/>
+                <outlet property="myTable" destination="ipl-QA-uZT" id="IC8-0x-ls1"/>
                 <outlet property="nameValueField" destination="HdU-Y9-Idv" id="5ys-xs-nGe"/>
                 <outlet property="pickUpTimeValue" destination="u0E-eI-hJR" id="Jad-wb-vi9"/>
                 <outlet property="pickUpTimeValueField" destination="MiT-xo-BtN" id="ibF-bl-86Z"/>
                 <outlet property="returnTimeValue" destination="jFc-lz-Nn7" id="NOx-lz-cXD"/>
                 <outlet property="returnTimeValueField" destination="f4d-wf-tFC" id="AJu-jI-UPJ"/>
                 <outlet property="rightView" destination="gRA-am-cUZ" id="IuP-zo-EqK"/>
-                <outlet property="tableTopGuideConstraint" destination="fX2-5r-ABS" id="rlv-bT-b1g"/>
-                <outlet property="tablebottomGuideConstraint" destination="roT-zw-wjM" id="GhL-XS-vOk"/>
+                <outlet property="tableTopGuideConstraint" destination="B6A-wp-RPm" id="Rfd-5J-W5o"/>
+                <outlet property="tablebottomGuideConstraint" destination="roT-zw-wjM" id="EB3-cX-fRk"/>
                 <outlet property="timeOfRequestValue" destination="TfA-qg-Q3P" id="cOv-vy-dbn"/>
                 <outlet property="topLayoutGuideConstraint" destination="lkL-EB-GaJ" id="7je-Aa-k7O"/>
                 <outlet property="typeValue" destination="jcG-Tz-l46" id="2Kc-57-GHX"/>
@@ -39,6 +39,29 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H0Q-s1-zCE">
                     <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                     <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lgX-oF-6nT" userLabel="View done button">
+                            <rect key="frame" x="418" y="0.0" width="350" height="50"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ufl-29-5Gh">
+                                    <rect key="frame" x="16" y="10" width="142" height="30"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="30" id="cg9-8h-zF6"/>
+                                    </constraints>
+                                    <state key="normal" title="Delete Marked Items">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="doneButton:" destination="-1" eventType="touchUpInside" id="Jcm-YQ-aQc"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstItem="Ufl-29-5Gh" firstAttribute="leading" secondItem="lgX-oF-6nT" secondAttribute="leading" constant="16" id="5L0-OZ-40j"/>
+                                <constraint firstAttribute="height" constant="50" id="BRA-Wa-2Yx"/>
+                                <constraint firstItem="Ufl-29-5Gh" firstAttribute="top" secondItem="lgX-oF-6nT" secondAttribute="top" constant="10" id="D9N-Uc-yug"/>
+                            </constraints>
+                        </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5A4-Y1-Bad" userLabel="View add button">
                             <rect key="frame" x="418" y="974" width="350" height="50"/>
                             <subviews>
@@ -242,21 +265,27 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gRA-am-cUZ" userLabel="View right">
                             <rect key="frame" x="418" y="0.0" width="350" height="1024"/>
                             <subviews>
-                                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="aLr-us-RSk">
+                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ipl-QA-uZT">
                                     <rect key="frame" x="0.0" y="0.0" width="350" height="1024"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" white="0.96983349323272705" alpha="1" colorSpace="calibratedWhite"/>
+                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="vVg-Hy-wah">
+                                        <size key="itemSize" width="350" height="35"/>
+                                        <size key="headerReferenceSize" width="350" height="20"/>
+                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    </collectionViewFlowLayout>
                                     <connections>
-                                        <outlet property="dataSource" destination="-1" id="cy9-Nd-2iT"/>
-                                        <outlet property="delegate" destination="-1" id="w2S-NK-88O"/>
+                                        <outlet property="dataSource" destination="-1" id="ePU-hk-ymg"/>
+                                        <outlet property="delegate" destination="-1" id="75M-Ry-a1J"/>
                                     </connections>
-                                </tableView>
+                                </collectionView>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="bottom" secondItem="aLr-us-RSk" secondAttribute="bottom" id="7AG-zH-UUs"/>
-                                <constraint firstItem="aLr-us-RSk" firstAttribute="leading" secondItem="gRA-am-cUZ" secondAttribute="leading" id="O6E-Pt-Rj3"/>
-                                <constraint firstItem="aLr-us-RSk" firstAttribute="top" secondItem="gRA-am-cUZ" secondAttribute="top" id="fX2-5r-ABS"/>
-                                <constraint firstAttribute="trailing" secondItem="aLr-us-RSk" secondAttribute="trailing" id="j6E-Ak-OuT"/>
+                                <constraint firstAttribute="trailing" secondItem="ipl-QA-uZT" secondAttribute="trailing" id="PnF-yu-p27"/>
+                                <constraint firstItem="ipl-QA-uZT" firstAttribute="top" secondItem="gRA-am-cUZ" secondAttribute="top" id="QPF-dd-imM"/>
+                                <constraint firstAttribute="bottom" secondItem="ipl-QA-uZT" secondAttribute="bottom" id="gRl-B3-fFB"/>
+                                <constraint firstItem="ipl-QA-uZT" firstAttribute="leading" secondItem="gRA-am-cUZ" secondAttribute="leading" id="uLA-Ij-4Fn"/>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oqx-Zn-x5k" userLabel="View edit left">
@@ -355,7 +384,9 @@
                         <constraint firstAttribute="bottom" secondItem="zZA-FD-EOX" secondAttribute="bottom" id="6wA-5P-gYa"/>
                         <constraint firstItem="gRA-am-cUZ" firstAttribute="top" secondItem="H0Q-s1-zCE" secondAttribute="top" id="B6A-wp-RPm"/>
                         <constraint firstItem="gRA-am-cUZ" firstAttribute="leading" secondItem="zZA-FD-EOX" secondAttribute="trailing" id="E4n-Hl-XFk"/>
+                        <constraint firstItem="lgX-oF-6nT" firstAttribute="leading" secondItem="zZA-FD-EOX" secondAttribute="trailing" id="FOt-Bz-UPX"/>
                         <constraint firstItem="Oqx-Zn-x5k" firstAttribute="top" secondItem="H0Q-s1-zCE" secondAttribute="top" constant="71" id="Kfc-f4-CSY"/>
+                        <constraint firstItem="lgX-oF-6nT" firstAttribute="top" secondItem="H0Q-s1-zCE" secondAttribute="top" id="L4T-NB-yQy"/>
                         <constraint firstItem="Oqx-Zn-x5k" firstAttribute="leading" secondItem="H0Q-s1-zCE" secondAttribute="leading" constant="81" id="LW2-lR-CcE"/>
                         <constraint firstAttribute="trailing" secondItem="5A4-Y1-Bad" secondAttribute="trailing" id="Rbo-hT-pVq"/>
                         <constraint firstAttribute="centerX" secondItem="qCN-Bz-hug" secondAttribute="centerX" id="Ry6-Ij-6kD"/>
@@ -365,6 +396,7 @@
                         <constraint firstAttribute="centerY" secondItem="qCN-Bz-hug" secondAttribute="centerY" id="ZCS-JV-I8g"/>
                         <constraint firstItem="zZA-FD-EOX" firstAttribute="leading" secondItem="H0Q-s1-zCE" secondAttribute="leading" id="foM-ML-TBD"/>
                         <constraint firstItem="5A4-Y1-Bad" firstAttribute="leading" secondItem="zZA-FD-EOX" secondAttribute="trailing" id="i6P-Qp-WvA"/>
+                        <constraint firstAttribute="trailing" secondItem="lgX-oF-6nT" secondAttribute="trailing" id="rEK-1Y-CoT"/>
                         <constraint firstAttribute="bottom" secondItem="gRA-am-cUZ" secondAttribute="bottom" id="roT-zw-wjM"/>
                         <constraint firstAttribute="trailing" secondItem="gRA-am-cUZ" secondAttribute="trailing" id="tNO-2a-4TO"/>
                     </constraints>
