@@ -205,9 +205,27 @@
 }
 
 
--(void)informAdditionHasHappended{
+-(void)informAdditionHasHappended:(NSString*)newContactKeyID{
     
     [self renewTheView];
+    
+    __block NSIndexPath* chosenIndexPath;
+    
+    //automatically choose the newly created contact
+    [self.arrayOfContactsWithStructure enumerateObjectsUsingBlock:^(NSArray* subarray, NSUInteger idxSection, BOOL *stopInTop) {
+        
+        [subarray enumerateObjectsUsingBlock:^(EQRContactNameItem* contactItem, NSUInteger idxRow, BOOL *stopInSub) {
+           
+            if ([contactItem.key_id isEqualToString:newContactKeyID]){
+                
+                chosenIndexPath = [NSIndexPath indexPathForRow:idxRow inSection:idxSection];
+            }
+        }];
+    }];
+    
+    //move table to new contact
+    [self.tableView scrollToRowAtIndexPath:chosenIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    
 }
 
 

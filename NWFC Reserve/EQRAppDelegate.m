@@ -65,7 +65,7 @@
         __block EQRContactNameItem* contactObject;
         [webData queryWithLink:@"EQGetContactNameWithKey.php" parameters:topArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
             
-            if (muteArray > 0){
+            if ([muteArray count] > 0){
                 
                 contactObject = (EQRContactNameItem*)[muteArray objectAtIndex:0];
             }
@@ -84,9 +84,6 @@
         
         staffUserManager.currentStaffUser = contactObject;
         
-        
-        
-            
     }
     
     

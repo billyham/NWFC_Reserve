@@ -74,11 +74,11 @@
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSString* returnString = [webData queryForStringWithLink:@"EQSetNewContact.php" parameters:topArray];
-    NSLog(@"key for new contact: %@", returnString);
+//    NSLog(@"key for new contact: %@", returnString);
     
     
     //alert contactPicker that an update has been made
-    [self.delegate informAdditionHasHappended];
+    [self.delegate informAdditionHasHappended:returnString];
     
     //go back to previous VC
     [self.navigationController popViewControllerAnimated:YES];

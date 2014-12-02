@@ -22,7 +22,7 @@
 -(id)retrieveContactItem;
 
 //EQRContactAddDelegate method
--(void)informAdditionHasHappended;
+-(void)informAdditionHasHappended:(NSString*)newContactKeyID;
 
 
 @end

@@ -79,7 +79,7 @@
 
 //items for the add equip item function
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
-@property (strong, nonatomic) UIPopoverController* theEquipSelectionPopOver;
+@property (strong, nonatomic) UIPopoverController* myAddEquipPopover;
 
 @property BOOL inEditModeFlag;
 
@@ -348,6 +348,23 @@
     //make subview visible
     [self.rightView setHidden:NO];
     [self.leftView setHidden:NO];
+    
+    
+    
+    //____set up private request manager______
+    
+    //create private request manager as ivar
+    if (!self.privateRequestManager){
+        
+        self.privateRequestManager = [[EQRScheduleRequestManager alloc] init];
+    }
+    
+    //set the request as ivar in requestManager
+    self.privateRequestManager.request = self.myScheduleRequest;
+    
+    //two important methods that initiate requestManager ivar arrays
+    [self.privateRequestManager resetEquipListAndAvailableQuantites];
+    [self.privateRequestManager retrieveAllEquipUniqueItems];
 }
 
 
@@ -872,45 +889,46 @@
 
 
 #pragma mark - handle add equip item
-//______!!!!!!  this is eff'd up   !!!!!_______
 
-//-(IBAction)addEquipItem:(id)sender{
-//    
-//    EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
-//    
-//    //need to specify a privateRequestManager for the equip selection v cntrllr
-//    //also sets ivar isInPopover to YES
-//    [genericEquipVCntrllr overrideSharedRequestManager:self.privateRequestManager];
-//    
-//    
-//    
-//    //    genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeNone;
-//    //    [self.navigationController pushViewController:genericEquipVCntrllr animated:NO];
-//    
-//    UIPopoverController* popOverMe = [[UIPopoverController alloc] initWithContentViewController:genericEquipVCntrllr];
-//    self.theEquipSelectionPopOver = popOverMe;
-//    //must manually set the size, cannot be wider than 600px!!!!???? But seems to work ok at 800 anyway???
-//    self.theEquipSelectionPopOver.popoverContentSize = CGSizeMake(700, 600);
-//    
-//    [self.theEquipSelectionPopOver presentPopoverFromRect:self.addButtonView.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated: YES];
-//    
-//    
-//    //need to reprogram the target of the save button
-//    [genericEquipVCntrllr.continueButton removeTarget:genericEquipVCntrllr action:NULL forControlEvents:UIControlEventAllEvents];
-//    [genericEquipVCntrllr.continueButton addTarget:self action:@selector(continueAddEquipItem:) forControlEvents:UIControlEventTouchUpInside];
-//    
-//}
-//
-//-(IBAction)continueAddEquipItem:(id)sender{
-//    
-//    //replaces the uniqueItem key from "1" to an accurate value
-//    [self.privateRequestManager justConfirm];
-//    
-//    [self.theEquipSelectionPopOver dismissPopoverAnimated:YES];
-//    
-//    
-//    //_________***  need to update self.arrayOfEquipUniqueItems
-//    //empty arrays first
+
+-(IBAction)addEquipItem:(id)sender{
+
+    EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
+    
+    //need to specify a privateRequestManager for the equip selection v cntrllr
+    //also sets ivar isInPopover to YES
+    [genericEquipVCntrllr overrideSharedRequestManager:self.privateRequestManager];
+    
+    //    genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeNone;
+    //    [self.navigationController pushViewController:genericEquipVCntrllr animated:NO];
+    
+    UIPopoverController* popOverMe = [[UIPopoverController alloc] initWithContentViewController:genericEquipVCntrllr];
+    self.myAddEquipPopover = popOverMe;
+    //must manually set the size, cannot be wider than 600px!!!!???? But seems to work ok at 800 anyway???
+    self.myAddEquipPopover.popoverContentSize = CGSizeMake(700, 600);
+    
+    [self.myAddEquipPopover presentPopoverFromRect:self.addButtonView.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated: YES];
+    
+    //need to reprogram the target of the save button
+    [genericEquipVCntrllr.continueButton removeTarget:genericEquipVCntrllr action:NULL forControlEvents:UIControlEventAllEvents];
+    [genericEquipVCntrllr.continueButton addTarget:self action:@selector(continueAddEquipItem:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+
+-(IBAction)continueAddEquipItem:(id)sender{
+    
+    //replaces the uniqueItem key from "1" to an accurate value
+    [self.privateRequestManager justConfirm];
+    
+    [self.myAddEquipPopover dismissPopoverAnimated:YES];
+    
+    
+    //renew the list of joins by going to the data layer
+    [self renewTheViewWithRequest:self.myScheduleRequest];
+    
+    
+    //_________***  need to update self.arrayOfEquipUniqueItems
+    //empty arrays first
 //    [self.arrayOfSchedule_Unique_Joins removeAllObjects];
 //    self.arrayOfEquipUniqueItemsWithStructure = nil;
 //    
@@ -918,7 +936,7 @@
 //    NSMutableArray* arrayToReturnJoins = [NSMutableArray arrayWithCapacity:1];
 //    
 //    EQRWebData* webData = [EQRWebData sharedInstance];
-//    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", [self.myUserInfo objectForKey:@"key_ID"],  nil];
+//    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id,  nil];
 //    NSArray* secondArray = [NSArray arrayWithObjects:firstArray, nil];
 //    
 //    //get Scheduletracking_equipUnique_joins
@@ -942,9 +960,9 @@
 //    
 //    //reload collection view
 //    [self.myTable reloadData];
-//    
-//    //____________***
-//}
+    
+    //____________***
+}
 
 
 

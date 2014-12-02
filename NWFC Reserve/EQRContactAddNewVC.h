@@ -24,7 +24,7 @@
 
 @protocol EQRContactAddDelegate <NSObject>
 
--(void)informAdditionHasHappended;
+-(void)informAdditionHasHappended:(NSString*)newContactKeyID;
 
 @end
 
