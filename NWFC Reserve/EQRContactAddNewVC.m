@@ -85,6 +85,12 @@
     
 }
 
+-(IBAction)cancelButton:(id)sender{
+    
+    //go back to previous VC
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 
 /*
 #pragma mark - Navigation

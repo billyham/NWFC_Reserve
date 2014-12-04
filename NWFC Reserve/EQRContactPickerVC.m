@@ -19,6 +19,11 @@
 @property (strong, nonatomic) NSArray* arrayOfIndexLetter;
 @property (strong, nonatomic) NSArray* searchResultArrayOfContacts;
 @property (strong, nonatomic) EQRContactNameItem* selectedNameItem;
+@property BOOL useSubstituteArrayFlag;
+
+@property (strong, nonatomic) IBOutlet UIButton* addContactButton;
+@property BOOL shouldUseShowAllContactsButton;
+@property BOOL showAllContactsButtonHasBeenTapped;
 
 @property (strong, nonatomic) EQRContactAddNewVC* addContactVC;
 
@@ -35,19 +40,13 @@
 
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
     
     //register cells
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
     
-    //_______some messed up shit_______
-    //bug in ios7 needs the retain count for the UISearchDisplayController bumped up by 1
-    //http://stackoverflow.com/questions/19214286/having-a-zombie-issue-on-uisearchdisplaycontroller
-//    self.mySearchDisplayController = (__bridge UISearchDisplayController *)(CFBridgingRetain(self.searchDisplayController));
-    //_______!!!!!! AAUUUGGGHHHH this is not a fix because it prevents self (the view controller from getting deallocated properly
-    //________!!!!! as evidenced when rotating the device after opening the contact VC at least twice
-    //_______!!!!!!! DAmned if you do, damned if you don't
-    
+    //_____!!!!!!!   DEPRECATED IN IOS8 - use UISearchController    !!!!!!_______
     UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.mySearchBar contentsController:self];
     [searchController setDelegate:self];
     [searchController setSearchResultsDelegate:self];
@@ -55,13 +54,35 @@
     [self setMySearchDisplayController:searchController];
     
     
+    //_______some messed up shit_______
+    //bug in ios7 needs the retain count for the UISearchDisplayController bumped up by 1
+    //http://stackoverflow.com/questions/19214286/having-a-zombie-issue-on-uisearchdisplaycontroller
+//    self.mySearchDisplayController = (__bridge UISearchDisplayController *)(CFBridgingRetain(self.searchDisplayController));
+    //_______!!!!!! AAUUUGGGHHHH this is not a fix because it prevents self (the view controller) from getting deallocated properly
+    //________!!!!! as evidenced when rotating the device after opening the contact VC at least twice
+    //_______!!!!!!! Damned if you do, damned if you don't
+    
+
     
     [self renewTheView];
     
 }
 
 
+-(void)viewDidAppear:(BOOL)animated{
+    
+}
+
+
 -(void)renewTheView{
+    
+    //when using a substitute array, just reload the data in the table call it good
+    if (self.useSubstituteArrayFlag == YES){
+        
+        [self.tableView reloadData];
+        return;
+    }
+    
     
     //get ALL contacts ???
     EQRWebData* webData = [EQRWebData sharedInstance];
@@ -79,6 +100,7 @@
     if ([tempMuteArray count] < 1){
         
         //error handling if 0 is returned
+        NSLog(@"no items in the returned array");
     }
     
     //_______move to expand method??_____
@@ -96,6 +118,8 @@
     
     //put some structure on that array of namesItems
     self.arrayOfContactsWithStructure = [NSArray arrayWithArray: [self expandFlatArrayToStructuredArray:sortedArray]];
+    
+//    [self.tableView reloadData];
 }
 
 
@@ -195,13 +219,28 @@
 
 -(IBAction)addNewContactButton:(id)sender{
     
-    EQRContactAddNewVC* newContact = [[EQRContactAddNewVC alloc] initWithNibName:@"EQRContactAddNewVC" bundle:nil];
+    //button serves two purposes
+    //test is it should be a "show all contacts" button
+    if ((self.shouldUseShowAllContactsButton == YES) && (!self.showAllContactsButtonHasBeenTapped == YES)){
+        
+        self.useSubstituteArrayFlag = NO;
+        self.showAllContactsButtonHasBeenTapped = YES;
+        
+        [self.addContactButton setTitle:@"Add New Contact" forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+        
+        [self renewTheView];
+        [self.tableView reloadData];
+        
+    }else{
+        
+        EQRContactAddNewVC* newContact = [[EQRContactAddNewVC alloc] initWithNibName:@"EQRContactAddNewVC" bundle:nil];
+        
+        self.addContactVC = newContact;
+        self.addContactVC.delegate = self;
+        
+        [self.navigationController pushViewController:newContact animated:YES];
+    }
     
-    self.addContactVC = newContact;
-    self.addContactVC.delegate = self;
-    
-    [self.navigationController pushViewController:newContact animated:YES];
-       
 }
 
 
@@ -228,8 +267,39 @@
     
 }
 
+#pragma mark - public methods
 
-#pragma mark - retrieve selection
+-(void)replaceDefaultContactArrayWith:(NSArray*)substituteContactArray{
+
+    //______raise the flag
+    //_____to insure renew the view doesn't override the substitute array
+    self.useSubstituteArrayFlag = YES;
+    
+    //change add contact item button to show all contacts and reset flags
+    self.shouldUseShowAllContactsButton = YES;
+    self.showAllContactsButtonHasBeenTapped = NO;
+    [self.addContactButton setTitle:@"Show All Contacts in Database" forState:UIControlStateHighlighted & UIControlStateNormal & UIControlStateSelected];
+
+    //remove the search display if it exists
+    //______!!!!!!!  UISearchDisplayController is DEPRECATED in ios8     !!!!!______
+    [self.mySearchDisplayController setActive:NO animated:YES];
+    
+    //set arrays
+    self.arrayOfContacts = substituteContactArray;
+    self.arrayOfContactsWithStructure = [self expandFlatArrayToStructuredArray:self.arrayOfContacts];
+    
+    //reload the table
+    [self.tableView reloadData];
+    
+    //scroll to the top (if table has any data)
+    if ([self.tableView numberOfSections] > 0){
+        if ([self.tableView numberOfRowsInSection:0] > 0){
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        }
+    }
+}
+
+
 
 -(id)retrieveContactItem{
     
@@ -390,6 +460,11 @@
     
     return YES;
 }
+
+-(void)viewDidDisappear:(BOOL)animated{
+    
+}
+
 
 -(void)dealloc{
     

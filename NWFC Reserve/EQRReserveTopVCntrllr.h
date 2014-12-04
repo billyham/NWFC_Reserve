@@ -7,14 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRContactPickerVC.h"
 
-@interface EQRReserveTopVCntrllr : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource>
+@interface EQRReserveTopVCntrllr : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource, EQRContactPickerDelegate>
 
-@property (nonatomic, strong) IBOutlet UICollectionView* classListTable;
-@property (nonatomic, strong) IBOutlet UICollectionView* nameListTable;
 @property (nonatomic, strong) IBOutlet UICollectionView* rentorTypeListTable;
+@property (nonatomic, strong) IBOutlet UICollectionView* classListTable;
+//@property (nonatomic, strong) IBOutlet UITableView* nameListTable;
 
-
+-(void)retrieveSelectedNameItem;
 
 
 

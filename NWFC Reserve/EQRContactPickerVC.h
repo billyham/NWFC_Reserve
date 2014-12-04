@@ -19,6 +19,7 @@
 
 @property (weak, nonatomic) id <EQRContactPickerDelegate> delegate;
 
+-(void)replaceDefaultContactArrayWith:(NSArray*)substituteContactArray;
 -(id)retrieveContactItem;
 
 //EQRContactAddDelegate method

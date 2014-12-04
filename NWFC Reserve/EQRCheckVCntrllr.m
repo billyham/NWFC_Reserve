@@ -312,33 +312,34 @@
         
         //___________SECOND respond to a matching title key id match and replace an existing unique item with the scanned item
         //___________in the case of c stands or sand bags that are not specified but they are tracked
-        BOOL foundAMatchingTitleKey = NO;
-        for (EQRScheduleTracking_EquipmentUnique_Join* joinObject in self.arrayOfEquipJoins){
-            
-            if ([joinObject.equipTitleItem_foreignKey isEqualToString:titleItemSubString]){
-                
-                //should also test the the item has not already been give a YES value for the 'myProperty' value
-                //otherwise it continues to the next segment, adding it as a new item to the order
-                
-                //found a matching title key in the ivar array
-                foundAMatchingTitleKey = YES;
-                
-                
-            }
-            
-            //change the data layer
-            
-            //change the local ivar
-            
-            //change the row cell content distinguishing id, and flip switch
-            
-        }
-        
-        if (foundAMatchingTitleKey == YES){
-            
-            //exit the method
-            break;
-        }
+        //___________!!!!!!   THIS IS NO GOOD, IF YOU HAVE TWO BATTERIES TO SCAN IN, THIS METHOD PREVENTS THE SECOND FROM GETTING FLIPPED  !!!!______
+//        BOOL foundAMatchingTitleKey = NO;
+//        for (EQRScheduleTracking_EquipmentUnique_Join* joinObject in self.arrayOfEquipJoins){
+//            
+//            if ([joinObject.equipTitleItem_foreignKey isEqualToString:titleItemSubString]){
+//                
+//                //should also test the the item has not already been give a YES value for the 'myProperty' value
+//                //otherwise it continues to the next segment, adding it as a new item to the order
+//                
+//                //found a matching title key in the ivar array
+//                foundAMatchingTitleKey = YES;
+//                
+//                
+//            }
+//            
+//            //change the data layer
+//            
+//            //change the local ivar
+//            
+//            //change the row cell content distinguishing id, and flip switch
+//            
+//        }
+//        
+//        if (foundAMatchingTitleKey == YES){
+//            
+//            //exit the method
+//            break;
+//        }
         
         
         //_____________ THIRD respond to a new titleItem by adding it the the order (in the case of batteries)

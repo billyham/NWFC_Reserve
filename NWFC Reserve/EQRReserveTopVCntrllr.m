@@ -21,6 +21,7 @@
 #import "EQRModeManager.h"
 
 
+
 @interface EQRReserveTopVCntrllr ()
 
 @property (strong, nonatomic) NSArray* contactNameArray;
@@ -36,6 +37,9 @@
 
 @property BOOL hideNameListFlag;
 @property BOOL hideClassListFlag;
+
+//contact picker
+@property (weak, nonatomic) EQRContactPickerVC* myContactPickerVC;
 
 
 @end
@@ -55,8 +59,11 @@
 
     //register colleciton view cell
     [self.classListTable registerClass:[EQRClassCell class] forCellWithReuseIdentifier:@"Cell"];
-    [self.nameListTable registerClass:[EQRContactNameCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.rentorTypeListTable registerClass:[EQRCellTemplate class] forCellWithReuseIdentifier:@"Cell"];
+    
+    //register table view cells
+    //?s
+
 
     //populate rentorTypeArray
     if (!self.rentorTypeArray){
@@ -100,6 +107,71 @@
     [super viewWillAppear:animated];
 }
 
+-(void)viewDidLayoutSubviews{
+    
+    //________Accessing childviewcontrollers
+    NSArray* arrayOfChildVCs = [self childViewControllers];
+    
+    //this method is called often (during a rotation). Only intitiate a view controller if it doesn't yet exist
+    if (!self.myContactPickerVC){
+        
+        if ([arrayOfChildVCs count] > 0){
+            
+            EQRContactPickerVC* contactPickerVC = (EQRContactPickerVC*)[(UINavigationController*)[arrayOfChildVCs objectAtIndex:0] topViewController];
+            
+            //assign to weak ivar
+            self.myContactPickerVC = contactPickerVC;
+            
+            //set self as delegate
+            self.myContactPickerVC.delegate = self;
+            
+            //initially, no content
+            NSArray* noneArray = [NSArray arrayWithObjects: nil];
+            
+            [self.myContactPickerVC replaceDefaultContactArrayWith:noneArray];
+            
+        }else{
+            
+            //error handling
+        }
+    }
+}
+
+
+#pragma mark - EQRContactPickerVC delegate methods
+
+-(void)retrieveSelectedNameItem{
+    
+    //retrieve name item from shared nib
+    EQRContactNameItem* myNameItem = [self.myContactPickerVC retrieveContactItem];
+    
+    
+    
+    //______****** cancel any existing scheduleRequestItems first???  ******___________
+    
+    //create a scheduleRequestItem instance
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
+    [requestManager createNewRequest];
+    
+    //assign contact and class to the request
+    //first to the object properties
+    requestManager.request.contactNameItem = myNameItem;
+    requestManager.request.classItem = self.thisClassItem;
+    
+    //second to the data model properties
+    requestManager.request.contact_foreignKey = requestManager.request.contactNameItem.key_id;
+    requestManager.request.classSection_foreignKey = self.thisClassItem.key_id;
+    requestManager.request.classTitle_foreignKey = self.thisClassItem.catalog_foreign_key;
+    requestManager.request.contact_name = requestManager.request.contactNameItem.first_and_last;
+    requestManager.request.renter_type = self.chosenRentorType;
+    
+    
+    //perform segue to show date picker
+    [self performSegueWithIdentifier:@"lookAtDates" sender:self];
+    
+}
+
 
 
 #pragma mark - return to start screen
@@ -122,27 +194,35 @@
     
     //delete info in collection views
     [self.classListTable reloadData];
-    [self.nameListTable reloadData];
+//    [self.nameListTable reloadData];
     
     //expand size of rentor type list
     //    self.rentorWidthContraint.constant = 230;
     self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
     self.nameListLeadingConstraint.constant = 1 - EQRRentorTypeLeadingSpace;
     
-    //animate change
+    //animate change    
     [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
         
         [self.view layoutIfNeeded];
+        
+    } completion:^(BOOL finished) {
+        
+        //empty content in name list
+        NSArray* noneArray = [NSArray arrayWithObjects: nil];
+        [self.myContactPickerVC replaceDefaultContactArrayWith:noneArray];
     }];
     
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
     //refresh the list of ALL equipUniqueItems
     [requestManager retrieveAllEquipUniqueItems];
+    
+    
 }
 
 
-#pragma mark - table datasource methods
+#pragma mark - collectionView datasource methods
 
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
@@ -155,18 +235,18 @@
   
     //discern between two different tables
     
-    if (collectionView == self.nameListTable){
-        
-        if (self.hideNameListFlag){
-            
-            return 0;
-            
-        }else{
-            
-            return [self.contactNameArray count];
-        }
-        
-    } else if (collectionView == self.classListTable){
+//    if (collectionView == self.nameListTable){
+//        
+//        if (self.hideNameListFlag){
+//            
+//            return 0;
+//            
+//        }else{
+//            
+//            return [self.contactNameArray count];
+//        }
+    
+     if (collectionView == self.classListTable){
         
         if (self.hideClassListFlag){
             
@@ -190,36 +270,36 @@
     
     //discern between different tables
     
-    if (collectionView == self.nameListTable){
-        
-        static NSString* CellIdentifier = @"Cell";
-        EQRContactNameCell* cell = [self.nameListTable dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
-        
-        //remove all subviews
-        for (UIView* view in cell.contentView.subviews){
-            
-            [view removeFromSuperview];
-        }
-        
-        cell.backgroundColor = [UIColor clearColor];
-        [cell setOpaque:YES];
-        
-        if ([self.contactNameArray count] > 0){
-            
-            NSLog(@"this is the class of objects: %@", [[self.contactNameArray objectAtIndex:indexPath.row] class]);
-            
-            NSLog(@"this is the fist and last: %@", [(EQRContactNameItem*)[self.contactNameArray objectAtIndex:indexPath.row] first_and_last]);
-            
-            [cell initialSetupWithTitle:[(EQRContactNameItem*)[self.contactNameArray objectAtIndex:indexPath.row] first_and_last]];
-            
-        }else{
-            
-            NSLog(@"no count in the contact name array");
-        }
-        
-        return cell;
-        
-    }else if (collectionView == self.classListTable){
+//    if (collectionView == self.nameListTable){
+//        
+//        static NSString* CellIdentifier = @"Cell";
+//        EQRContactNameCell* cell = [self.nameListTable dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+//        
+//        //remove all subviews
+//        for (UIView* view in cell.contentView.subviews){
+//            
+//            [view removeFromSuperview];
+//        }
+//        
+//        cell.backgroundColor = [UIColor clearColor];
+//        [cell setOpaque:YES];
+//        
+//        if ([self.contactNameArray count] > 0){
+//            
+//            NSLog(@"this is the class of objects: %@", [[self.contactNameArray objectAtIndex:indexPath.row] class]);
+//            
+//            NSLog(@"this is the fist and last: %@", [(EQRContactNameItem*)[self.contactNameArray objectAtIndex:indexPath.row] first_and_last]);
+//            
+//            [cell initialSetupWithTitle:[(EQRContactNameItem*)[self.contactNameArray objectAtIndex:indexPath.row] first_and_last]];
+//            
+//        }else{
+//            
+//            NSLog(@"no count in the contact name array");
+//        }
+//        
+//        return cell;
+    
+    if (collectionView == self.classListTable){
         
         static NSString* CellIdentifier = @"Cell";
         EQRClassCell* cell = [self.classListTable dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
@@ -275,6 +355,26 @@
         return nil;
     }
 };
+
+
+#pragma mark - table view data source methods
+
+//-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+//    
+//    return 1;
+//}
+//
+//-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+//    
+//    
+//}
+//
+//-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+//    
+//    
+//    
+//}
+
 
 
 #pragma mark - collection view delegate methods
@@ -413,46 +513,20 @@
                 
                 //            NSLog(@"count of objects in contactNameMuteArray: %lu", (unsigned long)[contactNameMuteArray count]);
                 
+                //hand array to contactPickerVC
+                [self.myContactPickerVC replaceDefaultContactArrayWith:self.contactNameArray];
+                
+                
                 //is this necessary_____???
-                [self.nameListTable reloadData];
+//                [self.nameListTable reloadData];
             }];
         }
-
-
-    } else if (collectionView == self.nameListTable){
-        
-        //name list was selected
-        
-        //______****** cancel any existing scheduleRequestItems first???  ******___________
-        
-        //create a scheduleRequestItem instance
-        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-        
-        [requestManager createNewRequest];
-        
-        //assign contact and class to the request
-        //first to the object properties
-        requestManager.request.contactNameItem = [self.contactNameArray objectAtIndex:indexPath.row];
-        requestManager.request.classItem = self.thisClassItem;
-
-        //second to the data model properties
-        requestManager.request.contact_foreignKey = requestManager.request.contactNameItem.key_id;
-        requestManager.request.classSection_foreignKey = self.thisClassItem.key_id;
-        requestManager.request.classTitle_foreignKey = self.thisClassItem.catalog_foreign_key;
-        requestManager.request.contact_name = requestManager.request.contactNameItem.first_and_last;
-        requestManager.request.renter_type = self.chosenRentorType;
-        
-        
-        //perform segue to show date picker
-        [self performSegueWithIdentifier:@"lookAtDates" sender:self];
         
     } else if (collectionView == self.rentorTypeListTable){
         
         //reveal class list
         self.hideClassListFlag = NO;
-        
-        
-        
+   
         //rentor type is selected
         switch (indexPath.row) {
                 
@@ -474,7 +548,7 @@
                 
                 //remove whatever currently exists in the contact tables
                 self.contactNameArray = nil;
-                [self.nameListTable reloadData];
+//                [self.nameListTable reloadData];
                 
                 //get current term from user defaults
                 NSString* termString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
@@ -513,6 +587,12 @@
                 //yes, this is necessary
                 [self.classListTable reloadData];
                 
+                //empty out the contactPicker table
+                NSArray* noneArray = [NSArray arrayWithObjects: nil];
+                
+                //hand array to contactPickerVC
+                [self.myContactPickerVC replaceDefaultContactArrayWith:noneArray];
+                
                 break;
                 
             } case (1):{ //faculty
@@ -534,7 +614,7 @@
                 self.classArray = nil;
                 [self.classListTable reloadData];
                 self.contactNameArray = nil;
-                [self.nameListTable reloadData];
+//                [self.nameListTable reloadData];
                 
                 //_____populate nameList table with names of faculty
                 
@@ -564,11 +644,14 @@
                 
                 self.contactNameArray = tempMuteArrayAlpha;
                 
+                //hand array to contactPickerVC
+                [self.myContactPickerVC replaceDefaultContactArrayWith:self.contactNameArray];
+                
                 //********  reveal name list  **********
                 self.hideNameListFlag = NO;
                 
                 //is this necessary_____???
-                [self.nameListTable reloadData];
+//                [self.nameListTable reloadData];
                 
                 break;
                 
@@ -592,7 +675,7 @@
                 self.classArray = nil;
                 [self.classListTable reloadData];
                 self.contactNameArray = nil;
-                [self.nameListTable reloadData];
+//                [self.nameListTable reloadData];
                 
                 //_____populate nameList table with names of staff
                 
@@ -622,11 +705,14 @@
                 
                 self.contactNameArray = tempMuteArrayAlpha;
                 
+                //hand array to contactPickerVC
+                [self.myContactPickerVC replaceDefaultContactArrayWith:self.contactNameArray];
+                
                 //********  reveal name list  **********
                 self.hideNameListFlag = NO;
                 
                 //is this necessary_____???
-                [self.nameListTable reloadData];
+//                [self.nameListTable reloadData];
                 
                 break;
                 
@@ -649,7 +735,7 @@
                 self.classArray = nil;
                 [self.classListTable reloadData];
                 self.contactNameArray = nil;
-                [self.nameListTable reloadData];
+//                [self.nameListTable reloadData];
                 
                 //_____populate with list of ALL names in database____?
                 //instantiate mute array
@@ -678,11 +764,14 @@
                 
                 self.contactNameArray = tempMuteArrayAlpha;
                 
+                //hand array to contactPickerVC
+                [self.myContactPickerVC replaceDefaultContactArrayWith:self.contactNameArray];
+                
                 //********  reveal name list  **********
                 self.hideNameListFlag = NO;
                 
                 //is this necessary_____???
-                [self.nameListTable reloadData];
+//                [self.nameListTable reloadData];
                 
                 break;
                 
@@ -706,7 +795,7 @@
                 self.classArray = nil;
                 [self.classListTable reloadData];
                 self.contactNameArray = nil;
-                [self.nameListTable reloadData];
+//                [self.nameListTable reloadData];
                 
                 //get current term from user defaults
                 NSString* termString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"campTerm"] objectForKey:@"campTerm"];
@@ -746,6 +835,12 @@
                 //yes, this is necessary
                 [self.classListTable reloadData];
                 
+                //empty out the contactPicker table
+                NSArray* noneArray = [NSArray arrayWithObjects: nil];
+                
+                //hand array to contactPickerVC
+                [self.myContactPickerVC replaceDefaultContactArrayWith:noneArray];
+                
                 
                 break;
                 
@@ -765,6 +860,18 @@
     return YES;
 }
 
+
+#pragma mark - table view delegate methods
+
+//-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+//    
+//    if (tableView == self.nameListTable){
+//        
+//        //name list was selected
+//        
+//        
+//    }
+//}
 
 
 
