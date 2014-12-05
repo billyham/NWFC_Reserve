@@ -175,7 +175,7 @@
         
         //error test for when no name exists
         if ([[nameItem performSelector:@selector(first_and_last)] length] < 1){
-            break;
+            continue;
         }
         
         NSString* firstLetterSubstring = [[nameItem performSelector:@selector(first_and_last)] substringToIndex:1];

@@ -150,7 +150,7 @@
                 //try adding it here and now???
                 [subArray addObject:join.equipTitleItem_foreignKey];
                 
-                //_____????  Is this break OK???_____
+                //_____????  Is this break OK???_____ Yes. Yes it is.
                 break;
             }
         }

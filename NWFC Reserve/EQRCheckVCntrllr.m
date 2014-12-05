@@ -255,8 +255,8 @@
         
         if (alreadyInArray == YES){
             
-            //exit if the item has already been scanned
-            break;
+            //advance to the next cycle if the item has already been scanned
+            continue;
         }
         
         //otherwise... add to the set of found objects
@@ -276,7 +276,7 @@
                 //present a message that an object was scanned but not recognized by the system???
                 
                 //exit the method
-                break;
+                continue;
             }
         }
         
@@ -306,13 +306,16 @@
                 //alert matching row cell content with a notification
                 NSDictionary* newDic = [NSDictionary dictionaryWithObject:uniqueItemSubString forKey:@"keyID"];
                 [[NSNotificationCenter defaultCenter] postNotificationName:EQRQRCodeFlipsSwitchInRowCellContent object:nil userInfo:newDic];
+                
+                //found the match so break out of this sub loop
+                break;
             }
         }
         
         if (foundAMatchingEquipKey == YES){
             
-            //exit the method
-            break;
+            //advance to the next cycle
+            continue;
         }
         
         
@@ -344,7 +347,7 @@
 //        if (foundAMatchingTitleKey == YES){
 //            
 //            //exit the method
-//            break;
+//            continue;
 //        }
         
         
@@ -365,8 +368,8 @@
         } else {
             
             //____show error message that the item wasn't found in the database
-            //exit the method
-            break;
+            //advance to the next cycle
+            continue;
         }
         
         //change the data layer
