@@ -268,10 +268,16 @@
         //will return NSNotFound for location and 0 for length if it doesn't find the string
         if (eqrRange.location == NSNotFound){
             
-//            present a message that an object was scanned but not recognized by the system
+            //try capital letters
+            eqrRange = [recognizedObject.stringValue rangeOfString:@"EQR"];
             
-            //exit the method
-            break;
+            if (eqrRange.location == NSNotFound){
+                
+                //present a message that an object was scanned but not recognized by the system???
+                
+                //exit the method
+                break;
+            }
         }
         
         //derive the titleItem key
