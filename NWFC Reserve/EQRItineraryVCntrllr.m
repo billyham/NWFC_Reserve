@@ -132,11 +132,6 @@
     //set leftBarButton item on SELF
     [self.navigationItem setLeftBarButtonItems:arrayOfLeftButtons];
     
-    
-
-    
-    
-    
     //right button
     UIBarButtonItem* staffUserBarButton = [[UIBarButtonItem alloc] initWithTitle:logText style:UIBarButtonItemStylePlain target:self action:@selector(showStaffUserPicker)];
     
@@ -383,6 +378,8 @@
     
     //model pops up from below, removes navigiation controller
     UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:checkViewController];
+    
+    //add staff picker and cancel buttons in nav bar??
     
     [self presentViewController:newNavController animated:YES completion:^{
         

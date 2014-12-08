@@ -16,7 +16,6 @@ extern NSString* EQRRenterFaculty;
 extern NSString* EQRRenterStaff;
 extern NSString* EQRRenterPublic;
 extern NSString* EQRRenterYouth;
-
 extern NSString* EQRRenterInClass;
 
 //error string
@@ -38,6 +37,8 @@ extern NSString* EQRMarkItineraryAsCompleteOrNot;
 extern NSString* EQRAChangeWasMadeToTheSchedule;
 extern NSString* EQREquipUniqueToBeDeleted;
 extern NSString* EQREquipUniqueToBeDeletedCancel;
+extern NSString* EQRJoinToBeDeletedInCheckInOut;
+extern NSString* EQRJoinToBeDeletedInCheckInOutCancel;
 extern NSString* EQRLongPressOnNestedDayCell;
 extern NSString* EQRPartialRefreshToItineraryArray;
 extern NSString* EQRQRCodeFlipsSwitchInRowCellContent;

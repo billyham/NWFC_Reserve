@@ -10,11 +10,14 @@
 
 extern NSString* EQRColorLightBlue;
 extern NSString* EQRColorVeryLightGrey;
+
 extern NSString* EQRColorCalStudent;
 extern NSString* EQRColorCalPublic;
 extern NSString* EQRColorCalStaff;
 extern NSString* EQRColorCalFaculty;
 extern NSString* EQRColorCalYouth;
+extern NSString* EQRColorCalInClass;
+
 extern NSString* EQRColorNeedsPrep;
 extern NSString* EQRColorDonePrep;
 extern NSString* EQRColorFilterOn;

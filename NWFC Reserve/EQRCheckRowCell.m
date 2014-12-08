@@ -13,6 +13,7 @@
 @interface EQRCheckRowCell ()
 
 @property (strong, nonatomic) EQRCheckCellContentVCntrllr* myCheckContent;
+//@property BOOL toBeDeletedFlag;
 
 @end
 
@@ -29,7 +30,10 @@
 
 
 
--(void)initialSetupWithEquipUnique:(EQRScheduleTracking_EquipmentUnique_Join*)equipJoin marked:(BOOL)mark_for_returning switch_num:(NSUInteger)switch_num{
+-(void)initialSetupWithEquipUnique:(EQRScheduleTracking_EquipmentUnique_Join*)equipJoin
+                            marked:(BOOL)mark_for_returning
+                        switch_num:(NSUInteger)switch_num
+                 markedForDeletion:(BOOL)deleteFlag{
     
     self.backgroundColor = [UIColor clearColor];
     
@@ -141,6 +145,9 @@
     
     //hide service issue button
     [self.myCheckContent.serviceIssue setHidden:YES];
+    
+    //setup deletion button and background color based on deletionFlag
+    [self.myCheckContent initialSetupWithDeleteFlag:deleteFlag];
     
 }
 

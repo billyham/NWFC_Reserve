@@ -12,6 +12,9 @@
 
 @interface EQRCheckCellContentVCntrllr ()
 
+@property (strong, nonatomic) IBOutlet UIButton* myDeleteButton;
+@property BOOL toBeDeletedFlag;
+
 @end
 
 @implementation EQRCheckCellContentVCntrllr
@@ -39,6 +42,57 @@
     
 }
 
+-(void)initialSetupWithDeleteFlag:(BOOL)deleteFlag{
+    
+    NSLog(@"checkCellContentVC > initialSetup is called with deleteFlag: %ul", deleteFlag);
+    
+    self.toBeDeletedFlag = deleteFlag;
+    
+    if (self.toBeDeletedFlag){
+        
+        self.view.backgroundColor = [UIColor redColor];
+        [self.myDeleteButton setTitle:@"Cancel" forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+        
+    }else {
+        
+        self.view.backgroundColor = [UIColor whiteColor];
+        [self.myDeleteButton setTitle:@"Delete" forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+    }
+}
+
+-(IBAction)deleteEquipItem:(id)sender{
+    
+    if (!self.toBeDeletedFlag){
+        
+        //send view controller a note with join key_id (or indexpath) to indicate it needs to be removed from the database
+        
+        NSDictionary* thisDic = [NSDictionary dictionaryWithObject:self.myJoinKeyID forKey:@"key_id"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRJoinToBeDeletedInCheckInOut object:nil userInfo:thisDic];
+        
+        //flag the color of the cell!!
+        self.view.backgroundColor = [UIColor redColor];
+        
+        [self.myDeleteButton setTitle:@"Cancel" forState:UIControlStateNormal];
+        [self.myDeleteButton setTitle:@"Cancel" forState:UIControlStateHighlighted];
+        [self.myDeleteButton setTitle:@"Cancel" forState:UIControlStateSelected];
+        
+        self.toBeDeletedFlag = YES;
+        
+    }else {
+        
+        NSDictionary* thisDic = [NSDictionary dictionaryWithObject:self.myJoinKeyID forKey:@"key_id"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRJoinToBeDeletedInCheckInOutCancel object:nil userInfo:thisDic];
+        
+        self.view.backgroundColor = [UIColor whiteColor];
+        
+        [self.myDeleteButton setTitle:@"Delete" forState:UIControlStateNormal];
+        [self.myDeleteButton setTitle:@"Delete" forState:UIControlStateHighlighted];
+        [self.myDeleteButton setTitle:@"Delete" forState:UIControlStateSelected];
+        
+        self.toBeDeletedFlag = NO;
+    }
+}
+
 
 #pragma mark - notification methods
 
@@ -46,16 +100,14 @@
     
     NSString* equipKeyID = [[note userInfo] objectForKey:@"keyID"];
     
-    NSLog(@"this is a row's equipUnique key: %@", self.equipUniteItem_foreignKey);
+//    NSLog(@"this is a row's equipUnique key: %@", self.equipUniteItem_foreignKey);
     
     if ([equipKeyID isEqualToString:self.equipUniteItem_foreignKey]){
         
         [self.statusSwitch setOn:YES];
         
         [self receiveSwitchChange:self.statusSwitch];
-        
     }
-    
 }
 
 

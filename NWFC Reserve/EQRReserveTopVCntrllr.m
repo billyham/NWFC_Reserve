@@ -74,6 +74,7 @@
                                 [EQRRenterStaff capitalizedString],
                                 [EQRRenterPublic capitalizedString],
                                 [EQRRenterYouth capitalizedString],
+                                [EQRRenterInClass capitalizedString],
                                 nil];
     }
     
@@ -398,10 +399,9 @@
     
     if (collectionView == self.classListTable){
         
-        //discern between adult and youth class
+        //discern between adult, youth and in class
         
-        //youth class
-        if ([self.chosenRentorType isEqualToString:EQRRenterYouth]){
+        if ([self.chosenRentorType isEqualToString:EQRRenterYouth]){  //youth class
             
             //youth camp was selected
             
@@ -431,11 +431,54 @@
             
             NSLog(@"this is the instructor name: %@ and key: %@", self.thisClassItem.instructor_name, self.thisClassItem.instructor_foreign_key);
             
-            //perform segue to show date picker
-            [self performSegueWithIdentifier:@"lookAtDates" sender:self];
+            //____error handling when no intructor_foreign_key exists_______
+            if (([self.thisClassItem.instructor_foreign_key isEqualToString:@""]) || (self.thisClassItem.instructor_foreign_key == NULL)){
+                
+                //_____populate nameList table with names of faculty
+                
+                //instantiate mute array
+                NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+                
+                EQRWebData* webData2 = [EQRWebData sharedInstance];
+                
+                //pull a list of names, only ones with faculty bool set to 1
+                [webData2 queryWithLink:@"EQGetFacultyNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+                    
+                    for (id obj in muteArray){
+                        
+                        [tempMuteArray  addObject:obj];
+                    }
+                }];
+                
+                //alphabatize the class list
+                NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                    
+                    NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
+                    NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
+                    
+                    return [string1 compare:string2];
+                    
+                }];
+                
+                self.contactNameArray = tempMuteArrayAlpha;
+                
+                //hand array to contactPickerVC
+                [self.myContactPickerVC replaceDefaultContactArrayWith:self.contactNameArray];
+                
+                //********  reveal name list  **********
+                self.hideNameListFlag = NO;
+                
+            } else {
+                
+                //found instructor foreign key to proceed as per normal with the segue
+                
+                //perform segue to show date picker
+                [self performSegueWithIdentifier:@"lookAtDates" sender:self];
+            }
             
-            //adult class
-        }else{
+          
+            
+        }else if ([self.chosenRentorType isEqualToString:EQRRenterStudent]) {   //student in adult class
             
             //reveal name list
             self.hideNameListFlag = NO;
@@ -520,6 +563,81 @@
                 //is this necessary_____???
 //                [self.nameListTable reloadData];
             }];
+            
+        } else if ([self.chosenRentorType isEqualToString:EQRRenterInClass]){    //in class 
+         
+            //____identical to youth selection______
+            
+            //in class was selected
+            
+            //______****** cancel any existing scheduleRequestItems first???  ******___________
+            
+            //create a scheduleRequestItem instance
+            EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+            
+            [requestManager createNewRequest];
+            
+            //1. get key_id of selected class Section
+            EQRClassItem* thisClass = [self.classArray objectAtIndex:indexPath.row];
+            //            NSString*  classKeyId = thisClass.key_id;
+            self.thisClassItem = thisClass;
+            
+            //assign contact and class to the request
+            //first to the object properties
+            requestManager.request.contactNameItem = nil;
+            requestManager.request.classItem = self.thisClassItem;
+            
+            //second to the data model properties
+            requestManager.request.contact_foreignKey = self.thisClassItem.instructor_foreign_key;
+            requestManager.request.classSection_foreignKey = self.thisClassItem.key_id;
+            requestManager.request.classTitle_foreignKey = self.thisClassItem.catalog_foreign_key;
+            requestManager.request.contact_name = self.thisClassItem.instructor_name;
+            requestManager.request.renter_type = self.chosenRentorType;
+            
+            NSLog(@"this is the instructor name: %@ and key: %@", self.thisClassItem.instructor_name, self.thisClassItem.instructor_foreign_key);
+            
+            //____error handling when no intructor_foreign_key exists_______
+            if (([self.thisClassItem.instructor_foreign_key isEqualToString:@""]) || (self.thisClassItem.instructor_foreign_key == NULL)){
+                
+                //_____populate nameList table with names of faculty
+                
+                //instantiate mute array
+                NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+                
+                EQRWebData* webData2 = [EQRWebData sharedInstance];
+                
+                //pull a list of names, only ones with faculty bool set to 1
+                [webData2 queryWithLink:@"EQGetFacultyNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+                    
+                    for (id obj in muteArray){
+                        
+                        [tempMuteArray  addObject:obj];
+                    }
+                }];
+                
+                //alphabatize the class list
+                NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                    
+                    NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
+                    NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
+                    
+                    return [string1 compare:string2];
+                    
+                }];
+                
+                self.contactNameArray = tempMuteArrayAlpha;
+                
+                //hand array to contactPickerVC
+                [self.myContactPickerVC replaceDefaultContactArrayWith:self.contactNameArray];
+                
+                //********  reveal name list  **********
+                self.hideNameListFlag = NO;
+                
+            } else {  //perform segue as per normal
+                
+                //perform segue to show date picker
+                [self performSegueWithIdentifier:@"lookAtDates" sender:self];
+            }
         }
         
     } else if (collectionView == self.rentorTypeListTable){
@@ -844,6 +962,69 @@
                 
                 break;
                 
+            }case (5):{  //in class
+                
+                //set rentorType for request object
+                self.chosenRentorType = EQRRenterInClass;
+                
+                //contact size of rentor type list
+                //                self.rentorWidthContraint.constant = 120;
+                self.rentorLeadingConstraint.constant = 0.0;
+                self.nameListLeadingConstraint.constant = 2.0;
+                
+                //animate change
+                [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
+                    
+                    [self.view layoutIfNeeded];
+                }];
+                
+                //remove whatever currently exists in the contact tables
+                self.contactNameArray = nil;
+                
+                //get current term from user defaults
+                NSString* termString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
+                
+                //load class table with current term classes and display in collection view
+                EQRWebData* webData = [EQRWebData sharedInstance];
+                
+                //instantiate mute array
+                NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+                
+                //params for class section query is the current term
+                NSArray* termArray = [NSArray arrayWithObjects:@"term", termString, nil];
+                NSArray* classqueryArray = [NSArray arrayWithObject:termArray];
+                
+                [webData queryWithLink:@"EQGetClassesCurrent.php" parameters:classqueryArray class:@"EQRClassItem" completion:^(NSMutableArray* muteArray){
+                    
+                    for (id object in muteArray){
+                        
+                        [tempMuteArray addObject:object];
+                        
+                    }
+                }];
+                
+                //alphabatize the class list
+                NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                    
+                    NSString* string1 = [(EQRClassItem*)obj1 section_name];
+                    NSString* string2 = [(EQRClassItem*)obj2 section_name];
+                    
+                    return [string1 compare:string2];
+                    
+                }];
+                
+                self.classArray = tempMuteArrayAlpha;
+                
+                //yes, this is necessary
+                [self.classListTable reloadData];
+                
+                //empty out the contactPicker table
+                NSArray* noneArray = [NSArray arrayWithObjects: nil];
+                
+                //hand array to contactPickerVC
+                [self.myContactPickerVC replaceDefaultContactArrayWith:noneArray];
+                
+                break;
             }
                 
             default:

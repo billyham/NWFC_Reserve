@@ -16,6 +16,8 @@ NSString* EQRRenterFaculty = @"faculty";
 NSString* EQRRenterStaff = @"staff";
 NSString* EQRRenterPublic = @"public";
 NSString* EQRRenterYouth = @"youth";
+NSString* EQRRenterInClass = @"in class";
+
 //______******* if any change is made to these, be sure to update existing renter_type rows in BOTH
 //______******* scheduleTracking AND scheduleTracking_uniqueItem_join tables
 
@@ -38,6 +40,8 @@ NSString* EQRMarkItineraryAsCompleteOrNot = @"EQRMarkItineraryAsCompleteOrNot";
 NSString* EQRAChangeWasMadeToTheSchedule = @"EQRAChangeWasMadeToTheSchedule";
 NSString* EQREquipUniqueToBeDeleted = @"EQREquipUniqueToBeDeleted";
 NSString* EQREquipUniqueToBeDeletedCancel = @"EQREquipUniqueToBeDeletedCancel";
+NSString* EQRJoinToBeDeletedInCheckInOut = @"EQRJoinToBeDeletedInCheckInOut";
+NSString* EQRJoinToBeDeletedInCheckInOutCancel = @"EQRJoinToBeDeletedInCheckInOutCancel";
 NSString* EQRLongPressOnNestedDayCell = @"EQRLongPressOnNestedDayCell";
 NSString* EQRPartialRefreshToItineraryArray = @"EQRPartialRefreshToItineraryArray";
 NSString* EQRQRCodeFlipsSwitchInRowCellContent = @"EQRQRCodeFlipsSwitchInRowCellContent";

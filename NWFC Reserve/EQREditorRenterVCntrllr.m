@@ -46,6 +46,7 @@
                           EQRRenterFaculty,
                          EQRRenterPublic,
                          EQRRenterYouth,
+                          EQRRenterInClass,
                          nil];
     
     self.arrayOfRenterTypes = thisArray;
@@ -75,6 +76,10 @@
     }else if([presetRenter isEqualToString:EQRRenterYouth]){
         
         [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:4 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+        
+    }else if ([presetRenter isEqualToString:EQRRenterInClass]){
+        
+        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:5 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
     
 }

@@ -20,9 +20,17 @@
 #import "EQRStaffUserManager.h"
 #import "EQRCheckHeaderCell.h"
 #import "EQRDataStructure.h"
+#import "EQRStaffUserManager.h"
+#import "EQRStaffUserPickerViewController.h"
+#import "EQRModeManager.h"
 
 
 @interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate>
+
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* tableTopGuideConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* tablebottomGuideConstraint;
+
+@property (strong, nonatomic) IBOutlet UILabel* updateLabel;
 
 @property (strong, nonatomic) IBOutlet UILabel* nameTextLabel;
 @property (strong, nonatomic) NSDictionary* myUserInfo;
@@ -32,6 +40,9 @@
 @property (strong, nonatomic) IBOutlet UICollectionView* myEquipCollection;
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipJoins;
 @property (strong, nonatomic) NSArray* arrayOfEquipJoinsWithStructure;
+@property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedEquipIDs;
+
+@property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
 
 //for qr code reader
 @property(nonatomic, strong) AVCaptureSession *session;
@@ -43,6 +54,8 @@
 @end
 
 @implementation EQRCheckVCntrllr
+
+#pragma mark - methods
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -83,16 +96,22 @@
         }
     }
     
+    [self renewTheArrayWithScheduleTracking_foreignKey:self.scheduleRequestKeyID];
+}
+
+
+-(void)renewTheArrayWithScheduleTracking_foreignKey:(NSString*)scheduleRequestKeyID{
+    
     //populate arrays using schedule key
     EQRWebData* webData = [EQRWebData sharedInstance];
-
+    
     NSMutableArray* altMuteArray = [NSMutableArray arrayWithCapacity:1];
-    NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.scheduleRequestKeyID, nil];
+    NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", scheduleRequestKeyID, nil];
     NSArray* bigArray = [NSArray arrayWithObject:ayeArray];
     [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:bigArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
         
         for (EQRScheduleTracking_EquipmentUnique_Join* object in muteArray){
-                        
+            
             [altMuteArray addObject:object];
         }
     }];
@@ -108,13 +127,11 @@
     
     //add nested structure to the array of equup items
     self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins];
-    
 }
 
 
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
+    
     [super viewDidLoad];
 
     //register collection view cell
@@ -127,7 +144,9 @@
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     //receive change in state from row items
     [nc addObserver:self selector:@selector(updateArrayOfJoins:) name:EQRUpdateCheckInOutArrayOfJoins object:nil];
-    
+    //receive notes from cell's content VCs when delete button is tapped
+    [nc addObserver:self selector:@selector(addJoinKeyIDToBeDeletedArray:) name:EQRJoinToBeDeletedInCheckInOut object:nil];
+    [nc addObserver:self selector:@selector(removeJoinKeyIDToBeDeletedArray:) name:EQRJoinToBeDeletedInCheckInOutCancel object:nil];
     
     //cancel bar button
 //    UIBarButtonItem* rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction)];
@@ -140,6 +159,108 @@
         
         [self initiateQRCodeSteps];
     }
+    
+    //instantiate mutableArray for deletion ivar
+    if (!self.arrayOfToBeDeletedEquipIDs){
+        
+        self.arrayOfToBeDeletedEquipIDs = [NSMutableArray arrayWithCapacity:1];
+        
+    } else {
+        
+        [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+    }
+    
+    //derive the current user name
+    EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+    NSString* logText = [NSString stringWithFormat:@"Logged in as %@", staffUserManager.currentStaffUser.first_name];
+    
+    //uibar buttons
+    //create fixed spaces
+    UIBarButtonItem* twentySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+    twentySpace.width = 20;
+    UIBarButtonItem* thirtySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+    thirtySpace.width = 30;
+    
+    //wrap buttons in barbuttonitem
+    UIBarButtonItem* leftBarButton =[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction)];
+    
+    //array that shit
+    NSArray* arrayOfLeftButtons = [NSArray arrayWithObjects:leftBarButton, nil];
+    
+    //set leftBarButton item on SELF
+    [self.navigationItem setLeftBarButtonItems:arrayOfLeftButtons];
+    
+    //right button
+    UIBarButtonItem* staffUserBarButton = [[UIBarButtonItem alloc] initWithTitle:logText style:UIBarButtonItemStylePlain target:self action:@selector(showStaffUserPicker)];
+    
+    //array that shit
+    NSArray* arrayOfRightButtons = [NSArray arrayWithObjects:staffUserBarButton, nil];
+    
+    //set rightBarButton item in SELF
+    [self.navigationItem setRightBarButtonItems:arrayOfRightButtons];
+    
+    
+    //___________
+    
+}
+
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    //update navigation bar
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    if (modeManager.isInDemoMode){
+        
+        //set prompt
+        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        
+    }else{
+        
+        //set prompt
+        self.navigationItem.prompt = nil;
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = nil;
+    }
+    
+    [super viewWillAppear:animated];
+    
+    //add constraints
+    //______this MUST be added programmatically because you CANNOT specify the topLayoutGuide of a VC in a nib______
+    
+    self.myEquipCollection.translatesAutoresizingMaskIntoConstraints = NO;
+    id topGuide = self.topLayoutGuide;
+    id bottomGuide = self.bottomLayoutGuide;
+    
+    NSDictionary *viewsDictionary = @{@"equipCollection":self.myEquipCollection, @"topGuide":topGuide, @"bottomGuide":bottomGuide};
+    
+    NSArray *constraint_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-0-[equipCollection]"
+                                                                        options:0
+                                                                        metrics:nil
+                                                                          views:viewsDictionary];
+    
+    
+    
+    NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[equipCollection]-50-[bottomGuide]"
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:viewsDictionary];
+    
+    //drop exisiting constraints
+    //_____THIS IS NECESSARY BECAUSE NIBS REALLY HATE IT IF YOU LEAVE OUT ANY CONSTRAINTS __
+    //_____THESE WERE ONLY TEMPORARY TO SATISIFY THE NIB FROM SCREAMING ERROR MESSAGES____
+    [[self.myEquipCollection superview] removeConstraints:[NSArray arrayWithObjects:self.tableTopGuideConstraint, self.tablebottomGuideConstraint, nil]];
+    
+    //add replacement constraints
+    [[self.myEquipCollection superview] addConstraints:constraint_POS_V];
+    [[self.myEquipCollection superview] addConstraints:constraint_POS_VB];
+    
+    //reassign constraint ivars!!
+    self.tableTopGuideConstraint = [constraint_POS_V objectAtIndex:0];
+    self.tablebottomGuideConstraint = [constraint_POS_VB objectAtIndex:0];
     
 }
 
@@ -303,9 +424,31 @@
                 
                 foundAMatchingEquipKey = YES;
                 
+                //________move collection view to row with new object.
+                //________when cell is not in view (because at the bottom of a long list) the switch doesn't receive the notification and get flipped
+                [self.arrayOfEquipJoinsWithStructure enumerateObjectsUsingBlock:^(NSArray* subArray, NSUInteger idx, BOOL *stop) {
+                   
+                    [subArray enumerateObjectsUsingBlock:^(EQRScheduleTracking_EquipmentUnique_Join* joinObj, NSUInteger subIdx, BOOL *stop) {
+                        
+                        if (joinObj == joinObject){
+                            
+                            NSLog(@"found a match in subarray, %@", joinObject.name);
+                            
+                            NSIndexPath* matchingIndexPath = [NSIndexPath indexPathForRow:subIdx inSection:idx];
+                            
+                            [self.myEquipCollection scrollToItemAtIndexPath:matchingIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
+                        }
+                    }];
+                }];
+                
                 //alert matching row cell content with a notification
                 NSDictionary* newDic = [NSDictionary dictionaryWithObject:uniqueItemSubString forKey:@"keyID"];
-                [[NSNotificationCenter defaultCenter] postNotificationName:EQRQRCodeFlipsSwitchInRowCellContent object:nil userInfo:newDic];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:EQRQRCodeFlipsSwitchInRowCellContent object:nil userInfo:newDic];
+                //send note with delay
+                [self performSelector:@selector(delayedNotification:) withObject:newDic afterDelay:0.25f];
+                
+                //add text to the display update
+                [self showUpdateDisplay:[NSString stringWithFormat:@"Checked: %@ #%@", joinObject.name, joinObject.distinquishing_id]];
                 
                 //found the match so break out of this sub loop
                 break;
@@ -411,10 +554,25 @@
         self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins];
         //_______         MUST BE UPDATED BECAUSE NOW WE USE A STRUCTURED ARRAY         _______
         
-        
-        
-        
         [self.myEquipCollection reloadData];
+        
+        
+        //________move collection view to row with new object.
+        //________when cell is not in view (because at the bottom of a long list) the switch doesn't receive the notification and get flipped
+        [self.arrayOfEquipJoinsWithStructure enumerateObjectsUsingBlock:^(NSArray* subArray, NSUInteger idx, BOOL *stop) {
+            
+            [subArray enumerateObjectsUsingBlock:^(EQRScheduleTracking_EquipmentUnique_Join* joinObj, NSUInteger subIdx, BOOL *stop) {
+                
+                if (joinObj == newJoinToAdd){
+                    
+                    NSLog(@"found a match in subarray: %@", newJoinToAdd.name);
+                    
+                    NSIndexPath* matchingIndexPath = [NSIndexPath indexPathForRow:subIdx inSection:idx];
+                    
+                    [self.myEquipCollection scrollToItemAtIndexPath:matchingIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
+                }
+            }];
+        }];
         
         //flip the switch in the row cell
         //alert matching row cell content with a notification
@@ -422,6 +580,8 @@
         
         [self performSelector:@selector(delayedNotification:) withObject:newDic afterDelay:0.25];
         
+        //add text to the display update
+        [self showUpdateDisplay:[NSString stringWithFormat:@"Added: %@ #%@", newJoinToAdd.name, newJoinToAdd.distinquishing_id]];
         
     
         
@@ -438,24 +598,71 @@
 -(void)delayedNotification:(NSDictionary*)myUserDic{
     
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRQRCodeFlipsSwitchInRowCellContent object:nil userInfo:myUserDic];
+}
+
+
+-(void)showUpdateDisplay:(NSString*)updateText{
+
+    //add new text to the existing display text
+    self.updateLabel.text = [self.updateLabel.text stringByAppendingString:[NSString stringWithFormat:@"%@    ", updateText]];
+    
+    //lower collectionView to reveal update display
+    self.tableTopGuideConstraint.constant = 50.f;
+    
+    [self.myEquipCollection setNeedsUpdateConstraints];
+    
+    [UIView animateWithDuration:0.25f animations:^{
+       
+        //generally use the topmost view
+        [self.view layoutIfNeeded];
+    }];
+}
+
+
+#pragma mark - equip list buttons
+
+-(IBAction)deleteMarkedItemsButton:(id)sender{
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    //delete the marked scheduleTracking_equip_joins
+    for (NSString* thisKeyID in self.arrayOfToBeDeletedEquipIDs){
+        
+        //send php message to delete with the join key_id
+        NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", thisKeyID, nil];
+        NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
+        NSString* returnString = [webData queryForStringWithLink:@"EQRDeleteScheduleEquipJoin.php" parameters:beeArray];
+        
+        NSLog(@"this is the result: %@", returnString);
+    }
+    
+    //empty the arrays
+    [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+    
+    //renew the array of equipment
+    [self renewTheArrayWithScheduleTracking_foreignKey:self.scheduleRequestKeyID];
+    
+    //reload the collection view
+    [self.myEquipCollection reloadData];
+    
+    //send note to schedule that a change has been saved
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
     
     
 }
 
 
 
-
-
 #pragma mark - navigation buttons
 
-//-(void)cancelAction{
-//
-//    [self dismissViewControllerAnimated:YES completion:^{
-//
-//
-//    }];
-//
-//}
+-(void)cancelAction{
+
+    [self dismissViewControllerAnimated:YES completion:^{
+
+
+    }];
+
+}
 
 
 #pragma clang diagnostic push
@@ -634,8 +841,75 @@
     }
 }
 
+
+-(void)addJoinKeyIDToBeDeletedArray:(NSNotification*)note{
+    
+    [self.arrayOfToBeDeletedEquipIDs addObject:[note.userInfo objectForKey:@"key_id"]];
+    
+}
+
+-(void)removeJoinKeyIDToBeDeletedArray:(NSNotification*)note{
+    
+    NSString* stringToBeRemoved;
+    
+    for (NSString* thisString in self.arrayOfToBeDeletedEquipIDs){
+        
+        if ([thisString isEqualToString:[note.userInfo objectForKey:@"key_id"]]){
+            
+            stringToBeRemoved = thisString;
+        }
+    }
+    
+    [self.arrayOfToBeDeletedEquipIDs removeObject:stringToBeRemoved];
+}
+
+
 #pragma clang diagnostic pop
 
+
+#pragma mark - staff picker method
+
+-(void)showStaffUserPicker{
+    
+    EQRStaffUserPickerViewController* staffUserPicker = [[EQRStaffUserPickerViewController alloc] initWithNibName:@"EQRStaffUserPickerViewController" bundle:nil];
+    self.myStaffUserPicker = [[UIPopoverController alloc] initWithContentViewController:staffUserPicker];
+    
+    //set size
+    [self.myStaffUserPicker setPopoverContentSize:CGSizeMake(400, 400)];
+    
+    //present popover
+    [self.myStaffUserPicker presentPopoverFromBarButtonItem:[self.navigationItem.rightBarButtonItems objectAtIndex:0]  permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    //set target of continue button
+    [staffUserPicker.continueButton addTarget:self action:@selector(dismissStaffUserPicker) forControlEvents:UIControlEventTouchUpInside];
+    
+}
+
+
+-(void)dismissStaffUserPicker{
+    
+    //do stuff with the iboutlet of the
+    EQRStaffUserPickerViewController* thisStaffUserPicker = (EQRStaffUserPickerViewController*)[self.myStaffUserPicker contentViewController];
+    int selectedRow = (int)[thisStaffUserPicker.myPicker selectedRowInComponent:0];
+    
+    //assign contact name object to shared staffUserManager
+    EQRContactNameItem* selectedNameObject = (EQRContactNameItem*)[thisStaffUserPicker.arrayOfContactObjects objectAtIndex:selectedRow];
+    
+    EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+    staffUserManager.currentStaffUser = selectedNameObject;
+    
+    //set title on bar button item
+    NSString* newUserString = [NSString stringWithFormat:@"Logged in as %@", selectedNameObject.first_name];
+    [[self.navigationItem.rightBarButtonItems objectAtIndex:0] setTitle:newUserString];
+    
+    //save as default
+    NSDictionary* newDic = [NSDictionary dictionaryWithObject:selectedNameObject.key_id forKey:@"staffUserKey"];
+    [[NSUserDefaults standardUserDefaults] setObject:newDic forKey:@"staffUserKey"];
+    
+    //dismiss the picker
+    [self.myStaffUserPicker dismissPopoverAnimated:YES];
+    
+}
 
 
 #pragma mark - datasource methods
@@ -667,7 +941,22 @@
     //and reset the cell's background color...
     cell.backgroundColor = [UIColor whiteColor];
     
-    [cell initialSetupWithEquipUnique:[(NSArray*)[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] marked:self.marked_for_returning switch_num:self.switch_num];
+    //tell the cell's contentVC to be marked for deletion or not
+    BOOL toBeDeleted = NO;
+    for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
+        
+        if ([keyToDelete isEqualToString:[[[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]]){
+            
+            toBeDeleted = YES;
+        }
+    }
+    
+    //cell setup
+    [cell initialSetupWithEquipUnique:[(NSArray*)[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]
+                               marked:self.marked_for_returning
+                           switch_num:self.switch_num
+                    markedForDeletion:toBeDeleted];
+    
     
     return cell;
 };
@@ -694,6 +983,11 @@
     return cell;
 }
 
+
+-(void)dealloc{
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 #pragma mark - memory warning
 

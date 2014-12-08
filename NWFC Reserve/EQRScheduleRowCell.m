@@ -214,6 +214,10 @@
     }else if([renter_type isEqualToString:EQRRenterYouth]){
         
         cell.contentView.backgroundColor = [self.myColors.colorDic objectForKey:EQRColorCalYouth];
+        
+    }else if([renter_type isEqualToString:EQRRenterInClass]){
+        
+        cell.contentView.backgroundColor = [self.myColors.colorDic objectForKey:EQRColorCalInClass];
     }
     
     //_______********  ..maybe color should change if it is currently out?

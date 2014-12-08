@@ -22,4 +22,6 @@
 @property (strong, nonatomic) IBOutlet UISwitch* statusSwitch;
 @property (strong, nonatomic) IBOutlet UIButton* serviceIssue;
 
+-(void)initialSetupWithDeleteFlag:(BOOL)deleteFlag;
+
 @end

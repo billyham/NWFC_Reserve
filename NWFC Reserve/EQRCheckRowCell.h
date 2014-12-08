@@ -13,7 +13,10 @@
 @interface EQRCheckRowCell : UICollectionViewCell
 
 
--(void)initialSetupWithEquipUnique:(EQRScheduleTracking_EquipmentUnique_Join*)equipJoin marked:(BOOL)mark_for_returning switch_num:(NSUInteger)switch_num;
+-(void)initialSetupWithEquipUnique:(EQRScheduleTracking_EquipmentUnique_Join*)equipJoin
+                            marked:(BOOL)mark_for_returning
+                        switch_num:(NSUInteger)switch_num
+                 markedForDeletion:(BOOL)deleteFlag;
 
 
 @end
