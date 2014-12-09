@@ -1190,10 +1190,10 @@
                     </tabBar>
                     <connections>
                         <segue destination="PkY-gJ-1eR" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
+                        <segue destination="4zk-cf-ufk" kind="relationship" relationship="viewControllers" id="tYA-sM-7dj"/>
                         <segue destination="xA8-l4-PwP" kind="relationship" relationship="viewControllers" id="k2F-PR-9qw"/>
                         <segue destination="hee-oI-qji" kind="relationship" relationship="viewControllers" id="skc-Dk-72s"/>
                         <segue destination="Q0m-16-1SA" kind="relationship" relationship="viewControllers" id="LrH-oW-zRK"/>
-                        <segue destination="4zk-cf-ufk" kind="relationship" relationship="viewControllers" id="tYA-sM-7dj"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>

@@ -611,7 +611,12 @@
 
 -(void)allocateGearListWithDates:(NSDictionary*)datesDic{
     
-    //______DATESDIC CAN BE NIL, THEN IS USES DATES ASSIGNED TO THE REQUEST ITEM_____
+    //______DATESDIC CAN BE NIL, THEN IT IS USES DATES ASSIGNED TO THE REQUEST ITEM_____
+    //______THUS far, datesDic is NEVER used
+    
+    //request ivars that determine how to handle collisions and how precisely
+    BOOL allowSameDayFlag = self.request.allowSameDayFlag;
+    BOOL allowConflictFlag = self.request.allowConflictFlag;
     
     
     //get a list of uniqueItems that fall within the rental dates.
@@ -629,9 +634,36 @@
     //begin and end dates in sql format
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-    NSString* dateBeginString = [dateFormatter stringFromDate:self.request.request_date_begin];
-    NSString* dateEndString = [dateFormatter stringFromDate:self.request.request_date_end];
+    
+    //determine if should allow same day pickup and return
+    //____!!!!!! BUT it doesn't work   !!!!!________
+    
+    if (allowSameDayFlag == YES){     //use precise dates
+        
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        
+    }else{    //use dates that drop the hours and minutes
+        
+        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    }
+    
+    
+    NSString* dateBeginString;
+    NSString* dateEndString;
+    
+    //determine if should allow date conflicts
+    if (allowConflictFlag == YES){
+        
+        dateBeginString = [dateFormatter stringFromDate:self.request.request_date_begin];
+        
+        //end date is earlier than begin date. a sure fire way for the PHP script to return nothing
+        dateEndString = [dateFormatter stringFromDate:[self.request.request_date_begin dateByAddingTimeInterval:-172800]];
+        
+    }else{
+        
+        dateBeginString = [dateFormatter stringFromDate:self.request.request_date_begin];
+        dateEndString = [dateFormatter stringFromDate:self.request.request_date_end];
+    }
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     
@@ -641,6 +673,8 @@
     
     //use request item's dates
     if (datesDic == nil){
+        
+
         
         arrayWithBeginDate = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
         arrayWithEndDate = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
@@ -659,7 +693,7 @@
     
     [webData queryWithLink:@"EQGetScheduleItemsInDateRange.php" parameters:arrayTopDate class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
         
-        NSLog(@"result from schedule request Date range: %@", muteArray);
+//        NSLog(@"result from schedule request Date range: %@", muteArray);
         
         //populate array with key_ids
         for (EQRScheduleRequestItem* objKey in muteArray){

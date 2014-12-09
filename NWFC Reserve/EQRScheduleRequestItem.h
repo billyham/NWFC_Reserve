@@ -50,6 +50,8 @@
 @property (strong, nonatomic) EQRClassItem* classItem;
 @property (strong, nonatomic) EQRClassRegistrationItem* classRegistrationItem;
 @property BOOL showAllEquipmentFlag;
+@property BOOL allowSameDayFlag;
+@property BOOL allowConflictFlag;
 
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipmentJoins;
 

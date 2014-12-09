@@ -9,9 +9,10 @@
 
 #import <UIKit/UIKit.h>
 #import "EQREquipItemCell.h"
+#import "EQREquipOptionsTableVC.h"
 
 
-@interface EQREquipSelectionGenericVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>{
+@interface EQREquipSelectionGenericVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREquipOptionsDelegate>{
     
     
 }
@@ -22,6 +23,8 @@
 
 -(void)overrideSharedRequestManager:(id)privateRequestManager;
 
+//equip options delegate method
+-(void)optionsSelectionMade;
 
 @end
 

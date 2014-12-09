@@ -40,5 +40,9 @@
 //@property (strong, nonatomic) NSString* subcategory;
 @property (strong, nonatomic) NSString* schedule_grouping;
 
+//ScheduleRequestManager will use to tag joins if they conflict
+@property BOOL scheduleSameDayFlag;
+@property BOOL scheduleCollisionFlag;
+
 
 @end

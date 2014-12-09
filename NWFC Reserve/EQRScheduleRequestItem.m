@@ -47,6 +47,8 @@
     newRequest.notes = [self.notes copy];
     
     newRequest.showAllEquipmentFlag = self.showAllEquipmentFlag;
+    newRequest.allowSameDayFlag = self.allowSameDayFlag;
+    newRequest.allowConflictFlag = self.allowConflictFlag;
     
     
     return newRequest;

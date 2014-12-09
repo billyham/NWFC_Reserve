@@ -8,6 +8,17 @@
 
 #import "EQREquipSelectionGenericVCntrllr.h"
 #import "EQRScheduleRequestManager.h"
+//#import "EQREquipSelectionVCntrllr.h"
+#import "EQRWebData.h"
+#import "EQREquipItem.h"
+#import "EQRScheduleRequestItem.h"
+#import "EQRClassCatalog_EquipTitleItem_Join.h"
+#import "EQRGlobals.h"
+#import "EQREquipUniqueItem.h"
+#import "EQREquipSummaryGenericVCntrllr.h"
+#import "EQRHeaderCellTemplate.h"
+#import "EQRModeManager.h"
+#import "EQREquipOptionsTableVC.h"
 
 @interface EQREquipSelectionGenericVCntrllr ()
 
@@ -21,18 +32,15 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* topGuideLayoutThingy;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* bottomGuideLayoutThingy;
 
+@property (strong, nonatomic) EQREquipOptionsTableVC* optionsVC;
+@property (strong, nonatomic) UIPopoverController* optionsPopover;
+//@property BOOL showAllEquipFlag;
+//@property BOOL allowSameDayFlag;
+//@property BOOL allowConflictFlag;
+
 @end
 
-#import "EQREquipSelectionVCntrllr.h"
-#import "EQRWebData.h"
-#import "EQREquipItem.h"
-#import "EQRScheduleRequestItem.h"
-#import "EQRClassCatalog_EquipTitleItem_Join.h"
-#import "EQRGlobals.h"
-#import "EQREquipUniqueItem.h"
-#import "EQREquipSummaryGenericVCntrllr.h"
-#import "EQRHeaderCellTemplate.h"
-#import "EQRModeManager.h"
+
 
 
 
@@ -414,13 +422,58 @@
 
 -(IBAction)listAllEquipment:(id)sender{
     
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    EQRScheduleRequestManager* requestManager;
+    if (self.privateRequestManagerFlag){
+        requestManager = self.privateRequestManager;
+    }else{
+        requestManager = [EQRScheduleRequestManager sharedInstance];
+    }
     
-    requestManager.request.showAllEquipmentFlag = YES;
+    //show options submenu in popover
+    EQREquipOptionsTableVC* optionsVC = [[EQREquipOptionsTableVC alloc] initWithNibName:@"EQREquipOptionsTableVC" bundle:nil];
+    self.optionsVC = optionsVC;
+    
+    //set self as delegate to receive information about selection
+    self.optionsVC.delegate = self;
+    
+    //set flags
+    self.optionsVC.showAllEquipFlag = requestManager.request.showAllEquipmentFlag;
+    self.optionsVC.allowSameDayFlag = requestManager.request.allowSameDayFlag;
+    self.optionsVC.allowConflictFlag = requestManager.request.allowConflictFlag;
+    
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.optionsVC];
+    self.optionsPopover = popOver;
+    [self.optionsPopover setPopoverContentSize:CGSizeMake(320.f, 300.f)];
+
+    //show popover
+    [self.optionsPopover presentPopoverFromRect:self.listAllEquipButton.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+
+    
+    
+ 
+    
+}
+
+-(void)optionsSelectionMade{
+    
+    EQRScheduleRequestManager* requestManager;
+    if (self.privateRequestManagerFlag){
+        requestManager = self.privateRequestManager;
+    }else{
+        requestManager = [EQRScheduleRequestManager sharedInstance];
+    }
+    
+    //sync flags
+    requestManager.request.showAllEquipmentFlag = self.optionsVC.showAllEquipFlag;
+    requestManager.request.allowSameDayFlag = self.optionsVC.allowSameDayFlag;
+    requestManager.request.allowConflictFlag = self.optionsVC.allowConflictFlag;
+    
+    //dismiss popover
+    [self.optionsPopover dismissPopoverAnimated:YES];
     
     //reload the view
     [self renewTheViewWithRequestManager:requestManager];
-    
 }
 
 
@@ -474,6 +527,7 @@
 
 -(void)refreshTable:(NSNotification*)note{
     
+    //____!!!!!!  DOESN'T INSERT OF DELETE ENTIRE SECTIONS   !!!!!______
     
     NSString* typeOfChange = [[note userInfo] objectForKey:@"type"];
     //    NSString* sectionString = [[note userInfo] objectForKey:@"sectionString"];
@@ -722,6 +776,7 @@
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
 
+    //_______!!!!!  crashes here if you turn on "show all equip" and then turn off the "show all equip"   !!!!!_______
     EQREquipItem* sampleItem = [[self.equipTitleArrayWithSections objectAtIndex:section] objectAtIndex:0];
     
     

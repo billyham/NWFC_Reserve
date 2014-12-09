@@ -56,6 +56,7 @@
 @property (strong, nonatomic) IBOutlet UIButton* returnTimeValueField;
 
 @property (strong, nonatomic) IBOutlet UIView* addButtonView;
+@property (strong, nonatomic) IBOutlet UIView* doneButtonView;
 
 @property (strong, nonatomic) NSArray* arrayOfJoins;
 @property (strong, nonatomic) NSArray* arrayOfJoinsWithStructure;
@@ -169,6 +170,7 @@
     [self.rightView setHidden:YES];
     [self.viewEditLeft setHidden:YES];
     [self.addButtonView setHidden:YES];
+    [self.doneButtonView setHidden:YES];
         
 }
 
@@ -657,8 +659,9 @@
     //show edit text fields
     [self.viewEditLeft setHidden:NO];
     
-    //show the add button
+    //show the add & done buttons
     [self.addButtonView setHidden:NO];
+    [self.doneButtonView setHidden:NO];
     
     //alter table to reveal add and done buttons
     self.tablebottomGuideConstraint.constant = 50.f;
@@ -696,22 +699,12 @@
     //update flag
     self.inEditModeFlag = NO;
     
-    
-    
     //hide edit text fields
     [self.viewEditLeft setHidden:YES];
     
     //alter table to hide add and done buttons
     self.tablebottomGuideConstraint.constant = 0;
     self.tableTopGuideConstraint.constant = 0;
-    
-    //raise main sub view to hide save button
-//    self.topLayoutGuideConstraint.constant = 0;
-    
-    //hide the add button after the change to the constraint is complete
-    [self.addButtonView setHidden:NO];
-    
-    
     
     //animate changes in the constraints (specifically the constraints added to mainSubView)
     [self.mainSubView setNeedsUpdateConstraints];
@@ -720,8 +713,13 @@
         
         //genearlly, use the top most view
         [self.view layoutIfNeeded];
+        
+    } completion:^(BOOL finished) {
+        
+        //hide the add and done buttons after the change to the constraint is complete
+        [self.addButtonView setHidden:YES];
+        [self.doneButtonView setHidden:YES];
     }];
-    
   
 }
 

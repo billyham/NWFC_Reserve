@@ -38,7 +38,7 @@
 @property (strong, nonatomic) IBOutlet UICollectionView* equipList;
 @property (strong, nonatomic) UIPopoverController* theDatePopOver;
 
-@property (strong, nonatomic) IBOutlet UITextField* renterTypeField;
+@property (strong, nonatomic) IBOutlet UIButton* renterTypeField;
 //@property (strong ,nonatomic) IBOutlet UIPickerView* renterTypePicker;
 @property (strong, nonatomic) NSString* renterTypeString;  //I don't think this is used
 @property (strong, nonatomic) EQREditorRenterVCntrllr* myRenterViewController;
@@ -284,7 +284,7 @@
     self.returnDateField.text = [dateFormatterLookinNice stringFromDate:self.returnDateDate];
     
     //set the renter field....
-    self.renterTypeField.text = self.privateRequestManager.request.renter_type;
+    [self.renterTypeField setTitle:self.privateRequestManager.request.renter_type forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
     
     [super viewWillAppear:animated];
 }
@@ -743,10 +743,10 @@
 
 -(void)initiateRetrieveRenterItem{
     
-    NSLog(@"this is the chosen renter type: %@", [self.myRenterViewController retrieveRenterType]);
+//    NSLog(@"this is the chosen renter type: %@", [self.myRenterViewController retrieveRenterType]);
     
     //set new renter type value
-    self.renterTypeField.text = [self.myRenterViewController retrieveRenterType];
+    [self.renterTypeField setTitle:[self.myRenterViewController retrieveRenterType] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
     self.privateRequestManager.request.renter_type = [self.myRenterViewController retrieveRenterType];
     
     //remove popover
