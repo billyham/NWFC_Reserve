@@ -294,6 +294,11 @@
     if (!self.equipTitleCategoriesList){
         
         self.equipTitleCategoriesList = [NSMutableArray arrayWithCapacity:1];
+        
+    } else {
+        
+        //MUST empty out an existing equipTitlesCategoriesList
+        [self.equipTitleCategoriesList removeAllObjects];
     }
     
     //A. first test if array of categories is valid
@@ -527,8 +532,6 @@
 
 -(void)refreshTable:(NSNotification*)note{
     
-    //____!!!!!!  DOESN'T INSERT OF DELETE ENTIRE SECTIONS   !!!!!______
-    
     NSString* typeOfChange = [[note userInfo] objectForKey:@"type"];
     //    NSString* sectionString = [[note userInfo] objectForKey:@"sectionString"];
     NSArray* sectionArray = [[note userInfo] objectForKey:@"sectionArray"];
@@ -538,6 +541,7 @@
     
     //array of index paths to add or delete
     NSMutableArray* arrayOfIndexPaths = [NSMutableArray arrayWithCapacity:1];
+    
     int indexPathToDelete;
     
     //test whether inserting or deleting
@@ -776,7 +780,6 @@
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
 
-    //_______!!!!!  crashes here if you turn on "show all equip" and then turn off the "show all equip"   !!!!!_______
     EQREquipItem* sampleItem = [[self.equipTitleArrayWithSections objectAtIndex:section] objectAtIndex:0];
     
     

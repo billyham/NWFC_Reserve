@@ -11,7 +11,7 @@
                 <outlet property="nameTextLabel" destination="XRl-J1-VbJ" id="cE4-b1-0lq"/>
                 <outlet property="tableTopGuideConstraint" destination="e15-H8-44r" id="xnc-fH-enb"/>
                 <outlet property="tablebottomGuideConstraint" destination="a00-41-l2Q" id="qIG-FA-SGf"/>
-                <outlet property="updateLabel" destination="31e-ub-32B" id="oKH-o5-Nib"/>
+                <outlet property="updateLabel" destination="j4E-ZN-M9v" id="oqh-Hd-D9D"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -23,22 +23,21 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3kH-Fl-Al8" userLabel="View - status display">
                     <rect key="frame" x="178" y="0.0" width="590" height="120"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="535" translatesAutoresizingMaskIntoConstraints="NO" id="31e-ub-32B">
-                            <rect key="frame" x="34" y="70" width="535" height="50"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="50" id="KAP-lp-wlE"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j4E-ZN-M9v" userLabel="Text View - display status">
+                            <rect key="frame" x="20" y="0.0" width="552" height="120"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                        </textView>
                     </subviews>
                     <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="trailing" secondItem="31e-ub-32B" secondAttribute="trailing" constant="21" id="8lH-ie-uZg"/>
-                        <constraint firstAttribute="bottom" secondItem="31e-ub-32B" secondAttribute="bottom" id="CvO-Gp-r3f"/>
-                        <constraint firstItem="31e-ub-32B" firstAttribute="leading" secondItem="3kH-Fl-Al8" secondAttribute="leading" constant="34" id="tv2-kO-eks"/>
+                        <constraint firstItem="j4E-ZN-M9v" firstAttribute="leading" secondItem="3kH-Fl-Al8" secondAttribute="leading" constant="20" id="3J6-AU-Dkh"/>
+                        <constraint firstItem="j4E-ZN-M9v" firstAttribute="top" secondItem="3kH-Fl-Al8" secondAttribute="top" id="6ml-uz-Ky6"/>
+                        <constraint firstAttribute="bottom" secondItem="j4E-ZN-M9v" secondAttribute="bottom" id="AKb-g2-TCZ"/>
                         <constraint firstAttribute="height" constant="120" id="uI2-PC-Hqa"/>
+                        <constraint firstAttribute="trailing" secondItem="j4E-ZN-M9v" secondAttribute="trailing" constant="18" id="z4N-gp-79k"/>
                     </constraints>
                 </view>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="fVz-SU-K6t">

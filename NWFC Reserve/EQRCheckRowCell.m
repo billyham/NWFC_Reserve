@@ -141,7 +141,7 @@
 
     
     self.myCheckContent.equipNameLabel.text = equipJoin.name;
-    self.myCheckContent.distIDLabel.text = equipJoin.distinquishing_id;
+    [self.myCheckContent.distIDLabel setTitle:equipJoin.distinquishing_id forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
     
     //hide service issue button
     [self.myCheckContent.serviceIssue setHidden:YES];

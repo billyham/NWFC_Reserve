@@ -30,7 +30,7 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* tableTopGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* tablebottomGuideConstraint;
 
-@property (strong, nonatomic) IBOutlet UILabel* updateLabel;
+@property (strong, nonatomic) IBOutlet UITextView* updateLabel;
 
 @property (strong, nonatomic) IBOutlet UILabel* nameTextLabel;
 @property (strong, nonatomic) NSDictionary* myUserInfo;
@@ -604,7 +604,7 @@
 -(void)showUpdateDisplay:(NSString*)updateText{
 
     //add new text to the existing display text
-    self.updateLabel.text = [self.updateLabel.text stringByAppendingString:[NSString stringWithFormat:@"%@    ", updateText]];
+    self.updateLabel.text = [self.updateLabel.text stringByAppendingString:[NSString stringWithFormat:@"%@    \n", updateText]];
     
     //lower collectionView to reveal update display
     self.tableTopGuideConstraint.constant = 50.f;
