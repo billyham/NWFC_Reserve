@@ -7,7 +7,24 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRScheduleRequestItem.h"
 
-@interface EQRDistIDPickerTableVC : UITableViewController
+@protocol EQRDistIDPickerDelegate;
+
+@interface EQRDistIDPickerTableVC : UITableViewController{
+    
+    __weak id <EQRDistIDPickerDelegate> delegate;
+}
+
+@property (weak, nonatomic) id <EQRDistIDPickerDelegate> delegate;
+
+-(void)initialSetupWithIndexPath:(NSIndexPath*)indexPath equipTitleKey:(NSString*)equipTitleKey scheduleItem:(EQRScheduleRequestItem*)scheduleItem;
+
+@end
+
+
+@protocol EQRDistIDPickerDelegate <NSObject>
+
+-(void)distIDSelectionMade;
 
 @end

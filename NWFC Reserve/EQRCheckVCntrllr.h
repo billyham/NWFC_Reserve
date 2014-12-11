@@ -7,13 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRDistIDPickerTableVC.h"
 
-@interface EQRCheckVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface EQRCheckVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRDistIDPickerDelegate>
 
 @property (strong, nonatomic) NSString* scheduleRequestKeyID;
 @property BOOL marked_for_returning;
 @property NSUInteger switch_num;
 
 -(void)initialSetupWithInfo:(NSDictionary*)userInfo;
+
+//dist id picker delegate method
+-(void)distIDSelectionMade;
 
 @end

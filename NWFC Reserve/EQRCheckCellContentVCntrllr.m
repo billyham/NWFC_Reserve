@@ -94,15 +94,29 @@
 }
 
 
+-(IBAction)distIDButton:(id)sender{
+    
+    NSDictionary* dic = [NSDictionary dictionaryWithObjectsAndKeys:self.myJoinKeyID, @"joinKey_id",
+                         self.equipTitleItem_foreignKey, @"equipTitleItem_foreignKey",
+                         self.myIndexPath, @"indexPath",
+                         self.distIDLabel, @"distButton",
+                         nil];
+    
+    //send note to EQRCheckVCntrllr
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRDistIDPickerTapped object:nil userInfo:dic];
+    
+}
+
+
 #pragma mark - notification methods
 
 -(void)receiveQRCodeMessage:(NSNotification*)note{
     
     NSString* equipKeyID = [[note userInfo] objectForKey:@"keyID"];
     
-//    NSLog(@"this is a row's equipUnique key: %@", self.equipUniteItem_foreignKey);
+//    NSLog(@"this is a row's equipUnique key: %@", self.equipUniqueItem_foreignKey);
     
-    if ([equipKeyID isEqualToString:self.equipUniteItem_foreignKey]){
+    if ([equipKeyID isEqualToString:self.equipUniqueItem_foreignKey]){
         
         [self.statusSwitch setOn:YES];
         

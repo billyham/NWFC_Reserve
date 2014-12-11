@@ -46,6 +46,7 @@ NSString* EQRLongPressOnNestedDayCell = @"EQRLongPressOnNestedDayCell";
 NSString* EQRPartialRefreshToItineraryArray = @"EQRPartialRefreshToItineraryArray";
 NSString* EQRQRCodeFlipsSwitchInRowCellContent = @"EQRQRCodeFlipsSwitchInRowCellContent";
 NSString* EQRRefreshViewWhenOrientationRotates = @"EQRRefreshViewWhenOrientationRotates";
+NSString* EQRDistIDPickerTapped = @"EQRDistIDPickerTapped";
 
 //Timing
 float EQRHighlightTappingTime = 0.125;

@@ -13,6 +13,13 @@
 #import "EQREquipUniqueItem.h"
 #import "EQRWebData.h"
 
+@interface EQRScheduleRequestManager ()
+
+@property (strong, nonatomic) NSArray* arrayOfEquipUniquesAfterCollisionSubraction;
+
+
+@end
+
 @implementation EQRScheduleRequestManager
 
 
@@ -728,12 +735,7 @@
     //assign to requestManager ivar (this is used in EQEquipSummaryVCntrllr > justConfirm method
     self.arrayOfEquipUniqueItemsByDateCollision = arrayOfEquipUniqueItems;
     
-    
     //_____*******  add structure to the array by sections with titleKey???
-    
-    
-    //_____********  NOW HAVE ARRAY OF UNIQUEITEMS BUT NOT SAVING IT ANYWHERE YET____*******
-    //arrayOfEquipUniqueItems
     
     //SUBTRACT OUT the scheduled gear from the requestManager array of titles with qty count
     //loop through arrayOfEquipUniqueItems
@@ -756,8 +758,33 @@
         }
     }
     
+
+    //_____!!!!!!  Need to create an array of equipUniqueItems that are AVAILABLE  !!!!______
+    //    self.arrayOfEquipUniquesAfterCollisionSubraction =
+    
+    
 }
 
+
+-(NSArray*)retrieveAvailableEquipUniquesForTitleKey:(NSString*)equipTitleItem_foreignKey{
+    
+    NSLog(@"this is the titleItem foreign key: %@", equipTitleItem_foreignKey);
+    
+    NSMutableArray* muteArray = [NSMutableArray arrayWithCapacity:1];
+    
+    for (EQREquipUniqueItem* eqritem in self.arrayOfEquipUniqueItemsByDateCollision){
+        
+        if ([eqritem.equipTitleItem_foreignKey isEqualToString:equipTitleItem_foreignKey]){
+            
+            //add to our new array
+            [muteArray addObject:eqritem];
+        }
+    }
+    
+    NSLog(@"this is the count of the array: %u", [muteArray count]);
+    
+    return [NSArray arrayWithArray:muteArray];
+}
 
 
 

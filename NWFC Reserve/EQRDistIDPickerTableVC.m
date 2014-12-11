@@ -7,15 +7,24 @@
 //
 
 #import "EQRDistIDPickerTableVC.h"
+#import "EQRScheduleRequestManager.h"
+#import "EQREquipUniqueItem.h"
 
 @interface EQRDistIDPickerTableVC ()
+
+@property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
+@property (strong, nonatomic) NSArray* arrayOfEquipUniques;
 
 @end
 
 @implementation EQRDistIDPickerTableVC
 
+@synthesize delegate;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self.tableView registerClass:([UITableViewCell class]) forCellReuseIdentifier:@"Cell"];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -24,34 +33,52 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(void)initialSetupWithIndexPath:(NSIndexPath*)indexPath equipTitleKey:(NSString*)equipTitleKey scheduleItem:(EQRScheduleRequestItem*)scheduleItem{
+    
+    //____set up private request manager______
+    if (!self.privateRequestManager){
+        
+        self.privateRequestManager = [[EQRScheduleRequestManager alloc] init];
+    }
+    
+    //set the request as ivar in requestManager
+    self.privateRequestManager.request = scheduleItem;
+    
+    //two important methods that initiate requestManager ivar arrays
+    [self.privateRequestManager resetEquipListAndAvailableQuantites];
+    [self.privateRequestManager retrieveAllEquipUniqueItems];
+    
+    
+    //now activate method to get just this title item's avaliable dist ids
+    self.arrayOfEquipUniques = [self.privateRequestManager retrieveAvailableEquipUniquesForTitleKey:equipTitleKey];
+    
+    
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+
+    return [self.arrayOfEquipUniques count];
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
     // Configure the cell...
     
+    cell.textLabel.text = [NSString stringWithFormat:@"%@: %@", [(EQREquipUniqueItem*)[self.arrayOfEquipUniques objectAtIndex:indexPath.row] name],
+                           [(EQREquipUniqueItem*)[self.arrayOfEquipUniques objectAtIndex:indexPath.row] distinquishing_id]];
+    
     return cell;
 }
-*/
+
 
 /*
 // Override to support conditional editing of the table view.
@@ -87,21 +114,17 @@
 }
 */
 
-/*
+
 #pragma mark - Table view delegate
 
-// In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Navigation logic may go here, for example:
-    // Create the next view controller.
-    <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:<#@"Nib name"#> bundle:nil];
     
-    // Pass the selected object to the new view controller.
+    [self.delegate distIDSelectionMade];
     
-    // Push the view controller.
-    [self.navigationController pushViewController:detailViewController animated:YES];
+    self.privateRequestManager = nil;
+    
 }
-*/
+
 
 /*
 #pragma mark - Navigation
@@ -112,5 +135,14 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+
+
+#pragma mark - memory warning
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 
 @end

@@ -23,9 +23,14 @@
 #import "EQRStaffUserManager.h"
 #import "EQRStaffUserPickerViewController.h"
 #import "EQRModeManager.h"
+#import "EQRScheduleRequestManager.h"
+#import "EQRScheduleRequestItem.h"
 
 
 @interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate>
+
+//@property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
+@property (strong, nonatomic) EQRScheduleRequestItem* myScheduleRequestItem;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* tableTopGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* tablebottomGuideConstraint;
@@ -48,7 +53,9 @@
 @property(nonatomic, strong) AVCaptureSession *session;
 @property (nonatomic, strong) NSMutableSet* setOfAlreadyCapturedQRs;
 
-
+//for dist id picker
+@property (strong, nonatomic) UIPopoverController* distIDPopover;
+@property (strong, nonatomic) EQRDistIDPickerTableVC* distIDPickerVC;
 
 
 @end
@@ -97,6 +104,24 @@
     }
     
     [self renewTheArrayWithScheduleTracking_foreignKey:self.scheduleRequestKeyID];
+    
+    
+    //get scheduleRequest object using key
+    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.scheduleRequestKeyID, nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    [webData queryWithLink:@"EQGetScheduleRequestComplete.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        if ([muteArray count] > 0){
+            
+            self.myScheduleRequestItem = [muteArray objectAtIndex:0];
+        } else {
+            
+            //error handling if nothing is returned
+            return;
+        }
+    }];
 }
 
 
@@ -147,6 +172,9 @@
     //receive notes from cell's content VCs when delete button is tapped
     [nc addObserver:self selector:@selector(addJoinKeyIDToBeDeletedArray:) name:EQRJoinToBeDeletedInCheckInOut object:nil];
     [nc addObserver:self selector:@selector(removeJoinKeyIDToBeDeletedArray:) name:EQRJoinToBeDeletedInCheckInOutCancel object:nil];
+    //receive notes from cell's content when distIDPicker is tapped
+    [nc addObserver:self selector:@selector(distIDPickerTapped:) name:EQRDistIDPickerTapped object:nil];
+    
     
     //cancel bar button
 //    UIBarButtonItem* rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction)];
@@ -647,8 +675,6 @@
     
     //send note to schedule that a change has been saved
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
-    
-    
 }
 
 
@@ -864,6 +890,48 @@
 }
 
 
+-(void)distIDPickerTapped:(NSNotification*)note{
+    
+    //get cell's equipUniqueKey and IndexPath and button's frame?? UIButton??
+//    NSString* joinKey_ID = [[note userInfo] objectForKey:@"joinKey_id"];
+    NSString* equipTitleItem_foreignKey = [[note userInfo] objectForKey:@"equipTitleItem_foreignKey"];
+    NSIndexPath* thisIndexPath = [[note userInfo] objectForKey:@"indexPath"];
+    CGRect buttonRect = [(UIButton*)[[note userInfo] objectForKey:@"distButton"] frame];
+    
+    
+    EQRDistIDPickerTableVC* distIDPickerVC = [[EQRDistIDPickerTableVC alloc] initWithNibName:@"EQRDistIDPickerTableVC" bundle:nil];
+    self.distIDPickerVC = distIDPickerVC;
+    
+    //initial setup
+    [self.distIDPickerVC initialSetupWithIndexPath:thisIndexPath equipTitleKey:equipTitleItem_foreignKey scheduleItem:self.myScheduleRequestItem];
+    self.distIDPickerVC.delegate = self;
+    
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.distIDPickerVC];
+    self.distIDPopover = popOver;
+    [self.distIDPopover setPopoverContentSize:CGSizeMake(320.f, 300.f)];
+    
+    
+    //present popover
+    [self.distIDPopover presentPopoverFromRect:buttonRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+}
+
+
+-(void)distIDSelectionMade{
+    
+    //retrieve key id of selected equipUniqueItem AND indexPath of the collection cell that initiated the distID picker
+    //tell content of the cell to use replace the dist ID
+    //udpate the data model > schedule_equip_join has new unique_foreignKey
+    
+    //remove the popover
+    [self.distIDPopover dismissPopoverAnimated:YES];
+    
+    self.distIDPickerVC = nil;
+    self.distIDPopover = nil;
+    
+}
+
+
 #pragma clang diagnostic pop
 
 
@@ -955,7 +1023,8 @@
     [cell initialSetupWithEquipUnique:[(NSArray*)[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]
                                marked:self.marked_for_returning
                            switch_num:self.switch_num
-                    markedForDeletion:toBeDeleted];
+                    markedForDeletion:toBeDeleted
+                            indexPath:indexPath];
     
     
     return cell;

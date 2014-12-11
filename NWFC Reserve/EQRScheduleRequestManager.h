@@ -55,5 +55,8 @@
 -(NSArray*)retrieveArrayOfEquipSectionsThatShouldBeHidden;
 -(void)collapseOrExpandSection:(NSString*)chosenSection WithAll:(BOOL)withAllFlag;
 
+//Check In/Out methods for obtaining available equipUniqueItems for equipment title
+-(NSArray*)retrieveAvailableEquipUniquesForTitleKey:(NSString*)equipTitleItem_foreignKey;
+
 
 @end

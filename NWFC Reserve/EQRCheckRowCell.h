@@ -16,7 +16,8 @@
 -(void)initialSetupWithEquipUnique:(EQRScheduleTracking_EquipmentUnique_Join*)equipJoin
                             marked:(BOOL)mark_for_returning
                         switch_num:(NSUInteger)switch_num
-                 markedForDeletion:(BOOL)deleteFlag;
+                 markedForDeletion:(BOOL)deleteFlag
+                         indexPath:(NSIndexPath*)indexPath;
 
 
 @end

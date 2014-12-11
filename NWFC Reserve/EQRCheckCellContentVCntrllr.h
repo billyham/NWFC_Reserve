@@ -10,9 +10,11 @@
 
 @interface EQRCheckCellContentVCntrllr : UIViewController
 
+@property (strong, nonatomic) NSIndexPath* myIndexPath;
 @property (strong, nonatomic) NSString* myJoinKeyID;
 @property (strong, nonatomic) NSString* joinPropertyToBeUpdated;
-@property (strong, nonatomic) NSString* equipUniteItem_foreignKey;
+@property (strong, nonatomic) NSString* equipUniqueItem_foreignKey;
+@property (strong, nonatomic) NSString* equipTitleItem_foreignKey;
 
 
 @property (strong, nonatomic) IBOutlet UILabel* equipNameLabel;

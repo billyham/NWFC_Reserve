@@ -33,15 +33,18 @@
 -(void)initialSetupWithEquipUnique:(EQRScheduleTracking_EquipmentUnique_Join*)equipJoin
                             marked:(BOOL)mark_for_returning
                         switch_num:(NSUInteger)switch_num
-                 markedForDeletion:(BOOL)deleteFlag{
+                 markedForDeletion:(BOOL)deleteFlag
+                         indexPath:(NSIndexPath*)indexPath{
     
     self.backgroundColor = [UIColor clearColor];
     
     EQRCheckCellContentVCntrllr* checkContent = [[EQRCheckCellContentVCntrllr alloc] initWithNibName:@"EQRCheckCellContentVCntrllr" bundle:nil];
     
     self.myCheckContent = checkContent;
+    self.myCheckContent.myIndexPath = indexPath;
     self.myCheckContent.myJoinKeyID = equipJoin.key_id;
-    self.myCheckContent.equipUniteItem_foreignKey = equipJoin.equipUniqueItem_foreignKey;
+    self.myCheckContent.equipUniqueItem_foreignKey = equipJoin.equipUniqueItem_foreignKey;
+    self.myCheckContent.equipTitleItem_foreignKey = equipJoin.equipTitleItem_foreignKey;
         
     
     [self.contentView addSubview:self.myCheckContent.view];
