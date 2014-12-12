@@ -22,6 +22,9 @@
 @property (strong, nonatomic) NSString* shortname;
 @property (strong, nonatomic) NSString* schedule_grouping;
 
+//properties used for check in/out DistIDPickerVC to hide unavailable uniqueItems
+@property BOOL unavailableFlag;
+
 //properties derived from the matching schedule_equip_join
 //@property (strong, nonatomic) NSString* prep_flag;
 //@property (strong, nonatomic) NSString* checkout_flag;
