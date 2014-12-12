@@ -18,6 +18,6 @@
 -(void)initialSetupWithInfo:(NSDictionary*)userInfo;
 
 //dist id picker delegate method
--(void)distIDSelectionMadeWithIndexPath:(NSIndexPath*)distIndexPath equipUniqueItem:(id)distEquipUniqueItem;
+-(void)distIDSelectionMadeWithOriginalEquipUniqueKey:(NSString*)originalKeyID equipUniqueItem:(id)distEquipUniqueItem;
 
 @end

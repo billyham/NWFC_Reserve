@@ -611,6 +611,7 @@
         //add text to the display update
         [self showUpdateDisplay:[NSString stringWithFormat:@"Added: %@ #%@", newJoinToAdd.name, newJoinToAdd.distinquishing_id]];
         
+        
     
         
         
@@ -641,6 +642,9 @@
     
     [UIView animateWithDuration:0.25f animations:^{
        
+        //scroll update label to bottom
+        [self.updateLabel scrollRangeToVisible:NSMakeRange(0,[self.updateLabel.text length])];
+        
         //generally use the topmost view
         [self.view layoutIfNeeded];
     }];
@@ -895,7 +899,8 @@
     //get cell's equipUniqueKey and IndexPath and button's frame?? UIButton??
 //    NSString* joinKey_ID = [[note userInfo] objectForKey:@"joinKey_id"];
     NSString* equipTitleItem_foreignKey = [[note userInfo] objectForKey:@"equipTitleItem_foreignKey"];
-    NSIndexPath* thisIndexPath = [[note userInfo] objectForKey:@"indexPath"];
+    NSString* equipUniqueItem_foreignKey = [[note userInfo] objectForKey:@"equipUniqueItem_foreignKey"];
+//    NSIndexPath* thisIndexPath = [[note userInfo] objectForKey:@"indexPath"];
     CGRect buttonRect = [(UIButton*)[[note userInfo] objectForKey:@"distButton"] frame];
     
     
@@ -903,7 +908,7 @@
 //    self.distIDPickerVC = distIDPickerVC;
     
     //initial setup
-    [distIDPickerVC initialSetupWithIndexPath:thisIndexPath equipTitleKey:equipTitleItem_foreignKey scheduleItem:self.myScheduleRequestItem];
+    [distIDPickerVC initialSetupWithOriginalUniqueKeyID:equipUniqueItem_foreignKey equipTitleKey:equipTitleItem_foreignKey scheduleItem:self.myScheduleRequestItem];
     distIDPickerVC.delegate = self;
     
     if (self.distIDPopover){
@@ -923,8 +928,10 @@
 }
 
 
--(void)distIDSelectionMadeWithIndexPath:(NSIndexPath*)distIndexPath equipUniqueItem:(id)distEquipUniqueItem{
+-(void)distIDSelectionMadeWithOriginalEquipUniqueKey:(NSString*)originalKeyID equipUniqueItem:(id)distEquipUniqueItem{
     
+    //____!!!!!! INDEXPATH IS MEANINGLESS! BECAUSE THAT'S THE PATH IN THE STRUCTRED ARRAY, BUT WE NEED TO UPDATE THE
+    //____!!!!!! UNSTRUCTURED ARRAY AS WELL  !!!____
     //retrieve key id of selected equipUniqueItem AND indexPath of the collection cell that initiated the distID picker
     //tell content of the cell to use replace the dist ID
     //update the data model > schedule_equip_join has new unique_foreignKey
@@ -933,9 +940,19 @@
     NSString* thisIsTheKey = [(EQREquipUniqueItem*)distEquipUniqueItem key_id];
     NSString* thisIsTheDistID = [(EQREquipUniqueItem*)distEquipUniqueItem distinquishing_id];
     
+    EQRScheduleTracking_EquipmentUnique_Join* saveThisJoin;
+    
     //update local ivar arrays
-    [(EQRScheduleTracking_EquipmentUnique_Join*)[self.arrayOfEquipJoins objectAtIndex:distIndexPath.row] setEquipUniqueItem_foreignKey:thisIsTheKey];
-    [(EQRScheduleTracking_EquipmentUnique_Join*)[self.arrayOfEquipJoins objectAtIndex:distIndexPath.row] setDistinquishing_id:thisIsTheDistID];
+    for (EQRScheduleTracking_EquipmentUnique_Join* joinObj in self.arrayOfEquipJoins){
+        
+        if ([joinObj.equipUniqueItem_foreignKey isEqualToString:originalKeyID]){
+            
+            [joinObj setEquipUniqueItem_foreignKey:thisIsTheKey];
+            [joinObj setDistinquishing_id:thisIsTheDistID];
+            
+            saveThisJoin = joinObj;
+        }
+    }
     self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins];
     
     //renew the collection view
@@ -943,9 +960,9 @@
     
     
     //update the data layer
-    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", [(EQRScheduleTracking_EquipmentUnique_Join*)[self.arrayOfEquipJoins objectAtIndex:distIndexPath.row] key_id], nil];
-    NSArray* secondArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", [(EQRScheduleTracking_EquipmentUnique_Join*)[self.arrayOfEquipJoins objectAtIndex:distIndexPath.row] equipUniqueItem_foreignKey], nil];
-    NSArray* thirdArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", [(EQRScheduleTracking_EquipmentUnique_Join*)[self.arrayOfEquipJoins objectAtIndex:distIndexPath.row] equipTitleItem_foreignKey], nil];
+    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", [saveThisJoin key_id], nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", [saveThisJoin equipUniqueItem_foreignKey], nil];
+    NSArray* thirdArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", [saveThisJoin equipTitleItem_foreignKey], nil];
     NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
     
     EQRWebData* webData = [EQRWebData sharedInstance];

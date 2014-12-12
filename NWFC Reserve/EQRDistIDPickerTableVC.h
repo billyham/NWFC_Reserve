@@ -18,7 +18,7 @@
 
 @property (weak, nonatomic) id <EQRDistIDPickerDelegate> delegate;
 
--(void)initialSetupWithIndexPath:(NSIndexPath*)indexPath equipTitleKey:(NSString*)equipTitleKey scheduleItem:(EQRScheduleRequestItem*)scheduleItem;
+-(void)initialSetupWithOriginalUniqueKeyID:(NSString*)originalK equipTitleKey:(NSString*)equipTitleKey scheduleItem:(EQRScheduleRequestItem*)scheduleItem;
 -(void)killThisThing;
 
 @end
@@ -26,6 +26,6 @@
 
 @protocol EQRDistIDPickerDelegate <NSObject>
 
--(void)distIDSelectionMadeWithIndexPath:(NSIndexPath*)distIndexPath equipUniqueItem:(id)distEquipUniqueItem;
+-(void)distIDSelectionMadeWithOriginalEquipUniqueKey:(NSString*)originalKeyID equipUniqueItem:(id)distEquipUniqueItem;
 
 @end

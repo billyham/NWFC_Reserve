@@ -98,6 +98,7 @@
     
     NSDictionary* dic = [NSDictionary dictionaryWithObjectsAndKeys:self.myJoinKeyID, @"joinKey_id",
                          self.equipTitleItem_foreignKey, @"equipTitleItem_foreignKey",
+                         self.equipUniqueItem_foreignKey, @"equipUniqueItem_foreignKey",
                          self.myIndexPath, @"indexPath",
                          self.distIDLabel, @"distButton",
                          nil];

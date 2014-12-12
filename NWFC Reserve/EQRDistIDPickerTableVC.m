@@ -18,6 +18,7 @@
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
 @property (strong, nonatomic) NSArray* arrayOfEquipUniques;
 @property (strong, nonatomic) NSIndexPath* thisIndexPath;
+@property (strong, nonatomic) NSString* originalKeyID;
 
 @end
 
@@ -37,7 +38,7 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
--(void)initialSetupWithIndexPath:(NSIndexPath*)indexPath equipTitleKey:(NSString*)equipTitleKey scheduleItem:(EQRScheduleRequestItem*)scheduleItem{
+-(void)initialSetupWithOriginalUniqueKeyID:(NSString*)originalK equipTitleKey:(NSString*)equipTitleKey scheduleItem:(EQRScheduleRequestItem*)scheduleItem{
     
     //  1  use php call to get equipUniqueItems for a specified equipTitleItem_foreignKey
     //  2  use php call to get schedule_equip_joins in specfied date range
@@ -46,7 +47,7 @@
     //  4  a list of available equipUniqueItems and assign to ivar arrayOfEquipUniques
     
     //save indexpath to local ivar
-    self.thisIndexPath = indexPath;
+    self.originalKeyID = originalK;
     
     EQRWebData* webData = [EQRWebData sharedInstance];
 
@@ -215,7 +216,7 @@
         return;
     }
     
-    [self.delegate distIDSelectionMadeWithIndexPath:self.thisIndexPath equipUniqueItem:[self.arrayOfEquipUniques objectAtIndex:indexPath.row]];
+    [self.delegate distIDSelectionMadeWithOriginalEquipUniqueKey:self.originalKeyID equipUniqueItem:[self.arrayOfEquipUniques objectAtIndex:indexPath.row]];
     
     self.privateRequestManager = nil;
 }
