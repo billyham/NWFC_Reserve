@@ -55,7 +55,7 @@
 
 //for dist id picker
 @property (strong, nonatomic) UIPopoverController* distIDPopover;
-@property (strong, nonatomic) EQRDistIDPickerTableVC* distIDPickerVC;
+//@property (strong, nonatomic) EQRDistIDPickerTableVC* distIDPickerVC;
 
 
 @end
@@ -900,15 +900,21 @@
     
     
     EQRDistIDPickerTableVC* distIDPickerVC = [[EQRDistIDPickerTableVC alloc] initWithNibName:@"EQRDistIDPickerTableVC" bundle:nil];
-    self.distIDPickerVC = distIDPickerVC;
+//    self.distIDPickerVC = distIDPickerVC;
     
     //initial setup
-    [self.distIDPickerVC initialSetupWithIndexPath:thisIndexPath equipTitleKey:equipTitleItem_foreignKey scheduleItem:self.myScheduleRequestItem];
-    self.distIDPickerVC.delegate = self;
+    [distIDPickerVC initialSetupWithIndexPath:thisIndexPath equipTitleKey:equipTitleItem_foreignKey scheduleItem:self.myScheduleRequestItem];
+    distIDPickerVC.delegate = self;
     
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.distIDPickerVC];
+    if (self.distIDPopover){
+        NSLog(@"distIDPopover exists");
+    }
+    
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:distIDPickerVC];
+    [popOver setPopoverContentSize:CGSizeMake(320.f, 300.f)];
+    popOver.delegate = self;
     self.distIDPopover = popOver;
-    [self.distIDPopover setPopoverContentSize:CGSizeMake(320.f, 300.f)];
+    
     
     
     //present popover
@@ -917,18 +923,61 @@
 }
 
 
--(void)distIDSelectionMade{
+-(void)distIDSelectionMadeWithIndexPath:(NSIndexPath*)distIndexPath equipUniqueItem:(id)distEquipUniqueItem{
     
     //retrieve key id of selected equipUniqueItem AND indexPath of the collection cell that initiated the distID picker
     //tell content of the cell to use replace the dist ID
-    //udpate the data model > schedule_equip_join has new unique_foreignKey
+    //update the data model > schedule_equip_join has new unique_foreignKey
+    
+    //extract the unique's key as a string
+    NSString* thisIsTheKey = [(EQREquipUniqueItem*)distEquipUniqueItem key_id];
+    NSString* thisIsTheDistID = [(EQREquipUniqueItem*)distEquipUniqueItem distinquishing_id];
+    
+    //update local ivar arrays
+    [(EQRScheduleTracking_EquipmentUnique_Join*)[self.arrayOfEquipJoins objectAtIndex:distIndexPath.row] setEquipUniqueItem_foreignKey:thisIsTheKey];
+    [(EQRScheduleTracking_EquipmentUnique_Join*)[self.arrayOfEquipJoins objectAtIndex:distIndexPath.row] setDistinquishing_id:thisIsTheDistID];
+    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins];
+    
+    //renew the collection view
+    [self.myEquipCollection reloadData];
+    
+    
+    //update the data layer
+    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", [(EQRScheduleTracking_EquipmentUnique_Join*)[self.arrayOfEquipJoins objectAtIndex:distIndexPath.row] key_id], nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", [(EQRScheduleTracking_EquipmentUnique_Join*)[self.arrayOfEquipJoins objectAtIndex:distIndexPath.row] equipUniqueItem_foreignKey], nil];
+    NSArray* thirdArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", [(EQRScheduleTracking_EquipmentUnique_Join*)[self.arrayOfEquipJoins objectAtIndex:distIndexPath.row] equipTitleItem_foreignKey], nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSString* returnString = [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
+    NSLog(@"this si the return string: %@", returnString);
+    
+    
     
     //remove the popover
+    [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController setDelegate:nil];
+    
     [self.distIDPopover dismissPopoverAnimated:YES];
     
-    self.distIDPickerVC = nil;
+    //gracefully dealloc all the objects in the content VC
+    [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController killThisThing];
+    
+    //_______THIS IS SUPER DUPER DUPER SUPER IMPORTANT!!!!!_______
     self.distIDPopover = nil;
     
+}
+
+#pragma mark - popover delegate methods
+
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
+    
+    [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController setDelegate:nil];
+    
+    //gracefully dealloc all the objects in the content VC
+    [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController killThisThing];
+    
+    //_______THIS IS SUPER DUPER DUPER SUPER IMPORTANT!!!!!_______
+     self.distIDPopover = nil;
 }
 
 

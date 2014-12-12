@@ -17,6 +17,7 @@
 
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
 @property (strong, nonatomic) NSArray* arrayOfEquipUniques;
+@property (strong, nonatomic) NSIndexPath* thisIndexPath;
 
 @end
 
@@ -38,33 +39,14 @@
 
 -(void)initialSetupWithIndexPath:(NSIndexPath*)indexPath equipTitleKey:(NSString*)equipTitleKey scheduleItem:(EQRScheduleRequestItem*)scheduleItem{
     
-    
-    //_______VERSION 1______
-//    //____set up private request manager______
-//    if (!self.privateRequestManager){
-//        
-//        self.privateRequestManager = [[EQRScheduleRequestManager alloc] init];
-//    }
-//    
-//    //set the request as ivar in requestManager
-//    self.privateRequestManager.request = scheduleItem;
-//    
-//    //two important methods that initiate requestManager ivar arrays
-//    [self.privateRequestManager resetEquipListAndAvailableQuantites];
-//    [self.privateRequestManager retrieveAllEquipUniqueItems];
-//    
-//    //now activate method to get just this title item's avaliable dist ids
-//    self.arrayOfEquipUniques = [self.privateRequestManager retrieveAvailableEquipUniquesForTitleKey:equipTitleKey];
-    
-    
-    //________VERSION 2_________________
-    //Save initializing the private reqeust manager for when "add item" button is tapped
-    ///... which will ensure a new item won't get assigned the same uniqueItem as a changed item
     //  1  use php call to get equipUniqueItems for a specified equipTitleItem_foreignKey
     //  2  use php call to get schedule_equip_joins in specfied date range
     // 2.1 keep only those with a matching titleItem_key
     //  3  mark as unavailable the equipUniques that are found in the filtered array of schedule_equip_joins to produce...
     //  4  a list of available equipUniqueItems and assign to ivar arrayOfEquipUniques
+    
+    //save indexpath to local ivar
+    self.thisIndexPath = indexPath;
     
     EQRWebData* webData = [EQRWebData sharedInstance];
 
@@ -229,14 +211,15 @@
     
     if ([(EQREquipUniqueItem*)[self.arrayOfEquipUniques objectAtIndex:indexPath.row] unavailableFlag] == YES){
     
-        //don't do anything
+        //don't do anything when cell is grayed out
         return;
     }
     
-    [self.delegate distIDSelectionMade];
+    [self.delegate distIDSelectionMadeWithIndexPath:self.thisIndexPath equipUniqueItem:[self.arrayOfEquipUniques objectAtIndex:indexPath.row]];
     
     self.privateRequestManager = nil;
 }
+
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -263,6 +246,15 @@
 }
 */
 
+
+-(void)killThisThing{
+    
+    self.delegate = nil;
+    self.privateRequestManager = nil;
+    self.arrayOfEquipUniques = nil;
+    
+    
+}
 
 
 #pragma mark - memory warning

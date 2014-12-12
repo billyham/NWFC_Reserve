@@ -19,12 +19,13 @@
 @property (weak, nonatomic) id <EQRDistIDPickerDelegate> delegate;
 
 -(void)initialSetupWithIndexPath:(NSIndexPath*)indexPath equipTitleKey:(NSString*)equipTitleKey scheduleItem:(EQRScheduleRequestItem*)scheduleItem;
+-(void)killThisThing;
 
 @end
 
 
 @protocol EQRDistIDPickerDelegate <NSObject>
 
--(void)distIDSelectionMade;
+-(void)distIDSelectionMadeWithIndexPath:(NSIndexPath*)distIndexPath equipUniqueItem:(id)distEquipUniqueItem;
 
 @end

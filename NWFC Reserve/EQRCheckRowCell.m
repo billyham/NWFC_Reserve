@@ -36,6 +36,8 @@
                  markedForDeletion:(BOOL)deleteFlag
                          indexPath:(NSIndexPath*)indexPath{
     
+    NSLog(@"inside initialsetupwith equipUnique... new dist id: %@", equipJoin.distinquishing_id);
+    
     self.backgroundColor = [UIColor clearColor];
     
     EQRCheckCellContentVCntrllr* checkContent = [[EQRCheckCellContentVCntrllr alloc] initWithNibName:@"EQRCheckCellContentVCntrllr" bundle:nil];

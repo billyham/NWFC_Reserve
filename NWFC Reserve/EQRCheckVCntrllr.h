@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "EQRDistIDPickerTableVC.h"
 
-@interface EQRCheckVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRDistIDPickerDelegate>
+@interface EQRCheckVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRDistIDPickerDelegate, UIPopoverControllerDelegate>
 
 @property (strong, nonatomic) NSString* scheduleRequestKeyID;
 @property BOOL marked_for_returning;
@@ -18,6 +18,6 @@
 -(void)initialSetupWithInfo:(NSDictionary*)userInfo;
 
 //dist id picker delegate method
--(void)distIDSelectionMade;
+-(void)distIDSelectionMadeWithIndexPath:(NSIndexPath*)distIndexPath equipUniqueItem:(id)distEquipUniqueItem;
 
 @end
