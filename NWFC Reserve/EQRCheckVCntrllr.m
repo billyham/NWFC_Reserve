@@ -902,6 +902,7 @@
     NSString* equipUniqueItem_foreignKey = [[note userInfo] objectForKey:@"equipUniqueItem_foreignKey"];
 //    NSIndexPath* thisIndexPath = [[note userInfo] objectForKey:@"indexPath"];
     CGRect buttonRect = [(UIButton*)[[note userInfo] objectForKey:@"distButton"] frame];
+    UIButton* thisButton = (UIButton*)[[note userInfo] objectForKey:@"distButton"];
     
     
     EQRDistIDPickerTableVC* distIDPickerVC = [[EQRDistIDPickerTableVC alloc] initWithNibName:@"EQRDistIDPickerTableVC" bundle:nil];
@@ -911,19 +912,22 @@
     [distIDPickerVC initialSetupWithOriginalUniqueKeyID:equipUniqueItem_foreignKey equipTitleKey:equipTitleItem_foreignKey scheduleItem:self.myScheduleRequestItem];
     distIDPickerVC.delegate = self;
     
-    if (self.distIDPopover){
-        NSLog(@"distIDPopover exists");
-    }
-    
     UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:distIDPickerVC];
     [popOver setPopoverContentSize:CGSizeMake(320.f, 300.f)];
     popOver.delegate = self;
     self.distIDPopover = popOver;
     
-    
+//    CGRect fixedRect1 = [thisButton.superview convertRect:buttonRect fromView:thisButton];
+    CGRect fixedRect2 = [thisButton.superview.superview convertRect:buttonRect fromView:thisButton.superview];
+    CGRect fixedRect3 = [thisButton.superview.superview.superview convertRect:fixedRect2 fromView:thisButton.superview.superview];
+    CGRect fixedrect4 = [thisButton.superview.superview.superview.superview convertRect:fixedRect3 fromView:thisButton.superview.superview.superview];
+    CGRect fixedRect5 = [thisButton.superview.superview.superview.superview.superview convertRect:fixedrect4 fromView:thisButton.superview.superview.superview.superview];
+//    CGRect fixedRect6 = [thisButton.superview.superview.superview.superview.superview.superview convertRect:fixedRect5 fromView:thisButton.superview.superview.superview.superview.superview];
+//    CGRect fixedRect7 = [thisButton.superview.superview.superview.superview.superview.superview.superview convertRect:fixedRect6 fromView:thisButton.superview.superview.superview.superview.superview.superview];
+//    CGRect fixedRect8 = [thisButton.superview.superview.superview.superview.superview.superview.superview.superview convertRect:fixedRect7 fromView:thisButton.superview.superview.superview.superview.superview.superview.superview];
     
     //present popover
-    [self.distIDPopover presentPopoverFromRect:buttonRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self.distIDPopover presentPopoverFromRect:fixedRect5 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
 }
 
@@ -951,6 +955,7 @@
             [joinObj setDistinquishing_id:thisIsTheDistID];
             
             saveThisJoin = joinObj;
+            break;
         }
     }
     self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins];

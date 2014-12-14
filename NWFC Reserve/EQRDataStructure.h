@@ -12,7 +12,7 @@
 
 +(EQRDataStructure*)sharedInstance;
 
-//enter array of ScheduleTracking_EquipmentUnique_Joins (actually any object that has values for equipTitleItem_foreignKey, schedule_grouping
+//enter array of any object that has values for equipTitleItem_foreignKey, schedule_grouping, and distinquishing_id)
 //returns array of arrays, the subarrays are grouped together based on schedule_grouping,
 //the subarrays are populated with ScheduleTracking_EquipmentUnique_Joins
 +(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray;

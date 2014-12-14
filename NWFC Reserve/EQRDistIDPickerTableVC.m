@@ -128,8 +128,26 @@
         }
     }
     
+    //sort in asending order
+    NSArray* sortedArrayOfEquipUniques = [arrayOfEquipUniquesWithSpecificTitle sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        NSString* string1 = [(EQREquipUniqueItem*)obj1 distinquishing_id];
+        NSString* string2 = [(EQREquipUniqueItem*)obj2 distinquishing_id];
+        
+        //if dist id is only one character in length, add a 0 to the start.
+        if ([string1 length] < 2){
+            string1 = [NSString stringWithFormat:@"0%@", string1];
+        }
+        
+        if ([string2 length] < 2){
+            string2 = [NSString stringWithFormat:@"0%@", string2];
+        }
+        
+        return [string1 compare:string2];
+    }];
+    
     //save as property
-    self.arrayOfEquipUniques = [NSArray arrayWithArray:arrayOfEquipUniquesWithSpecificTitle];
+    self.arrayOfEquipUniques = [NSArray arrayWithArray:sortedArrayOfEquipUniques];
     
     //reload the table view
     [self.tableView reloadData];

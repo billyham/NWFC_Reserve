@@ -107,10 +107,50 @@
         
     }
     
+    //Have a comppleted array of arrays. Now need to SORT them
     NSArray* arrayToReturn = [NSArray arrayWithArray:tempTopArray];
     
-    //sort the array alphabetically
-    NSArray* sortedTopArray = [arrayToReturn sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+    //sort sub arrays first, but dist ID
+    NSMutableArray* newMuteTopArray = [NSMutableArray arrayWithCapacity:1];
+    [arrayToReturn enumerateObjectsUsingBlock:^(NSArray* objArray, NSUInteger idx, BOOL *stop) {
+        
+        //sort in asending order
+        NSArray* sortedSubArray = [objArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            
+            //first, compare on equipTitleItem_foreignKey
+            NSString* string1 = [(EQREquipUniqueItem*)obj1 equipTitleItem_foreignKey];
+            NSString* string2 = [(EQREquipUniqueItem*)obj2 equipTitleItem_foreignKey];
+            
+            NSInteger firstComparisonResult = [string1 compare:string2];
+            
+            //if equipTitleItem_foreignKey is the same, sort using dist id
+            if (firstComparisonResult == NSOrderedSame){
+                
+                NSString* string3 = [(EQREquipUniqueItem*)obj1 distinquishing_id];
+                NSString* string4 = [(EQREquipUniqueItem*)obj2 distinquishing_id];
+                
+                //if dist id is only one character in length, add a 0 to the start.
+                if ([string3 length] < 2){
+                    string3 = [NSString stringWithFormat:@"0%@", string3];
+                }
+                
+                if ([string4 length] < 2){
+                    string4 = [NSString stringWithFormat:@"0%@", string4];
+                }
+                
+                return [string3 compare:string4];
+                
+            } else {
+                
+                return firstComparisonResult;
+            }
+        }];
+        
+        [newMuteTopArray addObject:sortedSubArray];
+    }];
+    
+    //sort the top array alphabetically by schedule grouping
+    NSArray* sortedTopArray = [newMuteTopArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         
         return [[(EQRScheduleTracking_EquipmentUnique_Join*)[obj1 objectAtIndex:0] schedule_grouping]
                 compare:[(EQRScheduleTracking_EquipmentUnique_Join*)[obj2 objectAtIndex:0] schedule_grouping]];

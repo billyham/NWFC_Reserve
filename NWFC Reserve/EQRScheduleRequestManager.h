@@ -51,6 +51,8 @@
 -(void)addNewRequestEquipJoin:(EQREquipItem*)thisEquipItem;
 -(void)removeRequestEquipJoin:(EQREquipItem*)thisEquipItem;
 
+-(void)emptyTheArrayOfEquipJoins;
+
 //EQRHeaderCellDelegate protocal methods
 -(NSArray*)retrieveArrayOfEquipSectionsThatShouldBeHidden;
 -(void)collapseOrExpandSection:(NSString*)chosenSection WithAll:(BOOL)withAllFlag;

@@ -764,8 +764,6 @@
     //also sets ivar isInPopover to YES
     [genericEquipVCntrllr overrideSharedRequestManager:self.privateRequestManager];
     
-    
-    
 //    genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeNone;
 //    [self.navigationController pushViewController:genericEquipVCntrllr animated:NO];
     
@@ -790,8 +788,9 @@
 
     [self.theEquipSelectionPopOver dismissPopoverAnimated:YES];
     
-    
-    
+    //dealloc the popover or it resumes to show selected items from a previous viewing.. ALSO need to to this in the popover delegate method!!
+    //____!!!!!! this does nothing  !!!!!!______
+//    self.theEquipSelectionPopOver = nil;
     
     //_________***  need to update self.arrayOfEquipUniqueItems
     //empty arrays first
@@ -829,6 +828,7 @@
     
     //____________***
 }
+
 
 
 #pragma mark - notification methods

@@ -193,6 +193,9 @@
     //...now factor in the gear already scheduled for the chosen dates in the available quantities.
     [self allocateGearList];
     
+    //if request manager already has a request object, remove any recently added join
+    [requestManager emptyTheArrayOfEquipJoins];
+    
     //-------*******___________
     
     

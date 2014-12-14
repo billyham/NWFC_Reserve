@@ -376,6 +376,11 @@
     }
 }
 
+-(void)emptyTheArrayOfEquipJoins{
+    
+    [self.request.arrayOfEquipmentJoins removeAllObjects];
+}
+
 
 #pragma mark - equipment update fulfillment
 
@@ -507,14 +512,15 @@
         }
     }
     //______the result is a nested array of just the titleItems requested, with sub_arrays of ALL uniqueItems
+    
+    
+    
     //tempListOfUniqueItemsJustRequested
     
     //    for (id obj in tempListOfUniqueItemsJustRequested){
     //
     //        NSLog(@"count of objects in inner array: %u", (int)[obj count]);
     //    }
-    
-    
     
     
     //____now remove the unique items that have date collisions
@@ -554,13 +560,56 @@
     //    }
     
     
+    //________!!!!!! MAYBE MAKE A PROVISION SOMEWHERE IN HERE THAT PUTS ITEMS SCHEDULED ONLY A DAY AWAY AT THE BOTTOM OF THE STACK??  !!!!______
+    //___sort the subarrays by dist id___
+    //sort sub arrays first, but dist ID
+    NSMutableArray* sortedTempListOfUniqueItemsJustRequested = [NSMutableArray arrayWithCapacity:1];
+    [tempListOfUniqueItemsJustRequested enumerateObjectsUsingBlock:^(NSArray* objArray, NSUInteger idx, BOOL *stop) {
+        
+        //sort in asending order
+        NSArray* sortedSubArray = [objArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            
+            //first, compare on equipTitleItem_foreignKey
+            NSString* string1 = [(EQREquipUniqueItem*)obj1 equipTitleItem_foreignKey];
+            NSString* string2 = [(EQREquipUniqueItem*)obj2 equipTitleItem_foreignKey];
+            
+            NSInteger firstComparisonResult = [string1 compare:string2];
+            
+            //if equipTitleItem_foreignKey is the same, sort using dist id
+            if (firstComparisonResult == NSOrderedSame){
+                
+                NSString* string3 = [(EQREquipUniqueItem*)obj1 distinquishing_id];
+                NSString* string4 = [(EQREquipUniqueItem*)obj2 distinquishing_id];
+                
+                //if dist id is only one character in length, add a 0 to the start.
+                if ([string3 length] < 2){
+                    string3 = [NSString stringWithFormat:@"0%@", string3];
+                }
+                
+                if ([string4 length] < 2){
+                    string4 = [NSString stringWithFormat:@"0%@", string4];
+                }
+                
+                return [string3 compare:string4];
+                
+            } else {
+                
+                return firstComparisonResult;
+            }
+        }];
+        
+        [sortedTempListOfUniqueItemsJustRequested addObject:[NSMutableArray arrayWithArray:sortedSubArray]];
+    }];
+    
+
+    
     //geez.... now for each title item, find the matching array of uniques, and assign the key_id from the top of the stack and then pop the stack
     
     for (EQRScheduleTracking_EquipmentUnique_Join* joinMe in self.request.arrayOfEquipmentJoins){
         
-        NSLog(@"count of items in uniqueArrayMe: %lu", (unsigned long)[[tempListOfUniqueItemsJustRequested objectAtIndex:0] count]);
+//        NSLog(@"count of items in uniqueArrayMe: %lu", (unsigned long)[[tempListOfUniqueItemsJustRequested objectAtIndex:0] count]);
         
-        for (NSMutableArray* uniqueArrayMe in tempListOfUniqueItemsJustRequested){
+        for (NSMutableArray* uniqueArrayMe in sortedTempListOfUniqueItemsJustRequested){
             
             //____an array may be left empty after the last function, avoid tyring to interate through
             //____it or app will crash
