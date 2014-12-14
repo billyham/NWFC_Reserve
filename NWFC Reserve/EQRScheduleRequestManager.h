@@ -23,6 +23,7 @@
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItemsAll;
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItemsWithSubArrays;
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipUniqueItemsByDateCollision;
+@property (strong, nonatomic) NSArray* arrayOfEquipUniqueItemsByExpandedBuffer;
 
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipSectionsThatShouldBeHidden; //for equip reservation
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipSectionsThatShouldBeVisibleInSchedule;  //for schedule
@@ -50,7 +51,6 @@
 
 -(void)addNewRequestEquipJoin:(EQREquipItem*)thisEquipItem;
 -(void)removeRequestEquipJoin:(EQREquipItem*)thisEquipItem;
-
 -(void)emptyTheArrayOfEquipJoins;
 
 //EQRHeaderCellDelegate protocal methods

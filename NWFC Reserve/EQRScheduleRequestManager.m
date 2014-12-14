@@ -389,6 +389,12 @@
     
     //    NSLog(@"this is the contact_foreignKey: %@", [NSString stringWithFormat:@"%@", request.contact_foreignKey]);
     
+    
+    //________A PROVISION THAT PUTS ITEMS SCHEDULED ONLY A DAY AWAY AT THE BOTTOM OF THE STACK
+    //set ivar array of equipUniques to avoid scheduling equipment that is one day away from this request
+    [self allocateGearListWithExpandedDatesForBufferZoneWithBeginDate:self.request.request_date_begin EndDate:self.request.request_date_end];
+    
+    
     //must not include nil objects in array
     //cycle though all inputs and ensure some object is included. use @"88888888" as an error code
     if (!self.request.contact_foreignKey) self.request.contact_foreignKey = EQRErrorCode88888888;
@@ -452,7 +458,7 @@
     EQRWebData* webData = [EQRWebData sharedInstance];
     
     NSString* returnID = [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
-    NSLog(@"this is the returnID: %@", returnID);
+//    NSLog(@"this is the returnID: %@", returnID);
     
     
     //___________************  Use this moment to allocate a uniqueItem object (key_id and/or dist ID) *****_______
@@ -514,15 +520,6 @@
     //______the result is a nested array of just the titleItems requested, with sub_arrays of ALL uniqueItems
     
     
-    
-    //tempListOfUniqueItemsJustRequested
-    
-    //    for (id obj in tempListOfUniqueItemsJustRequested){
-    //
-    //        NSLog(@"count of objects in inner array: %u", (int)[obj count]);
-    //    }
-    
-    
     //____now remove the unique items that have date collisions
     //the top array
     for (NSMutableArray* selectedUniqueList in tempListOfUniqueItemsJustRequested){
@@ -545,22 +542,13 @@
                     [arrayOfUniquesToRemove addObject:selectedUniqueItem];
                 }
             }
-            
-            
         }
         
         //here is where we deduct the list of deductions
         [selectedUniqueList removeObjectsInArray:arrayOfUniquesToRemove];
     }
-    //____the result is a modified nested array with the date collision uniques removed
     
-    //    for (id obj in tempListOfUniqueItemsJustRequested){
-    //
-    //        NSLog(@"NEW count of objects in inner array: %u", (int)[obj count]);
-    //    }
-    
-    
-    //________!!!!!! MAYBE MAKE A PROVISION SOMEWHERE IN HERE THAT PUTS ITEMS SCHEDULED ONLY A DAY AWAY AT THE BOTTOM OF THE STACK??  !!!!______
+
     //___sort the subarrays by dist id___
     //sort sub arrays first, but dist ID
     NSMutableArray* sortedTempListOfUniqueItemsJustRequested = [NSMutableArray arrayWithCapacity:1];
@@ -578,19 +566,51 @@
             //if equipTitleItem_foreignKey is the same, sort using dist id
             if (firstComparisonResult == NSOrderedSame){
                 
-                NSString* string3 = [(EQREquipUniqueItem*)obj1 distinquishing_id];
-                NSString* string4 = [(EQREquipUniqueItem*)obj2 distinquishing_id];
+                //first, give preference to any item that IS NOT in the array of buffer objects
+                NSString* testOnString3 = @"0";
+                NSString* testOnString4 = @"0";
                 
-                //if dist id is only one character in length, add a 0 to the start.
-                if ([string3 length] < 2){
-                    string3 = [NSString stringWithFormat:@"0%@", string3];
+//                NSLog(@"count of expandedBuffer array: %u", [self.arrayOfEquipUniqueItemsByExpandedBuffer count]);
+                for (EQREquipUniqueItem* testItem in self.arrayOfEquipUniqueItemsByExpandedBuffer){
+                    
+                    if ([testItem.key_id isEqualToString:[(EQREquipUniqueItem*)obj1 key_id]]){
+                        testOnString3 = @"1";
+                        break;
+                    }
                 }
                 
-                if ([string4 length] < 2){
-                    string4 = [NSString stringWithFormat:@"0%@", string4];
+                for (EQREquipUniqueItem* testItem in self.arrayOfEquipUniqueItemsByExpandedBuffer){
+                    
+                    if ([testItem.key_id isEqualToString:[(EQREquipUniqueItem*)obj2 key_id]]){
+                        testOnString4 = @"1";
+                        break;
+                    }
                 }
                 
-                return [string3 compare:string4];
+                NSInteger secondComparisonResult = [testOnString3 compare:testOnString4];
+                
+                //if both are equal in their next day status... move onto the dist id
+                if (secondComparisonResult == NSOrderedSame){
+                
+                    
+                    NSString* string3 = [(EQREquipUniqueItem*)obj1 distinquishing_id];
+                    NSString* string4 = [(EQREquipUniqueItem*)obj2 distinquishing_id];
+                    
+                    //if dist id is only one character in length, add a 0 to the start.
+                    if ([string3 length] < 2){
+                        string3 = [NSString stringWithFormat:@"0%@", string3];
+                    }
+                    
+                    if ([string4 length] < 2){
+                        string4 = [NSString stringWithFormat:@"0%@", string4];
+                    }
+                    
+                    return [string3 compare:string4];
+                    
+                }else{
+                    
+                    return secondComparisonResult;
+                }
                 
             } else {
                 
@@ -693,6 +713,7 @@
     
     //determine if should allow same day pickup and return
     //____!!!!!! BUT it doesn't work   !!!!!________
+    //_____  currently, allowSameDayFlag is NEVER set to YES  _______
     
     if (allowSameDayFlag == YES){     //use precise dates
         
@@ -702,7 +723,6 @@
         
         [dateFormatter setDateFormat:@"yyyy-MM-dd"];
     }
-    
     
     NSString* dateBeginString;
     NSString* dateEndString;
@@ -720,6 +740,70 @@
         dateBeginString = [dateFormatter stringFromDate:self.request.request_date_begin];
         dateEndString = [dateFormatter stringFromDate:self.request.request_date_end];
     }
+
+    //use request item's dates or supplied dateDic
+    //______this never gets called and will ignore the usefulness of the expanded list for buffer zones_____
+    if (datesDic != nil){
+        
+        //use the supplied parameter
+        dateBeginString = [datesDic objectForKey:@"request_date_begin"];
+        dateEndString = [datesDic objectForKey:@"request_date_end"];
+    }
+    
+    //get data two php calls...
+    NSArray* arrayOfScheduleTrackingKeyIDs = [self getArrayOfScheduleTrackingIDsWithBeginDate:dateBeginString endDate:dateEndString];
+    
+    //assign to requestManager ivar (this is used in EQEquipSummaryVCntrllr > justConfirm method
+    self.arrayOfEquipUniqueItemsByDateCollision = [self getArrayOfEquipUniquesWithArrayOfScheduleTrackingIDs:arrayOfScheduleTrackingKeyIDs];
+    
+    
+    //Update the array that tracks the COUNT of equipTitleItems
+    //loop through arrayOfEquipUniqueItems
+    for (EQREquipUniqueItem* eqritem in self.arrayOfEquipUniqueItemsByDateCollision){
+        
+        for (NSMutableArray* checkArray in self.arrayOfEquipTitlesWithCountOfUniqueItems){
+            
+            if ([eqritem.equipTitleItem_foreignKey isEqualToString:[checkArray objectAtIndex:0]] ){
+                
+                //found a matching title item, now reduce the count of available items by one
+                //... but only if the current available quantity is above 0 (to prevent going into negative integers)
+                
+                if ([(NSNumber*)[checkArray objectAtIndex:1] integerValue] > 0){
+                    
+                    int newIntValue = [(NSNumber*)[checkArray objectAtIndex:1] intValue] - 1;
+                    NSNumber* newNumber = [NSNumber numberWithInt: newIntValue];
+                    [checkArray replaceObjectAtIndex:1 withObject:newNumber];
+                }
+                
+                break;
+            }
+        }
+    }
+}
+
+
+-(void)allocateGearListWithExpandedDatesForBufferZoneWithBeginDate:(NSDate*)begindate EndDate:(NSDate*)endDate{
+    
+    
+    //begin and end dates in sql format
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    
+    //expand dates
+    NSDate* newBeginDate = [begindate dateByAddingTimeInterval:-86400];
+    NSDate* newEndDate = [endDate dateByAddingTimeInterval:86400];
+    
+    NSString* dateBeginString = [dateFormatter stringFromDate:newBeginDate];
+    NSString* dateEndString = [dateFormatter stringFromDate:newEndDate];
+    
+    NSArray* trackingKeysArray = [self getArrayOfScheduleTrackingIDsWithBeginDate:dateBeginString endDate:dateEndString];
+    
+    self.arrayOfEquipUniqueItemsByExpandedBuffer = [self getArrayOfEquipUniquesWithArrayOfScheduleTrackingIDs:trackingKeysArray];
+}
+
+
+-(NSArray*)getArrayOfScheduleTrackingIDsWithBeginDate:(NSString*)beginDate endDate:(NSString*)endDate{
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     
@@ -727,29 +811,17 @@
     NSArray* arrayWithBeginDate;
     NSArray* arrayWithEndDate;
     
-    //use request item's dates
-    if (datesDic == nil){
-        
-
-        
-        arrayWithBeginDate = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
-        arrayWithEndDate = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
-    }else{
-        //use the supplied parameter
-        
-        arrayWithBeginDate =[NSArray arrayWithObjects:@"request_date_begin", [datesDic objectForKey:@"request_date_begin"], nil];
-        
-        
-    }
+    arrayWithBeginDate = [NSArray arrayWithObjects:@"request_date_begin", beginDate, nil];
+    arrayWithEndDate = [NSArray arrayWithObjects:@"request_date_end", endDate, nil];
+    
     
     NSArray* arrayTopDate = [NSArray arrayWithObjects:arrayWithBeginDate, arrayWithEndDate, nil];
     
     NSMutableArray* arrayOfScheduleTrackingKeyIDs = [NSMutableArray arrayWithCapacity:1];
-    NSMutableArray* arrayOfEquipUniqueItems = [NSMutableArray arrayWithCapacity:1];
     
     [webData queryWithLink:@"EQGetScheduleItemsInDateRange.php" parameters:arrayTopDate class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
         
-//        NSLog(@"result from schedule request Date range: %@", muteArray);
+        //        NSLog(@"result from schedule request Date range: %@", muteArray);
         
         //populate array with key_ids
         for (EQRScheduleRequestItem* objKey in muteArray){
@@ -760,7 +832,16 @@
         }
     }];
     
+    return arrayOfScheduleTrackingKeyIDs;
+}
+
+
+-(NSMutableArray*)getArrayOfEquipUniquesWithArrayOfScheduleTrackingIDs:(NSArray*)arrayOfScheduleTrackingKeyIDs{
     
+    EQRWebData* webData = [EQRWebData sharedInstance];
+
+    NSMutableArray* arrayOfEquipUniqueItems = [NSMutableArray arrayWithCapacity:1];
+
     //Use sql with inner join...
     //  get reserved EquipUniqueItem objects With ScheduleTrackingKeys
     
@@ -781,43 +862,13 @@
         }];
     }
     
-    //assign to requestManager ivar (this is used in EQEquipSummaryVCntrllr > justConfirm method
-    self.arrayOfEquipUniqueItemsByDateCollision = arrayOfEquipUniqueItems;
-    
-    //_____*******  add structure to the array by sections with titleKey???
-    
-    //SUBTRACT OUT the scheduled gear from the requestManager array of titles with qty count
-    //loop through arrayOfEquipUniqueItems
-    for (EQREquipUniqueItem* eqritem in arrayOfEquipUniqueItems){
-        
-        for (NSMutableArray* checkArray in self.arrayOfEquipTitlesWithCountOfUniqueItems){
-            
-            if ([eqritem.equipTitleItem_foreignKey isEqualToString:[checkArray objectAtIndex:0]] ){
-                
-                //found a matching title item, now reduce the count of available items by one
-                //... but only if the current available quantity is above 0 (to prevent going into negative integers)
-                
-                if ([(NSNumber*)[checkArray objectAtIndex:1] integerValue] > 0){
-                    
-                    int newIntValue = [(NSNumber*)[checkArray objectAtIndex:1] intValue] - 1;
-                    NSNumber* newNumber = [NSNumber numberWithInt: newIntValue];
-                    [checkArray replaceObjectAtIndex:1 withObject:newNumber];
-                }
-            }
-        }
-    }
-    
-
-    //_____!!!!!!  Need to create an array of equipUniqueItems that are AVAILABLE  !!!!______
-    //    self.arrayOfEquipUniquesAfterCollisionSubraction =
-    
-    
+    return arrayOfEquipUniqueItems;
 }
 
 
 -(NSArray*)retrieveAvailableEquipUniquesForTitleKey:(NSString*)equipTitleItem_foreignKey{
     
-    NSLog(@"this is the titleItem foreign key: %@", equipTitleItem_foreignKey);
+//    NSLog(@"this is the titleItem foreign key: %@", equipTitleItem_foreignKey);
     
     NSMutableArray* muteArray = [NSMutableArray arrayWithCapacity:1];
     
@@ -830,7 +881,7 @@
         }
     }
     
-    NSLog(@"this is the count of the array: %u", [muteArray count]);
+//    NSLog(@"this is the count of the array: %u", [muteArray count]);
     
     return [NSArray arrayWithArray:muteArray];
 }
