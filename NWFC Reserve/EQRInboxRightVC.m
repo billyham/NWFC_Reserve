@@ -923,46 +923,7 @@
     
     //renew the list of joins by going to the data layer
     [self renewTheViewWithRequest:self.myScheduleRequest];
-    
-    
-    //_________***  need to update self.arrayOfEquipUniqueItems
-    //empty arrays first
-//    [self.arrayOfSchedule_Unique_Joins removeAllObjects];
-//    self.arrayOfEquipUniqueItemsWithStructure = nil;
-//    
-//    NSMutableArray* arrayToReturn = [NSMutableArray arrayWithCapacity:1];
-//    NSMutableArray* arrayToReturnJoins = [NSMutableArray arrayWithCapacity:1];
-//    
-//    EQRWebData* webData = [EQRWebData sharedInstance];
-//    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id,  nil];
-//    NSArray* secondArray = [NSArray arrayWithObjects:firstArray, nil];
-//    
-//    //get Scheduletracking_equipUnique_joins
-//    [webData queryWithLink:@"EQGetScheduleEquipJoins.php" parameters:secondArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
-//        
-//        [arrayToReturnJoins addObjectsFromArray:muteArray];
-//        
-//    }];
-//    
-//    [self.arrayOfSchedule_Unique_Joins addObjectsFromArray:arrayToReturnJoins];
-//    
-//    
-//    //get equipUniqueItems
-//    [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys.php" parameters:secondArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
-//        
-//        [arrayToReturn addObjectsFromArray:muteArray];
-//    }];
-//    
-//    //add structure to the array
-//    self.arrayOfEquipUniqueItemsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:arrayToReturn];
-//    
-//    //reload collection view
-//    [self.myTable reloadData];
-    
-    //____________***
 }
-
-
 
 
 

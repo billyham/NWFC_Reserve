@@ -1222,6 +1222,7 @@
         
         for (UIView* view in cell.contentView.subviews){
             
+            //____!!!!!!  SEE below
             [view removeFromSuperview];
             
             //also remove notifications
@@ -1245,7 +1246,9 @@
             cell.backgroundColor = [[myColors colorDic] objectForKey:EQRColorVeryLightGrey];;
         }
         
-        
+        //_____!!!!!  MAYBE instead of removing the contentViewController and reloading every time, we can just alter the
+        //_____!!!!!  the contentViewController as necessary ???
+        //_____!!!!! in the interest of smoother scrolling
         //add content view from xib
         EQRScheduleCellContentVCntrllr* myContentViewController = [[EQRScheduleCellContentVCntrllr alloc] initWithNibName:@"EQRScheduleCellContentVCntrllr" bundle:nil];
         

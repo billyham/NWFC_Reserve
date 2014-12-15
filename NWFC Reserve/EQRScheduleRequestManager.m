@@ -458,7 +458,7 @@
     EQRWebData* webData = [EQRWebData sharedInstance];
     
     NSString* returnID = [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
-//    NSLog(@"this is the returnID: %@", returnID);
+    NSLog(@"this is the returnID: %@", returnID);
     
     
     //___________************  Use this moment to allocate a uniqueItem object (key_id and/or dist ID) *****_______
@@ -750,11 +750,16 @@
         dateEndString = [datesDic objectForKey:@"request_date_end"];
     }
     
-    //get data two php calls...
-    NSArray* arrayOfScheduleTrackingKeyIDs = [self getArrayOfScheduleTrackingIDsWithBeginDate:dateBeginString endDate:dateEndString];
     
-    //assign to requestManager ivar (this is used in EQEquipSummaryVCntrllr > justConfirm method
-    self.arrayOfEquipUniqueItemsByDateCollision = [self getArrayOfEquipUniquesWithArrayOfScheduleTrackingIDs:arrayOfScheduleTrackingKeyIDs];
+    //_____REPLACED BY THE FOLLOWING SINGLE PHP CALL____ FOR PERFORMANCE IMPROVEMENT_____
+    //get data two php calls...
+//    NSArray* arrayOfScheduleTrackingKeyIDs = [self getArrayOfScheduleTrackingIDsWithBeginDate:dateBeginString endDate:dateEndString];
+//    
+//    //assign to requestManager ivar (this is used in EQEquipSummaryVCntrllr > justConfirm method
+//    self.arrayOfEquipUniqueItemsByDateCollision = [self getArrayOfEquipUniquesWithArrayOfScheduleTrackingIDs:arrayOfScheduleTrackingKeyIDs];
+    
+    //the PHP call
+    self.arrayOfEquipUniqueItemsByDateCollision = [self getArrayOfEquipUniquesWithBeginDate:dateBeginString EndDate:dateEndString];
     
     
     //Update the array that tracks the COUNT of equipTitleItems
@@ -797,13 +802,77 @@
     NSString* dateBeginString = [dateFormatter stringFromDate:newBeginDate];
     NSString* dateEndString = [dateFormatter stringFromDate:newEndDate];
     
-    NSArray* trackingKeysArray = [self getArrayOfScheduleTrackingIDsWithBeginDate:dateBeginString endDate:dateEndString];
     
-    self.arrayOfEquipUniqueItemsByExpandedBuffer = [self getArrayOfEquipUniquesWithArrayOfScheduleTrackingIDs:trackingKeysArray];
+//    NSArray* trackingKeysArray = [self getArrayOfScheduleTrackingIDsWithBeginDate:dateBeginString endDate:dateEndString];
+//
+//    self.arrayOfEquipUniqueItemsByExpandedBuffer = [self getArrayOfEquipUniquesWithArrayOfScheduleTrackingIDs:trackingKeysArray];
+    
+    self.arrayOfEquipUniqueItemsByExpandedBuffer = [self getArrayOfEquipUniquesWithBeginDate:dateBeginString EndDate:dateEndString];
 }
 
 
--(NSArray*)getArrayOfScheduleTrackingIDsWithBeginDate:(NSString*)beginDate endDate:(NSString*)endDate{
+//_______THESE TWO METHODS REPLACED WITH ONE THAT HAS A MORE SOPHISTICATED MYSQL CALL, BETTER PERFORMANCE______
+//-(NSArray*)getArrayOfScheduleTrackingIDsWithBeginDate:(NSString*)beginDate endDate:(NSString*)endDate{
+//    
+//    EQRWebData* webData = [EQRWebData sharedInstance];
+//    
+//    //declare arrays
+//    NSArray* arrayWithBeginDate;
+//    NSArray* arrayWithEndDate;
+//    
+//    arrayWithBeginDate = [NSArray arrayWithObjects:@"request_date_begin", beginDate, nil];
+//    arrayWithEndDate = [NSArray arrayWithObjects:@"request_date_end", endDate, nil];
+//    NSArray* arrayTopDate = [NSArray arrayWithObjects:arrayWithBeginDate, arrayWithEndDate, nil];
+//    
+//    NSMutableArray* arrayOfScheduleTrackingKeyIDs = [NSMutableArray arrayWithCapacity:1];
+//    
+//    [webData queryWithLink:@"EQGetScheduleItemsInDateRange.php" parameters:arrayTopDate class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+//        
+//        //        NSLog(@"result from schedule request Date range: %@", muteArray);
+//        
+//        //populate array with key_ids
+//        for (EQRScheduleRequestItem* objKey in muteArray){
+//            
+//            [arrayOfScheduleTrackingKeyIDs addObject:objKey];
+//            
+//            //cycle through and get equipUniqueItem key IDs
+//        }
+//    }];
+//    
+//    return arrayOfScheduleTrackingKeyIDs;
+//}
+//
+//
+//-(NSMutableArray*)getArrayOfEquipUniquesWithArrayOfScheduleTrackingIDs:(NSArray*)arrayOfScheduleTrackingKeyIDs{
+//    
+//    EQRWebData* webData = [EQRWebData sharedInstance];
+//
+//    NSMutableArray* arrayOfEquipUniqueItems = [NSMutableArray arrayWithCapacity:1];
+//
+//    //Use sql with inner join...
+//    //  get reserved EquipUniqueItem objects With ScheduleTrackingKeys
+//    
+//    for (EQRScheduleTracking_EquipmentUnique_Join* objThingy in arrayOfScheduleTrackingKeyIDs){
+//        
+//        NSArray* arrayWithTrackingKey = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", objThingy.key_id, nil];
+//        NSArray* topArrayWithTrackingKey = [NSArray arrayWithObject:arrayWithTrackingKey];
+//        
+//        [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys.php" parameters:topArrayWithTrackingKey class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray2) {
+//            
+//            for (EQREquipUniqueItem* objUniqueItem in muteArray2){
+//                
+//                //                NSLog(@"this is EquipUniqueItem key_id: %@  and titleItem key_id: %@ and name: %@",
+//                //                      objUniqueItem.key_id, objUniqueItem.equipTitleItem_foreignKey, objUniqueItem.name);
+//                
+//                [arrayOfEquipUniqueItems addObject:objUniqueItem];
+//            }
+//        }];
+//    }
+//    
+//    return arrayOfEquipUniqueItems;
+//}
+
+-(NSMutableArray*)getArrayOfEquipUniquesWithBeginDate:(NSString*)beginDate EndDate:(NSString*)endDate{
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     
@@ -813,54 +882,17 @@
     
     arrayWithBeginDate = [NSArray arrayWithObjects:@"request_date_begin", beginDate, nil];
     arrayWithEndDate = [NSArray arrayWithObjects:@"request_date_end", endDate, nil];
-    
-    
     NSArray* arrayTopDate = [NSArray arrayWithObjects:arrayWithBeginDate, arrayWithEndDate, nil];
     
-    NSMutableArray* arrayOfScheduleTrackingKeyIDs = [NSMutableArray arrayWithCapacity:1];
+    NSMutableArray* arrayOfEquipUniqueItems = [NSMutableArray arrayWithCapacity:1];
     
-    [webData queryWithLink:@"EQGetScheduleItemsInDateRange.php" parameters:arrayTopDate class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+    [webData queryWithLink:@"EQGetEquipUniqueItemsWithScheduleDateRange.php" parameters:arrayTopDate class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray2) {
         
-        //        NSLog(@"result from schedule request Date range: %@", muteArray);
-        
-        //populate array with key_ids
-        for (EQRScheduleRequestItem* objKey in muteArray){
-            
-            [arrayOfScheduleTrackingKeyIDs addObject:objKey];
-            
-            //cycle through and get equipUniqueItem key IDs
+        for (EQREquipUniqueItem* objUniqueItem in muteArray2){
+                        
+            [arrayOfEquipUniqueItems addObject:objUniqueItem];
         }
     }];
-    
-    return arrayOfScheduleTrackingKeyIDs;
-}
-
-
--(NSMutableArray*)getArrayOfEquipUniquesWithArrayOfScheduleTrackingIDs:(NSArray*)arrayOfScheduleTrackingKeyIDs{
-    
-    EQRWebData* webData = [EQRWebData sharedInstance];
-
-    NSMutableArray* arrayOfEquipUniqueItems = [NSMutableArray arrayWithCapacity:1];
-
-    //Use sql with inner join...
-    //  get reserved EquipUniqueItem objects With ScheduleTrackingKeys
-    
-    for (EQRScheduleTracking_EquipmentUnique_Join* objThingy in arrayOfScheduleTrackingKeyIDs){
-        
-        NSArray* arrayWithTrackingKey = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", objThingy.key_id, nil];
-        NSArray* topArrayWithTrackingKey = [NSArray arrayWithObject:arrayWithTrackingKey];
-        
-        [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys.php" parameters:topArrayWithTrackingKey class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray2) {
-            
-            for (EQREquipUniqueItem* objUniqueItem in muteArray2){
-                
-                //                NSLog(@"this is EquipUniqueItem key_id: %@  and titleItem key_id: %@ and name: %@",
-                //                      objUniqueItem.key_id, objUniqueItem.equipTitleItem_foreignKey, objUniqueItem.name);
-                
-                [arrayOfEquipUniqueItems addObject:objUniqueItem];
-            }
-        }];
-    }
     
     return arrayOfEquipUniqueItems;
 }

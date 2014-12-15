@@ -972,7 +972,7 @@
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSString* returnString = [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
-    NSLog(@"this si the return string: %@", returnString);
+    NSLog(@"this is the return string: %@", returnString);
     
     
     
@@ -987,7 +987,10 @@
     //_______THIS IS SUPER DUPER DUPER SUPER IMPORTANT!!!!!_______
     self.distIDPopover = nil;
     
+    //send note to schedule that a change has been saved
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
 }
+
 
 #pragma mark - popover delegate methods
 
