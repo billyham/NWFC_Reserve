@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="bottomGuideLayoutThingy" destination="1nF-ZA-a2L" id="atb-ya-rh1"/>
                 <outlet property="continueButton" destination="6bK-FM-VHe" id="l7o-BL-vMz"/>
+                <outlet property="editNotesButton" destination="sdD-j5-3PE" id="LsB-YM-x4y"/>
                 <outlet property="equipCollectionView" destination="Hha-K8-upK" id="RGE-rh-XRI"/>
                 <outlet property="listAllEquipButton" destination="Aq7-zw-7GS" id="l8i-1X-dfP"/>
                 <outlet property="mainSubView" destination="KF1-XO-Q8h" id="4WZ-wg-Ghd"/>
@@ -63,6 +64,18 @@
                                 <outlet property="delegate" destination="-1" id="I9Y-ov-lIZ"/>
                             </connections>
                         </collectionView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sdD-j5-3PE">
+                            <rect key="frame" x="20" y="33" width="41" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="H5m-jp-bjd"/>
+                            </constraints>
+                            <state key="normal" title="Notes">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="notesButtonTapped:" destination="-1" eventType="touchUpInside" id="27v-cN-QnK"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
@@ -72,6 +85,8 @@
                         <constraint firstItem="Hha-K8-upK" firstAttribute="leading" secondItem="KF1-XO-Q8h" secondAttribute="leading" constant="20" id="CqT-0p-n9k"/>
                         <constraint firstItem="6bK-FM-VHe" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="33" id="DGQ-wP-dIG"/>
                         <constraint firstAttribute="trailing" secondItem="Hha-K8-upK" secondAttribute="trailing" constant="20" id="JNt-lT-ucX"/>
+                        <constraint firstItem="sdD-j5-3PE" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="33" id="gdb-NM-m0k"/>
+                        <constraint firstItem="sdD-j5-3PE" firstAttribute="leading" secondItem="KF1-XO-Q8h" secondAttribute="leading" constant="20" id="kDT-2T-Rpo"/>
                         <constraint firstAttribute="centerX" secondItem="6bK-FM-VHe" secondAttribute="centerX" id="rWL-xu-aZB"/>
                         <constraint firstItem="Hha-K8-upK" firstAttribute="top" secondItem="Aq7-zw-7GS" secondAttribute="bottom" constant="18" id="xYI-fK-o0k"/>
                     </constraints>

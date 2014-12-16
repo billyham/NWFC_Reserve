@@ -25,11 +25,12 @@
 #import "EQRModeManager.h"
 #import "EQRScheduleRequestManager.h"
 #import "EQRScheduleRequestItem.h"
+#import "EQREquipSelectionGenericVCntrllr.h"
+#import "EQRScheduleRequestManager.h"
 
 
 @interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate>
 
-//@property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
 @property (strong, nonatomic) EQRScheduleRequestItem* myScheduleRequestItem;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* tableTopGuideConstraint;
@@ -47,6 +48,7 @@
 @property (strong, nonatomic) NSArray* arrayOfEquipJoinsWithStructure;
 @property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedEquipIDs;
 
+//for staff user picker
 @property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
 
 //for qr code reader
@@ -56,6 +58,12 @@
 //for dist id picker
 @property (strong, nonatomic) UIPopoverController* distIDPopover;
 //@property (strong, nonatomic) EQRDistIDPickerTableVC* distIDPickerVC;
+
+//for add item popover
+@property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
+@property (strong, nonatomic) UIPopoverController* myEquipSelectionPopover;
+@property (strong, nonatomic) IBOutlet UIButton* addButton;
+
 
 
 @end
@@ -122,6 +130,22 @@
             return;
         }
     }];
+    
+    
+    //____set up private request manager______
+    
+    //create private request manager as ivar
+    if (!self.privateRequestManager){
+        
+        self.privateRequestManager = [[EQRScheduleRequestManager alloc] init];
+    }
+    
+    //set the request as ivar in requestManager
+    self.privateRequestManager.request = self.myScheduleRequestItem;
+    
+    //two important methods that initiate requestManager ivar arrays
+    [self.privateRequestManager resetEquipListAndAvailableQuantites];
+    [self.privateRequestManager retrieveAllEquipUniqueItems];
 }
 
 
@@ -839,10 +863,11 @@
 
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
 #pragma mark - receive messages from row content
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
 -(void)updateArrayOfJoins:(NSNotification*)note{
     
@@ -870,6 +895,8 @@
         }
     }
 }
+#pragma clang diagnostic pop
+
 
 
 -(void)addJoinKeyIDToBeDeletedArray:(NSNotification*)note{
@@ -996,17 +1023,63 @@
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
     
-    [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController setDelegate:nil];
-    
-    //gracefully dealloc all the objects in the content VC
-    [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController killThisThing];
-    
-    //_______THIS IS SUPER DUPER DUPER SUPER IMPORTANT!!!!!_______
-     self.distIDPopover = nil;
+    if (popoverController == self.myEquipSelectionPopover){
+        
+        self.myEquipSelectionPopover = nil;
+        
+    }else if (popoverController == self.distIDPopover){
+        
+        [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController setDelegate:nil];
+        
+        //gracefully dealloc all the objects in the content VC
+        [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController killThisThing];
+        
+        //_______THIS IS SUPER DUPER DUPER SUPER IMPORTANT!!!!!_______
+        self.distIDPopover = nil;
+    }
 }
 
 
-#pragma clang diagnostic pop
+
+
+#pragma mark - handle add equip item
+
+-(IBAction)addEquipItem:(id)sender{
+    
+    EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
+    
+    //need to specify a privateRequestManager for the equip selection v cntrllr
+    //also sets ivar isInPopover to YES
+    [genericEquipVCntrllr overrideSharedRequestManager:self.privateRequestManager];
+    
+    UIPopoverController* popOverMe = [[UIPopoverController alloc] initWithContentViewController:genericEquipVCntrllr];
+    self.myEquipSelectionPopover = popOverMe;
+    //must manually set the size, cannot be wider than 600px!!!!???? But seems to work ok at 800 anyway???
+    self.myEquipSelectionPopover.popoverContentSize = CGSizeMake(700, 600);
+    
+    CGRect rect1 = [self.addButton.superview.superview convertRect:self.addButton.frame fromView:self.addButton.superview];
+    
+    [self.myEquipSelectionPopover presentPopoverFromRect:rect1 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated: YES];
+    
+    //need to reprogram the target of the save button
+    [genericEquipVCntrllr.continueButton removeTarget:genericEquipVCntrllr action:NULL forControlEvents:UIControlEventAllEvents];
+    [genericEquipVCntrllr.continueButton addTarget:self action:@selector(continueAddEquipItem:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+
+-(IBAction)continueAddEquipItem:(id)sender{
+    
+    //replaces the uniqueItem key from "1" to an accurate value
+    [self.privateRequestManager justConfirm];
+    
+    [self.myEquipSelectionPopover dismissPopoverAnimated:YES];
+
+    //renew the list of joins by going to the data layer
+    [self renewTheArrayWithScheduleTracking_foreignKey:self.myScheduleRequestItem.key_id];
+    
+    //this is necessary
+    [self.myEquipCollection reloadData];
+}
 
 
 #pragma mark - staff picker method

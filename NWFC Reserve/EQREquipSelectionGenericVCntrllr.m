@@ -32,11 +32,13 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* topGuideLayoutThingy;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* bottomGuideLayoutThingy;
 
+//options button
 @property (strong, nonatomic) EQREquipOptionsTableVC* optionsVC;
 @property (strong, nonatomic) UIPopoverController* optionsPopover;
-//@property BOOL showAllEquipFlag;
-//@property BOOL allowSameDayFlag;
-//@property BOOL allowConflictFlag;
+
+//notes button
+@property (strong, nonatomic) IBOutlet UIButton* editNotesButton;
+@property (strong, nonatomic) UIPopoverController* notesPopover;
 
 @end
 
@@ -456,11 +458,6 @@
     //show popover
     [self.optionsPopover presentPopoverFromRect:self.listAllEquipButton.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
-
-    
-    
- 
-    
 }
 
 -(void)optionsSelectionMade{
@@ -483,6 +480,68 @@
     //reload the view
     [self renewTheViewWithRequestManager:requestManager];
 }
+
+
+-(IBAction)notesButtonTapped:(id)sender{
+    
+    EQRNotesVC* notesVC = [[EQRNotesVC alloc] initWithNibName:@"EQRNotesVC" bundle:nil];
+    
+    EQRScheduleRequestManager* requestManager;
+    if (self.privateRequestManagerFlag){
+        requestManager = self.privateRequestManager;
+    }else{
+        requestManager = [EQRScheduleRequestManager sharedInstance];
+        
+    }
+    
+    notesVC.delegate = self;
+    
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:notesVC];
+    self.notesPopover = popOver;
+    [self.notesPopover setPopoverContentSize:CGSizeMake(320.f, 400.f)];
+    
+    CGRect rect1 = [self.editNotesButton.superview.superview convertRect:self.editNotesButton.frame fromView:self.editNotesButton.superview];
+    
+    //present popOver
+    [self.notesPopover presentPopoverFromRect:rect1 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    //must be after presentation
+    [notesVC initialSetupWithScheduleRequest:requestManager.request];
+
+    
+    
+    }
+
+
+-(void)retrieveNotesData:(NSString*)noteText{
+    
+    //update request
+    EQRScheduleRequestManager* requestManager;
+    if (self.privateRequestManagerFlag){
+        requestManager = self.privateRequestManager;
+    }else{
+        requestManager = [EQRScheduleRequestManager sharedInstance];
+    }
+    
+    requestManager.request.notes = noteText;
+    
+    //dismiss popover
+    [self.notesPopover dismissPopoverAnimated:YES];
+    
+    //release delegate status
+    [(EQRNotesVC*)[self.notesPopover contentViewController] setDelegate:nil];
+    
+    //dealloc popover
+    self.notesPopover = nil;
+}
+
+
+-(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
+    
+    //dealloc popover
+    self.notesPopover = nil;
+}
+
 
 
 #pragma mark - equipment cell buttons

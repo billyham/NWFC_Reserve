@@ -905,7 +905,9 @@
     //must manually set the size, cannot be wider than 600px!!!!???? But seems to work ok at 800 anyway???
     self.myAddEquipPopover.popoverContentSize = CGSizeMake(700, 600);
     
-    [self.myAddEquipPopover presentPopoverFromRect:self.addButtonView.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated: YES];
+    CGRect rect1 = [self.addButtonView.superview.superview convertRect:self.addButtonView.frame fromView:self.addButtonView.superview];
+    
+    [self.myAddEquipPopover presentPopoverFromRect:rect1 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated: YES];
     
     //need to reprogram the target of the save button
     [genericEquipVCntrllr.continueButton removeTarget:genericEquipVCntrllr action:NULL forControlEvents:UIControlEventAllEvents];

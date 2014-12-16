@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRCheckVCntrllr">
             <connections>
+                <outlet property="addButton" destination="eTA-kD-Iaw" id="H36-TP-e6d"/>
                 <outlet property="myEquipCollection" destination="fVz-SU-K6t" id="iPW-h8-2sF"/>
                 <outlet property="nameTextLabel" destination="XRl-J1-VbJ" id="cE4-b1-0lq"/>
                 <outlet property="tableTopGuideConstraint" destination="e15-H8-44r" id="xnc-fH-enb"/>
@@ -150,6 +151,9 @@
                             <state key="normal" title="Add Item">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
+                            <connections>
+                                <action selector="addEquipItem:" destination="-1" eventType="touchUpInside" id="sDh-wY-YRj"/>
+                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rXR-td-KJn">
                             <rect key="frame" x="382" y="10" width="142" height="30"/>

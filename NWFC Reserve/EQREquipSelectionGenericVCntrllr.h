@@ -10,9 +10,10 @@
 #import <UIKit/UIKit.h>
 #import "EQREquipItemCell.h"
 #import "EQREquipOptionsTableVC.h"
+#import "EQRNotesVC.h"
 
 
-@interface EQREquipSelectionGenericVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREquipOptionsDelegate>{
+@interface EQREquipSelectionGenericVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREquipOptionsDelegate, EQRNoteDelegate, UIPopoverControllerDelegate>{
     
     
 }
@@ -25,6 +26,9 @@
 
 //equip options delegate method
 -(void)optionsSelectionMade;
+
+//notes delegate method
+-(void)retrieveNotesData:(NSString*)noteText;
 
 @end
 
