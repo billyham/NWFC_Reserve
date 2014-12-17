@@ -390,7 +390,7 @@
     [self.session addOutput:output];
     
     // see what types are supported (do this after adding otherwise the output reports nothing supported
-    NSSet *potentialDataTypes = [NSSet setWithArray:@[AVMetadataObjectTypeQRCode]];
+    NSSet *potentialDataTypes = [NSSet setWithArray:@[AVMetadataObjectTypeQRCode, AVMetadataObjectTypeCode39Code]];
     
     NSMutableArray *supportedMetaDataTypes = [NSMutableArray array];
     for(NSString *availableMetadataObject in output.availableMetadataObjectTypes) {
@@ -567,73 +567,89 @@
             continue;
         }
         
-        //change the data layer
-        //create a new schedule_equip_join object
-        //retrieve the key_id of the join?
-        
-        NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.scheduleRequestKeyID, nil];
-        NSArray* secondArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", uniqueItemSubString, nil];
-        NSArray* thirdArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", titleItemSubString, nil];
-        NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
-        
-        NSString* returnString = [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:topArray];
-        
-//        NSLog(@"this is the new join key: %@", returnString);
-        
+        //also confirm that the unique key object exists!!!
         //________create a new join item to add to the local ivar
         EQRScheduleTracking_EquipmentUnique_Join* newJoinToAdd = [[EQRScheduleTracking_EquipmentUnique_Join alloc] init];
-        newJoinToAdd.key_id = returnString;
-        newJoinToAdd.scheduleTracking_foreignKey = self.scheduleRequestKeyID;
-        newJoinToAdd.equipTitleItem_foreignKey = titleItemSubString;
-        newJoinToAdd.equipUniqueItem_foreignKey = uniqueItemSubString;
-        
         NSArray* fourthArray = [NSArray arrayWithObjects:@"key_id", uniqueItemSubString, nil];
         NSArray* tipTopArray = [NSArray arrayWithObject:fourthArray];
-        
         [webData queryWithLink:@"EQGetEquipmentUnique.php" parameters:tipTopArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
             
-            newJoinToAdd.name = [(EQREquipUniqueItem*)[muteArray objectAtIndex:0] name];
-            newJoinToAdd.distinquishing_id = [(EQREquipUniqueItem*) [muteArray objectAtIndex:0] distinquishing_id];
-        }];
-        
-        
-        
-        
-        //_______          MUST BE UPDATED BECAUSE NOW WE USE A STRUCTURED ARRAY          _______
-        //add join object to array ivar
-        [self.arrayOfEquipJoins addObject:newJoinToAdd];
-        
-        self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins];
-        //_______         MUST BE UPDATED BECAUSE NOW WE USE A STRUCTURED ARRAY         _______
-        
-        [self.myEquipCollection reloadData];
-        
-        
-        //________move collection view to row with new object.
-        //________when cell is not in view (because at the bottom of a long list) the switch doesn't receive the notification and get flipped
-        [self.arrayOfEquipJoinsWithStructure enumerateObjectsUsingBlock:^(NSArray* subArray, NSUInteger idx, BOOL *stop) {
-            
-            [subArray enumerateObjectsUsingBlock:^(EQRScheduleTracking_EquipmentUnique_Join* joinObj, NSUInteger subIdx, BOOL *stop) {
+            if ([muteArray count] > 0){
                 
-                if (joinObj == newJoinToAdd){
+                //only continue with a confirmed Unique Item present
+                //change the data layer
+                //create a new schedule_equip_join object
+                //retrieve the key_id of the join?
+                
+                
+                newJoinToAdd.name = [(EQREquipUniqueItem*)[muteArray objectAtIndex:0] name];
+                newJoinToAdd.distinquishing_id = [(EQREquipUniqueItem*) [muteArray objectAtIndex:0] distinquishing_id];
+                newJoinToAdd.scheduleTracking_foreignKey = self.scheduleRequestKeyID;
+                newJoinToAdd.equipTitleItem_foreignKey = titleItemSubString;
+                newJoinToAdd.equipUniqueItem_foreignKey = uniqueItemSubString;
+                
+                //create the join object in the database and retrieve key_id
+                NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.scheduleRequestKeyID, nil];
+                NSArray* secondArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", uniqueItemSubString, nil];
+                NSArray* thirdArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", titleItemSubString, nil];
+                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
+                
+                NSString* returnString = [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:topArray];
+                
+                newJoinToAdd.key_id = returnString;
+                
+
+                
+                //_______          MUST BE UPDATED BECAUSE NOW WE USE A STRUCTURED ARRAY          _______
+                //add join object to array ivar
+                [self.arrayOfEquipJoins addObject:newJoinToAdd];
+                
+                self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins];
+                //_______         MUST BE UPDATED BECAUSE NOW WE USE A STRUCTURED ARRAY         _______
+                
+                [self.myEquipCollection reloadData];
+                
+                
+                //________move collection view to row with new object.
+                //________when cell is not in view (because at the bottom of a long list) the switch doesn't receive the notification and get flipped
+                [self.arrayOfEquipJoinsWithStructure enumerateObjectsUsingBlock:^(NSArray* subArray, NSUInteger idx, BOOL *stop) {
                     
-                    NSLog(@"found a match in subarray: %@", newJoinToAdd.name);
-                    
-                    NSIndexPath* matchingIndexPath = [NSIndexPath indexPathForRow:subIdx inSection:idx];
-                    
-                    [self.myEquipCollection scrollToItemAtIndexPath:matchingIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
-                }
-            }];
+                    [subArray enumerateObjectsUsingBlock:^(EQRScheduleTracking_EquipmentUnique_Join* joinObj, NSUInteger subIdx, BOOL *stop) {
+                        
+                        if (joinObj == newJoinToAdd){
+                            
+                            NSLog(@"found a match in subarray: %@", newJoinToAdd.name);
+                            
+                            NSIndexPath* matchingIndexPath = [NSIndexPath indexPathForRow:subIdx inSection:idx];
+                            
+                            [self.myEquipCollection scrollToItemAtIndexPath:matchingIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
+                        }
+                    }];
+                }];
+                
+                //flip the switch in the row cell
+                //alert matching row cell content with a notification
+                NSDictionary* newDic = [NSDictionary dictionaryWithObject:uniqueItemSubString forKey:@"keyID"];
+                
+                [self performSelector:@selector(delayedNotification:) withObject:newDic afterDelay:0.25];
+                
+                //add text to the display update
+                [self showUpdateDisplay:[NSString stringWithFormat:@"Added: %@ #%@", newJoinToAdd.name, newJoinToAdd.distinquishing_id]];
+                
+                
+                
+            }else{
+                
+                //can't find this uniqueKey in the database
+                //exit and alert user
+                //____!!!!!!  NEED TO INCLUDE THE TITLE ITEM NAME  !!!!!_______
+                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Not Found" message:[NSString stringWithFormat:@"Cannot find this item in the database"]  delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                
+                [alertView show];
+            }
         }];
         
-        //flip the switch in the row cell
-        //alert matching row cell content with a notification
-        NSDictionary* newDic = [NSDictionary dictionaryWithObject:uniqueItemSubString forKey:@"keyID"];
         
-        [self performSelector:@selector(delayedNotification:) withObject:newDic afterDelay:0.25];
-        
-        //add text to the display update
-        [self showUpdateDisplay:[NSString stringWithFormat:@"Added: %@ #%@", newJoinToAdd.name, newJoinToAdd.distinquishing_id]];
         
         
     
