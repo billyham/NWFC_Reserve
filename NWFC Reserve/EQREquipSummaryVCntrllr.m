@@ -206,7 +206,7 @@
     
     //reset eveything back to 0 (which in turn sends an nsnotification)
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-    [requestManager dismissRequest];
+    [requestManager dismissRequest:YES];
     
 }
 
@@ -226,7 +226,7 @@
         
         //reset eveything back to 0 (which in turn sends an nsnotification)
         EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-        [requestManager dismissRequest];
+        [requestManager dismissRequest:NO];
     }
 }
 
@@ -243,7 +243,7 @@
     
     //reset eveything back to 0 (which in turn sends an nsnotification)
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-    [requestManager dismissRequest];
+    [requestManager dismissRequest:NO];
     
 }
 

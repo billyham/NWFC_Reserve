@@ -143,6 +143,11 @@
         self.navigationController.navigationBar.barTintColor = nil;
     }
     
+    if (self.privateRequestManagerFlag){
+        
+        //hide the notes button when in a popover
+        [self.editNotesButton setHidden:YES];
+    }
     
     //add constraints
     //______this MUST be added programmatically because you CANNOT specify the topLayoutGuide of a VC in a nib______
@@ -423,7 +428,7 @@
         requestManager = [EQRScheduleRequestManager sharedInstance];
 
     }
-    [requestManager dismissRequest];
+    [requestManager dismissRequest:YES];
     
 }
 

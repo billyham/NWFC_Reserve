@@ -37,7 +37,7 @@
 
 +(EQRScheduleRequestManager*)sharedInstance;
 -(void)createNewRequest;
--(void)dismissRequest;
+-(void)dismissRequest:(BOOL)isCanceled;
 -(void)resetEquipListAndAvailableQuantites;
 -(NSArray*)retrieveAllEquipUniqueItems;
 -(void)collapseOrExpandSectionInSchedule:(NSString*)chosenSection;

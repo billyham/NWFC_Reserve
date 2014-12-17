@@ -80,7 +80,7 @@
 }
 
 
--(void)dismissRequest{
+-(void)dismissRequest:(BOOL)isCanceled{
     
     //set request item's properties to nil
 //    if(self.request){
@@ -89,6 +89,22 @@
 //        self.request.classTitle_foreignKey = nil;
 //        
 //    }
+
+    if (isCanceled == YES){
+        
+        //notes will have been saved immediately to the data layer
+        //must alter the existing scheduleRequest to eliminate any notes
+        //udpate data layer
+        
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        
+        NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.request.key_id, nil];
+        NSArray* secondArray = [NSArray arrayWithObjects:@"notes", @"", nil];
+        NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+        
+        //php call
+        [webData queryForStringWithLink:@"EQAlterNotesInScheduleRequest.php" parameters:topArray];
+    }
     
     //set request item to nil
     self.request = nil;
@@ -96,6 +112,8 @@
     //void any local ivars that view controllers have established for keeping track of selections and flags
     //send by notification!!
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:self userInfo:nil];
+    
+
     
 }
 

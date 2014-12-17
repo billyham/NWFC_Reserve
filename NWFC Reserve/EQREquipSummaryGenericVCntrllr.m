@@ -306,7 +306,7 @@
     
     //reset eveything back to 0 (which in turn sends an nsnotification)
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-    [requestManager dismissRequest];
+    [requestManager dismissRequest:YES];
     
 }
 
@@ -328,7 +328,7 @@
         [self.navigationController popToRootViewControllerAnimated:YES];
         
         //reset eveything back to 0 (which in turn sends an nsnotification)
-        [requestManager dismissRequest];
+        [requestManager dismissRequest:NO];
     }
 }
 
@@ -347,7 +347,7 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
     
     //reset eveything back to 0 (which in turn sends an nsnotification)
-    [requestManager dismissRequest];
+    [requestManager dismissRequest:NO];
     
 }
 

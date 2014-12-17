@@ -32,6 +32,18 @@
     self.myTextView.text = requestItem.notes;
     self.myRequestItem = requestItem;
     
+    //get any existing notes text
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.myRequestItem.key_id, nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
+    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+       
+        for (EQRScheduleRequestItem* object in muteArray){
+            
+            self.myTextView.text = object.notes;
+        }
+    }];
 }
 
 
