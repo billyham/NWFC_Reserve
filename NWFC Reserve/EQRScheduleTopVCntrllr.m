@@ -1060,32 +1060,46 @@
                     
                     [newAlertView show];
                     
-                }else{
+                }else{  //titleKey remains the same
                     
-                    //or continue as planned...
-                    
-                    //now update the equipUnique and equipTitle values
-                    equipUniqueItem_foreignKey = [(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] key_id];
-                    
-                    thisJoin.equipUniqueItem_foreignKey = equipUniqueItem_foreignKey;
-                    
-                    thisJoin.equipTitleItem_foreignKey = equipTitleItem_foreignKey;
-                    
-                    //then reload the collection views in the former and new rowCells
-                    [self.myMasterScheduleCollectionView reloadData];
-                    
-                    
-                    //webData query to change equipKeyID on schedule_equip_join (or delete previous and create a new one)
-                    EQRWebData* webData = [EQRWebData sharedInstance];
-                    NSArray* firstArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", equipUniqueItem_foreignKey, nil];
-                    NSArray* secondArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", equipTitleItem_foreignKey, nil];
-                    NSArray* thirdArray = [NSArray arrayWithObjects:@"key_id", joinKey_id, nil];
-                    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
-                    
-                    [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
-                    
-                    
-                    [self.movingNestedCellView removeFromSuperview];
+                    //alert if selected an item that has serious service issues
+                    if ([[(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] status_level] integerValue] >= 5){
+                        
+                        //save joinkey and indexpath to use in alert delegate method
+                        self.thisTempJoinKey = joinKey_id;
+                        self.thisTempIndexPath = indexPathForRowCell;
+                        self.thisTempNewRowInt = newRowInt;
+                        
+                        //landed on item that has serious service issues
+                        UIAlertView* issueAlertView = [[UIAlertView alloc] initWithTitle:@"Equipment Down" message:@"You have selected an item that is not available or non-functioning properly" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles: @"Continue", nil];
+                        
+                        [issueAlertView show];
+                        
+                    }else{  //continue as planned
+                        
+                        //now update the equipUnique and equipTitle values
+                        equipUniqueItem_foreignKey = [(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] key_id];
+                        
+                        thisJoin.equipUniqueItem_foreignKey = equipUniqueItem_foreignKey;
+                        
+                        thisJoin.equipTitleItem_foreignKey = equipTitleItem_foreignKey;
+                        
+                        //then reload the collection views in the former and new rowCells
+                        [self.myMasterScheduleCollectionView reloadData];
+                        
+                        
+                        //webData query to change equipKeyID on schedule_equip_join (or delete previous and create a new one)
+                        EQRWebData* webData = [EQRWebData sharedInstance];
+                        NSArray* firstArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", equipUniqueItem_foreignKey, nil];
+                        NSArray* secondArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", equipTitleItem_foreignKey, nil];
+                        NSArray* thirdArray = [NSArray arrayWithObjects:@"key_id", joinKey_id, nil];
+                        NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
+                        
+                        [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
+                        
+                        
+                        [self.movingNestedCellView removeFromSuperview];
+                    }
                 }
             }
         }
@@ -1266,8 +1280,39 @@
         myContentViewController.myRowLabel.text = myTitleString;
         
         //determine if service issues should be visible or hidden (default hidden)
-        myContentViewController.serviceIssuesButton.hidden = YES;
+        //does a servcie issue exist?
+        NSString* issue_short_name = [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] issue_short_name];
+        if ([issue_short_name isEqualToString:@""]){
+            
+            //no issues, hide button
+            myContentViewController.serviceIssuesButton.hidden = YES;
+            
+        }else{
+            
+            
+            //show issue button
+            myContentViewController.serviceIssuesButton.hidden = NO;
+            [myContentViewController.serviceIssuesButton setTitle:issue_short_name forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+            
+            //set color of button
+            NSString* statusLevel = [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] status_level];
+            NSInteger statusLevelInt = [statusLevel integerValue];
+            if (statusLevelInt >= 5){  //outstanding issue that should prevent selection
+                
+                [myContentViewController.serviceIssuesButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+                
+                //change background color
+                cell.backgroundColor = [UIColor lightGrayColor];
+                
+            }else if((statusLevelInt == 3) || (statusLevelInt == 4)){  //flawed but functional
+                
+                [myContentViewController.serviceIssuesButton setTitleColor:[UIColor brownColor] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+            }
+        }
         
+        //text label on issue button must be altered for two lines
+        myContentViewController.serviceIssuesButton.titleLabel.numberOfLines = 2;
+        myContentViewController.serviceIssuesButton.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         
         
         return cell;

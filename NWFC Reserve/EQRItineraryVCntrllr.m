@@ -1239,6 +1239,11 @@
 
 
 
+-(void)dealloc{
+    
+    self.privateRequestManager = nil;
+}
+
 
 
 #pragma mark - memory warning

@@ -84,6 +84,9 @@
     
     self.myDeleteButton = deleteButton;
     
+    
+    
+    
     //label
     UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 0, 295, 30)];
     self.titleLabel = thisLabel;

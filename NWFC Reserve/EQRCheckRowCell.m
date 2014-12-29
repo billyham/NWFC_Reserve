@@ -148,8 +148,28 @@
     self.myCheckContent.equipNameLabel.text = equipJoin.name;
     [self.myCheckContent.distIDLabel setTitle:equipJoin.distinquishing_id forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
     
-    //hide service issue button
-    [self.myCheckContent.serviceIssue setHidden:YES];
+    //service issue button
+    if ([equipJoin.issue_short_name isEqualToString:@""]){  //no service issues
+        
+        [self.myCheckContent.serviceIssue setHidden:YES];
+        
+    }else{  //show service issues
+        
+        [self.myCheckContent.serviceIssue setHidden:NO];
+        
+        [self.myCheckContent.serviceIssue setTitle:equipJoin.issue_short_name forState:UIControlStateHighlighted & UIControlStateNormal & UIControlStateSelected];
+        
+        //set color if status level is 3 or above
+        if ([equipJoin.status_level integerValue] >= 5){  //damaged, make text red
+            
+            [self.myCheckContent.serviceIssue setTitleColor:[UIColor redColor] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
+            
+        }else if (([equipJoin.status_level integerValue] == 3) || ([equipJoin.status_level integerValue] == 4)){
+            
+            [self.myCheckContent.serviceIssue setTitleColor:[UIColor brownColor] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
+        }
+    }
+    
     
     //setup deletion button and background color based on deletionFlag
     [self.myCheckContent initialSetupWithDeleteFlag:deleteFlag];

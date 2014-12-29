@@ -25,6 +25,12 @@
 //properties used for check in/out DistIDPickerVC to hide unavailable uniqueItems
 @property BOOL unavailableFlag;
 
+//properties from service issues
+@property (strong, nonatomic) NSString* issue_short_name;
+//@property BOOL hasIssuesFlag;
+//@property BOOL hasSeriousIssuesFlag;
+//@property (strong, nonatomic) NSString* status_level_numeric;
+
 //properties derived from the matching schedule_equip_join
 //@property (strong, nonatomic) NSString* prep_flag;
 //@property (strong, nonatomic) NSString* checkout_flag;

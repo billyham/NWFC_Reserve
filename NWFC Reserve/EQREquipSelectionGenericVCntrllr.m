@@ -430,6 +430,9 @@
     }
     [requestManager dismissRequest:YES];
     
+    //_____!!!!!! is this OK, does it get triggered too soon?   !!!!_____
+    requestManager = nil;
+    
 }
 
 
@@ -688,7 +691,7 @@
     if (self.privateRequestManagerFlag){
         requestManager = self.privateRequestManager;
     }else{
-        NSLog(@"INSIDE THE ALLOCATE GEAR LIST AND IS USING SHARED REQUEST MANAGER");
+//        NSLog(@"INSIDE THE ALLOCATE GEAR LIST AND IS USING SHARED REQUEST MANAGER");
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
     
@@ -974,6 +977,12 @@
 
 
 #pragma mark - memory warning
+
+-(void)dealloc{
+    
+    self.privateRequestManager = nil;
+}
+
 
 - (void)didReceiveMemoryWarning
 {

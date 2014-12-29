@@ -986,6 +986,10 @@
     //extract the unique's key as a string
     NSString* thisIsTheKey = [(EQREquipUniqueItem*)distEquipUniqueItem key_id];
     NSString* thisIsTheDistID = [(EQREquipUniqueItem*)distEquipUniqueItem distinquishing_id];
+    NSLog(@"this is the issue_service_name text: %@", [(EQREquipUniqueItem*)distEquipUniqueItem issue_short_name]);
+    NSString* thisIsTheIssueShortName = [(EQREquipUniqueItem*)distEquipUniqueItem issue_short_name];
+    NSString* thisIsTheStatusLevel = [(EQREquipUniqueItem*)distEquipUniqueItem status_level];
+    
     
     EQRScheduleTracking_EquipmentUnique_Join* saveThisJoin;
     
@@ -996,6 +1000,10 @@
             
             [joinObj setEquipUniqueItem_foreignKey:thisIsTheKey];
             [joinObj setDistinquishing_id:thisIsTheDistID];
+            
+            //_____need to know what service issues are a part of this new equipUnique and assign to local var in array______
+            [joinObj setIssue_short_name:thisIsTheIssueShortName];
+            [joinObj setStatus_level:thisIsTheStatusLevel];
             
             saveThisJoin = joinObj;
             break;
@@ -1016,7 +1024,6 @@
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSString* returnString = [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
     NSLog(@"this is the return string: %@", returnString);
-    
     
     
     //remove the popover
@@ -1219,6 +1226,7 @@
 -(void)dealloc{
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    self.privateRequestManager = nil;
 }
 
 #pragma mark - memory warning

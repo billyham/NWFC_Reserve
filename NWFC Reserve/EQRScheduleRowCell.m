@@ -53,7 +53,7 @@
 //    self.titleLabel.backgroundColor = [UIColor clearColor];
 //    
 //    [self.contentView addSubview:self.titleLabel];
-    
+
 
     //create a uicollectionview object programatically
     EQRScheduleNestedDayLayout* thisNestedDayLayout = [[EQRScheduleNestedDayLayout alloc] init];
@@ -63,7 +63,9 @@
     //assign the dateForShow property to the layout object
     thisNestedDayLayout.scheduleDateForShow = dateForShow;
 
-    
+    //______this doesn't do anything______
+    //set preferred max width on label
+//    self.cellContentVC.myRowLabel.preferredMaxLayoutWidth = 10;
     
     CGRect thisRect = CGRectMake(EQRScheduleLengthOfEquipUniqueLabel, 0, (1024 - EQRScheduleLengthOfEquipUniqueLabel), 30);
     UICollectionView* thisCollectionView = [[UICollectionView alloc] initWithFrame:thisRect collectionViewLayout:thisNestedDayLayout];

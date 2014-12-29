@@ -121,7 +121,7 @@
             
             if ([thisEquipUniqueItem.key_id isEqualToString:thisHereJoin.equipUniqueItem_foreignKey]){
                 
-                NSLog(@"marking flag is GO");
+//                NSLog(@"marking flag is GO");
                 //mark as unavailable using ivar BOOL
                 thisEquipUniqueItem.unavailableFlag = YES;
             }
@@ -169,12 +169,40 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
-    // Configure the cell...
+    // Configure the cell... with attributed strings
+    //name and dist id
+    NSString* nameAndDistID = [NSString stringWithFormat:@"%@: %@  ",
+    [(EQREquipUniqueItem*)[self.arrayOfEquipUniques objectAtIndex:indexPath.row] name],
+    [(EQREquipUniqueItem*)[self.arrayOfEquipUniques objectAtIndex:indexPath.row] distinquishing_id]];
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%@: %@",
-                           [(EQREquipUniqueItem*)[self.arrayOfEquipUniques objectAtIndex:indexPath.row] name],
-                           [(EQREquipUniqueItem*)[self.arrayOfEquipUniques objectAtIndex:indexPath.row] distinquishing_id]];
+    NSString* issueString = [(EQREquipUniqueItem*) [self.arrayOfEquipUniques objectAtIndex:indexPath.row] issue_short_name];
+    NSString* status_level = [(EQREquipUniqueItem*) [self.arrayOfEquipUniques objectAtIndex:indexPath.row] status_level];
+    NSInteger status_level_int = [status_level integerValue];
     
+    UIFont* normalFont = [UIFont systemFontOfSize:12];
+    UIColor* thisChosenColor;
+    
+    if (status_level_int >=5){
+        thisChosenColor = [UIColor redColor];
+    }else if ((status_level_int == 3) || (status_level_int == 4)){
+        thisChosenColor = [UIColor brownColor];
+    }else{
+        thisChosenColor = [UIColor blueColor];
+    }
+    
+    NSDictionary* arrayAttA = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName, nil];
+    NSAttributedString* thisAttString = [[NSAttributedString alloc] initWithString:nameAndDistID attributes:arrayAttA];
+    NSMutableAttributedString* finalAttString = [[NSMutableAttributedString alloc] initWithAttributedString:thisAttString];
+    
+    NSDictionary* arrayAttB = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName,
+                               thisChosenColor, NSForegroundColorAttributeName, nil];
+    NSAttributedString* thatAttString = [[NSAttributedString alloc] initWithString:issueString attributes:arrayAttB];
+    [finalAttString appendAttributedString:thatAttString];
+
+    //set text in cell
+    [cell.textLabel setAttributedText:finalAttString];
+    
+    //gray out if unavailable
     if ([(EQREquipUniqueItem*)[self.arrayOfEquipUniques objectAtIndex:indexPath.row] unavailableFlag] == YES){
         
         //unavailable selection, gray out
@@ -271,7 +299,6 @@
     self.delegate = nil;
     self.privateRequestManager = nil;
     self.arrayOfEquipUniques = nil;
-    
     
 }
 

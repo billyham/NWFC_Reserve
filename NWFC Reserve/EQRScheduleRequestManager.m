@@ -94,7 +94,7 @@
         
         //notes will have been saved immediately to the data layer
         //must alter the existing scheduleRequest to eliminate any notes
-        //udpate data layer
+        //update data layer
         
         EQRWebData* webData = [EQRWebData sharedInstance];
         
@@ -802,6 +802,8 @@
             }
         }
     }
+    
+    //____!!!!!!  further reduce the available list of items by removing the damaged equipment from play   !!!!!______
 }
 
 

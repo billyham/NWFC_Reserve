@@ -781,6 +781,20 @@ const int intEQREquipUniqueItem = 8;
     }
     
     
+    //properties for servcie issues (and EquipUniqueItem objects)
+    if ([elementName isEqualToString:@"issue_short_name"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"status_level_numeric"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    
 }
 
 
@@ -1442,6 +1456,31 @@ const int intEQREquipUniqueItem = 8;
         }
         return;
     }
+
+    
+    //Servcie Issues properties
+    
+    if ([prop isEqualToString:@"issue_short_name"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(issue_short_name)]){
+            
+            [(EQREquipUniqueItem*)self.currentThing setIssue_short_name:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+//    if ([prop isEqualToString:@"status_level_numeric"]){
+//        
+//        if ([self.currentThing respondsToSelector:@selector(status_level_numeric)]){
+//            
+//            [(EQREquipUniqueItem*)self.currentThing setStatus_level_numeric:self.currentValue];
+//            
+//            self.currentValue = nil;
+//        }
+//        return;
+//    }
     
     
     
