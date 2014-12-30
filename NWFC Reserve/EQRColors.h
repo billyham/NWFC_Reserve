@@ -27,6 +27,9 @@ extern NSString* EQRColorStatusNil;
 extern NSString* EQRColorStatusGoing;
 extern NSString* EQRColorStatusReturning;
 
+extern NSString* EQRColorIssueDescriptive;
+extern NSString* EQRColorIssueMinor;
+extern NSString* EQRColorIssueSerious;
 
 
 @interface EQRColors : NSObject

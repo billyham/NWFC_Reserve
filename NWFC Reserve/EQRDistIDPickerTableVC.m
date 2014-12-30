@@ -12,6 +12,7 @@
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRWebData.h"
 #import "EQRDataStructure.h"
+#import "EQRColors.h"
 
 @interface EQRDistIDPickerTableVC ()
 
@@ -181,13 +182,16 @@
     
     UIFont* normalFont = [UIFont systemFontOfSize:12];
     UIColor* thisChosenColor;
+    EQRColors* colors = [EQRColors sharedInstance];
     
     if (status_level_int >=5){
-        thisChosenColor = [UIColor redColor];
+        thisChosenColor = [colors.colorDic objectForKey:EQRColorIssueSerious];  //serious issue
     }else if ((status_level_int == 3) || (status_level_int == 4)){
-        thisChosenColor = [UIColor brownColor];
+        thisChosenColor = [colors.colorDic objectForKey:EQRColorIssueMinor];   //issue not serious
+    }else if (status_level_int == 2){
+        thisChosenColor = [colors.colorDic objectForKey:EQRColorIssueDescriptive];  //issue is descriptive note
     }else{
-        thisChosenColor = [UIColor blueColor];
+        issueString = @"";  //status is resolved, so hide any issues
     }
     
     NSDictionary* arrayAttA = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName, nil];

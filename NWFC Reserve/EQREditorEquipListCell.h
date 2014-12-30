@@ -7,10 +7,12 @@
 //
 
 #import "EQRCellTemplate.h"
+#import "EQREditorEquipListContentVC.h"
 
 @interface EQREditorEquipListCell : EQRCellTemplate
 
 @property BOOL toBeDeletedFlag;
+@property (strong, nonatomic) EQREditorEquipListContentVC* myContentVC;
 
 -(void)initialSetupWithTitle:(NSString*) titleName keyID:(NSString*)keyID deleteFlag:(BOOL)deleteFlag;
 

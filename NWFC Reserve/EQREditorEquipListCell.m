@@ -9,11 +9,13 @@
 #import "EQREditorEquipListCell.h"
 #import "EQRColors.h"
 #import "EQRGlobals.h"
+#import "EQRScheduleTracking_EquipmentUnique_Join.h"
 
 @interface EQREditorEquipListCell ()
 
+@property (nonatomic, strong) EQRScheduleTracking_EquipmentUnique_Join* myJoinObject;
 @property (nonatomic, strong) NSString* myKey_id;
-@property (nonatomic, strong) IBOutlet UIButton* myDeleteButton;
+@property (nonatomic, strong) IBOutlet UIButton* myDeleteButtonx;
 
 @end
 
@@ -23,7 +25,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
+        
     }
     return self;
 }
@@ -34,17 +36,38 @@
     self.myKey_id = keyID;
     self.toBeDeletedFlag = deleteFlag;
     
+    EQREditorEquipListContentVC* contentView = [[EQREditorEquipListContentVC alloc] initWithNibName:@"EQREditorEquipListContentVC" bundle:nil];
+    self.myContentVC = contentView;
+    
+    //add content view to view
+    [self.contentView addSubview:self.myContentVC.view];
+    
+    
+    //_____ add constraints to content view
+    self.myContentVC.view.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    NSDictionary* viewsDictionary = @{@"myContentVC":self.myContentVC.view};
+    
+    NSArray* constraint_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[myContentVC]-0-|" options:0 metrics:nil views:viewsDictionary];
+    
+    NSArray* constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[myContentVC]-0-|" options:0 metrics:nil views:viewsDictionary];
+    
+    [[self.myContentVC.view superview] addConstraints:constraint_POS_V];
+    [[self.myContentVC.view superview] addConstraints:constraint_POS_VB];
+    
+    
+    
     NSString* thisButtonText;
     
     if (self.toBeDeletedFlag){
         
-        self.backgroundColor = [UIColor redColor];
-        thisButtonText = @"cancel";
+        self.myContentVC.view.backgroundColor = [UIColor redColor];
+        thisButtonText = @"Cancel";
         
     }else {
         
-        self.backgroundColor = [UIColor whiteColor];
-        thisButtonText = @"delete";
+        self.myContentVC.view.backgroundColor = [UIColor whiteColor];
+        thisButtonText = @"Delete";
     }
     
     //size of cell depends on size of collection view based on orientation
@@ -64,37 +87,28 @@
     EQRColors* colors = [EQRColors sharedInstance];
     
     //delete button
-    UIButton* deleteButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    deleteButton.frame = CGRectMake(0, 0, 100, self.frame.size.height);
-    deleteButton.titleLabel.text = thisButtonText;
-    deleteButton.titleLabel.font = [UIFont systemFontOfSize:12];
-    [deleteButton setTitle:thisButtonText forState:UIControlStateNormal];
-    [deleteButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    [deleteButton setTitle:thisButtonText forState:UIControlStateHighlighted];
-    [deleteButton setTitleColor:[colors.colorDic objectForKey:EQRColorLightBlue] forState:UIControlStateHighlighted];
-    [deleteButton setTitle: thisButtonText forState:UIControlStateSelected];
-    [deleteButton setTitleColor:[UIColor blueColor] forState:UIControlStateSelected];
-    deleteButton.reversesTitleShadowWhenHighlighted = YES;
-    deleteButton.userInteractionEnabled = YES;
+//    UIButton* deleteButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//    deleteButton.frame = CGRectMake(0, 0, 100, self.frame.size.height);
+    
+//    deleteButton.titleLabel.font = [UIFont systemFontOfSize:12];
+    [self.myContentVC.myDeleteButton setTitle:thisButtonText forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+    [self.myContentVC.myDeleteButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal & UIControlStateSelected];
+    [self.myContentVC.myDeleteButton setTitleColor:[colors.colorDic objectForKey:EQRColorLightBlue] forState:UIControlStateHighlighted];
+    self.myContentVC.myDeleteButton.reversesTitleShadowWhenHighlighted = YES;
+    self.myContentVC.myDeleteButton.userInteractionEnabled = YES;
     
     //target of button
-    [deleteButton addTarget:self action:@selector(deleteEquipItem:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.contentView addSubview:deleteButton];
-    
-    self.myDeleteButton = deleteButton;
-    
+    [self.myContentVC.myDeleteButton addTarget:self action:@selector(deleteEquipItem:) forControlEvents:UIControlEventTouchUpInside];
+
     
     
     
     //label
-    UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 0, 295, 30)];
-    self.titleLabel = thisLabel;
-    self.titleLabel.text = titleName;
-    self.titleLabel.font = [UIFont systemFontOfSize:12];
-    self.titleLabel.backgroundColor = [UIColor clearColor];
-    
-    [self.contentView addSubview:self.titleLabel];
+//    UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 0, 295, 30)];
+//    self.titleLabel = thisLabel;
+//    self.myContentVC.myLabel.font = [UIFont systemFontOfSize:12];
+//    self.myContentVC.myLabel.backgroundColor = [UIColor clearColor];
+    self.myContentVC.myLabel.text = titleName;
     
 }
 
@@ -109,12 +123,10 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:EQREquipUniqueToBeDeleted object:nil userInfo:thisDic];
         
         //flag the color of the cell!!
-        self.backgroundColor = [UIColor redColor];
+        self.myContentVC.view.backgroundColor = [UIColor redColor];
         
-        [self.myDeleteButton setTitle:@"cancel" forState:UIControlStateNormal];
-        [self.myDeleteButton setTitle:@"cancel" forState:UIControlStateHighlighted];
-        [self.myDeleteButton setTitle:@"cancel" forState:UIControlStateSelected];
-        
+        [self.myContentVC.myDeleteButton setTitle:@"Cancel" forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+
         self.toBeDeletedFlag = YES;
         
     }else {
@@ -122,11 +134,9 @@
         NSDictionary* thisDic = [NSDictionary dictionaryWithObject:self.myKey_id forKey:@"key_id"];
         [[NSNotificationCenter defaultCenter] postNotificationName:EQREquipUniqueToBeDeletedCancel object:nil userInfo:thisDic];
         
-        self.backgroundColor = [UIColor whiteColor];
+        self.myContentVC.view.backgroundColor = [UIColor whiteColor];
         
-        [self.myDeleteButton setTitle:@"delete" forState:UIControlStateNormal];
-        [self.myDeleteButton setTitle:@"delete" forState:UIControlStateHighlighted];
-        [self.myDeleteButton setTitle:@"delete" forState:UIControlStateSelected];
+        [self.myContentVC.myDeleteButton setTitle:@"Delete" forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
         
         self.toBeDeletedFlag = NO;
     }

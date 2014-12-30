@@ -8,6 +8,7 @@
 
 #import "EQRCheckRowCell.h"
 #import "EQRCheckCellContentVCntrllr.h"
+#import "EQRColors.h"
 
 
 @interface EQRCheckRowCell ()
@@ -36,7 +37,7 @@
                  markedForDeletion:(BOOL)deleteFlag
                          indexPath:(NSIndexPath*)indexPath{
     
-    NSLog(@"inside initialsetupwith equipUnique... new dist id: %@", equipJoin.distinquishing_id);
+//    NSLog(@"inside initialsetupwith equipUnique... new dist id: %@", equipJoin.distinquishing_id);
     
     self.backgroundColor = [UIColor clearColor];
     
@@ -153,20 +154,30 @@
         
         [self.myCheckContent.serviceIssue setHidden:YES];
         
-    }else{  //show service issues
+    } else if([equipJoin.status_level integerValue] < 2){   //service issue exists but it is resolved, so don't show
+        
+        [self.myCheckContent.serviceIssue setHidden:YES];
+        
+    } else {  //show service issues
         
         [self.myCheckContent.serviceIssue setHidden:NO];
         
         [self.myCheckContent.serviceIssue setTitle:equipJoin.issue_short_name forState:UIControlStateHighlighted & UIControlStateNormal & UIControlStateSelected];
         
-        //set color if status level is 3 or above
+        //set color
+        EQRColors* colors = [EQRColors sharedInstance];
+        
+        //if status level is 3 or above
         if ([equipJoin.status_level integerValue] >= 5){  //damaged, make text red
             
-            [self.myCheckContent.serviceIssue setTitleColor:[UIColor redColor] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
+            [self.myCheckContent.serviceIssue setTitleColor:[colors.colorDic objectForKey:EQRColorIssueSerious] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
             
         }else if (([equipJoin.status_level integerValue] == 3) || ([equipJoin.status_level integerValue] == 4)){
             
-            [self.myCheckContent.serviceIssue setTitleColor:[UIColor brownColor] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
+            [self.myCheckContent.serviceIssue setTitleColor:[colors.colorDic objectForKey:EQRColorIssueMinor] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
+        }else{
+            
+            [self.myCheckContent.serviceIssue setTitleColor:[colors.colorDic objectForKey:EQRColorIssueDescriptive] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
         }
     }
     

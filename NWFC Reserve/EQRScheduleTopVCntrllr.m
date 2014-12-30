@@ -1282,31 +1282,41 @@
         //determine if service issues should be visible or hidden (default hidden)
         //does a servcie issue exist?
         NSString* issue_short_name = [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] issue_short_name];
+        
+        NSString* statusLevel = [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] status_level];
+        NSInteger statusLevelInt = [statusLevel integerValue];
+        
         if ([issue_short_name isEqualToString:@""]){
             
             //no issues, hide button
             myContentViewController.serviceIssuesButton.hidden = YES;
             
-        }else{
+        } else if(statusLevelInt < 2){   //service issue exists but it is resolved, so don't show
             
+            myContentViewController.serviceIssuesButton.hidden = YES;
+            
+        }else{
             
             //show issue button
             myContentViewController.serviceIssuesButton.hidden = NO;
             [myContentViewController.serviceIssuesButton setTitle:issue_short_name forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
             
             //set color of button
-            NSString* statusLevel = [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] status_level];
-            NSInteger statusLevelInt = [statusLevel integerValue];
+            EQRColors* colors = [EQRColors sharedInstance];
+            
             if (statusLevelInt >= 5){  //outstanding issue that should prevent selection
                 
-                [myContentViewController.serviceIssuesButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+                [myContentViewController.serviceIssuesButton setTitleColor:[colors.colorDic objectForKey:EQRColorIssueSerious] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
                 
                 //change background color
                 cell.backgroundColor = [UIColor lightGrayColor];
                 
             }else if((statusLevelInt == 3) || (statusLevelInt == 4)){  //flawed but functional
                 
-                [myContentViewController.serviceIssuesButton setTitleColor:[UIColor brownColor] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+                [myContentViewController.serviceIssuesButton setTitleColor:[colors.colorDic objectForKey:EQRColorIssueMinor] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+            }else{
+                
+                [myContentViewController.serviceIssuesButton setTitleColor:[colors.colorDic objectForKey:EQRColorIssueDescriptive] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
             }
         }
         

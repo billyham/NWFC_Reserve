@@ -27,6 +27,10 @@ NSString* EQRColorStatusNil = @"EQRColorStatusNil";
 NSString* EQRColorStatusGoing = @"EQRColorStatusGoing";
 NSString* EQRColorStatusReturning = @"EQRColorStatusReturning";
 
+NSString* EQRColorIssueDescriptive = @"EQRColorIssueDescriptive";
+NSString* EQRColorIssueMinor = @"EQRColorIssueMinor";
+NSString* EQRColorIssueSerious = @"EQRColorIssueSerious";
+
 @implementation EQRColors
 
 
@@ -59,6 +63,9 @@ NSString* EQRColorStatusReturning = @"EQRColorStatusReturning";
                          [UIColor colorWithRed:0.57 green:0.77 blue:0.77 alpha:1.0], EQRColorStatusGoing,
                          [UIColor colorWithRed:0.77 green:0.57 blue:0.57 alpha:1.0], EQRColorStatusReturning,
                          [UIColor colorWithRed:222 green:235 blue:234 alpha:1], EQRColorCoolGreen,
+                         [UIColor blueColor], EQRColorIssueDescriptive,
+                         [UIColor brownColor], EQRColorIssueMinor,
+                         [UIColor redColor], EQRColorIssueSerious,
                          nil];
     }
 }
