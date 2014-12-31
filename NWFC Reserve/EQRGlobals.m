@@ -68,6 +68,11 @@ NSString* EQRScheduleGrouping = @"schedule_grouping";  //choose category or subc
 BOOL EQRDisableTimeLimitForRequest = YES;
 BOOL EQRIncludeQRCodeReader = YES;
 
+//service issue thresholds
+NSInteger EQRThresholdForDescriptiveNote = 2;
+NSInteger EQRThresholdForMinorIssue = 3;
+NSInteger EQRThresholdForSeriousIssue = 5;
+
 
 @implementation EQRGlobals
 

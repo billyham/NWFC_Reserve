@@ -127,6 +127,9 @@
 
 -(void)resetEquipListAndAvailableQuantites{
     
+    //whether or not to include equipment that is damaged and needs repair
+    BOOL allowSeriousServiceIssueFlag = self.request.allowSeriousServiceIssueFlag;
+    
     //clean out existing arrays
     if (self.arrayOfEquipTitlesWithCountOfUniqueItems){
         
@@ -154,21 +157,41 @@
                 
                 if ([[objArray objectAtIndex:0] isEqualToString:thisTitleKey]){
                     
-                    //replace the existing NSNumber at index 1 by adding one
-                    int newInt =  [(NSNumber*)[objArray objectAtIndex:1] intValue] + 1;
-                    NSNumber* newNumber = [NSNumber numberWithInt:newInt];
-                    [objArray replaceObjectAtIndex:1 withObject:newNumber];
+                    //prevent the addition of this item if its broken and flag is up
+                    if ((allowSeriousServiceIssueFlag == NO) && ([obj.status_level integerValue] >= EQRThresholdForSeriousIssue)){
+                        
+                        foundObjectFlag = YES;
+                        break;
+                        
+                    }else{  //otherwise continue by upticking the item count
+                    
+                        //replace the existing NSNumber at index 1 by adding one
+                        int newInt =  [(NSNumber*)[objArray objectAtIndex:1] intValue] + 1;
+                        NSNumber* newNumber = [NSNumber numberWithInt:newInt];
+                        [objArray replaceObjectAtIndex:1 withObject:newNumber];
+                    }
                     
                     foundObjectFlag = YES;
+                    
+                    //found a match so exit the inner loop
+                    break;
                 }
             }
             
             if (!foundObjectFlag){
                 
-                //didn't find a match, create a new entry for this title item
-                NSMutableArray* brandNewArray = [NSMutableArray arrayWithObjects:obj.equipTitleItem_foreignKey, [NSNumber numberWithInt:1], nil];
-                
-                [topArray addObject:brandNewArray];
+                //prevent the addition of this item if its broken and flag is up
+                if ((allowSeriousServiceIssueFlag == NO) && ([obj.status_level integerValue] >= EQRThresholdForSeriousIssue)){
+                    
+                    //dont' add this item, it's busted
+                    
+                }else{
+                    
+                    //didn't find a match, create a new entry for this title item
+                    NSMutableArray* brandNewArray = [NSMutableArray arrayWithObjects:obj.equipTitleItem_foreignKey, [NSNumber numberWithInt:1], nil];
+                    
+                    [topArray addObject:brandNewArray];
+                }
             }
         }
         
@@ -475,8 +498,8 @@
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     
-    NSString* returnID = [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
-    NSLog(@"this is the returnID: %@", returnID);
+    [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
+//    NSLog(@"this is the returnID: %@", returnID);
     
     
     //___________************  Use this moment to allocate a uniqueItem object (key_id and/or dist ID) *****_______
@@ -506,12 +529,7 @@
             
             if ([[(EQREquipUniqueItem*)[arrayOfUniqueKeys objectAtIndex:0] equipTitleItem_foreignKey] isEqualToString:join.equipTitleItem_foreignKey]){
                 
-                
-                
                 for (NSMutableArray* innerArray in tempListOfUniqueItemsJustRequested){
-                    
-                    //                    NSLog(@"this is a titleForeignKey: %@", [(EQREquipUniqueItem*)[innerArray objectAtIndex:0] equipTitleItem_foreignKey]);
-                    //                    NSLog(@"this is another titleForeignKey: %@", join.equipTitleItem_foreignKey);
                     
                     if ([[(EQREquipUniqueItem*)[innerArray objectAtIndex:0] equipTitleItem_foreignKey] isEqualToString:join.equipTitleItem_foreignKey]){
                         
@@ -547,9 +565,6 @@
         //the inner array
         for (EQREquipUniqueItem* selectedUniqueItem in selectedUniqueList){
             
-            //            NSLog(@"this is the count of requestManager.arrayOfEquipUniqueItemsByDateCollision: %u", (int)[requestManager.arrayOfEquipUniqueItemsByDateCollision count]);
-            
-            
             for (EQREquipUniqueItem* unItem in self.arrayOfEquipUniqueItemsByDateCollision){
                 
                 //                NSLog(@"this is the selectedUniqueItem.key_id: %@  and this is the unItem.key_id: %@", selectedUniqueItem.key_id,unItem.key_id );
@@ -564,6 +579,29 @@
         
         //here is where we deduct the list of deductions
         [selectedUniqueList removeObjectsInArray:arrayOfUniquesToRemove];
+    }
+    
+    //____now (maybe) remove UniqueItems that are damaged
+    if (self.request.allowSeriousServiceIssueFlag == NO){
+        
+        //the top array
+        for (NSMutableArray* selectedUniqueList in tempListOfUniqueItemsJustRequested){
+            
+            NSMutableArray* arrayOfUniquesToRemove = [NSMutableArray arrayWithCapacity:1];
+         
+            //the inner array
+            for (EQREquipUniqueItem* selectedUniqueItem in selectedUniqueList){
+                
+                if ([selectedUniqueItem.status_level integerValue] >= EQRThresholdForSeriousIssue){
+                    
+                    //too damaged to allow out
+                    [arrayOfUniquesToRemove addObject:selectedUniqueItem];
+                }
+            }
+            
+            //here is where we remove stuff
+            [selectedUniqueList removeObjectsInArray:arrayOfUniquesToRemove];
+        }
     }
     
 
@@ -584,50 +622,71 @@
             //if equipTitleItem_foreignKey is the same, sort using dist id
             if (firstComparisonResult == NSOrderedSame){
                 
-                //first, give preference to any item that IS NOT in the array of buffer objects
-                NSString* testOnString3 = @"0";
-                NSString* testOnString4 = @"0";
+                //___1, give preference to any item that does NOT have a minor service issue
+                NSString* testOnMinorIssue1 = @"0";
+                NSString* testOnMinorIssue2 = @"0";
                 
-//                NSLog(@"count of expandedBuffer array: %u", [self.arrayOfEquipUniqueItemsByExpandedBuffer count]);
-                for (EQREquipUniqueItem* testItem in self.arrayOfEquipUniqueItemsByExpandedBuffer){
-                    
-                    if ([testItem.key_id isEqualToString:[(EQREquipUniqueItem*)obj1 key_id]]){
-                        testOnString3 = @"1";
-                        break;
-                    }
+                if ([[(EQREquipUniqueItem*)obj1 status_level] integerValue] >= EQRThresholdForMinorIssue){
+                    testOnMinorIssue1 = @"1";
                 }
                 
-                for (EQREquipUniqueItem* testItem in self.arrayOfEquipUniqueItemsByExpandedBuffer){
-                    
-                    if ([testItem.key_id isEqualToString:[(EQREquipUniqueItem*)obj2 key_id]]){
-                        testOnString4 = @"1";
-                        break;
-                    }
+                if ([[(EQREquipUniqueItem*)obj2 status_level] integerValue] >= EQRThresholdForMinorIssue){
+                    testOnMinorIssue2 = @"1";
                 }
                 
-                NSInteger secondComparisonResult = [testOnString3 compare:testOnString4];
+                NSInteger firstAndAHalfComparisonResult = [testOnMinorIssue1 compare:testOnMinorIssue2];
                 
-                //if both are equal in their next day status... move onto the dist id
-                if (secondComparisonResult == NSOrderedSame){
-                
+                if (firstAndAHalfComparisonResult == NSOrderedSame){
                     
-                    NSString* string3 = [(EQREquipUniqueItem*)obj1 distinquishing_id];
-                    NSString* string4 = [(EQREquipUniqueItem*)obj2 distinquishing_id];
+                    //____2, give preference to any item that IS NOT in the array of buffer objects
+                    NSString* testOnString3 = @"0";
+                    NSString* testOnString4 = @"0";
                     
-                    //if dist id is only one character in length, add a 0 to the start.
-                    if ([string3 length] < 2){
-                        string3 = [NSString stringWithFormat:@"0%@", string3];
+                    //                NSLog(@"count of expandedBuffer array: %u", [self.arrayOfEquipUniqueItemsByExpandedBuffer count]);
+                    for (EQREquipUniqueItem* testItem in self.arrayOfEquipUniqueItemsByExpandedBuffer){
+                        
+                        if ([testItem.key_id isEqualToString:[(EQREquipUniqueItem*)obj1 key_id]]){
+                            testOnString3 = @"1";
+                            break;
+                        }
                     }
                     
-                    if ([string4 length] < 2){
-                        string4 = [NSString stringWithFormat:@"0%@", string4];
+                    for (EQREquipUniqueItem* testItem in self.arrayOfEquipUniqueItemsByExpandedBuffer){
+                        
+                        if ([testItem.key_id isEqualToString:[(EQREquipUniqueItem*)obj2 key_id]]){
+                            testOnString4 = @"1";
+                            break;
+                        }
                     }
                     
-                    return [string3 compare:string4];
+                    NSInteger secondComparisonResult = [testOnString3 compare:testOnString4];
                     
-                }else{
+                    //_____3, statuslevel and nextDayStatus are equal, move onto the dist id
+                    if (secondComparisonResult == NSOrderedSame){
+                        
+                        
+                        NSString* string3 = [(EQREquipUniqueItem*)obj1 distinquishing_id];
+                        NSString* string4 = [(EQREquipUniqueItem*)obj2 distinquishing_id];
+                        
+                        //if dist id is only one character in length, add a 0 to the start.
+                        if ([string3 length] < 2){
+                            string3 = [NSString stringWithFormat:@"0%@", string3];
+                        }
+                        
+                        if ([string4 length] < 2){
+                            string4 = [NSString stringWithFormat:@"0%@", string4];
+                        }
+                        
+                        return [string3 compare:string4];
+                        
+                    }else{
+                        
+                        return secondComparisonResult;
+                    }
                     
-                    return secondComparisonResult;
+                } else {
+                    
+                    return firstAndAHalfComparisonResult;
                 }
                 
             } else {
@@ -683,7 +742,7 @@
     //input array of scheduleTracking_equipUniqueItem_joins
     for (EQRScheduleTracking_EquipmentUnique_Join* join in self.request.arrayOfEquipmentJoins){
         
-        NSLog(@"this is the equipUniqueItem key: %@", join.equipUniqueItem_foreignKey, nil);
+//        NSLog(@"this is the equipUniqueItem key: %@", join.equipUniqueItem_foreignKey, nil);
         
         NSArray* firstArrayForJoin = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", join.scheduleTracking_foreignKey, nil];
         NSArray* secondArrayForJoin = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", join.equipUniqueItem_foreignKey, nil];
@@ -694,8 +753,8 @@
                                     thirdArrayForJoin,
                                     nil];
         
-        NSString* returnID2 = [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:bigArrayForJoin];
-        NSLog(@"this is the schedule_equip_join return key_id: %@", returnID2);
+        [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:bigArrayForJoin];
+//        NSLog(@"this is the schedule_equip_join return key_id: %@", returnID2);
     }
 }
 
@@ -804,6 +863,7 @@
     }
     
     //____!!!!!!  further reduce the available list of items by removing the damaged equipment from play   !!!!!______
+
 }
 
 

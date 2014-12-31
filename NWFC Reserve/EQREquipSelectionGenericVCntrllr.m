@@ -481,6 +481,7 @@
     requestManager.request.showAllEquipmentFlag = self.optionsVC.showAllEquipFlag;
     requestManager.request.allowSameDayFlag = self.optionsVC.allowSameDayFlag;
     requestManager.request.allowConflictFlag = self.optionsVC.allowConflictFlag;
+    requestManager.request.allowSeriousServiceIssueFlag = self.optionsVC.allowSeriousServiceIssueFlag;
     
     //dismiss popover
     [self.optionsPopover dismissPopoverAnimated:YES];

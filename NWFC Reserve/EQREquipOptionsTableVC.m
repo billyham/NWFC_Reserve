@@ -25,7 +25,12 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
     
     //instantiate array
-    NSArray* arrayForNow = [NSArray arrayWithObjects:@"Show All Items", @"Allow Same Day Turnaround", @"Allow Schedule Conflicts", nil];
+    NSArray* arrayForNow = [NSArray arrayWithObjects:
+                            @"Show All Items",
+                            @"Allow Same Day Turnaround",
+                            @"Allow Schedule Conflicts",
+                            @"Allow Repair Shelf",
+                            nil];
     
     self.arrayOfOptions = arrayForNow;
     
@@ -81,6 +86,12 @@
     }else if (indexPath.row == 2){
         
         if (self.allowConflictFlag == YES){
+            
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        }
+    }else if (indexPath.row == 3){
+        
+        if (self.allowSeriousServiceIssueFlag == YES){
             
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         }
@@ -163,6 +174,15 @@
         }else{
             
             self.allowConflictFlag = YES;
+        }
+    }else if (indexPath.row == 3){
+        
+        if (self.allowSeriousServiceIssueFlag == YES){
+            
+            self.allowSeriousServiceIssueFlag = NO;
+        }else{
+            
+            self.allowSeriousServiceIssueFlag = YES;
         }
     }
 

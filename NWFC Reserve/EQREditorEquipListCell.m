@@ -108,7 +108,7 @@
         
         [self.myContentVC.myServiceIssue setHidden:YES];
         
-    } else if([joinObject.status_level integerValue] < 2){   //service issue exists but it is resolved, so don't show
+    } else if([joinObject.status_level integerValue] < EQRThresholdForDescriptiveNote){   //service issue exists but it is resolved, so don't show
         
         [self.myContentVC.myServiceIssue setHidden:YES];
         
@@ -122,11 +122,11 @@
         EQRColors* colors = [EQRColors sharedInstance];
         
         //if status level is 3 or above
-        if ([joinObject.status_level integerValue] >= 5){  //damaged, make text red
+        if ([joinObject.status_level integerValue] >= EQRThresholdForSeriousIssue){  //damaged, make text red
             
             [self.myContentVC.myServiceIssue setTitleColor:[colors.colorDic objectForKey:EQRColorIssueSerious] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
             
-        }else if (([joinObject.status_level integerValue] == 3) || ([joinObject.status_level integerValue] == 4)){
+        }else if (([joinObject.status_level integerValue] >= EQRThresholdForMinorIssue) && ([joinObject.status_level integerValue] < EQRThresholdForSeriousIssue)){
             
             [self.myContentVC.myServiceIssue setTitleColor:[colors.colorDic objectForKey:EQRColorIssueMinor] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
         }else{

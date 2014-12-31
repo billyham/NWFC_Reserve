@@ -20,6 +20,7 @@
 @property BOOL showAllEquipFlag;
 @property BOOL allowSameDayFlag;
 @property BOOL allowConflictFlag;
+@property BOOL allowSeriousServiceIssueFlag;
 
 @end
 

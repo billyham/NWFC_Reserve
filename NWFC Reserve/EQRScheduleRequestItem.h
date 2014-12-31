@@ -52,6 +52,7 @@
 @property BOOL showAllEquipmentFlag;
 @property BOOL allowSameDayFlag;
 @property BOOL allowConflictFlag;
+@property BOOL allowSeriousServiceIssueFlag;
 
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipmentJoins;
 

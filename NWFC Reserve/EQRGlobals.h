@@ -65,6 +65,11 @@ extern NSString* EQRScheduleGrouping;
 extern BOOL EQRDisableTimeLimitForRequest;
 extern BOOL EQRIncludeQRCodeReader;
 
+//service issue thresholds
+extern NSInteger EQRThresholdForDescriptiveNote;
+extern NSInteger EQRThresholdForMinorIssue;
+extern NSInteger EQRThresholdForSeriousIssue;
+
 
 
 @interface EQRGlobals : NSObject

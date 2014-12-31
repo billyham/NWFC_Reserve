@@ -1063,7 +1063,7 @@
                 }else{  //titleKey remains the same
                     
                     //alert if selected an item that has serious service issues
-                    if ([[(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] status_level] integerValue] >= 5){
+                    if ([[(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] status_level] integerValue] >= EQRThresholdForSeriousIssue){
                         
                         //save joinkey and indexpath to use in alert delegate method
                         self.thisTempJoinKey = joinKey_id;
@@ -1291,7 +1291,7 @@
             //no issues, hide button
             myContentViewController.serviceIssuesButton.hidden = YES;
             
-        } else if(statusLevelInt < 2){   //service issue exists but it is resolved, so don't show
+        } else if(statusLevelInt < EQRThresholdForDescriptiveNote){   //service issue exists but it is resolved, so don't show
             
             myContentViewController.serviceIssuesButton.hidden = YES;
             
@@ -1304,14 +1304,14 @@
             //set color of button
             EQRColors* colors = [EQRColors sharedInstance];
             
-            if (statusLevelInt >= 5){  //outstanding issue that should prevent selection
+            if (statusLevelInt >= EQRThresholdForSeriousIssue){  //outstanding issue that should prevent selection
                 
                 [myContentViewController.serviceIssuesButton setTitleColor:[colors.colorDic objectForKey:EQRColorIssueSerious] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
                 
                 //change background color
                 cell.backgroundColor = [UIColor lightGrayColor];
                 
-            }else if((statusLevelInt == 3) || (statusLevelInt == 4)){  //flawed but functional
+            }else if((statusLevelInt >= EQRThresholdForMinorIssue) && (statusLevelInt < EQRThresholdForSeriousIssue)){  //flawed but functional
                 
                 [myContentViewController.serviceIssuesButton setTitleColor:[colors.colorDic objectForKey:EQRColorIssueMinor] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
             }else{

@@ -7,6 +7,7 @@
 //
 
 #import "EQRCheckRowCell.h"
+#import "EQRGlobals.h"
 #import "EQRCheckCellContentVCntrllr.h"
 #import "EQRColors.h"
 
@@ -154,7 +155,7 @@
         
         [self.myCheckContent.serviceIssue setHidden:YES];
         
-    } else if([equipJoin.status_level integerValue] < 2){   //service issue exists but it is resolved, so don't show
+    } else if([equipJoin.status_level integerValue] < EQRThresholdForDescriptiveNote){   //service issue exists but it is resolved, so don't show
         
         [self.myCheckContent.serviceIssue setHidden:YES];
         
@@ -168,11 +169,11 @@
         EQRColors* colors = [EQRColors sharedInstance];
         
         //if status level is 3 or above
-        if ([equipJoin.status_level integerValue] >= 5){  //damaged, make text red
+        if ([equipJoin.status_level integerValue] >= EQRThresholdForSeriousIssue){  //damaged, make text red
             
             [self.myCheckContent.serviceIssue setTitleColor:[colors.colorDic objectForKey:EQRColorIssueSerious] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
             
-        }else if (([equipJoin.status_level integerValue] == 3) || ([equipJoin.status_level integerValue] == 4)){
+        }else if (([equipJoin.status_level integerValue] >= EQRThresholdForMinorIssue) && ([equipJoin.status_level integerValue] < EQRThresholdForSeriousIssue)){
             
             [self.myCheckContent.serviceIssue setTitleColor:[colors.colorDic objectForKey:EQRColorIssueMinor] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
         }else{

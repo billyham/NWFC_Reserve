@@ -7,6 +7,7 @@
 //
 
 #import "EQRDistIDPickerTableVC.h"
+#import "EQRGlobals.h"
 #import "EQRScheduleRequestManager.h"
 #import "EQREquipUniqueItem.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
@@ -184,11 +185,11 @@
     UIColor* thisChosenColor;
     EQRColors* colors = [EQRColors sharedInstance];
     
-    if (status_level_int >=5){
+    if (status_level_int >=EQRThresholdForSeriousIssue){
         thisChosenColor = [colors.colorDic objectForKey:EQRColorIssueSerious];  //serious issue
-    }else if ((status_level_int == 3) || (status_level_int == 4)){
+    }else if ((status_level_int >= EQRThresholdForMinorIssue) && (status_level_int < EQRThresholdForSeriousIssue)){
         thisChosenColor = [colors.colorDic objectForKey:EQRColorIssueMinor];   //issue not serious
-    }else if (status_level_int == 2){
+    }else if ((status_level_int >= EQRThresholdForDescriptiveNote) && (status_level_int < EQRThresholdForMinorIssue)){
         thisChosenColor = [colors.colorDic objectForKey:EQRColorIssueDescriptive];  //issue is descriptive note
     }else{
         issueString = @"";  //status is resolved, so hide any issues
