@@ -9,13 +9,11 @@
 #import "EQREditorEquipListCell.h"
 #import "EQRColors.h"
 #import "EQRGlobals.h"
-#import "EQRScheduleTracking_EquipmentUnique_Join.h"
 
 @interface EQREditorEquipListCell ()
 
 @property (nonatomic, strong) EQRScheduleTracking_EquipmentUnique_Join* myJoinObject;
 @property (nonatomic, strong) NSString* myKey_id;
-@property (nonatomic, strong) IBOutlet UIButton* myDeleteButtonx;
 
 @end
 
@@ -31,9 +29,9 @@
 }
 
 
--(void)initialSetupWithTitle:(NSString*) titleName keyID:(NSString*)keyID deleteFlag:(BOOL)deleteFlag{
+-(void)initialSetupWithJoinObject:(EQRScheduleTracking_EquipmentUnique_Join*)joinObject deleteFlag:(BOOL)deleteFlag{
     
-    self.myKey_id = keyID;
+    self.myKey_id = joinObject.equipUniqueItem_foreignKey;
     self.toBeDeletedFlag = deleteFlag;
     
     EQREditorEquipListContentVC* contentView = [[EQREditorEquipListContentVC alloc] initWithNibName:@"EQREditorEquipListContentVC" bundle:nil];
@@ -71,26 +69,22 @@
     }
     
     //size of cell depends on size of collection view based on orientation
-    UIInterfaceOrientation thisOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    if (UIInterfaceOrientationIsLandscape(thisOrientation)){
-        
-        CGRect thisRect = CGRectMake(0, self.frame.origin.y, 602, self.frame.size.height);  //-128
-        self.frame = thisRect;
-        
-    }else {
-        
-        CGRect thisRect = CGRectMake(0, self.frame.origin.y, 346, self.frame.size.height);
-        self.frame = thisRect;
-    }
+//    UIInterfaceOrientation thisOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+//    if (UIInterfaceOrientationIsLandscape(thisOrientation)){
+//        
+//        CGRect thisRect = CGRectMake(0, self.frame.origin.y, 602, self.frame.size.height);  //-128
+//        self.frame = thisRect;
+//        
+//    }else {
+//        
+//        CGRect thisRect = CGRectMake(0, self.frame.origin.y, 346, self.frame.size.height);
+//        self.frame = thisRect;
+//    }
     
     //colors
     EQRColors* colors = [EQRColors sharedInstance];
     
     //delete button
-//    UIButton* deleteButton = [UIButton buttonWithType:UIButtonTypeSystem];
-//    deleteButton.frame = CGRectMake(0, 0, 100, self.frame.size.height);
-    
-//    deleteButton.titleLabel.font = [UIFont systemFontOfSize:12];
     [self.myContentVC.myDeleteButton setTitle:thisButtonText forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
     [self.myContentVC.myDeleteButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal & UIControlStateSelected];
     [self.myContentVC.myDeleteButton setTitleColor:[colors.colorDic objectForKey:EQRColorLightBlue] forState:UIControlStateHighlighted];
@@ -104,11 +98,42 @@
     
     
     //label
-//    UILabel* thisLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 0, 295, 30)];
-//    self.titleLabel = thisLabel;
-//    self.myContentVC.myLabel.font = [UIFont systemFontOfSize:12];
-//    self.myContentVC.myLabel.backgroundColor = [UIColor clearColor];
-    self.myContentVC.myLabel.text = titleName;
+    self.myContentVC.myLabel.text = joinObject.name;
+    
+    //dist id button
+    [self.myContentVC.myDistIDButton setTitle:joinObject.distinquishing_id forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+    
+    //service issue button
+    if ([joinObject.issue_short_name isEqualToString:@""]){  //no service issues
+        
+        [self.myContentVC.myServiceIssue setHidden:YES];
+        
+    } else if([joinObject.status_level integerValue] < 2){   //service issue exists but it is resolved, so don't show
+        
+        [self.myContentVC.myServiceIssue setHidden:YES];
+        
+    } else {  //show service issues
+        
+        [self.myContentVC.myServiceIssue setHidden:NO];
+        
+        [self.myContentVC.myServiceIssue setTitle:joinObject.issue_short_name forState:UIControlStateHighlighted & UIControlStateNormal & UIControlStateSelected];
+        
+        //set color
+        EQRColors* colors = [EQRColors sharedInstance];
+        
+        //if status level is 3 or above
+        if ([joinObject.status_level integerValue] >= 5){  //damaged, make text red
+            
+            [self.myContentVC.myServiceIssue setTitleColor:[colors.colorDic objectForKey:EQRColorIssueSerious] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
+            
+        }else if (([joinObject.status_level integerValue] == 3) || ([joinObject.status_level integerValue] == 4)){
+            
+            [self.myContentVC.myServiceIssue setTitleColor:[colors.colorDic objectForKey:EQRColorIssueMinor] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
+        }else{
+            
+            [self.myContentVC.myServiceIssue setTitleColor:[colors.colorDic objectForKey:EQRColorIssueDescriptive] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
+        }
+    }
     
 }
 

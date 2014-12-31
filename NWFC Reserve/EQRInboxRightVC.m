@@ -1211,11 +1211,6 @@
         [view removeFromSuperview];
     }
     
-    NSString* thisName = [[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name];
-    NSString* thisDistNumber = [[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id];
-    NSString* thisTitle = [NSString stringWithFormat:@"%@: # %@", thisName, thisDistNumber];
-    
-    
     BOOL toBeDeleted = NO;
     for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
         
@@ -1225,7 +1220,7 @@
         }
     }
     
-    [cell initialSetupWithTitle:thisTitle keyID:[[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] equipUniqueItem_foreignKey] deleteFlag:toBeDeleted];
+    [cell initialSetupWithJoinObject:[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] deleteFlag:toBeDeleted];
     
     return cell;
 }
@@ -1286,6 +1281,17 @@
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     
+    
+}
+
+#pragma mark - collection view flow layout delegate methods
+
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    //width is equal to the collectionView's width
+    return CGSizeMake(self.myTable.frame.size.width, 35.f);
     
 }
 

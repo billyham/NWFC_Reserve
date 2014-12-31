@@ -49,7 +49,7 @@
 
 @property (strong, nonatomic) NSMutableArray* arrayOfSchedule_Unique_Joins;
 @property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedEquipIDs;
-@property (strong, nonatomic) NSArray* arrayOfEquipUniqueItemsWithStructure;
+@property (strong, nonatomic) NSArray* arrayOfSchedule_Unique_JoinsWithStructure;
 
 @property (strong, nonatomic) EQREditorDateVCntrllr* myDateVC;
 @property (strong, nonatomic) EQRContactPickerVC* myContactVC;
@@ -85,8 +85,6 @@
     
     //set ivar flag
     self.saveButtonTappedFlag = NO;
-    
-    
     
     //register collection view cell
     [self.equipList registerClass:[EQREditorEquipListCell class] forCellWithReuseIdentifier:@"Cell"];
@@ -149,41 +147,25 @@
     //_______*******  THIS IS CRASHING BECAUSE THE DATE INFO IS NOT PRESENT_________**********
 //    [requestManager allocateGearListWithDates:datesDic];
     
-    NSMutableArray* arrayToReturn = [NSMutableArray arrayWithCapacity:1];
+//    NSMutableArray* arrayToReturn = [NSMutableArray arrayWithCapacity:1];
     NSMutableArray* arrayToReturnJoins = [NSMutableArray arrayWithCapacity:1];
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", [self.myUserInfo objectForKey:@"key_ID"],  nil];
     NSArray* secondArray = [NSArray arrayWithObjects:firstArray, nil];
     
-    //get Scheduletracking_equipUnique_joins
-    [webData queryWithLink:@"EQGetScheduleEquipJoins.php" parameters:secondArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+    //get Scheduletracking_equipUnique_joins   formerly used EQGetScheduleEquipJoins.php
+    [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php"
+                parameters:secondArray class:@"EQRScheduleTracking_EquipmentUnique_Join"
+                completion:^(NSMutableArray *muteArray) {
        
         [arrayToReturnJoins addObjectsFromArray:muteArray];
-        
     }];
     
     [self.arrayOfSchedule_Unique_Joins addObjectsFromArray:arrayToReturnJoins];
     
-    
-    //get equipUniqueItems
-    [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys.php" parameters:secondArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
-        
-        [arrayToReturn addObjectsFromArray:muteArray];
-    }];
-    
-    //alphabatize the list of unique items
-    NSArray* tempMuteArrayAlpha = [arrayToReturn sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        
-        NSString* string1 = [(EQREquipUniqueItem*)obj1 name];
-        NSString* string2 = [(EQREquipUniqueItem*)obj2 name];
-        
-        return [string1 compare:string2];
-        
-    }];
-    
-    //expand array of EquipUniques to structred array of EquipUniques
-    self.arrayOfEquipUniqueItemsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:tempMuteArrayAlpha];
+    //add structure to array
+    self.arrayOfSchedule_Unique_JoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfSchedule_Unique_Joins];
     
     //reload collection view
     [self.equipList reloadData];
@@ -406,7 +388,7 @@
     //empty the arrays
     [self.arrayOfSchedule_Unique_Joins removeAllObjects];
     [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
-    self.arrayOfEquipUniqueItemsWithStructure = nil;
+    self.arrayOfSchedule_Unique_JoinsWithStructure = nil;
 
     //send note to schedule that a change has been saved
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
@@ -551,7 +533,7 @@
         //empty the arrays
         [self.arrayOfSchedule_Unique_Joins removeAllObjects];
         [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
-        self.arrayOfEquipUniqueItemsWithStructure = nil;
+        self.arrayOfSchedule_Unique_JoinsWithStructure = nil;
         
         //send note to schedule that a change has been saved
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
@@ -795,9 +777,9 @@
     //_________***  need to update self.arrayOfEquipUniqueItems
     //empty arrays first
     [self.arrayOfSchedule_Unique_Joins removeAllObjects];
-    self.arrayOfEquipUniqueItemsWithStructure = nil;
+    self.arrayOfSchedule_Unique_JoinsWithStructure = nil;
     
-    NSMutableArray* arrayToReturn = [NSMutableArray arrayWithCapacity:1];
+//    NSMutableArray* arrayToReturn = [NSMutableArray arrayWithCapacity:1];
     NSMutableArray* arrayToReturnJoins = [NSMutableArray arrayWithCapacity:1];
     
     EQRWebData* webData = [EQRWebData sharedInstance];
@@ -805,7 +787,9 @@
     NSArray* secondArray = [NSArray arrayWithObjects:firstArray, nil];
     
     //get Scheduletracking_equipUnique_joins
-    [webData queryWithLink:@"EQGetScheduleEquipJoins.php" parameters:secondArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+    [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php"
+                parameters:secondArray class:@"EQRScheduleTracking_EquipmentUnique_Join"
+                completion:^(NSMutableArray *muteArray) {
         
         [arrayToReturnJoins addObjectsFromArray:muteArray];
         
@@ -813,15 +797,8 @@
     
     [self.arrayOfSchedule_Unique_Joins addObjectsFromArray:arrayToReturnJoins];
     
-    
-    //get equipUniqueItems
-    [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys.php" parameters:secondArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
-        
-        [arrayToReturn addObjectsFromArray:muteArray];
-    }];
-    
-    //add structure to the array
-    self.arrayOfEquipUniqueItemsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:arrayToReturn];
+    //add structure
+    self.arrayOfSchedule_Unique_JoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfSchedule_Unique_Joins];
     
     //reload collection view
     [self.equipList reloadData];
@@ -862,19 +839,14 @@
 #pragma mark - collection view data source methods
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    
-//    return [self.arrayOfEquipUniqueItems count];
-    
-    return [[self.arrayOfEquipUniqueItemsWithStructure objectAtIndex:section] count];
-    
+        
+    return [[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:section] count];
 }
 
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-
-//    return 1;
     
-    return [self.arrayOfEquipUniqueItemsWithStructure count];
+    return [self.arrayOfSchedule_Unique_JoinsWithStructure count];
 }
 
 
@@ -889,21 +861,16 @@
         [view removeFromSuperview];
     }
     
-    NSString* thisName = [[[self.arrayOfEquipUniqueItemsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name];
-    NSString* thisDistNumber = [[[self.arrayOfEquipUniqueItemsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id];
-    NSString* thisTitle = [NSString stringWithFormat:@"%@: #%@", thisName, thisDistNumber];
-    
-    
     BOOL toBeDeleted = NO;
     for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
         
-        if ([keyToDelete isEqualToString:[[[self.arrayOfEquipUniqueItemsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]]){
+        if ([keyToDelete isEqualToString:[[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]]){
             
             toBeDeleted = YES;
         }
     }
     
-    [cell initialSetupWithTitle:thisTitle keyID:[[[self.arrayOfEquipUniqueItemsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id] deleteFlag:toBeDeleted];
+    [cell initialSetupWithJoinObject:[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] deleteFlag:toBeDeleted];
     
     return cell;
 }
@@ -920,14 +887,22 @@
         [view removeFromSuperview];
     }
     
-    [cell initialSetupWithTitle: [(EQREquipUniqueItem*)[[self.arrayOfEquipUniqueItemsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] schedule_grouping]];
+    [cell initialSetupWithTitle: [(EQREquipUniqueItem*)[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] schedule_grouping]];
     
     return cell;
 }
 
 
-#pragma mark - collection view delegate methods
+#pragma mark - collection view flow layout delegate methods
 
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    //width is equal to the collectionView's width
+    return CGSizeMake(self.equipList.frame.size.width, 35.f);
+    
+}
 
 #pragma mark - popover delegate methods
 
