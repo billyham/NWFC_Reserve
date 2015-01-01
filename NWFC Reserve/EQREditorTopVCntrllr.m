@@ -7,7 +7,6 @@
 //
 
 #import "EQREditorTopVCntrllr.h"
-#import "EQREditorEquipListCell.h"
 #import "EQREditorHeaderCell.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQREquipUniqueItem.h"
@@ -77,11 +76,11 @@
     [super viewDidLoad];
     
     //register for notes
-    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
-    
-    //register to receive delete instructions from equipList cells
-    [nc addObserver:self selector:@selector(addEquipUniqueToBeDeletedArray:) name:EQREquipUniqueToBeDeleted object:nil];
-    [nc addObserver:self selector:@selector(removeEquipUniqueToBeDeletedArray:) name:EQREquipUniqueToBeDeletedCancel object:nil];
+//    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+//    
+//    //register to receive delete instructions from equipList cells
+//    [nc addObserver:self selector:@selector(addEquipUniqueToBeDeletedArray:) name:EQREquipUniqueToBeDeleted object:nil];
+//    [nc addObserver:self selector:@selector(removeEquipUniqueToBeDeletedArray:) name:EQREquipUniqueToBeDeletedCancel object:nil];
     
     //set ivar flag
     self.saveButtonTappedFlag = NO;
@@ -808,28 +807,53 @@
 
 
 
-#pragma mark - notification methods
+#pragma mark - EQREditorEquipDelegate methods
 
--(void)addEquipUniqueToBeDeletedArray:(NSNotification*)note{
+-(void)tagEquipUniqueToDelete:(NSString*)key_id{
     
-    [self.arrayOfToBeDeletedEquipIDs addObject:[note.userInfo objectForKey:@"key_id"]];
-    
+    [self.arrayOfToBeDeletedEquipIDs addObject:key_id];
+
 }
 
--(void)removeEquipUniqueToBeDeletedArray:(NSNotification*)note{
+-(void)tagEquipUniqueToCancelDelete:(NSString*)key_id{
     
     NSString* stringToBeRemoved;
     
     for (NSString* thisString in self.arrayOfToBeDeletedEquipIDs){
         
-        if ([thisString isEqualToString:[note.userInfo objectForKey:@"key_id"]]){
+        if ([thisString isEqualToString:key_id]){
             
             stringToBeRemoved = thisString;
         }
     }
-
+    
     [self.arrayOfToBeDeletedEquipIDs removeObject:stringToBeRemoved];
 }
+
+
+//_____using delegate methods instead
+#pragma mark - notification methods
+
+//-(void)addEquipUniqueToBeDeletedArray:(NSNotification*)note{
+//    
+//    [self.arrayOfToBeDeletedEquipIDs addObject:[note.userInfo objectForKey:@"key_id"]];
+//    
+//}
+//
+//-(void)removeEquipUniqueToBeDeletedArray:(NSNotification*)note{
+//    
+//    NSString* stringToBeRemoved;
+//    
+//    for (NSString* thisString in self.arrayOfToBeDeletedEquipIDs){
+//        
+//        if ([thisString isEqualToString:[note.userInfo objectForKey:@"key_id"]]){
+//            
+//            stringToBeRemoved = thisString;
+//        }
+//    }
+//
+//    [self.arrayOfToBeDeletedEquipIDs removeObject:stringToBeRemoved];
+//}
 
 
 
@@ -860,6 +884,9 @@
         
         [view removeFromSuperview];
     }
+    
+    //set self as cell's delegate
+    cell.delegate = self;
     
     BOOL toBeDeleted = NO;
     for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){

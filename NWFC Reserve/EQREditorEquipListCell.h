@@ -10,12 +10,26 @@
 #import "EQREditorEquipListContentVC.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 
+@protocol EQREditorEquipCellDelegate;
 
-@interface EQREditorEquipListCell : EQRCellTemplate
 
+@interface EQREditorEquipListCell : EQRCellTemplate{
+    
+    __weak id <EQREditorEquipCellDelegate> delegate;
+}
+
+@property (weak, nonatomic) id <EQREditorEquipCellDelegate> delegate;
 @property BOOL toBeDeletedFlag;
 @property (strong, nonatomic) EQREditorEquipListContentVC* myContentVC;
 
 -(void)initialSetupWithJoinObject:(EQRScheduleTracking_EquipmentUnique_Join*)joinObject deleteFlag:(BOOL)deleteFlag;
+
+@end
+
+
+@protocol EQREditorEquipCellDelegate <NSObject>
+
+-(void)tagEquipUniqueToDelete:(NSString*)key_id;
+-(void)tagEquipUniqueToCancelDelete:(NSString*)key_id;
 
 @end

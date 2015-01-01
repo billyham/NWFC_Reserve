@@ -19,6 +19,8 @@
 
 @implementation EQREditorEquipListCell
 
+@synthesize delegate;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -69,17 +71,7 @@
     }
     
     //size of cell depends on size of collection view based on orientation
-//    UIInterfaceOrientation thisOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-//    if (UIInterfaceOrientationIsLandscape(thisOrientation)){
-//        
-//        CGRect thisRect = CGRectMake(0, self.frame.origin.y, 602, self.frame.size.height);  //-128
-//        self.frame = thisRect;
-//        
-//    }else {
-//        
-//        CGRect thisRect = CGRectMake(0, self.frame.origin.y, 346, self.frame.size.height);
-//        self.frame = thisRect;
-//    }
+    //____moved to VC and handled in CollectionViewFlowLayoutDelegate method
     
     //colors
     EQRColors* colors = [EQRColors sharedInstance];
@@ -144,8 +136,12 @@
         
         //send view controller a note with key_id (or indexpath) to indicate it needs to be removed from the database
         
-        NSDictionary* thisDic = [NSDictionary dictionaryWithObject:self.myKey_id forKey:@"key_id"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQREquipUniqueToBeDeleted object:nil userInfo:thisDic];
+        //__1. use delegate methods
+        [self.delegate tagEquipUniqueToDelete:self.myKey_id];
+        
+        //__2. or.... use notification
+//        NSDictionary* thisDic = [NSDictionary dictionaryWithObject:self.myKey_id forKey:@"key_id"];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:EQREquipUniqueToBeDeleted object:nil userInfo:thisDic];
         
         //flag the color of the cell!!
         self.myContentVC.view.backgroundColor = [UIColor redColor];
@@ -156,8 +152,12 @@
         
     }else {
         
-        NSDictionary* thisDic = [NSDictionary dictionaryWithObject:self.myKey_id forKey:@"key_id"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQREquipUniqueToBeDeletedCancel object:nil userInfo:thisDic];
+        //___1. use delegate method
+        [self.delegate tagEquipUniqueToCancelDelete:self.myKey_id];
+        
+        //___2. or... use notification
+//        NSDictionary* thisDic = [NSDictionary dictionaryWithObject:self.myKey_id forKey:@"key_id"];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:EQREquipUniqueToBeDeletedCancel object:nil userInfo:thisDic];
         
         self.myContentVC.view.backgroundColor = [UIColor whiteColor];
         
@@ -165,6 +165,11 @@
         
         self.toBeDeletedFlag = NO;
     }
+}
+
+-(IBAction)distIDPickerButton:(id)sender{
+    
+    
 }
 
 

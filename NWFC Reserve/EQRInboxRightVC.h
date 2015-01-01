@@ -14,11 +14,12 @@
 #import "EQRContactPickerVC.h"
 #import "EQREditorRenterVCntrllr.h"
 #import "EQRClassPickerVC.h"
+#import "EQREditorEquipListCell.h"
 
 @protocol EQRInboxRightDelegate;
 
 
-@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate, UISearchBarDelegate, EQRContactPickerDelegate, EQRRenterTypeDelegate, EQRClassPickerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout> {
+@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate, UISearchBarDelegate, EQRContactPickerDelegate, EQRRenterTypeDelegate, EQRClassPickerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREditorEquipCellDelegate> {
     
     __weak id <EQRInboxRightDelegate> delegateForRightSide;
 }
@@ -28,6 +29,9 @@
 
 -(void)renewTheViewWithRequest:(EQRScheduleRequestItem*)request;
 
+//EQREditorEquipList Delegate methods
+-(void)tagEquipUniqueToDelete:(NSString*)key_id;
+-(void)tagEquipUniqueToCancelDelete:(NSString*)key_id;
 
 @end
 

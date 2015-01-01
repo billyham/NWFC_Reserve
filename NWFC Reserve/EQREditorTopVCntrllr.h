@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "EQREditorRenterVCntrllr.h"
 #import "EQRContactPickerVC.h"
+#import "EQREditorEquipListCell.h"
 
-@interface EQREditorTopVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRRenterTypeDelegate, EQRContactPickerDelegate, UIPopoverControllerDelegate, UICollectionViewDelegateFlowLayout>
+@interface EQREditorTopVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRRenterTypeDelegate, EQRContactPickerDelegate, UIPopoverControllerDelegate, UICollectionViewDelegateFlowLayout, EQREditorEquipCellDelegate>
 
 @property (strong, nonatomic) NSString* scheduleRequestKeyID;
 @property BOOL saveButtonTappedFlag;
@@ -19,5 +20,9 @@
 -(IBAction)saveAction:(id)sender;
 -(IBAction)deleteRequest:(id)sender;
 -(IBAction)addEquipItem:(id)sender;
+
+//EQREditorEquipList Delegate methods
+-(void)tagEquipUniqueToDelete:(NSString*)key_id;
+-(void)tagEquipUniqueToCancelDelete:(NSString*)key_id;
 
 @end
