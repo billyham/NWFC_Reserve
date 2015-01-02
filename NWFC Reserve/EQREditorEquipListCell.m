@@ -33,6 +33,9 @@
 
 -(void)initialSetupWithJoinObject:(EQRScheduleTracking_EquipmentUnique_Join*)joinObject deleteFlag:(BOOL)deleteFlag{
     
+    //retaining the joinObject seems like a bad idea, but... need to use it for the distIDPicker
+    self.myJoinObject = joinObject;
+    
     self.myKey_id = joinObject.equipUniqueItem_foreignKey;
     self.toBeDeletedFlag = deleteFlag;
     
@@ -87,13 +90,16 @@
     [self.myContentVC.myDeleteButton addTarget:self action:@selector(deleteEquipItem:) forControlEvents:UIControlEventTouchUpInside];
 
     
-    
-    
     //label
     self.myContentVC.myLabel.text = joinObject.name;
     
+    
     //dist id button
     [self.myContentVC.myDistIDButton setTitle:joinObject.distinquishing_id forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+    
+    //dist id button target
+    [self.myContentVC.myDistIDButton addTarget:self action:@selector(distIDPickerButton:) forControlEvents:UIControlEventTouchUpInside];
+    
     
     //service issue button
     if ([joinObject.issue_short_name isEqualToString:@""]){  //no service issues
@@ -169,7 +175,18 @@
 
 -(IBAction)distIDPickerButton:(id)sender{
     
+    //send cell's equipUniqueKey, titleKey, button
+//    NSString* equipTitleItem_foreignKey = [infoDictionary objectForKey:@"equipTitleItem_foreignKey"];
+//    NSString* equipUniqueItem_foreignKey = [infoDictionary objectForKey:@"equipUniqueItem_foreignKey"];
+//    UIButton* thisButton = (UIButton*)[infoDictionary objectForKey:@"distButton"];
     
+    NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                            self.myJoinObject.equipTitleItem_foreignKey, @"equipTitleItem_foreignKey",
+                            self.myJoinObject.equipUniqueItem_foreignKey, @"equipUniqueItem_foreignKey",
+                            self.myContentVC.myDistIDButton, @"distButton",
+                            nil];
+    
+    [self.delegate distIDPickerTapped:newDic];
 }
 
 

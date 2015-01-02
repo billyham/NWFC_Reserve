@@ -10,8 +10,9 @@
 #import "EQREditorRenterVCntrllr.h"
 #import "EQRContactPickerVC.h"
 #import "EQREditorEquipListCell.h"
+#import "EQRDistIDPickerTableVC.h"
 
-@interface EQREditorTopVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRRenterTypeDelegate, EQRContactPickerDelegate, UIPopoverControllerDelegate, UICollectionViewDelegateFlowLayout, EQREditorEquipCellDelegate>
+@interface EQREditorTopVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRRenterTypeDelegate, EQRContactPickerDelegate, UIPopoverControllerDelegate, UICollectionViewDelegateFlowLayout, EQREditorEquipCellDelegate, EQRDistIDPickerDelegate>
 
 @property (strong, nonatomic) NSString* scheduleRequestKeyID;
 @property BOOL saveButtonTappedFlag;
@@ -24,5 +25,10 @@
 //EQREditorEquipList Delegate methods
 -(void)tagEquipUniqueToDelete:(NSString*)key_id;
 -(void)tagEquipUniqueToCancelDelete:(NSString*)key_id;
+-(void)distIDPickerTapped:(NSDictionary*)infoDictionary;
+
+//dist id picker delegate method
+-(void)distIDSelectionMadeWithOriginalEquipUniqueKey:(NSString*)originalKeyID equipUniqueItem:(id)distEquipUniqueItem;
+
 
 @end

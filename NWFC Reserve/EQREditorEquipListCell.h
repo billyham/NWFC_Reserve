@@ -31,5 +31,6 @@
 
 -(void)tagEquipUniqueToDelete:(NSString*)key_id;
 -(void)tagEquipUniqueToCancelDelete:(NSString*)key_id;
+-(void)distIDPickerTapped:(NSDictionary*)infoDictionary;
 
 @end

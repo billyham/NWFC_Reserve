@@ -15,11 +15,12 @@
 #import "EQREditorRenterVCntrllr.h"
 #import "EQRClassPickerVC.h"
 #import "EQREditorEquipListCell.h"
+#import "EQRDistIDPickerTableVC.h"
 
 @protocol EQRInboxRightDelegate;
 
 
-@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate, UISearchBarDelegate, EQRContactPickerDelegate, EQRRenterTypeDelegate, EQRClassPickerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREditorEquipCellDelegate, UIPopoverControllerDelegate> {
+@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate, UISearchBarDelegate, EQRContactPickerDelegate, EQRRenterTypeDelegate, EQRClassPickerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREditorEquipCellDelegate, UIPopoverControllerDelegate, EQRDistIDPickerDelegate> {
     
     __weak id <EQRInboxRightDelegate> delegateForRightSide;
 }
@@ -32,6 +33,11 @@
 //EQREditorEquipList Delegate methods
 -(void)tagEquipUniqueToDelete:(NSString*)key_id;
 -(void)tagEquipUniqueToCancelDelete:(NSString*)key_id;
+-(void)distIDPickerTapped:(NSDictionary*)infoDictionary;
+
+//dist id picker delegate method
+-(void)distIDSelectionMadeWithOriginalEquipUniqueKey:(NSString*)originalKeyID equipUniqueItem:(id)distEquipUniqueItem;
+
 
 @end
 

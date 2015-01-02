@@ -22,7 +22,7 @@
 #import "EQREditorExtendedDateVC.h"
 #import "EQREditorEquipListCell.h"
 #import "EQREditorHeaderCell.h"
-
+#import "EQREquipUniqueItem.h"
 #import "EQREquipSelectionGenericVCntrllr.h"
 #import "EQRScheduleRequestManager.h"
 
@@ -68,6 +68,7 @@
 @property (strong, nonatomic) UIPopoverController* myContactPicker;
 @property (strong, nonatomic) UIPopoverController* myRenterTypePicker;
 @property (strong, nonatomic) UIPopoverController* myClassPicker;
+@property (strong, nonatomic) UIPopoverController* distIDPopover;
 
 //popOver root VCs
 @property (strong, nonatomic) EQREditorDateVCntrllr* myDayDateVC;
@@ -111,7 +112,10 @@
 //    [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(sendEmail)]];
     
     //register for notes
-//    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    
+    //receive changes to the schedule to update the existing view
+    [nc addObserver:self selector:@selector(renewtheViewFromGeneralNotification:) name:EQRAChangeWasMadeToTheSchedule object:nil];
     
     //register to receive delete instructions from equipList cells
 //    [nc addObserver:self selector:@selector(addEquipUniqueToBeDeletedArray:) name:EQREquipUniqueToBeDeleted object:nil];
@@ -367,6 +371,11 @@
     //two important methods that initiate requestManager ivar arrays
     [self.privateRequestManager resetEquipListAndAvailableQuantites];
     [self.privateRequestManager retrieveAllEquipUniqueItems];
+}
+
+-(void)renewtheViewFromGeneralNotification:(NSNotification*)note{
+    
+    [self renewTheViewWithRequest:self.myScheduleRequest];
 }
 
 
@@ -1072,6 +1081,109 @@
 }
 
 
+#pragma mark - Distingishing ID Picker Button
+
+//an equipCell delegate method
+-(void)distIDPickerTapped:(NSDictionary*)infoDictionary{
+    
+    //get cell's equipUniqueKey, titleKey, buttonRect and button
+    NSString* equipTitleItem_foreignKey = [infoDictionary objectForKey:@"equipTitleItem_foreignKey"];
+    NSString* equipUniqueItem_foreignKey = [infoDictionary objectForKey:@"equipUniqueItem_foreignKey"];
+    CGRect buttonRect = [(UIButton*)[infoDictionary objectForKey:@"distButton"] frame];
+    UIButton* thisButton = (UIButton*)[infoDictionary objectForKey:@"distButton"];
+    
+    //create content VC
+    EQRDistIDPickerTableVC* distIDPickerVC = [[EQRDistIDPickerTableVC alloc] initWithNibName:@"EQRDistIDPickerTableVC" bundle:nil];
+    
+    //initial setup
+    [distIDPickerVC initialSetupWithOriginalUniqueKeyID:equipUniqueItem_foreignKey equipTitleKey:equipTitleItem_foreignKey scheduleItem:self.privateRequestManager.request];
+    distIDPickerVC.delegate = self;
+    
+    //create uiPopoverController
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:distIDPickerVC];
+    [popOver setPopoverContentSize:CGSizeMake(320.f, 300.f)];
+    popOver.delegate = self;
+    self.distIDPopover = popOver;
+    
+    //    CGRect fixedRect1 = [thisButton.superview convertRect:buttonRect fromView:thisButton];
+    CGRect fixedRect2 = [thisButton.superview.superview convertRect:buttonRect fromView:thisButton.superview];
+    CGRect fixedRect3 = [thisButton.superview.superview.superview convertRect:fixedRect2 fromView:thisButton.superview.superview];
+    CGRect fixedrect4 = [thisButton.superview.superview.superview.superview convertRect:fixedRect3 fromView:thisButton.superview.superview.superview];
+    CGRect fixedRect5 = [thisButton.superview.superview.superview.superview.superview convertRect:fixedrect4 fromView:thisButton.superview.superview.superview.superview];
+    
+    //present popover
+    [self.distIDPopover presentPopoverFromRect:fixedRect5 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+
+
+//distIDPicker Delegate method
+-(void)distIDSelectionMadeWithOriginalEquipUniqueKey:(NSString*)originalKeyID equipUniqueItem:(id)distEquipUniqueItem{
+    
+    //retrieve key id of selected equipUniqueItem AND indexPath of the collection cell that initiated the distID picker
+    //tell content of the cell to use replace the dist ID
+    //update the data model > schedule_equip_join has new unique_foreignKey
+    
+    //extract the unique's key as a string
+    NSString* thisIsTheKey = [(EQREquipUniqueItem*)distEquipUniqueItem key_id];
+    NSString* thisIsTheDistID = [(EQREquipUniqueItem*)distEquipUniqueItem distinquishing_id];
+    //    NSLog(@"this is the issue_service_name text: %@", [(EQREquipUniqueItem*)distEquipUniqueItem issue_short_name]);
+    NSString* thisIsTheIssueShortName = [(EQREquipUniqueItem*)distEquipUniqueItem issue_short_name];
+    NSString* thisIsTheStatusLevel = [(EQREquipUniqueItem*)distEquipUniqueItem status_level];
+    
+    
+    EQRScheduleTracking_EquipmentUnique_Join* saveThisJoin;
+    
+    //update local ivar arrays
+    for (EQRScheduleTracking_EquipmentUnique_Join* joinObj in self.arrayOfJoins){
+        
+        if ([joinObj.equipUniqueItem_foreignKey isEqualToString:originalKeyID]){
+            
+            [joinObj setEquipUniqueItem_foreignKey:thisIsTheKey];
+            [joinObj setDistinquishing_id:thisIsTheDistID];
+            
+            //_____need to know what service issues are a part of this new equipUnique and assign to local var in array______
+            [joinObj setIssue_short_name:thisIsTheIssueShortName];
+            [joinObj setStatus_level:thisIsTheStatusLevel];
+            
+            saveThisJoin = joinObj;
+            break;
+        }
+    }
+    self.arrayOfJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfJoins];
+    
+    //renew the collection view
+    [self.myTable reloadData];
+    
+    
+    //update the data layer
+    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", [saveThisJoin key_id], nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", [saveThisJoin equipUniqueItem_foreignKey], nil];
+    NSArray* thirdArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", [saveThisJoin equipTitleItem_foreignKey], nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
+    //    NSLog(@"this is the return string: %@", returnString);
+    
+    
+    //remove the popover
+    [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController setDelegate:nil];
+    
+    [self.distIDPopover dismissPopoverAnimated:YES];
+    
+    //gracefully dealloc all the objects in the content VC
+    [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController killThisThing];
+    
+    self.distIDPopover = nil;
+    
+    //send note to schedule that a change has been saved
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
+}
+
+
+
+
+
 #pragma mark - equip item deletion notification methods
 
 //-(void)addEquipUniqueToBeDeletedArray:(NSNotification*)note{
@@ -1380,6 +1492,10 @@
     }else if (popoverController == self.popover){
         
         self.popover = nil;
+        
+    }else if (popoverController == self.distIDPopover){
+        
+        self.distIDPopover = nil;
     }
 }
 
@@ -1408,6 +1524,8 @@
 -(void)dealloc{
     
     self.privateRequestManager = nil;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
