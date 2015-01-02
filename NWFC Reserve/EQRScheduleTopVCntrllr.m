@@ -638,6 +638,7 @@
     
     EQRStaffUserPickerViewController* staffUserPicker = [[EQRStaffUserPickerViewController alloc] initWithNibName:@"EQRStaffUserPickerViewController" bundle:nil];
     self.myStaffUserPicker = [[UIPopoverController alloc] initWithContentViewController:staffUserPicker];
+    self.myStaffUserPicker.delegate = self;
     
     //set size
     [self.myStaffUserPicker setPopoverContentSize:CGSizeMake(400, 400)];
@@ -673,6 +674,7 @@
     
     //dismiss the picker
     [self.myStaffUserPicker dismissPopoverAnimated:YES];
+    self.myStaffUserPicker = nil;
     
 }
 
@@ -682,6 +684,7 @@
     
     EQRDayDatePickerVCntrllr* dayDateView = [[EQRDayDatePickerVCntrllr alloc] initWithNibName:@"EQRDayDatePickerVCntrllr" bundle:nil];
     self.myDayDatePicker = [[UIPopoverController alloc] initWithContentViewController:dayDateView];
+    self.myDayDatePicker.delegate = self;
     
     //set size
     [self.myDayDatePicker setPopoverContentSize:CGSizeMake(400, 400)];
@@ -719,6 +722,7 @@
     
     //dismiss the picker
     [self.myDayDatePicker dismissPopoverAnimated:YES];
+    self.myDayDatePicker = nil;
     
     [self renewTheView];
 }
@@ -821,6 +825,7 @@
     self.myQuickViewScrollVCntrllr.myQuickViewPage3 = quickViewPage3;
     
     self.myScheduleRowQuickView = [[UIPopoverController alloc] initWithContentViewController:self.myQuickViewScrollVCntrllr];
+    self.myScheduleRowQuickView.delegate = self;
     [self.myScheduleRowQuickView setPopoverContentSize:CGSizeMake(300.f, 502.f)];
     
 
@@ -886,6 +891,7 @@
     
     //dismiss any popovers that may exist (ie the quickview when "duplicate" is tapped)
     [self.myScheduleRowQuickView dismissPopoverAnimated:YES];
+    self.myScheduleRowQuickView = nil;
     
     
    
@@ -921,6 +927,7 @@
     
     //dismiss the quickView popover
     [self.myScheduleRowQuickView dismissPopoverAnimated:YES];
+    self.myScheduleRowQuickView = nil;
     
     EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
     
@@ -1547,8 +1554,31 @@
 }
 
 
-#pragma mark - memory warning
+#pragma mark - popover delegate methods
 
+-(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
+    
+    //there are 3 popovers
+    //myDayDatePicker;
+    //myStaffUserPicker;
+    //myScheduleRowQuickView;
+    
+    if (popoverController == self.myDayDatePicker){
+        
+        self.myDayDatePicker = nil;
+        
+    }else if (popoverController == self.myStaffUserPicker){
+        
+        self.myStaffUserPicker = nil;
+        
+    }else if (popoverController == self.myScheduleRowQuickView){
+        
+        self.myScheduleRowQuickView = nil;
+    }
+}
+
+
+#pragma mark - memory warning
 
 
 - (void)didReceiveMemoryWarning

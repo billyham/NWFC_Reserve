@@ -394,6 +394,7 @@
     
     EQRStaffUserPickerViewController* staffUserPicker = [[EQRStaffUserPickerViewController alloc] initWithNibName:@"EQRStaffUserPickerViewController" bundle:nil];
     self.myStaffUserPicker = [[UIPopoverController alloc] initWithContentViewController:staffUserPicker];
+    self.myStaffUserPicker.delegate = self;
     
     //set size
     [self.myStaffUserPicker setPopoverContentSize:CGSizeMake(400, 400)];
@@ -429,6 +430,7 @@
     
     //dismiss the picker
     [self.myStaffUserPicker dismissPopoverAnimated:YES];
+    self.myStaffUserPicker = nil;
     
 }
 
@@ -440,8 +442,7 @@
     
     //dismiss any popovers that may exist (ie the quickview when "duplicate" is tapped)
     [self.myQuickView dismissPopoverAnimated:YES];
-    
-    
+    self.myQuickView = nil;
     
     
     EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
@@ -475,6 +476,7 @@
     
     //dismiss the quickView popover
     [self.myQuickView dismissPopoverAnimated:YES];
+    self.myQuickView = nil;
     
     EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
     
@@ -532,6 +534,8 @@
     self.myQuickViewScrollVCntrllr.myQuickViewPage3 = quickViewPage3;
     
     self.myQuickView = [[UIPopoverController alloc] initWithContentViewController:self.myQuickViewScrollVCntrllr];
+    self.myQuickView.delegate = self;
+    
     [self.myQuickView setPopoverContentSize:CGSizeMake(300.f, 502.f)];
     
     
@@ -715,6 +719,7 @@
     
     EQRDayDatePickerVCntrllr* dayDateView = [[EQRDayDatePickerVCntrllr alloc] initWithNibName:@"EQRDayDatePickerVCntrllr" bundle:nil];
     self.myDayDatePicker = [[UIPopoverController alloc] initWithContentViewController:dayDateView];
+    self.myDayDatePicker.delegate = self;
     
     //set size
     [self.myDayDatePicker setPopoverContentSize:CGSizeMake(400, 400)];
@@ -744,6 +749,7 @@
     
     //dismiss the picker
     [self.myDayDatePicker dismissPopoverAnimated:YES];
+    self.myDayDatePicker = nil;
     
     [self refreshTheView];
 }
@@ -1242,6 +1248,29 @@
 -(void)dealloc{
     
     self.privateRequestManager = nil;
+}
+
+#pragma mark - popover delegate methods
+
+-(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
+    
+    //there are 3 popovers
+    //myDayDatePicker;
+    //myStaffUserPicker;
+    //myQuickView;
+    
+    if (popoverController == self.myDayDatePicker){
+        
+        self.myDayDatePicker = nil;
+        
+    }else if (popoverController == self.myStaffUserPicker){
+        
+        self.myStaffUserPicker = nil;
+        
+    }else if (popoverController == self.myQuickView){
+        
+        self.myQuickView = nil;
+    }
 }
 
 

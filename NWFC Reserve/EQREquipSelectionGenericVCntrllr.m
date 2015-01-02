@@ -461,6 +461,8 @@
     
     UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.optionsVC];
     self.optionsPopover = popOver;
+    self.optionsPopover.delegate = self;
+    
     [self.optionsPopover setPopoverContentSize:CGSizeMake(320.f, 300.f)];
 
     //show popover
@@ -485,6 +487,7 @@
     
     //dismiss popover
     [self.optionsPopover dismissPopoverAnimated:YES];
+    self.optionsPopover = nil;
     
     //reload the view
     [self renewTheViewWithRequestManager:requestManager];
@@ -507,6 +510,8 @@
     
     UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:notesVC];
     self.notesPopover = popOver;
+    self.notesPopover.delegate = self;
+    
     [self.notesPopover setPopoverContentSize:CGSizeMake(320.f, 400.f)];
     
     CGRect rect1 = [self.editNotesButton.superview.superview convertRect:self.editNotesButton.frame fromView:self.editNotesButton.superview];
@@ -516,10 +521,8 @@
     
     //must be after presentation
     [notesVC initialSetupWithScheduleRequest:requestManager.request];
-
     
-    
-    }
+}
 
 
 -(void)retrieveNotesData:(NSString*)noteText{
@@ -543,14 +546,6 @@
     //dealloc popover
     self.notesPopover = nil;
 }
-
-
--(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
-    
-    //dealloc popover
-    self.notesPopover = nil;
-}
-
 
 
 #pragma mark - equipment cell buttons
@@ -602,6 +597,10 @@
 #pragma mark - notifications
 
 -(void)refreshTable:(NSNotification*)note{
+
+    //use for testing if the equipSelectionVC gets dealloc'ed
+//    NSLog(@"RECEIVED NOTE TO REFRESH EQUIP TABLE");
+//    return;
     
     NSString* typeOfChange = [[note userInfo] objectForKey:@"type"];
     //    NSString* sectionString = [[note userInfo] objectForKey:@"sectionString"];
@@ -977,11 +976,36 @@
 }
 
 
+#pragma mark - popover delegate methods
+
+-(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
+ 
+    // there are 2 popovers
+    //notesPopover
+    //optionsPopover
+    
+    if (popoverController == self.notesPopover){
+        
+        //dealloc popover
+        self.notesPopover = nil;
+        
+    }else if( popoverController == self.optionsPopover){
+        
+        self.optionsPopover = nil;
+    }
+}
+
+
 #pragma mark - memory warning
 
 -(void)dealloc{
     
     self.privateRequestManager = nil;
+    
+    //____tested and I don't this is necessary(???)
+    //unlist self from notificationCenter
+//    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
 }
 
 

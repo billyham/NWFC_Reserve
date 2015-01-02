@@ -556,6 +556,7 @@
     
     UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:navController];
     self.myContactPicker = popOver;
+    self.myContactPicker.delegate = self;
     
     //set the size
     [self.myContactPicker setPopoverContentSize:CGSizeMake(320, 550)];
@@ -587,9 +588,10 @@
     
     //dismiss popover
     [self.myContactPicker dismissPopoverAnimated:YES];
+    self.myContactPicker = nil;
     
     //release content view controller
-    self.myContactVC = nil;
+//    self.myContactVC = nil;
 }
 
 
@@ -602,6 +604,8 @@
     
     UIPopoverController* popOverC = [[UIPopoverController alloc] initWithContentViewController:myDateViewController];
     self.theDatePopOver = popOverC;
+    self.theDatePopOver.delegate = self;
+    
     self.theDatePopOver.popoverContentSize = CGSizeMake(320.f, 570.f);
 
     
@@ -626,7 +630,7 @@
 
 -(IBAction)showExtendedDate:(id)sender{
     
-    NSLog(@"showOrHide action fires with class: %@", [[self.theDatePopOver contentViewController] class]);
+//    NSLog(@"showOrHide action fires with class: %@", [[self.theDatePopOver contentViewController] class]);
     
     
     //change to Extended view
@@ -692,6 +696,7 @@
     
     //remove popover
     [self.theDatePopOver dismissPopoverAnimated:YES];
+    self.theDatePopOver = nil;
     
 }
 
@@ -704,7 +709,8 @@
     self.myRenterViewController = myRenterVC;
     
     UIPopoverController* popOverC2 = [[UIPopoverController alloc] initWithContentViewController:self.myRenterViewController];
-    self.theRenterPopOver= popOverC2;
+    self.theRenterPopOver = popOverC2;
+    self.theRenterPopOver.delegate = self;
     
     //set size
     [self.theRenterPopOver setPopoverContentSize:CGSizeMake(300.f, 500.f)];
@@ -732,6 +738,7 @@
     
     //remove popover
     [self.theRenterPopOver dismissPopoverAnimated:YES];
+    self.theRenterPopOver = nil;
 }
 
 
@@ -750,6 +757,8 @@
     
     UIPopoverController* popOverMe = [[UIPopoverController alloc] initWithContentViewController:genericEquipVCntrllr];
     self.theEquipSelectionPopOver = popOverMe;
+    self.theEquipSelectionPopOver.delegate = self;
+    
     //must manually set the size, cannot be wider than 600px!!!!???? But seems to work ok at 800 anyway???
     self.theEquipSelectionPopOver.popoverContentSize = CGSizeMake(700, 600);
     
@@ -768,17 +777,16 @@
     [self.privateRequestManager justConfirm];
 
     [self.theEquipSelectionPopOver dismissPopoverAnimated:YES];
-    
-    //dealloc the popover or it resumes to show selected items from a previous viewing.. ALSO need to to this in the popover delegate method!!
-    //____!!!!!! this does nothing  !!!!!!______
-//    self.theEquipSelectionPopOver = nil;
-    
-    //_________***  need to update self.arrayOfEquipUniqueItems
+
+    //dealloc the popover or it resumes to show selected items from a previous viewing.. ALSO need to do this in the popover delegate method!!
+    //____!!!!!!  must also issue the same dealloc for the content VC in the Popover's delegate method for when cancelled  !!!!!!______
+    self.theEquipSelectionPopOver = nil;
+
+    //need to update self.arrayOfEquipUniqueItems ??
     //empty arrays first
     [self.arrayOfSchedule_Unique_Joins removeAllObjects];
     self.arrayOfSchedule_Unique_JoinsWithStructure = nil;
     
-//    NSMutableArray* arrayToReturn = [NSMutableArray arrayWithCapacity:1];
     NSMutableArray* arrayToReturnJoins = [NSMutableArray arrayWithCapacity:1];
     
     EQRWebData* webData = [EQRWebData sharedInstance];
@@ -935,14 +943,36 @@
 
 -(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
     
-    //release delegate
-    self.myContactVC.delegate = self;
+    //___There are 4 different popovers____
+    //try a universal approach...
+    //____this didn't work____
+//    popoverController = nil;
     
-    //release content view controller
-    self.myContactVC = nil;
+    //this works... need to dealloc properties
+    if (popoverController == self.theDatePopOver){
+        
+        self.theDatePopOver = nil;
+        
+    }else if (popoverController == self.theRenterPopOver){
+        
+        self.theRenterPopOver = nil;
+        
+    }else if (popoverController == self.theEquipSelectionPopOver){
+        
+        self.theEquipSelectionPopOver = nil;
+        
+    }else if (popoverController == self.myContactPicker){
+        
+        //release delegate
+        self.myContactVC.delegate = self;
+        
+        //release content view controller
+        self.myContactVC = nil;
+        
+        //release popover
+        self.myContactPicker = nil;
+    }
     
-    //release popover
-    self.myContactPicker = nil;
 }
 
 

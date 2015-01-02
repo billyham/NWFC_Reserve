@@ -1046,6 +1046,11 @@
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
     
+    //there are 3 popovers:
+    //myStaffUserPicker
+    //distIDPopover
+    //myEquipSelectionPopover
+    
     if (popoverController == self.myEquipSelectionPopover){
         
         self.myEquipSelectionPopover = nil;
@@ -1059,6 +1064,10 @@
         
         //_______THIS IS SUPER DUPER DUPER SUPER IMPORTANT!!!!!_______
         self.distIDPopover = nil;
+        
+    }else if (popoverController == self.myStaffUserPicker){
+        
+        self.myStaffUserPicker = nil;
     }
 }
 
@@ -1077,6 +1086,8 @@
     
     UIPopoverController* popOverMe = [[UIPopoverController alloc] initWithContentViewController:genericEquipVCntrllr];
     self.myEquipSelectionPopover = popOverMe;
+    self.myEquipSelectionPopover.delegate = self;
+    
     //must manually set the size, cannot be wider than 600px!!!!???? But seems to work ok at 800 anyway???
     self.myEquipSelectionPopover.popoverContentSize = CGSizeMake(700, 600);
     
@@ -1096,6 +1107,7 @@
     [self.privateRequestManager justConfirm];
     
     [self.myEquipSelectionPopover dismissPopoverAnimated:YES];
+    self.myEquipSelectionPopover = nil;
 
     //renew the list of joins by going to the data layer
     [self renewTheArrayWithScheduleTracking_foreignKey:self.myScheduleRequestItem.key_id];
@@ -1111,6 +1123,7 @@
     
     EQRStaffUserPickerViewController* staffUserPicker = [[EQRStaffUserPickerViewController alloc] initWithNibName:@"EQRStaffUserPickerViewController" bundle:nil];
     self.myStaffUserPicker = [[UIPopoverController alloc] initWithContentViewController:staffUserPicker];
+    self.myStaffUserPicker.delegate = self;
     
     //set size
     [self.myStaffUserPicker setPopoverContentSize:CGSizeMake(400, 400)];
@@ -1146,6 +1159,7 @@
     
     //dismiss the picker
     [self.myStaffUserPicker dismissPopoverAnimated:YES];
+    self.myStaffUserPicker = nil;
     
 }
 

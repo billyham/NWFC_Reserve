@@ -773,6 +773,7 @@
     
     UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.contactNavController];
     self.myContactPicker = popOver;
+    self.myContactPicker.delegate = self;
     
     //set the size
     [self.myContactPicker setPopoverContentSize:CGSizeMake(320, 550)];
@@ -803,6 +804,7 @@
     
     UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.myRenterTypeVC];
     self.myRenterTypePicker = popOver;
+    self.myRenterTypePicker.delegate = self;
     
     //set the size
     [self.myRenterTypePicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
@@ -831,6 +833,7 @@
     
     UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.myClassPickerVC];
     self.myClassPicker = popOver;
+    self.myClassPicker.delegate = self;
     
     //set the size
     [self.myClassPicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
@@ -859,6 +862,8 @@
     //create the popover and assign to ivar
     UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:datePickerVC];
     self.myDayDatePicker = popOver;
+    self.myDayDatePicker.delegate = self;
+    
     self.myDayDatePicker.popoverContentSize = CGSizeMake(320.f, 570.f);
     
     //convert coordinates of textField frame to self.view
@@ -902,6 +907,8 @@
     
     UIPopoverController* popOverMe = [[UIPopoverController alloc] initWithContentViewController:genericEquipVCntrllr];
     self.myAddEquipPopover = popOverMe;
+    self.myAddEquipPopover.delegate = self;
+    
     //must manually set the size, cannot be wider than 600px!!!!???? But seems to work ok at 800 anyway???
     self.myAddEquipPopover.popoverContentSize = CGSizeMake(700, 600);
     
@@ -921,6 +928,7 @@
     [self.privateRequestManager justConfirm];
     
     [self.myAddEquipPopover dismissPopoverAnimated:YES];
+    self.myAddEquipPopover = nil;
     
     
     //renew the list of joins by going to the data layer
@@ -952,7 +960,9 @@
     
     //dismiss the popover
     [self.myDayDatePicker dismissPopoverAnimated:YES];
-    self.myDayDateVC = nil;
+    self.myDayDatePicker = nil;
+//    self.myDayDateVC = nil;
+    
     
 }
 
@@ -980,9 +990,11 @@
     
     //dismiss the popover
     [self.myContactPicker dismissPopoverAnimated:YES];
+    self.myContactPicker = nil;
     
+    //i think this is unnecessary if the popover is set to nil
     //release mycontactVC
-    self.myContactVC = nil;
+//    self.myContactVC = nil;
 }
 
 
@@ -1005,6 +1017,7 @@
     
     //dismiss popover
     [self.myRenterTypePicker dismissPopoverAnimated:YES];
+    self.myRenterTypePicker = nil;
     
 }
 
@@ -1031,6 +1044,7 @@
     
     //dismiss popover
     [self.myClassPicker dismissPopoverAnimated:YES];
+    self.myClassPicker = nil;
 }
 
 
@@ -1113,6 +1127,7 @@
     
     EQRStaffUserPickerViewController* staffUserPicker = [[EQRStaffUserPickerViewController alloc] initWithNibName:@"EQRStaffUserPickerViewController" bundle:nil];
     self.myStaffUserPicker = [[UIPopoverController alloc] initWithContentViewController:staffUserPicker];
+    self.myStaffUserPicker.delegate = self;
     
     //set size
     [self.myStaffUserPicker setPopoverContentSize:CGSizeMake(400, 400)];
@@ -1148,6 +1163,7 @@
     
     //dismiss the picker
     [self.myStaffUserPicker dismissPopoverAnimated:YES];
+    self.myStaffUserPicker = nil;
     
 }
 
@@ -1194,7 +1210,7 @@
 
 -(void)splitViewController:(UISplitViewController *)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)pc{
     
-    NSLog(@"inside willHide split view delegate method");
+//    NSLog(@"inside willHide split view delegate method");
     
     barButtonItem.title = @"Requests";
     [self.navigationItem setLeftBarButtonItem:barButtonItem];
@@ -1320,6 +1336,51 @@
     //width is equal to the collectionView's width
     return CGSizeMake(self.myTable.frame.size.width, 35.f);
     
+}
+
+
+#pragma mark - popover delegate methods
+
+-(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
+ 
+    //there are 7 different popovers!
+    //  popover
+    //  myStaffUserPicker;
+    //  myDayDatePicker;
+    //  myContactPicker;
+    //  myRenterTypePicker;
+    //  myClassPicker;
+    //  myAddEquipPopover;
+    
+    
+    if (popoverController == self.myStaffUserPicker){
+        
+        self.myStaffUserPicker = nil;
+        
+    }else if (popoverController == self.myDayDatePicker){
+        
+        self.myDayDatePicker = nil;
+        
+    }else if (popoverController == self.myContactPicker){
+        
+        self.myContactPicker = nil;
+        
+    }else if (popoverController == self.myRenterTypePicker){
+        
+        self.myRenterTypePicker = nil;
+        
+    }else if (popoverController == self.myClassPicker){
+        
+        self.myClassPicker = nil;
+        
+    }else if (popoverController == self.myAddEquipPopover){
+        
+        self.myAddEquipPopover = nil;
+        
+    }else if (popoverController == self.popover){
+        
+        self.popover = nil;
+    }
 }
 
 

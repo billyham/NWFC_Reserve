@@ -19,7 +19,7 @@
 
 @property (strong, nonatomic) UIColor* myAssignedColor;
 @property (strong, nonatomic) UIButton* myQuickViewButton;
-@property (strong, nonatomic) UIPopoverController* myPopOver;
+//@property (strong, nonatomic) UIPopoverController* myPopOver;
 
 
 @end
@@ -480,6 +480,18 @@
         }
     }
 }
+
+#pragma mark - popover delegate methods
+
+//never uses the popover actually
+//-(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
+//    
+//    //there is 1 popover
+//    if (popoverController == self.myPopOver){
+//        
+//        self.myPopOver = nil;
+//    }
+//}
 
 
 - (void)didReceiveMemoryWarning
