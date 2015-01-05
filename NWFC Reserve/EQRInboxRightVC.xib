@@ -17,6 +17,7 @@
                 <outlet property="mainSubView" destination="H0Q-s1-zCE" id="ey2-DC-zLv"/>
                 <outlet property="myTable" destination="ipl-QA-uZT" id="IC8-0x-ls1"/>
                 <outlet property="nameValueField" destination="HdU-Y9-Idv" id="5ys-xs-nGe"/>
+                <outlet property="notesView" destination="1e6-uK-hFI" id="bk6-eC-mKm"/>
                 <outlet property="pickUpTimeValue" destination="u0E-eI-hJR" id="Jad-wb-vi9"/>
                 <outlet property="pickUpTimeValueField" destination="MiT-xo-BtN" id="ibF-bl-86Z"/>
                 <outlet property="returnTimeValue" destination="jFc-lz-Nn7" id="NOx-lz-cXD"/>
@@ -201,12 +202,9 @@
                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1e6-uK-hFI">
-                                    <rect key="frame" x="78" y="476" width="315" height="191"/>
+                                <textView clipsSubviews="YES" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1e6-uK-hFI">
+                                    <rect key="frame" x="78" y="476" width="315" height="534"/>
                                     <color key="backgroundColor" white="0.96983348540145986" alpha="1" colorSpace="calibratedWhite"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="191" id="vra-4f-tHt"/>
-                                    </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 </textView>
@@ -259,6 +257,7 @@
                                 <constraint firstItem="evo-GZ-jxt" firstAttribute="top" secondItem="q4h-Q8-p31" secondAttribute="bottom" constant="16" id="fIP-Yh-5HB"/>
                                 <constraint firstItem="jFc-lz-Nn7" firstAttribute="top" secondItem="u0E-eI-hJR" secondAttribute="bottom" constant="16" id="fIk-s6-Lv1"/>
                                 <constraint firstItem="bpD-Kp-48w" firstAttribute="leading" secondItem="zZA-FD-EOX" secondAttribute="leading" constant="14" id="h3d-pW-Rim"/>
+                                <constraint firstAttribute="bottom" secondItem="1e6-uK-hFI" secondAttribute="bottom" constant="14" id="icZ-DJ-rgm"/>
                                 <constraint firstAttribute="trailing" secondItem="u0E-eI-hJR" secondAttribute="trailing" constant="8" id="mrh-qf-Zne"/>
                                 <constraint firstItem="aoB-5J-EgF" firstAttribute="trailing" secondItem="evo-GZ-jxt" secondAttribute="trailing" id="oSb-a1-Mq5"/>
                                 <constraint firstAttribute="trailing" secondItem="1e6-uK-hFI" secondAttribute="trailing" constant="25" id="r9h-ai-hZX"/>
@@ -276,11 +275,11 @@
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ipl-QA-uZT">
                                     <rect key="frame" x="0.0" y="0.0" width="350" height="1024"/>
                                     <color key="backgroundColor" white="0.96983349323272705" alpha="1" colorSpace="calibratedWhite"/>
-                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="vVg-Hy-wah">
+                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="vVg-Hy-wah">
                                         <size key="itemSize" width="350" height="35"/>
                                         <size key="headerReferenceSize" width="350" height="20"/>
                                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="8"/>
                                     </collectionViewFlowLayout>
                                     <connections>
                                         <outlet property="dataSource" destination="-1" id="ePU-hk-ymg"/>

@@ -9,6 +9,7 @@
 #import "EQRColors.h"
 
 NSString* EQRColorLightBlue = @"EQRColorLightBlue";
+NSString* EQRVeryNiceBlue = @"EQRVeryNiceBlue";
 NSString* EQRColorVeryLightGrey = @"EQRColorVeryLightGrey";
 
 NSString* EQRColorCalStudent = @"EQRColorCalStudent";
@@ -52,6 +53,7 @@ NSString* EQRColorIssueSerious = @"EQRColorIssueSerious";
     if (!self.colorDic){
         self.colorDic = [NSDictionary dictionaryWithObjectsAndKeys:
                          [UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0], EQRColorLightBlue,
+                         [UIColor colorWithRed:0.9 green:0.95 blue:0.98 alpha:1.0], EQRVeryNiceBlue,
                          [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1.0], EQRColorVeryLightGrey,
                          [UIColor colorWithRed:0.77 green:0.87 blue:0.97 alpha:0.5], EQRColorCalStudent,
                          [UIColor colorWithRed:0.97 green:0.32 blue:0.52 alpha:0.5], EQRColorCalPublic,
@@ -63,7 +65,7 @@ NSString* EQRColorIssueSerious = @"EQRColorIssueSerious";
                          [UIColor colorWithRed:0.57 green:0.77 blue:0.77 alpha:1.0], EQRColorStatusGoing,
                          [UIColor colorWithRed:0.77 green:0.57 blue:0.57 alpha:1.0], EQRColorStatusReturning,
                          [UIColor colorWithRed:222 green:235 blue:234 alpha:1], EQRColorCoolGreen,
-                         [UIColor blueColor], EQRColorIssueDescriptive,
+                         [UIColor grayColor], EQRColorIssueDescriptive,
                          [UIColor brownColor], EQRColorIssueMinor,
                          [UIColor redColor], EQRColorIssueSerious,
                          nil];

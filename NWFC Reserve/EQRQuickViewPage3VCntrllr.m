@@ -14,6 +14,7 @@
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRCheckPrintPage.h"
 
+
 @interface EQRQuickViewPage3VCntrllr ()
 
 @property (strong, nonatomic) NSString* mykeyID;
@@ -205,6 +206,21 @@
         }
     }];
     
+    //also gather contact info
+    NSArray* alphaArray = [NSArray arrayWithObjects:@"key_id", chosenItem.contact_foreignKey, nil];
+    NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
+    [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:betaArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+       
+        if ([muteArray count] > 0){
+            
+            chosenItem.contactNameItem = [muteArray objectAtIndex:0];
+            
+        }else {
+            
+            //error handling if no contact object is returned
+            NSLog(@"QuickViewPage3VC > print  no contact returned with contact foreign key");
+        }
+    }];
     
     //create printable page view controller
     EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
@@ -214,8 +230,8 @@
     
     //assign ivar variables
     pageForPrint.rentorNameAtt = chosenItem.contact_name;
-    pageForPrint.rentorEmailAtt = @"test email address";
-    pageForPrint.rentorPhoneAtt = @"test phone";
+    pageForPrint.rentorEmailAtt = chosenItem.contactNameItem.email;
+    pageForPrint.rentorPhoneAtt = chosenItem.contactNameItem.phone;
     
     
     //show the view controller

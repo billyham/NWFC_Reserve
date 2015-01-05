@@ -15,4 +15,6 @@
 @property (strong, nonatomic) IBOutlet UILabel* myLabel;
 @property (strong, nonatomic) IBOutlet UIButton* myServiceIssue;
 
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* issueTrailingConstraint;
+
 @end

@@ -25,7 +25,7 @@
 #import "EQREquipUniqueItem.h"
 #import "EQREquipSelectionGenericVCntrllr.h"
 #import "EQRScheduleRequestManager.h"
-
+#import "EQRColors.h"
 
 @interface EQRInboxRightVC ()
 
@@ -54,6 +54,7 @@
 @property (strong, nonatomic) IBOutlet UIButton* classValueField;
 @property (strong, nonatomic) IBOutlet UIButton* pickUpTimeValueField;
 @property (strong, nonatomic) IBOutlet UIButton* returnTimeValueField;
+@property (strong, nonatomic) IBOutlet UITextView* notesView;
 
 @property (strong, nonatomic) IBOutlet UIView* addButtonView;
 @property (strong, nonatomic) IBOutlet UIView* doneButtonView;
@@ -69,6 +70,7 @@
 @property (strong, nonatomic) UIPopoverController* myRenterTypePicker;
 @property (strong, nonatomic) UIPopoverController* myClassPicker;
 @property (strong, nonatomic) UIPopoverController* distIDPopover;
+@property (strong, nonatomic) UIPopoverController* myNotesPopover;
 
 //popOver root VCs
 @property (strong, nonatomic) EQREditorDateVCntrllr* myDayDateVC;
@@ -84,6 +86,7 @@
 @property (strong, nonatomic) UIPopoverController* myAddEquipPopover;
 
 @property BOOL inEditModeFlag;
+@property BOOL aChangeWasMade;
 
 
 @end
@@ -115,7 +118,7 @@
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     
     //receive changes to the schedule to update the existing view
-    [nc addObserver:self selector:@selector(renewtheViewFromGeneralNotification:) name:EQRAChangeWasMadeToTheSchedule object:nil];
+    [nc addObserver:self selector:@selector(raiseFlagThatAChangeHasBeenMade:) name:EQRAChangeWasMadeToTheSchedule object:nil];
     
     //register to receive delete instructions from equipList cells
 //    [nc addObserver:self selector:@selector(addEquipUniqueToBeDeletedArray:) name:EQREquipUniqueToBeDeleted object:nil];
@@ -187,6 +190,25 @@
 
 
 -(void)viewWillAppear:(BOOL)animated{
+    
+    if (self.aChangeWasMade == YES){
+        
+        self.aChangeWasMade = NO;
+        
+        if (self.myScheduleRequest == nil){
+            
+            //do nothing when no item is currently loaded into the rightView
+            
+        }else{
+            
+            EQRScheduleRequestItem* thisItem = [self retrieveRequestItemWithRequestKeyID:self.myScheduleRequest.key_id];
+            
+            if (thisItem){
+                
+                [self renewTheViewWithRequest:thisItem];
+            }
+        }
+    }
     
     //update navigation bar
     EQRModeManager* modeManager = [EQRModeManager sharedInstance];
@@ -267,6 +289,43 @@
 }
 
 
+-(EQRScheduleRequestItem*)retrieveRequestItemWithRequestKeyID:(NSString*)keyID{
+    
+    if (keyID == nil){
+        //error handling if no keyID is sent
+        return nil;
+    }
+    
+    //use this when a change to dates may have occured in the scheduleRequest
+    
+    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", keyID, nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
+    __block EQRScheduleRequestItem* thisItem = nil;
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    [webData queryWithLink:@"EQGetScheduleRequestComplete.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+    
+        if ([muteArray count] == 0){
+            
+            //error handling when no item are returned
+            NSLog(@"InboxRightVC > retrieveRequestItemWith... no request items returned");
+            
+        }else if ([muteArray count] == 1){
+            
+            thisItem = [muteArray objectAtIndex:0];
+            
+        }else if ([muteArray count] > 1){
+            
+            //error handling when more than one request item is returned for the same keyid
+            NSLog(@"InboxRightVC > retrieveRequestItemWith... got two requests for one key id");
+        }
+        
+    }];
+
+    return thisItem;
+}
+
+
 -(void)renewTheViewWithRequest:(EQRScheduleRequestItem*)request{
     
     //set reqeustItem (error handling if nil)
@@ -325,6 +384,31 @@
     [self.pickUpTimeValueField setTitle:self.pickUpTimeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     [self.returnTimeValueField setTitle:self.returnTimeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     
+    //set text in notes
+    NSArray* justKeyArray = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequest.key_id, nil];
+    NSArray* justTopArray = [NSArray arrayWithObjects:justKeyArray, nil];
+    NSMutableArray* tempMuteArrayJustKey = [NSMutableArray arrayWithCapacity:1];
+    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:justTopArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+       
+        for (EQRScheduleRequestItem* requestItem in muteArray){
+            
+            [tempMuteArrayJustKey addObject:requestItem];
+        }
+    }];
+    
+    //error handling if no items are returned
+    if ([tempMuteArrayJustKey count] > 0){
+        
+        self.myScheduleRequest.notes = [[tempMuteArrayJustKey objectAtIndex:0] notes];
+    }else{
+        NSLog(@"InboxRightVC > renewTheViewWithRequest failed to find a matching request key id");
+    }
+    
+    //set notes text
+    self.notesView.text = self.myScheduleRequest.notes;
+    
+    //turn off editable
+    self.notesView.editable = NO;
     
     //get table of joins
     NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
@@ -373,9 +457,9 @@
     [self.privateRequestManager retrieveAllEquipUniqueItems];
 }
 
--(void)renewtheViewFromGeneralNotification:(NSNotification*)note{
+-(void)raiseFlagThatAChangeHasBeenMade:(NSNotification*)note{
     
-    [self renewTheViewWithRequest:self.myScheduleRequest];
+    self.aChangeWasMade = YES;
 }
 
 
@@ -679,8 +763,6 @@
     //lower main sub view to reveal save button
 //    self.topLayoutGuideConstraint.constant = 50;
     
-    
-    
     //animate changes in the constraints (specifically the constraints added to mainSubView)
     [self.mainSubView setNeedsUpdateConstraints];
     
@@ -690,10 +772,19 @@
         [self.view layoutIfNeeded];
     }];
     
+   //show delete button in cells (and show distIDPicker button)
+    for (EQREditorEquipListCell* thisCell in [self.myTable visibleCells]){
+        
+        [thisCell enterEditMode];
+    }
     
-   
+    //make notes view hot to touch
+    UITapGestureRecognizer* tapGest = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openNotesEditor)];
+    [self.notesView addGestureRecognizer:tapGest];
     
-    
+    //background color for notes
+    EQRColors* colors = [EQRColors sharedInstance];
+    self.notesView.backgroundColor = [colors.colorDic objectForKey:EQRVeryNiceBlue];
     
 }
 
@@ -730,6 +821,24 @@
         [self.doneButtonView setHidden:YES];
     }];
   
+    //hide delete button in cells (and hide distIDPicker button)
+    for (EQREditorEquipListCell* thisCell in [self.myTable visibleCells]){
+        
+        [thisCell leaveEditMode];
+    }
+    
+    //remove tap gesture on notes
+    for (UIGestureRecognizer* gest in [self.notesView gestureRecognizers]){
+        
+        if ([gest class] == [UITapGestureRecognizer class]){
+            
+            [self.notesView removeGestureRecognizer:gest];
+        }
+    }
+    
+    //background color for notes
+    EQRColors* colors = [EQRColors sharedInstance];
+    self.notesView.backgroundColor = [colors.colorDic objectForKey:EQRColorVeryLightGrey];
 }
 
 
@@ -1181,6 +1290,46 @@
 }
 
 
+#pragma mark - Notes popover methods
+
+-(void)openNotesEditor{
+    
+    EQRNotesVC* thisNotes = [[EQRNotesVC alloc] initWithNibName:@"EQRNotesVC" bundle:nil];
+    thisNotes.delegate = self;
+    
+    UIPopoverController* thisNotesPop = [[UIPopoverController alloc] initWithContentViewController:thisNotes];
+    self.myNotesPopover = thisNotesPop;
+    self.myNotesPopover.delegate = self;
+    
+    [self.myNotesPopover setPopoverContentSize:CGSizeMake(320.f, 400.f)];
+
+    [self.myNotesPopover presentPopoverFromRect:self.notesView.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    //must be after presentation
+    [thisNotes initialSetupWithScheduleRequest:self.myScheduleRequest];
+}
+
+
+-(void)retrieveNotesData:(NSString*)noteText{
+    
+    //update notes view
+    self.notesView.text = noteText;
+    
+    //update ivar request
+    self.myScheduleRequest.notes = noteText;
+    
+    //update data layer
+    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequest.key_id, nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:@"notes", noteText, nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    [webData queryForStringWithLink:@"EQAlterNotesInScheduleRequest.php" parameters:topArray];
+    
+    //dismiss popover
+    [self.myNotesPopover dismissPopoverAnimated:YES];
+    self.myNotesPopover = nil;
+}
 
 
 
@@ -1369,13 +1518,13 @@
     BOOL toBeDeleted = NO;
     for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
         
-        if ([keyToDelete isEqualToString:[[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]]){
+        if ([keyToDelete isEqualToString:[[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] equipUniqueItem_foreignKey]]){
             
             toBeDeleted = YES;
         }
     }
     
-    [cell initialSetupWithJoinObject:[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] deleteFlag:toBeDeleted];
+    [cell initialSetupWithJoinObject:[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] deleteFlag:toBeDeleted editMode:self.inEditModeFlag];
     
     return cell;
 }
@@ -1455,16 +1604,8 @@
 
 -(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
  
-    //there are 7 different popovers!
-    //  popover
-    //  myStaffUserPicker;
-    //  myDayDatePicker;
-    //  myContactPicker;
-    //  myRenterTypePicker;
-    //  myClassPicker;
-    //  myAddEquipPopover;
-    
-    
+    //there are 8 different popovers!
+
     if (popoverController == self.myStaffUserPicker){
         
         self.myStaffUserPicker = nil;
@@ -1496,6 +1637,10 @@
     }else if (popoverController == self.distIDPopover){
         
         self.distIDPopover = nil;
+        
+    }else if (popoverController == self.myNotesPopover){
+        
+        self.myNotesPopover = nil;
     }
 }
 

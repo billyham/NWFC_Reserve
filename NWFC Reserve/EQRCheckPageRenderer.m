@@ -731,19 +731,43 @@
 }
 
 
-//- (void)drawContentForPageAtIndex:(NSInteger)index inRect:(CGRect)contentRect{
-//    
-//    
-//    
-//}
+- (void)drawContentForPageAtIndex:(NSInteger)index inRect:(CGRect)contentRect{
+
+    //more than 20 items will need a second column
+
+    //first the dates then the rest of the text
+    NSTextContainer *container = self.aTextView.layoutManager.textContainers[0];
+    CGPoint datesOrigin = CGPointMake(120.f, 220.f);
+    
+    NSRange glyphRange = [self.aTextView.layoutManager glyphRangeForTextContainer:container];
+    
+    [self.aTextView.layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:datesOrigin];
+    
+    
+    //now the equipment list
+    for (NSUInteger i = 0; i < [self.aTwoColumnView.layoutManager.textContainers count]; i++) {
+        
+        NSTextContainer *container = self.aTwoColumnView.layoutManager.textContainers[i];
+        CGPoint origin = [self.aTwoColumnView.textOrigins[i] CGPointValue];
+        
+        //add 220 to the y value to place below header
+        CGPoint newOrigin = CGPointMake(origin.x + 30.f, origin.y + 250.f);
+        
+        NSRange glyphRange = [self.aTwoColumnView.layoutManager glyphRangeForTextContainer:container];
+        
+        [self.aTwoColumnView.layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:newOrigin];
+    }
+    
+}
+
 
 #pragma mark - printerFormatter
 
-- (void)drawPrintFormatter:(UIPrintFormatter *)printFormatter forPageAtIndex:(NSInteger)index{
-    
-    [super drawPrintFormatter:printFormatter forPageAtIndex:index];
-    
-}
+//- (void)drawPrintFormatter:(UIPrintFormatter *)printFormatter forPageAtIndex:(NSInteger)index{
+//    
+//    [super drawPrintFormatter:printFormatter forPageAtIndex:index];
+//    
+//}
 
 
 #pragma mark - footer

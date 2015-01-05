@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 extern NSString* EQRColorLightBlue;
+extern NSString* EQRVeryNiceBlue;
 extern NSString* EQRColorVeryLightGrey;
 
 extern NSString* EQRColorCalStudent;

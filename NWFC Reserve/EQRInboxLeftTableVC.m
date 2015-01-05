@@ -48,8 +48,8 @@
     //http://stackoverflow.com/questions/19214286/having-a-zombie-issue-on-uisearchdisplaycontroller
     self.mySearechDisplayController = (__bridge UISearchDisplayController*)(CFBridgingRetain(self.searchDisplayController));
  
-
-    
+    // Uncomment the following line to preserve selection between presentations.
+    self.clearsSelectionOnViewWillAppear = NO;
 }
 
 
@@ -144,7 +144,7 @@
     }
     
     
-    
+//    NSLog(@"InboxLeftTableVC > renewTheView count of items in tempMuteArray: %u", [tempMuteArray count]);
     
     //______*****   sort on date   ******______
     //alphabatize the list of unique items

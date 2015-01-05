@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQREditorEquipListContentVC">
             <connections>
+                <outlet property="issueTrailingConstraint" destination="geZ-Sc-2dz" id="rsX-0d-I1J"/>
                 <outlet property="myDeleteButton" destination="G2O-cn-nOo" id="9FU-xT-5If"/>
                 <outlet property="myDistIDButton" destination="tgt-R3-Z5g" id="UKG-Zg-Uih"/>
                 <outlet property="myLabel" destination="clP-jG-1Rr" id="LJE-8t-2VL"/>
@@ -30,7 +31,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G2O-cn-nOo">
-                    <rect key="frame" x="302" y="3" width="36" height="30"/>
+                    <rect key="frame" x="297" y="3" width="36" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="Qex-75-Phl"/>
                     </constraints>
@@ -71,7 +72,7 @@
                 <constraint firstItem="tgt-R3-Z5g" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="172" id="a5b-UD-Wwv"/>
                 <constraint firstItem="G2O-cn-nOo" firstAttribute="leading" secondItem="71b-oO-ysc" secondAttribute="trailing" constant="7" id="dNo-yf-rPc"/>
                 <constraint firstAttribute="trailing" secondItem="71b-oO-ysc" secondAttribute="trailing" constant="50" id="geZ-Sc-2dz"/>
-                <constraint firstAttribute="trailing" secondItem="G2O-cn-nOo" secondAttribute="trailing" constant="8" id="jbd-Ue-jez"/>
+                <constraint firstAttribute="trailing" secondItem="G2O-cn-nOo" secondAttribute="trailing" constant="13" id="jbd-Ue-jez"/>
                 <constraint firstItem="clP-jG-1Rr" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="7" id="sck-lo-14n"/>
                 <constraint firstItem="tgt-R3-Z5g" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="2" id="vFp-1a-ar5"/>
             </constraints>

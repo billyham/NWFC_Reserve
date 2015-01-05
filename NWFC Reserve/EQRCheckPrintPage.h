@@ -18,8 +18,13 @@
 
 @property (nonatomic, strong) IBOutlet UITextView* summaryTextView;
 @property (nonatomic, strong) NSTextStorage* summaryTextStorage;
+
+@property (nonatomic, strong) NSMutableAttributedString* datesAtt;
 @property (nonatomic, strong) NSMutableAttributedString* summaryTotalAtt;
+
+
 @property (nonatomic, strong) IBOutlet UIButton* dismissButton;
+
 
 
 -(void)initialSetupWithScheduleRequestItem:(EQRScheduleRequestItem*)request;

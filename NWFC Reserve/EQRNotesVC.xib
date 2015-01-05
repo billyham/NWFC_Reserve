@@ -16,8 +16,8 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="400"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HOM-iz-Ggp">
-                    <rect key="frame" x="8" y="43" width="304" height="349"/>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HOM-iz-Ggp">
+                    <rect key="frame" x="8" y="43" width="304" height="332"/>
                     <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="calibratedRGB"/>
                     <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -41,6 +41,10 @@
             <constraints>
                 <constraint firstAttribute="centerX" secondItem="j3G-Bv-O8C" secondAttribute="centerX" id="4lv-wd-IK6"/>
                 <constraint firstItem="j3G-Bv-O8C" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="8" id="DvN-XH-T7m"/>
+                <constraint firstAttribute="trailing" secondItem="HOM-iz-Ggp" secondAttribute="trailing" constant="8" id="HI4-wk-iLh"/>
+                <constraint firstAttribute="bottom" secondItem="HOM-iz-Ggp" secondAttribute="bottom" constant="25" id="LPM-eL-V7a"/>
+                <constraint firstItem="HOM-iz-Ggp" firstAttribute="top" secondItem="j3G-Bv-O8C" secondAttribute="bottom" constant="5" id="Ldn-7I-oWk"/>
+                <constraint firstItem="HOM-iz-Ggp" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="tus-Ul-r8v"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

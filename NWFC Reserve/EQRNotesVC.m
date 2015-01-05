@@ -44,6 +44,15 @@
             self.myTextView.text = object.notes;
         }
     }];
+    
+    //present keyboard to begin editing
+    [self.myTextView becomeFirstResponder];
+}
+
+
+-(void)beginEditing{
+    
+    [self.myTextView becomeFirstResponder];
 }
 
 
@@ -52,6 +61,11 @@
     //udpate data layer
     EQRWebData* webData = [EQRWebData sharedInstance];
     
+    //error handling when no myRequestItem.key_id exists
+    if (self.myRequestItem == nil){
+        
+        return;
+    }
     
     NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.myRequestItem.key_id, nil];
     NSArray* secondArray = [NSArray arrayWithObjects:@"notes", self.myTextView.text, nil];

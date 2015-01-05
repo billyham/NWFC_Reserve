@@ -16,11 +16,12 @@
 #import "EQRClassPickerVC.h"
 #import "EQREditorEquipListCell.h"
 #import "EQRDistIDPickerTableVC.h"
+#import "EQRNotesVC.h"
 
 @protocol EQRInboxRightDelegate;
 
 
-@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate, UISearchBarDelegate, EQRContactPickerDelegate, EQRRenterTypeDelegate, EQRClassPickerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREditorEquipCellDelegate, UIPopoverControllerDelegate, EQRDistIDPickerDelegate> {
+@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate, UISearchBarDelegate, EQRContactPickerDelegate, EQRRenterTypeDelegate, EQRClassPickerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREditorEquipCellDelegate, UIPopoverControllerDelegate, EQRDistIDPickerDelegate, EQRNoteDelegate> {
     
     __weak id <EQRInboxRightDelegate> delegateForRightSide;
 }
@@ -38,6 +39,8 @@
 //dist id picker delegate method
 -(void)distIDSelectionMadeWithOriginalEquipUniqueKey:(NSString*)originalKeyID equipUniqueItem:(id)distEquipUniqueItem;
 
+//notes delegate method
+-(void)retrieveNotesData:(NSString*)noteText;
 
 @end
 

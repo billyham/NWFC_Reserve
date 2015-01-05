@@ -12,10 +12,13 @@
 #import "EQREquipUniqueItem.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRCheckPageRenderer.h"
+#import "EQRTwoColumnTextView.h"
 
 @interface EQRCheckPrintPage ()
 
 @property (strong, nonatomic) EQRScheduleRequestItem* request;
+
+@property (nonatomic, strong) IBOutlet EQRTwoColumnTextView* myTwoColumnView;
 
 @end
 
@@ -108,10 +111,11 @@
     self.rentorEmailAtt = contactItem.email;
     
     //nsattributedstrings
-    UIFont* normalFont = [UIFont systemFontOfSize:10];
-    UIFont* boldFont = [UIFont boldSystemFontOfSize:10];
+    UIFont* normalFont = [UIFont systemFontOfSize:9];
+    UIFont* boldFont = [UIFont boldSystemFontOfSize:9];
     
     //begin the total attribute string
+    self.datesAtt = [[NSMutableAttributedString alloc] initWithString:@""];
     self.summaryTotalAtt = [[NSMutableAttributedString alloc] initWithString:@""];
     
     
@@ -121,26 +125,29 @@
     //_______PICKUP DATE_____
     NSDictionary* arrayAtt6 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
     NSAttributedString* pickupHead = [[NSAttributedString alloc] initWithString:@"Pick Up: " attributes:arrayAtt6];
-    [self.summaryTotalAtt appendAttributedString:pickupHead];
+    [self.datesAtt appendAttributedString:pickupHead];
     
     NSDictionary* arrayAtt7 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
     NSAttributedString* pickupAtt = [[NSAttributedString alloc] initWithString:combinedDateAndTimeBegin  attributes:arrayAtt7];
-    [self.summaryTotalAtt appendAttributedString:pickupAtt];
+    [self.datesAtt appendAttributedString:pickupAtt];
     
     //______RETURN DATE________
     NSDictionary* arrayAtt8 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
     NSAttributedString* returnHead = [[NSAttributedString alloc] initWithString:@"            Return: " attributes:arrayAtt8];
-    [self.summaryTotalAtt appendAttributedString:returnHead];
+    [self.datesAtt appendAttributedString:returnHead];
     
     NSDictionary* arrayAtt9 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
     NSAttributedString* returnAtt = [[NSAttributedString alloc] initWithString:combinedDateAndTimeEnd  attributes:arrayAtt9];
-    [self.summaryTotalAtt appendAttributedString:returnAtt];
+    [self.datesAtt appendAttributedString:returnAtt];
+    
+    
+    
     
     //________EQUIP LIST________
     
-    NSDictionary* arrayAtt10 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* equipHead = [[NSAttributedString alloc] initWithString:@"\r\r\r Pick Up | Return   Equipment Items:\r\r" attributes:arrayAtt10];
-    [self.summaryTotalAtt appendAttributedString:equipHead];
+//    NSDictionary* arrayAtt10 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
+//    NSAttributedString* equipHead = [[NSAttributedString alloc] initWithString:@"Pick Up | Return   Equipment Items:\r\r" attributes:arrayAtt10];
+//    [self.summaryTotalAtt appendAttributedString:equipHead];
     
     //cycle through array of equipItems and build a string
     
@@ -170,8 +177,18 @@
         
     }
     
+    //____!!!!!  NOW ADD THE NOTES   !!!!!______
     
-    self.summaryTextView.attributedText = self.summaryTotalAtt;
+    
+    //__1__ use a text view
+    self.summaryTextView.attributedText = self.datesAtt;
+    
+    //.... and
+    
+    //__2__ use a custom view with two columns
+    self.myTwoColumnView.myAttString = self.summaryTotalAtt;
+    [self.myTwoColumnView manuallySetText];
+
     
     
     
@@ -188,10 +205,11 @@
     
     UIPrintInteractionController* printIntCont = [UIPrintInteractionController sharedPrintController];
     
-    UIViewPrintFormatter* viewPrintFormatter = [self.summaryTextView viewPrintFormatter];
-    //add contect insets to printFormatter
-    UIEdgeInsets myInsets = UIEdgeInsetsMake (0, 90, 0, 20);
-    viewPrintFormatter.contentInsets = myInsets;
+    //__1__ only necessary if using a printFormatter
+//    UIViewPrintFormatter* viewPrintFormatter = [self.summaryTextView viewPrintFormatter];
+//    //add contect insets to printFormatter
+//    UIEdgeInsets myInsets = UIEdgeInsetsMake (0, 90, 0, 20);
+//    viewPrintFormatter.contentInsets = myInsets;
     
     
     UIPrintInfo* printInfo = [UIPrintInfo printInfo] ;
@@ -213,8 +231,15 @@
     pageRenderer.email_text_value = self.rentorEmailAtt;
     
     
-    //add printer formatter object to the page renderer
-    [pageRenderer addPrintFormatter:viewPrintFormatter startingAtPageAtIndex:0];
+    //__1__ add printer formatter object to the page renderer
+//    [pageRenderer addPrintFormatter:viewPrintFormatter startingAtPageAtIndex:0];
+    
+    //.... or
+    
+    //__2__ add a textview
+//    EQRTwoColumnTextView* thisTwoColumnView = [[EQRTwoColumnTextView alloc] initWithFrame:CGRectMake(50.f, 210.f, 650.f, 400.f)];
+    pageRenderer.aTwoColumnView = self.myTwoColumnView;
+    pageRenderer.aTextView = self.summaryTextView;
     
     //assign page renderer to int cntrllr
     printIntCont.printPageRenderer = pageRenderer;

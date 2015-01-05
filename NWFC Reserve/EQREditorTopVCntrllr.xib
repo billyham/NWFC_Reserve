@@ -10,6 +10,7 @@
                 <outlet property="addEquipItemButton" destination="iBC-O5-cOY" id="vCk-Ny-w8d"/>
                 <outlet property="equipList" destination="2U3-9Y-lAh" id="8RW-tX-mg4"/>
                 <outlet property="nameTextField" destination="ESq-Ry-RUR" id="Jw3-xx-Cke"/>
+                <outlet property="notesView" destination="1Ly-Pp-fyB" id="GN8-QI-GIT"/>
                 <outlet property="pickupDateField" destination="D92-l1-gNr" id="Hiw-MX-ZWX"/>
                 <outlet property="renterTypeField" destination="g1U-Hh-dbB" id="Gkj-xs-BBB"/>
                 <outlet property="returnDateField" destination="DyV-jp-8Wt" id="bwY-bK-vbm"/>
@@ -64,11 +65,11 @@
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="2U3-9Y-lAh">
                     <rect key="frame" x="412" y="139" width="346" height="825"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="0.0" id="Ubt-E5-pz9">
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Ubt-E5-pz9">
                         <size key="itemSize" width="346" height="35"/>
                         <size key="headerReferenceSize" width="346" height="20"/>
                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                        <inset key="sectionInset" minX="0.0" minY="5" maxX="0.0" maxY="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="8"/>
                     </collectionViewFlowLayout>
                     <cells/>
                     <connections>
@@ -189,6 +190,22 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notes" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SlK-Fn-JQs">
+                    <rect key="frame" x="70" y="541" width="33" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="ITV-uN-Ods"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Ly-Pp-fyB">
+                    <rect key="frame" x="70" y="560" width="334" height="404"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
@@ -211,17 +228,23 @@
                 <constraint firstItem="g1U-Hh-dbB" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="82" id="H5P-Vc-OBx"/>
                 <constraint firstItem="abZ-YS-ffx" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="70" id="IgZ-I0-h37"/>
                 <constraint firstItem="Eeh-aR-IxZ" firstAttribute="top" secondItem="DyV-jp-8Wt" secondAttribute="bottom" constant="7" id="LZV-8J-bqh"/>
+                <constraint firstItem="2U3-9Y-lAh" firstAttribute="leading" secondItem="1Ly-Pp-fyB" secondAttribute="trailing" constant="8" id="LjD-KI-OHZ"/>
                 <constraint firstItem="D92-l1-gNr" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="82" id="OuW-OZ-a62"/>
                 <constraint firstAttribute="bottom" secondItem="4md-Xy-tdp" secondAttribute="bottom" constant="20" id="PDB-Ij-RDn"/>
+                <constraint firstItem="SlK-Fn-JQs" firstAttribute="top" secondItem="Eeh-aR-IxZ" secondAttribute="bottom" constant="16" id="Z2z-Ec-paU"/>
                 <constraint firstItem="2U3-9Y-lAh" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="139" id="adP-g1-gK8"/>
                 <constraint firstItem="aEJ-FG-73s" firstAttribute="top" secondItem="g1U-Hh-dbB" secondAttribute="bottom" constant="32" id="cUr-lh-ZDX"/>
+                <constraint firstAttribute="bottom" secondItem="1Ly-Pp-fyB" secondAttribute="bottom" constant="60" id="d4o-2L-Iyz"/>
                 <constraint firstItem="ESq-Ry-RUR" firstAttribute="top" secondItem="rdi-Zv-Au8" secondAttribute="bottom" constant="1" id="dzg-HF-0mR"/>
+                <constraint firstItem="SlK-Fn-JQs" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="70" id="e3s-0h-4YF"/>
                 <constraint firstItem="X34-5N-XOv" firstAttribute="top" secondItem="D92-l1-gNr" secondAttribute="bottom" constant="8" id="fqM-Bu-Sa5"/>
                 <constraint firstItem="X34-5N-XOv" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="70" id="gdf-UH-aDR"/>
                 <constraint firstItem="ESq-Ry-RUR" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="82" id="gn6-cD-XFF"/>
                 <constraint firstItem="KN8-Pw-AEV" firstAttribute="top" secondItem="abZ-YS-ffx" secondAttribute="bottom" constant="167" id="kZG-xa-69B"/>
                 <constraint firstAttribute="bottom" secondItem="iBC-O5-cOY" secondAttribute="bottom" constant="20" id="mju-yF-R0N"/>
                 <constraint firstItem="rdi-Zv-Au8" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="117" id="mnP-cE-FvI"/>
+                <constraint firstItem="1Ly-Pp-fyB" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="70" id="qC4-Ed-Zd5"/>
+                <constraint firstItem="1Ly-Pp-fyB" firstAttribute="top" secondItem="SlK-Fn-JQs" secondAttribute="bottom" constant="-2" id="rF1-Hg-1cF"/>
                 <constraint firstItem="abZ-YS-ffx" firstAttribute="top" secondItem="ESq-Ry-RUR" secondAttribute="bottom" constant="17" id="rpA-e3-hk2"/>
                 <constraint firstItem="azt-mV-ixn" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="79" id="xqf-2r-5MM"/>
             </constraints>

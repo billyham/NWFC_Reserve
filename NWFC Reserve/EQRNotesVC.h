@@ -19,6 +19,7 @@
 @property (weak, nonatomic) id <EQRNoteDelegate> delegate;
 
 -(void)initialSetupWithScheduleRequest:(EQRScheduleRequestItem*)requestItem;
+-(void)beginEditing;
 
 @end
 

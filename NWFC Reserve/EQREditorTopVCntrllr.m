@@ -35,7 +35,7 @@
 @property (strong, nonatomic) IBOutlet UITextField* pickupDateField;
 @property (strong, nonatomic) IBOutlet UITextField* returnDateField;
 @property (strong, nonatomic) IBOutlet UICollectionView* equipList;
-
+@property (strong, nonatomic) IBOutlet UITextView* notesView;
 
 @property (strong, nonatomic) IBOutlet UIButton* renterTypeField;
 @property (strong, nonatomic) NSString* renterTypeString;  //I don't think this is used
@@ -56,6 +56,7 @@
 @property (strong, nonatomic) UIPopoverController* theEquipSelectionPopOver;
 @property (strong, nonatomic) UIPopoverController* myContactPicker;
 @property (strong, nonatomic) UIPopoverController* distIDPopover;
+@property (strong, nonatomic) UIPopoverController* myNotesPopover;
 
 @end
 
@@ -171,6 +172,37 @@
     [self.equipList reloadData];
     
     
+    //set text in notes
+    NSArray* justKeyArray = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.key_id, nil];
+    NSArray* justTopArray = [NSArray arrayWithObjects:justKeyArray, nil];
+    NSMutableArray* tempMuteArrayJustKey = [NSMutableArray arrayWithCapacity:1];
+    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:justTopArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        for (EQRScheduleRequestItem* requestItem in muteArray){
+            
+            [tempMuteArrayJustKey addObject:requestItem];
+        }
+    }];
+    
+    //error handling if no items are returned
+    if ([tempMuteArrayJustKey count] > 0){
+        self.privateRequestManager.request.notes = [[tempMuteArrayJustKey objectAtIndex:0] notes];
+    }else{
+        NSLog(@"InboxRightVC > renewTheViewWithRequest failed to find a matching request key id");
+    }
+    
+    //set notes text
+    self.notesView.text = self.privateRequestManager.request.notes;
+    
+    //make notes view hot to touch
+    UITapGestureRecognizer* tapGest = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openNotesEditor)];
+    [self.notesView addGestureRecognizer:tapGest];
+    
+    //background color for notes
+    EQRColors* colors = [EQRColors sharedInstance];
+    self.notesView.backgroundColor = [colors.colorDic objectForKey:EQRVeryNiceBlue];
+    
+    
 }
 
 
@@ -237,6 +269,7 @@
     }];
     
 //    NSLog(@"this is the contact foreign key: %@", self.privateRequestManager.request.contact_foreignKey);
+    
     
 
     //_________**********  LOAD REQUEST EDITOR COLLECTION VIEW WITH EquipUniqueItem_Joins  *******_____________
@@ -965,6 +998,46 @@
 
 
 
+#pragma mark - Notes popover methods
+
+-(void)openNotesEditor{
+    
+    EQRNotesVC* thisNotes = [[EQRNotesVC alloc] initWithNibName:@"EQRNotesVC" bundle:nil];
+    thisNotes.delegate = self;
+    
+    UIPopoverController* thisNotesPop = [[UIPopoverController alloc] initWithContentViewController:thisNotes];
+    self.myNotesPopover = thisNotesPop;
+    self.myNotesPopover.delegate = self;
+    
+    [self.myNotesPopover setPopoverContentSize:CGSizeMake(320.f, 400.f)];
+    
+    [self.myNotesPopover presentPopoverFromRect:self.notesView.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    //must be after presentation
+    [thisNotes initialSetupWithScheduleRequest:self.privateRequestManager.request];
+}
+
+
+-(void)retrieveNotesData:(NSString*)noteText{
+    
+    //update notes view
+    self.notesView.text = noteText;
+    
+    //update ivar request
+    self.privateRequestManager.request.notes = noteText;
+    
+    //update data layer
+    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.key_id, nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:@"notes", noteText, nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    [webData queryForStringWithLink:@"EQAlterNotesInScheduleRequest.php" parameters:topArray];
+    
+    //dismiss popover
+    [self.myNotesPopover dismissPopoverAnimated:YES];
+    self.myNotesPopover = nil;
+}
 
 
 
@@ -999,13 +1072,13 @@
     BOOL toBeDeleted = NO;
     for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
         
-        if ([keyToDelete isEqualToString:[[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]]){
+        if ([keyToDelete isEqualToString:[[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] equipUniqueItem_foreignKey]]){
             
             toBeDeleted = YES;
         }
     }
     
-    [cell initialSetupWithJoinObject:[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] deleteFlag:toBeDeleted];
+    [cell initialSetupWithJoinObject:[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] deleteFlag:toBeDeleted editMode:YES];
     
     return cell;
 }
@@ -1043,7 +1116,7 @@
 
 -(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
     
-    //___There are 4 different popovers____
+    //___There are 6 different popovers____
     //try a universal approach...
     //____this didn't work____
 //    popoverController = nil;
@@ -1075,6 +1148,10 @@
     }else if (popoverController == self.distIDPopover){
         
         self.distIDPopover = nil;
+        
+    }else if(popoverController == self.myNotesPopover){
+        
+        self.myNotesPopover = nil;
     }
     
 }

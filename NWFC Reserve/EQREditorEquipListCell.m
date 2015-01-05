@@ -31,7 +31,7 @@
 }
 
 
--(void)initialSetupWithJoinObject:(EQRScheduleTracking_EquipmentUnique_Join*)joinObject deleteFlag:(BOOL)deleteFlag{
+-(void)initialSetupWithJoinObject:(EQRScheduleTracking_EquipmentUnique_Join*)joinObject deleteFlag:(BOOL)deleteFlag editMode:(BOOL)editModeFlag{
     
     //retaining the joinObject seems like a bad idea, but... need to use it for the distIDPicker
     self.myJoinObject = joinObject;
@@ -45,6 +45,12 @@
     //add content view to view
     [self.contentView addSubview:self.myContentVC.view];
     
+    //hide or show the delete button
+    if (editModeFlag == NO){
+        [self.myContentVC.myDeleteButton setHidden:YES];
+        
+        self.myContentVC.issueTrailingConstraint.constant = 0;
+    }
     
     //_____ add constraints to content view
     self.myContentVC.view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -132,6 +138,41 @@
             [self.myContentVC.myServiceIssue setTitleColor:[colors.colorDic objectForKey:EQRColorIssueDescriptive] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
         }
     }
+    
+}
+
+
+-(void)enterEditMode{
+    
+    //shorten issue text and show edit button
+    self.myContentVC.issueTrailingConstraint.constant = 50.f;
+    
+    [UIView animateWithDuration:0.25 animations:^{
+       
+        [self.myContentVC.view layoutIfNeeded];
+        
+    } completion:^(BOOL finished) {
+        
+        [self.myContentVC.myDeleteButton setHidden:NO];
+    }];
+    
+}
+
+
+-(void)leaveEditMode{
+    
+    //lengthen issue text and hide edit button
+    self.myContentVC.issueTrailingConstraint.constant = 0;
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        
+        [self.myContentVC.view layoutIfNeeded];
+        
+        [self.myContentVC.myDeleteButton setHidden:YES];
+        
+    } completion:^(BOOL finished) {
+        
+    }];
     
 }
 

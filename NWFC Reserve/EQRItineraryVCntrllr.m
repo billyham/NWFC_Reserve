@@ -49,6 +49,8 @@
 @property (strong, nonatomic) EQRQuickViewScrollVCntrllr* myQuickViewScrollVCntrllr;
 @property (strong, nonatomic) NSDictionary* temporaryDicFromQuickView;
 
+@property BOOL aChangeWasMade;
+
 -(IBAction)moveToNextDay:(id)sender;
 -(IBAction)moveToPreviousDay:(id)sender;
 
@@ -72,7 +74,7 @@
     //register for notifications
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     //refresh the view when a change is made
-    [nc addObserver:self selector:@selector(refreshTheView) name:EQRAChangeWasMadeToTheSchedule object:nil];
+    [nc addObserver:self selector:@selector(raiseFlagThatAChangeHasBeenMade:) name:EQRAChangeWasMadeToTheSchedule object:nil];
     //partial refresh to when a switch is thrown in the itinarary cell view
     [nc addObserver:self selector:@selector(partialRefreshToUpdateTheArrayOfRequests:) name:EQRPartialRefreshToItineraryArray object:nil];
     //receive note from cellContentView to show check in out v controllr
@@ -171,6 +173,14 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
+    //test if a change has occurred in the data
+    if (self.aChangeWasMade == YES){
+        
+        self.aChangeWasMade = NO;
+        
+        [self refreshTheView];
+    }
+    
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     
     //set title on bar button item
@@ -198,6 +208,12 @@
     
     [super viewWillAppear:animated];
     
+}
+
+
+-(void)raiseFlagThatAChangeHasBeenMade:(NSNotification*)note{
+    
+    self.aChangeWasMade = YES;
 }
 
 

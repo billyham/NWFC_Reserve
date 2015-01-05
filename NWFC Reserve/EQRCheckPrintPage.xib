@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRCheckPrintPage">
             <connections>
                 <outlet property="dismissButton" destination="1RX-EW-wec" id="3GY-jD-bXG"/>
+                <outlet property="myTwoColumnView" destination="1ku-xq-ooG" id="qid-dC-NfW"/>
                 <outlet property="summaryTextView" destination="Hor-s4-1TR" id="dTD-Ck-zBI"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -17,8 +19,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hor-s4-1TR">
-                    <rect key="frame" x="104" y="150" width="559" height="874"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <rect key="frame" x="104" y="150" width="559" height="99"/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="559" id="GnR-rT-IN1"/>
@@ -29,7 +30,6 @@
                 </textView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1RX-EW-wec">
                     <rect key="frame" x="357" y="94" width="54" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="n13-o9-4SO"/>
                     </constraints>
@@ -40,16 +40,24 @@
                         <action selector="dismissMe:" destination="-1" eventType="touchUpInside" id="It0-jW-cxS"/>
                     </connections>
                 </button>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1ku-xq-ooG" customClass="EQRTwoColumnTextView">
+                    <rect key="frame" x="105" y="271" width="559" height="182"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="Hor-s4-1TR" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="150" id="3kq-t1-weg"/>
                 <constraint firstAttribute="centerX" secondItem="Hor-s4-1TR" secondAttribute="centerX" id="Szp-JM-9Ha"/>
                 <constraint firstAttribute="centerX" secondItem="1RX-EW-wec" secondAttribute="centerX" id="VWK-64-Ct3"/>
-                <constraint firstAttribute="bottom" secondItem="Hor-s4-1TR" secondAttribute="bottom" id="oRG-FP-qai"/>
+                <constraint firstAttribute="bottom" secondItem="Hor-s4-1TR" secondAttribute="bottom" constant="775" id="oRG-FP-qai"/>
                 <constraint firstItem="1RX-EW-wec" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="94" id="uk8-wn-nPL"/>
             </constraints>
-            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
         </view>
     </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
 </document>

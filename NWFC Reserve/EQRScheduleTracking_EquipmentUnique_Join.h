@@ -47,6 +47,9 @@
 @property BOOL scheduleSameDayFlag;
 @property BOOL scheduleCollisionFlag;
 
+//EQREditorEquipListCell will use this to mark to be deleted
+//@property BOOL markedForDeletion;
+
 
 
 

@@ -22,7 +22,9 @@
 @property BOOL toBeDeletedFlag;
 @property (strong, nonatomic) EQREditorEquipListContentVC* myContentVC;
 
--(void)initialSetupWithJoinObject:(EQRScheduleTracking_EquipmentUnique_Join*)joinObject deleteFlag:(BOOL)deleteFlag;
+-(void)initialSetupWithJoinObject:(EQRScheduleTracking_EquipmentUnique_Join*)joinObject deleteFlag:(BOOL)deleteFlag editMode:(BOOL)editModeFlag;
+-(void)enterEditMode;
+-(void)leaveEditMode;
 
 @end
 
