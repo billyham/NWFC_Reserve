@@ -16,6 +16,8 @@
 @property (copy, nonatomic) NSTextStorage *textStorage;
 @property (strong, nonatomic) NSArray *textOrigins;
 @property (strong, nonatomic) NSLayoutManager *layoutManager;
+@property NSInteger myColumnCount;
+
 
 -(void)manuallySetTextWithColumnCount:(NSInteger)columnCount;
 

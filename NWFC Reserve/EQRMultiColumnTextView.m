@@ -10,7 +10,6 @@
 
 @interface EQRMultiColumnTextView ()
 
-@property NSInteger myColumnCount;
 
 @end
 
@@ -33,7 +32,15 @@
         self.myColumnCount = 2;
     }
     
+//    if (self.layoutManager){
+//        self.layoutManager = nil;
+//    }
+    
     self.layoutManager = [[NSLayoutManager alloc] init];
+    
+//    if (self.textStorage){
+//        self.textStorage = nil;
+//    }
     
     self.textStorage = [[NSTextStorage alloc] initWithAttributedString:self.myAttString];
     

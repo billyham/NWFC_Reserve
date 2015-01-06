@@ -17,6 +17,8 @@
 //the subarrays are populated with ScheduleTracking_EquipmentUnique_Joins
 +(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray;
 
+//same function for EquipUnqiueItems* but uses category instead of schedule_grouping
++(NSArray*)convertFlatArrayofUniqueItemsToStructureWithCategory:(NSArray*)flatArray;
 
 //need function to sort a subarray of schedule_equip_joins (or equipUniques) based on ascending distinguishing ids
 

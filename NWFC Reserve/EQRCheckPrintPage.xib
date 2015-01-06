@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <objects>
@@ -21,7 +22,8 @@
                     <rect key="frame" x="104" y="150" width="559" height="99"/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="559" id="GnR-rT-IN1"/>
+                        <constraint firstAttribute="width" constant="559" id="Dn9-u3-eCL"/>
+                        <constraint firstAttribute="height" constant="99" id="k2M-oT-pbu"/>
                     </constraints>
                     <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -40,16 +42,15 @@
                     </connections>
                 </button>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1ku-xq-ooG" customClass="EQRMultiColumnTextView">
-                    <rect key="frame" x="105" y="271" width="559" height="182"/>
+                    <rect key="frame" x="105" y="271" width="559" height="258"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="Hor-s4-1TR" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="150" id="3kq-t1-weg"/>
-                <constraint firstAttribute="centerX" secondItem="Hor-s4-1TR" secondAttribute="centerX" id="Szp-JM-9Ha"/>
                 <constraint firstAttribute="centerX" secondItem="1RX-EW-wec" secondAttribute="centerX" id="VWK-64-Ct3"/>
-                <constraint firstAttribute="bottom" secondItem="Hor-s4-1TR" secondAttribute="bottom" constant="775" id="oRG-FP-qai"/>
+                <constraint firstItem="Hor-s4-1TR" firstAttribute="top" secondItem="1RX-EW-wec" secondAttribute="bottom" constant="26" id="aw0-j1-8sX"/>
+                <constraint firstAttribute="centerX" secondItem="Hor-s4-1TR" secondAttribute="centerX" id="nfe-2G-XN6"/>
                 <constraint firstItem="1RX-EW-wec" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="94" id="uk8-wn-nPL"/>
             </constraints>
         </view>

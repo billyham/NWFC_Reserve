@@ -159,6 +159,133 @@
     return sortedTopArray;
 }
 
+
+//same function for EquipUnqiueItems* but uses category instead of schedule_grouping
++(NSArray*)convertFlatArrayofUniqueItemsToStructureWithCategory:(NSArray*)flatArray{
+    
+    //first get array of grouping objects
+    //get title items EQGetEquipmentTitlesAll (except items with hide_from_public set to YES)
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    __block NSMutableSet* tempMuteSetOfGroupingStrings = [NSMutableSet setWithCapacity:1];
+    __block NSMutableDictionary* tempMuteDicOfTitleKeysToGrouping = [NSMutableDictionary dictionaryWithCapacity:1];
+    
+    
+    [webData queryWithLink:@"EQGetEquipmentTitlesAll.php" parameters:nil class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
+        
+        //loop through entire title item array
+        for (EQREquipItem* item in muteArray){
+            
+            //add item's category to the dictionary
+            [tempMuteDicOfTitleKeysToGrouping setValue:item.category forKey:item.key_id];
+            
+            BOOL foundTitleDontAdd = NO;
+            
+            for (NSString* titleString in tempMuteSetOfGroupingStrings){
+                
+                //identify items with schedule _grouping already in our muteable array
+                if ([item.category isEqualToString:titleString]){
+                    
+                    foundTitleDontAdd = YES;
+                }
+            }
+            
+            //advance to next title item
+            if (foundTitleDontAdd == NO){
+                
+                //otherwise add grouping in set
+                [tempMuteSetOfGroupingStrings addObject:item.category];
+            }
+        }
+    }];
+    
+    NSMutableArray* tempTopArray = [NSMutableArray arrayWithCapacity:1];
+    
+    //loop through ivar array of uniques
+    for (EQREquipUniqueItem* uniqueItem in flatArray){
+        
+        //find a matching key_id
+        NSString* groupingString = [tempMuteDicOfTitleKeysToGrouping objectForKey:uniqueItem.equipTitleItem_foreignKey];
+        
+        //assign to object
+        uniqueItem.category = groupingString;
+        
+        BOOL createNewSubArray = YES;
+        
+        for (NSMutableArray* subArray in tempTopArray){
+            
+            if ([uniqueItem.category isEqualToString:[(EQREquipUniqueItem*)[subArray objectAtIndex:0] category]]){
+                
+                createNewSubArray = NO;
+                
+                //add join to this subArray
+                [subArray addObject:uniqueItem];
+            }
+        }
+        
+        if (createNewSubArray == YES){
+            
+            //create a new array
+            NSMutableArray* newArray = [NSMutableArray arrayWithObject:uniqueItem];
+            
+            //add the subarray to the top array
+            [tempTopArray addObject:newArray];
+        }
+        
+    }
+    
+    //Have a comppleted array of arrays. Now need to SORT them
+    NSArray* arrayToReturn = [NSArray arrayWithArray:tempTopArray];
+    
+    //sort sub arrays first, but dist ID
+    NSMutableArray* newMuteTopArray = [NSMutableArray arrayWithCapacity:1];
+    [arrayToReturn enumerateObjectsUsingBlock:^(NSArray* objArray, NSUInteger idx, BOOL *stop) {
+        
+        //sort in asending order
+        NSArray* sortedSubArray = [objArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            
+            //first, compare on equipTitleItem_foreignKey
+            NSString* string1 = [(EQREquipUniqueItem*)obj1 equipTitleItem_foreignKey];
+            NSString* string2 = [(EQREquipUniqueItem*)obj2 equipTitleItem_foreignKey];
+            
+            NSInteger firstComparisonResult = [string1 compare:string2];
+            
+            //if equipTitleItem_foreignKey is the same, sort using dist id
+            if (firstComparisonResult == NSOrderedSame){
+                
+                NSString* string3 = [(EQREquipUniqueItem*)obj1 distinquishing_id];
+                NSString* string4 = [(EQREquipUniqueItem*)obj2 distinquishing_id];
+                
+                //if dist id is only one character in length, add a 0 to the start.
+                if ([string3 length] < 2){
+                    string3 = [NSString stringWithFormat:@"0%@", string3];
+                }
+                
+                if ([string4 length] < 2){
+                    string4 = [NSString stringWithFormat:@"0%@", string4];
+                }
+                
+                return [string3 compare:string4];
+                
+            } else {
+                
+                return firstComparisonResult;
+            }
+        }];
+        
+        [newMuteTopArray addObject:sortedSubArray];
+    }];
+    
+    //sort the top array alphabetically by schedule grouping
+    NSArray* sortedTopArray = [newMuteTopArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        return [[(EQREquipUniqueItem*)[obj1 objectAtIndex:0] category]
+                compare:[(EQREquipUniqueItem*)[obj2 objectAtIndex:0] category]];
+    }];
+    
+    return sortedTopArray;
+}
+
+
 #pragma clang diagnostic pop
 
 

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "EQRMultiColumnTextView.h"
 
-@interface EQRCheckPageRenderer : UIPrintPageRenderer
+@interface EQRCheckPageRenderer : UIPrintPageRenderer 
 
 @property (strong, nonatomic) NSString* name_text_value;
 @property (strong, nonatomic) NSString* phone_text_value;
@@ -17,6 +17,7 @@
 
 @property (strong, nonatomic) UITextView* aTextView;
 @property (strong, nonatomic) EQRMultiColumnTextView* aTwoColumnView;
+@property float additionalXAdjustment;
 
 
 @end

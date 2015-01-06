@@ -751,7 +751,7 @@
         CGPoint origin = [self.aTwoColumnView.textOrigins[i] CGPointValue];
         
         //add 220 to the y value to place below header
-        CGPoint newOrigin = CGPointMake(origin.x + 30.f, origin.y + 250.f);
+        CGPoint newOrigin = CGPointMake(origin.x + 30.f + self.additionalXAdjustment, origin.y + 250.f);
         
         NSRange glyphRange = [self.aTwoColumnView.layoutManager glyphRangeForTextContainer:container];
         
@@ -792,7 +792,8 @@
     //________KEEP ABOVE
     
     
-    /// Abstracted Attributes
+    
+    //// Abstracted Attributes
     NSString* textContent = @"Please read and initial the following:";
     NSString* text2Content = @"I hereby assume full responsibility for the above listed equipment provided by the Northwest Film Center. Financial responsibility includes payment for all repairs, up to teh full replacement value of equipment, and the full replacement value for all stolen or lost equipment. Financial responsibility also includes the rental fee for the time period in which damaged equipment is out for repair, or until replacement payment is received. I have inspected the contents of rental equipment and acknowledge that all parts and pieces are present and in working order unless otherwise noted.";
     NSString* text3Content = @"Projects produced through School of Film classes must include www.nwfilm.org and the following phrase in the credits: Produced through the Northwest Film Center School of Film (spelling out \"Northwest Film Center\").";
@@ -1469,6 +1470,14 @@
 //    
 //    return 1;
 //}
+
+
+
+
+
+
+
+
 
 
 

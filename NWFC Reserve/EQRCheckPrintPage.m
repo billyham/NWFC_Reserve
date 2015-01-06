@@ -18,8 +18,9 @@
 @interface EQRCheckPrintPage ()
 
 @property (strong, nonatomic) EQRScheduleRequestItem* request;
-
 @property (nonatomic, strong) IBOutlet EQRMultiColumnTextView* myTwoColumnView;
+@property NSInteger countOfColumns;
+@property float additionalXAdjustment;
 
 @end
 
@@ -44,6 +45,8 @@
         self.request = request;
     }
     
+    self.countOfColumns = 0;
+    self.additionalXAdjustment = 0.f;
     
     //build the request's array of equip joins
     EQRWebData* webData = [EQRWebData sharedInstance];
@@ -115,11 +118,20 @@
     //font styles
     UIFont* normalFont = [UIFont systemFontOfSize:9];
     UIFont* boldFont = [UIFont boldSystemFontOfSize:9];
+    UIFont* headerFont = [UIFont boldSystemFontOfSize:7];
     
     //paragraph stylpes - indents paragraph except for after a \r
     NSMutableParagraphStyle* paraStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
     paraStyle.firstLineHeadIndent = 0.f;
-    paraStyle.headIndent = 45.f;
+    paraStyle.headIndent = 50.f;
+    
+    NSMutableParagraphStyle* headerParaStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    headerParaStyle.firstLineHeadIndent = 40.f;
+    headerParaStyle.headIndent = 40.f;
+    
+    NSMutableParagraphStyle* notesHeaderParaStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    notesHeaderParaStyle.firstLineHeadIndent = 20.f;
+    
     
     //begin the total attribute string
     self.datesAtt = [[NSMutableAttributedString alloc] initWithString:@""];
@@ -180,7 +192,7 @@
     
     
     // ____!!!!  Sort and add structure to the array (with category, not schedule_grouping)
-    NSArray* arrayOfUniquesWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:arrayOfUniques];
+    NSArray* arrayOfUniquesWithStructure = [EQRDataStructure convertFlatArrayofUniqueItemsToStructureWithCategory:arrayOfUniques];
     
     
     //cyle through structured equipUniques and print line to summaryMutableString
@@ -188,11 +200,23 @@
         
         // ____And printer headers with category titles
         
-        NSLog(@"this is my schedule_grouping: %@", [(EQREquipUniqueItem*)[subArray objectAtIndex:0] schedule_grouping]);
+//        NSLog(@"this is my category: %@", [(EQREquipUniqueItem*)[subArray objectAtIndex:0] category]);
 
         
-        NSDictionary* arrayAttForHeaderText = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName, nil];
-        NSAttributedString* headerAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r",[(EQREquipUniqueItem*)[subArray objectAtIndex:0] schedule_grouping]] attributes:arrayAttForHeaderText];
+        NSDictionary* arrayAttForHeaderText = [NSDictionary dictionaryWithObjectsAndKeys:headerFont, NSFontAttributeName,
+                                               headerParaStyle, NSParagraphStyleAttributeName,
+                                               nil];
+        
+        //text for the header
+        NSAttributedString* headerAttString;
+        
+        //if item is first, eliminate the first carriage return
+        if ([arrayOfUniquesWithStructure objectAtIndex:0] == subArray){
+            headerAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r",[(EQREquipUniqueItem*)[subArray objectAtIndex:0] category]] attributes:arrayAttForHeaderText];
+        }else{
+            headerAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r%@\r",[(EQREquipUniqueItem*)[subArray objectAtIndex:0] category]] attributes:arrayAttForHeaderText];
+        }
+        
         [self.summaryTotalAtt appendAttributedString:headerAttString];
         
         for (EQREquipUniqueItem* equipUniqueObj in subArray){
@@ -209,16 +233,19 @@
     
     
     
-    
-    
-    
     //____ NOW ADD THE NOTES (if they exist)______
     if (self.request.notes){
         if (![self.request.notes isEqualToString:@""]){
             
             //if notes exist, add them
-            NSDictionary* arrayAtt12 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-            NSAttributedString* notesAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r\rNotes:\r%@\r", self.request.notes] attributes:arrayAtt12];
+            NSDictionary* arrayAtt12 = [NSDictionary dictionaryWithObjectsAndKeys:headerFont, NSFontAttributeName,
+                                        notesHeaderParaStyle, NSParagraphStyleAttributeName,
+                                        nil];
+            NSAttributedString* notesHeaderAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r\rNotes:\r"] attributes:arrayAtt12];
+            [self.summaryTotalAtt appendAttributedString:notesHeaderAttString];
+            
+            NSDictionary* arrayAtt13 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+            NSAttributedString* notesAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", self.request.notes] attributes:arrayAtt13];
             [self.summaryTotalAtt appendAttributedString:notesAttString];
         }
     }
@@ -232,6 +259,12 @@
     //__2__ use a custom view with two columns
     self.myTwoColumnView.myAttString = self.summaryTotalAtt;
     [self.myTwoColumnView manuallySetTextWithColumnCount:3];
+    
+    //_______set page renderer as delegate for layoutManager of MultiColumnTextView
+    //so it can reflow the text between multiple pages
+    //or re-position the text view and number of columns
+    self.myTwoColumnView.layoutManager.delegate = self;
+    
 
     
     
@@ -267,7 +300,10 @@
     
     //assign renderer properties
     pageRenderer.headerHeight = 210.f;
-    pageRenderer.footerHeight = 300.f;
+    pageRenderer.footerHeight = 260.f;
+    
+    //ivars
+    pageRenderer.additionalXAdjustment = self.additionalXAdjustment;
     
     //add info to renderer properties
     pageRenderer.name_text_value = self.rentorNameAtt;
@@ -305,12 +341,8 @@
             
             //dismiss the view
             [self dismissViewControllerAnimated:YES completion:^{
-                
-                
+        
             }];
-            
-            
-            
             
             
         } else {
@@ -320,10 +352,7 @@
             //dismiss the view
             [self dismissViewControllerAnimated:YES completion:^{
                 
-                
             }];
-            
-            
         }
     }];
     
@@ -340,6 +369,76 @@
         
     }];
 }
+
+
+#pragma mark - nslayoutmanager delegate methods
+
+- (void)layoutManager:(NSLayoutManager *)aLayoutManager didCompleteLayoutForTextContainer:(NSTextContainer *)aTextContainer atEnd:(BOOL)flag{
+    
+    NSLog(@"This is the BOOL flag for layoutManager: %u  for text Container %@", flag, aTextContainer);
+    
+    self.countOfColumns = self.countOfColumns + 1;
+    
+    if (flag == YES){
+        
+
+        
+        switch (self.countOfColumns) {
+            case 1:
+                
+                if (self.myTwoColumnView.myColumnCount == 3){
+                    
+                    //reposition view for printing
+                    self.additionalXAdjustment = 180.f;
+                }
+                break;
+                
+            case 2:
+                
+                if (self.myTwoColumnView.myColumnCount == 3){
+                    
+                    //reposition view for printing
+                    self.additionalXAdjustment = 80.f;
+                }
+                
+                break;
+                
+            case 3:
+                
+                //filled all three columns of text
+                break;
+                
+            default:
+                break;
+        }
+        
+        //reset count of columns
+        self.countOfColumns = 0;
+        
+    }else{
+        
+        if (self.countOfColumns == 3){
+            
+            //filled all three columns with overflow
+            //_____!!!!!!  need to re-format  !!!!!!________
+            
+            self.countOfColumns = 0;
+        }
+    }
+    
+    //if atEnd is never YES then the text does not fill the available space and we need more pages.
+    
+    //(NSUInteger) firstUnlaidCharacterIndex
+    
+    
+    //call this on layoutManager invalidateDisplayForCharacterRange:(NSRange)charRange
+    
+    
+    
+}
+
+
+
 
 
 #pragma mark - memory warning

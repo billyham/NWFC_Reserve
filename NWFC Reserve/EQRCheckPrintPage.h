@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "EQRScheduleRequestItem.h"
 
-@interface EQRCheckPrintPage : UIViewController
+@interface EQRCheckPrintPage : UIViewController <NSLayoutManagerDelegate>
 
 @property (nonatomic, strong) NSString* rentorNameAtt;
 @property (nonatomic, strong) NSString* rentorPhoneAtt;
