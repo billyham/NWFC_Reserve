@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EQRTwoColumnTextView.h"
+#import "EQRMultiColumnTextView.h"
 
 @interface EQRCheckPageRenderer : UIPrintPageRenderer
 
@@ -16,7 +16,7 @@
 @property (strong, nonatomic) NSString* email_text_value;
 
 @property (strong, nonatomic) UITextView* aTextView;
-@property (strong, nonatomic) EQRTwoColumnTextView* aTwoColumnView;
+@property (strong, nonatomic) EQRMultiColumnTextView* aTwoColumnView;
 
 
 @end

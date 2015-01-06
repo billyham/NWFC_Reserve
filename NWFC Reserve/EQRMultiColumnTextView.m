@@ -6,15 +6,15 @@
 //  Copyright (c) 2015 Ham Again LLC. All rights reserved.
 //
 
-#import "EQRTwoColumnTextView.h"
+#import "EQRMultiColumnTextView.h"
 
-@interface EQRTwoColumnTextView ()
+@interface EQRMultiColumnTextView ()
 
-
+@property NSInteger myColumnCount;
 
 @end
 
-@implementation EQRTwoColumnTextView
+@implementation EQRMultiColumnTextView
 
 //using textKit to create multiple columns of text in a single view
 //from http://robots.thoughtbot.com/ios-text-kit-basics
@@ -25,7 +25,13 @@
 
 }
 
--(void)manuallySetText{
+-(void)manuallySetTextWithColumnCount:(NSInteger)columnCount{
+    
+    if (columnCount){
+        self.myColumnCount = columnCount;
+    }else{
+        self.myColumnCount = 2;
+    }
     
     self.layoutManager = [[NSLayoutManager alloc] init];
     
@@ -65,7 +71,7 @@
     
     // These are effectively constants. If you want to make this class more
     // extensible, turning these into public properties would be a nice start!
-    NSUInteger columnCount = 2;
+    NSUInteger columnCount = self.myColumnCount;
     CGFloat interColumnMargin = 10;
     
     // Calculate sizes for building a series of text containers.

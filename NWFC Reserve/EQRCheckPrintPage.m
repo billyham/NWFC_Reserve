@@ -12,13 +12,14 @@
 #import "EQREquipUniqueItem.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRCheckPageRenderer.h"
-#import "EQRTwoColumnTextView.h"
+#import "EQRDataStructure.h"
+#import "EQRMultiColumnTextView.h"
 
 @interface EQRCheckPrintPage ()
 
 @property (strong, nonatomic) EQRScheduleRequestItem* request;
 
-@property (nonatomic, strong) IBOutlet EQRTwoColumnTextView* myTwoColumnView;
+@property (nonatomic, strong) IBOutlet EQRMultiColumnTextView* myTwoColumnView;
 
 @end
 
@@ -111,8 +112,14 @@
     self.rentorEmailAtt = contactItem.email;
     
     //nsattributedstrings
+    //font styles
     UIFont* normalFont = [UIFont systemFontOfSize:9];
     UIFont* boldFont = [UIFont boldSystemFontOfSize:9];
+    
+    //paragraph stylpes - indents paragraph except for after a \r
+    NSMutableParagraphStyle* paraStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    paraStyle.firstLineHeadIndent = 0.f;
+    paraStyle.headIndent = 45.f;
     
     //begin the total attribute string
     self.datesAtt = [[NSMutableAttributedString alloc] initWithString:@""];
@@ -155,29 +162,66 @@
     
     
     
-
     
-    // 2. first, cycle through scheduleTracking_equip_joins
+    // 2. first, cycle through scheduleTracking_equip_joins and get equipUniques
+    NSMutableArray* arrayOfUniques = [NSMutableArray arrayWithCapacity:1];
     for (EQRScheduleTracking_EquipmentUnique_Join* joinItem in self.request.arrayOfEquipmentJoins){
         
         NSArray* thisArray1 = [NSArray arrayWithObjects:@"key_id", joinItem.equipUniqueItem_foreignKey, Nil];
         NSArray* thisArray2 = [NSArray arrayWithObject:thisArray1];
         [webData queryWithLink:@"EQGetEquipmentUnique.php" parameters:thisArray2 class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
             
-            //add the text of the equip item names to the textField's attributed string
             for (EQREquipUniqueItem* equipItemObj in muteArray){
                 
-                NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-                NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"   ______ | ______   %@  #%@\r", equipItemObj.name, equipItemObj.distinquishing_id] attributes:arrayAtt11];
-                
-                [self.summaryTotalAtt appendAttributedString:thisHereAttString];
+                [arrayOfUniques addObject:equipItemObj];
             }
-            
         }];
-        
     }
     
-    //____!!!!!  NOW ADD THE NOTES   !!!!!______
+    
+    // ____!!!!  Sort and add structure to the array (with category, not schedule_grouping)
+    NSArray* arrayOfUniquesWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:arrayOfUniques];
+    
+    
+    //cyle through structured equipUniques and print line to summaryMutableString
+    for (NSArray* subArray in arrayOfUniquesWithStructure){
+        
+        // ____And printer headers with category titles
+        
+        NSLog(@"this is my schedule_grouping: %@", [(EQREquipUniqueItem*)[subArray objectAtIndex:0] schedule_grouping]);
+
+        
+        NSDictionary* arrayAttForHeaderText = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName, nil];
+        NSAttributedString* headerAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r",[(EQREquipUniqueItem*)[subArray objectAtIndex:0] schedule_grouping]] attributes:arrayAttForHeaderText];
+        [self.summaryTotalAtt appendAttributedString:headerAttString];
+        
+        for (EQREquipUniqueItem* equipUniqueObj in subArray){
+            
+            //add the text of the equip item names to the textField's attributed string
+            NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName,
+                                        paraStyle, NSParagraphStyleAttributeName,
+                                        nil];
+            NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"   _____   %@  #%@\r", equipUniqueObj.name, equipUniqueObj.distinquishing_id] attributes:arrayAtt11];
+            
+            [self.summaryTotalAtt appendAttributedString:thisHereAttString];
+        }
+    }
+    
+    
+    
+    
+    
+    
+    //____ NOW ADD THE NOTES (if they exist)______
+    if (self.request.notes){
+        if (![self.request.notes isEqualToString:@""]){
+            
+            //if notes exist, add them
+            NSDictionary* arrayAtt12 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+            NSAttributedString* notesAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r\rNotes:\r%@\r", self.request.notes] attributes:arrayAtt12];
+            [self.summaryTotalAtt appendAttributedString:notesAttString];
+        }
+    }
     
     
     //__1__ use a text view
@@ -187,7 +231,7 @@
     
     //__2__ use a custom view with two columns
     self.myTwoColumnView.myAttString = self.summaryTotalAtt;
-    [self.myTwoColumnView manuallySetText];
+    [self.myTwoColumnView manuallySetTextWithColumnCount:3];
 
     
     

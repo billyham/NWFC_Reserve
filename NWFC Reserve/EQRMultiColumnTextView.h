@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQRTwoColumnTextView : UIView
+@interface EQRMultiColumnTextView : UIView
 
 @property (strong, nonatomic) NSAttributedString* myDatesAttString;
 @property (strong, nonatomic) NSAttributedString* myAttString;
@@ -17,6 +17,6 @@
 @property (strong, nonatomic) NSArray *textOrigins;
 @property (strong, nonatomic) NSLayoutManager *layoutManager;
 
--(void)manuallySetText;
+-(void)manuallySetTextWithColumnCount:(NSInteger)columnCount;
 
 @end

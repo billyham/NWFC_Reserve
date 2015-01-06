@@ -222,6 +222,21 @@
         }
     }];
     
+    //also get notes (and other info)
+    NSArray* deltaArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:deltaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        if ([muteArray count] > 0){
+            
+            chosenItem.notes = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] notes];
+            
+        }else {
+            
+            //error handling if no contact object is returned
+            NSLog(@"QuickViewPage3VC > print  getScheduleRequestQuickViewData failed");
+        }
+    }];
+    
     //create printable page view controller
     EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
     
