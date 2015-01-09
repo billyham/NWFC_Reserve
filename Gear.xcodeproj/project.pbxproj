@@ -334,6 +334,7 @@
 		549BF3B9191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSummaryGenericVCntrllr.h; sourceTree = "<group>"; };
 		549BF3BA191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipSummaryGenericVCntrllr.m; sourceTree = "<group>"; };
 		549BF3BB191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREquipSummaryGenericVCntrllr.xib; sourceTree = "<group>"; };
+		549DDA721A5D1F430010DEE0 /* Gear.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Gear.entitlements; sourceTree = "<group>"; };
 		54A375B11A40040C00FD8A7B /* EQRNotesVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRNotesVC.h; sourceTree = "<group>"; };
 		54A375B21A40040C00FD8A7B /* EQRNotesVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRNotesVC.m; sourceTree = "<group>"; };
 		54A375B31A40040C00FD8A7B /* EQRNotesVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRNotesVC.xib; sourceTree = "<group>"; };
@@ -481,6 +482,7 @@
 		438EDCD3182B7ABD0090F882 = {
 			isa = PBXGroup;
 			children = (
+				549DDA721A5D1F430010DEE0 /* Gear.entitlements */,
 				438EDCE5182B7ABE0090F882 /* NWFC Reserve */,
 				438EDD07182B7ABE0090F882 /* NWFC ReserveTests */,
 				438EDCDE182B7ABD0090F882 /* Frameworks */,
@@ -894,6 +896,11 @@
 				TargetAttributes = {
 					438EDCDB182B7ABD0090F882 = {
 						DevelopmentTeam = C3YDZ7M5S2;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 					438EDCFF182B7ABE0090F882 = {
 						TestTargetID = 438EDCDB182B7ABD0090F882;
@@ -1186,6 +1193,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = Gear.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1202,8 +1210,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = Gear.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NWFC Reserve/Gear-Prefix.pch";
 				INFOPLIST_FILE = "NWFC Reserve/Gear-Info.plist";
