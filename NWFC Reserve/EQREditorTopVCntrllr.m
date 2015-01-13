@@ -41,6 +41,8 @@
 @property (strong, nonatomic) NSString* renterTypeString;  //I don't think this is used
 @property (strong, nonatomic) EQREditorRenterVCntrllr* myRenterViewController;
 
+@property (strong, nonatomic) IBOutlet UIButton* classField;
+
 @property (strong, nonatomic) IBOutlet UIButton* addEquipItemButton;
 
 @property (strong, nonatomic) NSMutableArray* arrayOfSchedule_Unique_Joins;
@@ -57,6 +59,8 @@
 @property (strong, nonatomic) UIPopoverController* myContactPicker;
 @property (strong, nonatomic) UIPopoverController* distIDPopover;
 @property (strong, nonatomic) UIPopoverController* myNotesPopover;
+@property (strong, nonatomic) UIPopoverController* myClassPicker;
+
 
 @end
 
@@ -284,11 +288,30 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    //get class name using key
+    if (([self.privateRequestManager.request.classTitle_foreignKey isEqualToString:EQRErrorCode88888888]) ||
+        ([self.privateRequestManager.request.classTitle_foreignKey isEqualToString:@""]) ||
+        (!self.privateRequestManager.request.classTitle_foreignKey)) {
+        
+//        [self.classField setHidden:YES];
+        
+    }else{
+        
+        NSArray* first2Array = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.classTitle_foreignKey, nil];
+        NSArray* top2Array = [NSArray arrayWithObjects:first2Array, nil];
+        NSString* classValueString = [webData queryForStringWithLink:@"EQGetClassCatalogTitleWithKey.php" parameters:top2Array];
+        
+        [self.classField setTitle:classValueString forState:UIControlStateHighlighted & UIControlStateNormal & UIControlStateSelected];
+        
+//        [self.classField setHidden:NO];
+    }
+    
     //set labels with provided dictionary
     //must do this AFTER loading the view
     [self.nameTextField setTitle:[self.myUserInfo objectForKey:@"contact_name"] forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
     self.renterTypeString = [self.myUserInfo objectForKey:@"renter_type"];
-    
     
     NSDateFormatter* dateFormatterLookinNice = [[NSDateFormatter alloc] init];
     dateFormatterLookinNice.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -626,6 +649,63 @@
     
     //release content view controller
 //    self.myContactVC = nil;
+}
+
+
+#pragma mark - class picker methods
+
+
+-(IBAction)classButton:(id)sender{
+    
+    EQRClassPickerVC* classPickerVC = [[EQRClassPickerVC alloc] initWithNibName:@"EQRClassPickerVC" bundle:nil];
+    
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:classPickerVC];
+    self.myClassPicker = popOver;
+    self.myClassPicker.delegate = self;
+    
+    //set the size
+    [self.myClassPicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
+    
+    //convert coordinates of textField frame to self.view
+    UIView* originalRect = self.classField;
+    CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
+    CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
+    
+    
+    //present the popover
+    [self.myClassPicker presentPopoverFromRect:step2Rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
+    
+    //assign as delegate
+    classPickerVC.delegate = self;
+    
+}
+
+
+
+-(void)initiateRetrieveClassItem{
+    
+    EQRClassPickerVC* classPickerVC = (EQRClassPickerVC*)[self.myClassPicker contentViewController];
+    
+    EQRClassItem* thisClassItem = [classPickerVC retrieveClassItem];
+    
+    //update view objects
+//    [self.classField setHidden:NO];
+    [self.classField setTitle:thisClassItem.section_name forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+    
+    //update schedule request
+    self.privateRequestManager.request.classItem = thisClassItem;
+    self.privateRequestManager.request.classSection_foreignKey = thisClassItem.key_id;
+    self.privateRequestManager.request.classTitle_foreignKey = thisClassItem.catalog_foreign_key;
+    
+    //____data layer is updated with save button___
+    
+    //release self as delegate
+    self.myClassPicker.delegate = nil;
+    
+    //dismiss popover
+    [self.myClassPicker dismissPopoverAnimated:YES];
+    self.myClassPicker = nil;
+    
 }
 
 
@@ -1116,7 +1196,7 @@
 
 -(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
     
-    //___There are 6 different popovers____
+    //___There are 7 different popovers____
     //try a universal approach...
     //____this didn't work____
 //    popoverController = nil;
@@ -1152,6 +1232,10 @@
     }else if(popoverController == self.myNotesPopover){
         
         self.myNotesPopover = nil;
+        
+    }else if(popoverController == self.myClassPicker){
+        
+        self.myClassPicker = nil;
     }
     
 }

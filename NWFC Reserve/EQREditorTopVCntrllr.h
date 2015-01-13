@@ -12,8 +12,10 @@
 #import "EQREditorEquipListCell.h"
 #import "EQRDistIDPickerTableVC.h"
 #import "EQRNotesVC.h"
+#import "EQRClassPickerVC.h"
 
-@interface EQREditorTopVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRRenterTypeDelegate, EQRContactPickerDelegate, UIPopoverControllerDelegate, UICollectionViewDelegateFlowLayout, EQREditorEquipCellDelegate, EQRDistIDPickerDelegate, EQRNoteDelegate>
+
+@interface EQREditorTopVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRRenterTypeDelegate, EQRContactPickerDelegate, UIPopoverControllerDelegate, UICollectionViewDelegateFlowLayout, EQREditorEquipCellDelegate, EQRDistIDPickerDelegate, EQRNoteDelegate, EQRClassPickerDelegate>
 
 @property (strong, nonatomic) NSString* scheduleRequestKeyID;
 @property BOOL saveButtonTappedFlag;
@@ -33,6 +35,9 @@
 
 //notes delegate method
 -(void)retrieveNotesData:(NSString*)noteText;
+
+//class picker delegate method
+-(void)initiateRetrieveClassItem;
 
 
 @end
