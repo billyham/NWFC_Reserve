@@ -686,17 +686,30 @@
     
     EQRClassPickerVC* classPickerVC = (EQRClassPickerVC*)[self.myClassPicker contentViewController];
     
+    //can be nil... no class assigned to request
     EQRClassItem* thisClassItem = [classPickerVC retrieveClassItem];
     
     //update view objects
 //    [self.classField setHidden:NO];
-    [self.classField setTitle:thisClassItem.section_name forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
-    
-    //update schedule request
-    self.privateRequestManager.request.classItem = thisClassItem;
-    self.privateRequestManager.request.classSection_foreignKey = thisClassItem.key_id;
-    self.privateRequestManager.request.classTitle_foreignKey = thisClassItem.catalog_foreign_key;
-    
+    if (!thisClassItem){
+        
+        [self.classField setTitle:@"(No Class Selected)" forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+        
+        //update schedule request
+        self.privateRequestManager.request.classItem = nil;
+        self.privateRequestManager.request.classSection_foreignKey = nil;
+        self.privateRequestManager.request.classTitle_foreignKey = nil;
+        
+    }else{
+        
+        [self.classField setTitle:thisClassItem.section_name forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+        
+        //update schedule request
+        self.privateRequestManager.request.classItem = thisClassItem;
+        self.privateRequestManager.request.classSection_foreignKey = thisClassItem.key_id;
+        self.privateRequestManager.request.classTitle_foreignKey = thisClassItem.catalog_foreign_key;
+    }
+
     //____data layer is updated with save button___
     
     //release self as delegate

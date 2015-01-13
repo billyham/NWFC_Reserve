@@ -18,7 +18,7 @@ extern NSString* EQRRenterPublic;
 extern NSString* EQRRenterYouth;
 extern NSString* EQRRenterInClass;
 
-//error string
+//exception codes
 extern NSString* EQRErrorCode88888888;
 
 //Notification selectors

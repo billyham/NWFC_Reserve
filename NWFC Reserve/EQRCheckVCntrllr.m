@@ -33,12 +33,16 @@
 
 @property (strong, nonatomic) EQRScheduleRequestItem* myScheduleRequestItem;
 
+@property (strong, nonatomic) IBOutlet UIView* mainSubView;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* mainSubTopGuideConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* mainSubBottomGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* tableTopGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* tablebottomGuideConstraint;
 
 @property (strong, nonatomic) IBOutlet UITextView* updateLabel;
 
 @property (strong, nonatomic) IBOutlet UILabel* nameTextLabel;
+@property (strong, nonatomic) IBOutlet UITextView* noteView;
 @property (strong, nonatomic) NSDictionary* myUserInfo;
 
 @property (strong, nonatomic) NSString* myProperty;
@@ -287,16 +291,16 @@
     id topGuide = self.topLayoutGuide;
     id bottomGuide = self.bottomLayoutGuide;
     
-    NSDictionary *viewsDictionary = @{@"equipCollection":self.myEquipCollection, @"topGuide":topGuide, @"bottomGuide":bottomGuide};
+    NSDictionary *viewsDictionary = @{@"mainSubView":self.mainSubView, @"topGuide":topGuide, @"bottomGuide":bottomGuide};
     
-    NSArray *constraint_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-0-[equipCollection]"
+    NSArray *constraint_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-0-[mainSubView]"
                                                                         options:0
                                                                         metrics:nil
                                                                           views:viewsDictionary];
     
     
     
-    NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[equipCollection]-50-[bottomGuide]"
+    NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[mainSubView]-0-[bottomGuide]"
                                                                          options:0
                                                                          metrics:nil
                                                                            views:viewsDictionary];
@@ -304,15 +308,15 @@
     //drop exisiting constraints
     //_____THIS IS NECESSARY BECAUSE NIBS REALLY HATE IT IF YOU LEAVE OUT ANY CONSTRAINTS __
     //_____THESE WERE ONLY TEMPORARY TO SATISIFY THE NIB FROM SCREAMING ERROR MESSAGES____
-    [[self.myEquipCollection superview] removeConstraints:[NSArray arrayWithObjects:self.tableTopGuideConstraint, self.tablebottomGuideConstraint, nil]];
+    [[self.mainSubView superview] removeConstraints:[NSArray arrayWithObjects:self.mainSubTopGuideConstraint, self.mainSubBottomGuideConstraint, nil]];
     
     //add replacement constraints
-    [[self.myEquipCollection superview] addConstraints:constraint_POS_V];
-    [[self.myEquipCollection superview] addConstraints:constraint_POS_VB];
+    [[self.mainSubView superview] addConstraints:constraint_POS_V];
+    [[self.mainSubView superview] addConstraints:constraint_POS_VB];
     
     //reassign constraint ivars!!
-    self.tableTopGuideConstraint = [constraint_POS_V objectAtIndex:0];
-    self.tablebottomGuideConstraint = [constraint_POS_VB objectAtIndex:0];
+    self.mainSubTopGuideConstraint = [constraint_POS_V objectAtIndex:0];
+    self.mainSubBottomGuideConstraint = [constraint_POS_VB objectAtIndex:0];
     
 }
 
@@ -676,7 +680,7 @@
     self.updateLabel.text = [self.updateLabel.text stringByAppendingString:[NSString stringWithFormat:@"%@    \n", updateText]];
     
     //lower collectionView to reveal update display
-    self.tableTopGuideConstraint.constant = 50.f;
+    self.tableTopGuideConstraint.constant = 100.f;
     
     [self.myEquipCollection setNeedsUpdateConstraints];
     

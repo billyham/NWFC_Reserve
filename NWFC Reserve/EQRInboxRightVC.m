@@ -1142,17 +1142,35 @@
 
 -(void)initiateRetrieveClassItem{
     
+    //can be nil... no class assigned to request
     EQRClassItem* thisClassItem = [self.myClassPickerVC retrieveClassItem];
-   
-    //update view objects
-    [self.classValue setHidden:NO];
-    self.classValue.text = thisClassItem.section_name;
-    [self.classValueField setTitle:thisClassItem.section_name forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     
-    //update schedule request
-    self.myScheduleRequest.classItem = thisClassItem;
-    self.myScheduleRequest.classSection_foreignKey = thisClassItem.key_id;
-    self.myScheduleRequest.classTitle_foreignKey = thisClassItem.catalog_foreign_key;
+    //update view objects
+    //    [self.classField setHidden:NO];
+    if (!thisClassItem){
+        
+        //update view objects
+        [self.classValue setHidden:YES];
+        self.classValue.text = nil;
+        [self.classValueField setTitle:nil forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+        
+        //update schedule request
+        self.myScheduleRequest.classItem = nil;
+        self.myScheduleRequest.classSection_foreignKey = nil;
+        self.myScheduleRequest.classTitle_foreignKey = nil;
+        
+    }else{
+        
+        //update view objects
+        [self.classValue setHidden:NO];
+        self.classValue.text = thisClassItem.section_name;
+        [self.classValueField setTitle:thisClassItem.section_name forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+        
+        //update schedule request
+        self.myScheduleRequest.classItem = thisClassItem;
+        self.myScheduleRequest.classSection_foreignKey = thisClassItem.key_id;
+        self.myScheduleRequest.classTitle_foreignKey = thisClassItem.catalog_foreign_key;
+    }
     
     //update data layer
     [self updateScheduleRequest];

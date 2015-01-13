@@ -69,6 +69,18 @@
 }
 
 
+#pragma mark - Actions
+
+-(IBAction)removeClassButton:(id)sender{
+    
+    self.myClassItem = nil;
+    
+    //tell delegate to retrieve the nil item
+    [self.delegate initiateRetrieveClassItem];
+
+}
+
+
 #pragma mark - retrieval methods
 
 -(id)retrieveClassItem{
@@ -276,6 +288,8 @@
     return index;
     
 }
+
+
 
 
 #pragma mark - search box methods
