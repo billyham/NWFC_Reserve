@@ -470,6 +470,28 @@
 //        NSLog(@"this is the title key, perhaps: %@", titleItemSubString);
 
         
+        
+        //matching title key
+          //is generic - flip switch
+          //matching unique key - flip existing switch
+          //no matching unique key - replace existing OR add new(?)
+            //unique key not in DB - error
+        
+        //no matching title key
+          //is generic - add new item, random
+          //is NOT generic – add new item
+          //title key is not in DB - error
+        
+        
+        
+        //__1__ Matching uniqueKey, just flip switch
+        //__2__ (Matching title key but not unique key, will replace existing title item (unflipped switch) with a different unique...  ?)
+        //__3__ No matching title key, confirmed in DB and will add to list
+        //__4__ __A__ Generic item, matching title key and will flip switch
+        //__4__ __B__ Generic item, no matching title, but confirmed in DB and will add to list
+        //__5__ (No Title key found in database, show error)
+        
+        
         //_________FIRST respond to an exact equipUnique key id match
         BOOL foundAMatchingEquipKey = NO;
         for (EQRScheduleTracking_EquipmentUnique_Join* joinObject in self.arrayOfEquipJoins){
@@ -656,11 +678,12 @@
         
         
         
-    
+    //____________FOURTH  respond to a GENERIC QR code that offers a titleKey but NO uniqueKey
         
         
         
-        //_____________FOURTH respond to code that has the "eqr" string  but doesn't find a matching title key in the data
+        
+        //_____________FIFTH respond to code that has the "eqr" string  but doesn't find a matching title key in the data
         
         //present a message that an object was scanned but not found in the database
         
