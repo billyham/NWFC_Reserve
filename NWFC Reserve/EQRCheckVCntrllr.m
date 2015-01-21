@@ -470,17 +470,20 @@
 //        NSLog(@"this is the title key, perhaps: %@", titleItemSubString);
 
         
+        //__1__matching unique key - flip existing switch
+        //__1__else
+          //__2__matching title key
+            //__3__is generic - flip a switch
+            //__3__else
+              //__4__unique key is NOT in DB, error
+              //__4__else replace existing title item OR add new(?)
         
-        //matching title key
-          //is generic - flip switch
-          //matching unique key - flip existing switch
-          //no matching unique key - replace existing OR add new(?)
-            //unique key not in DB - error
+          //__2__else (no matching title key)
+              //__3__title key is not in DB - error
+              //__3__else
+                //__4__is generic - add new item, random
+                //__4__else (NOT generic) – add new item using uniqueKey
         
-        //no matching title key
-          //is generic - add new item, random
-          //is NOT generic – add new item
-          //title key is not in DB - error
         
         
         
@@ -492,7 +495,7 @@
         //__5__ (No Title key found in database, show error)
         
         
-        //_________FIRST respond to an exact equipUnique key id match
+        //__1__ respond to an exact equipUnique key id match
         BOOL foundAMatchingEquipKey = NO;
         for (EQRScheduleTracking_EquipmentUnique_Join* joinObject in self.arrayOfEquipJoins){
             
