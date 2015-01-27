@@ -47,6 +47,24 @@ NSString* EQRColorIssueSerious = @"EQRColorIssueSerious";
     return myInstance;
 }
 
+//better implementation of a singleton...
+//https://github.com/raywenderlich/objective-c-style-guide#spacing
+
+/*
+ Singleton objects should use a thread-safe pattern for creating their shared instance.
+ 
+ + (instancetype)sharedInstance {
+ static id sharedInstance = nil;
+ 
+ static dispatch_once_t onceToken;
+ dispatch_once(&onceToken, ^{
+ sharedInstance = [[self alloc] init];
+ });
+ 
+ return sharedInstance;
+ }
+ */
+
 
 -(void)loadColors{
     
