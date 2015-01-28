@@ -469,30 +469,24 @@
 //        NSLog(@"this is the substring: %@", uniqueItemSubString);
 //        NSLog(@"this is the title key, perhaps: %@", titleItemSubString);
 
+
         
-        //__1__matching unique key - flip existing switch
-        //__1__else
-          //__2__matching title key
-            //__3__is generic - flip a switch
-            //__3__else
-              //__4__unique key is NOT in DB, error
-              //__4__else replace existing title item OR add new(?)
-        
-          //__2__else (no matching title key)
-              //__3__title key is not in DB - error
-              //__3__else
-                //__4__is generic - add new item, random
-                //__4__else (NOT generic) – add new item using uniqueKey
-        
-        
-        
+        //_____!!!!  when scanning generic objects, must start a timer to prevent rapid rescanning of the same generic title items !!!____
+        //_____!!!!  or modal view that asks for a quantity for the generic title scananed...
         
         //__1__ Matching uniqueKey, just flip switch
+          //continue to next scanned item
+        
         //__2__ (Matching title key but not unique key, will replace existing title item (unflipped switch) with a different unique...  ?)
-        //__3__ No matching title key, confirmed in DB and will add to list
-        //__4__ __A__ Generic item, matching title key and will flip switch
-        //__4__ __B__ Generic item, no matching title, but confirmed in DB and will add to list
-        //__5__ (No Title key found in database, show error)
+          //__4__ __A__ Generic item, matching title key and will flip switch
+          //continue to next scanned item
+        
+        //__3__ No matching title key,
+          //__confirm in DB, otherwise show error & continue to next scanned item
+          //__is NOT generic, will add to list
+          //__is GENERIC...
+            //__4__ __B__ Generic item, no matching title, will add to list
+
         
         
         //__1__ respond to an exact equipUnique key id match
@@ -543,39 +537,56 @@
         }
         
         
-        //___________SECOND respond to a matching title key id match and replace an existing unique item with the scanned item
-        //___________in the case of c stands or sand bags that are not specified but they are tracked
+        //___2__ respond to a matching title key id match
+        //replace an existing unique item with the scanned item???
         //___________!!!!!!   THIS IS NO GOOD, IF YOU HAVE TWO BATTERIES TO SCAN IN, THIS METHOD PREVENTS THE SECOND FROM GETTING FLIPPED  !!!!______
-//        BOOL foundAMatchingTitleKey = NO;
-//        for (EQRScheduleTracking_EquipmentUnique_Join* joinObject in self.arrayOfEquipJoins){
-//            
-//            if ([joinObject.equipTitleItem_foreignKey isEqualToString:titleItemSubString]){
-//                
-//                //should also test the the item has not already been give a YES value for the 'myProperty' value
-//                //otherwise it continues to the next segment, adding it as a new item to the order
-//                
-//                //found a matching title key in the ivar array
-//                foundAMatchingTitleKey = YES;
-//                
-//                
-//            }
-//            
-//            //change the data layer
-//            
-//            //change the local ivar
-//            
-//            //change the row cell content distinguishing id, and flip switch
-//            
-//        }
-//        
-//        if (foundAMatchingTitleKey == YES){
-//            
-//            //exit the method
+        BOOL foundAMatchingTitleKey = NO;
+        for (EQRScheduleTracking_EquipmentUnique_Join* joinObject in self.arrayOfEquipJoins){
+            
+            if ([joinObject.equipTitleItem_foreignKey isEqualToString:titleItemSubString]){
+                
+                //should also test the the item has not already been give a YES value for the 'myProperty' value
+                //otherwise it continues to the next segment, adding it as a new item to the order
+                if ([joinObject respondsToSelector:NSSelectorFromString(self.myProperty)]){
+                    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                    
+                    SEL thisSelector = NSSelectorFromString(self.myProperty);
+                    NSString* thisLiteralProperty = [joinObject performSelector:thisSelector];
+                    if ([thisLiteralProperty isEqualToString:@""] || thisLiteralProperty == nil){
+                        
+#pragma clang diagnostic pop
+                        
+                        //found a matching title key in the ivar array
+                        foundAMatchingTitleKey = YES;
+                        
+                        //____ !!!  could be a GENERIC item   !!!____
+                        //__4__ __A__ Generic item, matching title key and will flip switch
+
+                        
+                        //do stuff, replace existing unqiueItem with NEW uniqueItem
+                        
+                        //change the data layer
+                        
+                        //change the local ivar
+                        
+                        //change the row cell content distinguishing id, and flip switch
+                        
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if (foundAMatchingTitleKey == YES){
+            
+            //exit the method
 //            continue;
-//        }
+        }
         
         
-        //_____________ THIRD respond to a new titleItem by adding it the the order (in the case of batteries)
+        //__3__ respond to a new titleItem by adding it the the order (in the case of batteries)
         
         BOOL foundACatalogTitleKey = NO;
         EQRWebData* webData = [EQRWebData sharedInstance];
@@ -596,101 +607,91 @@
             continue;
         }
         
-        //also confirm that the unique key object exists!!!
-        //________create a new join item to add to the local ivar
-        EQRScheduleTracking_EquipmentUnique_Join* newJoinToAdd = [[EQRScheduleTracking_EquipmentUnique_Join alloc] init];
-        NSArray* fourthArray = [NSArray arrayWithObjects:@"key_id", uniqueItemSubString, nil];
-        NSArray* tipTopArray = [NSArray arrayWithObject:fourthArray];
-        [webData queryWithLink:@"EQGetEquipmentUnique.php" parameters:tipTopArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
+        //evaluate if generic...
+        if (![uniqueItemSubString isEqualToString:@"NA"]){
             
-            if ([muteArray count] > 0){
+            //confirm that the unique key object exists!!!
+            //________create a new join item to add to the local ivar
+            EQRScheduleTracking_EquipmentUnique_Join* newJoinToAdd = [[EQRScheduleTracking_EquipmentUnique_Join alloc] init];
+            NSArray* fourthArray = [NSArray arrayWithObjects:@"key_id", uniqueItemSubString, nil];
+            NSArray* tipTopArray = [NSArray arrayWithObject:fourthArray];
+            [webData queryWithLink:@"EQGetEquipmentUnique.php" parameters:tipTopArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
                 
-                //only continue with a confirmed Unique Item present
-                //change the data layer
-                //create a new schedule_equip_join object
-                //retrieve the key_id of the join?
-                
-                
-                newJoinToAdd.name = [(EQREquipUniqueItem*)[muteArray objectAtIndex:0] name];
-                newJoinToAdd.distinquishing_id = [(EQREquipUniqueItem*) [muteArray objectAtIndex:0] distinquishing_id];
-                newJoinToAdd.scheduleTracking_foreignKey = self.scheduleRequestKeyID;
-                newJoinToAdd.equipTitleItem_foreignKey = titleItemSubString;
-                newJoinToAdd.equipUniqueItem_foreignKey = uniqueItemSubString;
-                
-                //create the join object in the database and retrieve key_id
-                NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.scheduleRequestKeyID, nil];
-                NSArray* secondArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", uniqueItemSubString, nil];
-                NSArray* thirdArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", titleItemSubString, nil];
-                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
-                
-                NSString* returnString = [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:topArray];
-                
-                newJoinToAdd.key_id = returnString;
-                
-
-                
-                //_______          MUST BE UPDATED BECAUSE NOW WE USE A STRUCTURED ARRAY          _______
-                //add join object to array ivar
-                [self.arrayOfEquipJoins addObject:newJoinToAdd];
-                
-                self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins];
-                //_______         MUST BE UPDATED BECAUSE NOW WE USE A STRUCTURED ARRAY         _______
-                
-                [self.myEquipCollection reloadData];
-                
-                
-                //________move collection view to row with new object.
-                //________when cell is not in view (because at the bottom of a long list) the switch doesn't receive the notification and get flipped
-                [self.arrayOfEquipJoinsWithStructure enumerateObjectsUsingBlock:^(NSArray* subArray, NSUInteger idx, BOOL *stop) {
+                if ([muteArray count] > 0){
                     
-                    [subArray enumerateObjectsUsingBlock:^(EQRScheduleTracking_EquipmentUnique_Join* joinObj, NSUInteger subIdx, BOOL *stop) {
+                    //only continue with a confirmed Unique Item present
+                    //change the data layer
+                    //create a new schedule_equip_join object
+                    //retrieve the key_id of the join?
+                    
+                    
+                    newJoinToAdd.name = [(EQREquipUniqueItem*)[muteArray objectAtIndex:0] name];
+                    newJoinToAdd.distinquishing_id = [(EQREquipUniqueItem*) [muteArray objectAtIndex:0] distinquishing_id];
+                    newJoinToAdd.scheduleTracking_foreignKey = self.scheduleRequestKeyID;
+                    newJoinToAdd.equipTitleItem_foreignKey = titleItemSubString;
+                    newJoinToAdd.equipUniqueItem_foreignKey = uniqueItemSubString;
+                    
+                    //create the join object in the database and retrieve key_id
+                    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.scheduleRequestKeyID, nil];
+                    NSArray* secondArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", uniqueItemSubString, nil];
+                    NSArray* thirdArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", titleItemSubString, nil];
+                    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
+                    
+                    NSString* returnString = [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:topArray];
+                    
+                    newJoinToAdd.key_id = returnString;
+                    
+                    //2 arrays to update
+                    //add join object to array property
+                    [self.arrayOfEquipJoins addObject:newJoinToAdd];
+                    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins];
+                    
+                    [self.myEquipCollection reloadData];
+                    
+                    //move collection view to row with new object.
+                    //when cell is not in view (because at the bottom of a long list) the switch doesn't receive the notification and get flipped
+                    [self.arrayOfEquipJoinsWithStructure enumerateObjectsUsingBlock:^(NSArray* subArray, NSUInteger idx, BOOL *stop) {
                         
-                        if (joinObj == newJoinToAdd){
+                        [subArray enumerateObjectsUsingBlock:^(EQRScheduleTracking_EquipmentUnique_Join* joinObj, NSUInteger subIdx, BOOL *stop) {
                             
-                            NSLog(@"found a match in subarray: %@", newJoinToAdd.name);
-                            
-                            NSIndexPath* matchingIndexPath = [NSIndexPath indexPathForRow:subIdx inSection:idx];
-                            
-                            [self.myEquipCollection scrollToItemAtIndexPath:matchingIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
-                        }
+                            if (joinObj == newJoinToAdd){
+                                
+                                NSIndexPath* matchingIndexPath = [NSIndexPath indexPathForRow:subIdx inSection:idx];
+                                
+                                [self.myEquipCollection scrollToItemAtIndexPath:matchingIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
+                            }
+                        }];
                     }];
-                }];
-                
-                //flip the switch in the row cell
-                //alert matching row cell content with a notification
-                NSDictionary* newDic = [NSDictionary dictionaryWithObject:uniqueItemSubString forKey:@"keyID"];
-                
-                [self performSelector:@selector(delayedNotification:) withObject:newDic afterDelay:0.25];
-                
-                //add text to the display update
-                [self showUpdateDisplay:[NSString stringWithFormat:@"Added: %@ #%@", newJoinToAdd.name, newJoinToAdd.distinquishing_id]];
-                
-                
-                
-            }else{
-                
-                //can't find this uniqueKey in the database
-                //exit and alert user
-                //____!!!!!!  NEED TO INCLUDE THE TITLE ITEM NAME  !!!!!_______
-                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Not Found" message:[NSString stringWithFormat:@"Cannot find this item in the database"]  delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
-                
-                [alertView show];
-            }
-        }];
-        
-        
-        
-        
-    //____________FOURTH  respond to a GENERIC QR code that offers a titleKey but NO uniqueKey
-        
-        
-        
-        
-        //_____________FIFTH respond to code that has the "eqr" string  but doesn't find a matching title key in the data
-        
-        //present a message that an object was scanned but not found in the database
-        
-        
+                    
+                    //flip the switch in the row cell
+                    //alert matching row cell content with a notification
+                    NSDictionary* newDic = [NSDictionary dictionaryWithObject:uniqueItemSubString forKey:@"keyID"];
+                    
+                    [self performSelector:@selector(delayedNotification:) withObject:newDic afterDelay:0.25];
+                    
+                    //add text to the display update
+                    [self showUpdateDisplay:[NSString stringWithFormat:@"Added: %@ #%@", newJoinToAdd.name, newJoinToAdd.distinquishing_id]];
+                    
+                }else{
+                    
+                    //can't find this uniqueKey in the database
+                    //exit and alert user
+                    //____!!!!!!  NEED TO INCLUDE THE TITLE ITEM NAME  !!!!!_______
+                    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Not Found" message:[NSString stringWithFormat:@"Cannot find this item in the database"]  delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                    
+                    [alertView show];
+                }
+            }];
+            
+        }else{
+            
+            //__4__ __B__ Generic item, no matching title, but title confirmed in DB and will add to list
+            
+            //__check available quantity for this title, return error if none
+            
+            
+            
+        }
     }
 }
 
