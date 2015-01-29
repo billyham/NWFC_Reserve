@@ -262,6 +262,67 @@
 }
 
 
+-(BOOL)confirmAvailabilityOfTitleItem:(NSString*)equipTitleItem_foreignKey{
+    
+    //_____ Must call allocateGearListWithDates method before using this method ____
+    //iterate through local array
+    int numberOfAvailableItems = 0;
+    for (NSArray* subArray in self.arrayOfEquipTitlesWithCountOfUniqueItems){
+        
+        if ([(NSString*)[subArray objectAtIndex:0] isEqualToString:equipTitleItem_foreignKey]){
+            
+            numberOfAvailableItems = [(NSNumber*)[subArray objectAtIndex:1] intValue];
+            break;
+        }
+    }
+    
+    if (numberOfAvailableItems > 0){
+        return YES;
+    }else{
+        return NO;
+    }
+}
+
+
+-(NSString*)retrieveAnAvailableUniqueKeyFromTitleKey:(NSString*)equipTitleItem_foreignKey{
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+    NSArray* firstArray = @[@"equipTitleItem_foreignKey", equipTitleItem_foreignKey];
+    NSArray* topArray = @[firstArray];
+    [webData queryWithLink:@"EQGetEquipUniquesWithEquipTitleKey" parameters:topArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
+       
+        for (id object in muteArray){
+            [tempMuteArray addObject:object];
+        }
+    }];
+    
+    if ([tempMuteArray count] < 1){
+        //error handling when no items are returned
+    }
+    
+    //reduce result by matching items in self.arrayOfEquipUniqueItemsByDateCollision
+    NSMutableArray* arrayOfJustMatchingTitles = [NSMutableArray arrayWithCapacity:1];
+    for (EQREquipUniqueItem* item in self.arrayOfEquipUniqueItemsByDateCollision){
+        if ([item.equipTitleItem_foreignKey isEqualToString:equipTitleItem_foreignKey]){
+            [arrayOfJustMatchingTitles addObject:item];
+        }
+    }
+    
+    [tempMuteArray removeObjectsInArray:arrayOfJustMatchingTitles];
+    
+    //pick the unique at the bottom of the stack
+    if ([tempMuteArray count] > 0){
+        
+        return [(EQREquipUniqueItem*)[tempMuteArray objectAtIndex:0] key_id];
+    }else{
+        
+        //error handling when no items are available
+        return nil;
+    }
+}
+
+
 -(NSArray*)retrieveAllEquipUniqueItems{
     
     EQRWebData* webData = [EQRWebData sharedInstance];
@@ -708,7 +769,7 @@
         
         for (NSMutableArray* uniqueArrayMe in sortedTempListOfUniqueItemsJustRequested){
             
-            //____an array may be left empty after the last function, avoid tyring to interate through
+            //____an array may be left empty after the last function, avoid tyring to iterate through
             //____it or app will crash
             if ([uniqueArrayMe count] > 0){
                 

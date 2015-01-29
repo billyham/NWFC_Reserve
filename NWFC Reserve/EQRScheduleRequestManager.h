@@ -39,6 +39,8 @@
 -(void)createNewRequest;
 -(void)dismissRequest:(BOOL)isCanceled;
 -(void)resetEquipListAndAvailableQuantites;
+-(BOOL)confirmAvailabilityOfTitleItem:(NSString*)equipTitleItem_foreignKey;
+-(NSString*)retrieveAnAvailableUniqueKeyFromTitleKey:(NSString*)equipTitleItem_foreignKey;
 -(NSArray*)retrieveAllEquipUniqueItems;
 -(void)collapseOrExpandSectionInSchedule:(NSString*)chosenSection;
 -(void)allocateGearListWithDates:(NSDictionary*)datesDic;
