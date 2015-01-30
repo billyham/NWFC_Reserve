@@ -297,29 +297,43 @@
         }
     }];
     
+    NSLog(@"count of tempMuteArray: %u", [tempMuteArray count]);
     if ([tempMuteArray count] < 1){
         //error handling when no items are returned
+        return nil;
     }
     
     //reduce result by matching items in self.arrayOfEquipUniqueItemsByDateCollision
+    //__1__ identify any corresponding
     NSMutableArray* arrayOfJustMatchingTitles = [NSMutableArray arrayWithCapacity:1];
     for (EQREquipUniqueItem* item in self.arrayOfEquipUniqueItemsByDateCollision){
         if ([item.equipTitleItem_foreignKey isEqualToString:equipTitleItem_foreignKey]){
             [arrayOfJustMatchingTitles addObject:item];
         }
     }
+        NSLog(@"count of arrayOfJustMatchingTitle: %u", [arrayOfJustMatchingTitles count]);
     
-    [tempMuteArray removeObjectsInArray:arrayOfJustMatchingTitles];
+    NSMutableArray* arrayOfUniqueObjectsToBeRemoved = [NSMutableArray arrayWithCapacity:1];
+    for (EQREquipUniqueItem* equipUniqueItemObject in tempMuteArray){
+        
+        for (EQREquipUniqueItem* equipUniqueFromJustMatching in arrayOfJustMatchingTitles){
+            
+            if ([equipUniqueItemObject.key_id isEqualToString:equipUniqueFromJustMatching.key_id]){
+                
+                [arrayOfUniqueObjectsToBeRemoved addObject:equipUniqueItemObject];
+                break;
+            }
+        }
+    }
+    NSLog(@"count of arrayOfUniqueObjectsToBeRemoved: %u", [arrayOfUniqueObjectsToBeRemoved count]);
+    //remove them objects (if there are any)
+    if ([arrayOfUniqueObjectsToBeRemoved count] > 0){
+        [tempMuteArray removeObjectsInArray:arrayOfUniqueObjectsToBeRemoved];
+    }
+        NSLog(@"RE-count of tempMuteArray: %u", [tempMuteArray count]);
     
     //pick the unique at the bottom of the stack
-    if ([tempMuteArray count] > 0){
-        
-        return [(EQREquipUniqueItem*)[tempMuteArray objectAtIndex:0] key_id];
-    }else{
-        
-        //error handling when no items are available
-        return nil;
-    }
+    return [(EQREquipUniqueItem*)[tempMuteArray objectAtIndex:0] key_id];
 }
 
 
@@ -339,10 +353,6 @@
     
     //set ivar
     self.arrayOfEquipUniqueItemsAll = [NSMutableArray arrayWithArray:arrayToReturn];
-    
-    NSLog(@"array of equipUniqueItems count: %u", (int)[self.arrayOfEquipUniqueItemsAll count]);
-    
-    
     
     
     //______****** add structure the array? nested array's in equipTitleItem id's?
@@ -377,7 +387,6 @@
     
     //assign to ivar
     self.arrayOfEquipUniqueItemsWithSubArrays = arrayWithSubArrays;
-    
     
     //... this is redundant....
     return arrayToReturn;

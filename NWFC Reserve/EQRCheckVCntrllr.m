@@ -147,7 +147,7 @@
     //set the request as ivar in requestManager
     self.privateRequestManager.request = self.myScheduleRequestItem;
     
-    //two important methods that initiate requestManager ivar arrays
+    //important methods that initiate requestManager ivar arrays
     [self.privateRequestManager resetEquipListAndAvailableQuantites];
     [self.privateRequestManager retrieveAllEquipUniqueItems];
 }
@@ -422,10 +422,11 @@
         //check to see if the string value already has been captured
         for (NSString* stringObject in self.setOfAlreadyCapturedQRs){
             
-            
             if ([stringObject isEqualToString:recognizedObject.stringValue]){
                 
                 alreadyInArray = YES;
+//                NSLog(@"found OBJECT IN ALREADYCAPTURED QRS");
+                
                 break;
             }
         }
@@ -507,7 +508,7 @@
                         
                         if (joinObj == joinObject){
                             
-                            NSLog(@"found a match in subarray, %@", joinObject.name);
+//                            NSLog(@"found a match in subarray, %@", joinObject.name);
                             
                             NSIndexPath* matchingIndexPath = [NSIndexPath indexPathForRow:subIdx inSection:idx];
                             
@@ -617,7 +618,13 @@
             //check available quantity for this title, return error if none
             //derive a legitimate uniqueKey and assign to uniqueItemSubString to use in the following code...
             //use privateRequestManager... check the title for availability,
+            //important methods that initiate requestManager ivar arrays
+            
+            //allocate method MUST be called only ONCE after the other two methods. or the count gets screwed up.  
+            [self.privateRequestManager resetEquipListAndAvailableQuantites];
+            [self.privateRequestManager retrieveAllEquipUniqueItems];
             [self.privateRequestManager allocateGearListWithDates:nil];
+            
             BOOL isAvailable = [self.privateRequestManager confirmAvailabilityOfTitleItem:titleItemSubString];
             if (isAvailable){
                 
@@ -632,20 +639,32 @@
                 if (tempReturn == nil){
                     
                     //error handling when nothing is returned
+                    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Scan Error" message:[NSString stringWithFormat:@"Scan Failed, an error occurred when trying to select this item"]  delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                    [alertView show];
+                    
+                    //advance the cycle
+                    continue;
+                    
                 }else{
                     
                     //otherwise assign key to 
                     uniqueItemSubString = tempReturn;
+                    
+                    //set a delayed method to remove the particular code from the alreadyInArray after 2 seconds to allow multiple scans
+                    [self performSelector:@selector(removeGenericQRCodeFromAlreadySet:) withObject:recognizedObject.stringValue afterDelay:2.0];
                 }
                 
             }else{
                 
-                //____!!!!  send alert that item is not available   !!!!!____
+                //____send alert that item is not available____
+                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Not Available" message:[NSString stringWithFormat:@"Gear is no longer available for this date range"]  delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                [alertView show];
+                
+                //advance the cycle
+                continue;
             }
-            
-            
-            
         }
+        
         
         //confirm that the unique key object exists!!!
         //________create a new join item to add to the local ivar
@@ -727,6 +746,16 @@
 -(void)delayedNotification:(NSDictionary*)myUserDic{
     
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRQRCodeFlipsSwitchInRowCellContent object:nil userInfo:myUserDic];
+}
+
+
+-(void)removeGenericQRCodeFromAlreadySet:(NSString*)QRCodeString{
+    
+    if (self.setOfAlreadyCapturedQRs){
+        if ([self.setOfAlreadyCapturedQRs count] > 0){
+            [self.setOfAlreadyCapturedQRs removeObject:QRCodeString];
+        }
+    }
 }
 
 
