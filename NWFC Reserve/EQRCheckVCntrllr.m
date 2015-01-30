@@ -472,8 +472,7 @@
 
 
         
-        //_____!!!!  when scanning generic objects, must start a timer to prevent rapid rescanning of the same generic title items !!!____
-        //_____!!!!  or modal view that asks for a quantity for the generic title scananed...
+        //_____!!!!  a modal view that asks for a quantity for the generic title scananed?...
         
         //__1__ Matching uniqueKey, just flip switch
           //continue to next scanned item
@@ -546,12 +545,12 @@
             
             if ([joinObject.equipTitleItem_foreignKey isEqualToString:titleItemSubString]){
                 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                
                 //should also test the the item has not already been give a YES value for the 'myProperty' value
                 //otherwise it continues to the next segment, adding it as a new item to the order
                 if ([joinObject respondsToSelector:NSSelectorFromString(self.myProperty)]){
-                    
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                     
                     SEL thisSelector = NSSelectorFromString(self.myProperty);
                     NSString* thisLiteralProperty = [joinObject performSelector:thisSelector];

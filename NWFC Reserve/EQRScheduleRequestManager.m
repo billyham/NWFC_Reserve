@@ -297,7 +297,7 @@
         }
     }];
     
-    NSLog(@"count of tempMuteArray: %u", [tempMuteArray count]);
+//    NSLog(@"count of tempMuteArray: %u", [tempMuteArray count]);
     if ([tempMuteArray count] < 1){
         //error handling when no items are returned
         return nil;
@@ -311,7 +311,7 @@
             [arrayOfJustMatchingTitles addObject:item];
         }
     }
-        NSLog(@"count of arrayOfJustMatchingTitle: %u", [arrayOfJustMatchingTitles count]);
+//        NSLog(@"count of arrayOfJustMatchingTitle: %u", [arrayOfJustMatchingTitles count]);
     
     NSMutableArray* arrayOfUniqueObjectsToBeRemoved = [NSMutableArray arrayWithCapacity:1];
     for (EQREquipUniqueItem* equipUniqueItemObject in tempMuteArray){
@@ -325,12 +325,12 @@
             }
         }
     }
-    NSLog(@"count of arrayOfUniqueObjectsToBeRemoved: %u", [arrayOfUniqueObjectsToBeRemoved count]);
+//    NSLog(@"count of arrayOfUniqueObjectsToBeRemoved: %u", [arrayOfUniqueObjectsToBeRemoved count]);
     //remove them objects (if there are any)
     if ([arrayOfUniqueObjectsToBeRemoved count] > 0){
         [tempMuteArray removeObjectsInArray:arrayOfUniqueObjectsToBeRemoved];
     }
-        NSLog(@"RE-count of tempMuteArray: %u", [tempMuteArray count]);
+//        NSLog(@"RE-count of tempMuteArray: %u", [tempMuteArray count]);
     
     //pick the unique at the bottom of the stack
     return [(EQREquipUniqueItem*)[tempMuteArray objectAtIndex:0] key_id];

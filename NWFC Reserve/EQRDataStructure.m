@@ -37,6 +37,15 @@
 
 +(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray{
     
+    //attach a MISCELLANEOUS section...
+    //after sorting
+    //needs schedule_grouping value?
+    //add NSArray parameter with objects (name),
+    //needs Join attributes: scheduleTracking_foreignKey, prep_flag, etc_flags...
+    //...OR provides NSString parameter with scheduleTracking key to pull related objects from database
+    
+    
+    
     //first get array of grouping objects
     //get title items EQGetEquipmentTitlesAll (except items with hide_from_public set to YES)
     EQRWebData* webData = [EQRWebData sharedInstance];
