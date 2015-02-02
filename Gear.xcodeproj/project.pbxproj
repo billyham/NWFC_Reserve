@@ -128,6 +128,7 @@
 		54C22B0E1A52A86F00F6610E /* EQREditorEquipListContentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C22B0C1A52A86F00F6610E /* EQREditorEquipListContentVC.m */; };
 		54C22B0F1A52A86F00F6610E /* EQREditorEquipListContentVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54C22B0D1A52A86F00F6610E /* EQREditorEquipListContentVC.xib */; };
 		54CE45AC186AF4680023FDA4 /* EQREquipItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54CE45AB186AF4680023FDA4 /* EQREquipItemCell.m */; };
+		54D3D8231A7DC53700562699 /* EQRMiscJoin.m in Sources */ = {isa = PBXBuildFile; fileRef = 54D3D8221A7DC53700562699 /* EQRMiscJoin.m */; };
 		54D4548A1A3856F50099DFE4 /* EQRDistIDPickerTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54D454881A3856F50099DFE4 /* EQRDistIDPickerTableVC.m */; };
 		54D4548B1A3856F50099DFE4 /* EQRDistIDPickerTableVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54D454891A3856F50099DFE4 /* EQRDistIDPickerTableVC.xib */; };
 		54DFE0F0186ECD610089B9EA /* EQRClassRegistrationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DFE0EF186ECD610089B9EA /* EQRClassRegistrationItem.m */; };
@@ -349,6 +350,8 @@
 		54C22B0D1A52A86F00F6610E /* EQREditorEquipListContentVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREditorEquipListContentVC.xib; sourceTree = "<group>"; };
 		54CE45AA186AF4680023FDA4 /* EQREquipItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipItemCell.h; sourceTree = "<group>"; };
 		54CE45AB186AF4680023FDA4 /* EQREquipItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipItemCell.m; sourceTree = "<group>"; };
+		54D3D8211A7DC53700562699 /* EQRMiscJoin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRMiscJoin.h; sourceTree = "<group>"; };
+		54D3D8221A7DC53700562699 /* EQRMiscJoin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRMiscJoin.m; sourceTree = "<group>"; };
 		54D454871A3856F50099DFE4 /* EQRDistIDPickerTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRDistIDPickerTableVC.h; sourceTree = "<group>"; };
 		54D454881A3856F50099DFE4 /* EQRDistIDPickerTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRDistIDPickerTableVC.m; sourceTree = "<group>"; };
 		54D454891A3856F50099DFE4 /* EQRDistIDPickerTableVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRDistIDPickerTableVC.xib; sourceTree = "<group>"; };
@@ -787,6 +790,8 @@
 				01FDEA95188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m */,
 				016C3F7C18ADBDAD00B2A692 /* EQREquipUniqueItem.h */,
 				016C3F7D18ADBDAD00B2A692 /* EQREquipUniqueItem.m */,
+				54D3D8211A7DC53700562699 /* EQRMiscJoin.h */,
+				54D3D8221A7DC53700562699 /* EQRMiscJoin.m */,
 			);
 			name = "collection objects";
 			sourceTree = "<group>";
@@ -996,6 +1001,7 @@
 				5402D22E186BFCF80091C080 /* EQRCellTemplate.m in Sources */,
 				438EDCEC182B7ABE0090F882 /* main.m in Sources */,
 				5402D22B186BFCDA0091C080 /* EQRContactNameCell.m in Sources */,
+				54D3D8231A7DC53700562699 /* EQRMiscJoin.m in Sources */,
 				549BF3BC191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m in Sources */,
 				01C83A7F199E818C00CD5E9C /* EQREditorExtendedDateVC.m in Sources */,
 				01735F1D193FAC38007E85C1 /* EQRCheckPrintPage.m in Sources */,

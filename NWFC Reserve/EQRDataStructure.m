@@ -41,8 +41,8 @@
     //after sorting
     //needs schedule_grouping value?
     //add NSArray parameter with objects (name),
-    //needs Join attributes: scheduleTracking_foreignKey, prep_flag, etc_flags...
-    //...OR provides NSString parameter with scheduleTracking key to pull related objects from database
+    //... needs Join attributes: scheduleTracking_foreignKey, prep_flag, etc_flags...
+    //... OR provides NSString parameter with scheduleTracking key to pull related objects from database
     
     
     
