@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRCellTemplate.h"
 
-@interface EQREditorHeaderCell : UICollectionViewCell
+@interface EQREditorHeaderCell : EQRCellTemplate
 
 -(void)initialSetupWithTitle:(NSString*) titleName;
 

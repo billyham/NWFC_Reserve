@@ -44,6 +44,8 @@ const int intEQRClassRegistrationItem = 5;
 const int intEQRClassCatalog_EquipTitleItem_Join = 6;
 const int intEQRScheduleTracking_EquipmentUnique_Join = 7;
 const int intEQREquipUniqueItem = 8;
+const int intEQRMiscJoin = 9;
+
 
 @implementation EQRWebData
 
@@ -107,6 +109,11 @@ const int intEQREquipUniqueItem = 8;
     
     if ([classString isEqualToString:@"EQREquipUniqueItem"]){
         self.returnClassInt = intEQREquipUniqueItem;
+        return;
+    }
+    
+    if ([classString isEqualToString:@"EQRMiscJoin"]){
+        self.returnClassInt = intEQRMiscJoin;
         return;
     }
     

@@ -155,7 +155,6 @@
         
         [self.myContentVC.myDeleteButton setHidden:NO];
     }];
-    
 }
 
 
@@ -173,7 +172,6 @@
     } completion:^(BOOL finished) {
         
     }];
-    
 }
 
 

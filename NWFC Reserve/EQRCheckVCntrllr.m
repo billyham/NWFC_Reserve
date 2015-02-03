@@ -789,9 +789,9 @@
     for (NSString* thisKeyID in self.arrayOfToBeDeletedEquipIDs){
         
         //send php message to delete with the join key_id
-        NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", thisKeyID, nil];
+        NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", thisKeyID, nil];
         NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
-        NSString* returnString = [webData queryForStringWithLink:@"EQRDeleteScheduleEquipJoin.php" parameters:beeArray];
+        NSString* returnString = [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoin.php" parameters:beeArray];
         
         NSLog(@"this is the result: %@", returnString);
     }

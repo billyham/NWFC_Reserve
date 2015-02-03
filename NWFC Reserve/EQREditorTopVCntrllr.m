@@ -20,6 +20,7 @@
 #import "EQRColors.h"
 #import "EQREquipSelectionGenericVCntrllr.h"
 #import "EQRDataStructure.h"
+#import "EQRMiscJoin.h"
 
 @interface EQREditorTopVCntrllr ()
 
@@ -46,7 +47,9 @@
 @property (strong, nonatomic) IBOutlet UIButton* addEquipItemButton;
 
 @property (strong, nonatomic) NSMutableArray* arrayOfSchedule_Unique_Joins;
+@property (strong, nonatomic) NSMutableArray* arrayOfMiscJoins;
 @property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedEquipIDs;
+@property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedMiscJoinIDs;
 @property (strong, nonatomic) NSArray* arrayOfSchedule_Unique_JoinsWithStructure;
 
 @property (strong, nonatomic) EQREditorDateVCntrllr* myDateVC;
@@ -93,26 +96,32 @@
     
     //register collection view cell
     [self.equipList registerClass:[EQREditorEquipListCell class] forCellWithReuseIdentifier:@"Cell"];
+    [self.equipList registerClass:[EQREditorMiscListCell class] forCellWithReuseIdentifier:@"CellForMiscJoin"];
     [self.equipList registerClass:[EQREditorHeaderCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SuppCell"];
     
     //initialze ivar arrays
     if (!self.arrayOfSchedule_Unique_Joins){
-        
         self.arrayOfSchedule_Unique_Joins = [NSMutableArray arrayWithCapacity:1];
-        
     }else {
-        
         [self.arrayOfSchedule_Unique_Joins removeAllObjects];
     }
     
+    if (!self.arrayOfMiscJoins){
+        self.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
+    }else{
+        [self.arrayOfMiscJoins removeAllObjects];
+    }
     
     if (!self.arrayOfToBeDeletedEquipIDs){
-        
         self.arrayOfToBeDeletedEquipIDs = [NSMutableArray arrayWithCapacity:1];
-        
     } else {
-        
         [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+    }
+    
+    if (!self.arrayOfToBeDeletedMiscJoinIDs){
+        self.arrayOfToBeDeletedMiscJoinIDs = [NSMutableArray arrayWithCapacity:1];
+    }else{
+        [self.arrayOfToBeDeletedMiscJoinIDs removeAllObjects];
     }
     
     //set color of collection view
@@ -169,8 +178,19 @@
     
     [self.arrayOfSchedule_Unique_Joins addObjectsFromArray:arrayToReturnJoins];
     
+    //gather any misc joins
+    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
+    NSArray* alphaArray = @[@"scheduleTracking_foreignKey", [self.myUserInfo objectForKey:@"key_ID"]];
+    NSArray* omegaArray = @[alphaArray];
+    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
+        for (id object in muteArray2){
+            [tempMiscMuteArray addObject:object];
+        }
+    }];
+    [self.arrayOfMiscJoins addObjectsFromArray:tempMiscMuteArray];
+    
     //add structure to array
-    self.arrayOfSchedule_Unique_JoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfSchedule_Unique_Joins];
+    self.arrayOfSchedule_Unique_JoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfSchedule_Unique_Joins withMiscJoins:self.arrayOfMiscJoins];
     
     //reload collection view
     [self.equipList reloadData];
@@ -431,19 +451,35 @@
                 //found a matching equipUnique item
                 
                 //send php message to detele with the join key_id
-                NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", thisJoin.key_id, nil];
+                NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", thisJoin.key_id, nil];
                 NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
-                NSString* returnString = [webData queryForStringWithLink:@"EQRDeleteScheduleEquipJoin.php" parameters:beeArray];
-                
-                NSLog(@"this is the result: %@", returnString);
+                [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoin.php" parameters:beeArray];
             }
+        }
+    }
+    
+    //_______*********  delete the marked MiscJoin
+    for (NSString* thisKeyID in self.arrayOfToBeDeletedMiscJoinIDs){
+        
+        for (EQRMiscJoin* miscJoin in self.arrayOfMiscJoins){
             
+            if ([thisKeyID isEqualToString:miscJoin.key_id]){
+                
+                //found a matching equipUnique item
+                
+                //send php message to detele with the miscjoin key_id
+                NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", miscJoin.key_id, nil];
+                NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
+                [webData queryForStringWithLink:@"EQDeleteMiscJoin.php" parameters:beeArray];
+            }
         }
     }
     
     //empty the arrays
     [self.arrayOfSchedule_Unique_Joins removeAllObjects];
+    [self.arrayOfMiscJoins removeAllObjects];
     [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+    [self.arrayOfToBeDeletedMiscJoinIDs removeAllObjects];
     self.arrayOfSchedule_Unique_JoinsWithStructure = nil;
 
     //send note to schedule that a change has been saved
@@ -588,7 +624,9 @@
         
         //empty the arrays
         [self.arrayOfSchedule_Unique_Joins removeAllObjects];
+        [self.arrayOfMiscJoins removeAllObjects];
         [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+        [self.arrayOfToBeDeletedMiscJoinIDs removeAllObjects];
         self.arrayOfSchedule_Unique_JoinsWithStructure = nil;
         
         //send note to schedule that a change has been saved
@@ -912,6 +950,7 @@
     //need to update self.arrayOfEquipUniqueItems ??
     //empty arrays first
     [self.arrayOfSchedule_Unique_Joins removeAllObjects];
+    [self.arrayOfMiscJoins removeAllObjects];
     self.arrayOfSchedule_Unique_JoinsWithStructure = nil;
     
     NSMutableArray* arrayToReturnJoins = [NSMutableArray arrayWithCapacity:1];
@@ -931,8 +970,19 @@
     
     [self.arrayOfSchedule_Unique_Joins addObjectsFromArray:arrayToReturnJoins];
     
+    //gather any misc joins
+    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
+    NSArray* alphaArray = @[@"scheduleTracking_foreignKey", [self.myUserInfo objectForKey:@"key_ID"]];
+    NSArray* omegaArray = @[alphaArray];
+    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
+        for (id object in muteArray2){
+            [tempMiscMuteArray addObject:object];
+        }
+    }];
+    [self.arrayOfMiscJoins addObjectsFromArray:tempMiscMuteArray];
+    
     //add structure
-    self.arrayOfSchedule_Unique_JoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfSchedule_Unique_Joins];
+    self.arrayOfSchedule_Unique_JoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfSchedule_Unique_Joins withMiscJoins:self.arrayOfMiscJoins];
     
     //reload collection view
     [self.equipList reloadData];
@@ -963,6 +1013,28 @@
     }
     
     [self.arrayOfToBeDeletedEquipIDs removeObject:stringToBeRemoved];
+}
+
+#pragma mark - EQREditorMiscCellDelegate methods
+
+-(void)tagMiscJoinToDelete:(NSString*)key_id{
+    
+    [self.arrayOfToBeDeletedMiscJoinIDs addObject:key_id];
+}
+
+-(void)tagMiscJoinToCancelDelete:(NSString*)key_id{
+    
+    NSString* stringToBeRemoved;
+    
+    for (NSString* thisString in self.arrayOfToBeDeletedMiscJoinIDs){
+        
+        if ([thisString isEqualToString:key_id]) {
+            
+            stringToBeRemoved = thisString;
+        }
+    }
+    
+    [self.arrayOfToBeDeletedMiscJoinIDs removeObject:stringToBeRemoved];
 }
 
 
@@ -1033,7 +1105,8 @@
             break;
         }
     }
-    self.arrayOfSchedule_Unique_JoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfSchedule_Unique_Joins];
+    
+    self.arrayOfSchedule_Unique_JoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfSchedule_Unique_Joins withMiscJoins:self.arrayOfMiscJoins];
     
     //renew the collection view
     [self.equipList reloadData];
@@ -1063,32 +1136,6 @@
     //send note to schedule that a change has been saved
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
 }
-
-
-//_____using delegate methods instead
-//#pragma mark - notification methods
-//
-//-(void)addEquipUniqueToBeDeletedArray:(NSNotification*)note{
-//    
-//    [self.arrayOfToBeDeletedEquipIDs addObject:[note.userInfo objectForKey:@"key_id"]];
-//    
-//}
-//
-//-(void)removeEquipUniqueToBeDeletedArray:(NSNotification*)note{
-//    
-//    NSString* stringToBeRemoved;
-//    
-//    for (NSString* thisString in self.arrayOfToBeDeletedEquipIDs){
-//        
-//        if ([thisString isEqualToString:[note.userInfo objectForKey:@"key_id"]]){
-//            
-//            stringToBeRemoved = thisString;
-//        }
-//    }
-//
-//    [self.arrayOfToBeDeletedEquipIDs removeObject:stringToBeRemoved];
-//}
-
 
 
 #pragma mark - Notes popover methods
@@ -1150,30 +1197,63 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    static NSString* CellIdentifier = @"Cell";
+    //__1__ An equipUniqueJoin item
+    //__2__ A MiscJoin Item
     
-    EQREditorEquipListCell* cell = [self.equipList dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
-    
-    for (UIView* view in cell.contentView.subviews){
+    if ([[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] respondsToSelector:@selector(schedule_grouping)]){
         
-        [view removeFromSuperview];
-    }
-    
-    //set self as cell's delegate
-    cell.delegate = self;
-    
-    BOOL toBeDeleted = NO;
-    for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
+        EQREditorEquipListCell* cell = [self.equipList dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
         
-        if ([keyToDelete isEqualToString:[[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] equipUniqueItem_foreignKey]]){
+        
+        
+        for (UIView* view in cell.contentView.subviews){
             
-            toBeDeleted = YES;
+            [view removeFromSuperview];
         }
+        
+        //set self as cell's delegate
+        cell.delegate = self;
+        
+        BOOL toBeDeleted = NO;
+        for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
+            
+            if ([keyToDelete isEqualToString:[[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] equipUniqueItem_foreignKey]]){
+                
+                toBeDeleted = YES;
+            }
+        }
+        
+        [cell initialSetupWithJoinObject:[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] deleteFlag:toBeDeleted editMode:YES];
+        
+        return cell;
+        
+    }else{
+        
+        EQREditorMiscListCell* cell = [self.equipList dequeueReusableCellWithReuseIdentifier:@"CellForMiscJoin" forIndexPath:indexPath];
+        
+
+        
+        for (UIView* view in cell.contentView.subviews){
+            
+            [view removeFromSuperview];
+        }
+        
+        //set self as cell's delegate
+        cell.delegate = self;
+        
+        BOOL toBeDeleted = NO;
+        for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
+            
+            if ([keyToDelete isEqualToString:[[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] equipUniqueItem_foreignKey]]){
+                
+                toBeDeleted = YES;
+            }
+        }
+        
+        [cell initialSetupWithMiscJoin:[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] deleteFlag:toBeDeleted editMode:YES];
+        
+        return cell;
     }
-    
-    [cell initialSetupWithJoinObject:[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] deleteFlag:toBeDeleted editMode:YES];
-    
-    return cell;
 }
 
 
@@ -1188,7 +1268,11 @@
         [view removeFromSuperview];
     }
     
-    [cell initialSetupWithTitle: [(EQREquipUniqueItem*)[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] schedule_grouping]];
+    if ([[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:0] respondsToSelector:@selector(schedule_grouping)]){
+        [cell initialSetupWithTitle: [(EQREquipUniqueItem*)[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] schedule_grouping]];
+    }else{
+        [cell initialSetupWithTitle:@"Miscellaneous"];
+    }
     
     return cell;
 }

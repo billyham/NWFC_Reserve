@@ -13,6 +13,7 @@
 #import "EQREquipUniqueItem.h"
 #import "EQRWebData.h"
 
+
 @interface EQRScheduleRequestManager ()
 
 @property (strong, nonatomic) NSArray* arrayOfEquipUniquesAfterCollisionSubraction;

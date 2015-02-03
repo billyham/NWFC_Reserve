@@ -17,6 +17,9 @@
 //the subarrays are populated with ScheduleTracking_EquipmentUnique_Joins
 +(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray;
 
+//expands on the method to incorporate seperate MiscJoin objects
++(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray withMiscJoins:(NSArray*)arrayOfMisc;
+
 //same function for EquipUnqiueItems* but uses category instead of schedule_grouping
 +(NSArray*)convertFlatArrayofUniqueItemsToStructureWithCategory:(NSArray*)flatArray;
 

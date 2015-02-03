@@ -13,6 +13,7 @@
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQREquipItem.h"
 #import "EQREquipUniqueItem.h"
+#import "EQRMiscJoin.h"
 
 @implementation EQRDataStructure
 
@@ -32,10 +33,7 @@
 }
 
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-
-+(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray{
++(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray withMiscJoins:(NSArray*)arrayOfMisc{
     
     //attach a MISCELLANEOUS section...
     //after sorting
@@ -43,9 +41,27 @@
     //add NSArray parameter with objects (name),
     //... needs Join attributes: scheduleTracking_foreignKey, prep_flag, etc_flags...
     //... OR provides NSString parameter with scheduleTracking key to pull related objects from database
+
     
+    NSArray* regularArray = [self turnFlatArrayToStructuredArray:flatArray];
+
+    NSMutableArray* sortedTopArrayWithMisc = [NSMutableArray arrayWithCapacity:1];
+    [sortedTopArrayWithMisc addObjectsFromArray:regularArray];
+
+    if ([arrayOfMisc count] > 0){
+        //_______!!!!!  add miscJoin ites   !!!!!!________
+        [sortedTopArrayWithMisc addObject:arrayOfMisc];
+    }
     
-    
+    return sortedTopArrayWithMisc;
+}
+
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+
++(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray{
+
     //first get array of grouping objects
     //get title items EQGetEquipmentTitlesAll (except items with hide_from_public set to YES)
     EQRWebData* webData = [EQRWebData sharedInstance];

@@ -856,9 +856,9 @@
                 //found a matching equipUnique item
                 
                 //send php message to delete with the join key_id
-                NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", thisJoin.key_id, nil];
+                NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", thisJoin.key_id, nil];
                 NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
-                NSString* returnString = [webData queryForStringWithLink:@"EQRDeleteScheduleEquipJoin.php" parameters:beeArray];
+                NSString* returnString = [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoin.php" parameters:beeArray];
                 
                 NSLog(@"this is the return string: %@", returnString);
             }
