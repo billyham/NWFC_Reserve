@@ -24,6 +24,9 @@
 @property (strong, nonatomic) IBOutlet UISwitch* statusSwitch;
 @property (strong, nonatomic) IBOutlet UIButton* serviceIssue;
 
+@property BOOL isContentForMiscJoin;
+
 -(void)initialSetupWithDeleteFlag:(BOOL)deleteFlag;
+
 
 @end

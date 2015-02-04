@@ -8,6 +8,8 @@
 
 #import "EQRCheckVCntrllr.h"
 #import "EQRCheckRowCell.h"
+#import "EQRCheckRowMiscItemCell.h"
+#import "EQRMiscJoin.h"
 #import "EQRWebData.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRGlobals.h"
@@ -49,8 +51,10 @@
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myEquipCollection;
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipJoins;
+@property (strong, nonatomic) NSMutableArray* arrayOfMiscJoins;
 @property (strong, nonatomic) NSArray* arrayOfEquipJoinsWithStructure;
 @property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedEquipIDs;
+@property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedMiscJoins;
 
 //for staff user picker
 @property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
@@ -169,17 +173,37 @@
         }
     }];
     
+    //initiate the nsmutable array if necessary
     if (!self.arrayOfEquipJoins){
-        
         self.arrayOfEquipJoins = [NSMutableArray arrayWithCapacity:1];
     }
-    
     [self.arrayOfEquipJoins removeAllObjects];
     
     [self.arrayOfEquipJoins addObjectsFromArray:altMuteArray];
     
-    //add nested structure to the array of equup items
-    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins];
+
+    //gather any misc joins
+    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
+    NSArray* alphaArray = @[@"scheduleTracking_foreignKey", scheduleRequestKeyID];
+    NSArray* omegaArray = @[alphaArray];
+    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
+        for (id object in muteArray2){
+            [tempMiscMuteArray addObject:object];
+        }
+    }];
+    
+    //initiate the nsmutable array if necessary
+    if (!self.arrayOfMiscJoins){
+        self.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
+    }
+    [self.arrayOfMiscJoins removeAllObjects];
+
+    [self.arrayOfMiscJoins addObjectsFromArray:tempMiscMuteArray];
+    
+    
+    
+    //add nested structure to the array of equip items
+    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
 }
 
 
@@ -187,8 +211,9 @@
     
     [super viewDidLoad];
 
-    //register collection view cell
+    //register collection view cells
     [self.myEquipCollection registerClass:[EQRCheckRowCell class] forCellWithReuseIdentifier:@"Cell"];
+    [self.myEquipCollection registerClass:[EQRCheckRowMiscItemCell class] forCellWithReuseIdentifier:@"CellForMiscJoin"];
     
     //register for header cell
     [self.myEquipCollection registerClass:[EQRCheckHeaderCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
@@ -699,7 +724,7 @@
                 //2 arrays to update
                 //add join object to array property
                 [self.arrayOfEquipJoins addObject:newJoinToAdd];
-                self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins];
+                self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
                 
                 [self.myEquipCollection reloadData];
                 
@@ -860,7 +885,23 @@
                 
             }
         }
+    }
+    
+    //make special note if any of the joins in the ivar array are not complete **NOW for MiscJoins**
+    for (EQRMiscJoin* join in self.arrayOfMiscJoins){
         
+        if ([join respondsToSelector:NSSelectorFromString(self.myProperty)]){
+            
+            SEL thisSelector = NSSelectorFromString(self.myProperty);
+            
+            NSString* thisLiteralProperty = [join performSelector:thisSelector];
+            
+            if (([thisLiteralProperty isEqualToString:@""]) || (thisLiteralProperty == nil)){
+                
+                foundOutstandingItem = YES;
+                
+            }
+        }
     }
     
     
@@ -978,23 +1019,50 @@
     NSString* joinKeyID = [[note userInfo] objectForKey:@"joinKeyID"];
     NSString* joinProperty = [[note userInfo] objectForKey:@"joinProperty"];
     NSString* verdict = [[note userInfo] objectForKey: @"markedAsYes"];
+    BOOL isContentForMiscJoin = [[[note userInfo] objectForKey:@"isContentForMiscJoin"] boolValue];
     
-    for (EQRScheduleTracking_EquipmentUnique_Join* joinItem in self.arrayOfEquipJoins){
-        
-        if ([joinItem.key_id isEqualToString:joinKeyID]){
+    if (isContentForMiscJoin == NO){
+        for (EQRScheduleTracking_EquipmentUnique_Join* joinItem in self.arrayOfEquipJoins){
             
-            //gotta cutoff the "_flag" at the end or else is will capitalize the "F"
-            NSUInteger thisLength = [joinProperty length];
-            NSRange newRange = NSMakeRange(0, thisLength - 5);
-            NSString* joinSubstring = [joinProperty substringWithRange:newRange];
-            
-            NSString* joinPropertyWithCap = [joinSubstring capitalizedString];
-            NSString* joinPropertySetMethod = [NSString stringWithFormat:@"set%@_flag:", joinPropertyWithCap];
-            SEL mySelector = NSSelectorFromString(joinPropertySetMethod);
-            
-            if ([joinItem respondsToSelector:mySelector]){
+            if ([joinItem.key_id isEqualToString:joinKeyID]){
                 
-                [joinItem performSelector:mySelector withObject:verdict];
+                //gotta cutoff the "_flag" at the end or else is will capitalize the "F"
+                NSUInteger thisLength = [joinProperty length];
+                NSRange newRange = NSMakeRange(0, thisLength - 5);
+                NSString* joinSubstring = [joinProperty substringWithRange:newRange];
+                
+                NSString* joinPropertyWithCap = [joinSubstring capitalizedString];
+                NSString* joinPropertySetMethod = [NSString stringWithFormat:@"set%@_flag:", joinPropertyWithCap];
+                SEL mySelector = NSSelectorFromString(joinPropertySetMethod);
+                
+                if ([joinItem respondsToSelector:mySelector]){
+                    
+                    [joinItem performSelector:mySelector withObject:verdict];
+                }
+                break;
+            }
+        }
+        
+    }else{
+        
+        for (EQRMiscJoin* miscJoin in self.arrayOfMiscJoins){
+            
+            if ([miscJoin.key_id isEqualToString:joinKeyID]){
+                
+                //gotta cutoff the "_flag" at the end or else is will capitalize the "F"
+                NSUInteger thisLength = [joinProperty length];
+                NSRange newRange = NSMakeRange(0, thisLength - 5);
+                NSString* joinSubstring = [joinProperty substringWithRange:newRange];
+                
+                NSString* joinPropertyWithCap = [joinSubstring capitalizedString];
+                NSString* joinPropertySetMethod = [NSString stringWithFormat:@"set%@_flag:", joinPropertyWithCap];
+                SEL mySelector = NSSelectorFromString(joinPropertySetMethod);
+                
+                if ([miscJoin respondsToSelector:mySelector]){
+                    
+                    [miscJoin performSelector:mySelector withObject:verdict];
+                }
+                break;
             }
         }
     }
@@ -1097,7 +1165,7 @@
             break;
         }
     }
-    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins];
+    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
     
     //renew the collection view
     [self.myEquipCollection reloadData];
@@ -1268,38 +1336,75 @@
 
 -(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    static NSString* CellIdentifier = @"Cell";
+    //__1__ An equipUniqueJoin item
+    //__2__ A MiscJoin Item
     
-    EQRCheckRowCell* cell = [self.myEquipCollection dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
-    
-    //remove subviews
-    for (UIView* view in cell.contentView.subviews){
+    if ([[[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] respondsToSelector:@selector(schedule_grouping)]){
         
-        [view removeFromSuperview];
-    }
-    
-    //and reset the cell's background color...
-    cell.backgroundColor = [UIColor whiteColor];
-    
-    //tell the cell's contentVC to be marked for deletion or not
-    BOOL toBeDeleted = NO;
-    for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
+        EQRCheckRowCell* cell = [self.myEquipCollection dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
         
-        if ([keyToDelete isEqualToString:[[[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]]){
+        //remove subviews
+        for (UIView* view in cell.contentView.subviews){
             
-            toBeDeleted = YES;
+            [view removeFromSuperview];
         }
+        
+        //and reset the cell's background color...
+        cell.backgroundColor = [UIColor whiteColor];
+        
+        //tell the cell's contentVC to be marked for deletion or not
+        BOOL toBeDeleted = NO;
+        for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
+            
+            if ([keyToDelete isEqualToString:[[[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]]){
+                
+                toBeDeleted = YES;
+            }
+        }
+        
+        //cell setup
+        [cell initialSetupWithEquipUnique:[(NSArray*)[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]
+                                   marked:self.marked_for_returning
+                               switch_num:self.switch_num
+                        markedForDeletion:toBeDeleted
+                                indexPath:indexPath];
+        
+        
+        return cell;
+        
+    }else{
+        
+        EQRCheckRowMiscItemCell* cell = [self.myEquipCollection dequeueReusableCellWithReuseIdentifier:@"CellForMiscJoin" forIndexPath:indexPath];
+        
+        //remove subviews
+        for (UIView* view in cell.contentView.subviews){
+            
+            [view removeFromSuperview];
+        }
+        
+        //and reset the cell's background color...
+        cell.backgroundColor = [UIColor whiteColor];
+        
+        //tell the cell's contentVC to be marked for deletion or not
+        BOOL toBeDeleted = NO;
+        for (NSString* keyToDelete in self.arrayOfToBeDeletedMiscJoins){
+            
+            if ([keyToDelete isEqualToString:[[[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]]){
+                
+                toBeDeleted = YES;
+                break;
+            }
+        }
+        
+        //cell setup
+        [cell initialSetupWithMiscJoin:[(NSArray*)[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]
+                                   marked:self.marked_for_returning
+                               switch_num:self.switch_num
+                        markedForDeletion:toBeDeleted
+                                indexPath:indexPath];
+        
+        return cell;
     }
-    
-    //cell setup
-    [cell initialSetupWithEquipUnique:[(NSArray*)[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]
-                               marked:self.marked_for_returning
-                           switch_num:self.switch_num
-                    markedForDeletion:toBeDeleted
-                            indexPath:indexPath];
-    
-    
-    return cell;
 };
 
 
@@ -1315,11 +1420,15 @@
         
         [view removeFromSuperview];
     }
-
-    NSString* categoryStringValue = [(EQRScheduleTracking_EquipmentUnique_Join*)[(NSArray*)[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] schedule_grouping];
     
-    [cell initialSetupWithCategoryText:categoryStringValue];
-    
+    if ([[[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:0] respondsToSelector:@selector(schedule_grouping)]){
+        NSString* categoryStringValue = [(EQRScheduleTracking_EquipmentUnique_Join*)[(NSArray*)[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] schedule_grouping];
+        
+        [cell initialSetupWithCategoryText:categoryStringValue];
+    }else{
+        
+        [cell initialSetupWithCategoryText:@"Miscellaneous"];
+    }
     
     return cell;
 }

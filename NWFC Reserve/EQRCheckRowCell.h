@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-//#import "EQREquipUniqueItem.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 
 @interface EQRCheckRowCell : UICollectionViewCell

@@ -26,6 +26,7 @@
 #import "EQREquipSelectionGenericVCntrllr.h"
 #import "EQRScheduleRequestManager.h"
 #import "EQRColors.h"
+#import "EQRMiscJoin.h"
 
 @interface EQRInboxRightVC ()
 
@@ -60,8 +61,10 @@
 @property (strong, nonatomic) IBOutlet UIView* doneButtonView;
 
 @property (strong, nonatomic) NSArray* arrayOfJoins;
+@property (strong, nonatomic) NSArray* arrayOfMiscJoins;
 @property (strong, nonatomic) NSArray* arrayOfJoinsWithStructure;
 @property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedEquipIDs;
+@property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedMiscJoins;
 
 //popOver controllers
 @property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
@@ -156,6 +159,7 @@
     
     //register cells
     [self.myTable registerClass:[EQREditorEquipListCell class] forCellWithReuseIdentifier:@"Cell"];
+    [self.myTable registerClass:[EQREditorMiscListCell class] forCellWithReuseIdentifier:@"CellForMiscJoin"];
     [self.myTable registerClass:[EQREditorHeaderCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SuppCell"];
 
     //remnants when collectionView was a table
@@ -164,12 +168,15 @@
     
     //initialize array of to be deleted joins
     if (!self.arrayOfToBeDeletedEquipIDs){
-        
         self.arrayOfToBeDeletedEquipIDs = [NSMutableArray arrayWithCapacity:1];
-        
     } else {
-        
         [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+    }
+    
+    if (!self.arrayOfToBeDeletedMiscJoins){
+        self.arrayOfToBeDeletedMiscJoins = [NSMutableArray arrayWithCapacity:1];
+    }else{
+        [self.arrayOfToBeDeletedMiscJoins removeAllObjects];
     }
     
     //initially hide everything
@@ -429,8 +436,20 @@
     
     self.arrayOfJoins = [NSArray arrayWithArray:tempMuteArray];
     
+    //gather any misc joins
+    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
+    NSArray* alphaArray = @[@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id];
+    NSArray* omegaArray = @[alphaArray];
+    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
+        for (id object in muteArray2){
+            [tempMiscMuteArray addObject:object];
+        }
+    }];
+    self.arrayOfMiscJoins = [NSArray arrayWithArray:tempMiscMuteArray];
+    
+    
     //add structure to that array
-    self.arrayOfJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfJoins];
+    self.arrayOfJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfJoins withMiscJoins:self.arrayOfMiscJoins];
     
     //refresh the data in table
     [self.myTable reloadData];
@@ -854,20 +873,34 @@
             if ([thisKeyID isEqualToString:thisJoin.equipUniqueItem_foreignKey]){
                 
                 //found a matching equipUnique item
-                
                 //send php message to delete with the join key_id
                 NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", thisJoin.key_id, nil];
                 NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
-                NSString* returnString = [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoin.php" parameters:beeArray];
-                
-                NSLog(@"this is the return string: %@", returnString);
+                [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoin.php" parameters:beeArray];
             }
-            
         }
     }
     
+    //___And delete miscJoin items...
+    for (NSString* thisKeyID in self.arrayOfToBeDeletedMiscJoins){
+        
+        for (EQRMiscJoin* thisJoin in self.arrayOfMiscJoins){
+            
+            if ([thisKeyID isEqualToString:thisJoin.key_id]){
+                
+                //found a matching MiscJoin item
+                //send php message to delete with the join key_id
+                NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", thisJoin.key_id, nil];
+                NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
+                [webData queryForStringWithLink:@"EQDeleteMiscJoin.php" parameters:beeArray];
+            }
+        }
+    }
+    
+    
     //empty the arrays
     [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+    [self.arrayOfToBeDeletedMiscJoins removeAllObjects];
     
     //send note to schedule that a change has been saved
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
@@ -1201,10 +1234,31 @@
         if ([thisString isEqualToString:key_id]){
             
             stringToBeRemoved = thisString;
+            break;
         }
     }
     
     [self.arrayOfToBeDeletedEquipIDs removeObject:stringToBeRemoved];
+}
+
+
+#pragma mark - EditorMiscListCell  Delegate methods
+
+-(void)tagMiscJoinToDelete:(NSString*)key_id{
+    
+    [self.arrayOfToBeDeletedMiscJoins addObject:key_id];
+}
+
+-(void)tagMiscJoinToCancelDelete:(NSString*)key_id{
+    
+    NSString* stringToBeRemoved;
+    for (NSString *thisString in self.arrayOfToBeDeletedMiscJoins){
+        if ([thisString isEqualToString:key_id]){
+            stringToBeRemoved = thisString;
+            break;
+        }
+    }
+    [self.arrayOfToBeDeletedMiscJoins removeObject:stringToBeRemoved];
 }
 
 
@@ -1276,7 +1330,7 @@
             break;
         }
     }
-    self.arrayOfJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfJoins];
+    self.arrayOfJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfJoins withMiscJoins:self.arrayOfMiscJoins];
     
     //renew the collection view
     [self.myTable reloadData];
@@ -1351,28 +1405,7 @@
 
 
 
-#pragma mark - equip item deletion notification methods
-
-//-(void)addEquipUniqueToBeDeletedArray:(NSNotification*)note{
-//    
-//    [self.arrayOfToBeDeletedEquipIDs addObject:[note.userInfo objectForKey:@"key_id"]];
-//}
-//
-//
-//-(void)removeEquipUniqueToBeDeletedArray:(NSNotification*)note{
-//    
-//    NSString* stringToBeRemoved;
-//    
-//    for (NSString* thisString in self.arrayOfToBeDeletedEquipIDs){
-//        
-//        if ([thisString isEqualToString:[note.userInfo objectForKey:@"key_id"]]){
-//            
-//            stringToBeRemoved = thisString;
-//        }
-//    }
-//    
-//    [self.arrayOfToBeDeletedEquipIDs removeObject:stringToBeRemoved];
-//}
+//#pragma mark - equip item deletion notification methods
 
 
 #pragma mark - alert view delegate  / compose email
@@ -1522,29 +1555,59 @@
 
 -(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    NSString* CellIdentifier = @"Cell";
-    EQREditorEquipListCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    //__1__ An equipUniqueJoin item
+    //__2__ A MiscJoin Item
     
-    for (UIView* view in cell.contentView.subviews){
+    if ([[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] respondsToSelector:@selector(schedule_grouping)]){
         
-        [view removeFromSuperview];
-    }
-    
-    //set self as cell's delegate
-    cell.delegate = self;
-    
-    BOOL toBeDeleted = NO;
-    for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
+        EQREditorEquipListCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
         
-        if ([keyToDelete isEqualToString:[[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] equipUniqueItem_foreignKey]]){
+        for (UIView* view in cell.contentView.subviews){
             
-            toBeDeleted = YES;
+            [view removeFromSuperview];
         }
+        
+        //set self as cell's delegate
+        cell.delegate = self;
+        
+        BOOL toBeDeleted = NO;
+        for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
+            
+            if ([keyToDelete isEqualToString:[[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] equipUniqueItem_foreignKey]]){
+                
+                toBeDeleted = YES;
+            }
+        }
+        
+        [cell initialSetupWithJoinObject:[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] deleteFlag:toBeDeleted editMode:self.inEditModeFlag];
+        
+        return cell;
+        
+    }else{
+        
+        EQREditorMiscListCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CellForMiscJoin" forIndexPath:indexPath];
+        
+        for (UIView* view in cell.contentView.subviews){
+            
+            [view removeFromSuperview];
+        }
+        
+        //set self as cell's delegate
+        cell.delegate = self;
+        
+        BOOL toBeDeleted = NO;
+        for (NSString* keyToDelete in self.arrayOfToBeDeletedMiscJoins){
+            
+            if ([keyToDelete isEqualToString:[[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] equipUniqueItem_foreignKey]]){
+                
+                toBeDeleted = YES;
+            }
+        }
+        
+        [cell initialSetupWithMiscJoin:[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] deleteFlag:toBeDeleted editMode:self.inEditModeFlag];
+        
+        return cell;
     }
-    
-    [cell initialSetupWithJoinObject:[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] deleteFlag:toBeDeleted editMode:self.inEditModeFlag];
-    
-    return cell;
 }
 
 
@@ -1559,44 +1622,15 @@
         [view removeFromSuperview];
     }
     
-    [cell initialSetupWithTitle: [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] schedule_grouping]];
-    
-    return cell;
+    if ([[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:0] respondsToSelector:@selector(schedule_grouping)]){
+        [cell initialSetupWithTitle: [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] schedule_grouping]];
+        return cell;
+    }else{
+        [cell initialSetupWithTitle:@"Miscellaneous"];
+        return cell;
+    }
 }
 
-
-#pragma mark - table datasource
-
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-//{
-//    
-//    return [self.arrayOfJoinsWithStructure count];
-//}
-//
-//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-//{
-//    
-//    return [(NSArray*)[self.arrayOfJoinsWithStructure objectAtIndex:section] count];
-//}
-//
-//
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-//    
-//    NSString* stringWithDistID = [NSString stringWithFormat:@"%@  # %@",[(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name], [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id ]];
-//
-//    cell.textLabel.text = stringWithDistID;
-//    cell.textLabel.font = [UIFont systemFontOfSize:13];
-//    
-//    return cell;
-//}
-//
-//
-//-(NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-//    
-//    return [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.arrayOfJoinsWithStructure objectAtIndex:section] objectAtIndex:0] schedule_grouping];
-//}
 
 
 #pragma mark - collection view delegate methods

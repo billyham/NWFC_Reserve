@@ -44,7 +44,7 @@
 
 -(void)initialSetupWithDeleteFlag:(BOOL)deleteFlag{
     
-    NSLog(@"checkCellContentVC > initialSetup is called with deleteFlag: %ul", deleteFlag);
+//    NSLog(@"checkCellContentVC > initialSetup is called with deleteFlag: %ul", deleteFlag);
     
     self.toBeDeletedFlag = deleteFlag;
     
@@ -113,6 +113,10 @@
 
 -(void)receiveQRCodeMessage:(NSNotification*)note{
     
+    if (self.isContentForMiscJoin == YES){
+        return;
+    }
+    
     NSString* equipKeyID = [[note userInfo] objectForKey:@"keyID"];
     
 //    NSLog(@"this is a row's equipUnique key: %@", self.equipUniqueItem_foreignKey);
@@ -140,8 +144,11 @@
         NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
         
         //update model
-        [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleEquipJoin.php" parameters:topArray];
-
+        if (self.isContentForMiscJoin == NO){
+            [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleEquipJoin.php" parameters:topArray];
+        }else{
+            [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleMiscJoin.php" parameters:topArray];
+        }
         
         //____need to update ivar array
         NSString* verdict = @"yes";
@@ -149,6 +156,7 @@
                                 self.myJoinKeyID, @"joinKeyID",
                                 self.joinPropertyToBeUpdated, @"joinProperty",
                                 verdict, @"markedAsYes",
+                                [NSNumber numberWithBool:self.isContentForMiscJoin], @"isContentForMiscJoin",
                                 nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRUpdateCheckInOutArrayOfJoins object:nil userInfo:newDic];
         
@@ -187,7 +195,11 @@
         NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
         
         //update model
-        [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleEquipJoin.php" parameters:topArray];
+        if (self.isContentForMiscJoin == NO){
+            [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleEquipJoin.php" parameters:topArray];
+        }else{
+            [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleMiscJoin.php" parameters:topArray];
+        }
         
         
         //____need to update ivar array
@@ -196,6 +208,7 @@
                                 self.myJoinKeyID, @"joinKeyID",
                                 self.joinPropertyToBeUpdated, @"joinProperty",
                                 verdict, @"markedAsYes",
+                                [NSNumber numberWithBool:self.isContentForMiscJoin], @"isContentForMiscJoin",
                                 nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRUpdateCheckInOutArrayOfJoins object:nil userInfo:newDic];
         

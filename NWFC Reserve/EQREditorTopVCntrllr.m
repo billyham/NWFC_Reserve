@@ -1204,8 +1204,6 @@
         
         EQREditorEquipListCell* cell = [self.equipList dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
         
-        
-        
         for (UIView* view in cell.contentView.subviews){
             
             [view removeFromSuperview];

@@ -1,24 +1,25 @@
 //
-//  EQRCheckRowCell.m
-//  NWFC Reserve
+//  EQRCheckRowMiscItemCell.m
+//  Gear
 //
-//  Created by Ray Smith on 5/27/14.
-//  Copyright (c) 2014 Ham Again LLC. All rights reserved.
+//  Created by Ray Smith on 2/4/15.
+//  Copyright (c) 2015 Ham Again LLC. All rights reserved.
 //
 
-#import "EQRCheckRowCell.h"
+#import "EQRCheckRowMiscItemCell.h"
 #import "EQRGlobals.h"
-#import "EQRCheckCellContentVCntrllr.h"
 #import "EQRColors.h"
+#import "EQRCheckCellContentVCntrllr.h"
 
-
-@interface EQRCheckRowCell ()
+@interface EQRCheckRowMiscItemCell()
 
 @property (strong, nonatomic) EQRCheckCellContentVCntrllr* myCheckContent;
 
 @end
 
-@implementation EQRCheckRowCell
+
+
+@implementation EQRCheckRowMiscItemCell
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -30,14 +31,11 @@
 }
 
 
-
--(void)initialSetupWithEquipUnique:(EQRScheduleTracking_EquipmentUnique_Join*)equipJoin
-                            marked:(BOOL)mark_for_returning
-                        switch_num:(NSUInteger)switch_num
-                 markedForDeletion:(BOOL)deleteFlag
-                         indexPath:(NSIndexPath*)indexPath{
-    
-//    NSLog(@"inside initialsetupwith equipUnique... new dist id: %@", equipJoin.distinquishing_id);
+-(void)initialSetupWithMiscJoin:(EQRMiscJoin*)miscJoin
+                         marked:(BOOL)mark_for_returning
+                     switch_num:(NSUInteger)switch_num
+              markedForDeletion:(BOOL)deleteFlag
+                      indexPath:(NSIndexPath*)indexPath{
     
     self.backgroundColor = [UIColor clearColor];
     
@@ -45,10 +43,8 @@
     
     self.myCheckContent = checkContent;
     self.myCheckContent.myIndexPath = indexPath;
-    self.myCheckContent.myJoinKeyID = equipJoin.key_id;
-    self.myCheckContent.equipUniqueItem_foreignKey = equipJoin.equipUniqueItem_foreignKey;
-    self.myCheckContent.equipTitleItem_foreignKey = equipJoin.equipTitleItem_foreignKey;
-        
+    self.myCheckContent.myJoinKeyID = miscJoin.key_id;
+    
     
     [self.contentView addSubview:self.myCheckContent.view];
     
@@ -61,7 +57,7 @@
             
             self.myCheckContent.joinPropertyToBeUpdated = @"prep_flag";
             
-            if ([equipJoin.prep_flag isEqualToString:@"yes"]){
+            if ([miscJoin.prep_flag isEqualToString:@"yes"]){
                 
                 self.myCheckContent.statusSwitch.on = YES;
                 
@@ -81,7 +77,7 @@
             
             self.myCheckContent.joinPropertyToBeUpdated = @"checkout_flag";
             
-            if ([equipJoin.checkout_flag isEqualToString:@"yes"]){
+            if ([miscJoin.checkout_flag isEqualToString:@"yes"]){
                 
                 self.myCheckContent.statusSwitch.on = YES;
                 
@@ -105,7 +101,7 @@
             
             self.myCheckContent.joinPropertyToBeUpdated = @"checkin_flag";
             
-            if ([equipJoin.checkin_flag isEqualToString:@"yes"]){
+            if ([miscJoin.checkin_flag isEqualToString:@"yes"]){
                 
                 self.myCheckContent.statusSwitch.on = YES;
                 
@@ -125,7 +121,7 @@
             
             self.myCheckContent.joinPropertyToBeUpdated = @"shelf_flag";
             
-            if ([equipJoin.shelf_flag isEqualToString:@"yes"]){
+            if ([miscJoin.shelf_flag isEqualToString:@"yes"]){
                 
                 self.myCheckContent.statusSwitch.on = YES;
                 
@@ -144,57 +140,20 @@
         }
         
     }
-
     
-    self.myCheckContent.equipNameLabel.text = equipJoin.name;
-    [self.myCheckContent.distIDLabel setTitle:equipJoin.distinquishing_id forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+    self.myCheckContent.equipNameLabel.text = miscJoin.name;
     
-    //service issue button
-    if ([equipJoin.issue_short_name isEqualToString:@""]){  //no service issues
-        
-        [self.myCheckContent.serviceIssue setHidden:YES];
-        
-    } else if([equipJoin.status_level integerValue] < EQRThresholdForDescriptiveNote){   //service issue exists but it is resolved, so don't show
-        
-        [self.myCheckContent.serviceIssue setHidden:YES];
-        
-    } else {  //show service issues
-        
-        [self.myCheckContent.serviceIssue setHidden:NO];
-        
-        [self.myCheckContent.serviceIssue setTitle:equipJoin.issue_short_name forState:UIControlStateHighlighted & UIControlStateNormal & UIControlStateSelected];
-        
-        //set color
-        EQRColors* colors = [EQRColors sharedInstance];
-        
-        //if status level is 3 or above
-        if ([equipJoin.status_level integerValue] >= EQRThresholdForSeriousIssue){  //damaged, make text red
-            
-            [self.myCheckContent.serviceIssue setTitleColor:[colors.colorDic objectForKey:EQRColorIssueSerious] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
-            
-        }else if (([equipJoin.status_level integerValue] >= EQRThresholdForMinorIssue) && ([equipJoin.status_level integerValue] < EQRThresholdForSeriousIssue)){
-            
-            [self.myCheckContent.serviceIssue setTitleColor:[colors.colorDic objectForKey:EQRColorIssueMinor] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
-        }else{
-            
-            [self.myCheckContent.serviceIssue setTitleColor:[colors.colorDic objectForKey:EQRColorIssueDescriptive] forState:UIControlStateSelected & UIControlStateNormal & UIControlStateHighlighted];
-        }
-    }
-    
+    //hide the dist_id label and service issue button
+    [self.myCheckContent.distIDLabel setHidden:YES];
+    [self.myCheckContent.serviceIssue setHidden:YES];
     
     //setup deletion button and background color based on deletionFlag
     [self.myCheckContent initialSetupWithDeleteFlag:deleteFlag];
     
+    //turn off QR code receiving function
+    self.myCheckContent.isContentForMiscJoin = YES;
 }
 
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
 
 @end
