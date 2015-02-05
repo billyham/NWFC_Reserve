@@ -25,6 +25,8 @@
 @property (strong, nonatomic) IBOutlet UIButton* serviceIssue;
 
 @property BOOL isContentForMiscJoin;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *nameLabelWidthContraint;
+
 
 -(void)initialSetupWithDeleteFlag:(BOOL)deleteFlag;
 

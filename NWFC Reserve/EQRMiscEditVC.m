@@ -53,7 +53,7 @@
     NSArray* omegaArray = @[alphaArray];
     [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
         for (id object in muteArray2){
-            [tempMiscMuteArray addObject:object];
+            [tempMiscMuteArray insertObject:object atIndex:0];
         }
     }];
     self.arrayOfMiscJoins = [NSArray arrayWithArray:tempMiscMuteArray];
@@ -99,6 +99,8 @@
     
     cell.textLabel.text = [(EQRMiscJoin*)[self.arrayOfMiscJoins objectAtIndex:indexPath.row] name];
     cell.textLabel.font = [UIFont systemFontOfSize:11];
+    cell.contentView.backgroundColor = [UIColor clearColor];
+    cell.textLabel.numberOfLines = 2;
     
     return cell;
 }

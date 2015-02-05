@@ -22,7 +22,6 @@
 @property (nonatomic, strong) NSString* rentorPhoneAtt;
 @property (nonatomic, strong) NSString* rentorEmailAtt;
 
-
 @property (nonatomic, strong) IBOutlet UITextView* summaryTextView;
 @property (nonatomic, strong) NSTextStorage* summaryTextStorage;
 @property (nonatomic, strong) NSMutableAttributedString* summaryTotalAtt;

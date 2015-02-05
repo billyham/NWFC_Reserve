@@ -18,10 +18,10 @@
             <rect key="frame" x="0.0" y="0.0" width="346" height="35"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BZm-OJ-Rjs">
-                    <rect key="frame" x="7" y="7" width="277" height="21"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="277" placeholderIntrinsicHeight="35" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BZm-OJ-Rjs">
+                    <rect key="frame" x="7" y="0.0" width="277" height="35"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="21" id="J9W-YU-oyn"/>
+                        <constraint firstAttribute="height" constant="35" id="J9W-YU-oyn"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -44,7 +44,7 @@
                 <constraint firstAttribute="trailing" secondItem="m4x-e4-TRm" secondAttribute="trailing" constant="13" id="EVt-f4-N7M"/>
                 <constraint firstItem="m4x-e4-TRm" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="3" id="bLV-3D-fZA"/>
                 <constraint firstAttribute="trailing" secondItem="BZm-OJ-Rjs" secondAttribute="trailing" constant="62" id="iDg-XG-atm"/>
-                <constraint firstItem="BZm-OJ-Rjs" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="7" id="qZh-8S-L9l"/>
+                <constraint firstItem="BZm-OJ-Rjs" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="qZh-8S-L9l"/>
                 <constraint firstItem="BZm-OJ-Rjs" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="7" id="t4Z-NE-S9K"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>

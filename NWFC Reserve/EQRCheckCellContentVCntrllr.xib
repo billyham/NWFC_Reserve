@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -10,6 +10,7 @@
                 <outlet property="distIDLabel" destination="P3c-Np-kFS" id="MNT-iL-90I"/>
                 <outlet property="equipNameLabel" destination="xYg-LZ-xHA" id="pc2-Lx-w0S"/>
                 <outlet property="myDeleteButton" destination="UK8-a7-fdQ" id="XBG-mm-uS9"/>
+                <outlet property="nameLabelWidthContraint" destination="5rN-bl-lJE" id="Fdi-5g-hJF"/>
                 <outlet property="serviceIssue" destination="vLS-hj-Nqf" id="CHI-Ko-b61"/>
                 <outlet property="status1Label" destination="Nxa-b4-2Yf" id="YED-bH-fta"/>
                 <outlet property="status2Label" destination="aSj-xY-sNB" id="m8t-nt-mS7"/>
@@ -23,12 +24,11 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="equip name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xYg-LZ-xHA">
-                    <rect key="frame" x="13" y="9" width="197" height="21"/>
+                    <rect key="frame" x="13" y="3" width="197" height="35"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="21" id="CpV-F9-0tj"/>
-                        <constraint firstAttribute="width" constant="197" id="uxM-VI-0gH"/>
+                        <constraint firstAttribute="height" constant="35" id="CpV-F9-0tj"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -83,10 +83,11 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="xYg-LZ-xHA" secondAttribute="trailing" constant="380" id="5rN-bl-lJE"/>
                 <constraint firstAttribute="trailing" secondItem="UK8-a7-fdQ" secondAttribute="trailing" constant="13" id="M4w-FV-ChE"/>
                 <constraint firstItem="xYg-LZ-xHA" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="13" id="MEv-wx-aUS"/>
                 <constraint firstItem="UK8-a7-fdQ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="5" id="Ukk-zu-FE0"/>
-                <constraint firstItem="xYg-LZ-xHA" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="9" id="cYU-hD-CTQ"/>
+                <constraint firstItem="xYg-LZ-xHA" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="3" id="cYU-hD-CTQ"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

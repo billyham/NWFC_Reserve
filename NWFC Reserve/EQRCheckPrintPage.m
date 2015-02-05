@@ -14,6 +14,7 @@
 #import "EQRCheckPageRenderer.h"
 #import "EQRDataStructure.h"
 #import "EQRMultiColumnTextView.h"
+#import "EQRMiscJoin.h"
 
 @interface EQRCheckPrintPage ()
 
@@ -231,6 +232,37 @@
         }
     }
     
+    
+    //____ADD MISC JOINS IF THEY EXIST____
+    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
+    NSArray* alphaArray = @[@"scheduleTracking_foreignKey", self.request.key_id];
+    NSArray* omegaArray = @[alphaArray];
+    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
+        for (id object in muteArray2){
+            [tempMiscMuteArray addObject:object];
+        }
+    }];
+    
+    //if miscJoins exist...
+    if ([tempMiscMuteArray count] > 0){
+        
+        //print miscellaneous section
+        NSDictionary* arrayAtt13 = [NSDictionary dictionaryWithObjectsAndKeys:headerFont, NSFontAttributeName,
+                                    headerParaStyle, NSParagraphStyleAttributeName,
+                                    nil];
+        NSAttributedString *thisHereString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r%@\r",@"Miscellaneous"] attributes:arrayAtt13];
+        [self.summaryTotalAtt appendAttributedString:thisHereString];
+        
+        for (EQRMiscJoin* miscJoin in tempMiscMuteArray){
+            
+            NSDictionary* arrayAtt14 = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName,
+                                        paraStyle, NSParagraphStyleAttributeName,
+                                        nil];
+            NSAttributedString* thisHereAttStringAgain = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"   _____   %@\r", miscJoin.name] attributes:arrayAtt14];
+            
+            [self.summaryTotalAtt appendAttributedString:thisHereAttStringAgain];
+        }
+    }
     
     
     //____ NOW ADD THE NOTES (if they exist)______

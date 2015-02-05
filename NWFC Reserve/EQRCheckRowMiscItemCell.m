@@ -147,6 +147,11 @@
     [self.myCheckContent.distIDLabel setHidden:YES];
     [self.myCheckContent.serviceIssue setHidden:YES];
     
+    //change leading constraint on the name label
+    self.myCheckContent.nameLabelWidthContraint.constant = 200.f;
+    //make label 2 lines
+    self.myCheckContent.equipNameLabel.numberOfLines = 2;
+    
     //setup deletion button and background color based on deletionFlag
     [self.myCheckContent initialSetupWithDeleteFlag:deleteFlag];
     

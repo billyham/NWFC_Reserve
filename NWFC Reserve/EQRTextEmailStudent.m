@@ -8,6 +8,8 @@
 
 #import "EQRTextEmailStudent.h"
 #import "EQREquipItem.h"
+#import "EQRWebData.h"
+#import "EQRMiscJoin.h"
 
 @interface EQRTextEmailStudent()
 
@@ -91,6 +93,46 @@
                                                                                            [myDic objectForKey:@"quantity"],
                                                                                            [(EQREquipItem*)[myDic objectForKey:@"equipTitleObject"] name]
                                                                                            ] attributes:normalDic]];
+    }
+    
+    //______Misc Join List_______
+    //gather any misc joins
+    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
+    NSArray* alphaArray = @[@"scheduleTracking_foreignKey", self.request_keyID];
+    NSArray* omegaArray = @[alphaArray];
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
+        for (id object in muteArray2){
+            [tempMiscMuteArray addObject:object];
+        }
+    }];
+    
+    //if miscJoins exist...
+    if ([tempMiscMuteArray count] > 0){
+        
+        //print miscellaneous section
+        NSAttributedString *thisHereString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@\n",@"Additional items:"] attributes:normalDic];
+        [self.finalText appendAttributedString:thisHereString];
+        
+        for (EQRMiscJoin* miscJoin in tempMiscMuteArray){
+            
+            NSAttributedString* thisHereAttStringAgain = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", miscJoin.name] attributes:normalDic];
+            
+            [self.finalText appendAttributedString:thisHereAttStringAgain];
+        }
+    }
+    
+    //_______Notes___________
+    if (self.notes){
+        if (![self.notes isEqualToString:@""]){
+            
+            NSAttributedString* thisHereString = [[NSAttributedString alloc] initWithString:@"\nNotes:\n" attributes:normalDic];
+            [self.finalText appendAttributedString:thisHereString];
+            
+            NSAttributedString* thisHereString2 = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", self.notes] attributes:normalDic];
+            [self.finalText appendAttributedString:thisHereString2];
+        }
     }
     
     

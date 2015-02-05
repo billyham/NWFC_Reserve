@@ -29,6 +29,7 @@
 #import "EQRScheduleRequestItem.h"
 #import "EQREquipSelectionGenericVCntrllr.h"
 #import "EQRScheduleRequestManager.h"
+#import "EQRContactNameItem.h"
 
 
 @interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate>
@@ -44,6 +45,7 @@
 @property (strong, nonatomic) IBOutlet UITextView* updateLabel;
 
 @property (strong, nonatomic) IBOutlet UILabel* nameTextLabel;
+@property (strong, nonatomic) NSString* notesText;
 @property (strong, nonatomic) IBOutlet UITextView* noteView;
 @property (strong, nonatomic) NSDictionary* myUserInfo;
 
@@ -96,6 +98,17 @@
     self.marked_for_returning = [[userInfo objectForKey:@"marked_for_returning"] boolValue];
     self.switch_num = [[userInfo objectForKey:@"switch_num"] integerValue];
     
+    //get notes from data layer
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSArray* alphaArray = @[@"key_id", self.scheduleRequestKeyID];
+    NSArray* omegaArray = @[alphaArray];
+    [webData queryWithLink:@"EQGetScheduleRequestNotes.php" parameters:omegaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        if ([muteArray count] > 0){
+            self.notesText = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] notes];
+        }
+    }];
+        
     //figure out the literal column name in the database to use
     if (!self.marked_for_returning){
         
@@ -125,7 +138,6 @@
     //get scheduleRequest object using key
     NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.scheduleRequestKeyID, nil];
     NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-    EQRWebData* webData = [EQRWebData sharedInstance];
     
     [webData queryWithLink:@"EQGetScheduleRequestComplete.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
         
@@ -138,6 +150,24 @@
             return;
         }
     }];
+    
+    
+    //get contactNameItem and assign to request
+    if (self.myScheduleRequestItem.contact_foreignKey){
+        if (![self.myScheduleRequestItem.contact_foreignKey isEqualToString:@""]){
+            
+            NSArray* contact1Array = @[@"key_id", self.myScheduleRequestItem.contact_foreignKey];
+            NSArray* contactTopArray = @[contact1Array];
+            [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:contactTopArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+                
+                if ([muteArray count] > 0){
+                    self.myScheduleRequestItem.contactNameItem = [muteArray objectAtIndex:0];
+                }
+            }];
+        }
+    }
+    
+    
     
     
     //____set up private request manager______
@@ -243,12 +273,16 @@
     
     //instantiate mutableArray for deletion ivar
     if (!self.arrayOfToBeDeletedEquipIDs){
-        
         self.arrayOfToBeDeletedEquipIDs = [NSMutableArray arrayWithCapacity:1];
-        
     } else {
-        
         [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+    }
+    
+    //instantiate mutableArray for deletion miscJoins
+    if (!self.arrayOfToBeDeletedMiscJoins){
+        self.arrayOfToBeDeletedMiscJoins = [NSMutableArray arrayWithCapacity:1];
+    } else {
+        [self.arrayOfToBeDeletedMiscJoins removeAllObjects];
     }
     
     //derive the current user name
@@ -282,6 +316,14 @@
     
     
     //___________
+    
+    //set notes text
+    self.noteView.text = self.notesText;
+    
+    //set name label
+    if (self.myScheduleRequestItem.contactNameItem){
+        self.nameTextLabel.text = self.myScheduleRequestItem.contactNameItem.first_and_last;
+    }
     
 }
 
@@ -816,13 +858,22 @@
         //send php message to delete with the join key_id
         NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", thisKeyID, nil];
         NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
-        NSString* returnString = [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoin.php" parameters:beeArray];
-        
-        NSLog(@"this is the result: %@", returnString);
+        [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoin.php" parameters:beeArray];
     }
+    
+    //delete the marked miscJoin
+    for (NSString* thisKeyID in self.arrayOfToBeDeletedMiscJoins){
+        
+        //send php message to delete with the join key_id
+        NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", thisKeyID, nil];
+        NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
+        [webData queryForStringWithLink:@"EQDeleteMiscJoin.php" parameters:beeArray];
+    }
+    
     
     //empty the arrays
     [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+    [self.arrayOfToBeDeletedMiscJoins removeAllObjects];
     
     //renew the array of equipment
     [self renewTheArrayWithScheduleTracking_foreignKey:self.scheduleRequestKeyID];
@@ -949,6 +1000,19 @@
         }
     }];
     
+    //add the notes
+    chosenItem.notes = self.notesText;
+    NSLog(@"these are the notes >>%@<<", chosenItem.notes);
+    
+    //add contact information
+    NSString* email;
+    NSString* phone;
+    if (self.myScheduleRequestItem.contactNameItem){
+        email = self.myScheduleRequestItem.contactNameItem.email;
+        phone = self.myScheduleRequestItem.contactNameItem.phone;
+        
+        chosenItem.contactNameItem = self.myScheduleRequestItem.contactNameItem;
+    }
 
     
     //create printable page view controller
@@ -959,8 +1023,8 @@
     
     //assign ivar variables
     pageForPrint.rentorNameAtt = chosenItem.contact_name;
-    pageForPrint.rentorEmailAtt = @"test email address";
-    pageForPrint.rentorPhoneAtt = @"test phone";
+    pageForPrint.rentorEmailAtt = email;
+    pageForPrint.rentorPhoneAtt = phone;
     
     
     //show the view controller
@@ -1073,23 +1137,43 @@
 
 -(void)addJoinKeyIDToBeDeletedArray:(NSNotification*)note{
     
-    [self.arrayOfToBeDeletedEquipIDs addObject:[note.userInfo objectForKey:@"key_id"]];
+    BOOL isContentForMiscJoin = [[note.userInfo objectForKey:@"isContentForMiscJoin"] boolValue];
+    
+    if (isContentForMiscJoin == NO){
+        [self.arrayOfToBeDeletedEquipIDs addObject:[note.userInfo objectForKey:@"key_id"]];
+    }else{
+        [self.arrayOfToBeDeletedMiscJoins addObject:[note.userInfo objectForKey:@"key_id"]];
+    }
     
 }
 
 -(void)removeJoinKeyIDToBeDeletedArray:(NSNotification*)note{
     
+    BOOL isContentForMiscJoin = [[note.userInfo objectForKey:@"isContentForMiscJoin"] boolValue];
+    
     NSString* stringToBeRemoved;
     
-    for (NSString* thisString in self.arrayOfToBeDeletedEquipIDs){
-        
-        if ([thisString isEqualToString:[note.userInfo objectForKey:@"key_id"]]){
+    if (isContentForMiscJoin == NO){
+        for (NSString* thisString in self.arrayOfToBeDeletedEquipIDs){
             
-            stringToBeRemoved = thisString;
+            if ([thisString isEqualToString:[note.userInfo objectForKey:@"key_id"]]){
+                
+                stringToBeRemoved = thisString;
+            }
         }
+        [self.arrayOfToBeDeletedEquipIDs removeObject:stringToBeRemoved];
+        
+    }else{
+        
+        for (NSString* thisString in self.arrayOfToBeDeletedMiscJoins){
+            
+            if ([thisString isEqualToString:[note.userInfo objectForKey:@"key_id"]]){
+                
+                stringToBeRemoved = thisString;
+            }
+        }
+        [self.arrayOfToBeDeletedMiscJoins removeObject:stringToBeRemoved];
     }
-    
-    [self.arrayOfToBeDeletedEquipIDs removeObject:stringToBeRemoved];
 }
 
 

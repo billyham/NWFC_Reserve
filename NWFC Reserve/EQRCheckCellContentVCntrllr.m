@@ -66,7 +66,7 @@
         
         //send view controller a note with join key_id (or indexpath) to indicate it needs to be removed from the database
         
-        NSDictionary* thisDic = [NSDictionary dictionaryWithObject:self.myJoinKeyID forKey:@"key_id"];
+        NSDictionary* thisDic = @{@"key_id":self.myJoinKeyID, @"isContentForMiscJoin":[NSNumber numberWithBool:self.isContentForMiscJoin]};
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRJoinToBeDeletedInCheckInOut object:nil userInfo:thisDic];
         
         //flag the color of the cell!!
@@ -80,7 +80,7 @@
         
     }else {
         
-        NSDictionary* thisDic = [NSDictionary dictionaryWithObject:self.myJoinKeyID forKey:@"key_id"];
+        NSDictionary* thisDic = @{@"key_id":self.myJoinKeyID, @"isContentForMiscJoin":[NSNumber numberWithBool:self.isContentForMiscJoin]};
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRJoinToBeDeletedInCheckInOutCancel object:nil userInfo:thisDic];
         
         self.view.backgroundColor = [UIColor whiteColor];

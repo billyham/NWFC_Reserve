@@ -694,12 +694,14 @@
     //_______compose message body________
     EQRTextEmailStudent* emailBody = [[EQRTextEmailStudent alloc] init];
     
+    emailBody.request_keyID = self.myScheduleRequest.key_id;
     emailBody.renterEmail = contactItem.email;
     emailBody.renterFirstName = contactItem.first_name;
     emailBody.pickupDateAsDate = self.myScheduleRequest.request_date_begin;
     emailBody.pickupTimeAsDate = self.myScheduleRequest.request_time_begin;
     emailBody.returnDateAsDate = self.myScheduleRequest.request_date_end;
     emailBody.returnTimeAsDate = self.myScheduleRequest.request_time_end;
+    emailBody.notes = self.myScheduleRequest.notes;
     
     //get staff name
     EQRStaffUserManager* staffUser = [EQRStaffUserManager sharedInstance];

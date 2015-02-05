@@ -10,6 +10,8 @@
 
 @interface EQRTextEmailStudent : NSObject
 
+@property (strong, nonatomic) NSString *request_keyID;
+
 @property (strong, nonatomic) NSString* renterEmail;
 @property (strong, nonatomic) NSString* renterFirstName;
 @property (strong, nonatomic) NSDate* pickupDateAsDate;
@@ -18,6 +20,7 @@
 @property (strong, nonatomic) NSDate* returnTimeAsDate;
 @property (strong, nonatomic) NSString* staffFirstName;
 //@property (strong, nonatomic) NSString* emailSignature;
+@property (strong, nonatomic) NSString* notes;
 
 @property (strong,nonatomic) NSArray* arrayOfEquipTitlesAndQtys;
 
