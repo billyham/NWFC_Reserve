@@ -15,6 +15,8 @@
 		0119D2FF18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 0119D2FD18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m */; };
 		0119D30018DBB25D009126CB /* EQRScheduleCellContentVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0119D2FE18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.xib */; };
 		0119D30318DBC736009126CB /* EQRScheduleRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0119D30218DBC736009126CB /* EQRScheduleRowCell.m */; };
+		01470A911A82C3B100A0C2A6 /* EQRMiscEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 01470A8F1A82C3B100A0C2A6 /* EQRMiscEditVC.m */; };
+		01470A921A82C3B100A0C2A6 /* EQRMiscEditVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01470A901A82C3B100A0C2A6 /* EQRMiscEditVC.xib */; };
 		014F776D18E3B28F00C75D66 /* EQRScheduleNavBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 014F776C18E3B28F00C75D66 /* EQRScheduleNavBarCell.m */; };
 		015B7C6A18EA22B3002F5B6D /* EQREditorEquipListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 015B7C6918EA22B3002F5B6D /* EQREditorEquipListCell.m */; };
 		01600B3818CA51CA0006D75A /* EQRScheduleTopVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 01600B3718CA51CA0006D75A /* EQRScheduleTopVCntrllr.m */; };
@@ -170,6 +172,9 @@
 		0119D2FE18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRScheduleCellContentVCntrllr.xib; sourceTree = "<group>"; };
 		0119D30118DBC736009126CB /* EQRScheduleRowCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleRowCell.h; sourceTree = "<group>"; };
 		0119D30218DBC736009126CB /* EQRScheduleRowCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EQRScheduleRowCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		01470A8E1A82C3B100A0C2A6 /* EQRMiscEditVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRMiscEditVC.h; sourceTree = "<group>"; };
+		01470A8F1A82C3B100A0C2A6 /* EQRMiscEditVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRMiscEditVC.m; sourceTree = "<group>"; };
+		01470A901A82C3B100A0C2A6 /* EQRMiscEditVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRMiscEditVC.xib; sourceTree = "<group>"; };
 		014F776B18E3B28F00C75D66 /* EQRScheduleNavBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleNavBarCell.h; sourceTree = "<group>"; };
 		014F776C18E3B28F00C75D66 /* EQRScheduleNavBarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleNavBarCell.m; sourceTree = "<group>"; };
 		015B7C6818EA22B3002F5B6D /* EQREditorEquipListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREditorEquipListCell.h; sourceTree = "<group>"; };
@@ -681,6 +686,9 @@
 				54A375B11A40040C00FD8A7B /* EQRNotesVC.h */,
 				54A375B21A40040C00FD8A7B /* EQRNotesVC.m */,
 				54A375B31A40040C00FD8A7B /* EQRNotesVC.xib */,
+				01470A8E1A82C3B100A0C2A6 /* EQRMiscEditVC.h */,
+				01470A8F1A82C3B100A0C2A6 /* EQRMiscEditVC.m */,
+				01470A901A82C3B100A0C2A6 /* EQRMiscEditVC.xib */,
 			);
 			name = "shared nibs";
 			sourceTree = "<group>";
@@ -989,6 +997,7 @@
 				5416F9A01918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.xib in Resources */,
 				545547CE197F987C001AC986 /* GenericRightArrow.png in Resources */,
 				54882BD31900D588005A4D5A /* EQREditorRenterVCntrllr.xib in Resources */,
+				01470A921A82C3B100A0C2A6 /* EQRMiscEditVC.xib in Resources */,
 				546F28241A19529C00980221 /* EQRContactPickerVC.xib in Resources */,
 				01C83A80199E818C00CD5E9C /* EQREditorExtendedDateVC.xib in Resources */,
 			);
@@ -1080,6 +1089,7 @@
 				54DFE0F0186ECD610089B9EA /* EQRClassRegistrationItem.m in Sources */,
 				01A4755A18EB9BDF006F32EB /* EQREditorDateVCntrllr.m in Sources */,
 				0190DAE218E234EA00B55D82 /* EQRScheduleNestedDayCell.m in Sources */,
+				01470A911A82C3B100A0C2A6 /* EQRMiscEditVC.m in Sources */,
 				54ECF1E41998A7E100298996 /* EQRModeManager.m in Sources */,
 				5402D237186C24A50091C080 /* EQRClassCell.m in Sources */,
 				01600B3C18CA53080006D75A /* EQRHeaderCellTemplate.m in Sources */,

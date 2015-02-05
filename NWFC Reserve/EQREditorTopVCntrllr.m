@@ -622,6 +622,10 @@
         NSString* joinReturn = [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoinWithScheduleKey.php" parameters:betaArray];
         NSLog(@"this is the join return: %@", joinReturn);
         
+        //delete all miscJoins
+        NSArray *unoArray = @[alphaArray];
+        [webData queryForStringWithLink:@"EQDeleteAllMiscJoinsWithScheduleKey.php" parameters:unoArray];
+        
         //empty the arrays
         [self.arrayOfSchedule_Unique_Joins removeAllObjects];
         [self.arrayOfMiscJoins removeAllObjects];

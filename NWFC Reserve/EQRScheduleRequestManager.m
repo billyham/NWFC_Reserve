@@ -102,9 +102,14 @@
         NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.request.key_id, nil];
         NSArray* secondArray = [NSArray arrayWithObjects:@"notes", @"", nil];
         NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
-        
-        //php call
         [webData queryForStringWithLink:@"EQAlterNotesInScheduleRequest.php" parameters:topArray];
+        
+        
+        //and also, go to data layer to delete miscJoins
+        //go to data layer, enter the scheduleRequest key and delete items with php call
+        NSArray* alphaArray = @[@"scheduleTracking_foreignKey", self.request.key_id];
+        NSArray* omegaArray = @[alphaArray];
+        [webData queryForStringWithLink:@"EQDeleteAllMiscJoinsWithScheduleKey.php" parameters:omegaArray];
     }
     
     //set request item to nil

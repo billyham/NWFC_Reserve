@@ -11,9 +11,10 @@
 #import "EQREquipItemCell.h"
 #import "EQREquipOptionsTableVC.h"
 #import "EQRNotesVC.h"
+#import "EQRMiscEditVC.h"
 
 
-@interface EQREquipSelectionGenericVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREquipOptionsDelegate, EQRNoteDelegate, UIPopoverControllerDelegate>{
+@interface EQREquipSelectionGenericVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREquipOptionsDelegate, EQRNoteDelegate, EQRMiscEditVCDelegate, UIPopoverControllerDelegate>{
     
     
 }
@@ -29,6 +30,9 @@
 
 //notes delegate method
 -(void)retrieveNotesData:(NSString*)noteText;
+
+//miscEditVC methods
+-(void)receiveMiscData:(NSString *)miscItemText;
 
 @end
 

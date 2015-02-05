@@ -55,6 +55,7 @@
 @property BOOL allowSeriousServiceIssueFlag;
 
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipmentJoins;
+//@property (strong, nonatomic) NSMutableArray* arrayOfMiscJoins;
 
 @property BOOL markedForReturn;
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQREquipSelectionGenericVCntrllr">
             <connections>
+                <outlet property="addMiscellaneousButton" destination="BdW-53-E2C" id="r5q-Fu-Dl1"/>
                 <outlet property="bottomGuideLayoutThingy" destination="1nF-ZA-a2L" id="atb-ya-rh1"/>
                 <outlet property="continueButton" destination="6bK-FM-VHe" id="l7o-BL-vMz"/>
                 <outlet property="editNotesButton" destination="sdD-j5-3PE" id="LsB-YM-x4y"/>
@@ -27,6 +28,7 @@
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6bK-FM-VHe">
                             <rect key="frame" x="353" y="33" width="62" height="30"/>
+                            <color key="backgroundColor" red="0.92865114795918369" green="0.92865114795918369" blue="0.92865114795918369" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="30" id="oXH-3E-apc"/>
                             </constraints>
@@ -76,18 +78,32 @@
                                 <action selector="notesButtonTapped:" destination="-1" eventType="touchUpInside" id="27v-cN-QnK"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BdW-53-E2C">
+                            <rect key="frame" x="99" y="33" width="130" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="NCm-4e-Wzq"/>
+                            </constraints>
+                            <state key="normal" title="Add Miscellaneous">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="miscButtonTapped:" destination="-1" eventType="touchUpInside" id="58C-qv-Bna"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="Aq7-zw-7GS" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="33" id="3N4-Oc-n6N"/>
                         <constraint firstAttribute="trailing" secondItem="Aq7-zw-7GS" secondAttribute="trailing" constant="30" id="5yH-rW-95F"/>
                         <constraint firstAttribute="bottom" secondItem="Hha-K8-upK" secondAttribute="bottom" id="8Uh-jn-gZc"/>
+                        <constraint firstItem="BdW-53-E2C" firstAttribute="leading" secondItem="sdD-j5-3PE" secondAttribute="trailing" constant="38" id="A17-aw-18s"/>
                         <constraint firstItem="Hha-K8-upK" firstAttribute="leading" secondItem="KF1-XO-Q8h" secondAttribute="leading" constant="20" id="CqT-0p-n9k"/>
                         <constraint firstItem="6bK-FM-VHe" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="33" id="DGQ-wP-dIG"/>
                         <constraint firstAttribute="trailing" secondItem="Hha-K8-upK" secondAttribute="trailing" constant="20" id="JNt-lT-ucX"/>
                         <constraint firstItem="sdD-j5-3PE" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="33" id="gdb-NM-m0k"/>
                         <constraint firstItem="sdD-j5-3PE" firstAttribute="leading" secondItem="KF1-XO-Q8h" secondAttribute="leading" constant="20" id="kDT-2T-Rpo"/>
                         <constraint firstAttribute="centerX" secondItem="6bK-FM-VHe" secondAttribute="centerX" id="rWL-xu-aZB"/>
+                        <constraint firstItem="BdW-53-E2C" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="33" id="tga-F1-jUP"/>
                         <constraint firstItem="Hha-K8-upK" firstAttribute="top" secondItem="Aq7-zw-7GS" secondAttribute="bottom" constant="18" id="xYI-fK-o0k"/>
                     </constraints>
                 </view>

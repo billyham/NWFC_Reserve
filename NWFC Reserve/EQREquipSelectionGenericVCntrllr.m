@@ -40,6 +40,10 @@
 @property (strong, nonatomic) IBOutlet UIButton* editNotesButton;
 @property (strong, nonatomic) UIPopoverController* notesPopover;
 
+// add miscellaneous button
+@property (strong, nonatomic) IBOutlet UIButton *addMiscellaneousButton;
+@property (strong, nonatomic) UIPopoverController* miscPopover;
+
 @end
 
 
@@ -503,7 +507,6 @@
         requestManager = self.privateRequestManager;
     }else{
         requestManager = [EQRScheduleRequestManager sharedInstance];
-        
     }
     
     notesVC.delegate = self;
@@ -545,6 +548,64 @@
     
     //dealloc popover
     self.notesPopover = nil;
+}
+
+
+-(IBAction)miscButtonTapped:(id)sender{
+    
+    EQRMiscEditVC* miscEditVC = [[EQRMiscEditVC alloc] init];
+    miscEditVC.delegate = self;
+    
+    EQRScheduleRequestManager* requestManager;
+    if (self.privateRequestManagerFlag){
+        requestManager = self.privateRequestManager;
+    }else{
+        requestManager = [EQRScheduleRequestManager sharedInstance];
+    }
+    
+    UIPopoverController* miscEditPopover = [[UIPopoverController alloc] initWithContentViewController:miscEditVC];
+    self.miscPopover = miscEditPopover;
+    self.miscPopover.delegate = self;
+    [self.miscPopover setPopoverContentSize:CGSizeMake(320.f, 500.f)];
+    
+    CGRect rect1 = [self.addMiscellaneousButton.superview.superview convertRect:self.editNotesButton.frame fromView:self.addMiscellaneousButton.superview];
+    
+    //present popOver
+    [self.miscPopover presentPopoverFromRect:rect1 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+    //must be after presentation
+    [miscEditVC initialSetupWithScheduleTrackingKey:requestManager.request.key_id];
+    
+}
+
+
+-(void)receiveMiscData:(NSString*)miscItemText{
+    
+    //update data layer new entry in db with item text
+    EQRScheduleRequestManager* requestManager;
+    if (self.privateRequestManagerFlag){
+        requestManager = self.privateRequestManager;
+    }else{
+        requestManager = [EQRScheduleRequestManager sharedInstance];
+    }
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSArray* firstArray = @[@"scheduleTracking_foreignKey", requestManager.request.key_id];
+    NSArray* secondArray = @[@"name", miscItemText];
+    NSArray *topArray = @[firstArray, secondArray];
+    [webData queryForStringWithLink:@"EQSetNewMiscJoin" parameters:topArray];
+    
+    //refresh the popover's view
+    [(EQRMiscEditVC*)[self.miscPopover contentViewController] renewTheViewWithScheduleKey:requestManager.request.key_id];
+    
+    
+    //dismiss and dealloc popover
+//    [self.miscPopover dismissPopoverAnimated:YES];
+//    
+//    //release delegate status
+//    [(EQRMiscEditVC*)[self.miscPopover contentViewController] setDelegate:nil];
+//    
+//    self.miscPopover = nil;
 }
 
 
@@ -980,9 +1041,10 @@
 
 -(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
  
-    // there are 2 popovers
+    // there are 3 popovers
     //notesPopover
     //optionsPopover
+    //miscPopover
     
     if (popoverController == self.notesPopover){
         
@@ -992,6 +1054,13 @@
     }else if( popoverController == self.optionsPopover){
         
         self.optionsPopover = nil;
+        
+    }else if (popoverController == self.miscPopover){
+        
+        //release delegate status
+        [(EQRMiscEditVC*)[self.miscPopover contentViewController] setDelegate:nil];
+        
+        self.miscPopover = nil;
     }
 }
 
