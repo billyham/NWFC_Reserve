@@ -40,6 +40,7 @@
 
 +(NSDate*)dateFromCombinedDay:(NSDate*)myDay And8HourShiftedTime:(NSDate*)myTime;
 //+(NSDate*)dateFromCombinedDay:(NSDate*)myDay AndTime:(NSDate*)myTime;
++(NSDate*)dateWithoutTimeFromString:(NSString*)dateString;
 
 +(NSDate*)dateByStrippingOffTime:(NSDate*)myDate;
 +(NSDate*)timeByStrippingOffDate:(NSDate*)myDate;

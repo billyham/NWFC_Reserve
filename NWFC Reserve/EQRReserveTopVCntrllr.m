@@ -426,10 +426,10 @@
             requestManager.request.contact_foreignKey = self.thisClassItem.instructor_foreign_key;
             requestManager.request.classSection_foreignKey = self.thisClassItem.key_id;
             requestManager.request.classTitle_foreignKey = self.thisClassItem.catalog_foreign_key;
-            requestManager.request.contact_name = self.thisClassItem.instructor_name;
+            requestManager.request.contact_name = self.thisClassItem.first_and_last;
             requestManager.request.renter_type = self.chosenRentorType;
             
-            NSLog(@"this is the instructor name: %@ and key: %@", self.thisClassItem.instructor_name, self.thisClassItem.instructor_foreign_key);
+            NSLog(@"this is the instructor name: %@ and key: %@", self.thisClassItem.first_and_last, self.thisClassItem.instructor_foreign_key);
             
             //____error handling when no intructor_foreign_key exists_______
             if (([self.thisClassItem.instructor_foreign_key isEqualToString:@""]) || (self.thisClassItem.instructor_foreign_key == NULL)){
@@ -591,10 +591,10 @@
             requestManager.request.contact_foreignKey = self.thisClassItem.instructor_foreign_key;
             requestManager.request.classSection_foreignKey = self.thisClassItem.key_id;
             requestManager.request.classTitle_foreignKey = self.thisClassItem.catalog_foreign_key;
-            requestManager.request.contact_name = self.thisClassItem.instructor_name;
+            requestManager.request.contact_name = self.thisClassItem.first_and_last;
             requestManager.request.renter_type = self.chosenRentorType;
             
-            NSLog(@"this is the instructor name: %@ and key: %@", self.thisClassItem.instructor_name, self.thisClassItem.instructor_foreign_key);
+            NSLog(@"this is the instructor name: %@ and key: %@", self.thisClassItem.first_and_last, self.thisClassItem.instructor_foreign_key);
             
             //____error handling when no intructor_foreign_key exists_______
             if (([self.thisClassItem.instructor_foreign_key isEqualToString:@""]) || (self.thisClassItem.instructor_foreign_key == NULL)){
@@ -634,6 +634,9 @@
                 self.hideNameListFlag = NO;
                 
             } else {  //perform segue as per normal
+                
+                //_____use this opportunity to ensure that class catalog entry has both a contact foreign key AND a value in instructor_name
+                //_____OR get rid of instructor_name in that database altogther
                 
                 //perform segue to show date picker
                 [self performSegueWithIdentifier:@"lookAtDates" sender:self];

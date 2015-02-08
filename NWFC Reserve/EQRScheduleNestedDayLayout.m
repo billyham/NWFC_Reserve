@@ -175,7 +175,7 @@
     
     //CENTER
     float newXValue = objectWidth / 2 + distanceOffset;
-    CGPoint newCenter = CGPointMake(newXValue, 15.f);
+    CGPoint newCenter = CGPointMake(newXValue, EQRScheduleItemHeightForDay / 2);
     
     //assign values to attributes
     theseAttributes.size = newSize;

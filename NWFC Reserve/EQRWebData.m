@@ -600,11 +600,11 @@ const int intEQRMiscJoin = 9;
         return;
     }
     
-    if ([elementName isEqualToString:@"instructor_name"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
+//    if ([elementName isEqualToString:@"instructor_name"]){
+//        
+//        self.currentProperty = elementName;
+//        return;
+//    }
     
     if ([elementName isEqualToString:@"instructor_foreign_key"]){
         
@@ -1057,16 +1057,16 @@ const int intEQRMiscJoin = 9;
         return;
     }
     
-    if ([prop isEqualToString:@"instructor_name"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(instructor_name)]){
-            
-            [(EQRClassItem*)self.currentThing setInstructor_name:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
+//    if ([prop isEqualToString:@"instructor_name"]){
+//        
+//        if ([self.currentThing respondsToSelector:@selector(instructor_name)]){
+//            
+//            [(EQRClassItem*)self.currentThing setInstructor_name:self.currentValue];
+//            
+//            self.currentValue = nil;
+//        }
+//        return;
+//    }
     
     if ([prop isEqualToString:@"instructor_foreign_key"]){
         

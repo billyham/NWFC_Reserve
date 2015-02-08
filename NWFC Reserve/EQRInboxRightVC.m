@@ -373,7 +373,8 @@
         ([self.myScheduleRequest.classTitle_foreignKey isEqualToString:@""]) ||
         (!self.myScheduleRequest.classTitle_foreignKey)) {
         
-        [self.classValue setHidden:YES];
+        self.classValue.text = @"(No Class Selected)";
+//        [self.classValue setHidden:YES];
         
     }else{
         
@@ -381,7 +382,7 @@
         NSArray* top2Array = [NSArray arrayWithObjects:first2Array, nil];
         self.classValue.text = [webData queryForStringWithLink:@"EQGetClassCatalogTitleWithKey.php" parameters:top2Array];
         
-        [self.classValue setHidden:NO];
+//        [self.classValue setHidden:NO];
     }
     
     //copy values to edit field values
@@ -1184,10 +1185,8 @@
     //    [self.classField setHidden:NO];
     if (!thisClassItem){
         
-        //update view objects
-        [self.classValue setHidden:YES];
-        self.classValue.text = nil;
-        [self.classValueField setTitle:nil forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+        self.classValue.text = @"(No Class Selected)";
+        [self.classValueField setTitle:@"(No Class Selected)" forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
         
         //update schedule request
         self.myScheduleRequest.classItem = nil;
@@ -1197,7 +1196,6 @@
     }else{
         
         //update view objects
-        [self.classValue setHidden:NO];
         self.classValue.text = thisClassItem.section_name;
         [self.classValueField setTitle:thisClassItem.section_name forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
         

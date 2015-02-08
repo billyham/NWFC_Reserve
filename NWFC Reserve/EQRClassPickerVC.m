@@ -43,7 +43,10 @@
     //_______some messed up shit_______
     //bug in ios7 needs the retain count for the UISearchDisplayController bumped up by 1
     //http://stackoverflow.com/questions/19214286/having-a-zombie-issue-on-uisearchdisplaycontroller
-    self.mySearchDisplayController = (__bridge  UISearchDisplayController *)(CFBridgingRetain(self.searchDisplayController));
+//    self.mySearchDisplayController = (__bridge  UISearchDisplayController *)(CFBridgingRetain(self.searchDisplayController));
+    //_______!!!!!! AAUUUGGGHHHH this is not a fix because it prevents self (the view controller) from getting deallocated properly
+    //________!!!!! as evidenced when rotating the device after opening the contact VC at least twice
+    //_______!!!!!!! Damned if you do, damned if you don't
     
     //get list of classes
     EQRWebData* webData = [EQRWebData sharedInstance];

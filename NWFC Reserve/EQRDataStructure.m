@@ -458,6 +458,17 @@
     return newAdjustedDate;
 }
 
++(NSDate*)dateWithoutTimeFromString:(NSString*)dateString{
+    
+    NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatForDate setLocale:usLocale];
+    [dateFormatForDate setDateFormat:@"yyyy-MM-dd"];
+    
+    NSDate *returnDate = [dateFormatForDate dateFromString:dateString];
+    return  returnDate;
+}
+
 
 //+(NSDate*)dateFromCombinedDay:(NSDate*)myDay AndTime:(NSDate*)myTime{
 //    

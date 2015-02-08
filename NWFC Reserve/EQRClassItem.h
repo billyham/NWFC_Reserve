@@ -15,8 +15,10 @@
 @property (strong, nonatomic) NSString* catalog_foreign_key;
 @property (strong, nonatomic) NSString* section_date;
 @property (strong, nonatomic) NSString* term;
-
-@property (strong, nonatomic) NSString* instructor_name;
 @property (strong, nonatomic) NSString* instructor_foreign_key;
+//@property (strong, nonatomic) NSString* instructor_name;
+
+//non-database properties
+@property (strong, nonatomic) NSString* first_and_last;
 
 @end

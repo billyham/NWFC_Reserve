@@ -27,12 +27,16 @@
 #import "EQRStaffUserPickerViewController.h"
 #import "EQRStaffUserManager.h"
 #import "EQRModeManager.h"
+#import "EQRScheduleNestedDateBarCell.h"
+#import "EQRNavBarDatesView.h"
+#import "EQRDataStructure.h"
 
 
 @interface EQRScheduleTopVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myMasterScheduleCollectionView;
 @property (strong ,nonatomic) IBOutlet UICollectionView* myNavBarCollectionView;
+@property (strong, nonatomic) IBOutlet UICollectionView* myDateBarCollection;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView* myActivityIndicator;
 
 @property (strong, nonatomic) NSArray* equipUniqueArray;
@@ -61,6 +65,7 @@
 @property (strong, nonatomic) NSDictionary* temporaryDicFromNestedDayCell;
 @property (strong, nonatomic) EQRQuickViewScrollVCntrllr* myQuickViewScrollVCntrllr;
 
+@property (strong, nonatomic) IBOutlet EQRNavBarDatesView* navBarDates;
 
 
 
@@ -115,6 +120,7 @@
     //register collection view cell
     [self.myMasterScheduleCollectionView registerClass:[EQRScheduleRowCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.myNavBarCollectionView registerClass:[EQRScheduleNavBarCell class] forCellWithReuseIdentifier:@"Cell"];
+    [self.myDateBarCollection registerClass:[EQRScheduleNestedDateBarCell class] forCellWithReuseIdentifier:@"CellForDateBar"];
 
     //register for header cell
     [self.myMasterScheduleCollectionView registerClass:[EQRHeaderCellForSchedule class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
@@ -139,6 +145,9 @@
     
     //assign month to nav bar title
     self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    
+    //background color of collection view
+    self.myDateBarCollection.backgroundColor = [UIColor clearColor];
     
     //assign flow layout programmatically
 //    self.scheduleMasterFlowLayout = [[UICollectionViewFlowLayout alloc] init];
@@ -196,7 +205,6 @@
     swipeLeftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:swipeLeftGesture];
     
-
 }
 
 
@@ -384,6 +392,24 @@
     [self.myMasterScheduleCollectionView reloadData];
     [self.myNavBarCollectionView reloadData];
     
+    //update opacity and width of navBarDates if in change orientation
+    UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
+    if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
+        
+        self.navBarDates.isNarrowFlag = YES;
+        self.navBarDates.alpha = 0.5;
+        [self.navBarDates setNeedsDisplay];
+    }else{
+        
+        self.navBarDates.isNarrowFlag = NO;
+        self.navBarDates.alpha = 1.0;
+        [self.navBarDates setNeedsDisplay];
+    }
+
+    //this updates placement of day and dates if orientation changed in a different tab
+    [self.myDateBarCollection.collectionViewLayout invalidateLayout];
+
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -482,9 +508,7 @@
     //_________________________________
 
     
-    
 
-    
 }
 
 
@@ -545,6 +569,7 @@
     [self renewTheView];
     
     [self.myMasterScheduleCollectionView reloadData];
+    [self.myDateBarCollection reloadData];
 }
 
 
@@ -601,6 +626,7 @@
     [self renewTheView];
     
     [self.myMasterScheduleCollectionView reloadData];
+    [self.myDateBarCollection reloadData];
 }
 
 
@@ -630,6 +656,7 @@
     [self renewTheView];
     
     [self.myMasterScheduleCollectionView reloadData];
+    [self.myDateBarCollection reloadData];
 }
 
 
@@ -725,6 +752,9 @@
     self.myDayDatePicker = nil;
     
     [self renewTheView];
+    
+    //reload dates
+    [self.myDateBarCollection reloadData];
 }
 
 
@@ -1205,10 +1235,14 @@
         //otherwise...
         return 0;
         
-    } else {
+    } else if (collectionView == self.myNavBarCollectionView){
         
-        NSLog(@"equiopUniqueCategoriesList count is: %u", (int)[self.equipUniqueCategoriesList count]);
+//        NSLog(@"equiopUniqueCategoriesList count is: %u", (int)[self.equipUniqueCategoriesList count]);
         return [self.equipUniqueCategoriesList count];
+        
+    } else {  //must be self.myDateBarCollection
+        
+        return 31;
     }
     
 }
@@ -1222,7 +1256,11 @@
         
         return [self.equipUniqueArrayWithSections count];
         
-    } else {
+    } else if (collectionView == self.myNavBarCollectionView){
+        
+        return 1;
+        
+    }else{   //must be self.myDateBarCollection
         
         return 1;
     }
@@ -1334,7 +1372,7 @@
         
         return cell;
         
-    } else {
+    } else if (collectionView == self.myNavBarCollectionView){
         
         //FOR Nav Bar
         EQRScheduleNavBarCell* cell2 = [self.myNavBarCollectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
@@ -1357,6 +1395,56 @@
         }
         
         return cell2;
+        
+    }else{  //must be self.myDateBarCollection
+        
+        static NSString* CellIdentifier = @"CellForDateBar";
+        EQRScheduleNestedDateBarCell* cell = [self.myDateBarCollection dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+        
+        for (UIView* view in cell.contentView.subviews){
+            [view removeFromSuperview];
+        }
+        
+        NSString *stringFromDate = [EQRDataStructure dateAsStringSansTime:self.dateForShow];
+        NSString *stringDateDayRemoved = [stringFromDate substringToIndex:7];
+        NSNumber *dayIndexAsNumber = [NSNumber numberWithInt:indexPath.row + 1];
+        NSString *revisedStringDate = [NSString stringWithFormat:@"%@-%@", stringDateDayRemoved, dayIndexAsNumber];
+        NSDate *thisDate = [EQRDataStructure dateWithoutTimeFromString:revisedStringDate];
+        
+        NSDateFormatter* dayOFWeekAsLetter = [[NSDateFormatter alloc] init];
+        [dayOFWeekAsLetter setLocale: [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] ];
+        dayOFWeekAsLetter.dateFormat = @"EEEEE";
+        
+        NSDateFormatter* dayOfWeekAsNumber = [[NSDateFormatter alloc] init];
+        [dayOfWeekAsNumber setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"]];
+        dayOfWeekAsNumber.dateFormat = @"EEEE";
+        
+        NSString* letterString = [dayOFWeekAsLetter stringFromDate:thisDate];
+        NSString* numberString = [dayOfWeekAsNumber stringFromDate:thisDate];
+        
+        if ([numberString isEqualToString:@"Tuesday"]){
+            letterString = @"Tu";
+        }
+        if ([numberString isEqualToString:@"Thursday"]){
+            letterString = @"Th";
+        }
+        if ([numberString isEqualToString:@"Saturday"]){
+            letterString = @"Sa";
+        }
+        if ([numberString isEqualToString:@"Sunday"]){
+            letterString = @"Su";
+        }
+        
+        NSString *dateString = [NSString stringWithFormat:@"%u", indexPath.row + 1];
+        
+        //delete the datestring if the month doesn't extend that far
+        if (!letterString){
+            dateString = @"";
+        }
+        
+        [cell initialSetupWithDate:dateString DayOfWeek:letterString];
+        
+        return cell;
     }
 }
 
@@ -1405,9 +1493,13 @@
         
         
         
-    } else {
+    } else if (collectionView == self.myNavBarCollectionView){
         
+        //no action necessary
         
+    }else{  //must be self.myDateBarCollection
+        
+        //no action necessary
     }
     
     return cell;
@@ -1425,6 +1517,21 @@
     NSDictionary* dic = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:toInterfaceOrientation] forKey:@"orientation"];
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshViewWhenOrientationRotates object:nil userInfo:dic];
     
+    //update navBarDates view
+    if ((toInterfaceOrientation == UIInterfaceOrientationPortrait) || (toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)){
+        
+        self.navBarDates.isNarrowFlag = YES;
+        self.navBarDates.alpha = 0.5;
+        [self.navBarDates setNeedsDisplay];
+        
+    }else{
+        
+        self.navBarDates.isNarrowFlag = NO;
+        self.navBarDates.alpha = 1.0;
+        [self.navBarDates setNeedsDisplay];
+    }
+    
+    
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
@@ -1433,6 +1540,7 @@
     
     [self.myMasterScheduleCollectionView performBatchUpdates:nil completion:nil];
     [self.myNavBarCollectionView performBatchUpdates:nil completion:nil];
+    [self.myDateBarCollection performBatchUpdates:nil completion:nil];
 
     //enumerate through visible cells and invalidate the layout to force the update of nested cells
     [[self.myMasterScheduleCollectionView visibleCells] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -1443,7 +1551,10 @@
     
     
 //    [self.myMasterScheduleCollectionView reloadData];
+//    [self.myDateBarCollection reloadData];
 //    [self.myNavBarCollectionView reloadData];
+    
+
     
     
 
@@ -1459,7 +1570,9 @@
     
     if (collectionView == self.myMasterScheduleCollectionView){
         
-    } else {
+        //no action necessary
+        
+    } else if (collectionView == self.myNavBarCollectionView){
         
         EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
         
@@ -1467,6 +1580,10 @@
         
         //update request Manager to do the action and keep persistence
         [requestManager collapseOrExpandSectionInSchedule:[self.equipUniqueCategoriesList objectAtIndex:indexPath.row]];
+        
+    }else{  //must be self.myDateBarCollection
+        
+        
     }
     
 }
@@ -1497,7 +1614,7 @@
             return CGSizeMake(1024.f, 30.f);
         }
         
-    } else {
+    } else if (collectionView == self.myNavBarCollectionView){
         
         //for NAV BAR
         //size of cell is based available length of collectoin view divided by count in array,
@@ -1517,8 +1634,12 @@
         }
         
         return CGSizeMake(widthOfMe, 50);
+        
+    }else{   //must be self.myNavBarCollection
+        
+        //_____doesn't use flow layout so this doesn't get called??? maybe...
+        return CGSizeMake(0, 0);
     }
-    
 }
 
 
