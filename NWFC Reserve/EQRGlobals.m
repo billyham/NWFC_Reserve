@@ -68,6 +68,8 @@ NSString* EQRScheduleGrouping = @"schedule_grouping";  //choose category or subc
 //application options
 BOOL EQRDisableTimeLimitForRequest = YES;
 BOOL EQRIncludeQRCodeReader = YES;
+BOOL EQRAllowHardcodedPassword = YES;
+NSString* EQRHardcodedPassword = @"super8";
 
 //service issue thresholds
 NSInteger EQRThresholdForDescriptiveNote = 2;

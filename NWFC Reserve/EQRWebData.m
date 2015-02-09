@@ -16,6 +16,7 @@
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRScheduleRequestItem.h"
 #import "EQRModeManager.h"
+#import "EQRTextElement.h"
 
 @interface EQRWebData ()
 
@@ -45,6 +46,7 @@ const int intEQRClassCatalog_EquipTitleItem_Join = 6;
 const int intEQRScheduleTracking_EquipmentUnique_Join = 7;
 const int intEQREquipUniqueItem = 8;
 const int intEQRMiscJoin = 9;
+const int intEQRTextElement = 10;
 
 
 @implementation EQRWebData
@@ -114,6 +116,11 @@ const int intEQRMiscJoin = 9;
     
     if ([classString isEqualToString:@"EQRMiscJoin"]){
         self.returnClassInt = intEQRMiscJoin;
+        return;
+    }
+    
+    if ([classString isEqualToString:@"EQRTextElement"]){
+        self.returnClassInt = intEQRTextElement;
         return;
     }
     
@@ -802,6 +809,31 @@ const int intEQRMiscJoin = 9;
     }
     
     
+    //properties for TextElements
+    if ([elementName isEqualToString:@"text"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"page"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"distinguishing_id"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"context"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
 }
 
 
@@ -1488,6 +1520,53 @@ const int intEQRMiscJoin = 9;
 //        }
 //        return;
 //    }
+    
+    
+    //Text Elements
+    
+    if ([prop isEqualToString:@"text"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(text)]){
+            
+            [(EQRTextElement*)self.currentThing setText:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"context"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(context)]){
+            
+            [(EQRTextElement*)self.currentThing setContext:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"page"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(page)]){
+            
+            [(EQRTextElement*)self.currentThing setPage:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"distinguishing_id"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(distinguishing_id)]){
+            
+            [(EQRTextElement*)self.currentThing setDistinguishing_id:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
     
     
     

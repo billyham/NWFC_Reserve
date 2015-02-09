@@ -9,10 +9,16 @@
 #import <Foundation/Foundation.h>
 #import "EQRContactNameItem.h"
 
-@interface EQRStaffUserManager : NSObject
+@interface EQRStaffUserManager : NSObject <UITabBarControllerDelegate>
 
 @property (strong, nonatomic) EQRContactNameItem* currentStaffUser;
 
 +(EQRStaffUserManager*)sharedInstance;
+
+- (void)goToKioskMode:(BOOL)isInKioskMode;
+- (BOOL)currentKioskMode;
+
+//UITabViewController delegate methods
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController;
 
 @end

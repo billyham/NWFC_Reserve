@@ -13,6 +13,12 @@
 #import "EQRWebData.h"
 #import "EQRContactNameItem.h"
 
+@interface EQRAppDelegate ()
+
+@property (strong, nonatomic) UITabBarController* myTabBarController;
+
+@end
+
 @implementation EQRAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -39,13 +45,16 @@
                                               @"", @"staffUserKey"
                                               , nil];
     
+    NSDictionary* EQRKioskModeIsOn = @{@"kioskModeIsOn":@"no"};
+    
     
     NSDictionary* appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
                                  EQRWebDataUrl, @"url",
                                  EQRCurrentTermCode, @"term",
                                  EQRCurrentCampTermCode, @"campTerm",
-                                 EQRDefaultStaffUserKeyID, @"staffUserKey"
-                                 , nil];
+                                 EQRDefaultStaffUserKeyID, @"staffUserKey",
+                                 EQRKioskModeIsOn, @"kioskModeIsOn",
+                                 nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     
@@ -54,6 +63,18 @@
     EQRColors* myColors = [EQRColors sharedInstance];
     [myColors loadColors];
     
+    //instantiate staffUserManager and assign as delegate for root view tabController
+    EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+    UITabBarController* thisTabVC = (UITabBarController*)self.window.rootViewController;
+    thisTabVC.delegate = staffUserManager;
+    
+    //set to kiosk mode if it was last in kiosk mode
+    NSString* currentKioskMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kioskModeIsOn"] objectForKey:@"kioskModeIsOn"];
+    if ([currentKioskMode isEqualToString:@"yes"]){
+        [staffUserManager goToKioskMode:YES];
+    }
+    
+    //set staffUser to last user
     NSString* keyID = [[[NSUserDefaults standardUserDefaults] objectForKey:@"staffUserKey"] objectForKey:@"staffUserKey"];
     
     if (![keyID isEqualToString:@""]){
@@ -80,12 +101,8 @@
 //        }
         
         //set the current staffUser as the last previous user
-        EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
-        
         staffUserManager.currentStaffUser = contactObject;
-        
     }
-    
     
     return YES;
 }

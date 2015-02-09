@@ -64,6 +64,8 @@ extern NSString* EQRScheduleGrouping;
 //application options
 extern BOOL EQRDisableTimeLimitForRequest;
 extern BOOL EQRIncludeQRCodeReader;
+extern BOOL EQRAllowHardcodedPassword;
+extern NSString* EQRHardcodedPassword;
 
 //service issue thresholds
 extern NSInteger EQRThresholdForDescriptiveNote;

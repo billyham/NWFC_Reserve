@@ -737,7 +737,7 @@
                                 </connections>
                             </textField>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo Mode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f9S-ZZ-XgU">
-                                <rect key="frame" x="337" y="417.5" width="94.5" height="21"/>
+                                <rect key="frame" x="337" y="417" width="94.5" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="Qpj-FB-VBi"/>
                                 </constraints>
@@ -754,10 +754,30 @@
                                     <action selector="demoModeDidChange:" destination="6G1-gm-2lt" eventType="valueChanged" id="CBw-Qd-7MM"/>
                                 </connections>
                             </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kiosk Mode" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vWk-Ud-Xwg">
+                                <rect key="frame" x="338.5" y="506" width="91.5" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="aDs-oH-QBV"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="LCw-Ny-OpR">
+                                <rect key="frame" x="360" y="535" width="51" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="31" id="BAq-zx-Asj"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="kioskModeDidChange:" destination="6G1-gm-2lt" eventType="valueChanged" id="tgP-5B-Cbs"/>
+                                </connections>
+                            </switch>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="LCw-Ny-OpR" firstAttribute="top" secondItem="vWk-Ud-Xwg" secondAttribute="bottom" constant="8" id="3V0-zC-RUM"/>
                             <constraint firstItem="kOp-x7-tiU" firstAttribute="top" secondItem="yIg-Iv-qyn" secondAttribute="bottom" constant="8" id="3YD-z1-Dwo"/>
+                            <constraint firstAttribute="centerX" secondItem="LCw-Ny-OpR" secondAttribute="centerX" id="3py-hJ-PIF"/>
                             <constraint firstAttribute="centerX" secondItem="uEZ-Z9-nGl" secondAttribute="centerX" id="9N7-wq-aoO"/>
                             <constraint firstAttribute="centerX" secondItem="imb-2J-3xE" secondAttribute="centerX" id="BLF-pJ-onn"/>
                             <constraint firstItem="yIg-Iv-qyn" firstAttribute="top" secondItem="imb-2J-3xE" secondAttribute="bottom" constant="112" id="BUW-vK-7if"/>
@@ -766,6 +786,7 @@
                             <constraint firstAttribute="centerX" secondItem="bEk-sq-19R" secondAttribute="centerX" id="P8d-pA-HOw"/>
                             <constraint firstItem="bEk-sq-19R" firstAttribute="top" secondItem="f9S-ZZ-XgU" secondAttribute="bottom" constant="8.5" id="RDx-U9-VZm"/>
                             <constraint firstItem="f9S-ZZ-XgU" firstAttribute="top" secondItem="kOp-x7-tiU" secondAttribute="bottom" constant="36" id="Ti6-NU-hkf"/>
+                            <constraint firstItem="vWk-Ud-Xwg" firstAttribute="top" secondItem="bEk-sq-19R" secondAttribute="bottom" constant="28" id="Xu6-Oc-v6l"/>
                             <constraint firstAttribute="centerX" secondItem="kOp-x7-tiU" secondAttribute="centerX" id="bFy-Ob-3qQ"/>
                             <constraint firstItem="uEZ-Z9-nGl" firstAttribute="top" secondItem="imb-2J-3xE" secondAttribute="bottom" constant="26" id="cF4-y7-UNP"/>
                             <constraint firstAttribute="centerX" secondItem="vVA-7f-kPL" secondAttribute="centerX" id="fYS-IU-Fpg"/>
@@ -773,12 +794,14 @@
                             <constraint firstItem="xkv-aJ-mgn" firstAttribute="top" secondItem="hxL-HC-Nj7" secondAttribute="bottom" constant="88" id="gCB-sJ-m15"/>
                             <constraint firstItem="vVA-7f-kPL" firstAttribute="top" secondItem="uEZ-Z9-nGl" secondAttribute="bottom" constant="8" id="rN9-HN-qta"/>
                             <constraint firstAttribute="centerX" secondItem="xkv-aJ-mgn" secondAttribute="centerX" id="tdO-U9-7SV"/>
+                            <constraint firstAttribute="centerX" secondItem="vWk-Ud-Xwg" secondAttribute="centerX" id="zrV-Pj-8uB"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Settings" id="t24-ER-jgh"/>
                     <connections>
                         <outlet property="campTermString" destination="vVA-7f-kPL" id="UXk-Lp-bhx"/>
                         <outlet property="demoModeSwitch" destination="bEk-sq-19R" id="7Nl-p6-dAf"/>
+                        <outlet property="kioskModeSwitch" destination="LCw-Ny-OpR" id="LsI-eQ-OK5"/>
                         <outlet property="termString" destination="imb-2J-3xE" id="XlP-kl-34S"/>
                         <outlet property="urlString" destination="kOp-x7-tiU" id="ruN-xK-cld"/>
                     </connections>

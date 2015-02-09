@@ -9,6 +9,8 @@
 #import "EQRStaffPage1VCntrllr.h"
 #import "EQRModeManager.h"
 #import "EQRGlobals.h"
+#import "EQRStaffUserManager.h"
+
 
 @interface EQRStaffPage1VCntrllr ()
 
@@ -16,6 +18,9 @@
 @property (strong, nonatomic) IBOutlet UITextField* termString;
 @property (strong, nonatomic) IBOutlet UITextField* campTermString;
 @property (strong, nonatomic) IBOutlet UISwitch* demoModeSwitch;
+@property (strong, nonatomic) IBOutlet UISwitch* kioskModeSwitch;
+
+@property (strong, nonatomic) UIPopoverController* passwordPopover;
 
 @end
 
@@ -43,6 +48,11 @@
     self.urlString.text = currentUrl;
     self.campTermString.text = currentCampTerm;
     
+    EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+    BOOL isInKioskMode = [staffUserManager currentKioskMode];
+    if (isInKioskMode){
+        self.kioskModeSwitch.on = YES;
+    }
     
 }
 
@@ -120,6 +130,101 @@
     //inform other VCs that they need to reload their data
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
 }
+
+
+-(IBAction)kioskModeDidChange:(id)sender{
+    
+    if (self.kioskModeSwitch.on){
+        
+        EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+        NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+        NSString* setStringForDefaults;
+        
+        [staffUserManager goToKioskMode:YES];
+        
+        [self.urlString setUserInteractionEnabled:NO];
+        [self.termString setUserInteractionEnabled:NO];
+        [self.campTermString setUserInteractionEnabled:NO];
+        [self.demoModeSwitch setUserInteractionEnabled:NO];
+        
+        setStringForDefaults = @"yes";
+        
+        //change user defaults with new string text
+        NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                setStringForDefaults, @"kioskModeIsOn"
+                                , nil];
+        
+        [defaults setObject:newDic forKey:@"kioskModeIsOn"];
+        [defaults synchronize];
+        
+    }else{
+        
+        //need password to change back to kiosk off
+        
+        EQRPasswordEntryVC* passEntry = [[EQRPasswordEntryVC alloc] initWithNibName:@"EQRPasswordEntryVC" bundle:nil];
+        passEntry.delegate = self;
+        
+        UIPopoverController* passPopover = [[UIPopoverController alloc] initWithContentViewController:passEntry];
+        self.passwordPopover = passPopover;
+        self.passwordPopover.delegate = self;
+        [self.passwordPopover setPopoverContentSize:CGSizeMake(320.f, 300.f)];
+        
+        CGRect thisRect = [self.kioskModeSwitch.superview.superview convertRect:self.kioskModeSwitch.frame fromCoordinateSpace:self.kioskModeSwitch.superview];
+        
+        [self.passwordPopover presentPopoverFromRect:thisRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    }
+}
+
+
+#pragma mark - password methods
+
+-(void)passwordEntered:(BOOL)passwordSuccessful{
+    
+    if (passwordSuccessful){
+        
+        EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+        NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+        NSString* setStringForDefaults;
+        
+        [staffUserManager goToKioskMode:NO];
+        
+        [self.urlString setUserInteractionEnabled:YES];
+        [self.termString setUserInteractionEnabled:YES];
+        [self.campTermString setUserInteractionEnabled:YES];
+        [self.demoModeSwitch setUserInteractionEnabled:YES];
+        
+        setStringForDefaults = @"no";
+        
+        //change user defaults with new string text
+        NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                setStringForDefaults, @"kioskModeIsOn"
+                                , nil];
+        
+        [defaults setObject:newDic forKey:@"kioskModeIsOn"];
+        [defaults synchronize];
+        
+        [self.passwordPopover dismissPopoverAnimated:YES];
+        self.passwordPopover = nil;
+    }
+    
+}
+
+
+#pragma mark - popover delegate methods
+
+-(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
+    
+    if (popoverController == self.passwordPopover){
+        
+        self.passwordPopover = nil;
+        
+        //a failed password entry, should flip kiosk mode back
+        [self.kioskModeSwitch setOn:YES animated:YES];
+    }
+}
+
+
+
 
 
 - (void)didReceiveMemoryWarning
