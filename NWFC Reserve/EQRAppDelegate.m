@@ -63,16 +63,10 @@
     EQRColors* myColors = [EQRColors sharedInstance];
     [myColors loadColors];
     
-    //instantiate staffUserManager and assign as delegate for root view tabController
+    //instantiate staffUserManager and assign as delegate for root view tabBarController
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     UITabBarController* thisTabVC = (UITabBarController*)self.window.rootViewController;
     thisTabVC.delegate = staffUserManager;
-    
-    //set to kiosk mode if it was last in kiosk mode
-    NSString* currentKioskMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kioskModeIsOn"] objectForKey:@"kioskModeIsOn"];
-    if ([currentKioskMode isEqualToString:@"yes"]){
-        [staffUserManager goToKioskMode:YES];
-    }
     
     //set staffUser to last user
     NSString* keyID = [[[NSUserDefaults standardUserDefaults] objectForKey:@"staffUserKey"] objectForKey:@"staffUserKey"];
@@ -127,6 +121,13 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    
+    //set to kiosk mode if it was last in kiosk mode
+    EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+    NSString* currentKioskMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"kioskModeIsOn"] objectForKey:@"kioskModeIsOn"];
+    if ([currentKioskMode isEqualToString:@"yes"]){
+        [staffUserManager goToKioskMode:YES];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

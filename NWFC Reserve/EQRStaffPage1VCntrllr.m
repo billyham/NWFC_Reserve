@@ -14,6 +14,7 @@
 
 @interface EQRStaffPage1VCntrllr ()
 
+@property (strong, nonatomic) IBOutlet UIView* lockableItemsView;
 @property (strong, nonatomic) IBOutlet UITextField* urlString;
 @property (strong, nonatomic) IBOutlet UITextField* termString;
 @property (strong, nonatomic) IBOutlet UITextField* campTermString;
@@ -52,6 +53,14 @@
     BOOL isInKioskMode = [staffUserManager currentKioskMode];
     if (isInKioskMode){
         self.kioskModeSwitch.on = YES;
+        
+        [self.urlString setUserInteractionEnabled:NO];
+        [self.termString setUserInteractionEnabled:NO];
+        [self.campTermString setUserInteractionEnabled:NO];
+        [self.demoModeSwitch setUserInteractionEnabled:NO];
+        
+        //dim lockable items
+        self.lockableItemsView.alpha = 0.25;
     }
     
 }
@@ -147,6 +156,9 @@
         [self.campTermString setUserInteractionEnabled:NO];
         [self.demoModeSwitch setUserInteractionEnabled:NO];
         
+        //dim lockable items
+        self.lockableItemsView.alpha = 0.25;
+        
         setStringForDefaults = @"yes";
         
         //change user defaults with new string text
@@ -156,6 +168,8 @@
         
         [defaults setObject:newDic forKey:@"kioskModeIsOn"];
         [defaults synchronize];
+        
+        
         
     }else{
         
@@ -168,8 +182,10 @@
         self.passwordPopover = passPopover;
         self.passwordPopover.delegate = self;
         [self.passwordPopover setPopoverContentSize:CGSizeMake(320.f, 300.f)];
+
+        CGRect thisRect = self.kioskModeSwitch.frame;
         
-        CGRect thisRect = [self.kioskModeSwitch.superview.superview convertRect:self.kioskModeSwitch.frame fromCoordinateSpace:self.kioskModeSwitch.superview];
+//        CGRect thisRect = [self.kioskModeSwitch.superview.superview convertRect:self.kioskModeSwitch.frame fromCoordinateSpace:self.kioskModeSwitch.superview];
         
         [self.passwordPopover presentPopoverFromRect:thisRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     }
@@ -192,6 +208,9 @@
         [self.termString setUserInteractionEnabled:YES];
         [self.campTermString setUserInteractionEnabled:YES];
         [self.demoModeSwitch setUserInteractionEnabled:YES];
+        
+        //make lockable items opaque
+        self.lockableItemsView.alpha = 1.0;
         
         setStringForDefaults = @"no";
         

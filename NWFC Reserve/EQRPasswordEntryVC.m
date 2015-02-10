@@ -54,7 +54,7 @@
         
         for (EQRTextElement* textElement in tempMuteArray){
             
-            NSLog(@"this is the password from the db >>%@<<", textElement.text);
+//            NSLog(@"this is the password from the db >>%@<<", textElement.text);
             
             //check all user passwords
             if ([self.passwordField.text isEqualToString:textElement.text]){

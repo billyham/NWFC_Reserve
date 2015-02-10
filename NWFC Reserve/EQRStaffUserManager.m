@@ -15,6 +15,7 @@
 @interface EQRStaffUserManager ()
 
 @property BOOL isInKioskMode;
+@property (strong, nonatomic) NSMutableArray* arrayOfHiddenVCs;
 
 @end
 
@@ -43,6 +44,48 @@
     
     self.isInKioskMode = isInKioskMode;
     
+    if (self.isInKioskMode){
+        
+        if (!self.arrayOfHiddenVCs){
+            self.arrayOfHiddenVCs = [NSMutableArray arrayWithCapacity:1];
+        }
+        
+        UIApplication* thisApp = [UIApplication sharedApplication];
+        NSArray* originalArray = [(UITabBarController*)thisApp.keyWindow.rootViewController viewControllers];
+        NSMutableArray* arrayToKeep = [NSMutableArray arrayWithCapacity:1];
+        for (UIViewController* thisVC in originalArray){
+            
+            if ([thisVC class] == [UISplitViewController class]){  //must be inbox
+                [self.arrayOfHiddenVCs addObject:thisVC];
+            }else if ([[(UINavigationController*)thisVC topViewController] class] == [EQRItineraryVCntrllr class]){
+                [self.arrayOfHiddenVCs addObject:thisVC];
+            }else if ([[(UINavigationController*)thisVC topViewController] class] == [EQRScheduleTopVCntrllr class]){
+                [self.arrayOfHiddenVCs addObject:thisVC];
+            }else{
+                [arrayToKeep addObject:thisVC];
+            }
+        }
+        
+        [(UITabBarController*)thisApp.keyWindow.rootViewController setViewControllers:arrayToKeep];
+        
+    } else {
+        
+//        if (!self.arrayOfHiddenVCs){
+//            self.arrayOfHiddenVCs = [NSMutableArray arrayWithCapacity:1];
+//        }
+        
+        UIApplication* thisApp = [UIApplication sharedApplication];
+        NSArray* originalArray = [(UITabBarController*)thisApp.keyWindow.rootViewController viewControllers];
+        NSMutableArray* arrayToKeep = [NSMutableArray arrayWithCapacity:1];
+        
+        //combined hidden and visible arrays
+        [arrayToKeep addObjectsFromArray:originalArray];
+        [arrayToKeep addObjectsFromArray:self.arrayOfHiddenVCs];
+        
+        [self.arrayOfHiddenVCs removeAllObjects];
+        
+        [(UITabBarController*)thisApp.keyWindow.rootViewController setViewControllers:arrayToKeep];
+    }
 }
 
 
