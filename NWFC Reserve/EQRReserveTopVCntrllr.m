@@ -219,7 +219,8 @@
     //refresh the list of ALL equipUniqueItems
     [requestManager retrieveAllEquipUniqueItems];
     
-    
+    //hide name list until a type is selected
+    [self.myContactPickerVC.view setHidden:YES];
 }
 
 
@@ -429,7 +430,7 @@
             requestManager.request.contact_name = self.thisClassItem.first_and_last;
             requestManager.request.renter_type = self.chosenRentorType;
             
-            NSLog(@"this is the instructor name: %@ and key: %@", self.thisClassItem.first_and_last, self.thisClassItem.instructor_foreign_key);
+//            NSLog(@"this is the instructor name: %@ and key: %@", self.thisClassItem.first_and_last, self.thisClassItem.instructor_foreign_key);
             
             //____error handling when no intructor_foreign_key exists_______
             if (([self.thisClassItem.instructor_foreign_key isEqualToString:@""]) || (self.thisClassItem.instructor_foreign_key == NULL)){
@@ -466,7 +467,7 @@
                 [self.myContactPickerVC replaceDefaultContactArrayWith:self.contactNameArray];
                 
                 //********  reveal name list  **********
-                self.hideNameListFlag = NO;
+                [self.myContactPickerVC.view setHidden:NO];
                 
             } else {
                 
@@ -481,7 +482,7 @@
         }else if ([self.chosenRentorType isEqualToString:EQRRenterStudent]) {   //student in adult class
             
             //reveal name list
-            self.hideNameListFlag = NO;
+            [self.myContactPickerVC.view setHidden:NO];
             
             //initialize webData object
             EQRWebData* webData = [EQRWebData sharedInstance];
@@ -631,7 +632,7 @@
                 [self.myContactPickerVC replaceDefaultContactArrayWith:self.contactNameArray];
                 
                 //********  reveal name list  **********
-                self.hideNameListFlag = NO;
+                [self.myContactPickerVC.view setHidden:NO];
                 
             } else {  //perform segue as per normal
                 
@@ -714,6 +715,9 @@
                 //hand array to contactPickerVC
                 [self.myContactPickerVC replaceDefaultContactArrayWith:noneArray];
                 
+                //hide name list until a type is selected
+                [self.myContactPickerVC.view setHidden:YES];
+                
                 break;
                 
             } case (1):{ //faculty
@@ -769,7 +773,7 @@
                 [self.myContactPickerVC replaceDefaultContactArrayWith:self.contactNameArray];
                 
                 //********  reveal name list  **********
-                self.hideNameListFlag = NO;
+                [self.myContactPickerVC.view setHidden:NO];
                 
                 //is this necessary_____???
 //                [self.nameListTable reloadData];
@@ -830,7 +834,7 @@
                 [self.myContactPickerVC replaceDefaultContactArrayWith:self.contactNameArray];
                 
                 //********  reveal name list  **********
-                self.hideNameListFlag = NO;
+                [self.myContactPickerVC.view setHidden:NO];
                 
                 //is this necessary_____???
 //                [self.nameListTable reloadData];
@@ -889,7 +893,7 @@
                 [self.myContactPickerVC replaceDefaultContactArrayWith:self.contactNameArray];
                 
                 //********  reveal name list  **********
-                self.hideNameListFlag = NO;
+                [self.myContactPickerVC.view setHidden:NO];
                 
                 //is this necessary_____???
 //                [self.nameListTable reloadData];
@@ -962,6 +966,8 @@
                 //hand array to contactPickerVC
                 [self.myContactPickerVC replaceDefaultContactArrayWith:noneArray];
                 
+                //hide name list until a type is selected
+                [self.myContactPickerVC.view setHidden:YES];
                 
                 break;
                 
@@ -1026,6 +1032,9 @@
                 
                 //hand array to contactPickerVC
                 [self.myContactPickerVC replaceDefaultContactArrayWith:noneArray];
+                
+                //hide name list until a type is selected
+                [self.myContactPickerVC.view setHidden:YES];
                 
                 break;
             }

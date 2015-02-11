@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQREquipSummaryGenericVCntrllr : UIViewController
+@interface EQREquipSummaryGenericVCntrllr : UIViewController <UITextViewDelegate>
 
 //why did I add these if they never get used???
 //@property (nonatomic, strong) NSAttributedString* rentorNameAtt;
