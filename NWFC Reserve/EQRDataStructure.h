@@ -20,7 +20,7 @@
 //expands on the method to incorporate seperate MiscJoin objects
 +(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray withMiscJoins:(NSArray*)arrayOfMisc;
 
-//same function for EquipUnqiueItems* but uses category instead of schedule_grouping
+//same as above for EquipUnqiueItems* but uses category instead of schedule_grouping
 +(NSArray*)convertFlatArrayofUniqueItemsToStructureWithCategory:(NSArray*)flatArray;
 
 //need function to sort a subarray of schedule_equip_joins (or equipUniques) based on ascending distinguishing ids
@@ -44,6 +44,10 @@
 
 +(NSDate*)dateByStrippingOffTime:(NSDate*)myDate;
 +(NSDate*)timeByStrippingOffDate:(NSDate*)myDate;
+
+//these two methods return nil if validation fails
++(NSString*)emailValidationAndSecureForDisplay:(NSString*)email;
++(NSString*)phoneValidationAndSecureForDisplay:(NSString*)phone;
 
 
 @end

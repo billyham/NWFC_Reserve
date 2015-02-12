@@ -510,6 +510,115 @@
     return timeAdjustedReferenceDate;
 }
 
++(NSString*)emailValidationAndSecureForDisplay:(NSString*)email{
+    
+    if (email == nil || [email isEqualToString:@""]){
+        return nil;
+    }
+    
+    NSString* emailForDisplay;
+    NSRange atRange = [email rangeOfString:@"@"];
+    NSRange dotRange = [email rangeOfString:@"."];
+    NSRange atRangeError = [[email substringFromIndex:atRange.location + 1] rangeOfString:@"@"];
+    NSRange dotRangeError = [[email substringFromIndex:dotRange.location + 1] rangeOfString:@"."];
+
+     //error when too many @ or . 's
+    if ((atRangeError.location != NSNotFound) || (dotRangeError.location != NSNotFound)){
+        return nil;
+    }
+    
+    //error when no @ or .
+    if ((atRange.location == NSNotFound) || (dotRange.location == NSNotFound)){
+        return nil;
+    }
+    
+    //__1__
+//    NSInteger firstTwoLettersLength = 2;
+//    NSInteger lengthOfDots1 = atRange.location - 2;
+//    if (lengthOfDots1 < 0) { //when address name is one letter long
+//        lengthOfDots1 = 0;
+//        firstTwoLettersLength = 1;
+//    }
+//    
+//    NSString* firstTwoLetters = [email substringToIndex:firstTwoLettersLength];
+//    
+//    int i;
+//    NSMutableString *stringOfDots1  = [NSMutableString stringWithString:@""];
+//    for (i=0 ; i < lengthOfDots1 ; i++){
+//        [stringOfDots1 appendString:@"●"];
+//    }
+//    
+//    NSInteger lengthOfDots2 = dotRange.location - atRange.location - 2;
+//    int n;
+//    NSMutableString *stringOfDots2 = [NSMutableString stringWithString:@""];
+//    for (n=0 ; n < lengthOfDots2 ; n++){
+//        [stringOfDots2 appendString:@"●"];
+//    }
+//    
+//    NSString *firstLetterAfterAt = [email substringWithRange:NSMakeRange(atRange.location + 1, 1)];
+//    NSString *lettersAfterDot = [email substringFromIndex:dotRange.location];
+//    
+//    emailForDisplay = [NSString stringWithFormat:@"%@%@@%@%@%@", firstTwoLetters, stringOfDots1, firstLetterAfterAt, stringOfDots2, lettersAfterDot];
+    
+    
+    //__2__ better
+    NSInteger lengthOfDots1 = atRange.location;
+    int i;
+    NSMutableString *stringOfDots1  = [NSMutableString stringWithString:@""];
+    for (i=0 ; i < lengthOfDots1 ; i++){
+        [stringOfDots1 appendString:@"●"];
+    }
+    
+    NSString *lettersAfterAt = [email substringFromIndex:atRange.location];
+    
+    emailForDisplay = [NSString stringWithFormat:@"%@%@", stringOfDots1, lettersAfterAt];
+    
+    
+    return emailForDisplay;
+}
+
++(NSString*)phoneValidationAndSecureForDisplay:(NSString*)phone{
+    
+    if ((phone == nil) || ([phone isEqualToString:@""])){
+        return nil;
+    }
+    
+    //remove spaces, dashes, paranthesis, dots, en dashes, em dashes
+    NSString *phoneForDisplay;
+    NSString *string1 = [phone stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSString *string2 = [string1 stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    NSString *string3 = [string2 stringByReplacingOccurrencesOfString:@"(" withString:@""];
+    NSString *string4 = [string3 stringByReplacingOccurrencesOfString:@")" withString:@""];
+    NSString *string5 = [string4 stringByReplacingOccurrencesOfString:@"–" withString:@""];
+    NSString *string6 = [string5 stringByReplacingOccurrencesOfString:@"—" withString:@""];
+    NSString *phoneClean = [string6 stringByReplacingOccurrencesOfString:@"." withString:@""];
+    
+    NSInteger lengthOfPhone = [phoneClean length];
+    
+    //return nil is less than 10 and more than 11
+    if ((lengthOfPhone < 10) || (lengthOfPhone > 11)){
+        return nil;
+    }
+    
+    //if first of 11 numbers is not 1, return nil, otherwise drop the 1
+    if (lengthOfPhone == 11){
+        if ([[phoneClean substringToIndex:1] isEqualToString:@"1"]){
+            phoneClean = [phoneClean substringFromIndex:1];
+        }else{
+            return nil;
+        }
+    }
+    
+    //show area code and last two numbers
+    NSString *areaCode = [phoneClean substringToIndex:3];
+    NSString *prefix = [phoneClean substringWithRange:NSMakeRange(3, 3)];
+//    NSString *lastTwo = [phoneClean substringFromIndex:8];
+    
+    phoneForDisplay = [NSString stringWithFormat:@"(%@) %@–●●●●", areaCode, prefix];
+    
+    return phoneForDisplay;
+}
+
 
 
 

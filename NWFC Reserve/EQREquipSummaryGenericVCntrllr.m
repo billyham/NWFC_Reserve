@@ -24,6 +24,9 @@
 @interface EQREquipSummaryGenericVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UIButton* printAndConfirmButton;
+@property (strong, nonatomic) IBOutlet UIButton* editPhoneButton;
+@property (strong, nonatomic) IBOutlet UIButton* editEmailButton;
+
 @property (strong, nonatomic) IBOutlet UIView* mainSubView;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* topLayoutGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* bottomLayoutGuideConstraint;
@@ -31,6 +34,9 @@
 @property (strong, nonatomic) IBOutlet UILabel* contactName;
 @property (strong, nonatomic) IBOutlet UILabel* contactPhone;
 @property (strong, nonatomic) IBOutlet UILabel* contactEmail;
+
+@property (strong, nonatomic) UIPopoverController* phonePopover;
+@property (strong, nonatomic) UIPopoverController* emailPopover;
 
 @end
 
@@ -77,36 +83,38 @@
 //    [pickUpFormatter setTimeStyle:NSDateFormatterShortStyle];
     [pickUpFormatter setDateFormat:@"EEE, MMM d, yyyy, h:mm aaa"];
     
-    
-    
     //save values to ivar
     self.rentorNameAtt = requestManager.request.contact_name;
     self.rentorPhoneAtt = contactItem.phone;
     self.rentorEmailAtt = contactItem.email;
-    
-    //outlets
-    self.contactName.text = self.rentorNameAtt;
-    
-    if ([self.rentorPhoneAtt isEqualToString:@""] || !self.rentorPhoneAtt){
-        self.contactPhone.font = [UIFont boldSystemFontOfSize:14];
-        self.contactPhone.text = @"(Please provide a phone number)";
-        self.contactEmail.textColor = [UIColor redColor];
-    }else{
-        self.contactPhone.font = [UIFont systemFontOfSize:14];
-        self.contactPhone.text = self.rentorPhoneAtt;
-        self.contactEmail.textColor = [UIColor blackColor];
-    }
-    
-    if ([self.rentorEmailAtt isEqualToString:@""] || !self.rentorEmailAtt){
+
+    //validate and email address and disguise it for secure display
+    NSString* emailForDisplay = [EQRDataStructure emailValidationAndSecureForDisplay:self.rentorEmailAtt];
+    if (emailForDisplay == nil){
         self.contactEmail.font = [UIFont boldSystemFontOfSize:14];
         self.contactEmail.text = @"(Please provide an email address)";
         self.contactEmail.textColor = [UIColor redColor];
     }else{
         self.contactEmail.font = [UIFont systemFontOfSize:14];
-        self.contactEmail.text = self.rentorEmailAtt;
+        self.contactEmail.text = emailForDisplay;
         self.contactEmail.textColor = [UIColor blackColor];
     }
     
+    //validate and phone and disguise it for secure display
+    NSString* phoneForDisplay = [EQRDataStructure phoneValidationAndSecureForDisplay:self.rentorPhoneAtt];
+    if (phoneForDisplay == nil){
+        self.contactPhone.font = [UIFont boldSystemFontOfSize:14];
+        self.contactPhone.text = @"(Please provide a phone number)";
+        self.contactPhone.textColor = [UIColor redColor];
+    }else{
+        self.contactPhone.font = [UIFont systemFontOfSize:14];
+        self.contactPhone.text = phoneForDisplay;
+        self.contactPhone.textColor = [UIColor blackColor];
+    }
+    
+    //name
+    self.contactName.text = self.rentorNameAtt;
+
     //nsattributedstrings
     UIFont* smallFont = [UIFont boldSystemFontOfSize:10];
     UIFont* normalFont = [UIFont systemFontOfSize:12];
@@ -363,7 +371,36 @@
 
 -(IBAction)editPhoneNumber:(id)sender{
     
+    EQREnterPhoneVC* phoneVC = [[EQREnterPhoneVC alloc] initWithNibName:@"EQREnterPhoneVC" bundle:nil];
+    phoneVC.delegate = self;
     
+    self.phonePopover = [[UIPopoverController alloc] initWithContentViewController:phoneVC];
+    self.phonePopover.delegate = self;
+    [self.phonePopover setPopoverContentSize:CGSizeMake(320.f, 200.f)];
+    
+    CGRect thisRect = [self.editPhoneButton.superview.superview convertRect:self.editPhoneButton.frame fromCoordinateSpace:self.editPhoneButton.superview];
+    
+    [self.phonePopover presentPopoverFromRect:thisRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+
+-(void)phoneEntered:(NSString*)phoneNumber{
+    
+    //update local objects
+    self.contactPhone.text = phoneNumber;
+    self.rentorPhoneAtt = phoneNumber;
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    //____yikes!
+    requestManager.request.contactNameItem.phone = phoneNumber;
+    
+    //make change to contact db
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSArray* firstArray = @[@"key_id", requestManager.request.contact_foreignKey];
+    NSArray* secondArray = @[@"phone", phoneNumber];
+    NSArray* topArray = @[firstArray, secondArray];
+    [webData queryForStringWithLink:@"EQAlterPhoneInContact.php" parameters:topArray];
+    
+    [self.phonePopover dismissPopoverAnimated:YES];
+    self.phonePopover = nil;
 }
 
 
@@ -483,6 +520,21 @@
     }];
     
     return successOrNot;
+}
+
+
+#pragma mark - popover delegate methods
+
+-(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
+    
+    if (popoverController == self.phonePopover){
+        
+        self.phonePopover = nil;
+        
+    }else{
+        
+        self.emailPopover = nil;
+    }
 }
 
 

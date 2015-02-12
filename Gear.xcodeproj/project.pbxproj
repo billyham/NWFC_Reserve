@@ -86,6 +86,8 @@
 		542F5FFE192357AF001C28CA /* EQRCheckVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 542F5FFC192357AF001C28CA /* EQRCheckVCntrllr.xib */; };
 		5431456B197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54314569197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m */; };
 		5431456C197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5431456A197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib */; };
+		5433FCD21A8CB30500057B4F /* EQREnterPhoneVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5433FCD01A8CB30500057B4F /* EQREnterPhoneVC.m */; };
+		5433FCD31A8CB30500057B4F /* EQREnterPhoneVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5433FCD11A8CB30500057B4F /* EQREnterPhoneVC.xib */; };
 		5439B08D19AEC835007CC11C /* EQRInboxLeftTopVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439B08C19AEC835007CC11C /* EQRInboxLeftTopVC.m */; };
 		5439DCBD1A87363C006252E5 /* EQRScheduleNestedDateBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439DCBC1A87363C006252E5 /* EQRScheduleNestedDateBarCell.m */; };
 		5439DCC01A8739E9006252E5 /* EQRScheduleDateBarLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439DCBF1A8739E9006252E5 /* EQRScheduleDateBarLayout.m */; };
@@ -296,6 +298,9 @@
 		54314568197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRQuickViewPage1VCntrllr.h; sourceTree = "<group>"; };
 		54314569197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRQuickViewPage1VCntrllr.m; sourceTree = "<group>"; };
 		5431456A197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRQuickViewPage1VCntrllr.xib; sourceTree = "<group>"; };
+		5433FCCF1A8CB30500057B4F /* EQREnterPhoneVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREnterPhoneVC.h; sourceTree = "<group>"; };
+		5433FCD01A8CB30500057B4F /* EQREnterPhoneVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREnterPhoneVC.m; sourceTree = "<group>"; };
+		5433FCD11A8CB30500057B4F /* EQREnterPhoneVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREnterPhoneVC.xib; sourceTree = "<group>"; };
 		5439B08B19AEC835007CC11C /* EQRInboxLeftTopVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRInboxLeftTopVC.h; sourceTree = "<group>"; };
 		5439B08C19AEC835007CC11C /* EQRInboxLeftTopVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRInboxLeftTopVC.m; sourceTree = "<group>"; };
 		5439DCBB1A87363C006252E5 /* EQRScheduleNestedDateBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleNestedDateBarCell.h; sourceTree = "<group>"; };
@@ -710,6 +715,9 @@
 				54E2FDE41A88AF9B00B51D45 /* EQRPasswordEntryVC.h */,
 				54E2FDE51A88AF9B00B51D45 /* EQRPasswordEntryVC.m */,
 				54E2FDE61A88AF9B00B51D45 /* EQRPasswordEntryVC.xib */,
+				5433FCCF1A8CB30500057B4F /* EQREnterPhoneVC.h */,
+				5433FCD01A8CB30500057B4F /* EQREnterPhoneVC.m */,
+				5433FCD11A8CB30500057B4F /* EQREnterPhoneVC.xib */,
 			);
 			name = "shared nibs";
 			sourceTree = "<group>";
@@ -990,6 +998,7 @@
 				54E1D60B1A80C23C00B41121 /* EQREditorMiscListContentVC.xib in Resources */,
 				438EDCFB182B7ABE0090F882 /* Images.xcassets in Resources */,
 				54E2FDE81A88AF9B00B51D45 /* EQRPasswordEntryVC.xib in Resources */,
+				5433FCD31A8CB30500057B4F /* EQREnterPhoneVC.xib in Resources */,
 				54E046F41924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib in Resources */,
 				547D0B4C1A36E2890006EB92 /* EQREquipOptionsTableVC.xib in Resources */,
 				549BF3BD191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib in Resources */,
@@ -1043,6 +1052,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				54457ED11935B7B900E9061A /* EQRCheckCellContentVCntrllr.m in Sources */,
+				5433FCD21A8CB30500057B4F /* EQREnterPhoneVC.m in Sources */,
 				5464C0141A0A21A600469C45 /* EQREquipSelectionLayout.m in Sources */,
 				01FDEA96188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m in Sources */,
 				014F776D18E3B28F00C75D66 /* EQRScheduleNavBarCell.m in Sources */,

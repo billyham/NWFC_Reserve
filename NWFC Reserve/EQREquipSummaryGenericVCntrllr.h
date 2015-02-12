@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQREnterPhoneVC.h"
 
-@interface EQREquipSummaryGenericVCntrllr : UIViewController <UITextViewDelegate>
+@interface EQREquipSummaryGenericVCntrllr : UIViewController <UITextViewDelegate, EQREnterPhoneDelegate, UIPopoverControllerDelegate>
 
 //why did I add these if they never get used???
 //@property (nonatomic, strong) NSAttributedString* rentorNameAtt;
@@ -26,6 +27,8 @@
 @property (nonatomic, strong) NSTextStorage* summaryTextStorage;
 @property (nonatomic, strong) NSMutableAttributedString* summaryTotalAtt;
 
+//enterPhone delegate method
+-(void)phoneEntered:(NSString*)phoneNumber;
 
 @end
 

@@ -11,6 +11,8 @@
                 <outlet property="contactEmail" destination="7oP-rK-KDF" id="lXO-jo-dGK"/>
                 <outlet property="contactName" destination="pd1-EL-T0j" id="eh5-75-mPh"/>
                 <outlet property="contactPhone" destination="FSN-W9-6Ea" id="gey-8c-xB2"/>
+                <outlet property="editEmailButton" destination="c9q-eM-YhE" id="n2D-uf-Fhx"/>
+                <outlet property="editPhoneButton" destination="KD6-oR-24u" id="tol-dB-v6L"/>
                 <outlet property="mainSubView" destination="LHE-9d-j0d" id="UcS-ed-Idu"/>
                 <outlet property="summaryTextView" destination="b9I-CN-tW3" id="g4A-OT-uO1"/>
                 <outlet property="topLayoutGuideConstraint" destination="KGi-i2-gPf" id="GNK-TT-kKH"/>

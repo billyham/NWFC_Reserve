@@ -226,7 +226,7 @@
             NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName,
                                         paraStyle, NSParagraphStyleAttributeName,
                                         nil];
-            NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"   _____   %@  #%@\r", equipUniqueObj.name, equipUniqueObj.distinquishing_id] attributes:arrayAtt11];
+            NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"   __|__   %@  #%@\r", equipUniqueObj.name, equipUniqueObj.distinquishing_id] attributes:arrayAtt11];
             
             [self.summaryTotalAtt appendAttributedString:thisHereAttString];
         }
