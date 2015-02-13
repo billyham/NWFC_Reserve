@@ -387,6 +387,8 @@
     
     //update local objects
     self.contactPhone.text = phoneNumber;
+    self.contactPhone.textColor = [UIColor blackColor];
+    self.contactPhone.font = [UIFont systemFontOfSize:14];
     self.rentorPhoneAtt = phoneNumber;
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     //____yikes!
@@ -422,6 +424,8 @@
     
     //update local objects
     self.contactEmail.text = email;
+    self.contactEmail.textColor = [UIColor blackColor];
+    self.contactEmail.font = [UIFont systemFontOfSize:14];
     self.rentorEmailAtt = email;
     EQRScheduleRequestManager *requestManager = [EQRScheduleRequestManager sharedInstance];
     requestManager.request.contactNameItem.email = email;

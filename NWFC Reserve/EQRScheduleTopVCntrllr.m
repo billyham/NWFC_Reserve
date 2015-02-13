@@ -1407,7 +1407,7 @@
         
         NSString *stringFromDate = [EQRDataStructure dateAsStringSansTime:self.dateForShow];
         NSString *stringDateDayRemoved = [stringFromDate substringToIndex:7];
-        NSNumber *dayIndexAsNumber = [NSNumber numberWithInt:indexPath.row + 1];
+        NSNumber *dayIndexAsNumber = [NSNumber numberWithInt:(int)indexPath.row + 1];
         NSString *revisedStringDate = [NSString stringWithFormat:@"%@-%@", stringDateDayRemoved, dayIndexAsNumber];
         NSDate *thisDate = [EQRDataStructure dateWithoutTimeFromString:revisedStringDate];
         
@@ -1435,7 +1435,7 @@
             letterString = @"Su";
         }
         
-        NSString *dateString = [NSString stringWithFormat:@"%u", indexPath.row + 1];
+        NSString *dateString = [NSString stringWithFormat:@"%u", (int)indexPath.row + 1];
         
         //delete the datestring if the month doesn't extend that far
         if (!letterString){
