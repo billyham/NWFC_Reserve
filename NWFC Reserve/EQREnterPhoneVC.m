@@ -13,7 +13,7 @@
 @property (strong, nonatomic) IBOutlet UITextField *phoneArea;
 @property (strong, nonatomic) IBOutlet UITextField *phonePrefix;
 @property (strong, nonatomic) IBOutlet UITextField *phoneFour;
-@property (strong, nonatomic) IBOutlet UILabel *errorOnEntry;
+@property (strong, nonatomic) IBOutlet UILabel *labelWithError;
 
 @end
 
@@ -28,9 +28,7 @@
 
 
 -(IBAction)changeInTextField:(id)sender{
-    
-    NSLog(@"is this thing on?");
-    
+        
     NSInteger buttonTag = [sender tag];
     
     switch (buttonTag) {
@@ -65,11 +63,14 @@
     NSInteger thirdInt = [self.phoneFour.text length];
     
     if ((firstInt < 3) || (secondInt < 3) || (thirdInt < 4)){
-        [self.errorOnEntry setHidden:NO];
+        self.labelWithError.text = @"Please enter a valid phone number";
+        self.labelWithError.textColor = [UIColor redColor];
         
     }else{
         
-        [self.errorOnEntry setHidden:YES];
+        self.labelWithError.text = @"Enter a phone number";
+        self.labelWithError.textColor = [UIColor blackColor];
+        
         NSString* stringToReturn = [NSString stringWithFormat:@"%@-%@-%@", self.phoneArea.text, self.phonePrefix.text, self.phoneFour.text];
         [self.delegate phoneEntered:stringToReturn];
     }

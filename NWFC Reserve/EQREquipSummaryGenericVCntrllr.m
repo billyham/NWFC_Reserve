@@ -378,7 +378,7 @@
     self.phonePopover.delegate = self;
     [self.phonePopover setPopoverContentSize:CGSizeMake(320.f, 200.f)];
     
-    CGRect thisRect = [self.editPhoneButton.superview.superview convertRect:self.editPhoneButton.frame fromCoordinateSpace:self.editPhoneButton.superview];
+    CGRect thisRect = [self.editPhoneButton.superview.superview convertRect:self.editPhoneButton.frame fromView:self.editPhoneButton.superview];
     
     [self.phonePopover presentPopoverFromRect:thisRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
@@ -406,8 +406,39 @@
 
 -(IBAction)editEmailAddress:(id)sender{
     
+    EQREnterEmail* emailVC = [[EQREnterEmail alloc] initWithNibName:@"EQREnterEmail" bundle:nil];
+    emailVC.delegate = self;
     
+    self.emailPopover = [[UIPopoverController alloc] initWithContentViewController:emailVC];
+    self.emailPopover.delegate = self;
+    [self.emailPopover setPopoverContentSize:CGSizeMake(320.f, 200.f)];
+    
+    CGRect thisRect = [self.editEmailButton.superview.superview convertRect:self.editEmailButton.frame fromView:self.editEmailButton.superview];
+    
+    [self.emailPopover presentPopoverFromRect:thisRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
+
+-(void)emailEntered:(NSString *)email{
+    
+    //update local objects
+    self.contactEmail.text = email;
+    self.rentorEmailAtt = email;
+    EQRScheduleRequestManager *requestManager = [EQRScheduleRequestManager sharedInstance];
+    requestManager.request.contactNameItem.email = email;
+    
+    //make change to db
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    NSArray* firstArray = @[@"key_id", requestManager.request.contact_foreignKey];
+    NSArray* secondArray = @[@"email", email];
+    NSArray* topArray = @[firstArray, secondArray];
+    [webData queryForStringWithLink:@"EQAlterEmailInContact.php" parameters:topArray];
+    
+    [self.emailPopover dismissPopoverAnimated:YES];
+    self.emailPopover = nil;
+}
+
+
+
 
 
 #pragma mark - confirm button

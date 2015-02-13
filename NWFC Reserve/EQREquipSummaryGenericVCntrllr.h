@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "EQREnterPhoneVC.h"
+#import "EQREnterEmail.h"
 
-@interface EQREquipSummaryGenericVCntrllr : UIViewController <UITextViewDelegate, EQREnterPhoneDelegate, UIPopoverControllerDelegate>
+@interface EQREquipSummaryGenericVCntrllr : UIViewController <UITextViewDelegate, EQREnterPhoneDelegate, UIPopoverControllerDelegate, EQREnterEmailDelegate>
 
 //why did I add these if they never get used???
 //@property (nonatomic, strong) NSAttributedString* rentorNameAtt;
@@ -29,6 +30,9 @@
 
 //enterPhone delegate method
 -(void)phoneEntered:(NSString*)phoneNumber;
+
+//enterEmail delegte method
+-(void)emailEntered:(NSString *)email;
 
 @end
 

@@ -516,19 +516,31 @@
         return nil;
     }
     
-    NSString* emailForDisplay;
-    NSRange atRange = [email rangeOfString:@"@"];
-    NSRange dotRange = [email rangeOfString:@"."];
-    NSRange atRangeError = [[email substringFromIndex:atRange.location + 1] rangeOfString:@"@"];
-    NSRange dotRangeError = [[email substringFromIndex:dotRange.location + 1] rangeOfString:@"."];
-
-     //error when too many @ or . 's
-    if ((atRangeError.location != NSNotFound) || (dotRangeError.location != NSNotFound)){
+    //if it ends in @ or . call it out, or the following will crash it
+    NSString* finalCharacter = [email substringFromIndex:[email length] - 1];
+    if ([finalCharacter isEqualToString:@"@"] || [finalCharacter isEqualToString:@"."]){
         return nil;
     }
     
+    NSString* emailForDisplay;
+    NSRange atRange = [email rangeOfString:@"@"];
+    NSRange dotRange = [email rangeOfString:@"."];
+    
     //error when no @ or .
     if ((atRange.location == NSNotFound) || (dotRange.location == NSNotFound)){
+        return nil;
+    }
+    
+    //error if . comes before @
+    if (atRange.location > dotRange.location){
+        return nil;
+    }
+    
+    NSRange atRangeError = [[email substringFromIndex:atRange.location + 1] rangeOfString:@"@"];
+    NSRange dotRangeError = [[email substringFromIndex:dotRange.location + 1] rangeOfString:@"."];
+    
+    //error when too many @ or . 's
+    if ((atRangeError.location != NSNotFound) || (dotRangeError.location != NSNotFound)){
         return nil;
     }
     

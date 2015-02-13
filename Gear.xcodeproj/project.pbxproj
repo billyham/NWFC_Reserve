@@ -25,6 +25,8 @@
 		01735F1D193FAC38007E85C1 /* EQRCheckPrintPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 01735F1B193FAC38007E85C1 /* EQRCheckPrintPage.m */; };
 		01735F1E193FAC38007E85C1 /* EQRCheckPrintPage.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01735F1C193FAC38007E85C1 /* EQRCheckPrintPage.xib */; };
 		018EB75A18E5DCD500FBDEA0 /* EQREditorTopVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 018EB75818E5DCD500FBDEA0 /* EQREditorTopVCntrllr.m */; };
+		018EF5521A8D61E6008B7A0C /* EQREnterEmail.m in Sources */ = {isa = PBXBuildFile; fileRef = 018EF5501A8D61E6008B7A0C /* EQREnterEmail.m */; };
+		018EF5531A8D61E6008B7A0C /* EQREnterEmail.xib in Resources */ = {isa = PBXBuildFile; fileRef = 018EF5511A8D61E6008B7A0C /* EQREnterEmail.xib */; };
 		0190DAE218E234EA00B55D82 /* EQRScheduleNestedDayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0190DAE118E234EA00B55D82 /* EQRScheduleNestedDayCell.m */; };
 		01A4755A18EB9BDF006F32EB /* EQREditorDateVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 01A4755818EB9BDF006F32EB /* EQREditorDateVCntrllr.m */; };
 		01A4755B18EB9BDF006F32EB /* EQREditorDateVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01A4755918EB9BDF006F32EB /* EQREditorDateVCntrllr.xib */; };
@@ -197,6 +199,9 @@
 		01735F1C193FAC38007E85C1 /* EQRCheckPrintPage.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRCheckPrintPage.xib; sourceTree = "<group>"; };
 		018EB75718E5DCD500FBDEA0 /* EQREditorTopVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREditorTopVCntrllr.h; sourceTree = "<group>"; };
 		018EB75818E5DCD500FBDEA0 /* EQREditorTopVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EQREditorTopVCntrllr.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		018EF54F1A8D61E6008B7A0C /* EQREnterEmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREnterEmail.h; sourceTree = "<group>"; };
+		018EF5501A8D61E6008B7A0C /* EQREnterEmail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREnterEmail.m; sourceTree = "<group>"; };
+		018EF5511A8D61E6008B7A0C /* EQREnterEmail.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREnterEmail.xib; sourceTree = "<group>"; };
 		0190DAE018E234E900B55D82 /* EQRScheduleNestedDayCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleNestedDayCell.h; sourceTree = "<group>"; };
 		0190DAE118E234EA00B55D82 /* EQRScheduleNestedDayCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleNestedDayCell.m; sourceTree = "<group>"; };
 		01A4755718EB9BDF006F32EB /* EQREditorDateVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREditorDateVCntrllr.h; sourceTree = "<group>"; };
@@ -718,6 +723,9 @@
 				5433FCCF1A8CB30500057B4F /* EQREnterPhoneVC.h */,
 				5433FCD01A8CB30500057B4F /* EQREnterPhoneVC.m */,
 				5433FCD11A8CB30500057B4F /* EQREnterPhoneVC.xib */,
+				018EF54F1A8D61E6008B7A0C /* EQREnterEmail.h */,
+				018EF5501A8D61E6008B7A0C /* EQREnterEmail.m */,
+				018EF5511A8D61E6008B7A0C /* EQREnterEmail.xib */,
 			);
 			name = "shared nibs";
 			sourceTree = "<group>";
@@ -999,6 +1007,7 @@
 				438EDCFB182B7ABE0090F882 /* Images.xcassets in Resources */,
 				54E2FDE81A88AF9B00B51D45 /* EQRPasswordEntryVC.xib in Resources */,
 				5433FCD31A8CB30500057B4F /* EQREnterPhoneVC.xib in Resources */,
+				018EF5531A8D61E6008B7A0C /* EQREnterEmail.xib in Resources */,
 				54E046F41924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib in Resources */,
 				547D0B4C1A36E2890006EB92 /* EQREquipOptionsTableVC.xib in Resources */,
 				549BF3BD191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib in Resources */,
@@ -1136,6 +1145,7 @@
 				54BB2D1A19F77BB200CF4AE8 /* Gear.xcdatamodeld in Sources */,
 				54ECF1E81998A9D900298996 /* EQRQuickViewPage3VCntrllr.m in Sources */,
 				010E2CFB18E6293B000B7711 /* EQRColors.m in Sources */,
+				018EF5521A8D61E6008B7A0C /* EQREnterEmail.m in Sources */,
 				54882BD21900D588005A4D5A /* EQREditorRenterVCntrllr.m in Sources */,
 				5497F5031A1DCA79008A7E52 /* EQRClassPickerVC.m in Sources */,
 				0119D2FF18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m in Sources */,

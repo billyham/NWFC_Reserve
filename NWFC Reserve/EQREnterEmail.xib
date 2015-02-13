@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQREnterEmail">
+            <connections>
+                <outlet property="emailAddress" destination="Hwi-oT-9DZ" id="gPY-Sg-mQ1"/>
+                <outlet property="labelWithError" destination="kK8-FZ-mDV" id="Nqr-HC-Kjz"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Hwi-oT-9DZ">
+                    <rect key="frame" x="16" y="67" width="289" height="30"/>
+                    <color key="backgroundColor" red="0.92339652062847033" green="0.95954949941870349" blue="0.99919813871383667" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="289" id="2wc-9s-J4B"/>
+                        <constraint firstAttribute="height" constant="30" id="NNY-E3-Chi"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
+                </textField>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter an email address " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kK8-FZ-mDV">
+                    <rect key="frame" x="70" y="109" width="181" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="uqi-5f-BEn"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yvR-EU-TYl">
+                    <rect key="frame" x="141" y="19" width="38" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="8pB-qp-0fL"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                    <state key="normal" title="Enter">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="enterButton:" destination="-1" eventType="touchUpInside" id="jXe-YZ-6nv"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="kK8-FZ-mDV" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="109" id="Eec-rm-Sdu"/>
+                <constraint firstItem="Hwi-oT-9DZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="67" id="QMD-BI-rWx"/>
+                <constraint firstAttribute="centerX" secondItem="kK8-FZ-mDV" secondAttribute="centerX" id="bcm-w9-shB"/>
+                <constraint firstAttribute="centerX" secondItem="Hwi-oT-9DZ" secondAttribute="centerX" id="dyg-ZF-J29"/>
+                <constraint firstAttribute="centerX" secondItem="yvR-EU-TYl" secondAttribute="centerX" id="pNr-lm-omH"/>
+                <constraint firstItem="yvR-EU-TYl" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="19" id="sdA-H9-TAc"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="1" y="154"/>
+        </view>
+    </objects>
+</document>

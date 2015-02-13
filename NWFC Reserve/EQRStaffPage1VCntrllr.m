@@ -182,10 +182,8 @@
         self.passwordPopover = passPopover;
         self.passwordPopover.delegate = self;
         [self.passwordPopover setPopoverContentSize:CGSizeMake(320.f, 300.f)];
-
-        CGRect thisRect = self.kioskModeSwitch.frame;
         
-//        CGRect thisRect = [self.kioskModeSwitch.superview.superview convertRect:self.kioskModeSwitch.frame fromCoordinateSpace:self.kioskModeSwitch.superview];
+        CGRect thisRect = [self.kioskModeSwitch.superview.superview convertRect:self.kioskModeSwitch.frame fromView:self.kioskModeSwitch.superview];
         
         [self.passwordPopover presentPopoverFromRect:thisRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     }
