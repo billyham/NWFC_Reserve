@@ -380,7 +380,7 @@
     
     CGRect thisRect = [self.editPhoneButton.superview.superview convertRect:self.editPhoneButton.frame fromView:self.editPhoneButton.superview];
     
-    [self.phonePopover presentPopoverFromRect:thisRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self.phonePopover presentPopoverFromRect:thisRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
 }
 
 -(void)phoneEntered:(NSString*)phoneNumber{
@@ -417,7 +417,7 @@
     
     CGRect thisRect = [self.editEmailButton.superview.superview convertRect:self.editEmailButton.frame fromView:self.editEmailButton.superview];
     
-    [self.emailPopover presentPopoverFromRect:thisRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self.emailPopover presentPopoverFromRect:thisRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
 }
 
 -(void)emailEntered:(NSString *)email{

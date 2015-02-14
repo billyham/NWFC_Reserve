@@ -40,7 +40,7 @@
                             </connections>
                         </button>
                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b9I-CN-tW3">
-                            <rect key="frame" x="104" y="190" width="559" height="879"/>
+                            <rect key="frame" x="104" y="190" width="559" height="834"/>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="559" id="JUR-gF-nhA"/>
@@ -114,7 +114,7 @@
                         <constraint firstItem="7oP-rK-KDF" firstAttribute="top" secondItem="FSN-W9-6Ea" secondAttribute="bottom" constant="12" id="ECd-jH-cNZ"/>
                         <constraint firstItem="c9q-eM-YhE" firstAttribute="leading" secondItem="7oP-rK-KDF" secondAttribute="trailing" constant="17" id="F4s-oF-48k"/>
                         <constraint firstItem="9Pd-KJ-gcZ" firstAttribute="top" secondItem="LHE-9d-j0d" secondAttribute="top" constant="47" id="GZP-cf-eGf"/>
-                        <constraint firstAttribute="bottom" secondItem="b9I-CN-tW3" secondAttribute="bottom" constant="-45" id="IpM-Ah-Bb4"/>
+                        <constraint firstAttribute="bottom" secondItem="b9I-CN-tW3" secondAttribute="bottom" id="IpM-Ah-Bb4"/>
                         <constraint firstAttribute="centerX" secondItem="9Pd-KJ-gcZ" secondAttribute="centerX" id="Lgq-Td-19V"/>
                         <constraint firstItem="KD6-oR-24u" firstAttribute="top" secondItem="LHE-9d-j0d" secondAttribute="top" constant="130" id="P61-xN-5u8"/>
                         <constraint firstItem="b9I-CN-tW3" firstAttribute="leading" secondItem="FSN-W9-6Ea" secondAttribute="leading" id="dkI-BK-zy5"/>
