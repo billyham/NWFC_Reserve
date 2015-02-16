@@ -482,7 +482,7 @@
     [self.myMasterScheduleCollectionView reloadData];
     
     //send async method to webData after assigning self as the delegate
-    webData.delegateForSchedule = self;
+    webData.delegateDataFeed = self;
     
     //raise the is loading flag
     self.isLoadingEquipDataFlag = YES;
@@ -525,7 +525,7 @@
         //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
         //_________falsely showing equip joins from a previous month
         //_________remedy by disconnecting the webdata's delegate
-        self.myWebData.delegateForSchedule = nil;
+        self.myWebData.delegateDataFeed = nil;
     }
     
     //add a month the current month
@@ -582,7 +582,7 @@
         //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
         //_________falsely showing equip joins from a previous month
         //_________remedy by disconnecting the webdata's delegate
-        self.myWebData.delegateForSchedule = nil;
+        self.myWebData.delegateDataFeed = nil;
     }
     
     //subtract a month the current month
@@ -639,7 +639,7 @@
         //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
         //_________falsely showing equip joins from a previous month
         //_________remedy by disconnecting the webdata's delegate
-        self.myWebData.delegateForSchedule = nil;
+        self.myWebData.delegateDataFeed = nil;
     }
     
     //assign date to ivar
@@ -733,7 +733,7 @@
         //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
         //_________falsely showing equip joins from a previous month
         //_________remedy by disconnecting the webdata's delegate
-        self.myWebData.delegateForSchedule = nil;
+        self.myWebData.delegateDataFeed = nil;
     }
     
     //get date from the popover's content view controller, a public method
@@ -1407,7 +1407,7 @@
         
         NSString *stringFromDate = [EQRDataStructure dateAsStringSansTime:self.dateForShow];
         NSString *stringDateDayRemoved = [stringFromDate substringToIndex:7];
-        NSNumber *dayIndexAsNumber = [NSNumber numberWithInt:(int)indexPath.row + 1];
+        NSNumber *dayIndexAsNumber = [NSNumber numberWithLong:(indexPath.row + 1)];
         NSString *revisedStringDate = [NSString stringWithFormat:@"%@-%@", stringDateDayRemoved, dayIndexAsNumber];
         NSDate *thisDate = [EQRDataStructure dateWithoutTimeFromString:revisedStringDate];
         
@@ -1435,7 +1435,7 @@
             letterString = @"Su";
         }
         
-        NSString *dateString = [NSString stringWithFormat:@"%u", (int)indexPath.row + 1];
+        NSString *dateString = [NSString stringWithFormat:@"%lu", indexPath.row + 1];
         
         //delete the datestring if the month doesn't extend that far
         if (!letterString){

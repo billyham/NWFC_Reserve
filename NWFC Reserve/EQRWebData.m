@@ -51,7 +51,7 @@ const int intEQRTextElement = 10;
 
 @implementation EQRWebData
 
-@synthesize delegateForSchedule;
+@synthesize delegateDataFeed;
 
 
 #pragma mark - class methods
@@ -1746,11 +1746,11 @@ const int intEQRTextElement = 10;
 
 -(void)asyncDispatchWithObject:(id)currentThing{
     
-    if (self.delegateForSchedule != nil){
+    if (self.delegateDataFeed != nil){
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            [self.delegateForSchedule addScheduleTrackingItem:currentThing];
+            [self.delegateDataFeed addScheduleTrackingItem:currentThing];
         });
     } 
     

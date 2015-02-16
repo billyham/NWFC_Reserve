@@ -125,6 +125,10 @@
         //get ALL requests
     }else if ([selectionType isEqualToString:@"AllRequests"]){
         
+        //______!!!!!   need to change to asynchronous reponse. Start with a total number of returning items  !!!!!_____
+//        NSString* countOfRequests = [webData queryForStringWithLink:@"EQGetCountOfScheduleRequestsAll.php" parameters:nil];
+//        NSLog(@"this is the count of all requests as a string: %@", countOfRequests);
+        
         //set nav bar title (override nav bar title from nib)
         self.navigationItem.title = @"Archive";
         

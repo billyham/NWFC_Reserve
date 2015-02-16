@@ -19,10 +19,10 @@ typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
 
 @interface EQRWebData : NSObject <NSXMLParserDelegate>{
     
-    __weak id <EQRWebDataDelegate> delegateForSchedule;
+    __weak id <EQRWebDataDelegate> ddelegateDataFeed;
 }
 
-@property (nonatomic, weak) id <EQRWebDataDelegate> delegateForSchedule;
+@property (nonatomic, weak) id <EQRWebDataDelegate> delegateDataFeed;
 
 @property BOOL cancelTheScheduleDownloadFlag;
 
@@ -37,7 +37,7 @@ typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
 - (void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock;
 -(NSString*)queryForStringWithLink:(NSString*)link parameters:(NSArray*)para;
 
-//asynchronous methods
+//asynchronous methods, used in conjunction with WebData delegate
 -(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithBool)completeBlock;
 
 @end
@@ -46,5 +46,8 @@ typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
 @protocol EQRWebDataDelegate <NSObject>
 
 -(void)addScheduleTrackingItem:(id)currentThing;
+
+//______something else to think about (this is used in scheduleDisplayTopVC)
+// [self.myWebData.xmlParser abortParsing]
 
 @end
