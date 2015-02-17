@@ -15,11 +15,16 @@
 
 @interface EQRInboxLeftTableVC ()
 
-@property (strong, nonatomic) NSArray* arrayOfRequests;
+@property (strong, nonatomic) NSMutableArray* arrayOfRequests;
+@property NSInteger countOfUltimageReturnedItems;
+@property NSInteger indexOfLastReturnedItem;
+@property BOOL finishedAsyncDBCall;
 @property (strong, nonatomic) NSArray* searchResultArrayOfRequests;
 @property (strong, nonatomic) EQRScheduleRequestItem* chosenRequest;
 
 @property (strong, nonatomic) IBOutlet UISearchDisplayController* mySearechDisplayController;
+
+@property (strong, nonatomic) EQRWebData* myWebData;
 
 @end
 
@@ -91,10 +96,17 @@
 
 -(void)renewTheView{
     
+    //refresh or initiate the array of objects
+    if (!self.arrayOfRequests){
+        self.arrayOfRequests = [NSMutableArray arrayWithCapacity:1];
+    }
+    [self.arrayOfRequests removeAllObjects];
+    
     //load the local array ONLY with upcoming unconfirmed requests
     EQRWebData* webData = [EQRWebData sharedInstance];
-    
-    NSMutableArray* tempMuteArray = [[NSMutableArray alloc] initWithCapacity:1];
+    webData.delegateDataFeed = self;
+    self.myWebData = webData;
+
     
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -107,103 +119,62 @@
     NSArray* firstArray = [NSArray arrayWithObjects:@"request_date_begin", [dateFormatter stringFromDate:adjustedDate], nil];
     NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
     
+    self.indexOfLastReturnedItem = -1;
     
     //_________determine which selection was made from top VC (Inbox or Archive)
     NSString* selectionType = [delegateForLeftSide selectedInboxOrArchive];
     
     //get only needs confirmation
-    if ([selectionType isEqualToString:@"NeedsConfirmation"]){
+    if ([selectionType isEqualToString:@"NeedsConfirmation"]){  //get only inbox
         
-        [webData queryWithLink:@"EQGetScheduleRequestsUpcomingUnconfirmed.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        //set nav bar title (override nav bar title from nib)
+        self.navigationItem.title = @"Inbox";
+        
+        //__1__ get total count of items that will be ultimately be returned
+        NSString* countOfRequests = [webData queryForStringWithLink:@"EQGetCountOfRequestsUpcomingUnconfirmed.php" parameters:topArray];
+
+        self.countOfUltimageReturnedItems = [countOfRequests integerValue];
+        
+        //__2__ do asynchronous call to webData
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+        dispatch_async(queue, ^{
             
-            for (id object in muteArray){
+            [webData queryWithAsync:@"EQGetScheduleRequestsUpcomingUnconfirmed.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(BOOL isLoadingFlagUp) {
                 
-                [tempMuteArray addObject: object];
-            }
-        }];
+                //identify when loading is complete
+                self.finishedAsyncDBCall = isLoadingFlagUp;
+                
+                NSLog(@"loading is DONE!!");
+            }];
+        });
         
-        //get ALL requests
-    }else if ([selectionType isEqualToString:@"AllRequests"]){
-        
-        //______!!!!!   need to change to asynchronous reponse. Start with a total number of returning items  !!!!!_____
-//        NSString* countOfRequests = [webData queryForStringWithLink:@"EQGetCountOfScheduleRequestsAll.php" parameters:nil];
-//        NSLog(@"this is the count of all requests as a string: %@", countOfRequests);
-        
+    }else if ([selectionType isEqualToString:@"AllRequests"]){     //get ALL requests
+    
         //set nav bar title (override nav bar title from nib)
         self.navigationItem.title = @"Archive";
         
-        //populate array
-        [webData queryWithLink:@"EQGetScheduleRequestsAll.php" parameters:nil class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-            
-            for (id object in muteArray){
-                
-                [tempMuteArray addObject: object];
-            }
-        }];
+        //__1__ get total count of items that will be ultimately be returned
+        NSString* countOfRequests = [webData queryForStringWithLink:@"EQGetCountOfScheduleRequestsAll.php" parameters:nil];
+//        NSLog(@"this is the count of all requests as a string: %@", countOfRequests);
+        self.countOfUltimageReturnedItems = [countOfRequests integerValue];
         
-        //error handling
+        //__2__ do asynchronous call to webData
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+        dispatch_async(queue, ^{
+            
+            [webData queryWithAsync:@"EQGetScheduleRequestsAll.php" parameters:nil class:@"EQRScheduleRequestItem" completion:^(BOOL isLoadingFlagUp) {
+                
+                //identify when loading is complete
+                self.finishedAsyncDBCall = isLoadingFlagUp;
+                
+                NSLog(@"loading is DONE!!");
+            }];
+        });
+        
     }else{
         
         //error handling when failed to create delegate or idenfity the segue
     }
-    
-    
-//    NSLog(@"InboxLeftTableVC > renewTheView count of items in tempMuteArray: %u", [tempMuteArray count]);
-    
-    //______*****   sort on date   ******______
-    //alphabatize the list of unique items
-    NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        
-        
-        //__1.___________SORT BASED ON PICK UP DATE AND TIME_______________
-        //compile date and time
-//        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-//        NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-//        dateFormatter.locale = thisLocale;
-//        dateFormatter.dateFormat = @"yyyy-MM-dd";
-//        
-//        NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
-//        timeFormatter.locale = thisLocale;
-//        timeFormatter.dateFormat = @"HH:mm:ss";
-//        
-//        //convert dates and times to timestamp strings
-//        NSString* dateAsString1 = [NSString stringWithFormat:@"%@ %@",
-//                                   [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)obj1 request_date_begin]],
-//                                    [timeFormatter stringFromDate:[(EQRScheduleRequestItem*)obj1 request_time_begin]]];
-//        NSString* dateAsString2 = [NSString stringWithFormat:@"%@ %@",
-//                                   [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)obj2 request_date_begin]],
-//                                   [timeFormatter stringFromDate:[(EQRScheduleRequestItem*)obj2 request_time_begin]]];
-//        
-//        //convert timestamp strings back to dates
-//        NSDateFormatter* dateFormatter2 = [[NSDateFormatter alloc] init];
-//        dateFormatter2.locale = thisLocale;
-//        dateFormatter2.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-//        
-//        NSDate* date1 = [dateFormatter2 dateFromString:dateAsString1];
-//        NSDate* date2 = [dateFormatter2 dateFromString:dateAsString2];
-        
-        
-        //__2._____________SORT BASED ON TIME OF REQUEST_________________
-        
-        NSDate* date1 = [(EQRScheduleRequestItem*)obj1 time_of_request];
-        NSDate* date2 = [(EQRScheduleRequestItem*)obj2 time_of_request];
-        
-        //________
-        
-        return [date1 compare:date2];
-    }];
-    
-    
-    //reverse the ascending order to descending order
-    //_____There's probably a better way to do this reverse sorting...
-    NSMutableArray* tempMuteArrayAlphaDescending = [NSMutableArray arrayWithCapacity:1];
-    for (id item in tempMuteArrayAlpha){
-        
-        [tempMuteArrayAlphaDescending insertObject:item atIndex: 0];
-    }
-    
-    //assign array to ivar
-    self.arrayOfRequests = [NSArray arrayWithArray:tempMuteArrayAlphaDescending];
     
     //reload the table
     [self.tableView reloadData];
@@ -235,6 +206,41 @@
 }
 
 
+#pragma mark - webData dataFeedDelegate methods
+
+-(void)addScheduleTrackingItem:(id)currentThing{
+    
+//    NSLog(@"is in addScheduleTrackingItem method");
+    
+    [self.arrayOfRequests addObject:currentThing];
+    
+    //uptick on the index
+    self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
+    
+    //test to see if the cell is visible and needs data...
+    for (NSIndexPath* indexPath in [self.tableView indexPathsForVisibleRows]){
+        
+        if (self.indexOfLastReturnedItem == indexPath.row){
+            
+//            NSLog(@"Found a Matching indexpath to indexOfLastReturnedItem");
+            NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:self.indexOfLastReturnedItem inSection:0];
+            NSArray* rowsOfIndexPaths = @[newIndexPath];
+            
+            //delay the refresh, the object's don't appear in the array immediately
+            [self performSelector:@selector(delayedCallToRefreshCellUITableViewRowAnimation:) withObject:rowsOfIndexPaths afterDelay:0.25];
+        }
+    }
+}
+
+-(void)delayedCallToRefreshCellUITableViewRowAnimation:(NSArray*)indexPaths{
+    
+    [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+}
+
+
+//______something else to think about (this is used in scheduleDisplayTopVC)
+// [self.myWebData.xmlParser abortParsing]
+
 
 #pragma mark - Table view data source
 
@@ -264,7 +270,7 @@
     }else{
         
     // Return the number of rows in the section.
-    return [self.arrayOfRequests count];
+    return self.countOfUltimageReturnedItems;
     }
 }
 
@@ -295,65 +301,103 @@
     
         nameString = [(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] contact_name];
         
-    }else{
+        //__2.______________DISPLAY TIME OF REQUEST___________
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+        NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        dateFormatter.locale = thisLocale;
+        dateFormatter.dateFormat = @"EEEE, MMM d, yyyy - h:mm aaa";
         
-        nameString = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] contact_name];
+        NSString* dateString;
+        
+        //_______determine either search results table or normal table
+        if (tableView == self.searchDisplayController.searchResultsTableView) {
+            
+            dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
+            
+        }else{
+            
+            dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
+        }
+        
+        //string for title
+        NSString* titleString = [NSString stringWithFormat:@"%@\n Submitted: %@", nameString, dateString];
+        
+        //__________
+        
+        //assign title to cell
+        cell.textLabel.numberOfLines = 2;
+        cell.textLabel.text = titleString;
+        cell.textLabel.font = [UIFont systemFontOfSize:12];
+        
+    }else{  //is content table
+        
+        //determine if data has been loaded
+        if ([self.arrayOfRequests count] > indexPath.row){  //yes, indexed indicate is has arrived
+            
+            nameString = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] contact_name];
+
+            //__1.___________DISPLAY PICK UP DATE AND TIME____________
+            //get date in format
+            //    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            //    NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            //    dateFormatter.locale = thisLocale;
+            //    dateFormatter.dateFormat = @"EEEE, MMM d";
+            //
+            //    NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
+            //    timeFormatter.locale = thisLocale;
+            //    timeFormatter.dateFormat = @"h:mm aaa";
+            //
+            //    NSDate* beginDate = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] request_date_begin];
+            //    NSDate* beginTime = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] request_time_begin];
+            //    NSString* dateString = [dateFormatter stringFromDate:beginDate];
+            //    NSString* timeString = [timeFormatter stringFromDate:beginTime];
+            //
+            //    //string for title
+            //    NSString* titleString = [NSString stringWithFormat:@"%@\n For Pick Up: %@, %@", nameString, dateString, timeString];
+            
+            
+            
+            //__2.______________DISPLAY TIME OF REQUEST___________
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            dateFormatter.locale = thisLocale;
+            dateFormatter.dateFormat = @"EEEE, MMM d, yyyy - h:mm aaa";
+            
+            NSString* dateString;
+            
+            //_______determine either search results table or normal table
+            if (tableView == self.searchDisplayController.searchResultsTableView) {
+                
+                dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
+                
+            }else{
+                
+                dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
+            }
+            
+            //string for title
+            NSString* titleString = [NSString stringWithFormat:@"%@\n Submitted: %@", nameString, dateString];
+            
+            //__________
+            
+            //assign title to cell
+            cell.textLabel.numberOfLines = 2;
+            cell.textLabel.text = titleString;
+            cell.textLabel.font = [UIFont systemFontOfSize:12];
+            
+        }else{  // no, the data is not loaded yet
+            
+            NSString* titleString = @"Loading Data...";
+            
+            //assign title to cell
+            cell.textLabel.numberOfLines = 2;
+            cell.textLabel.text = titleString;
+            cell.textLabel.font = [UIFont systemFontOfSize:12];
+        }
+        
     }
     
-    //__1.___________DISPLAY PICK UP DATE AND TIME____________
-    //get date in format
-//    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-//    NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-//    dateFormatter.locale = thisLocale;
-//    dateFormatter.dateFormat = @"EEEE, MMM d";
-//    
-//    NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
-//    timeFormatter.locale = thisLocale;
-//    timeFormatter.dateFormat = @"h:mm aaa";
-//    
-//    NSDate* beginDate = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] request_date_begin];
-//    NSDate* beginTime = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] request_time_begin];
-//    NSString* dateString = [dateFormatter stringFromDate:beginDate];
-//    NSString* timeString = [timeFormatter stringFromDate:beginTime];
-//
-//    //string for title
-//    NSString* titleString = [NSString stringWithFormat:@"%@\n For Pick Up: %@, %@", nameString, dateString, timeString];
-
-    
-    
-    //__2.______________DISPLAY TIME OF REQUEST___________
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    dateFormatter.locale = thisLocale;
-    dateFormatter.dateFormat = @"EEEE, MMM d, yyyy - h:mm aaa";
-    
-    NSString* dateString;
-    
-    //_______determine either search results table or normal table
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        
-        dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
-        
-    }else{
-        
-        dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
-    }
-    
-    //string for title
-    NSString* titleString = [NSString stringWithFormat:@"%@\n Submitted: %@", nameString, dateString];
-    
-    //__________
-    
-    
-
-    //assign title to cell
-    cell.textLabel.numberOfLines = 2;
-    cell.textLabel.text = titleString;
-    cell.textLabel.font = [UIFont systemFontOfSize:12];
-    
-    // Configure the cell...
-    
-    return cell;
+return cell;
 }
 
 
@@ -403,6 +447,15 @@
     NSLog(@"this is the segue: %@", segue.identifier);
     
 
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated{
+    
+    //___!!!!  stop the async data loading...
+    [self.myWebData.xmlParser abortParsing];
+    
+    [super viewWillDisappear:animated];
 }
 
 

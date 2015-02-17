@@ -1698,6 +1698,20 @@
     }
 }
 
+#pragma mark - view disappear
+
+- (void)viewWillDisappear:(BOOL)animated{
+    
+    //___!!!!  stop the async data loading...
+    [self.myWebData.xmlParser abortParsing];
+    
+    //tell view to reload if it aborts loading
+    if (self.isLoadingEquipDataFlag){
+        self.aChangeWasMade = YES;
+    }
+    
+    [super viewWillDisappear:animated];
+}
 
 #pragma mark - memory warning
 
