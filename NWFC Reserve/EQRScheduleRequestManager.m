@@ -520,6 +520,7 @@
     if (!self.request.request_date_begin) self.request.request_date_begin = [NSDate date];
     if (!self.request.request_date_end) self.request.request_date_end = [NSDate date];
     if (!self.request.contact_name) self.request.contact_name = EQRErrorCode88888888;
+    if (!self.request.notes) self.request.notes = @"";
     
     //format the nsdates to a mysql compatible string
     NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];
@@ -557,6 +558,7 @@
     NSArray* ninthArray =[NSArray arrayWithObjects:@"contact_name", self.request.contact_name, nil];
     NSArray* tenthArray = [NSArray arrayWithObjects:@"renter_type", self.request.renter_type, nil];
     NSArray* eleventhArray = [NSArray arrayWithObjects:@"time_of_request", timeRequestString, nil];
+    NSArray* twelfthArray = [NSArray arrayWithObjects:@"notes", self.request.notes, nil];
     
     NSArray* bigArray = [NSArray arrayWithObjects:
                          firstArray,
@@ -570,6 +572,7 @@
                          ninthArray,
                          tenthArray,
                          eleventhArray,
+                         twelfthArray,
                          nil];
     
     EQRWebData* webData = [EQRWebData sharedInstance];

@@ -33,4 +33,7 @@
 
 -(NSString*)selectedInboxOrArchive;
 
+@optional
+-(NSDictionary*)getDateRange;
+
 @end

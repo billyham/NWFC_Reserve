@@ -197,26 +197,30 @@
     
     
     //set text in notes
-    NSArray* justKeyArray = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.key_id, nil];
-    NSArray* justTopArray = [NSArray arrayWithObjects:justKeyArray, nil];
-    NSMutableArray* tempMuteArrayJustKey = [NSMutableArray arrayWithCapacity:1];
-    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:justTopArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-        
-        for (EQRScheduleRequestItem* requestItem in muteArray){
-            
-            [tempMuteArrayJustKey addObject:requestItem];
-        }
-    }];
+//    NSArray* justKeyArray = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.key_id, nil];
+//    NSArray* justTopArray = [NSArray arrayWithObjects:justKeyArray, nil];
+//    NSMutableArray* tempMuteArrayJustKey = [NSMutableArray arrayWithCapacity:1];
+//    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:justTopArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+//        
+//        for (EQRScheduleRequestItem* requestItem in muteArray){
+//            
+//            [tempMuteArrayJustKey addObject:requestItem];
+//        }
+//    }];
+//    
+//    //error handling if no items are returned
+//    if ([tempMuteArrayJustKey count] > 0){
+//        self.privateRequestManager.request.notes = [[tempMuteArrayJustKey objectAtIndex:0] notes];
+//    }else{
+//        NSLog(@"InboxRightVC > renewTheViewWithRequest failed to find a matching request key id");
+//    }
+//    
+//    //_____set notes text
+//    self.notesView.text = self.privateRequestManager.request.notes;
     
-    //error handling if no items are returned
-    if ([tempMuteArrayJustKey count] > 0){
-        self.privateRequestManager.request.notes = [[tempMuteArrayJustKey objectAtIndex:0] notes];
-    }else{
-        NSLog(@"InboxRightVC > renewTheViewWithRequest failed to find a matching request key id");
-    }
+    //.... or.....
+    self.notesView.text = [self.myUserInfo objectForKey:@"notes"];
     
-    //set notes text
-    self.notesView.text = self.privateRequestManager.request.notes;
     
     //make notes view hot to touch
     UITapGestureRecognizer* tapGest = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openNotesEditor)];
@@ -250,6 +254,9 @@
     self.returnDateDate = [self.myUserInfo objectForKey:@"request_date_end"];
     self.pickUpTime = [self.myUserInfo objectForKey:@"request_time_begin"];
     self.returnTime = [self.myUserInfo objectForKey:@"request_time_end"];
+    
+    //set notes
+    self.notesView.text = [self.myUserInfo objectForKey:@"notes"];
     
     //add times to dates
     self.pickUpDateDate = [self.pickUpDateDate dateByAddingTimeInterval: [self.pickUpTime timeIntervalSinceReferenceDate]];
@@ -380,6 +387,7 @@
     if (!self.privateRequestManager.request.request_date_end) self.privateRequestManager.request.request_date_end = [NSDate date];
     if (!self.privateRequestManager.request.contact_name) self.privateRequestManager.request.contact_name = EQRErrorCode88888888;
     if (!self.privateRequestManager.request.time_of_request) self.privateRequestManager.request.time_of_request = [NSDate date];
+    if (!self.privateRequestManager.request.notes) self.privateRequestManager.request.notes = @"";
 
     
     //format the nsdates to a mysql compatible string
@@ -416,6 +424,7 @@
     NSArray* ninthArray =[NSArray arrayWithObjects:@"contact_name", self.privateRequestManager.request.contact_name, nil];
     NSArray* tenthArray = [NSArray arrayWithObjects:@"renter_type", self.privateRequestManager.request.renter_type, nil];
     NSArray* eleventhArray = [NSArray arrayWithObjects:@"time_of_request", timeRequestString, nil];
+    NSArray* twelfthArray = [NSArray arrayWithObjects:@"notes", self.privateRequestManager.request.notes, nil];
     
     NSArray* bigArray = [NSArray arrayWithObjects:
                          firstArray,
@@ -429,6 +438,7 @@
                          ninthArray,
                          tenthArray,
                          eleventhArray,
+                         twelfthArray,
                          nil];
     
     

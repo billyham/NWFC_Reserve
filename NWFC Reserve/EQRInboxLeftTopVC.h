@@ -11,4 +11,8 @@
 
 @interface EQRInboxLeftTopVC : UITableViewController <EQRInboxLeftTableDelegate>
 
+
+//InboxLeftTableVC delegate method
+-(NSString*)selectedInboxOrArchive;
+
 @end

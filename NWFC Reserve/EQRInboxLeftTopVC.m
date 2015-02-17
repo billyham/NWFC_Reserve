@@ -108,6 +108,13 @@
         self.segueSelectionType = @"AllRequests";
     }
     
+    if ([segue.identifier isEqualToString:@"pickupDateRange"]){
+        
+        self.segueSelectionType = @"pickupDateRange";
+        
+        //VC getting pushed is NOT EQRInboxLeftTableVC
+        return;
+    }
     
     //assign this class as the delegate for the presented VC
     EQRInboxLeftTableVC* viewController = [segue destinationViewController];
@@ -192,6 +199,9 @@
     return YES;
 }
 */
+
+
+#pragma mark - memory warning
 
 
 - (void)didReceiveMemoryWarning

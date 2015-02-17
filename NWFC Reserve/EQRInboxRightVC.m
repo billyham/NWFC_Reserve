@@ -500,6 +500,7 @@
     if (!self.myScheduleRequest.request_date_end) self.myScheduleRequest.request_date_end = [NSDate date];
     if (!self.myScheduleRequest.contact_name) self.myScheduleRequest.contact_name = EQRErrorCode88888888;
     if (!self.myScheduleRequest.time_of_request) self.myScheduleRequest.time_of_request = [NSDate date];
+    if (!self.myScheduleRequest.notes) self.myScheduleRequest.notes = @"";
     
     //convert date values to strings
     NSString* date_begin = [EQRDataStructure dateAsStringSansTime:self.myScheduleRequest.request_date_begin];
@@ -519,6 +520,7 @@
     NSArray* ninthArray =[NSArray arrayWithObjects:@"contact_name", self.myScheduleRequest.contact_name, nil];
     NSArray* tenthArray = [NSArray arrayWithObjects:@"renter_type", self.myScheduleRequest.renter_type, nil];
     NSArray* eleventhArray = [NSArray arrayWithObjects:@"time_of_request", timeStamp_string, nil];
+    NSArray* twelfthArray = [NSArray arrayWithObjects:@"notes", self.myScheduleRequest.notes, nil];
     
     NSArray* bigArray = [NSArray arrayWithObjects:
                          firstArray,
@@ -532,6 +534,7 @@
                          ninthArray,
                          tenthArray,
                          eleventhArray,
+                         twelfthArray,
                          nil];
     
     NSString* returnID = [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];

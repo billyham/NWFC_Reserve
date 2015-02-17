@@ -12,6 +12,7 @@
 #import "EQRGlobals.h"
 #import "EQREditorTopVCntrllr.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
+#import "EQRMiscJoin.h"
 #import "EQRCheckPrintPage.h"
 
 
@@ -82,8 +83,23 @@
         return;
     }
     
-    //a complete schedule reqeust object, the one to be copied
+    //a complete schedule request object, the one to be copied
     EQRScheduleRequestItem* currentRequestItem = [tempMuteArray objectAtIndex:0];
+    
+    NSArray* alphaArray = @[@"key_id", self.mykeyID];
+    NSArray* omegaArray = @[alphaArray];
+    __block NSMutableString* notesReturned = [NSMutableString stringWithString:EQRErrorCode88888888];
+    [webData queryWithLink:@"EQGetScheduleRequestNotes.php" parameters:omegaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray2) {
+        
+        if ([muteArray2 count] > 0){
+            [notesReturned setString:[(EQRScheduleRequestItem*)[muteArray2 objectAtIndex:0] notes]];
+        }
+    }];
+    
+    currentRequestItem.notes = notesReturned;
+    
+    //need to save note to userInfo dic
+    [self.userInfo setObject:notesReturned forKey:@"notes"];
     
     //get a new schedule request key_id, the proper way...
     NSString* myDeviceName = [[UIDevice currentDevice] name];
@@ -106,6 +122,7 @@
     NSString* time_begin_string = [timeStampFormatter stringFromDate:currentRequestItem.request_time_begin];
     NSString* time_end_string = [timeStampFormatter stringFromDate:currentRequestItem.request_time_end];
     
+    //_____!!!  need to add notes  !!!_____
     //set the properties of the newly registered schedule request
     NSArray* oneArray = [NSArray arrayWithObjects:@"key_id", newKeyID, nil];
     NSArray* twoArray = [NSArray arrayWithObjects:@"contact_foreignKey", currentRequestItem.contact_foreignKey, nil];
@@ -118,6 +135,7 @@
     NSArray* nineArray = [NSArray arrayWithObjects:@"request_date_end", date_end_string, nil];
     NSArray* tenArray = [NSArray arrayWithObjects:@"request_time_begin", time_begin_string, nil];
     NSArray* elevenArray = [NSArray arrayWithObjects:@"request_time_end", time_end_string, nil];
+    NSArray* twelveArray = [NSArray arrayWithObjects:@"notes", currentRequestItem.notes, nil];
     
     NSArray* topMostArray = [NSArray arrayWithObjects:
                              oneArray,
@@ -131,16 +149,14 @@
                              nineArray,
                              tenArray,
                              elevenArray,
+                             twelveArray,
                              nil];
     
-    NSString* returnString = [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:topMostArray];
+    [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:topMostArray];
     
-    NSLog(@"this is the returnString: %@", returnString);
+//    NSLog(@"this is the returnString: %@", returnString);
     
-
-
     //Get all of the equipment joins
-    
     NSArray* aArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.mykeyID, nil];
     NSArray* zArray = [NSArray arrayWithObjects:aArray, nil];
     NSMutableArray* tempMuteArray3 = [NSMutableArray arrayWithCapacity:1];
@@ -160,15 +176,31 @@
         NSArray* ceeArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", join.equipTitleItem_foreignKey, nil];
         NSArray* zeeArray = [NSArray arrayWithObjects:ayeArray, beeArray, ceeArray, nil];
         
-        NSString* resultFromNestedJoins = [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:zeeArray];
-        NSLog(@"resut from nested joins: %@", resultFromNestedJoins);
+        [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:zeeArray];
+//        NSLog(@"resut from nested joins: %@", resultFromNestedJoins);
     }
+    
+    
+    //_____!!!!!!   need to copy miscellaneous items  !!!!______
+    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:zArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray) {
+        
+        for (EQRMiscJoin* join in muteArray){
+            
+            NSArray* ayeArray = @[@"scheduleTracking_foreignKey", newKeyID];
+            NSArray* beeArray = @[@"name", join.name];
+            NSArray* zeeArray = @[ayeArray, beeArray];
+            
+            [webData queryForStringWithLink:@"EQSetNewMiscJoin.php" parameters:zeeArray];
+//            NSLog(@"result from Misc Joins: %@", resultFromMiscJoins);
+        }
+    }];
+    
     
     
     //replace the key_id in the userInfo
     [self.userInfo setValue:newKeyID forKey:@"key_ID"];
     
-    //the date should change...
+    //the date should change... bring up request editor to have the user enter new info...
     //show request editor
     if (self.fromItinerary == YES){
         

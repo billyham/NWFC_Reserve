@@ -11,6 +11,7 @@
 #import "EQRWebData.h"
 #import "EQRScheduleRequestItem.h"
 #import "EQRModeManager.h"
+#import "EQRDataStructure.h"
 
 
 @interface EQRInboxLeftTableVC ()
@@ -51,7 +52,10 @@
     //_______some messed up shit_______
     //bug in ios7 needs the retain count for the UISearchDisplayController bumped up by 1
     //http://stackoverflow.com/questions/19214286/having-a-zombie-issue-on-uisearchdisplaycontroller
-    self.mySearechDisplayController = (__bridge UISearchDisplayController*)(CFBridgingRetain(self.searchDisplayController));
+//    self.mySearchDisplayController = (__bridge  UISearchDisplayController *)(CFBridgingRetain(self.searchDisplayController));
+    //_______!!!!!! AAUUUGGGHHHH this is not a fix because it prevents self (the view controller) from getting deallocated properly
+    //________!!!!! as evidenced when rotating the device after opening the contact VC at least twice
+    //_______!!!!!!! Damned if you do, damned if you don't
  
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
@@ -122,7 +126,7 @@
     self.indexOfLastReturnedItem = -1;
     
     //_________determine which selection was made from top VC (Inbox or Archive)
-    NSString* selectionType = [delegateForLeftSide selectedInboxOrArchive];
+    NSString* selectionType = [self.delegateForLeftSide selectedInboxOrArchive];
     
     //get only needs confirmation
     if ([selectionType isEqualToString:@"NeedsConfirmation"]){  //get only inbox
@@ -170,6 +174,41 @@
                 NSLog(@"loading is DONE!!");
             }];
         });
+        
+    }else if ([selectionType isEqualToString:@"datesToTable"]){    //get request according to pickup date range
+    
+        //set nav bar title (override nav bar title from nib)
+        self.navigationItem.title = @"Archive";
+        
+        //get dates
+        NSDictionary* dateRange = [self.delegateForLeftSide getDateRange];
+        NSDate* beginDate = [dateRange objectForKey:@"beginDate"];
+        NSDate* endDate = [dateRange objectForKey:@"endDate"];
+        NSString* beginDateString = [EQRDataStructure dateAsStringSansTime:beginDate];
+        NSString* endDateString = [EQRDataStructure dateAsStringSansTime:endDate];
+        NSArray* firstArray = @[@"request_date_begin", beginDateString];
+        NSArray* secondArray = @[@"request_date_end", endDateString];
+        NSArray* topArray = @[firstArray, secondArray];
+
+        
+        //__1__ get total count of items that will be ultimately be returned
+        NSString* countOfRequests = [webData queryForStringWithLink:@"EQGetCountOfRequestsInDateRange.php" parameters:topArray];
+        //        NSLog(@"this is the count of all requests as a string: %@", countOfRequests);
+        self.countOfUltimageReturnedItems = [countOfRequests integerValue];
+        
+        //__2__ do asynchronous call to webData
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+        dispatch_async(queue, ^{
+            
+            [webData queryWithAsync:@"EQGetScheduleItemsCompleteInDateRange.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(BOOL isLoadingFlagUp) {
+                
+                //identify when loading is complete
+                self.finishedAsyncDBCall = isLoadingFlagUp;
+                
+                NSLog(@"loading is DONE!!");
+            }];
+        });
+        
         
     }else{
         
@@ -452,7 +491,7 @@ return cell;
 
 - (void)viewWillDisappear:(BOOL)animated{
     
-    //___!!!!  stop the async data loading...
+    //stop the async data loading
     [self.myWebData.xmlParser abortParsing];
     
     [super viewWillDisappear:animated];
