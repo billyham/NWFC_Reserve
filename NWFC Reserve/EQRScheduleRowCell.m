@@ -13,6 +13,7 @@
 #import "EQRScheduleNestedDayCell.h"
 #import "EQRScheduleRequestManager.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
+#import "EQRWebData.h"
 
 
 @interface EQRScheduleRowCell()
@@ -143,7 +144,7 @@
         }
     }
     
-    //assigin to locao ivar
+    //assign to loco ivar
     if (!self.temporaryArrayOfEquipUniqueJoins){
         
         self.temporaryArrayOfEquipUniqueJoins  = [NSMutableArray arrayWithCapacity:1];
@@ -235,6 +236,18 @@
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
 
+    //get the remaining join information...
+    NSArray* firstArray = @[@"key_id", [[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] scheduleTracking_foreignKey]];
+    NSArray* secondArray = @[firstArray];
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    __block EQRScheduleRequestItem* thisRequestItem;
+    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:secondArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        if ([muteArray count] > 0){
+             thisRequestItem = [muteArray objectAtIndex:0];
+        }
+    }];
+    
     
     //get the cgRect of the selected cell
     UICollectionViewCell* cellOfSelectedNestedDayCell = [collectionView cellForItemAtIndexPath:indexPath];
@@ -263,7 +276,7 @@
     
     //... OR just send the Key_id and let the editor object run a SQL script to pull the scheduleTrackingRequest
     
-    NSDictionary* dic = [NSDictionary dictionaryWithObjectsAndKeys:
+    NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                          [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] scheduleTracking_foreignKey], @"key_ID",
                          [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] contact_name], @"contact_name",
                           [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] renter_type], @"renter_type",
@@ -273,6 +286,22 @@
                          [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] request_time_end], @"request_time_end",
                          valueOfRect, @"rectOfSelectedNestedDayCell",
                          nil];
+    
+    //add in information from quickviewData request
+    if (thisRequestItem){
+        if (thisRequestItem.notes)[dic setObject:thisRequestItem.notes forKey:@"notes"];
+        if (thisRequestItem.classTitle_foreignKey) [dic setObject:thisRequestItem.classTitle_foreignKey forKey:@"classTitle_foreignKey"];
+        if (thisRequestItem.staff_confirmation_id) [dic setObject:thisRequestItem.staff_confirmation_id forKey:@"staff_confirmation_id"];
+        if (thisRequestItem.staff_confirmation_date) [dic setObject:thisRequestItem.staff_confirmation_date     forKey:@"staff_confirmation_date"];
+        if (thisRequestItem.staff_prep_id) [dic setObject:thisRequestItem.staff_prep_id forKey:@"staff_prep_id"];
+        if (thisRequestItem.staff_prep_date) [dic setObject:thisRequestItem.staff_prep_date forKey:@"staff_prep_date"];
+        if (thisRequestItem.staff_checkout_id) [dic setObject:thisRequestItem.staff_checkout_id forKey:@"staff_checkout_id"];
+        if (thisRequestItem.staff_checkout_date) [dic setObject:thisRequestItem.staff_checkout_date forKey:@"staff_checkout_date"];
+        if (thisRequestItem.staff_checkin_id) [dic setObject:thisRequestItem.staff_checkin_id forKey:@"staff_checkin_id"];
+        if (thisRequestItem.staff_checkin_date) [dic setObject:thisRequestItem.staff_checkin_date forKey:@"staff_checkin_date"];
+        if (thisRequestItem.staff_shelf_id) [dic setObject:thisRequestItem.staff_shelf_id forKey:@"staff_shelf_id"];
+        if (thisRequestItem.staff_shelf_date) [dic setObject:thisRequestItem.staff_shelf_date forKey:@"staff_shelf_date"];
+    }
     
     //sends note to scheduleTopVCntrllr
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentScheduleRowQuickView object:nil userInfo:dic];

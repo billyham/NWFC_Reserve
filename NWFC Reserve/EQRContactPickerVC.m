@@ -83,6 +83,10 @@
         return;
     }
     
+    //not using a substitute array...
+    self.shouldUseShowAllContactsButton = NO;
+    self.showAllContactsButtonHasBeenTapped = YES;
+    [self.addContactButton setTitle:@"Add New Contact" forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
     
     //get ALL contacts ???
     EQRWebData* webData = [EQRWebData sharedInstance];
@@ -271,6 +275,13 @@
 
 -(void)replaceDefaultContactArrayWith:(NSArray*)substituteContactArray{
 
+    if (!substituteContactArray){   //error handling and used when public is selected from renters
+        self.useSubstituteArrayFlag = NO;
+        [self renewTheView];
+        [self.tableView reloadData];
+        return;
+    }
+    
     //______raise the flag
     //_____to insure renew the view doesn't override the substitute array
     self.useSubstituteArrayFlag = YES;

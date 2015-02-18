@@ -860,37 +860,37 @@
                 self.classArray = nil;
                 [self.classListTable reloadData];
                 self.contactNameArray = nil;
-//                [self.nameListTable reloadData];
-                
-                //_____populate with list of ALL names in database____?
-                //instantiate mute array
-                NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-                
-                EQRWebData* webData2 = [EQRWebData sharedInstance];
-                
-                //pull a list of all names
-                [webData2 queryWithLink:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-                    
-                    for (id obj in muteArray){
-                        
-                        [tempMuteArray  addObject:obj];
-                    }
-                }];
-                
-                //alphabatize the list
-                NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-                    
-                    NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
-                    NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
-                    
-                    return [string1 compare:string2];
-                    
-                }];
-                
-                self.contactNameArray = tempMuteArrayAlpha;
-                
-                //hand array to contactPickerVC
-                [self.myContactPickerVC replaceDefaultContactArrayWith:self.contactNameArray];
+
+//                //_____populate with list of ALL names in database____?
+//                //instantiate mute array
+//                NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+//                
+//                EQRWebData* webData2 = [EQRWebData sharedInstance];
+//                
+//                //pull a list of all names
+//                [webData2 queryWithLink:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+//                    
+//                    for (id obj in muteArray){
+//                        
+//                        [tempMuteArray  addObject:obj];
+//                    }
+//                }];
+//                
+//                //alphabatize the list
+//                NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+//                    
+//                    NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
+//                    NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
+//                    
+//                    return [string1 compare:string2];
+//                    
+//                }];
+//                
+//                self.contactNameArray = tempMuteArrayAlpha;
+//                
+//                //hand array to contactPickerVC
+//                [self.myContactPickerVC replaceDefaultContactArrayWith:self.contactNameArray];
+                [self.myContactPickerVC replaceDefaultContactArrayWith:nil];
                 
                 //********  reveal name list  **********
                 [self.myContactPickerVC.view setHidden:NO];

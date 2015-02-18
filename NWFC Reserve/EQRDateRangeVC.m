@@ -45,7 +45,12 @@
 
 -(IBAction)receiveReturnDate:(id)sender{
     
-    self.dateReturnSelectionFlag = YES;
+    NSComparisonResult compareResult = [self.pickUpPicker.date compare:self.returnPicker.date];
+    
+    if (compareResult == NSOrderedDescending){
+        
+        [self.pickUpPicker setDate:self.returnPicker.date animated:YES];
+    }
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{

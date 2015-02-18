@@ -346,7 +346,7 @@
     //date formats
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    dateFormatter.dateFormat = @"EEEE, MMM d";
+    dateFormatter.dateFormat = @"EEE, MMM d, yyyy";
     
     NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
     timeFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -354,7 +354,7 @@
     
     NSDateFormatter* submitFormatter = [[NSDateFormatter alloc] init];
     submitFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    submitFormatter.dateFormat = @"EEEE, MMM d, h:mm aaa";
+    submitFormatter.dateFormat = @"EEEE, MMM d, yyyy, h:mm aaa";
     
     NSString* pickUpDateString = [dateFormatter stringFromDate:self.myScheduleRequest.request_date_begin];
     NSString* pickUpTimeString = [timeFormatter stringFromDate:self.myScheduleRequest.request_time_begin];
@@ -1043,8 +1043,57 @@
     
     //assign target for datDatePicker's actions
     [self.myDayDateVC.saveButton addTarget:self action:@selector(receiveNewPickupDate) forControlEvents:UIControlEventTouchUpInside];
+    [self.myDayDateVC.showOrHideExtendedButton addTarget:self action:@selector(showExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
+    
+}
+
+-(IBAction)showExtendedDate:(id)sender{
+    
+    //    NSLog(@"showOrHide action fires with class: %@", [[self.theDatePopOver contentViewController] class]);
     
     
+    //change to Extended view
+    EQREditorExtendedDateVC* myDateViewController = [[EQREditorExtendedDateVC alloc] initWithNibName:@"EQREditorExtendedDateVC" bundle:nil];
+    CGSize thisSize = CGSizeMake(600.f, 570.f);
+    
+    [self.myDayDatePicker setPopoverContentSize:thisSize animated:YES];
+    [self.myDayDatePicker setContentViewController:myDateViewController animated:YES];
+    
+    [myDateViewController.saveButton addTarget:self action:@selector(receiveNewPickupDate)
+                              forControlEvents:UIControlEventTouchUpInside];
+    [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(returnToStandardDate:) forControlEvents:UIControlEventTouchUpInside];
+    
+    //need to set the date and time
+    myDateViewController.pickupDateField.date = self.myScheduleRequest.request_date_begin;
+    myDateViewController.pickupTimeField.date = self.myScheduleRequest.request_time_begin;
+    myDateViewController.returnDateField.date = self.myScheduleRequest.request_date_end;
+    myDateViewController.returnTimeField.date = self.myScheduleRequest.request_time_end;
+    
+    
+    //assign content VC as ivar (necessary, because VCs always need to be retained)
+    self.myDayDateVC = myDateViewController;
+}
+
+
+-(void)returnToStandardDate:(id)sender{
+    
+    //change to regular day view
+    EQREditorDateVCntrllr* myDateViewController = [[EQREditorDateVCntrllr alloc] initWithNibName:@"EQREditorDateVCntrllr" bundle:nil];
+    CGSize thisSize = CGSizeMake(320.f, 570.f);
+    
+    [self.myDayDatePicker setPopoverContentSize:thisSize animated:YES];
+    [self.myDayDatePicker setContentViewController:myDateViewController animated:YES];
+    
+    [myDateViewController.saveButton addTarget:self action:@selector(receiveNewPickupDate)
+                              forControlEvents:UIControlEventTouchUpInside];
+    [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(showExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
+    
+    //need to set the date
+    myDateViewController.pickupDateField.date = self.myScheduleRequest.request_date_begin;
+    myDateViewController.returnDateField.date = self.myScheduleRequest.request_date_end;
+    
+    //assign content VC as ivar
+    self.myDayDateVC = myDateViewController;
 }
 
 

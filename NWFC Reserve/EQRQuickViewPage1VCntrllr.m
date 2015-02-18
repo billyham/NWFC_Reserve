@@ -72,50 +72,64 @@
     //____abort if no key_id exists
     if (key_id == nil) return;
     
-    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", key_id, nil];
-    NSArray* secondArray = [NSArray arrayWithObject:firstArray];
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:secondArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-        
-        //should just be one object...
-        for (EQRScheduleRequestItem* object in muteArray){
-            
-            [tempMuteArray addObject:object];
-        }
-    }];
     
-    if ([tempMuteArray count] > 0){
-        
-        self.myScheduleRequestItem = [tempMuteArray objectAtIndex:0];
-        
-    } else {
-        
-        //______error handling when no item is returned
-    }
+    //assign info from userInfo to self.myScheduleRequestItem
+    EQRScheduleRequestItem *newRequestItem = [[EQRScheduleRequestItem alloc] init];
+    newRequestItem.key_id = key_id;
+    if ([self.myUserData objectForKey:@"notes"]) newRequestItem.notes = [self.myUserData objectForKey:@"notes"];
+    if ([self.myUserData objectForKey:@"classTitle_foreignKey"]) newRequestItem.classTitle_foreignKey = [self.myUserData objectForKey:@"classTitle_foreignKey"];
+    if ([self.myUserData objectForKey:@"staff_confirmation_id"]) newRequestItem.staff_confirmation_id = [self.myUserData objectForKey:@"staff_confirmation_id"];
+    if ([self.myUserData objectForKey:@"staff_confirmation_date"]) newRequestItem.staff_confirmation_date = [self.myUserData objectForKey:@"staff_confirmation_date"];
+    if ([self.myUserData objectForKey:@"staff_prep_id"]) newRequestItem.staff_prep_id = [self.myUserData objectForKey:@"staff_prep_id"];
+    if ([self.myUserData objectForKey:@"staff_prep_date"]) newRequestItem.staff_prep_date = [self.myUserData objectForKey:@"staff_prep_date"];
+    if ([self.myUserData objectForKey:@"staff_checkout_id"]) newRequestItem.staff_checkout_id = [self.myUserData objectForKey:@"staff_checkout_id"];
+    if ([self.myUserData objectForKey:@"staff_checkout_date"]) newRequestItem.staff_checkout_date = [self.myUserData objectForKey:@"staff_checkout_date"];
+    if ([self.myUserData objectForKey:@"staff_checkin_id"]) newRequestItem.staff_checkin_id = [self.myUserData objectForKey:@"staff_checkin_id"];
+    if ([self.myUserData objectForKey:@"staff_checkin_date"]) newRequestItem.staff_checkin_date = [self.myUserData objectForKey:@"staff_checkin_date"];
+    if ([self.myUserData objectForKey:@"staff_shelf_id"]) newRequestItem.staff_shelf_id = [self.myUserData objectForKey:@"staff_shelf_id"];
+    if ([self.myUserData objectForKey:@"staff_shelf_date"]) newRequestItem.staff_shelf_date = [self.myUserData objectForKey:@"staff_shelf_date"];
     
-    NSLog(@"this is the classTitle_foreignKey: %@",self.myScheduleRequestItem.classTitle_foreignKey);
+    self.myScheduleRequestItem = newRequestItem;
+
+    
+//    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", key_id, nil];
+//    NSArray* secondArray = [NSArray arrayWithObject:firstArray];
+//    EQRWebData* webData = [EQRWebData sharedInstance];
+//    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+//    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:secondArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+//        
+//        //should just be one object...
+//        for (EQRScheduleRequestItem* object in muteArray){
+//            
+//            [tempMuteArray addObject:object];
+//        }
+//    }];
+//    
+//    if ([tempMuteArray count] > 0){
+//        
+//        self.myScheduleRequestItem = [tempMuteArray objectAtIndex:0];
+//        
+//    } else {
+//        
+//        //______error handling when no item is returned
+//    }
+    
+    
+    
     
     //also get class title if a titleKey exists
     if (self.myScheduleRequestItem.classTitle_foreignKey){
         
-        NSLog(@"step one");
-        
         if ((![self.myScheduleRequestItem.classTitle_foreignKey isEqualToString:@""]) && (![self.myScheduleRequestItem.classTitle_foreignKey isEqualToString:EQRErrorCode88888888])){
-        
-            NSLog(@"step two");
             
+            EQRWebData* webData = [EQRWebData sharedInstance];
             NSArray* ayaArray = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequestItem.classTitle_foreignKey, nil];
             NSArray* beeArray = [NSArray arrayWithObjects:ayaArray, nil];
             NSString* classTitleString = [webData queryForStringWithLink:@"EQGetClassCatalogTitleWithKey.php" parameters:beeArray];
             self.classCatalogTitle = classTitleString;
-            NSLog(@"set classCatalogTitle: %@", classTitleString);
         }
     }
-    
-    
     //_______asynchronously???
-    
 }
 
 

@@ -561,6 +561,9 @@
         self.temporaryDicFromQuickView = nil;
     }
     
+    NSMutableDictionary* dicAlso = [NSMutableDictionary dictionaryWithCapacity:1];
+
+    
     EQRScheduleRequestItem* myItem;
     for (EQRScheduleRequestItem* thisItem in self.arrayOfScheduleRequests){
         
@@ -571,27 +574,58 @@
             
             myItem = thisItem;
             
+            
+            //get the remaining join information...
+            NSArray* firstArray = @[@"key_id", myItem.key_id];
+            NSArray* secondArray = @[firstArray];
+            EQRWebData* webData = [EQRWebData sharedInstance];
+            __block EQRScheduleRequestItem* thisRequestItem;
+            [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:secondArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+                
+                if ([muteArray count] > 0){
+                    thisRequestItem = [muteArray objectAtIndex:0];
+                }
+            }];
+            
+            
+            //add in information from quickviewData request
+            if (thisRequestItem){
+                if (thisRequestItem.notes)[dicAlso setObject:thisRequestItem.notes forKey:@"notes"];
+                if (thisRequestItem.classTitle_foreignKey) [dicAlso setObject:thisRequestItem.classTitle_foreignKey forKey:@"classTitle_foreignKey"];
+                if (thisRequestItem.staff_confirmation_id) [dicAlso setObject:thisRequestItem.staff_confirmation_id forKey:@"staff_confirmation_id"];
+                if (thisRequestItem.staff_confirmation_date) [dicAlso setObject:thisRequestItem.staff_confirmation_date     forKey:@"staff_confirmation_date"];
+                if (thisRequestItem.staff_prep_id) [dicAlso setObject:thisRequestItem.staff_prep_id forKey:@"staff_prep_id"];
+                if (thisRequestItem.staff_prep_date) [dicAlso setObject:thisRequestItem.staff_prep_date forKey:@"staff_prep_date"];
+                if (thisRequestItem.staff_checkout_id) [dicAlso setObject:thisRequestItem.staff_checkout_id forKey:@"staff_checkout_id"];
+                if (thisRequestItem.staff_checkout_date) [dicAlso setObject:thisRequestItem.staff_checkout_date forKey:@"staff_checkout_date"];
+                if (thisRequestItem.staff_checkin_id) [dicAlso setObject:thisRequestItem.staff_checkin_id forKey:@"staff_checkin_id"];
+                if (thisRequestItem.staff_checkin_date) [dicAlso setObject:thisRequestItem.staff_checkin_date forKey:@"staff_checkin_date"];
+                if (thisRequestItem.staff_shelf_id) [dicAlso setObject:thisRequestItem.staff_shelf_id forKey:@"staff_shelf_id"];
+                if (thisRequestItem.staff_shelf_date) [dicAlso setObject:thisRequestItem.staff_shelf_date forKey:@"staff_shelf_date"];
+            }
+            
             //undo the adjustment to the time difference
-//            //adjust the time by adding 9 hours... or 8 hours
-//            float secondsForOffset = 28800;    //this is 9 hours = 32400;
-//            myItem.request_time_begin = [myItem.request_time_begin dateByAddingTimeInterval:secondsForOffset];
-//            myItem.request_time_end = [myItem.request_time_end dateByAddingTimeInterval:secondsForOffset];
+            //            //adjust the time by adding 9 hours... or 8 hours
+            //            float secondsForOffset = 28800;    //this is 9 hours = 32400;
+            //            myItem.request_time_begin = [myItem.request_time_begin dateByAddingTimeInterval:secondsForOffset];
+            //            myItem.request_time_end = [myItem.request_time_end dateByAddingTimeInterval:secondsForOffset];
             
         }
     }
     
     //instantiate with details
     NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                         [[note userInfo] objectForKey: @"key_ID"],@"key_ID",
-                         myItem.contact_name , @"contact_name",
-                         myItem.renter_type, @"renter_type",
-                         myItem.request_date_begin, @"request_date_begin",
-                         myItem.request_date_end, @"request_date_end",
-                         myItem.request_time_begin, @"request_time_begin",
-                         myItem.request_time_end, @"request_time_end",
-                         nil];
+                                [[note userInfo] objectForKey: @"key_ID"],@"key_ID",
+                                myItem.contact_name , @"contact_name",
+                                myItem.renter_type, @"renter_type",
+                                myItem.request_date_begin, @"request_date_begin",
+                                myItem.request_date_end, @"request_date_end",
+                                myItem.request_time_begin, @"request_time_begin",
+                                myItem.request_time_end, @"request_time_end",
+                                nil];
     
-
+    [dic addEntriesFromDictionary:dicAlso];
+    
     //undo the adjustment to the time difference
     //adjust the time by adding 9 hours... or 8 hours
     float secondsForOffset = 0 * 2;    //this is 9 hours = 32400, this is 8 hour = 28800;
@@ -607,7 +641,7 @@
     [quickViewPage3 initialSetupWithKeyID:[[note userInfo] objectForKey: @"key_ID"] andUserInfoDic:dic];
     quickViewPage3.fromItinerary = YES;
     
-//    NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
+    //    NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
 //    CGRect selectedRect = [valueOfRect CGRectValue];
     
     //_____presenting the popover must be delayed (why?????)

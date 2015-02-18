@@ -284,6 +284,19 @@
     self.privateRequestManager.request.request_date_begin = self.pickUpDateDate;
     self.privateRequestManager.request.request_date_end = self.returnDateDate;
     
+    self.privateRequestManager.request.notes = [self.myUserInfo objectForKey:@"notes"];
+    self.privateRequestManager.request.staff_confirmation_id = [self.myUserInfo objectForKey:@"staff_confirmation_id"];
+    self.privateRequestManager.request.staff_confirmation_date = [self.myUserInfo objectForKey:@"staff_confirmation_date"];
+    self.privateRequestManager.request.staff_prep_id = [self.myUserInfo objectForKey:@"staff_prep_id"];
+    self.privateRequestManager.request.staff_prep_date = [self.myUserInfo objectForKey:@"staff_prep_date"];
+    self.privateRequestManager.request.staff_checkout_id = [self.myUserInfo objectForKey:@"staff_checkout_id"];
+    self.privateRequestManager.request.staff_checkout_date = [self.myUserInfo objectForKey:@"staff_checkout_date"];
+    self.privateRequestManager.request.staff_checkin_id = [self.myUserInfo objectForKey:@"staff_checkin_id"];
+    self.privateRequestManager.request.staff_checkin_date = [self.myUserInfo objectForKey:@"staff_checkin_date"];
+    self.privateRequestManager.request.staff_shelf_id = [self.myUserInfo objectForKey:@"staff_shelf_id"];
+    self.privateRequestManager.request.staff_shelf_date = [self.myUserInfo objectForKey:@"staff_shelf_date"];
+    
+    
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSArray* arrayWithKey = [NSArray arrayWithObjects:@"key_id",[userInfo objectForKey:@"key_ID"], nil];
     NSArray* topArrayWithKey = [NSArray arrayWithObject:arrayWithKey];
@@ -342,7 +355,7 @@
     
     NSDateFormatter* dateFormatterLookinNice = [[NSDateFormatter alloc] init];
     dateFormatterLookinNice.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    dateFormatterLookinNice.dateFormat = @"EEE, MMM d, h:mm a";
+    dateFormatterLookinNice.dateFormat = @"EEE, MMM d, yyyy, h:mm a";
     
     //set date labels
     self.pickupDateField.text = [dateFormatterLookinNice stringFromDate:self.pickUpDateDate];
