@@ -88,7 +88,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     
-    NSLog(@"this is the did select method with section: %u  and row: %u",(int)indexPath.section, (int)indexPath.row);
+//    NSLog(@"this is the did select method with section: %u  and row: %u",(int)indexPath.section, (int)indexPath.row);
     
     
     

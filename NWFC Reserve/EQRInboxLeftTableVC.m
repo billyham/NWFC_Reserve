@@ -332,111 +332,141 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    //name
+    //nsattributedstrings
+    UIFont* smallFont = [UIFont systemFontOfSize:10];
+    UIFont* normalFont = [UIFont systemFontOfSize:12];
+    UIFont* boldFont = [UIFont boldSystemFontOfSize:14];
+    UIFont* extraBoldFont = [UIFont boldSystemFontOfSize:17];
+    NSDictionary* smallFontDictionary = @{NSFontAttributeName:smallFont};
+    NSDictionary* normalFontDictionary = @{NSFontAttributeName:normalFont};
+    NSDictionary* boldFontDictionary = @{NSFontAttributeName:boldFont};
+    NSDictionary* boldClassDictionary = @{NSFontAttributeName:boldFont, NSForegroundColorAttributeName:[UIColor blueColor]};
+    NSDictionary* extraBoldDictionary = @{NSFontAttributeName:extraBoldFont};
+    
+    //the strings
     NSString* nameString;
+    NSString* dateString1;
+    NSString* timeString1;
+    
+    //the attributed strings
+    NSMutableAttributedString *totalAttString = [[NSMutableAttributedString alloc] init];
+    NSMutableAttributedString* classStringAttPrefix = [[NSMutableAttributedString alloc] initWithString:@"" attributes:normalFontDictionary];
+    NSMutableAttributedString* classStringAtt = [[NSMutableAttributedString alloc] initWithString:@"" attributes:boldClassDictionary];
+    
+    //the date and time formatters
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dateFormatter.locale = thisLocale;
+    dateFormatter.dateFormat = @"EEEE, MMM d, yyyy - h:mm aaa";
+    
+    NSDateFormatter* dateFormatter1 = [[NSDateFormatter alloc] init];
+    NSLocale* thisLocale1 = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dateFormatter1.locale = thisLocale1;
+    dateFormatter1.dateFormat = @"EEEE, MMM d, yyyy";
+    
+    NSDateFormatter* timeFormatter1 = [[NSDateFormatter alloc] init];
+    timeFormatter1.locale = thisLocale1;
+    timeFormatter1.dateFormat = @"h:mm aaa";
+    
     
     //_______determine either search results table or normal table
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-    
+    if (tableView == self.searchDisplayController.searchResultsTableView) {         //search results!!!
+        
         nameString = [(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] contact_name];
         
-        //__2.______________DISPLAY TIME OF REQUEST___________
-        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-        NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-        dateFormatter.locale = thisLocale;
-        dateFormatter.dateFormat = @"EEEE, MMM d, yyyy - h:mm aaa";
+        NSDate* beginDate = [(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] request_date_begin];
+        NSDate* beginTime = [(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] request_time_begin];
+        dateString1 = [dateFormatter1 stringFromDate:beginDate];
+        timeString1 = [timeFormatter1 stringFromDate:beginTime];
         
-        NSString* dateString;
+        //__1B.___________CLASS (if it exists)_________
+        //_______!!!!!!   search box cells are the wrong size, too small. For now, leave out classes    !!!!!________
+//        if ([(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] classTitle_foreignKey]){
+//            if ((![[(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] classTitle_foreignKey] isEqualToString:@""]) &&
+//                (![[(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] classTitle_foreignKey] isEqualToString:EQRErrorCode88888888])){
+//                
+//                NSAttributedString* classStringAttPrefixAppendage = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\nClass: "] attributes:normalFontDictionary];
+//                NSAttributedString* classStringAttAppendage = [[NSAttributedString alloc] initWithString:[(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] title] attributes:boldClassDictionary];
+//                
+//                [classStringAttPrefix appendAttributedString:classStringAttPrefixAppendage];
+//                [classStringAtt appendAttributedString:classStringAttAppendage];
+//            }
+//        }
         
-        //_______determine either search results table or normal table
-        if (tableView == self.searchDisplayController.searchResultsTableView) {
-            
-            dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
-            
-        }else{
-            
-            dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
-        }
-        
-        //string for title
-        NSString* titleString = [NSString stringWithFormat:@"%@\n Submitted: %@", nameString, dateString];
-        
-        //__________
-        
-        //assign title to cell
-        cell.textLabel.numberOfLines = 2;
-        cell.textLabel.text = titleString;
-        cell.textLabel.font = [UIFont systemFontOfSize:12];
-        
-    }else{  //is content table
+    } else {                                                                            //is content table
         
         //determine if data has been loaded
         if ([self.arrayOfRequests count] > indexPath.row){  //yes, indexed indicate is has arrived
             
             nameString = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] contact_name];
-
-            //__1.___________DISPLAY PICK UP DATE AND TIME____________
-            //get date in format
-            //    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-            //    NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-            //    dateFormatter.locale = thisLocale;
-            //    dateFormatter.dateFormat = @"EEEE, MMM d";
-            //
-            //    NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
-            //    timeFormatter.locale = thisLocale;
-            //    timeFormatter.dateFormat = @"h:mm aaa";
-            //
-            //    NSDate* beginDate = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] request_date_begin];
-            //    NSDate* beginTime = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] request_time_begin];
-            //    NSString* dateString = [dateFormatter stringFromDate:beginDate];
-            //    NSString* timeString = [timeFormatter stringFromDate:beginTime];
-            //
-            //    //string for title
-            //    NSString* titleString = [NSString stringWithFormat:@"%@\n For Pick Up: %@, %@", nameString, dateString, timeString];
             
+            NSDate* beginDate = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] request_date_begin];
+            NSDate* beginTime = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] request_time_begin];
+            dateString1 = [dateFormatter1 stringFromDate:beginDate];
+            timeString1 = [timeFormatter1 stringFromDate:beginTime];
             
-            
-            //__2.______________DISPLAY TIME OF REQUEST___________
-            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-            NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-            dateFormatter.locale = thisLocale;
-            dateFormatter.dateFormat = @"EEEE, MMM d, yyyy - h:mm aaa";
-            
-            NSString* dateString;
-            
-            //_______determine either search results table or normal table
-            if (tableView == self.searchDisplayController.searchResultsTableView) {
-                
-                dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
-                
-            }else{
-                
-                dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
+            //__1B.___________CLASS (if it exists)_________
+            if ([(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] title]){
+                if (![[(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] title] isEqualToString:@""]){
+                    
+                    NSAttributedString* classStringAttPrefixAppendage = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\nClass: "] attributes:normalFontDictionary];
+                    NSAttributedString* classStringAttAppendage = [[NSAttributedString alloc] initWithString:[(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] title] attributes:boldClassDictionary];
+                    
+                    [classStringAttPrefix appendAttributedString:classStringAttPrefixAppendage];
+                    [classStringAtt appendAttributedString:classStringAttAppendage];
+                }
             }
-            
-            //string for title
-            NSString* titleString = [NSString stringWithFormat:@"%@\n Submitted: %@", nameString, dateString];
-            
-            //__________
-            
-            //assign title to cell
-            cell.textLabel.numberOfLines = 2;
-            cell.textLabel.text = titleString;
-            cell.textLabel.font = [UIFont systemFontOfSize:12];
             
         }else{  // no, the data is not loaded yet
             
             NSString* titleString = @"Loading Data...";
             
             //assign title to cell
-            cell.textLabel.numberOfLines = 2;
+            cell.textLabel.numberOfLines = 4;
             cell.textLabel.text = titleString;
             cell.textLabel.font = [UIFont systemFontOfSize:12];
+            
+            return cell;
         }
-        
     }
     
-return cell;
+    //__1.__________ NAME_________
+    NSAttributedString* nameStringAtt = [[NSAttributedString alloc] initWithString:nameString attributes:extraBoldDictionary];
+    [totalAttString appendAttributedString:nameStringAtt];
+    
+    //__1A.__________RENTER TYPE__________
+    
+    //__1B.___________CLASS_________
+    [totalAttString appendAttributedString:classStringAttPrefix];
+    [totalAttString appendAttributedString:classStringAtt];
+    
+    //__C.______PICK UP DATE_______
+    NSAttributedString* combinedDateStringPrefixAtt = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\nOut: "] attributes:smallFontDictionary];
+    NSAttributedString* combinedDateStringAtt = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@, ", dateString1] attributes:boldFontDictionary];
+    NSAttributedString* combinedDateStringSuffixAtt = [[NSAttributedString alloc] initWithString:timeString1 attributes:normalFontDictionary];
+    [totalAttString appendAttributedString:combinedDateStringPrefixAtt];
+    [totalAttString appendAttributedString:combinedDateStringAtt];
+    [totalAttString appendAttributedString:combinedDateStringSuffixAtt];
+    
+    
+    //__3.______________DISPLAY TIME OF REQUEST___________
+    //            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    //            NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    //            dateFormatter.locale = thisLocale;
+    //            dateFormatter.dateFormat = @"EEEE, MMM d, yyyy";  // - h:mm aaa
+    //
+    //            NSString* dateString = [dateFormatter stringFromDate:[(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] time_of_request]];
+    //            NSAttributedString* titleStringAttPrefix = [[NSAttributedString alloc] initWithString:@"\n" attributes:normalFontDictionary];
+    //
+    //            NSAttributedString* titleStringAtt = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"Submitted: %@", dateString] attributes:smallFontDictionary];
+    //            [totalAttString appendAttributedString:titleStringAttPrefix];
+    //            [totalAttString appendAttributedString:titleStringAtt];
+    
+    //assign title to cell
+    cell.textLabel.numberOfLines = 4;
+    cell.textLabel.attributedText = totalAttString;
+    
+    return cell;
 }
 
 

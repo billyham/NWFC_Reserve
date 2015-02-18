@@ -46,6 +46,7 @@
     newRequest.station_id = [self.station_id copy];
     newRequest.notes = [self.notes copy];
     
+    newRequest.title = [self.title copy];
     newRequest.showAllEquipmentFlag = self.showAllEquipmentFlag;
     newRequest.allowSameDayFlag = self.allowSameDayFlag;
     newRequest.allowConflictFlag = self.allowConflictFlag;

@@ -794,6 +794,12 @@ const int intEQRTextElement = 10;
         return;
     }
     
+    if ([elementName isEqualToString:@"title"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
     
     //properties for servcie issues (and EquipUniqueItem objects)
     if ([elementName isEqualToString:@"issue_short_name"]){
@@ -1490,6 +1496,17 @@ const int intEQRTextElement = 10;
         if ([self.currentThing respondsToSelector:@selector(notes)]){
             
             [(EQRScheduleRequestItem*)self.currentThing setNotes:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"title"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(title)]){
+            
+            [(EQRScheduleRequestItem*)self.currentThing setTitle:self.currentValue];
             
             self.currentValue = nil;
         }
