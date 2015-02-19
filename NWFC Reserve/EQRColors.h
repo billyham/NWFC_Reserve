@@ -32,6 +32,8 @@ extern NSString* EQRColorIssueDescriptive;
 extern NSString* EQRColorIssueMinor;
 extern NSString* EQRColorIssueSerious;
 
+extern NSString* EQRColorDemoMode;
+
 
 @interface EQRColors : NSObject
 

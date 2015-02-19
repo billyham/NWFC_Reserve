@@ -19,6 +19,7 @@
 #import "EQRHeaderCellTemplate.h"
 #import "EQRModeManager.h"
 #import "EQREquipOptionsTableVC.h"
+#import "EQRColors.h"
 
 @interface EQREquipSelectionGenericVCntrllr ()
 
@@ -136,7 +137,8 @@
         self.navigationItem.prompt = @"!!! DEMO MODE !!!";
         
         //set color of navigation bar
-        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        EQRColors* colors = [EQRColors sharedInstance];
+        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
         
     }else{
         

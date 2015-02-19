@@ -12,6 +12,7 @@
 #import "EQRScheduleRequestItem.h"
 #import "EQRModeManager.h"
 #import "EQRDataStructure.h"
+#import "EQRColors.h"
 
 
 @interface EQRInboxLeftTableVC ()
@@ -24,6 +25,7 @@
 @property (strong, nonatomic) EQRScheduleRequestItem* chosenRequest;
 
 @property (strong, nonatomic) IBOutlet UISearchDisplayController* mySearechDisplayController;
+@property (strong, nonatomic) IBOutlet UISearchBar *mySearchBar;
 
 @property (strong, nonatomic) EQRWebData* myWebData;
 
@@ -75,7 +77,8 @@
         self.navigationItem.prompt = @"!!! DEMO MODE !!!";
         
         //set color of navigation bar
-        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        EQRColors* colors = [EQRColors sharedInstance];
+        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
         
     }else{
         
@@ -85,15 +88,14 @@
         //set color of navigation bar
         self.navigationController.navigationBar.barTintColor = nil;
     }
-    
-    
-    
+
     [super viewWillAppear:animated];
 }
 
 
 -(void)viewDidAppear:(BOOL)animated{
-    
+
+
     
 }
 
@@ -152,7 +154,7 @@
             }];
         });
         
-    }else if ([selectionType isEqualToString:@"AllRequests"]){     //get ALL requests
+    }else if ([selectionType isEqualToString:@"AllRequestsByName"]){     //get ALL requests
     
         //set nav bar title (override nav bar title from nib)
         self.navigationItem.title = @"Archive";
@@ -175,6 +177,28 @@
             }];
         });
         
+    }else if ([selectionType isEqualToString:@"AllRequestsByClassTitle"]){
+        
+        //set the search bar placeholder text
+        self.mySearchBar.placeholder = @"Search by Class";
+        
+        //set nav bar title (override nav bar title from nib)
+        self.navigationItem.title = @"Archive";
+        
+        NSString* countOfRequests = [webData queryForStringWithLink:@"EQGetCountOfScheduleRequestsAll.php" parameters:nil];
+        self.countOfUltimageReturnedItems = [countOfRequests integerValue];
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+        dispatch_async(queue, ^{
+            
+            [webData queryWithAsync:@"EQGetScheduleRequestsAll.php" parameters:nil class:@"EQRScheduleRequestItem" completion:^(BOOL isLoadingFlagUp) {
+                
+                //identify when loading is complete
+                self.finishedAsyncDBCall = isLoadingFlagUp;
+            }];
+        });
+
+    
     }else if ([selectionType isEqualToString:@"datesToTable"]){    //get request according to pickup date range
     
         //set nav bar title (override nav bar title from nib)
@@ -228,7 +252,18 @@
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
     
-    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"contact_name contains[c] %@", searchText];
+    NSPredicate *resultPredicate;
+    
+    NSString* selectionType = [self.delegateForLeftSide selectedInboxOrArchive];
+    if ([selectionType isEqualToString:@"AllRequestsByClassTitle"]){
+        
+        resultPredicate = [NSPredicate predicateWithFormat:@"title contains[c] %@", searchText];
+        
+    }else{
+        
+        resultPredicate = [NSPredicate predicateWithFormat:@"contact_name contains[c] %@", searchText];
+    }
+    
     self.searchResultArrayOfRequests = [self.arrayOfRequests filteredArrayUsingPredicate:resultPredicate];
 }
 
@@ -372,6 +407,9 @@
     //_______determine either search results table or normal table
     if (tableView == self.searchDisplayController.searchResultsTableView) {         //search results!!!
         
+        //this seems like a weird place to put the row heigh, but it works
+        tableView.rowHeight = 80.f;
+        
         nameString = [(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] contact_name];
         
         NSDate* beginDate = [(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] request_date_begin];
@@ -380,18 +418,17 @@
         timeString1 = [timeFormatter1 stringFromDate:beginTime];
         
         //__1B.___________CLASS (if it exists)_________
-        //_______!!!!!!   search box cells are the wrong size, too small. For now, leave out classes    !!!!!________
-//        if ([(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] classTitle_foreignKey]){
-//            if ((![[(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] classTitle_foreignKey] isEqualToString:@""]) &&
-//                (![[(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] classTitle_foreignKey] isEqualToString:EQRErrorCode88888888])){
-//                
-//                NSAttributedString* classStringAttPrefixAppendage = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\nClass: "] attributes:normalFontDictionary];
-//                NSAttributedString* classStringAttAppendage = [[NSAttributedString alloc] initWithString:[(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] title] attributes:boldClassDictionary];
-//                
-//                [classStringAttPrefix appendAttributedString:classStringAttPrefixAppendage];
-//                [classStringAtt appendAttributedString:classStringAttAppendage];
-//            }
-//        }
+        if ([(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] classTitle_foreignKey]){
+            if ((![[(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] classTitle_foreignKey] isEqualToString:@""]) &&
+                (![[(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] classTitle_foreignKey] isEqualToString:EQRErrorCode88888888])){
+                
+                NSAttributedString* classStringAttPrefixAppendage = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\nClass: "] attributes:normalFontDictionary];
+                NSAttributedString* classStringAttAppendage = [[NSAttributedString alloc] initWithString:[(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] title] attributes:boldClassDictionary];
+                
+                [classStringAttPrefix appendAttributedString:classStringAttPrefixAppendage];
+                [classStringAtt appendAttributedString:classStringAttAppendage];
+            }
+        }
         
     } else {                                                                            //is content table
         

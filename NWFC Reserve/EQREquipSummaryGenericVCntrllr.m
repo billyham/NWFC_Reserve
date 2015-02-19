@@ -20,6 +20,7 @@
 #import "EQRDataStructure.h"
 #import "EQRModeManager.h"
 #import "EQRMiscJoin.h"
+#import "EQRColors.h"
 
 @interface EQREquipSummaryGenericVCntrllr ()
 
@@ -303,7 +304,8 @@
         self.navigationItem.prompt = @"!!! DEMO MODE !!!";
         
         //set color of navigation bar
-        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        EQRColors* colors = [EQRColors sharedInstance];
+        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
         
     }else{
         

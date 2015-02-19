@@ -225,7 +225,8 @@
         self.navigationItem.prompt = @"";
         
         //set color of navigation bar
-        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        EQRColors* colors = [EQRColors sharedInstance];
+        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
         
     }else{
         
@@ -1322,7 +1323,7 @@
     //get cell's equipUniqueKey, titleKey, buttonRect and button
     NSString* equipTitleItem_foreignKey = [infoDictionary objectForKey:@"equipTitleItem_foreignKey"];
     NSString* equipUniqueItem_foreignKey = [infoDictionary objectForKey:@"equipUniqueItem_foreignKey"];
-    CGRect buttonRect = [(UIButton*)[infoDictionary objectForKey:@"distButton"] frame];
+//    CGRect buttonRect = [(UIButton*)[infoDictionary objectForKey:@"distButton"] frame];
     UIButton* thisButton = (UIButton*)[infoDictionary objectForKey:@"distButton"];
     
     //create content VC
@@ -1338,14 +1339,16 @@
     popOver.delegate = self;
     self.distIDPopover = popOver;
     
-    //    CGRect fixedRect1 = [thisButton.superview convertRect:buttonRect fromView:thisButton];
-    CGRect fixedRect2 = [thisButton.superview.superview convertRect:buttonRect fromView:thisButton.superview];
+    CGRect fixedRect2 = [thisButton.superview.superview convertRect:thisButton.frame fromView:thisButton.superview];
     CGRect fixedRect3 = [thisButton.superview.superview.superview convertRect:fixedRect2 fromView:thisButton.superview.superview];
-    CGRect fixedrect4 = [thisButton.superview.superview.superview.superview convertRect:fixedRect3 fromView:thisButton.superview.superview.superview];
-    CGRect fixedRect5 = [thisButton.superview.superview.superview.superview.superview convertRect:fixedrect4 fromView:thisButton.superview.superview.superview.superview];
+    CGRect fixedRect4 = [thisButton.superview.superview.superview.superview convertRect:fixedRect3 fromView:thisButton.superview.superview.superview];
+    CGRect fixedRect5 = [thisButton.superview.superview.superview.superview.superview convertRect:fixedRect4 fromView:thisButton.superview.superview.superview.superview];
+    CGRect fixedRect6 = [thisButton.superview.superview.superview.superview.superview.superview convertRect:fixedRect5 fromView:thisButton.superview.superview.superview.superview.superview];
+    CGRect fixedRect7 = [thisButton.superview.superview.superview.superview.superview.superview.superview convertRect:fixedRect6 fromView:thisButton.superview.superview.superview.superview.superview.superview];
+    
     
     //present popover
-    [self.distIDPopover presentPopoverFromRect:fixedRect5 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self.distIDPopover presentPopoverFromRect:fixedRect7 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
 

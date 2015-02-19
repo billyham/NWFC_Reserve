@@ -204,7 +204,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
-                            <tableViewSection headerTitle="Requests Needing Confirmation" id="SKV-cX-DJr">
+                            <tableViewSection headerTitle="Upcoming Requests" id="SKV-cX-DJr">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="DJF-g9-mIT" style="IBUITableViewCellStyleDefault" id="H2M-fN-odL">
                                         <rect key="frame" x="0.0" y="126" width="320" height="44"/>
@@ -237,7 +237,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Sorted by Time of Request" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Uc9-at-ZBM">
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Search by Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Uc9-at-ZBM">
                                                     <rect key="frame" x="15" y="0.0" width="270" height="43"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -247,12 +247,32 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="1km-hA-Moz" kind="push" identifier="AllRequests" id="oNi-Ze-s1k"/>
+                                            <segue destination="1km-hA-Moz" kind="push" identifier="AllRequestsByName" id="oNi-Ze-s1k"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell tag="1" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="L0H-wC-2G7" style="IBUITableViewCellStyleDefault" id="QRq-5H-XpV">
+                                        <rect key="frame" x="0.0" y="232" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QRq-5H-XpV" id="Ifq-D3-14x">
+                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Search by Class Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="L0H-wC-2G7">
+                                                    <rect key="frame" x="15" y="0.0" width="270" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="1km-hA-Moz" kind="push" identifier="AllRequestsByClassTitle" id="EcS-Vh-EIh"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="Search by Dates" id="yAN-7p-cwK">
+                            <tableViewSection headerTitle="Date Range" id="yAN-7p-cwK">
                                 <cells>
                                     <tableViewCell tag="1" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="5Y8-C1-yNV" style="IBUITableViewCellStyleDefault" id="clN-dz-44Z">
                                         <rect key="frame" x="0.0" y="232" width="320" height="44"/>
@@ -423,6 +443,7 @@
                         <barButtonItem key="backBarButtonItem" title="Inbox" id="iOs-Pe-pvE"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="mySearchBar" destination="adB-nf-BEg" id="pJi-UX-XqL"/>
                         <outlet property="searchDisplayController" destination="uwy-Qo-YZd" id="gdW-HT-pHq"/>
                     </connections>
                 </tableViewController>
@@ -1271,6 +1292,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="2TS-fB-jar"/>
+        <segue reference="EcS-Vh-EIh"/>
     </inferredMetricsTieBreakers>
 </document>

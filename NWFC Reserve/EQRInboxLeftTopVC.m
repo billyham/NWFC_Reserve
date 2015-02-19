@@ -9,6 +9,7 @@
 #import "EQRInboxLeftTopVC.h"
 #import "EQRInboxLeftTableVC.h"
 #import "EQRModeManager.h"
+#import "EQRColors.h"
 
 @interface EQRInboxLeftTopVC ()
 
@@ -53,7 +54,8 @@
         self.navigationItem.prompt = @"!!! DEMO MODE !!!";
         
         //set color of navigation bar
-        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        EQRColors* colors = [EQRColors sharedInstance];
+        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
         
     }else{
         
@@ -103,9 +105,14 @@
         self.segueSelectionType = @"NeedsConfirmation";
     }
     
-    if ([segue.identifier isEqualToString:@"AllRequests"]){
+    if ([segue.identifier isEqualToString:@"AllRequestsByName"]){
         
-        self.segueSelectionType = @"AllRequests";
+        self.segueSelectionType = @"AllRequestsByName";
+    }
+    
+    if ([segue.identifier isEqualToString:@"AllRequestsByClassTitle"]){
+        
+        self.segueSelectionType = @"AllRequestsByClassTitle";
     }
     
     if ([segue.identifier isEqualToString:@"pickupDateRange"]){

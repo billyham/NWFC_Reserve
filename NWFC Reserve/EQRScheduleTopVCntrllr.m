@@ -377,7 +377,8 @@
         self.navigationItem.prompt = @"!!! DEMO MODE !!!";
         
         //set color of navigation bar
-        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        EQRColors* colors = [EQRColors sharedInstance];
+        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
         
     }else{
         
@@ -1435,7 +1436,7 @@
             letterString = @"Su";
         }
         
-        NSString *dateString = [NSString stringWithFormat:@"%d", indexPath.row + 1];
+        NSString *dateString = [NSString stringWithFormat:@"%ld", indexPath.row + 1];
         
         //delete the datestring if the month doesn't extend that far
         if (!letterString){

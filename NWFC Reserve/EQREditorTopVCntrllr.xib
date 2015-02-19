@@ -109,19 +109,6 @@
                         <action selector="showDateVCntrllr:" destination="-1" eventType="touchUpInside" id="5sp-c9-06U"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="azt-mV-ixn">
-                    <rect key="frame" x="361" y="79" width="46" height="30"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="46" id="Ltg-Vo-GAc"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                    <state key="normal" title="Save">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="saveAction:" destination="-1" eventType="touchUpInside" id="BMO-VH-EVM"/>
-                    </connections>
-                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4md-Xy-tdp">
                     <rect key="frame" x="70" y="974" width="130" height="30"/>
                     <constraints>
@@ -210,6 +197,19 @@
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="azt-mV-ixn">
+                    <rect key="frame" x="361" y="93" width="46" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="46" id="Ltg-Vo-GAc"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                    <state key="normal" title="Save">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="saveAction:" destination="-1" eventType="touchUpInside" id="BMO-VH-EVM"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
@@ -250,7 +250,7 @@
                 <constraint firstItem="1Ly-Pp-fyB" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="70" id="qC4-Ed-Zd5"/>
                 <constraint firstItem="1Ly-Pp-fyB" firstAttribute="top" secondItem="SlK-Fn-JQs" secondAttribute="bottom" constant="-2" id="rF1-Hg-1cF"/>
                 <constraint firstItem="abZ-YS-ffx" firstAttribute="top" secondItem="ESq-Ry-RUR" secondAttribute="bottom" constant="17" id="rpA-e3-hk2"/>
-                <constraint firstItem="azt-mV-ixn" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="79" id="xqf-2r-5MM"/>
+                <constraint firstItem="azt-mV-ixn" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="93" id="xqf-2r-5MM"/>
             </constraints>
         </view>
     </objects>

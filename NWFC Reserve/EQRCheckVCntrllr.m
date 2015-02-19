@@ -30,6 +30,7 @@
 #import "EQREquipSelectionGenericVCntrllr.h"
 #import "EQRScheduleRequestManager.h"
 #import "EQRContactNameItem.h"
+#import "EQRColors.h"
 
 
 @interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate>
@@ -338,7 +339,8 @@
         self.navigationItem.prompt = @"!!! DEMO MODE !!!";
         
         //set color of navigation bar
-        self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        EQRColors* colors = [EQRColors sharedInstance];
+        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
         
     }else{
         

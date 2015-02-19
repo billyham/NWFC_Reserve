@@ -39,25 +39,16 @@
                     </connections>
                 </button>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R4d-3I-47x">
-                    <rect key="frame" x="8" y="48" width="304" height="179"/>
+                    <rect key="frame" x="8" y="48" width="304" height="103"/>
                     <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="179" id="5P3-cR-GWn"/>
+                        <constraint firstAttribute="height" constant="103" id="5P3-cR-GWn"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Miscellaneous Items" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LQr-1h-aNe">
-                    <rect key="frame" x="103" y="254" width="114" height="21"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="21" id="ujv-Dm-aoH"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="30" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="LWc-Iw-IPd">
-                    <rect key="frame" x="0.0" y="277" width="320" height="223"/>
+                    <rect key="frame" x="0.0" y="206" width="320" height="294"/>
                     <color key="backgroundColor" white="0.96983349323272705" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="223" id="rbp-NA-1RL"/>
@@ -72,6 +63,15 @@
                         <outlet property="delegate" destination="-1" id="Hix-pd-SIJ"/>
                     </connections>
                 </tableView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Miscellaneous Items" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LQr-1h-aNe">
+                    <rect key="frame" x="99.5" y="177" width="122.5" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="ujv-Dm-aoH"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
@@ -81,7 +81,7 @@
                 <constraint firstAttribute="bottom" secondItem="R4d-3I-47x" secondAttribute="bottom" constant="273" id="ETr-md-XMt"/>
                 <constraint firstAttribute="centerX" secondItem="saq-9D-gBx" secondAttribute="centerX" id="Ef5-oe-Ts4"/>
                 <constraint firstItem="R4d-3I-47x" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="48" id="Hir-Ds-jrR"/>
-                <constraint firstItem="LQr-1h-aNe" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="254" id="M8h-Dl-zNz"/>
+                <constraint firstItem="LQr-1h-aNe" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="177" id="M8h-Dl-zNz"/>
                 <constraint firstItem="LQr-1h-aNe" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="14" id="O3b-gs-pKi"/>
                 <constraint firstItem="R4d-3I-47x" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="StL-OP-wAm"/>
                 <constraint firstAttribute="centerX" secondItem="LQr-1h-aNe" secondAttribute="centerX" id="WyA-vg-E8H"/>
@@ -92,7 +92,7 @@
                 <constraint firstAttribute="trailing" secondItem="LWc-Iw-IPd" secondAttribute="trailing" id="n19-uP-zSh"/>
                 <constraint firstItem="R4d-3I-47x" firstAttribute="top" secondItem="FH4-1v-Dfw" secondAttribute="bottom" constant="-82" id="oXQ-Bo-xxX"/>
                 <constraint firstItem="saq-9D-gBx" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="462" id="rRf-FN-bun"/>
-                <constraint firstItem="LWc-Iw-IPd" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="277" id="z8K-0I-f2b"/>
+                <constraint firstItem="LWc-Iw-IPd" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="206" id="z8K-0I-f2b"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

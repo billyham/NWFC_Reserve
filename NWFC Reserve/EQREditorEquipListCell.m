@@ -50,6 +50,17 @@
         [self.myContentVC.myDeleteButton setHidden:YES];
         
         self.myContentVC.issueTrailingConstraint.constant = 0;
+        
+        EQRColors *colors = [EQRColors sharedInstance];
+        self.myContentVC.myDistIDButton.backgroundColor = [colors.colorDic objectForKey:EQRColorVeryLightGrey];
+        [self.myContentVC.myDistIDButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+        [self.myContentVC.myDistIDButton setUserInteractionEnabled:NO];
+    }else{
+        
+        EQRColors *colors = [EQRColors sharedInstance];
+        self.myContentVC.myDistIDButton.backgroundColor = [colors.colorDic objectForKey:EQRVeryNiceBlue];
+        [self.myContentVC.myDistIDButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+        [self.myContentVC.myDistIDButton setUserInteractionEnabled:YES];
     }
     
     //_____ add constraints to content view
@@ -147,6 +158,11 @@
     //shorten issue text and show edit button
     self.myContentVC.issueTrailingConstraint.constant = 50.f;
     
+    EQRColors *colors = [EQRColors sharedInstance];
+    self.myContentVC.myDistIDButton.backgroundColor = [colors.colorDic objectForKey:EQRVeryNiceBlue];
+    [self.myContentVC.myDistIDButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+    [self.myContentVC.myDistIDButton setUserInteractionEnabled:YES];
+    
     [UIView animateWithDuration:0.25 animations:^{
        
         [self.myContentVC.view layoutIfNeeded];
@@ -162,6 +178,11 @@
     
     //lengthen issue text and hide edit button
     self.myContentVC.issueTrailingConstraint.constant = 0;
+    
+    EQRColors *colors = [EQRColors sharedInstance];
+    self.myContentVC.myDistIDButton.backgroundColor = [colors.colorDic objectForKey:EQRColorVeryLightGrey];
+    [self.myContentVC.myDistIDButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+    [self.myContentVC.myDistIDButton setUserInteractionEnabled:NO];
     
     [UIView animateWithDuration:0.25 animations:^{
         

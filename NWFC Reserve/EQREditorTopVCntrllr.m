@@ -21,6 +21,7 @@
 #import "EQREquipSelectionGenericVCntrllr.h"
 #import "EQRDataStructure.h"
 #import "EQRMiscJoin.h"
+#import "EQRModeManager.h"
 
 @interface EQREditorTopVCntrllr ()
 
@@ -363,6 +364,26 @@
     
     //set the renter field....
     [self.renterTypeField setTitle:self.privateRequestManager.request.renter_type forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+    
+    //update navigation bar
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    if (modeManager.isInDemoMode){
+        
+        //set prompt
+        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        
+        //set color of navigation bar
+        EQRColors* colors = [EQRColors sharedInstance];
+        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
+        
+    }else{
+        
+        //set prompt
+        self.navigationItem.prompt = nil;
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = nil;
+    }
     
     [super viewWillAppear:animated];
 }
@@ -1073,7 +1094,7 @@
     //get cell's equipUniqueKey, titleKey, buttonRect and button
     NSString* equipTitleItem_foreignKey = [infoDictionary objectForKey:@"equipTitleItem_foreignKey"];
     NSString* equipUniqueItem_foreignKey = [infoDictionary objectForKey:@"equipUniqueItem_foreignKey"];
-    CGRect buttonRect = [(UIButton*)[infoDictionary objectForKey:@"distButton"] frame];
+//    CGRect buttonRect = [(UIButton*)[infoDictionary objectForKey:@"distButton"] frame];
     UIButton* thisButton = (UIButton*)[infoDictionary objectForKey:@"distButton"];
     
     //create content VC
@@ -1090,10 +1111,11 @@
     self.distIDPopover = popOver;
     
     //    CGRect fixedRect1 = [thisButton.superview convertRect:buttonRect fromView:thisButton];
-    CGRect fixedRect2 = [thisButton.superview.superview convertRect:buttonRect fromView:thisButton.superview];
+    CGRect fixedRect2 = [thisButton.superview.superview convertRect:thisButton.frame fromView:thisButton.superview];
     CGRect fixedRect3 = [thisButton.superview.superview.superview convertRect:fixedRect2 fromView:thisButton.superview.superview];
-    CGRect fixedrect4 = [thisButton.superview.superview.superview.superview convertRect:fixedRect3 fromView:thisButton.superview.superview.superview];
-    CGRect fixedRect5 = [thisButton.superview.superview.superview.superview.superview convertRect:fixedrect4 fromView:thisButton.superview.superview.superview.superview];
+    CGRect fixedRect4 = [thisButton.superview.superview.superview.superview convertRect:fixedRect3 fromView:thisButton.superview.superview.superview];
+    CGRect fixedRect5 = [thisButton.superview.superview.superview.superview.superview convertRect:fixedRect4 fromView:thisButton.superview.superview.superview.superview];
+//    CGRect fixedRect6 = [thisButton.superview.superview.superview.superview.superview.superview convertRect:fixedRect5 fromView:thisButton.superview.superview.superview.superview.superview];
     
     //present popover
     [self.distIDPopover presentPopoverFromRect:fixedRect5 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];

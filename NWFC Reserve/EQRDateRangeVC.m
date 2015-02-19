@@ -8,6 +8,8 @@
 
 #import "EQRDateRangeVC.h"
 #import "EQRGlobals.h"
+#import "EQRColors.h"
+#import "EQRModeManager.h"
 
 @interface EQRDateRangeVC ()
 
@@ -26,6 +28,31 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    //update navigation bar
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    if (modeManager.isInDemoMode){
+        
+        //set prompt
+        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        
+        //set color of navigation bar
+        EQRColors* colors = [EQRColors sharedInstance];
+        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
+        
+    }else{
+        
+        //set prompt
+        self.navigationItem.prompt = nil;
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = nil;
+    }
+    
+    [super viewWillAppear:animated];
 }
 
 - (void)didReceiveMemoryWarning {
