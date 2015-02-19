@@ -84,7 +84,7 @@ NSString* EQRColorIssueSerious = @"EQRColorIssueSerious";
                          [UIColor colorWithRed:0.77 green:0.57 blue:0.57 alpha:1.0], EQRColorStatusReturning,
                          [UIColor colorWithRed:222 green:235 blue:234 alpha:1], EQRColorCoolGreen,
                          [UIColor grayColor], EQRColorIssueDescriptive,
-                         [UIColor brownColor], EQRColorIssueMinor,
+                         [UIColor colorWithRed:0.88 green:0.65 blue:0.2 alpha:1.0], EQRColorIssueMinor,
                          [UIColor redColor], EQRColorIssueSerious,
                          nil];
     }
