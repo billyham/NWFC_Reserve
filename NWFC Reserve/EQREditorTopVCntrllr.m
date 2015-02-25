@@ -1110,7 +1110,6 @@
     popOver.delegate = self;
     self.distIDPopover = popOver;
     
-    //    CGRect fixedRect1 = [thisButton.superview convertRect:buttonRect fromView:thisButton];
     CGRect fixedRect2 = [thisButton.superview.superview convertRect:thisButton.frame fromView:thisButton.superview];
     CGRect fixedRect3 = [thisButton.superview.superview.superview convertRect:fixedRect2 fromView:thisButton.superview.superview];
     CGRect fixedRect4 = [thisButton.superview.superview.superview.superview convertRect:fixedRect3 fromView:thisButton.superview.superview.superview];

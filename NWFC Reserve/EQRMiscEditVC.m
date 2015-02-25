@@ -27,6 +27,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    self.itemsTable.rowHeight = UITableViewAutomaticDimension;
+
 }
 
 
@@ -37,6 +40,8 @@
     [self.itemsTable registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
     
     [self renewTheViewWithScheduleKey:scheduleTracking_foreignKey];
+    
+
 }
 
 
@@ -100,7 +105,7 @@
     cell.textLabel.text = [(EQRMiscJoin*)[self.arrayOfMiscJoins objectAtIndex:indexPath.row] name];
     cell.textLabel.font = [UIFont systemFontOfSize:11];
     cell.contentView.backgroundColor = [UIColor clearColor];
-    cell.textLabel.numberOfLines = 2;
+    cell.textLabel.numberOfLines = 0;
     
     return cell;
 }
