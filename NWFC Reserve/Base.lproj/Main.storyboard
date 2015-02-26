@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -18,12 +17,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OUe-9e-rV8" userLabel="left bg color View">
+                                <rect key="frame" x="0.0" y="64" width="384" height="911"/>
+                                <color key="backgroundColor" white="0.91471809440559437" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="384" id="gRB-R0-ZuR"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1QF-4X-5D7">
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2it-XM-d52">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="1023"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <rect key="frame" x="0.0" y="64" width="120" height="959"/>
+                                        <color key="backgroundColor" red="0.91385582010582012" green="0.91385582010582012" blue="0.91385582010582012" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="120" id="j38-ZP-va9"/>
                                         </constraints>
@@ -41,15 +47,21 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="120" height="50"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qfq-Nh-cu3">
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qfq-Nh-cu3">
                                                             <rect key="frame" x="20" y="14" width="77" height="21"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </view>
+                                                <constraints>
+                                                    <constraint firstItem="Qfq-Nh-cu3" firstAttribute="leading" secondItem="JzX-78-emy" secondAttribute="leadingMargin" constant="12" id="dwV-jx-4fj"/>
+                                                    <constraint firstAttribute="bottomMargin" secondItem="Qfq-Nh-cu3" secondAttribute="bottom" constant="7" id="e2G-0r-5Q7"/>
+                                                    <constraint firstItem="Qfq-Nh-cu3" firstAttribute="top" secondItem="JzX-78-emy" secondAttribute="topMargin" constant="6" id="sIb-jD-Hs8"/>
+                                                    <constraint firstAttribute="trailingMargin" secondItem="Qfq-Nh-cu3" secondAttribute="trailing" constant="15" id="saQ-gc-qDU"/>
+                                                </constraints>
                                                 <connections>
                                                     <outlet property="titleLabel" destination="Qfq-Nh-cu3" id="2Bi-O8-Ysu"/>
                                                 </connections>
@@ -61,8 +73,8 @@
                                         </connections>
                                     </collectionView>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Wwo-iZ-sDI">
-                                        <rect key="frame" x="120" y="64" width="354" height="902"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <rect key="frame" x="120" y="64" width="354" height="911"/>
+                                        <color key="backgroundColor" red="0.9759011243386243" green="0.9759011243386243" blue="0.9759011243386243" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="354" id="eu1-7L-CSa"/>
                                         </constraints>
@@ -80,15 +92,21 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="354" height="50"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Labelandandandandmorelabellabellabel" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="268" translatesAutoresizingMaskIntoConstraints="NO" id="UYU-Np-ZCc">
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Labelandandandandmorelabellabellabel" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="268" translatesAutoresizingMaskIntoConstraints="NO" id="UYU-Np-ZCc">
                                                             <rect key="frame" x="43" y="9" width="268" height="32"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </view>
+                                                <constraints>
+                                                    <constraint firstItem="UYU-Np-ZCc" firstAttribute="top" secondItem="M0f-JV-oct" secondAttribute="topMargin" constant="1" id="CMN-kt-bzb"/>
+                                                    <constraint firstItem="UYU-Np-ZCc" firstAttribute="leading" secondItem="M0f-JV-oct" secondAttribute="leadingMargin" constant="35" id="Zja-FG-dAI"/>
+                                                    <constraint firstAttribute="trailingMargin" secondItem="UYU-Np-ZCc" secondAttribute="trailing" constant="35" id="a90-3i-E3l"/>
+                                                    <constraint firstAttribute="bottomMargin" secondItem="UYU-Np-ZCc" secondAttribute="bottom" constant="1" id="gEd-yA-Yp0"/>
+                                                </constraints>
                                                 <connections>
                                                     <outlet property="titleLabel" destination="UYU-Np-ZCc" id="GiB-27-9Bq"/>
                                                 </connections>
@@ -100,9 +118,9 @@
                                         </connections>
                                     </collectionView>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rUu-B4-RwQ">
-                                        <rect key="frame" x="476" y="64" width="284" height="902"/>
+                                        <rect key="frame" x="474" y="64" width="287" height="911"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="284" id="RHd-a8-s0J"/>
+                                            <constraint firstAttribute="width" constant="287" id="RHd-a8-s0J"/>
                                         </constraints>
                                         <connections>
                                             <segue destination="jse-SM-yPd" kind="embed" id="KGr-iq-phW"/>
@@ -111,12 +129,12 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="2it-XM-d52" firstAttribute="top" secondItem="1QF-4X-5D7" secondAttribute="top" id="2P2-LL-ucH"/>
+                                    <constraint firstItem="2it-XM-d52" firstAttribute="top" secondItem="1QF-4X-5D7" secondAttribute="top" constant="64" id="2P2-LL-ucH"/>
                                     <constraint firstAttribute="bottom" secondItem="2it-XM-d52" secondAttribute="bottom" constant="1" id="6XK-LW-feq"/>
-                                    <constraint firstAttribute="bottom" secondItem="Wwo-iZ-sDI" secondAttribute="bottom" constant="58" id="ISU-ac-EKp"/>
+                                    <constraint firstAttribute="bottom" secondItem="Wwo-iZ-sDI" secondAttribute="bottom" constant="49" id="ISU-ac-EKp"/>
                                     <constraint firstAttribute="width" constant="768" id="JFw-ps-zB4"/>
-                                    <constraint firstAttribute="bottom" secondItem="rUu-B4-RwQ" secondAttribute="bottom" constant="58" id="Pgz-UV-7cQ"/>
-                                    <constraint firstItem="rUu-B4-RwQ" firstAttribute="leading" secondItem="Wwo-iZ-sDI" secondAttribute="trailing" constant="2" id="UQG-NX-3T8"/>
+                                    <constraint firstAttribute="bottom" secondItem="rUu-B4-RwQ" secondAttribute="bottom" constant="49" id="Pgz-UV-7cQ"/>
+                                    <constraint firstItem="rUu-B4-RwQ" firstAttribute="leading" secondItem="Wwo-iZ-sDI" secondAttribute="trailing" id="UQG-NX-3T8"/>
                                     <constraint firstItem="2it-XM-d52" firstAttribute="leading" secondItem="1QF-4X-5D7" secondAttribute="leading" id="Yp5-Wm-MgB"/>
                                     <constraint firstItem="rUu-B4-RwQ" firstAttribute="top" secondItem="1QF-4X-5D7" secondAttribute="top" constant="64" id="mYO-K8-JKG"/>
                                     <constraint firstItem="Wwo-iZ-sDI" firstAttribute="top" secondItem="1QF-4X-5D7" secondAttribute="top" constant="64" id="oln-1D-8sK"/>
@@ -126,7 +144,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="OUe-9e-rV8" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="1Vw-nh-i0a"/>
                             <constraint firstAttribute="centerX" secondItem="1QF-4X-5D7" secondAttribute="centerX" id="7yy-Ro-8yj"/>
+                            <constraint firstItem="OUe-9e-rV8" firstAttribute="top" secondItem="Cb4-SR-jtu" secondAttribute="bottom" id="A0W-6i-WHR"/>
+                            <constraint firstItem="yAW-zm-NfC" firstAttribute="top" secondItem="OUe-9e-rV8" secondAttribute="bottom" id="Zp3-cs-lha"/>
                             <constraint firstItem="yAW-zm-NfC" firstAttribute="top" secondItem="1QF-4X-5D7" secondAttribute="bottom" constant="-49" id="hfP-eK-dtL"/>
                             <constraint firstItem="1QF-4X-5D7" firstAttribute="top" secondItem="Cb4-SR-jtu" secondAttribute="bottom" constant="-64" id="wsL-dy-MZA"/>
                         </constraints>
@@ -140,6 +161,9 @@
                     </navigationItem>
                     <connections>
                         <outlet property="classListTable" destination="Wwo-iZ-sDI" id="UCO-xn-g2y"/>
+                        <outlet property="classWidthConstraint" destination="eu1-7L-CSa" id="59p-JF-Ij3"/>
+                        <outlet property="nameWidthConstraint" destination="RHd-a8-s0J" id="aGN-zg-mC2"/>
+                        <outlet property="renterWidthConstraint" destination="j38-ZP-va9" id="wkn-qe-Tqp"/>
                         <outlet property="rentorTypeListTable" destination="2it-XM-d52" id="p0v-d4-0CN"/>
                     </connections>
                 </viewController>

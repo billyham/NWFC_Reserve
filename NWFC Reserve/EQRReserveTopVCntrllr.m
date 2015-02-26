@@ -27,14 +27,16 @@
 
 @property (strong, nonatomic) NSArray* contactNameArray;
 @property (strong, nonatomic) NSArray* classArray;
-@property (strong, nonatomic) NSArray* rentorTypeArray;
+@property (strong, nonatomic) NSArray* renterTypeArray;
 @property (strong, nonatomic) EQRClassItem* thisClassItem;
 @property (strong, nonatomic) EQRClassRegistrationItem* thisClassRegistration;
-@property (strong, nonatomic) NSString* chosenRentorType;
+@property (strong, nonatomic) NSString* chosenRenterType;
 
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint* rentorWidthContraint;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint* rentorLeadingConstraint;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint* nameListLeadingConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *renterWidthConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *classWidthConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *nameWidthConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *renterLeadingConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *nameListLeadingConstraint;
 
 @property BOOL hideNameListFlag;
 @property BOOL hideClassListFlag;
@@ -66,10 +68,10 @@
     //?s
 
 
-    //populate rentorTypeArray
-    if (!self.rentorTypeArray){
+    //populate renterTypeArray
+    if (!self.renterTypeArray){
         
-        self.rentorTypeArray = [NSArray arrayWithObjects:
+        self.renterTypeArray = [NSArray arrayWithObjects:
                                 [EQRRenterStudent capitalizedString],
                                 [EQRRenterFaculty capitalizedString],
                                 [EQRRenterStaff capitalizedString],
@@ -167,7 +169,7 @@
     requestManager.request.classSection_foreignKey = self.thisClassItem.key_id;
     requestManager.request.classTitle_foreignKey = self.thisClassItem.catalog_foreign_key;
     requestManager.request.contact_name = requestManager.request.contactNameItem.first_and_last;
-    requestManager.request.renter_type = self.chosenRentorType;
+    requestManager.request.renter_type = self.chosenRenterType;
     
     
     //perform segue to show date picker
@@ -185,7 +187,7 @@
     [self.rentorTypeListTable reloadData];
     
     //deselect chosenType
-    self.chosenRentorType = @"UNKNOWN";
+    self.chosenRenterType = @"UNKNOWN";
     
     //delesect class item and registration
     self.thisClassItem = nil;
@@ -200,8 +202,9 @@
 //    [self.nameListTable reloadData];
     
     //expand size of rentor type list
-    //    self.rentorWidthContraint.constant = 230;
-    self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
+    self.renterWidthConstraint.constant = 230;
+    self.classWidthConstraint.constant = 0;
+    self.renterLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
     self.nameListLeadingConstraint.constant = 1 - EQRRentorTypeLeadingSpace;
     
     //animate change    
@@ -263,7 +266,7 @@
         
     } else if (collectionView == self.rentorTypeListTable){
         
-        return [self.rentorTypeArray count];
+        return [self.renterTypeArray count];
     }
     
     return 1;
@@ -315,7 +318,7 @@
         }
         
         cell.backgroundColor = [UIColor clearColor];
-        [cell setOpaque:YES];
+//        [cell setOpaque:YES];
         
         if ([self.classArray count] > 0){
             
@@ -338,17 +341,15 @@
             [view removeFromSuperview];
         }
         
-        cell.backgroundColor = [UIColor clearColor];
-        [cell setOpaque:YES];
-        
-        if ([self.rentorTypeArray count] > 0) {
+        if ([self.renterTypeArray count] > 0) {
             
-            [cell initialSetupWithTitle:[self.rentorTypeArray objectAtIndex:indexPath.row]];
+            [cell initialSetupWithTitle:[self.renterTypeArray objectAtIndex:indexPath.row]];
         } else {
             
             NSLog(@"No count in the rentor type array");
         }
         
+        cell.backgroundColor = [UIColor clearColor];
         return cell;
         
     } else{
@@ -404,7 +405,7 @@
         
         //discern between adult, youth and in class
         
-        if ([self.chosenRentorType isEqualToString:EQRRenterYouth]){  //youth class
+        if ([self.chosenRenterType isEqualToString:EQRRenterYouth]){  //youth class
             
             //youth camp was selected
             
@@ -430,7 +431,7 @@
             requestManager.request.classSection_foreignKey = self.thisClassItem.key_id;
             requestManager.request.classTitle_foreignKey = self.thisClassItem.catalog_foreign_key;
             requestManager.request.contact_name = self.thisClassItem.first_and_last;
-            requestManager.request.renter_type = self.chosenRentorType;
+            requestManager.request.renter_type = self.chosenRenterType;
             
 //            NSLog(@"this is the instructor name: %@ and key: %@", self.thisClassItem.first_and_last, self.thisClassItem.instructor_foreign_key);
             
@@ -481,7 +482,7 @@
             
           
             
-        }else if ([self.chosenRentorType isEqualToString:EQRRenterStudent]) {   //student in adult class
+        }else if ([self.chosenRenterType isEqualToString:EQRRenterStudent]) {   //student in adult class
             
             //reveal name list
             [self.myContactPickerVC.view setHidden:NO];
@@ -567,7 +568,7 @@
 //                [self.nameListTable reloadData];
             }];
             
-        } else if ([self.chosenRentorType isEqualToString:EQRRenterInClass]){    //in class 
+        } else if ([self.chosenRenterType isEqualToString:EQRRenterInClass]){    //in class 
          
             //____identical to youth selection______
             
@@ -595,7 +596,7 @@
             requestManager.request.classSection_foreignKey = self.thisClassItem.key_id;
             requestManager.request.classTitle_foreignKey = self.thisClassItem.catalog_foreign_key;
             requestManager.request.contact_name = self.thisClassItem.first_and_last;
-            requestManager.request.renter_type = self.chosenRentorType;
+            requestManager.request.renter_type = self.chosenRenterType;
             
             NSLog(@"this is the instructor name: %@ and key: %@", self.thisClassItem.first_and_last, self.thisClassItem.instructor_foreign_key);
             
@@ -657,11 +658,12 @@
             case (0):{ //student (adult)
                 
                 //set rentorType for request object
-                self.chosenRentorType = EQRRenterStudent;
+                self.chosenRenterType = EQRRenterStudent;
                 
-                //contact size of rentor type list
-//                self.rentorWidthContraint.constant = 120;
-                self.rentorLeadingConstraint.constant = 0.0;
+                //contact size of renter type list
+                self.renterWidthConstraint.constant = 120;
+                self.classWidthConstraint.constant = 354;
+                self.renterLeadingConstraint.constant = 0.0;
                 self.nameListLeadingConstraint.constant = 2.0;
                 
                 //animate change
@@ -725,10 +727,13 @@
             } case (1):{ //faculty
                 
                 //set rentorType for request object
-                self.chosenRentorType = EQRRenterFaculty;
+                self.chosenRenterType = EQRRenterFaculty;
                 
+                //contact size of renter type list
+                self.renterWidthConstraint.constant = 230;
+                self.classWidthConstraint.constant = 0;
                 //contact size of rentor type list
-                self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
+                self.renterLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
                 self.nameListLeadingConstraint.constant = 1 - EQRRentorTypeLeadingSpace;
                 
                 //animate change
@@ -786,10 +791,13 @@
             }case (2):{ //staff
                 
                 //set rentorType for request object
-                self.chosenRentorType = EQRRenterStaff;
+                self.chosenRenterType = EQRRenterStaff;
                 
+                //contact size of renter type list
+                self.renterWidthConstraint.constant = 230;
+                self.classWidthConstraint.constant = 0;
                 //contact size of rentor type list
-                self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
+                self.renterLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
                 self.nameListLeadingConstraint.constant = 1 - EQRRentorTypeLeadingSpace;
                 
                 //animate change
@@ -846,10 +854,13 @@
             }case (3):{ //public
                 
                 //set rentorType for request object
-                self.chosenRentorType = EQRRenterPublic;
+                self.chosenRenterType = EQRRenterPublic;
                 
+                //contact size of renter type list
+                self.renterWidthConstraint.constant = 230;
+                self.classWidthConstraint.constant = 0;
                 //contact size of rentor type list
-                self.rentorLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
+                self.renterLeadingConstraint.constant = EQRRentorTypeLeadingSpace;
                 self.nameListLeadingConstraint.constant = 1 - EQRRentorTypeLeadingSpace;
                 
                 //animate change
@@ -906,10 +917,13 @@
             }case (4):{ //youth camp
                 
                 //set rentorType for request object
-                self.chosenRentorType = EQRRenterYouth;
+                self.chosenRenterType = EQRRenterYouth;
                 
+                //contact size of renter type list
+                self.renterWidthConstraint.constant = 120;
+                self.classWidthConstraint.constant = 354;
                 //contact size of rentor type list
-                self.rentorLeadingConstraint.constant = 0.0;
+                self.renterLeadingConstraint.constant = 0.0;
                 self.nameListLeadingConstraint.constant = 2.0;
                 
                 //animate change
@@ -976,11 +990,12 @@
             }case (5):{  //in class
                 
                 //set rentorType for request object
-                self.chosenRentorType = EQRRenterInClass;
+                self.chosenRenterType = EQRRenterInClass;
                 
                 //contact size of rentor type list
-                //                self.rentorWidthContraint.constant = 120;
-                self.rentorLeadingConstraint.constant = 0.0;
+                self.renterWidthConstraint.constant = 120;
+                self.classWidthConstraint.constant = 354;
+                self.renterLeadingConstraint.constant = 0.0;
                 self.nameListLeadingConstraint.constant = 2.0;
                 
                 //animate change
