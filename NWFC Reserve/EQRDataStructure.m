@@ -532,17 +532,21 @@
     }
     
     //error if . comes before @
-    if (atRange.location > dotRange.location){
-        return nil;
-    }
+//    if (atRange.location > dotRange.location){
+//        return nil;
+//    }
     
     NSRange atRangeError = [[email substringFromIndex:atRange.location + 1] rangeOfString:@"@"];
-    NSRange dotRangeError = [[email substringFromIndex:dotRange.location + 1] rangeOfString:@"."];
+//    NSRange dotRangeError = [[email substringFromIndex:dotRange.location + 1] rangeOfString:@"."];
     
     //error when too many @ or . 's
-    if ((atRangeError.location != NSNotFound) || (dotRangeError.location != NSNotFound)){
+    if (atRangeError.location != NSNotFound){
         return nil;
     }
+    
+//    if (dotRangeError.location != NSNotFound){
+//        return  nil;
+//    }
     
     //__1__
 //    NSInteger firstTwoLettersLength = 2;

@@ -33,4 +33,7 @@
 
 -(void)retrieveSelectedNameItem;
 
+@optional
+-(void)retrieveSelectedNameItemWithObject:(id)contactObject;
+
 @end

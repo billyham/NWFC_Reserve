@@ -27,6 +27,7 @@
 @property (strong, nonatomic) IBOutlet UIButton* printAndConfirmButton;
 @property (strong, nonatomic) IBOutlet UIButton* editPhoneButton;
 @property (strong, nonatomic) IBOutlet UIButton* editEmailButton;
+@property (strong, nonatomic) IBOutlet UIButton *changeContactButton;
 
 @property (strong, nonatomic) IBOutlet UIView* mainSubView;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* topLayoutGuideConstraint;
@@ -38,6 +39,7 @@
 
 @property (strong, nonatomic) UIPopoverController* phonePopover;
 @property (strong, nonatomic) UIPopoverController* emailPopover;
+@property (strong, nonatomic) UIPopoverController *myContactPicker;
 
 @end
 
@@ -444,6 +446,82 @@
 }
 
 
+-(IBAction)changeContact:(id)sender{
+    
+    EQRContactPickerVC* contactPickerVC = [[EQRContactPickerVC alloc] initWithNibName:@"EQRContactPickerVC" bundle:nil];
+    contactPickerVC.delegate = self;
+    
+    UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:contactPickerVC];
+    [navController setNavigationBarHidden:YES];
+    
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:navController];
+    self.myContactPicker = popOver;
+    self.myContactPicker.delegate = self;
+    
+    //set the size
+    [self.myContactPicker setPopoverContentSize:CGSizeMake(320, 550)];
+    
+    //get coordinates in proper view
+    
+    //present popOver
+    [self.myContactPicker presentPopoverFromRect:self.changeContactButton.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
+    
+}
+
+
+-(void)retrieveSelectedNameItem{
+    
+}
+
+-(void)retrieveSelectedNameItemWithObject:(id)contactObject{
+    
+    EQRContactNameItem* nameItem = (EQRContactNameItem *)contactObject;
+    
+    self.contactName.text = nameItem.first_and_last;
+    
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    requestManager.request.contactNameItem = nameItem;
+    requestManager.request.contact_name = nameItem.first_and_last;
+    requestManager.request.contact_foreignKey = nameItem.key_id;
+    
+    
+    //change contact information
+    //save values to ivar
+    self.rentorNameAtt = requestManager.request.contact_name;
+    self.rentorPhoneAtt = nameItem.phone;
+    self.rentorEmailAtt = nameItem.email;
+    
+    //validate and email address and disguise it for secure display
+    NSString* emailForDisplay = [EQRDataStructure emailValidationAndSecureForDisplay:self.rentorEmailAtt];
+    if (emailForDisplay == nil){
+        self.contactEmail.font = [UIFont boldSystemFontOfSize:14];
+        self.contactEmail.text = @"(Please provide an email address)";
+        self.contactEmail.textColor = [UIColor redColor];
+    }else{
+        self.contactEmail.font = [UIFont systemFontOfSize:14];
+        self.contactEmail.text = emailForDisplay;
+        self.contactEmail.textColor = [UIColor blackColor];
+    }
+    
+    //validate and phone and disguise it for secure display
+    NSString* phoneForDisplay = [EQRDataStructure phoneValidationAndSecureForDisplay:self.rentorPhoneAtt];
+    if (phoneForDisplay == nil){
+        self.contactPhone.font = [UIFont boldSystemFontOfSize:14];
+        self.contactPhone.text = @"(Please provide a phone number)";
+        self.contactPhone.textColor = [UIColor redColor];
+    }else{
+        self.contactPhone.font = [UIFont systemFontOfSize:14];
+        self.contactPhone.text = phoneForDisplay;
+        self.contactPhone.textColor = [UIColor blackColor];
+    }
+    
+
+    
+    //dismiss popover
+    [self.myContactPicker dismissPopoverAnimated:YES];
+    self.myContactPicker = nil;
+    
+}
 
 
 
@@ -568,9 +646,14 @@
         
         self.phonePopover = nil;
         
-    }else{
+    }else if (popoverController == self.emailPopover){
         
         self.emailPopover = nil;
+        
+    }else if (popoverController == self.myContactPicker){
+        
+        self.myContactPicker = nil;
+        
     }
 }
 

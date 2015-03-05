@@ -446,6 +446,10 @@
     
     [self.delegate retrieveSelectedNameItem];
     
+    if ([self.delegate respondsToSelector:@selector(retrieveSelectedNameItemWithObject:)]){
+        [self.delegate retrieveSelectedNameItemWithObject:self.selectedNameItem];
+    }
+    
 }
 
 
