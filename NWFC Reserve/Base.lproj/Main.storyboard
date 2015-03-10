@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -503,7 +503,7 @@
         <scene sceneID="fbd-S5-icg">
             <objects>
                 <splitViewController title="Inbox" id="4zk-cf-ufk" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" tag="4" title="Inbox" id="GAl-KI-4Ib"/>
+                    <tabBarItem key="tabBarItem" tag="4" title="Inbox" image="tabInbox.png" id="GAl-KI-4Ib"/>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="4li-zk-mfK"/>
                     <connections>
@@ -539,7 +539,7 @@
                                     <action selector="receiveContinueAction:" destination="W9r-1m-gIx" eventType="touchUpInside" id="9zf-Tx-is9"/>
                                 </connections>
                             </button>
-                            <datePicker hidden="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="JKh-Fc-SNU">
+                            <datePicker hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="JKh-Fc-SNU">
                                 <rect key="frame" x="224" y="150" width="320" height="216"/>
                                 <date key="date" timeIntervalSinceReferenceDate="410169188.53517598">
                                     <!--2013-12-31 07:53:08 +0000-->
@@ -548,7 +548,7 @@
                                     <action selector="receivePickUpDate:" destination="W9r-1m-gIx" eventType="valueChanged" id="WtO-1V-fsx"/>
                                 </connections>
                             </datePicker>
-                            <datePicker hidden="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="hRx-uz-EVI">
+                            <datePicker hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="hRx-uz-EVI">
                                 <rect key="frame" x="224" y="454" width="320" height="216"/>
                                 <date key="date" timeIntervalSinceReferenceDate="410169200.87450302">
                                     <!--2013-12-31 07:53:20 +0000-->
@@ -562,7 +562,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Return Date and Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tu2-Wb-pwg">
+                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Return Date and Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tu2-Wb-pwg">
                                 <rect key="frame" x="300" y="425" width="168" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
@@ -657,7 +657,7 @@
             <objects>
                 <navigationController definesPresentationContext="YES" id="Q0m-16-1SA" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="3" title="Settings" id="9jm-Q9-owK"/>
+                    <tabBarItem key="tabBarItem" tag="3" title="Settings" image="tab_settings.png" id="9jm-Q9-owK"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="m1c-fR-371">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -835,7 +835,7 @@
         <scene sceneID="yCJ-oA-0VX">
             <objects>
                 <navigationController definesPresentationContext="YES" id="xA8-l4-PwP" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Day" id="qLA-sG-IQU"/>
+                    <tabBarItem key="tabBarItem" title="Day" image="tab_day.png" id="qLA-sG-IQU"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Fve-cu-Unq">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -852,7 +852,7 @@
             <objects>
                 <navigationController definesPresentationContext="YES" id="hee-oI-qji" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" tag="2" title="Month" id="80V-0y-NVa"/>
+                    <tabBarItem key="tabBarItem" tag="2" title="Month" image="tab_month.png" id="80V-0y-NVa"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ei4-hq-B9c">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1275,7 +1275,7 @@
         <scene sceneID="U9f-oN-PdO">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="PkY-gJ-1eR" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Request" id="acW-dT-cKf"/>
+                    <tabBarItem key="tabBarItem" title="Request" image="tab_new_request.png" id="acW-dT-cKf"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="8al-4j-zas">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
@@ -1310,6 +1310,13 @@
             <point key="canvasLocation" x="5946" y="505"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="tabInbox.png" width="30" height="30"/>
+        <image name="tab_day.png" width="30" height="30"/>
+        <image name="tab_month.png" width="30" height="30"/>
+        <image name="tab_new_request.png" width="30" height="30"/>
+        <image name="tab_settings.png" width="30" height="30"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackOpaque"/>
         <simulatedOrientationMetrics key="orientation"/>

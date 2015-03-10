@@ -117,7 +117,7 @@
     //________Accessing childviewcontrollers
     NSArray* arrayOfChildVCs = [self childViewControllers];
     
-    //this method is called often (during a rotation). Only intitiate a view controller if it doesn't yet exist
+    //viewDidLayoutSubviews is called often (during a rotation). Only intitiate a view controller if it doesn't yet exist
     if (!self.myContactPickerVC){
         
         if ([arrayOfChildVCs count] > 0){
@@ -134,6 +134,9 @@
             NSArray* noneArray = [NSArray arrayWithObjects: nil];
             
             [self.myContactPickerVC replaceDefaultContactArrayWith:noneArray];
+            
+            //initially hide the view controller
+            [self.myContactPickerVC.view setHidden:YES];
             
         }else{
             

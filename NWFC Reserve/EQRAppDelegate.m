@@ -128,6 +128,8 @@
     if ([currentKioskMode isEqualToString:@"yes"]){
         [staffUserManager goToKioskMode:YES];
     }
+    
+
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
