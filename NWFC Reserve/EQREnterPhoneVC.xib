@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <objects>
@@ -36,7 +35,7 @@
                         <constraint firstAttribute="width" constant="65" id="nH8-he-qX0"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
+                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="phonePad"/>
                     <connections>
                         <action selector="changeInTextField:" destination="-1" eventType="editingChanged" id="bY5-tU-lLo"/>
                     </connections>
@@ -49,7 +48,7 @@
                         <constraint firstAttribute="height" constant="30" id="v0h-2a-fKs"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
+                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="phonePad"/>
                     <connections>
                         <action selector="changeInTextField:" destination="-1" eventType="editingChanged" id="6K9-Qi-Jn0"/>
                     </connections>
@@ -62,7 +61,7 @@
                         <constraint firstAttribute="width" constant="82" id="w1c-fH-Q56"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
+                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="phonePad"/>
                     <connections>
                         <action selector="changeInTextField:" destination="-1" eventType="editingChanged" id="5n4-Pw-V4Z"/>
                     </connections>

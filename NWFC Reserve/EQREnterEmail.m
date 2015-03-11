@@ -22,7 +22,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+
+    [self.emailAddress becomeFirstResponder];
 }
 
 -(IBAction)enterButton:(id)sender{

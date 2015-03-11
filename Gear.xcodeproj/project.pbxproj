@@ -138,6 +138,8 @@
 		5497F5041A1DCA79008A7E52 /* EQRClassPickerVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5497F5021A1DCA79008A7E52 /* EQRClassPickerVC.xib */; };
 		549BF3BC191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 549BF3BA191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m */; };
 		549BF3BD191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 549BF3BB191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib */; };
+		54A0DB8E1AB0123400EE4281 /* EQRGenericTextEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A0DB8C1AB0123400EE4281 /* EQRGenericTextEditor.m */; };
+		54A0DB8F1AB0123400EE4281 /* EQRGenericTextEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54A0DB8D1AB0123400EE4281 /* EQRGenericTextEditor.xib */; };
 		54A375B41A40040C00FD8A7B /* EQRNotesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A375B21A40040C00FD8A7B /* EQRNotesVC.m */; };
 		54A375B51A40040C00FD8A7B /* EQRNotesVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54A375B31A40040C00FD8A7B /* EQRNotesVC.xib */; };
 		54AF8FAF1A5A9EEA004C4DDC /* EQRMultiColumnTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AF8FAE1A5A9EEA004C4DDC /* EQRMultiColumnTextView.m */; };
@@ -387,6 +389,9 @@
 		549BF3BA191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipSummaryGenericVCntrllr.m; sourceTree = "<group>"; };
 		549BF3BB191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREquipSummaryGenericVCntrllr.xib; sourceTree = "<group>"; };
 		549DDA721A5D1F430010DEE0 /* Gear.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Gear.entitlements; sourceTree = "<group>"; };
+		54A0DB8B1AB0123400EE4281 /* EQRGenericTextEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRGenericTextEditor.h; sourceTree = "<group>"; };
+		54A0DB8C1AB0123400EE4281 /* EQRGenericTextEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRGenericTextEditor.m; sourceTree = "<group>"; };
+		54A0DB8D1AB0123400EE4281 /* EQRGenericTextEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRGenericTextEditor.xib; sourceTree = "<group>"; };
 		54A375B11A40040C00FD8A7B /* EQRNotesVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRNotesVC.h; sourceTree = "<group>"; };
 		54A375B21A40040C00FD8A7B /* EQRNotesVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRNotesVC.m; sourceTree = "<group>"; };
 		54A375B31A40040C00FD8A7B /* EQRNotesVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRNotesVC.xib; sourceTree = "<group>"; };
@@ -761,6 +766,9 @@
 				018EF54F1A8D61E6008B7A0C /* EQREnterEmail.h */,
 				018EF5501A8D61E6008B7A0C /* EQREnterEmail.m */,
 				018EF5511A8D61E6008B7A0C /* EQREnterEmail.xib */,
+				54A0DB8B1AB0123400EE4281 /* EQRGenericTextEditor.h */,
+				54A0DB8C1AB0123400EE4281 /* EQRGenericTextEditor.m */,
+				54A0DB8D1AB0123400EE4281 /* EQRGenericTextEditor.xib */,
 			);
 			name = "shared nibs";
 			sourceTree = "<group>";
@@ -1074,6 +1082,7 @@
 				01A5D7C418EBA85900EE99EF /* EQREditorTopVCntrllr.xib in Resources */,
 				01735F1E193FAC38007E85C1 /* EQRCheckPrintPage.xib in Resources */,
 				01A4755B18EB9BDF006F32EB /* EQREditorDateVCntrllr.xib in Resources */,
+				54A0DB8F1AB0123400EE4281 /* EQRGenericTextEditor.xib in Resources */,
 				5497F5041A1DCA79008A7E52 /* EQRClassPickerVC.xib in Resources */,
 				54263FFC1AAF043D0095797E /* tab_settings.png in Resources */,
 				54263FED1AAF03490095797E /* tabInbox@2x.png in Resources */,
@@ -1133,6 +1142,7 @@
 				546F28231A19529C00980221 /* EQRContactPickerVC.m in Sources */,
 				540AEA1A19A02FD50092522D /* EQREditorHeaderCell.m in Sources */,
 				5414F8AE1A931F7A007A38B2 /* EQRDateRangeVC.m in Sources */,
+				54A0DB8E1AB0123400EE4281 /* EQRGenericTextEditor.m in Sources */,
 				01B4830519AE8290009F15F6 /* EQRInboxLeftTableVC.m in Sources */,
 				438EDCF6182B7ABE0090F882 /* EQRReserveTopVCntrllr.m in Sources */,
 				541167BD18E5458A0059BA3C /* EQRNavBarDatesView.m in Sources */,

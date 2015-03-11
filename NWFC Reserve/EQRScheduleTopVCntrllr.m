@@ -1436,7 +1436,7 @@
             letterString = @"Su";
         }
         
-        NSString *dateString = [NSString stringWithFormat:@"%ld", indexPath.row + 1];
+        NSString *dateString = [NSString stringWithFormat:@"%d", indexPath.row + 1];
         
         //delete the datestring if the month doesn't extend that far
         if (!letterString){

@@ -23,7 +23,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+
+    [self.myTextView becomeFirstResponder];
 }
 
 
@@ -45,8 +46,7 @@
         }
     }];
     
-    //present keyboard to begin editing
-    [self.myTextView becomeFirstResponder];
+    
 }
 
 

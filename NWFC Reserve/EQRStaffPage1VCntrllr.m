@@ -24,6 +24,8 @@
 
 @property (strong, nonatomic) UIPopoverController* passwordPopover;
 
+@property (strong, nonatomic) EQRGenericTextEditor* genericTextEditor;
+
 @end
 
 @implementation EQRStaffPage1VCntrllr
@@ -66,8 +68,64 @@
     
 }
 
+#pragma mark - tap inside text field
 
--(IBAction)urlTextFieldDidChange:(id)sender{
+-(IBAction)tapInAdultTermField:(id)sender{
+    
+    self.genericTextEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
+    self.genericTextEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    self.genericTextEditor.delegate = self;
+    [self.genericTextEditor initalSetupWithTitle:@"Enter the current adult term" subTitle:nil currentText:self.termString.text keyboard:nil returnMethod:@"termTextFieldDidChange:"];
+
+    [self presentViewController:self.genericTextEditor animated:YES completion:^{
+    }];
+}
+
+-(IBAction)tapInCampField:(id)sender{
+    
+    self.genericTextEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
+    self.genericTextEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    self.genericTextEditor.delegate = self;
+    [self.genericTextEditor initalSetupWithTitle:@"Enter the current camp term" subTitle:nil currentText:self.campTermString.text keyboard:nil returnMethod:@"campTermTextFieldDidChange:"];
+    
+    [self presentViewController:self.genericTextEditor animated:YES completion:^{
+    }];
+}
+
+-(IBAction)tapInDatabaseURL:(id)sender{
+    
+    self.genericTextEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
+    self.genericTextEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    self.genericTextEditor.delegate = self;
+    [self.genericTextEditor initalSetupWithTitle:@"Enter the database URL" subTitle:nil currentText:self.urlString.text keyboard:@"UIKeyboardTypeURL" returnMethod:@"urlTextFieldDidChange:"];
+    
+    [self presentViewController:self.genericTextEditor animated:YES completion:^{
+    }];
+}
+
+
+#pragma mark - EQRGenericTextEditor delegate methods
+
+-(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod{
+    
+    self.genericTextEditor.delegate = nil;
+    
+    [self.genericTextEditor dismissViewControllerAnimated:YES completion:^{
+                
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        [self performSelector:NSSelectorFromString(returnMethod) withObject:returnText];
+#pragma clang diagnostic pop
+        
+        self.genericTextEditor = nil;
+    }];
+    
+}
+
+
+-(void)urlTextFieldDidChange:(NSString *)returnText{
+    
+    self.urlString.text = returnText;
     
     //change user defaults with new string text
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
@@ -81,7 +139,9 @@
 }
 
 
--(IBAction)termTextFieldDidChange:(id)sender{
+-(void)termTextFieldDidChange:(NSString *)returnText{
+    
+    self.termString.text = returnText;
     
     //change user defaults with new string text
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
@@ -95,7 +155,9 @@
 }
 
 
--(IBAction)campTermTextFieldDidChange:(id)sender{
+-(void)campTermTextFieldDidChange:(NSString *)returnText{
+    
+    self.campTermString.text = returnText;
     
     //change user defaults with new string text
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
