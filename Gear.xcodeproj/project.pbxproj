@@ -620,8 +620,7 @@
 				0115506619956A03009A459F /* Request */,
 				438EDCF7182B7ABE0090F882 /* EQRSecondViewController.h */,
 				438EDCF8182B7ABE0090F882 /* EQRSecondViewController.m */,
-				540B551B18769CCE0025FDEE /* EQRStaffPage1VCntrllr.h */,
-				540B551C18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m */,
+				54A0DB901AB048C600EE4281 /* Settings */,
 				54CE45AD186AF4790023FDA4 /* collection objects */,
 				54CE45A9186AF3680023FDA4 /* collectionViewCells */,
 				542D59B71A00DD9100989617 /* Text Elements */,
@@ -857,6 +856,15 @@
 				54ECF1E71998A9D900298996 /* EQRQuickViewPage3VCntrllr.xib */,
 			);
 			name = "Page VCs";
+			sourceTree = "<group>";
+		};
+		54A0DB901AB048C600EE4281 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				540B551B18769CCE0025FDEE /* EQRStaffPage1VCntrllr.h */,
+				540B551C18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m */,
+			);
+			name = Settings;
 			sourceTree = "<group>";
 		};
 		54CE45A9186AF3680023FDA4 /* collectionViewCells */ = {
