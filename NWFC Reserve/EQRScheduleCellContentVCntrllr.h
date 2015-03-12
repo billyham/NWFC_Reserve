@@ -19,6 +19,8 @@
 @property (strong, nonatomic) IBOutlet UIButton* serviceIssuesButton;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *weeksLeadingConstraint;
+@property NSInteger weekIndicatorOffset;
+
 
 
 

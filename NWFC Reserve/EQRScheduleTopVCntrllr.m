@@ -446,23 +446,26 @@
     //reset the ivar flag
     self.aChangeWasMade = NO;
     
-    //offset the week indicators
+    //____offset the week indicators
     NSString *dateAsString = [EQRDataStructure dateAsString:self.dateForShow];
     NSString *revisedDateAsString = [NSString stringWithFormat:@"%@01%@", [dateAsString substringToIndex:8], [dateAsString substringWithRange:NSMakeRange(10, 1)]];
-    NSLog(@"this is the revisedDateAsString: %@", revisedDateAsString);
     NSDate *newDate = [EQRDataStructure dateWithoutTimeFromString:revisedDateAsString];
     
     NSDateFormatter* dayOfWeekAsNumber = [[NSDateFormatter alloc] init];
     [dayOfWeekAsNumber setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"]];
     dayOfWeekAsNumber.dateFormat = @"e";
     NSString* numberString = [dayOfWeekAsNumber stringFromDate:newDate];
-    self.weekIndicatorOffset = [numberString integerValue] - 1;
+    self.weekIndicatorOffset = 7 - [numberString integerValue];
     
-    NSLog(@"this is the offset string: %lu", self.weekIndicatorOffset );
     //offset week vertical line indicators
-    self.navWeeksConstraint.constant = EQRScheduleLengthOfEquipUniqueLabel + (EQRScheduleItemWidthForDay * self.weekIndicatorOffset);
+    UIInterfaceOrientation orientationOnLaunch = [[UIApplication sharedApplication] statusBarOrientation];
+    if (UIInterfaceOrientationIsPortrait(orientationOnLaunch)) {
+        self.navWeeksConstraint.constant = EQRScheduleLengthOfEquipUniqueLabel+(EQRScheduleItemWidthForDayNarrow * self.weekIndicatorOffset);
+    }else{
+        self.navWeeksConstraint.constant = EQRScheduleLengthOfEquipUniqueLabel + (EQRScheduleItemWidthForDay * self.weekIndicatorOffset);
+    }
     [self.navBarWeeks setNeedsDisplay];
-    
+    //____//
     
     //______Get a list of tracking items (defaulting with the current month)
     NSDate* todaysDate = self.dateForShow;
@@ -1354,7 +1357,13 @@
         myContentViewController.myRowLabel.text = myTitleString;
         
         //offset week vertical line indicators
-        myContentViewController.weeksLeadingConstraint.constant = EQRScheduleLengthOfEquipUniqueLabel + (EQRScheduleItemWidthForDay * self.weekIndicatorOffset);
+        myContentViewController.weekIndicatorOffset = self.weekIndicatorOffset;
+        UIInterfaceOrientation orientationOnLaunch = [[UIApplication sharedApplication] statusBarOrientation];
+        if (UIInterfaceOrientationIsPortrait(orientationOnLaunch)) {
+            myContentViewController.weeksLeadingConstraint.constant = EQRScheduleLengthOfEquipUniqueLabel+(EQRScheduleItemWidthForDayNarrow * self.weekIndicatorOffset);
+        }else{
+            myContentViewController.weeksLeadingConstraint.constant = EQRScheduleLengthOfEquipUniqueLabel + (EQRScheduleItemWidthForDay * self.weekIndicatorOffset);
+        }
         
         //determine if service issues should be visible or hidden (default hidden)
         //does a servcie issue exist?
@@ -1388,7 +1397,7 @@
                 //change background color
                 cell.backgroundColor = [UIColor lightGrayColor];
                 
-            }else if((statusLevelInt >= EQRThresholdForMinorIssue) && (statusLevelInt < EQRThresholdForSeriousIssue)){  //flawed but functional
+            }else if((statusLevelInt >= EQRThresholdForMinorIssue) && (statusLevelInt < EQRThresholdForSeriousIssue)){  //equip is flawed but functional
                 
                 [myContentViewController.serviceIssuesButton setTitleColor:[colors.colorDic objectForKey:EQRColorIssueMinor] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
             }else{
@@ -1467,7 +1476,7 @@
             letterString = @"Su";
         }
         
-        NSString *dateString = [NSString stringWithFormat:@"%ld", indexPath.row + 1];
+        NSString *dateString = [NSString stringWithFormat:@"%d", indexPath.row + 1];
         
         //delete the datestring if the month doesn't extend that far
         if (!letterString){
@@ -1556,6 +1565,9 @@
         self.navBarWeeks.isNarrowFlag = YES;
         self.navBarDates.alpha = 0.5;
         self.navBarWeeks.alpha = 0.5;
+        
+        self.navWeeksConstraint.constant = EQRScheduleLengthOfEquipUniqueLabel+(EQRScheduleItemWidthForDayNarrow * self.weekIndicatorOffset);
+        
         [self.navBarDates setNeedsDisplay];
         [self.navBarWeeks setNeedsDisplay];
         
@@ -1565,6 +1577,9 @@
         self.navBarWeeks.isNarrowFlag = NO;
         self.navBarDates.alpha = 1.0;
         self.navBarWeeks.alpha = 1.0;
+        
+        self.navWeeksConstraint.constant = EQRScheduleLengthOfEquipUniqueLabel+(EQRScheduleItemWidthForDay * self.weekIndicatorOffset);
+        
         [self.navBarDates setNeedsDisplay];
         [self.navBarWeeks setNeedsDisplay];
     }

@@ -80,6 +80,8 @@
         self.navBarDates.alpha = 0.5;
         self.navBarWeeks.alpha = 0.5;
         
+        self.weeksLeadingConstraint.constant = EQRScheduleLengthOfEquipUniqueLabel+(EQRScheduleItemWidthForDayNarrow * self.weekIndicatorOffset);
+        
         [self.navBarDates setNeedsDisplay];
         [self.navBarWeeks setNeedsDisplay];
         
@@ -90,6 +92,8 @@
         
         self.navBarDates.alpha = 1.0;
         self.navBarWeeks.alpha = 1.0;
+        
+        self.weeksLeadingConstraint.constant = EQRScheduleLengthOfEquipUniqueLabel + (EQRScheduleItemWidthForDay * self.weekIndicatorOffset);
         
         [self.navBarDates setNeedsDisplay];
         [self.navBarWeeks setNeedsDisplay];
