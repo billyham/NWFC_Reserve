@@ -39,6 +39,7 @@
     if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
         
         self.navBarDates.alpha = 0.5;
+        self.navBarWeeks.alpha = 0.5;
     }
 
     
@@ -74,18 +75,24 @@
     if ((orientationInt == UIInterfaceOrientationPortrait) || (orientationInt == UIInterfaceOrientationPortraitUpsideDown)){
         
         self.navBarDates.isNarrowFlag = YES;
+        self.navBarWeeks.isNarrowFlag = YES;
         
         self.navBarDates.alpha = 0.5;
+        self.navBarWeeks.alpha = 0.5;
         
         [self.navBarDates setNeedsDisplay];
+        [self.navBarWeeks setNeedsDisplay];
         
     }else{
         
         self.navBarDates.isNarrowFlag = NO;
+        self.navBarWeeks.isNarrowFlag = NO;
         
         self.navBarDates.alpha = 1.0;
+        self.navBarWeeks.alpha = 1.0;
         
         [self.navBarDates setNeedsDisplay];
+        [self.navBarWeeks setNeedsDisplay];
     }
     
 }

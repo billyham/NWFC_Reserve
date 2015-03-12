@@ -29,6 +29,7 @@
 #import "EQRModeManager.h"
 #import "EQRScheduleNestedDateBarCell.h"
 #import "EQRNavBarDatesView.h"
+#import "EQRNavBarWeeksView.h"
 #import "EQRDataStructure.h"
 
 
@@ -66,7 +67,10 @@
 @property (strong, nonatomic) EQRQuickViewScrollVCntrllr* myQuickViewScrollVCntrllr;
 
 @property (strong, nonatomic) IBOutlet EQRNavBarDatesView* navBarDates;
+@property (strong, nonatomic) IBOutlet EQRNavBarWeeksView *navBarWeeks;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *navWeeksConstraint;
 
+@property NSInteger weekIndicatorOffset;
 
 
 -(IBAction)moveToNextMonth:(id)sender;
@@ -398,13 +402,19 @@
     if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
         
         self.navBarDates.isNarrowFlag = YES;
+        self.navBarWeeks.isNarrowFlag = YES;
         self.navBarDates.alpha = 0.5;
+        self.navBarWeeks.alpha = 0.5;
         [self.navBarDates setNeedsDisplay];
+        [self.navBarWeeks setNeedsDisplay];
     }else{
         
         self.navBarDates.isNarrowFlag = NO;
+        self.navBarWeeks.isNarrowFlag = NO;
         self.navBarDates.alpha = 1.0;
+        self.navBarWeeks.alpha = 1.0;
         [self.navBarDates setNeedsDisplay];
+        [self.navBarWeeks setNeedsDisplay];
     }
 
     //this updates placement of day and dates if orientation changed in a different tab
@@ -435,6 +445,24 @@
     
     //reset the ivar flag
     self.aChangeWasMade = NO;
+    
+    //offset the week indicators
+    NSString *dateAsString = [EQRDataStructure dateAsString:self.dateForShow];
+    NSString *revisedDateAsString = [NSString stringWithFormat:@"%@01%@", [dateAsString substringToIndex:8], [dateAsString substringWithRange:NSMakeRange(10, 1)]];
+    NSLog(@"this is the revisedDateAsString: %@", revisedDateAsString);
+    NSDate *newDate = [EQRDataStructure dateWithoutTimeFromString:revisedDateAsString];
+    
+    NSDateFormatter* dayOfWeekAsNumber = [[NSDateFormatter alloc] init];
+    [dayOfWeekAsNumber setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"]];
+    dayOfWeekAsNumber.dateFormat = @"e";
+    NSString* numberString = [dayOfWeekAsNumber stringFromDate:newDate];
+    self.weekIndicatorOffset = [numberString integerValue] - 1;
+    
+    NSLog(@"this is the offset string: %lu", self.weekIndicatorOffset );
+    //offset week vertical line indicators
+    self.navWeeksConstraint.constant = EQRScheduleLengthOfEquipUniqueLabel + (EQRScheduleItemWidthForDay * self.weekIndicatorOffset);
+    [self.navBarWeeks setNeedsDisplay];
+    
     
     //______Get a list of tracking items (defaulting with the current month)
     NSDate* todaysDate = self.dateForShow;
@@ -1325,6 +1353,9 @@
         //change label AFTER adding it to the view else defaults to XIB file
         myContentViewController.myRowLabel.text = myTitleString;
         
+        //offset week vertical line indicators
+        myContentViewController.weeksLeadingConstraint.constant = EQRScheduleLengthOfEquipUniqueLabel + (EQRScheduleItemWidthForDay * self.weekIndicatorOffset);
+        
         //determine if service issues should be visible or hidden (default hidden)
         //does a servcie issue exist?
         NSString* issue_short_name = [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] issue_short_name];
@@ -1436,7 +1467,7 @@
             letterString = @"Su";
         }
         
-        NSString *dateString = [NSString stringWithFormat:@"%d", indexPath.row + 1];
+        NSString *dateString = [NSString stringWithFormat:@"%ld", indexPath.row + 1];
         
         //delete the datestring if the month doesn't extend that far
         if (!letterString){
@@ -1522,14 +1553,20 @@
     if ((toInterfaceOrientation == UIInterfaceOrientationPortrait) || (toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)){
         
         self.navBarDates.isNarrowFlag = YES;
+        self.navBarWeeks.isNarrowFlag = YES;
         self.navBarDates.alpha = 0.5;
+        self.navBarWeeks.alpha = 0.5;
         [self.navBarDates setNeedsDisplay];
+        [self.navBarWeeks setNeedsDisplay];
         
     }else{
         
         self.navBarDates.isNarrowFlag = NO;
+        self.navBarWeeks.isNarrowFlag = NO;
         self.navBarDates.alpha = 1.0;
+        self.navBarWeeks.alpha = 1.0;
         [self.navBarDates setNeedsDisplay];
+        [self.navBarWeeks setNeedsDisplay];
     }
     
     

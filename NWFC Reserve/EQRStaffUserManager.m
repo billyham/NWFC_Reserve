@@ -57,12 +57,16 @@
             
             if ([thisVC class] == [UISplitViewController class]){  //must be inbox
                 [self.arrayOfHiddenVCs addObject:thisVC];
-            }else if ([[(UINavigationController*)thisVC topViewController] class] == [EQRItineraryVCntrllr class]){
-                [self.arrayOfHiddenVCs addObject:thisVC];
-            }else if ([[(UINavigationController*)thisVC topViewController] class] == [EQRScheduleTopVCntrllr class]){
-                [self.arrayOfHiddenVCs addObject:thisVC];
+            }else if ([thisVC respondsToSelector:@selector(topViewController)] ){
+                if ([[(UINavigationController*)thisVC topViewController] class] == [EQRItineraryVCntrllr class]){
+                    [self.arrayOfHiddenVCs addObject:thisVC];
+                }else if ([[(UINavigationController*)thisVC topViewController] class] == [EQRScheduleTopVCntrllr class]){
+                    [self.arrayOfHiddenVCs addObject:thisVC];
+                }else{
+                    [arrayToKeep addObject:thisVC];  //must be Settings or Request
+                }
             }else{
-                [arrayToKeep addObject:thisVC];
+                [arrayToKeep addObject:thisVC];  //must be Settings or Request
             }
         }
         

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6751" systemVersion="14C109" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRScheduleCellContentVCntrllr">
             <connections>
                 <outlet property="myRowLabel" destination="rYz-xr-gkQ" id="GDj-hT-8pe"/>
                 <outlet property="navBarDates" destination="0Xn-We-typ" id="fEM-tV-WEo"/>
+                <outlet property="navBarWeeks" destination="oXi-Hd-SGg" id="xpP-bs-SJR"/>
                 <outlet property="serviceIssuesButton" destination="2xf-yO-TvY" id="5Ef-8X-mQ5"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="weeksLeadingConstraint" destination="Ue0-t5-K9l" id="dSs-Fc-ORU"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -28,6 +29,10 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Xn-We-typ" customClass="EQRNavBarDatesView">
+                    <rect key="frame" x="200" y="0.0" width="824" height="30"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oXi-Hd-SGg" customClass="EQRNavBarWeeksView">
                     <rect key="frame" x="200" y="0.0" width="824" height="30"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
@@ -49,10 +54,14 @@
                 <constraint firstItem="0Xn-We-typ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="68O-Z6-n1K"/>
                 <constraint firstItem="2xf-yO-TvY" firstAttribute="leading" secondItem="rYz-xr-gkQ" secondAttribute="trailing" constant="18" id="ChH-WH-YAn"/>
                 <constraint firstItem="2xf-yO-TvY" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="2" id="DEq-1P-jJh"/>
+                <constraint firstItem="oXi-Hd-SGg" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="JdJ-1I-2OQ"/>
                 <constraint firstAttribute="bottom" secondItem="0Xn-We-typ" secondAttribute="bottom" id="RAK-W1-wuJ"/>
                 <constraint firstItem="rYz-xr-gkQ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="SUF-1X-atL"/>
+                <constraint firstAttribute="trailing" secondItem="oXi-Hd-SGg" secondAttribute="trailing" id="T6X-sO-p8i"/>
+                <constraint firstItem="oXi-Hd-SGg" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="200" id="Ue0-t5-K9l"/>
                 <constraint firstAttribute="trailing" secondItem="0Xn-We-typ" secondAttribute="trailing" id="bOg-AS-rP3"/>
                 <constraint firstItem="rYz-xr-gkQ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="6" id="gr0-Eu-43p"/>
+                <constraint firstAttribute="bottom" secondItem="oXi-Hd-SGg" secondAttribute="bottom" id="xir-i1-8tJ"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

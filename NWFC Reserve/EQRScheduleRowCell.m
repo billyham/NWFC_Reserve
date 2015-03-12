@@ -101,14 +101,17 @@
     if (UIInterfaceOrientationIsPortrait(orientationOnLaunch)) {
         
         self.cellContentVC.navBarDates.isNarrowFlag = YES;
+        self.cellContentVC.navBarWeeks.isNarrowFlag = YES;
         
     }else{
         
         self.cellContentVC.navBarDates.isNarrowFlag = NO;
+        self.cellContentVC.navBarWeeks.isNarrowFlag = NO;
     }
     
     //refresh the view
     [self.cellContentVC.navBarDates setNeedsDisplay];
+    [self.cellContentVC.navBarWeeks setNeedsDisplay];
 }
 
 

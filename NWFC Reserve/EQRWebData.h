@@ -19,7 +19,7 @@ typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
 
 @interface EQRWebData : NSObject <NSXMLParserDelegate>{
     
-    __weak id <EQRWebDataDelegate> ddelegateDataFeed;
+    __weak id <EQRWebDataDelegate> delegateDataFeed;
 }
 
 @property (nonatomic, weak) id <EQRWebDataDelegate> delegateDataFeed;

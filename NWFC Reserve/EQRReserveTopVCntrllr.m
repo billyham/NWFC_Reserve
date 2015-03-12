@@ -40,6 +40,7 @@
 
 @property BOOL hideNameListFlag;
 @property BOOL hideClassListFlag;
+@property BOOL needsToRetrieveAllUniqueEquipItemsFlag;
 
 //contact picker
 @property (weak, nonatomic) EQRContactPickerVC* myContactPickerVC;
@@ -60,13 +61,11 @@
     [nc addObserver:self selector:@selector(startNewDisplay:) name:EQRVoidScheduleItemObjects object:nil];
     
 
-    //register colleciton view cell
+    //register collection view cells
     [self.classListTable registerClass:[EQRClassCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.rentorTypeListTable registerClass:[EQRCellTemplate class] forCellWithReuseIdentifier:@"Cell"];
     
     //register table view cells
-    //?s
-
 
     //populate renterTypeArray
     if (!self.renterTypeArray){
@@ -175,6 +174,20 @@
     requestManager.request.renter_type = self.chosenRenterType;
     
     
+    //confirm that requestManager has successfully loaded allEquipUniqueItems and warn if not
+    if (self.needsToRetrieveAllUniqueEquipItemsFlag){
+        NSArray *returnArray = [requestManager retrieveAllEquipUniqueItems];
+        if (returnArray == nil){
+            
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Connection Error" message:@"Cannot connect to equipment inventory. Ensure that wifi is on \"Private\" and database URL (in settings) is correct" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles: nil];
+            
+            [alertView show];
+            
+            //DON'T segue, cause you won't be able to complete the request succesfully
+            return;
+        }
+    }
+    
     //perform segue to show date picker
     [self performSegueWithIdentifier:@"lookAtDates" sender:self];
     
@@ -225,7 +238,15 @@
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
     //refresh the list of ALL equipUniqueItems
-    [requestManager retrieveAllEquipUniqueItems];
+    //_______!!!!!!!!!   if this fails because the database url is wrong, it doesn't get loaded until AFTER the first request is made
+    //________!!!!!!!!!  resulting in the WRONG equipUnique key (Canon XA10 key)
+    NSArray *returnArray = [requestManager retrieveAllEquipUniqueItems];
+    
+    if (returnArray == nil){
+//        NSLog(@"returned array is nil");
+        
+        self.needsToRetrieveAllUniqueEquipItemsFlag = YES;
+    }
     
     //hide name list until a type is selected
     [self.myContactPickerVC.view setHidden:YES];
