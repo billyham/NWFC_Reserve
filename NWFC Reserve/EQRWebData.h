@@ -24,11 +24,10 @@ typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
 
 @property (nonatomic, weak) id <EQRWebDataDelegate> delegateDataFeed;
 
-@property BOOL cancelTheScheduleDownloadFlag;
-
+//@property BOOL cancelTheScheduleDownloadFlag;
 //@property (strong, nonatomic) NSMutableArray* totalEquip;
-@property (strong, nonatomic) NSMutableArray* muteArray;
-@property (strong, nonatomic) NSXMLParser* xmlParser;
+//@property (strong, nonatomic) NSMutableArray* muteArray;
+//@property (strong, nonatomic) NSXMLParser* xmlParser;
 
 
 +(EQRWebData*)sharedInstance;
@@ -38,16 +37,16 @@ typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
 -(NSString*)queryForStringWithLink:(NSString*)link parameters:(NSArray*)para;
 
 //asynchronous methods, used in conjunction with WebData delegate
--(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithBool)completeBlock;
+-(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString selector:(SEL)action completion:(CompletionBlockWithBool)completeBlock;
+
+//stop parsing
+-(void)stopXMLParsing;
 
 @end
 
-
+//delegateDataFeed methods
 @protocol EQRWebDataDelegate <NSObject>
 
--(void)addScheduleTrackingItem:(id)currentThing;
-
-//______something else to think about (this is used in scheduleDisplayTopVC)
-// [self.myWebData.xmlParser abortParsing]
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action;
 
 @end

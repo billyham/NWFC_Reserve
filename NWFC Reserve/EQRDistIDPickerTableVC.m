@@ -111,11 +111,6 @@
         }
     }
     
-//    NSLog(@"count of equipUnique array: %u  and count of join array: %u  object.uniqueKey at index 0: %@",
-          [arrayOfEquipUniquesWithSpecificTitle count],
-          [keepTheseJoinsWithNoDupes count],
-          [(EQRScheduleTracking_EquipmentUnique_Join*)[keepTheseJoinsWithNoDupes objectAtIndex:0] equipUniqueItem_foreignKey];
-    
     //now we have a clean array with a list of the equipUniques that NOT available...
     for (EQREquipUniqueItem* thisEquipUniqueItem in arrayOfEquipUniquesWithSpecificTitle){
         

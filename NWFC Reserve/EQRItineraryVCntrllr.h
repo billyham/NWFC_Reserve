@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRWebData.h"
 
 typedef NS_OPTIONS(NSUInteger, EQRItineraryFilter){
     
@@ -22,8 +23,13 @@ typedef NS_OPTIONS(NSUInteger, EQRItineraryFilter){
 };
 
 
-@interface EQRItineraryVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UIPopoverControllerDelegate>
+@interface EQRItineraryVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UIPopoverControllerDelegate, EQRWebDataDelegate>
 
 -(IBAction)applyFilter:(id)sender;
+
+
+//webData DelegateDataFeed methods
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action;
+
 
 @end

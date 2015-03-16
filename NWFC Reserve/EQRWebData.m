@@ -20,6 +20,9 @@
 
 @interface EQRWebData ()
 
+@property (strong, nonatomic) NSMutableArray* muteArray;
+@property (strong, nonatomic) NSXMLParser* xmlParser;
+
 @property (strong, nonatomic) NSString* currentProperty;
 @property (strong, nonatomic) NSMutableString* currentValue;
 
@@ -33,6 +36,8 @@
 
 @property (strong, nonatomic) NSArray* alphaNumericaArray;
 @property int returnClassInt;
+
+@property SEL aSyncSelector;
 
 @end
 
@@ -1618,12 +1623,23 @@ const int intEQRTextElement = 10;
 }
 
 
+#pragma mark - abort method
+
+-(void)stopXMLParsing{
+    
+    [self.xmlParser abortParsing];
+}
+
+
 #pragma mark - Asynchronous methods
 
--(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithBool)completeBlock{
+-(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString selector:(SEL)action completion:(CompletionBlockWithBool)completeBlock{
+    
+    //set chosen selector
+    self.aSyncSelector = action;
     
     //set the flag
-    self.cancelTheScheduleDownloadFlag = NO;
+//    self.cancelTheScheduleDownloadFlag = NO;
     
 //    [self asyncDispatchWithObject:nil];
     
@@ -1761,13 +1777,13 @@ const int intEQRTextElement = 10;
     
 }
 
--(void)asyncDispatchWithObject:(id)currentThing{
+-(void)asyncDispatchWithObject:(id)currentThing {
     
     if (self.delegateDataFeed != nil){
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            [self.delegateDataFeed addScheduleTrackingItem:currentThing];
+            [self.delegateDataFeed addASyncDataItem:currentThing toSelector:self.aSyncSelector];
         });
     } 
     

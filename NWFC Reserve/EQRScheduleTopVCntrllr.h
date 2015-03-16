@@ -12,7 +12,7 @@
 @interface EQRScheduleTopVCntrllr : UIViewController <UICollectionViewDelegateFlowLayout, EQRWebDataDelegate, UIAlertViewDelegate, UIPopoverControllerDelegate>
 
 //EQRWebData Delegate methods
--(void)addScheduleTrackingItem:(id)currentThing;
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action;
 
 
 @end

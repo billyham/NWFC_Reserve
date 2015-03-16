@@ -440,7 +440,7 @@
     
     //cancel any existing web data parsing
     if (self.myWebData){
-        [self.myWebData.xmlParser abortParsing];
+        [self.myWebData stopXMLParsing];
     }
     
     //reset the ivar flag
@@ -523,10 +523,11 @@
     self.myActivityIndicator.hidden = NO;
     [self.myActivityIndicator startAnimating];
     
+    SEL thisSelector = @selector(timerFiredReloadCollectionView);
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
     dispatch_async(queue, ^{
         
-        [webData queryWithAsync:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(BOOL isLoadingFlagUp) {
+        [webData queryWithAsync:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
             
             //lower the isLoading flag
             self.isLoadingEquipDataFlag = NO;
@@ -552,7 +553,7 @@
     
     //cancel any existing web data parsing
     if (self.myWebData){
-        [self.myWebData.xmlParser abortParsing];
+        [self.myWebData stopXMLParsing];
         
         //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
         //_________falsely showing equip joins from a previous month
@@ -609,7 +610,7 @@
     
     //cancel any existing web data parsing
     if (self.myWebData){
-        [self.myWebData.xmlParser abortParsing];
+        [self.myWebData stopXMLParsing];
         
         //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
         //_________falsely showing equip joins from a previous month
@@ -666,7 +667,7 @@
     
     //cancel any existing web data parsing
     if (self.myWebData){
-        [self.myWebData.xmlParser abortParsing];
+        [self.myWebData stopXMLParsing];
         
         //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
         //_________falsely showing equip joins from a previous month
@@ -760,7 +761,7 @@
     
     //cancel any existing web data parsing
     if (self.myWebData){
-        [self.myWebData.xmlParser abortParsing];
+        [self.myWebData stopXMLParsing];
         
         //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
         //_________falsely showing equip joins from a previous month
@@ -1698,7 +1699,13 @@
 
 #pragma mark - EQRWebData Delegate methods
 
--(void)addScheduleTrackingItem:(id)currentThing{
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    
+    //abort if selector is unrecognized, otherwise crash
+    if (![self canPerformAction:action withSender:nil]){
+        NSLog(@"cannot perform selector: %@", NSStringFromSelector(action));
+        return;
+    }
     
 //    NSLog(@"WEBDATA SUCCESSFULLY CALLED DELEGATE'S METHOD: %@", [currentThing class]);
     
@@ -1756,7 +1763,7 @@
 - (void)viewWillDisappear:(BOOL)animated{
     
     //___!!!!  stop the async data loading...
-    [self.myWebData.xmlParser abortParsing];
+    [self.myWebData stopXMLParsing];
     
     //tell view to reload if it aborts loading
     if (self.isLoadingEquipDataFlag){

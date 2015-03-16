@@ -99,6 +99,7 @@
 		542F5FFE192357AF001C28CA /* EQRCheckVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 542F5FFC192357AF001C28CA /* EQRCheckVCntrllr.xib */; };
 		5431456B197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54314569197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m */; };
 		5431456C197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5431456A197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib */; };
+		54331E011AB6B59B00AA0E1C /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54331E001AB6B59B00AA0E1C /* CloudKit.framework */; };
 		5433FCD21A8CB30500057B4F /* EQREnterPhoneVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5433FCD01A8CB30500057B4F /* EQREnterPhoneVC.m */; };
 		5433FCD31A8CB30500057B4F /* EQREnterPhoneVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5433FCD11A8CB30500057B4F /* EQREnterPhoneVC.xib */; };
 		5439B08D19AEC835007CC11C /* EQRInboxLeftTopVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439B08C19AEC835007CC11C /* EQRInboxLeftTopVC.m */; };
@@ -330,6 +331,7 @@
 		54314568197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRQuickViewPage1VCntrllr.h; sourceTree = "<group>"; };
 		54314569197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRQuickViewPage1VCntrllr.m; sourceTree = "<group>"; };
 		5431456A197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRQuickViewPage1VCntrllr.xib; sourceTree = "<group>"; };
+		54331E001AB6B59B00AA0E1C /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		5433FCCF1A8CB30500057B4F /* EQREnterPhoneVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREnterPhoneVC.h; sourceTree = "<group>"; };
 		5433FCD01A8CB30500057B4F /* EQREnterPhoneVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREnterPhoneVC.m; sourceTree = "<group>"; };
 		5433FCD11A8CB30500057B4F /* EQREnterPhoneVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREnterPhoneVC.xib; sourceTree = "<group>"; };
@@ -457,6 +459,7 @@
 				5447B096193C3305004C6DB9 /* CoreMedia.framework in Frameworks */,
 				5447B094193C32FB004C6DB9 /* CoreVideo.framework in Frameworks */,
 				5447B092193C32B5004C6DB9 /* AVFoundation.framework in Frameworks */,
+				54331E011AB6B59B00AA0E1C /* CloudKit.framework in Frameworks */,
 				5447B090193C329E004C6DB9 /* CoreImage.framework in Frameworks */,
 				438EDCE2182B7ABE0090F882 /* CoreGraphics.framework in Frameworks */,
 				438EDCE4182B7ABE0090F882 /* UIKit.framework in Frameworks */,
@@ -590,6 +593,7 @@
 		438EDCDE182B7ABD0090F882 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				54331E001AB6B59B00AA0E1C /* CloudKit.framework */,
 				54BB2D1619F77AF900CF4AE8 /* CoreData.framework */,
 				011353F319B9200300E7BF02 /* MessageUI.framework */,
 				5447B095193C3305004C6DB9 /* CoreMedia.framework */,
@@ -1361,7 +1365,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NWFC Reserve/Gear-Prefix.pch";
 				INFOPLIST_FILE = "NWFC Reserve/Gear-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = Gear;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -1379,7 +1383,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NWFC Reserve/Gear-Prefix.pch";
 				INFOPLIST_FILE = "NWFC Reserve/Gear-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = Gear;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;

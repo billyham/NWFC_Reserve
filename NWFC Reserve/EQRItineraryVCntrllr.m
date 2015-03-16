@@ -31,7 +31,7 @@
 
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
 
-@property (strong, nonatomic) NSArray* arrayOfScheduleRequests;
+@property (strong, nonatomic) NSMutableArray* arrayOfScheduleRequests;
 @property (strong, nonatomic) NSArray* filteredArrayOfScheduleRequests;
 
 @property EQRItineraryFilter currentFilterBitmask;
@@ -50,6 +50,14 @@
 @property (strong, nonatomic) NSDictionary* temporaryDicFromQuickView;
 
 @property BOOL aChangeWasMade;
+
+//async webData properties
+@property NSInteger countOfUltimageReturnedItems;
+@property NSInteger indexOfLastReturnedItem;
+@property BOOL finishedAsyncDBCallForPickup;
+@property BOOL finishedAsyncDBCallForReturn;
+@property (strong, nonatomic) EQRWebData *webDataForPickup;
+@property (strong, nonatomic) EQRWebData *webDataForReturn;
 
 -(IBAction)moveToNextDay:(id)sender;
 -(IBAction)moveToPreviousDay:(id)sender;
@@ -219,6 +227,17 @@
 
 
 -(void)refreshTheView{
+
+    
+    //_____this doesn't help
+    self.countOfUltimageReturnedItems = 0;
+    [self.arrayOfScheduleRequests removeAllObjects];
+    
+    //reload the view
+    [self.myMasterItineraryCollection reloadData];
+    
+    [self.webDataForPickup stopXMLParsing];
+    [self.webDataForReturn stopXMLParsing];
     
     //update the array first
     [self partialRefreshToUpdateTheArrayOfRequests:nil];
@@ -246,7 +265,6 @@
         //update the filter button to ON
         [self updateFilterButtonDisplayWithAddedBitmask:cellBitmaskValue];
         
-        
         //if all filters are added, switch 'all' on
         if (self.currentFilterBitmask == EQRFilterAll){
             
@@ -267,10 +285,11 @@
     }
     
     
-    //empty out the existing array
-    if (self.arrayOfScheduleRequests){
-        
-        self.arrayOfScheduleRequests = nil;
+    //intiate array or empty out the existing array
+    if (!self.arrayOfScheduleRequests){
+        self.arrayOfScheduleRequests = [NSMutableArray arrayWithCapacity:1];
+    }else{
+        [self.arrayOfScheduleRequests removeAllObjects];
     }
     
     //put the date in timestamp format
@@ -287,86 +306,128 @@
     NSArray* secondArray = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
     NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
     
-    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+    self.indexOfLastReturnedItem = -1;
     
-    //First, add the 'going' schedule items
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    [webData queryWithLink:@"EQGetScheduleItemsWithBeginDate.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+    //__1__ get total count of items that will be ultimately be returned
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    self.webDataForPickup = webData;
+    self.webDataForPickup.delegateDataFeed = self;
+    NSString* countOfPickUps = [self.webDataForPickup queryForStringWithLink:@"EQGetCountOfScheduleItemsWithBeginDate.php" parameters:topArray];
+    self.countOfUltimageReturnedItems = [countOfPickUps integerValue];
+    NSString *countOfReturns = [self.webDataForPickup queryForStringWithLink:@"EQGetCountOfScheduleItemsWithEndDate.php" parameters:topArray];
+    self.countOfUltimageReturnedItems = self.countOfUltimageReturnedItems + [countOfReturns  intValue];
+    
+    //__2__ do asynchronous call
+    SEL thisSelectorPickup = @selector(addPickupToIntineraryList:);
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+    dispatch_async(queue, ^{
         
-        for (id object in muteArray){
+       [self.webDataForPickup queryWithAsync:@"EQGetScheduleItemsWithBeginDate.php" parameters:topArray class:@"EQRScheduleRequestItem" selector:thisSelectorPickup completion:^(BOOL isLoadingFlagUp) {
+          
+           //identify when loading is complete
+           self.finishedAsyncDBCallForPickup = isLoadingFlagUp;
+           
+           NSLog(@"loading pickups is DONE!!");
+       }];
+    });
+    
+    //do asynchronous call to a DIFFERENT IMPLEMENTATION OF WEBDATA
+    EQRWebData *webData2 = [EQRWebData sharedInstance];
+    self.webDataForReturn = webData2;
+    self.webDataForReturn.delegateDataFeed = self;
+    SEL thisSelectorReturn = @selector(addReturnToItineraryList:);
+    dispatch_queue_t queue2 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+    dispatch_async(queue2, ^{
+       
+        [self.webDataForReturn queryWithAsync:@"EQGetScheduleItemsWithEndDate.php" parameters:topArray class:@"EQRScheduleRequestItem" selector:thisSelectorReturn completion:^(BOOL isLoadingFlagUp) {
+           
+            self.finishedAsyncDBCallForReturn = isLoadingFlagUp;
             
-            NSLog(@"this is the prep date: %@", [(EQRScheduleRequestItem*)object staff_prep_date]);
-            
-            //adjust the begin date by adding 9 hours... or 8 hours
-            float secondsForOffset = 0;    //this is 9 hours = 32400, this is 8 hours = 28800;
-            NSDate* newTimeBegin = [[(EQRScheduleRequestItem*)object request_time_begin] dateByAddingTimeInterval:secondsForOffset];
-            NSDate* newTimeEnd = [[(EQRScheduleRequestItem*)object request_time_end] dateByAddingTimeInterval:secondsForOffset];
-            [(EQRScheduleRequestItem*)object setRequest_time_begin:newTimeBegin];
-            [(EQRScheduleRequestItem*)object setRequest_time_end:newTimeEnd];
-            
-            [tempMuteArray addObject:object];
-        }
+            NSLog(@"loading returns is DONE!!");
+        }];
         
-    }];
-    
-    //Second, add the 'returning' items to the same array
-    [webData queryWithLink:@"EQGetScheduleItemsWithEndDate.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-        
-        for (id object in muteArray){
-            
-            //adjust the date by adding 9 hours... or 8 hours
-            float secondsForOffset = 0;    //this is 9 hours = 32400, this is 8 hours = 28800;
-            NSDate* newTimeBegin = [[(EQRScheduleRequestItem*)object request_time_begin] dateByAddingTimeInterval:secondsForOffset];
-            NSDate* newTimeEnd = [[(EQRScheduleRequestItem*)object request_time_end] dateByAddingTimeInterval:secondsForOffset];
-            [(EQRScheduleRequestItem*)object setRequest_time_begin:newTimeBegin];
-            [(EQRScheduleRequestItem*)object setRequest_time_end:newTimeEnd];
-            
-            //mark the request item as a return object
-            [(EQRScheduleRequestItem*) object setMarkedForReturn:YES];
-            
-            [tempMuteArray addObject:object];
-        }
-    }];
+    });
     
     
-    
-    
-    //sort by request date begin (...and end)
-    
-    NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(EQRScheduleRequestItem* obj1, EQRScheduleRequestItem* obj2) {
-        
-        //use either time begin or time end depending on whether this item is going or returning
-        
-        NSDate* date1;
-        if (!obj1.markedForReturn){
-            date1 = [obj1 request_time_begin];
-        } else{
-            date1 = [obj1 request_time_end];
-        }
-        
-        NSDate* date2;
-        if (!obj2.markedForReturn){
-            date2 = [obj2 request_time_begin];
-        } else{
-            date2 = [obj2 request_time_end];
-        }
-        
-        return [date1 compare:date2];
-    }];
-    
-    //assign to ivar
-    self.arrayOfScheduleRequests = tempMuteArrayAlpha;
-    
-    //if a bitmisk filer it on, update it also
-    if (self.currentFilterBitmask != EQRFilterAll){
-        
-        [self createTheFilteredArray:self.currentFilterBitmask];
-    }
-    
-    if (needToReloadTheView){
-        
-        [self.myMasterItineraryCollection reloadData];
-    }
+//    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+//    
+//    //First, add the 'going' schedule items
+//    [webData queryWithLink:@"EQGetScheduleItemsWithBeginDate.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+//        
+//        for (id object in muteArray){
+//            
+////            NSLog(@"this is the prep date: %@", [(EQRScheduleRequestItem*)object staff_prep_date]);
+//            
+//            //adjust the begin date by adding 9 hours... or 8 hours
+//            float secondsForOffset = 0;    //this is 9 hours = 32400, this is 8 hours = 28800;
+//            NSDate* newTimeBegin = [[(EQRScheduleRequestItem*)object request_time_begin] dateByAddingTimeInterval:secondsForOffset];
+//            NSDate* newTimeEnd = [[(EQRScheduleRequestItem*)object request_time_end] dateByAddingTimeInterval:secondsForOffset];
+//            [(EQRScheduleRequestItem*)object setRequest_time_begin:newTimeBegin];
+//            [(EQRScheduleRequestItem*)object setRequest_time_end:newTimeEnd];
+//            
+//            [tempMuteArray addObject:object];
+//        }
+//        
+//    }];
+//    
+//    //Second, add the 'returning' items to the same array
+//    [webData queryWithLink:@"EQGetScheduleItemsWithEndDate.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+//        
+//        for (id object in muteArray){
+//            
+//            //adjust the date by adding 9 hours... or 8 hours
+//            float secondsForOffset = 0;    //this is 9 hours = 32400, this is 8 hours = 28800;
+//            NSDate* newTimeBegin = [[(EQRScheduleRequestItem*)object request_time_begin] dateByAddingTimeInterval:secondsForOffset];
+//            NSDate* newTimeEnd = [[(EQRScheduleRequestItem*)object request_time_end] dateByAddingTimeInterval:secondsForOffset];
+//            [(EQRScheduleRequestItem*)object setRequest_time_begin:newTimeBegin];
+//            [(EQRScheduleRequestItem*)object setRequest_time_end:newTimeEnd];
+//            
+//            //mark the request item as a return object
+//            [(EQRScheduleRequestItem*) object setMarkedForReturn:YES];
+//            
+//            [tempMuteArray addObject:object];
+//        }
+//    }];
+//    
+//    
+//    
+//    
+//    //sort by request date begin (...and end)
+//    
+//    NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(EQRScheduleRequestItem* obj1, EQRScheduleRequestItem* obj2) {
+//        
+//        //use either time begin or time end depending on whether this item is going or returning
+//        
+//        NSDate* date1;
+//        if (!obj1.markedForReturn){
+//            date1 = [obj1 request_time_begin];
+//        } else{
+//            date1 = [obj1 request_time_end];
+//        }
+//        
+//        NSDate* date2;
+//        if (!obj2.markedForReturn){
+//            date2 = [obj2 request_time_begin];
+//        } else{
+//            date2 = [obj2 request_time_end];
+//        }
+//        
+//        return [date1 compare:date2];
+//    }];
+//
+//    //assign to ivar
+//    [self.arrayOfScheduleRequests addObjectsFromArray:tempMuteArrayAlpha];
+//    
+//    //if a bitmisk filer is on, update it also
+//    if (self.currentFilterBitmask != EQRFilterAll){
+//        
+//        [self createTheFilteredArray:self.currentFilterBitmask];
+//    }
+//    
+//    if (needToReloadTheView){
+//        
+//        [self.myMasterItineraryCollection reloadData];
+//    }
     
 }
 
@@ -1224,9 +1285,92 @@
 
 -(IBAction)requestBoxOpen:(id)sender{
     
+}
+
+
+#pragma mark - webData Delegate methods
+
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
     
+    //abort if selector is unrecognized, otherwise crash
+    if (![self canPerformAction:action withSender:nil]){
+        NSLog(@"cannot perform selector: %@", NSStringFromSelector(action));
+        return;
+    }
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
     
 }
+
+-(void)addPickupToIntineraryList:(id)currentThing{
+    
+    if (currentThing){
+        [self.arrayOfScheduleRequests addObject:currentThing];
+        
+        //sort by request date begin (...and end)
+        NSArray* tempArrayAlpha = [self.arrayOfScheduleRequests sortedArrayUsingComparator:^NSComparisonResult(EQRScheduleRequestItem* obj1, EQRScheduleRequestItem* obj2) {
+            
+            //use either time begin or time end depending on whether this item is going or returning
+            
+            NSDate* date1;
+            if (!obj1.markedForReturn){
+                date1 = [obj1 request_time_begin];
+            } else{
+                date1 = [obj1 request_time_end];
+            }
+            
+            NSDate* date2;
+            if (!obj2.markedForReturn){
+                date2 = [obj2 request_time_begin];
+            } else{
+                date2 = [obj2 request_time_end];
+            }
+            
+            return [date1 compare:date2];
+        }];
+        
+        self.arrayOfScheduleRequests = [NSMutableArray arrayWithArray:tempArrayAlpha];
+    }
+
+    
+    //uptick on the index
+    self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
+    
+    //test to see if the cell is visible and needs data...
+    for (NSIndexPath* indexPath in [self.myMasterItineraryCollection indexPathsForVisibleItems]){
+        
+        if (self.indexOfLastReturnedItem == indexPath.row){
+            
+            NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:self.indexOfLastReturnedItem inSection:0];
+            NSArray* rowsOfIndexPaths = @[newIndexPath];
+            
+            //delay the refresh, the object's don't appear in the array immediately
+            [self performSelector:@selector(delayedCallToReloadCollectionViewItems:) withObject:rowsOfIndexPaths afterDelay:0.25];
+        }
+    }
+}
+
+-(void)addReturnToItineraryList:(id)currentThing{
+    
+    if (currentThing){
+        
+        //mark the request item as a return object
+        [(EQRScheduleRequestItem*)currentThing setMarkedForReturn:YES];
+    }
+    
+    [self addPickupToIntineraryList:currentThing];
+}
+
+
+-(void)delayedCallToReloadCollectionViewItems:(NSArray*)rowsOfIndexPaths{
+    
+    [self.myMasterItineraryCollection reloadItemsAtIndexPaths:rowsOfIndexPaths];
+}
+
+
 
 
 
@@ -1234,7 +1378,6 @@
 
 
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    
     
     return 1;
 }
@@ -1246,7 +1389,7 @@
     if (self.currentFilterBitmask == EQRFilterAll){
         //no filter
         
-        return [self.arrayOfScheduleRequests count];
+        return self.countOfUltimageReturnedItems;
         
     }else{
         //yes filter
@@ -1273,12 +1416,27 @@
     cell.backgroundColor = [UIColor whiteColor];
     
     
+    
     //test if a filter has been applied
     
     if (self.currentFilterBitmask == EQRFilterAll){
         //no filter
         
-        [cell initialSetupWithRequestItem:[self.arrayOfScheduleRequests objectAtIndex:indexPath.row]];
+        
+        //determine if data is loaded
+        if ([self.arrayOfScheduleRequests count] > indexPath.row){ //yes, indexed object has arrived
+            
+            [cell initialSetupWithRequestItem:[self.arrayOfScheduleRequests objectAtIndex:indexPath.row]];
+            
+        }else{ // no, the data is no loaded yet
+            
+//            cell.backgroundColor = [UIColor yellowColor];
+            return cell;
+            
+        }
+        
+        
+        
 
     }else{
         //yes filter
@@ -1294,12 +1452,23 @@
     return cell;
 }
 
-
+#pragma mark - dealloc and such
 
 -(void)dealloc{
     
     self.privateRequestManager = nil;
 }
+
+
+- (void)viewWillDisappear:(BOOL)animated{
+    
+    //stop the async data loading
+    [self.webDataForPickup stopXMLParsing];
+    [self.webDataForReturn stopXMLParsing];
+    
+    [super viewWillDisappear:animated];
+}
+
 
 #pragma mark - popover delegate methods
 

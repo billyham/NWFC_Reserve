@@ -45,5 +45,9 @@
     
 }
 
+-(void)stopXMLParsing{
+    
+}
+
 
 @end

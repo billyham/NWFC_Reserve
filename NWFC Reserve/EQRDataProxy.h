@@ -36,12 +36,12 @@ typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
 -(void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock;
 -(NSString*)queryForStringWithLink:(NSString*)link parameters:(NSArray*)para;
 -(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithBool)completeBlock;
-
+-(void)stopXMLParsing;
 
 @end
 
 @protocol EQRDataProxyDelegate <NSObject>
 
-
+-(void)addASyncDataItem:(id)currentThing;
 
 @end

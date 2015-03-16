@@ -22,7 +22,7 @@
 @property (weak, nonatomic) id <EQRInboxLeftTableDelegate> delegateForLeftSide;
 
 //webData dataFeedDelegate methods
--(void)addScheduleTrackingItem:(id)currentThing;
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action;
 
 @end
 

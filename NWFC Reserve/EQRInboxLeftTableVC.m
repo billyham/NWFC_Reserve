@@ -142,10 +142,11 @@
         self.countOfUltimageReturnedItems = [countOfRequests integerValue];
         
         //__2__ do asynchronous call to webData
+        SEL thisSelector = @selector(addToArrayOfRequests:);
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
         dispatch_async(queue, ^{
             
-            [webData queryWithAsync:@"EQGetScheduleRequestsUpcomingUnconfirmed.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(BOOL isLoadingFlagUp) {
+            [webData queryWithAsync:@"EQGetScheduleRequestsUpcomingUnconfirmed.php" parameters:topArray class:@"EQRScheduleRequestItem" selector:thisSelector  completion:^(BOOL isLoadingFlagUp) {
                 
                 //identify when loading is complete
                 self.finishedAsyncDBCall = isLoadingFlagUp;
@@ -165,10 +166,11 @@
         self.countOfUltimageReturnedItems = [countOfRequests integerValue];
         
         //__2__ do asynchronous call to webData
+        SEL thisSelector = @selector(addToArrayOfRequests:);
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
         dispatch_async(queue, ^{
             
-            [webData queryWithAsync:@"EQGetScheduleRequestsAll.php" parameters:nil class:@"EQRScheduleRequestItem" completion:^(BOOL isLoadingFlagUp) {
+            [webData queryWithAsync:@"EQGetScheduleRequestsAll.php" parameters:nil class:@"EQRScheduleRequestItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
                 
                 //identify when loading is complete
                 self.finishedAsyncDBCall = isLoadingFlagUp;
@@ -188,10 +190,11 @@
         NSString* countOfRequests = [webData queryForStringWithLink:@"EQGetCountOfScheduleRequestsAll.php" parameters:nil];
         self.countOfUltimageReturnedItems = [countOfRequests integerValue];
         
+        SEL thisSelector = @selector(addToArrayOfRequests:);
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
         dispatch_async(queue, ^{
             
-            [webData queryWithAsync:@"EQGetScheduleRequestsAll.php" parameters:nil class:@"EQRScheduleRequestItem" completion:^(BOOL isLoadingFlagUp) {
+            [webData queryWithAsync:@"EQGetScheduleRequestsAll.php" parameters:nil class:@"EQRScheduleRequestItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
                 
                 //identify when loading is complete
                 self.finishedAsyncDBCall = isLoadingFlagUp;
@@ -221,10 +224,11 @@
         self.countOfUltimageReturnedItems = [countOfRequests integerValue];
         
         //__2__ do asynchronous call to webData
+        SEL thisSelector = @selector(addToArrayOfRequests:);
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
         dispatch_async(queue, ^{
             
-            [webData queryWithAsync:@"EQGetScheduleItemsCompleteInDateRange.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(BOOL isLoadingFlagUp) {
+            [webData queryWithAsync:@"EQGetScheduleItemsCompleteInDateRange.php" parameters:topArray class:@"EQRScheduleRequestItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
                 
                 //identify when loading is complete
                 self.finishedAsyncDBCall = isLoadingFlagUp;
@@ -282,11 +286,26 @@
 
 #pragma mark - webData dataFeedDelegate methods
 
--(void)addScheduleTrackingItem:(id)currentThing{
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
     
-//    NSLog(@"is in addScheduleTrackingItem method");
+    //abort if selector is unrecognized, otherwise crash
+    if (![self canPerformAction:action withSender:nil]){
+        NSLog(@"cannot perform selector: %@", NSStringFromSelector(action));
+        return;
+    }
     
-    [self.arrayOfRequests addObject:currentThing];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+    
+}
+
+-(void)addToArrayOfRequests:(id)currentThing{
+    
+    if (currentThing){
+        [self.arrayOfRequests addObject:currentThing];
+    }
     
     //uptick on the index
     self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
@@ -296,7 +315,6 @@
         
         if (self.indexOfLastReturnedItem == indexPath.row){
             
-//            NSLog(@"Found a Matching indexpath to indexOfLastReturnedItem");
             NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:self.indexOfLastReturnedItem inSection:0];
             NSArray* rowsOfIndexPaths = @[newIndexPath];
             
@@ -559,7 +577,7 @@
 - (void)viewWillDisappear:(BOOL)animated{
     
     //stop the async data loading
-    [self.myWebData.xmlParser abortParsing];
+    [self.myWebData stopXMLParsing];
     
     [super viewWillDisappear:animated];
 }
