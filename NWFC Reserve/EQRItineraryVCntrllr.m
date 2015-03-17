@@ -239,6 +239,10 @@
     [self.webDataForPickup stopXMLParsing];
     [self.webDataForReturn stopXMLParsing];
     
+    //this does nothing
+//    self.webDataForPickup.delegateDataFeed = nil;
+//    self.webDataForReturn.delegateDataFeed = nil;
+    
     //update the array first
     [self partialRefreshToUpdateTheArrayOfRequests:nil];
 
@@ -250,6 +254,8 @@
 
 
 -(void)partialRefreshToUpdateTheArrayOfRequests:(NSNotification*)note{
+    
+    self.filteredArrayOfScheduleRequests = nil;
     
     //test if a cell is now displaying a status that has been filtered out
     //change bitmask to allow for that status
@@ -327,7 +333,17 @@
            //identify when loading is complete
            self.finishedAsyncDBCallForPickup = isLoadingFlagUp;
            
-           NSLog(@"loading pickups is DONE!!");
+           if (self.finishedAsyncDBCallForReturn){
+               
+//               NSLog(@"loading is DONE!!");
+               
+               //    //if a bitmisk filer is on, update it also
+               if (self.currentFilterBitmask != EQRFilterAll){
+                   
+                   [self createTheFilteredArray:self.currentFilterBitmask];
+                    [self.myMasterItineraryCollection reloadData];
+               }
+           }
        }];
     });
     
@@ -343,9 +359,18 @@
            
             self.finishedAsyncDBCallForReturn = isLoadingFlagUp;
             
-            NSLog(@"loading returns is DONE!!");
+            if (self.finishedAsyncDBCallForPickup){
+                
+//                NSLog(@"loading is DONE!!");
+                
+                //    //if a bitmisk filer is on, update it also
+                if (self.currentFilterBitmask != EQRFilterAll){
+                    
+                    [self createTheFilteredArray:self.currentFilterBitmask];
+                    [self.myMasterItineraryCollection reloadData];
+                }
+            }
         }];
-        
     });
     
     
@@ -418,16 +443,7 @@
 //    //assign to ivar
 //    [self.arrayOfScheduleRequests addObjectsFromArray:tempMuteArrayAlpha];
 //    
-//    //if a bitmisk filer is on, update it also
-//    if (self.currentFilterBitmask != EQRFilterAll){
-//        
-//        [self createTheFilteredArray:self.currentFilterBitmask];
-//    }
-//    
-//    if (needToReloadTheView){
-//        
-//        [self.myMasterItineraryCollection reloadData];
-//    }
+
     
 }
 
@@ -1165,36 +1181,36 @@
 -(NSUInteger)determineTheBitmaskFromCellInfo:(NSDictionary*)cellData{
     
     NSUInteger cellStatus = [[cellData objectForKey:@"status"] unsignedIntegerValue];
-    BOOL cellNarkedForReturning = [[cellData objectForKey:@"markedForReturning"] boolValue];
+    BOOL cellMarkedForReturning = [[cellData objectForKey:@"markedForReturning"] boolValue];
     
     NSUInteger returnValue = EQRFilterNone;
     
-    if ((cellStatus == 0) && (cellNarkedForReturning == NO)){
+    if ((cellStatus == 0) && (cellMarkedForReturning == NO)){
         
         returnValue = EQRGoingShelf;
     }
     
-    if ((cellStatus == 1) && (cellNarkedForReturning == NO)){
+    if ((cellStatus == 1) && (cellMarkedForReturning == NO)){
         
         returnValue = EQRGoingPrepped;
     }
     
-    if ((cellStatus == 2) && (cellNarkedForReturning == NO)){
+    if ((cellStatus == 2) && (cellMarkedForReturning == NO)){
         
         returnValue = EQRGoingPickedUp;
     }
     
-    if ((cellStatus == 0) && (cellNarkedForReturning == YES)){
+    if ((cellStatus == 0) && (cellMarkedForReturning == YES)){
         
         returnValue = EQRReturningOut;
     }
     
-    if ((cellStatus == 1) && (cellNarkedForReturning == YES)){
+    if ((cellStatus == 1) && (cellMarkedForReturning == YES)){
         
         returnValue = EQRReturningReturned;
     }
     
-    if ((cellStatus == 2) && (cellNarkedForReturning == YES)){
+    if ((cellStatus == 2) && (cellMarkedForReturning == YES)){
         
         returnValue = EQRReturningShelved;
     }
@@ -1307,48 +1323,59 @@
 
 -(void)addPickupToIntineraryList:(id)currentThing{
     
-    if (currentThing){
-        [self.arrayOfScheduleRequests addObject:currentThing];
-        
-        //sort by request date begin (...and end)
-        NSArray* tempArrayAlpha = [self.arrayOfScheduleRequests sortedArrayUsingComparator:^NSComparisonResult(EQRScheduleRequestItem* obj1, EQRScheduleRequestItem* obj2) {
-            
-            //use either time begin or time end depending on whether this item is going or returning
-            
-            NSDate* date1;
-            if (!obj1.markedForReturn){
-                date1 = [obj1 request_time_begin];
-            } else{
-                date1 = [obj1 request_time_end];
-            }
-            
-            NSDate* date2;
-            if (!obj2.markedForReturn){
-                date2 = [obj2 request_time_begin];
-            } else{
-                date2 = [obj2 request_time_end];
-            }
-            
-            return [date1 compare:date2];
-        }];
-        
-        self.arrayOfScheduleRequests = [NSMutableArray arrayWithArray:tempArrayAlpha];
+    if (!currentThing){
+        return;
     }
-
+    
+    NSInteger indexpathRow;
+    
+    [self.arrayOfScheduleRequests addObject:currentThing];
+    
+    //sort by request date begin (...and end)
+    NSArray* tempArrayAlpha = [self.arrayOfScheduleRequests sortedArrayUsingComparator:^NSComparisonResult(EQRScheduleRequestItem* obj1, EQRScheduleRequestItem* obj2) {
+        
+        //use either time begin or time end depending on whether this item is going or returning
+        NSDate* date1;
+        if (!obj1.markedForReturn){
+            date1 = [obj1 request_time_begin];
+        } else{
+            date1 = [obj1 request_time_end];
+        }
+        
+        NSDate* date2;
+        if (!obj2.markedForReturn){
+            date2 = [obj2 request_time_begin];
+        } else{
+            date2 = [obj2 request_time_end];
+        }
+        
+        return [date1 compare:date2];
+    }];
+    
+    self.arrayOfScheduleRequests = [NSMutableArray arrayWithArray:tempArrayAlpha];
+    
+    //the new index of the newly added item
+    indexpathRow = [self.arrayOfScheduleRequests indexOfObject:currentThing];
     
     //uptick on the index
     self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
     
-    //test to see if the cell is visible and needs data...
-    for (NSIndexPath* indexPath in [self.myMasterItineraryCollection indexPathsForVisibleItems]){
+    //__!!!!!GENIUS!!!!!___ reinitialize all cells at this index and at a higher index (because they got displaced with the sort)
+    NSInteger i;
+    for (i = indexpathRow ; i <= self.indexOfLastReturnedItem ; i++){
         
-        if (self.indexOfLastReturnedItem == indexPath.row){
+        //test to see if the cell is visible...
+        for (NSIndexPath* indexPath in [self.myMasterItineraryCollection indexPathsForVisibleItems]){
             
-            NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:self.indexOfLastReturnedItem inSection:0];
-            NSArray* rowsOfIndexPaths = @[newIndexPath];
-            
-            //delay the refresh, the object's don't appear in the array immediately
-            [self performSelector:@selector(delayedCallToReloadCollectionViewItems:) withObject:rowsOfIndexPaths afterDelay:0.25];
+            if (i == indexPath.row){
+                
+                NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                //            NSArray* rowsOfIndexPaths = @[newIndexPath];
+                
+                [(EQRItineraryRowCell *)[self.myMasterItineraryCollection cellForItemAtIndexPath:newIndexPath] initialSetupWithRequestItem:[self.arrayOfScheduleRequests objectAtIndex:i]];
+                
+                break;
+            }
         }
     }
 }
@@ -1362,12 +1389,6 @@
     }
     
     [self addPickupToIntineraryList:currentThing];
-}
-
-
--(void)delayedCallToReloadCollectionViewItems:(NSArray*)rowsOfIndexPaths{
-    
-    [self.myMasterItineraryCollection reloadItemsAtIndexPaths:rowsOfIndexPaths];
 }
 
 
