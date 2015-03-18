@@ -15,6 +15,8 @@
 
 @property (strong, nonatomic) EQRItineraryCellContentVCntrllr* myItineraryContent;
 
+
+
 @end
 
 
@@ -101,13 +103,8 @@
         }
     }
     
-    
-    
-    
     //______add the itinerary view to the cell's content view
     [self.contentView addSubview:self.myItineraryContent.view];
-    
-
     
     //only if status is 0, disable the second switch
     if (self.myItineraryContent.myStatus < 1){
@@ -122,16 +119,13 @@
         //set first swith to on
         self.myItineraryContent.switchTap1.innerCircleColor = [UIColor colorWithRed: 0 green: 0.657 blue: 0 alpha: 1];
         
-        
     } else {
         // status must be equal to 2
         
         //set first and second swith to on
         self.myItineraryContent.switchTap1.innerCircleColor = [UIColor colorWithRed: 0 green: 0.657 blue: 0 alpha: 1];
         self.myItineraryContent.switchTap2.innerCircleColor = [UIColor colorWithRed: 0 green: 0.657 blue: 0 alpha: 1];
-        
     }
-    
     
     if (!requestItem.markedForReturn){
         
@@ -158,55 +152,84 @@
         //set caution labels
         self.myItineraryContent.cautionLabel1.text = @"*Some items are not checked in";
         self.myItineraryContent.cautionLabel2.text = @"*Some items are not shelved";
-        
-        
     }
+    
+    //assign name and renter type
+    self.myItineraryContent.firstLastName.text = requestItem.contact_name;
+    self.myItineraryContent.renterType.text = requestItem.renter_type;
+    self.myItineraryContent.renterType.hidden = YES;
+    
+    //assign time
+    self.myItineraryContent.interactionTime.text = timeString;
+    
+
     
     
     //__________SHOW any appropriate caution labels
     
     //get an array of joins for this row's schedule_key
-    NSMutableArray* muteJoinArray = [NSMutableArray arrayWithCapacity:1];
     EQRWebData* webData = [EQRWebData sharedInstance];
+    self.webData = webData;
+    self.webData.delegateDataFeed = self;
     NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.myItineraryContent.requestKeyId, nil];
     NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-    [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+    
+    [self.webData queryWithAsync:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:@selector(itineraryRowCellLoadsJoins:) completion:^(BOOL isLoadingFlagUp) {
         
-        for (EQRScheduleTracking_EquipmentUnique_Join* join in muteArray){
-            
-            [muteJoinArray addObject:join];
-        }
+        
     }];
+    
+//    [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+//        
+//        for (EQRScheduleTracking_EquipmentUnique_Join* join in muteArray){
+//            
+//            [muteJoinArray addObject:join];
+//        }
+//    }];
   
+
+}
+
+
+#pragma mark - webdata delegate methods
+
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    
+    //abort if selector is unrecognized, otherwise crash
+    if (![self canPerformAction:action withSender:nil]){
+        NSLog(@"cannot perform selector: %@", NSStringFromSelector(action));
+        return;
+    }
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+}
+
+
+-(void)itineraryRowCellLoadsJoins:(EQRScheduleTracking_EquipmentUnique_Join *)currentThing{
+    
     //only apply caution to switch 1 if it is on
     if (self.myItineraryContent.myStatus == 1){
         
         BOOL foundOutstandingItemSwitch1 = NO;
-
+        
         //decide between returning or going
-
-        if (!self.myItineraryContent.markedForReturning){
-            //going
+        
+        if (!self.myItineraryContent.markedForReturning){     //going
             
-            for (EQRScheduleTracking_EquipmentUnique_Join* join in muteJoinArray){
+            if (([currentThing.prep_flag isEqualToString:@""]) || (currentThing.prep_flag == nil)){
                 
-                if (([join.prep_flag isEqualToString:@""]) || (join.prep_flag == nil)){
-                    
-                    foundOutstandingItemSwitch1 = YES;
-                }
+                foundOutstandingItemSwitch1 = YES;
             }
             
-        }else{
-            //returning
+        }else{              //returning
             
-            for (EQRScheduleTracking_EquipmentUnique_Join* join in muteJoinArray){
+            if (([currentThing.checkin_flag isEqualToString:@""]) || (currentThing.checkin_flag == nil)){
                 
-                if (([join.checkin_flag isEqualToString:@""]) || (join.checkin_flag == nil)){
-                    
-                    foundOutstandingItemSwitch1 = YES;
-                }
+                foundOutstandingItemSwitch1 = YES;
             }
-            
         }
         
         if (foundOutstandingItemSwitch1 == YES){
@@ -226,25 +249,18 @@
         if (!self.myItineraryContent.markedForReturning){
             //going
             
-            for (EQRScheduleTracking_EquipmentUnique_Join* join in muteJoinArray){
+            if (([currentThing.checkout_flag isEqualToString:@""]) || (currentThing.checkout_flag == nil)){
                 
-                if (([join.checkout_flag isEqualToString:@""]) || (join.checkout_flag == nil)){
-                    
-                    foundOutstandingItemSwitch2 = YES;
-                }
+                foundOutstandingItemSwitch2 = YES;
             }
             
         }else{
             //returning
             
-            for (EQRScheduleTracking_EquipmentUnique_Join* join in muteJoinArray){
+            if (([currentThing.shelf_flag isEqualToString:@""]) || (currentThing.shelf_flag == nil)){
                 
-                if (([join.shelf_flag isEqualToString:@""]) || (join.shelf_flag == nil)){
-                    
-                    foundOutstandingItemSwitch2 = YES;
-                }
+                foundOutstandingItemSwitch2 = YES;
             }
-            
         }
         
         if (foundOutstandingItemSwitch2 == YES){
@@ -252,23 +268,14 @@
             self.myItineraryContent.cautionLabel2.hidden = NO;
         }
     }
-    
-
-    
-    
-    //assign name and renter type
-    self.myItineraryContent.firstLastName.text = requestItem.contact_name;
-    self.myItineraryContent.renterType.text = requestItem.renter_type;
-    self.myItineraryContent.renterType.hidden = YES;
-    
-    //assign time
-    self.myItineraryContent.interactionTime.text = timeString;
-    
-
-    
 }
 
-
+- (void)dealloc{
+    
+    //stop the async data loading
+    [self.webData stopXMLParsing];
+    
+}
 
 
 /*

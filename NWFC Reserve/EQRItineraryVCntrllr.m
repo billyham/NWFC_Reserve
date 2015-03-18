@@ -1433,6 +1433,10 @@
         [view removeFromSuperview];
     }
     
+    if (cell.webData){
+        [cell.webData stopXMLParsing];
+    }
+    
     //and reset the cell's background color...
     cell.backgroundColor = [UIColor whiteColor];
     
