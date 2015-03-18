@@ -871,7 +871,9 @@ const int intEQRTextElement = 10;
 //        NSLog(@"this is the current thing class: %@", [self.currentThing class]);
         
         //add item to ivar array
-        [self.muteArray addObject:self.currentThing];
+        if (self.currentThing){
+            [self.muteArray addObject:self.currentThing];
+        }
         
         //________********** TEST FOR ASYNC METHODS ***********___________
         //will only do anything if it has a delegate

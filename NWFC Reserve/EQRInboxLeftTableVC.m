@@ -289,7 +289,7 @@
 -(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
     
     //abort if selector is unrecognized, otherwise crash
-    if (![self canPerformAction:action withSender:nil]){
+    if (![self respondsToSelector:action]){
         NSLog(@"cannot perform selector: %@", NSStringFromSelector(action));
         return;
     }
