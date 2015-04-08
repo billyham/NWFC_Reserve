@@ -172,13 +172,14 @@
     SEL thisSelector = @selector(itineraryRowCellLoadsJoins:);
     NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.myItineraryContent.requestKeyId, nil];
     NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-    
+
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
     dispatch_async(queue, ^{
         [self.webData queryWithAsync:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
             
         }];
     });
+    
     //    [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
 //        
 //        for (EQRScheduleTracking_EquipmentUnique_Join* join in muteArray){
@@ -186,7 +187,6 @@
 //            [muteJoinArray addObject:join];
 //        }
 //    }];
-  
 
 }
 
