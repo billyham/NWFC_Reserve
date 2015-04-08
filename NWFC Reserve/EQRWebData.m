@@ -379,7 +379,7 @@ const int intEQRTextElement = 10;
     
     if (!success){
         
-        NSLog(@"self xml parser failure");
+        NSLog(@"self xml parser failure. uh huh.");
         
         return;
     }else{
