@@ -49,6 +49,8 @@
 @property (strong, nonatomic) EQRQuickViewScrollVCntrllr* myQuickViewScrollVCntrllr;
 @property (strong, nonatomic) NSDictionary* temporaryDicFromQuickView;
 
+@property (strong, nonatomic) NSTimer *partialRefreshTimer;
+
 @property BOOL aChangeWasMade;
 
 //async webData properties
@@ -243,12 +245,19 @@
 //    self.webDataForPickup.delegateDataFeed = nil;
 //    self.webDataForReturn.delegateDataFeed = nil;
     
+    if (self.partialRefreshTimer){
+        [self.partialRefreshTimer invalidate];
+    }
+    
+    self.partialRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(partialRefreshToUpdateTheArrayOfRequests:) userInfo:nil repeats:NO];
+    
+    
     //update the array first
-    [self partialRefreshToUpdateTheArrayOfRequests:nil];
+//    [self partialRefreshToUpdateTheArrayOfRequests:nil];
 
     
-    //reload the view
-    [self.myMasterItineraryCollection reloadData];
+//    //reload the view
+//    [self.myMasterItineraryCollection reloadData];
     
 }
 
@@ -444,6 +453,9 @@
 //    [self.arrayOfScheduleRequests addObjectsFromArray:tempMuteArrayAlpha];
 //    
 
+    
+    //reload the view
+    [self.myMasterItineraryCollection reloadData];
     
 }
 

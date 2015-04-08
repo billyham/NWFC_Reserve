@@ -36,6 +36,7 @@
 
 @property (strong, nonatomic) NSArray* alphaNumericaArray;
 @property int returnClassInt;
+@property BOOL abortXMLParsingFlag;
 
 @property SEL aSyncSelector;
 
@@ -273,6 +274,8 @@ const int intEQRTextElement = 10;
 
 - (void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock{
     
+    self.abortXMLParsingFlag = NO;
+    
     //for raysmith as localhost
 //    NSString* urlRootString = @"http://localhost/nwfc/";
     
@@ -398,6 +401,8 @@ const int intEQRTextElement = 10;
 
 -(NSString*)queryForStringWithLink:(NSString*)link parameters:(NSArray*)para{
     
+    self.abortXMLParsingFlag = NO;
+    
     //get url string from user defaults
     NSString* urlRootString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
 
@@ -480,6 +485,10 @@ const int intEQRTextElement = 10;
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
     attributes:(NSDictionary *)attributeDict {
+    
+    if (self.abortXMLParsingFlag){
+        return;
+    }
     
     //build an array of equipment items
     if ([elementName isEqualToString:@"entries"]){
@@ -850,6 +859,10 @@ const int intEQRTextElement = 10;
 
 -(void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string{
     
+    if (self.abortXMLParsingFlag){
+        return;
+    }
+    
     if (!self.currentValue){
         
         self.currentValue = [[NSMutableString alloc] initWithCapacity:50];
@@ -865,6 +878,10 @@ const int intEQRTextElement = 10;
 
 
 -(void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName{
+    
+    if (self.abortXMLParsingFlag){
+        return;
+    }
     
     if ([elementName isEqualToString:@"entry"]){
         
@@ -1629,6 +1646,9 @@ const int intEQRTextElement = 10;
 
 -(void)stopXMLParsing{
     
+    self.abortXMLParsingFlag = YES;
+    self.aSyncSelector = nil;
+    
     [self.xmlParser abortParsing];
 }
 
@@ -1636,6 +1656,8 @@ const int intEQRTextElement = 10;
 #pragma mark - Asynchronous methods
 
 -(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString selector:(SEL)action completion:(CompletionBlockWithBool)completeBlock{
+    
+    self.abortXMLParsingFlag = NO;
     
     //set chosen selector
     self.aSyncSelector = action;
@@ -1780,6 +1802,10 @@ const int intEQRTextElement = 10;
 }
 
 -(void)asyncDispatchWithObject:(id)currentThing {
+    
+    if (self.abortXMLParsingFlag){
+        return;
+    }
     
     if (self.delegateDataFeed != nil){
         
