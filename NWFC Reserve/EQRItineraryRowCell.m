@@ -32,7 +32,9 @@
 
 -(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem{
     
-//    NSLog(@"inside itineraryRowCell initialSetup with request item contact name: %@", [requestItem contact_name]);
+//    if ([requestItem.key_id isEqualToString:@"535"]){
+//        NSLog(@"inside itineraryRowCell initialSetup with request item contact name: %@", [requestItem contact_name]);
+//    }
     
     self.backgroundColor = [UIColor clearColor];
     
@@ -162,56 +164,28 @@
     
 
     //__________SHOW any appropriate caution labels
-    
-    //get an array of joins for this row's schedule_key
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    self.webData = webData;
-    self.webData.delegateDataFeed = self;
-    SEL thisSelector = @selector(itineraryRowCellLoadsJoins:);
-    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.myItineraryContent.requestKeyId, nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-    
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
-    dispatch_async(queue, ^{
-        [self.webData queryWithAsync:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
-            
-        }];
-    });
-    
-    //    [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
-    //
-    //        for (EQRScheduleTracking_EquipmentUnique_Join* join in muteArray){
-    //
-    //            [muteJoinArray addObject:join];
-    //        }
-    //    }];
-
+//    
+//    //get an array of joins for this row's schedule_key
+//    EQRWebData* webData = [EQRWebData sharedInstance];
+//    self.webData = webData;
+//    self.webData.delegateDataFeed = self;
+//    SEL thisSelector = @selector(itineraryRowCellLoadsJoins:);
+//    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.myItineraryContent.requestKeyId, nil];
+//    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
+//    
+//    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+//    dispatch_async(queue, ^{
+//        [self.webData queryWithAsync:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+//            
+//        }];
+//    });
 }
 
 -(void)layoutSubviews{  
 }
 
 
-#pragma mark - webdata delegate methods
-
--(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
-    
-    //abort if selector is unrecognized, otherwise crash
-    if (![self respondsToSelector:action]){
-        NSLog(@"cannot perform selector: %@  I am class: %@", NSStringFromSelector(action), [self class]);
-        return;
-    }
-    
-    NSLog(@"inside EQRItineraryROWCELL");
-    
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [self performSelector:action withObject:currentThing];
-#pragma clang diagnostic pop
-}
-
-
--(void)itineraryRowCellLoadsJoins:(EQRScheduleTracking_EquipmentUnique_Join *)currentThing{
+-(void)checkForJoinWarnings:(EQRScheduleTracking_EquipmentUnique_Join *)join{
     
     //only apply caution to switch 1 if it is on
     if (self.myItineraryContent.myStatus == 1){
@@ -222,14 +196,14 @@
         
         if (!self.myItineraryContent.markedForReturning){     //going
             
-            if (([currentThing.prep_flag isEqualToString:@""]) || (currentThing.prep_flag == nil)){
+            if (([join.prep_flag isEqualToString:@""]) || (join.prep_flag == nil)){
                 
                 foundOutstandingItemSwitch1 = YES;
             }
             
         }else{              //returning
             
-            if (([currentThing.checkin_flag isEqualToString:@""]) || (currentThing.checkin_flag == nil)){
+            if (([join.checkin_flag isEqualToString:@""]) || (join.checkin_flag == nil)){
                 
                 foundOutstandingItemSwitch1 = YES;
             }
@@ -252,7 +226,7 @@
         if (!self.myItineraryContent.markedForReturning){
             //going
             
-            if (([currentThing.checkout_flag isEqualToString:@""]) || (currentThing.checkout_flag == nil)){
+            if (([join.checkout_flag isEqualToString:@""]) || (join.checkout_flag == nil)){
                 
                 foundOutstandingItemSwitch2 = YES;
             }
@@ -260,7 +234,7 @@
         }else{
             //returning
             
-            if (([currentThing.shelf_flag isEqualToString:@""]) || (currentThing.shelf_flag == nil)){
+            if (([join.shelf_flag isEqualToString:@""]) || (join.shelf_flag == nil)){
                 
                 foundOutstandingItemSwitch2 = YES;
             }
@@ -273,10 +247,11 @@
     }
 }
 
+#pragma mark - webdata delegate methods
+
+#pragma mark - dealloc
+
 - (void)dealloc{
-    
-    //stop the async data loading
-    [self.webData stopXMLParsing];
     
 }
 

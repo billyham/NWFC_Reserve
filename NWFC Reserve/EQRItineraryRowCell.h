@@ -9,17 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "EQRCellTemplate.h"
 #import "EQRScheduleRequestItem.h"
-#import "EQRWebData.h"
+#import "EQRScheduleTracking_EquipmentUnique_Join.h"
 
-@interface EQRItineraryRowCell : EQRCellTemplate <EQRWebDataDelegate>
-
-//async webData properties
-@property (strong, nonatomic) EQRWebData *webData;
+@interface EQRItineraryRowCell : EQRCellTemplate
 
 -(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem;
+-(void)checkForJoinWarnings:(EQRScheduleTracking_EquipmentUnique_Join *)join;
 
-//webData DelegateDataFeed methods
--(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action;
 
 
 @end

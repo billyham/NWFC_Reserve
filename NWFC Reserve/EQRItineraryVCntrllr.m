@@ -34,6 +34,8 @@
 @property (strong, nonatomic) NSMutableArray* arrayOfScheduleRequests;
 @property (strong, nonatomic) NSArray* filteredArrayOfScheduleRequests;
 
+@property (strong, nonatomic) NSMutableArray *arrayOfJoinsAll;
+
 @property EQRItineraryFilter currentFilterBitmask;
 @property (strong, nonatomic) IBOutlet UIButton* buttonAll;
 @property (strong, nonatomic) IBOutlet UIButton* buttonGoingShelf;
@@ -58,8 +60,11 @@
 @property NSInteger indexOfLastReturnedItem;
 @property BOOL finishedAsyncDBCallForPickup;
 @property BOOL finishedAsyncDBCallForReturn;
+@property BOOL readyToCheckForScheduleWarningsFlag;
 @property (strong, nonatomic) EQRWebData *webDataForPickup;
 @property (strong, nonatomic) EQRWebData *webDataForReturn;
+@property (strong, nonatomic) EQRWebData *webDataForJoins;
+
 
 -(IBAction)moveToNextDay:(id)sender;
 -(IBAction)moveToPreviousDay:(id)sender;
@@ -265,6 +270,7 @@
 -(void)partialRefreshToUpdateTheArrayOfRequests:(NSNotification*)note{
     
     self.filteredArrayOfScheduleRequests = nil;
+    self.readyToCheckForScheduleWarningsFlag = NO;
     
     //test if a cell is now displaying a status that has been filtered out
     //change bitmask to allow for that status
@@ -344,7 +350,13 @@
            
            if (self.finishedAsyncDBCallForReturn){
                
-//               NSLog(@"loading is DONE!!");
+               self.finishedAsyncDBCallForPickup = NO;
+               self.finishedAsyncDBCallForReturn = NO;
+               
+               //___ place data call all associated joins here, then update with "Some items are not..."
+               [self continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray:topArray];
+               
+//               NSLog(@"loading is DONE!! with begin date");
                
                //    //if a bitmisk filer is on, update it also
                if (self.currentFilterBitmask != EQRFilterAll){
@@ -370,7 +382,13 @@
             
             if (self.finishedAsyncDBCallForPickup){
                 
-//                NSLog(@"loading is DONE!!");
+                self.finishedAsyncDBCallForPickup = NO;
+                self.finishedAsyncDBCallForReturn = NO;
+                
+                //___ place data call all associated joins here, then update with "Some items are not..."
+                [self continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray:topArray];
+                
+//                NSLog(@"loading is DONE!! with end date");
                 
                 //    //if a bitmisk filer is on, update it also
                 if (self.currentFilterBitmask != EQRFilterAll){
@@ -382,81 +400,48 @@
         }];
     });
     
-    
-//    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-//    
-//    //First, add the 'going' schedule items
-//    [webData queryWithLink:@"EQGetScheduleItemsWithBeginDate.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-//        
-//        for (id object in muteArray){
-//            
-////            NSLog(@"this is the prep date: %@", [(EQRScheduleRequestItem*)object staff_prep_date]);
-//            
-//            //adjust the begin date by adding 9 hours... or 8 hours
-//            float secondsForOffset = 0;    //this is 9 hours = 32400, this is 8 hours = 28800;
-//            NSDate* newTimeBegin = [[(EQRScheduleRequestItem*)object request_time_begin] dateByAddingTimeInterval:secondsForOffset];
-//            NSDate* newTimeEnd = [[(EQRScheduleRequestItem*)object request_time_end] dateByAddingTimeInterval:secondsForOffset];
-//            [(EQRScheduleRequestItem*)object setRequest_time_begin:newTimeBegin];
-//            [(EQRScheduleRequestItem*)object setRequest_time_end:newTimeEnd];
-//            
-//            [tempMuteArray addObject:object];
-//        }
-//        
-//    }];
-//    
-//    //Second, add the 'returning' items to the same array
-//    [webData queryWithLink:@"EQGetScheduleItemsWithEndDate.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-//        
-//        for (id object in muteArray){
-//            
-//            //adjust the date by adding 9 hours... or 8 hours
-//            float secondsForOffset = 0;    //this is 9 hours = 32400, this is 8 hours = 28800;
-//            NSDate* newTimeBegin = [[(EQRScheduleRequestItem*)object request_time_begin] dateByAddingTimeInterval:secondsForOffset];
-//            NSDate* newTimeEnd = [[(EQRScheduleRequestItem*)object request_time_end] dateByAddingTimeInterval:secondsForOffset];
-//            [(EQRScheduleRequestItem*)object setRequest_time_begin:newTimeBegin];
-//            [(EQRScheduleRequestItem*)object setRequest_time_end:newTimeEnd];
-//            
-//            //mark the request item as a return object
-//            [(EQRScheduleRequestItem*) object setMarkedForReturn:YES];
-//            
-//            [tempMuteArray addObject:object];
-//        }
-//    }];
-//    
-//    
-//    
-//    
-//    //sort by request date begin (...and end)
-//    
-//    NSArray* tempMuteArrayAlpha = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(EQRScheduleRequestItem* obj1, EQRScheduleRequestItem* obj2) {
-//        
-//        //use either time begin or time end depending on whether this item is going or returning
-//        
-//        NSDate* date1;
-//        if (!obj1.markedForReturn){
-//            date1 = [obj1 request_time_begin];
-//        } else{
-//            date1 = [obj1 request_time_end];
-//        }
-//        
-//        NSDate* date2;
-//        if (!obj2.markedForReturn){
-//            date2 = [obj2 request_time_begin];
-//        } else{
-//            date2 = [obj2 request_time_end];
-//        }
-//        
-//        return [date1 compare:date2];
-//    }];
-//
-//    //assign to ivar
-//    [self.arrayOfScheduleRequests addObjectsFromArray:tempMuteArrayAlpha];
-//    
-
-    
     //reload the view
     [self.myMasterItineraryCollection reloadData];
+}
+
+-(void)continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray:(NSArray *)topArray{
     
+    //top array has RequestDateBegin and RequestDateEnd values
+    
+    if (self.arrayOfJoinsAll){
+        [self.arrayOfJoinsAll removeAllObjects];
+    }
+    
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    self.webDataForJoins = webData;
+    self.webDataForJoins.delegateDataFeed = self;
+    SEL thisSelector = @selector(addToArrayOfJoins:);
+    
+    [self.webDataForJoins queryWithAsync:@"EQGetScheduleEquipUniqueJoinsOnDate.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+        
+//        if ([self.arrayOfJoinsAll count] > 0){
+//            for (EQRScheduleTracking_EquipmentUnique_Join* join in self.arrayOfJoinsAll){
+//                NSLog(@"this is the name: %@", join.contact_name);
+//            }
+//        }
+        
+        //tell cells to check for and show warning message
+        self.readyToCheckForScheduleWarningsFlag = YES;
+        
+        NSArray *tempArray = [NSArray arrayWithArray:[self.myMasterItineraryCollection visibleCells]];
+        for (EQRItineraryRowCell *cell in tempArray){
+            
+            NSInteger tempInt = [[self.myMasterItineraryCollection indexPathForCell:cell] row];
+            
+            EQRScheduleRequestItem *thisItem = [self.arrayOfScheduleRequests objectAtIndex:tempInt];
+            
+            for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfJoinsAll){
+                if ([thisItem.key_id isEqualToString:join.scheduleTracking_foreignKey]){
+                    [cell checkForJoinWarnings:join];
+                }
+            }
+        }
+    }];
 }
 
 
@@ -1373,6 +1358,7 @@
     self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
     
     //__!!!!!GENIUS!!!!!___ reinitialize all cells at this index and at a higher index (because they got displaced with the sort)
+    //_____!!!!! OK, maybe not so genius afterall. The async call for joins is returning info to the wrong cell....  !!!!_____
     NSInteger i;
     for (i = indexpathRow ; i <= self.indexOfLastReturnedItem ; i++){
         
@@ -1384,6 +1370,9 @@
                 NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
                 //            NSArray* rowsOfIndexPaths = @[newIndexPath];
                 
+                //______!!!!!!!  Ahhh... when a day has lots of requests and are getting sorted multiple times !!!!!________
+                //_____!!!!!!   then each row cell is calling for it's joins multiple times, which is bad   !!!______
+                //_____!!!!!  Causes "items not checked" flag to appear with false positive  !!!!!_______
                 [(EQRItineraryRowCell *)[self.myMasterItineraryCollection cellForItemAtIndexPath:newIndexPath] initialSetupWithRequestItem:[self.arrayOfScheduleRequests objectAtIndex:i]];
                 
                 break;
@@ -1401,6 +1390,16 @@
     }
     
     [self addPickupToIntineraryList:currentThing];
+}
+
+
+-(void)addToArrayOfJoins:(id)currentThing{
+    
+    if (!self.arrayOfJoinsAll){
+        self.arrayOfJoinsAll = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    [self.arrayOfJoinsAll addObject:currentThing];
 }
 
 
@@ -1445,10 +1444,6 @@
         [view removeFromSuperview];
     }
     
-    if (cell.webData){
-        [cell.webData stopXMLParsing];
-    }
-    
     //and reset the cell's background color...
     cell.backgroundColor = [UIColor whiteColor];
     
@@ -1465,6 +1460,18 @@
             
             [cell initialSetupWithRequestItem:[self.arrayOfScheduleRequests objectAtIndex:indexPath.row]];
             
+            //determine if all joins are loaded
+            if (self.readyToCheckForScheduleWarningsFlag){
+                
+                EQRScheduleRequestItem* thisItem = [self.arrayOfScheduleRequests objectAtIndex:indexPath.row];
+                for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfJoinsAll){
+                    if ([join.scheduleTracking_foreignKey isEqualToString:thisItem.key_id]){
+                        NSLog(@"inside itineraryVC > collectionview check for matching joins");
+                        [cell checkForJoinWarnings:join];
+                    }
+                }
+            }
+            
         }else{ // no, the data is no loaded yet
             
 //            cell.backgroundColor = [UIColor yellowColor];
@@ -1474,7 +1481,7 @@
         
         
         
-
+        
     }else{
         //yes filter
         
