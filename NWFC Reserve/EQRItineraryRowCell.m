@@ -196,6 +196,8 @@
         
         if (!self.myItineraryContent.markedForReturning){     //going
             
+            NSLog(@"this is the prep_flag value: %@ this is the join's key_id: %@", join.prep_flag, join.key_id);
+            
             if (([join.prep_flag isEqualToString:@""]) || (join.prep_flag == nil)){
                 
                 foundOutstandingItemSwitch1 = YES;

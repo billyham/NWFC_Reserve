@@ -252,7 +252,7 @@
                 
                 //turn on caution label
                 if (foundOutstandingItem){
-                    
+//                    NSLog(@"EQRItineraryCellContentVC > dimissedCheckInOut inside turn on caution label");
                     self.cautionLabel1.hidden = NO;
                     
                 }else{

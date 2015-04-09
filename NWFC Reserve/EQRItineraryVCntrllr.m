@@ -21,6 +21,7 @@
 #import "EQRStaffUserPickerViewController.h"
 #import "EQRStaffUserManager.h"
 #import "EQRModeManager.h"
+#import "EQRMiscJoin.h"
 
 @interface EQRItineraryVCntrllr ()
 
@@ -60,10 +61,13 @@
 @property NSInteger indexOfLastReturnedItem;
 @property BOOL finishedAsyncDBCallForPickup;
 @property BOOL finishedAsyncDBCallForReturn;
+@property BOOL finishedAsyncDBCallForEquipJoins;
+@property BOOL finishedAsyncDBCallForMiscJoins;
 @property BOOL readyToCheckForScheduleWarningsFlag;
 @property (strong, nonatomic) EQRWebData *webDataForPickup;
 @property (strong, nonatomic) EQRWebData *webDataForReturn;
-@property (strong, nonatomic) EQRWebData *webDataForJoins;
+@property (strong, nonatomic) EQRWebData *webDataForEquipJoins;
+@property (strong, nonatomic) EQRWebData *webDataForMiscJoins;
 
 
 -(IBAction)moveToNextDay:(id)sender;
@@ -340,7 +344,7 @@
     
     //__2__ do asynchronous call
     SEL thisSelectorPickup = @selector(addPickupToIntineraryList:);
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
         
        [self.webDataForPickup queryWithAsync:@"EQGetScheduleItemsWithBeginDate.php" parameters:topArray class:@"EQRScheduleRequestItem" selector:thisSelectorPickup completion:^(BOOL isLoadingFlagUp) {
@@ -373,7 +377,7 @@
     self.webDataForReturn = webData2;
     self.webDataForReturn.delegateDataFeed = self;
     SEL thisSelectorReturn = @selector(addReturnToItineraryList:);
-    dispatch_queue_t queue2 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+    dispatch_queue_t queue2 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue2, ^{
        
         [self.webDataForReturn queryWithAsync:@"EQGetScheduleItemsWithEndDate.php" parameters:topArray class:@"EQRScheduleRequestItem" selector:thisSelectorReturn completion:^(BOOL isLoadingFlagUp) {
@@ -413,35 +417,86 @@
     }
     
     EQRWebData *webData = [EQRWebData sharedInstance];
-    self.webDataForJoins = webData;
-    self.webDataForJoins.delegateDataFeed = self;
+    self.webDataForEquipJoins = webData;
+    self.webDataForEquipJoins.delegateDataFeed = self;
     SEL thisSelector = @selector(addToArrayOfJoins:);
     
-    [self.webDataForJoins queryWithAsync:@"EQGetScheduleEquipUniqueJoinsOnDate.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+    dispatch_queue_t queue3 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0ul);
+    dispatch_async(queue3, ^{
         
-//        if ([self.arrayOfJoinsAll count] > 0){
-//            for (EQRScheduleTracking_EquipmentUnique_Join* join in self.arrayOfJoinsAll){
-//                NSLog(@"this is the name: %@", join.contact_name);
-//            }
-//        }
-        
-        //tell cells to check for and show warning message
-        self.readyToCheckForScheduleWarningsFlag = YES;
-        
-        NSArray *tempArray = [NSArray arrayWithArray:[self.myMasterItineraryCollection visibleCells]];
-        for (EQRItineraryRowCell *cell in tempArray){
+        [self.webDataForEquipJoins queryWithAsync:@"EQGetScheduleEquipUniqueJoinsOnDate.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
             
-            NSInteger tempInt = [[self.myMasterItineraryCollection indexPathForCell:cell] row];
+            self.finishedAsyncDBCallForEquipJoins = YES;
             
-            EQRScheduleRequestItem *thisItem = [self.arrayOfScheduleRequests objectAtIndex:tempInt];
-            
-            for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfJoinsAll){
-                if ([thisItem.key_id isEqualToString:join.scheduleTracking_foreignKey]){
-                    [cell checkForJoinWarnings:join];
+            if (self.finishedAsyncDBCallForMiscJoins){
+                
+                self.finishedAsyncDBCallForEquipJoins = NO;
+                self.finishedAsyncDBCallForMiscJoins = NO;
+                
+                //tell cells to check for and show warning message
+                self.readyToCheckForScheduleWarningsFlag = YES;
+                
+                NSArray *tempArray = [NSArray arrayWithArray:[self.myMasterItineraryCollection visibleCells]];
+                for (EQRItineraryRowCell *cell in tempArray){
+                    
+                    NSInteger tempInt = [[self.myMasterItineraryCollection indexPathForCell:cell] row];
+                    
+                    if ([self.arrayOfScheduleRequests count] > tempInt){
+                        EQRScheduleRequestItem *thisItem = [self.arrayOfScheduleRequests objectAtIndex:tempInt];
+                        
+                        for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfJoinsAll){
+                            if ([thisItem.key_id isEqualToString:join.scheduleTracking_foreignKey]){
+                                [cell checkForJoinWarnings:join];
+                            }
+                        }
+                    }
                 }
             }
-        }
-    }];
+            
+        }];
+    });
+ 
+    
+    EQRWebData *webData2 = [EQRWebData sharedInstance];
+    self.webDataForMiscJoins = webData2;
+    self.webDataForMiscJoins.delegateDataFeed = self;
+    
+    dispatch_queue_t queue4 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0ul);
+    dispatch_async(queue4, ^{
+        
+        [self.webDataForMiscJoins queryWithAsync:@"EQGetMiscJoinsOnDate.php" parameters:topArray class:@"EQRMiscJoin" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+            
+            self.finishedAsyncDBCallForMiscJoins = YES;
+            
+            if (self.finishedAsyncDBCallForEquipJoins){
+                
+                self.finishedAsyncDBCallForEquipJoins = NO;
+                self.finishedAsyncDBCallForMiscJoins = NO;
+            
+                //tell cells to check for and show warning message
+                self.readyToCheckForScheduleWarningsFlag = YES;
+                
+                NSArray *tempArray = [NSArray arrayWithArray:[self.myMasterItineraryCollection visibleCells]];
+                for (EQRItineraryRowCell *cell in tempArray){
+                    
+                    NSInteger tempInt = [[self.myMasterItineraryCollection indexPathForCell:cell] row];
+                    
+                    if ([self.arrayOfScheduleRequests count] > tempInt){
+                        
+                        EQRScheduleRequestItem *thisItem = [self.arrayOfScheduleRequests objectAtIndex:tempInt];
+                        
+                        for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfJoinsAll){
+                            if ([thisItem.key_id isEqualToString:join.scheduleTracking_foreignKey]){
+                                [cell checkForJoinWarnings:join];
+                            }
+                        }
+                    }
+                }
+            }
+        }];
+    });
+    
+  
 }
 
 
@@ -1357,7 +1412,7 @@
     //uptick on the index
     self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
     
-    //__!!!!!GENIUS!!!!!___ reinitialize all cells at this index and at a higher index (because they got displaced with the sort)
+    //_____ reinitialize all cells at this index and at a higher index (because they got displaced with the sort)
     //_____!!!!! OK, maybe not so genius afterall. The async call for joins is returning info to the wrong cell....  !!!!_____
     NSInteger i;
     for (i = indexpathRow ; i <= self.indexOfLastReturnedItem ; i++){
@@ -1370,9 +1425,7 @@
                 NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
                 //            NSArray* rowsOfIndexPaths = @[newIndexPath];
                 
-                //______!!!!!!!  Ahhh... when a day has lots of requests and are getting sorted multiple times !!!!!________
-                //_____!!!!!!   then each row cell is calling for it's joins multiple times, which is bad   !!!______
-                //_____!!!!!  Causes "items not checked" flag to appear with false positive  !!!!!_______
+                //_____!!!!!!!!  this causes cells to call for initialSetup multiple times   !!!!!_______
                 [(EQRItineraryRowCell *)[self.myMasterItineraryCollection cellForItemAtIndexPath:newIndexPath] initialSetupWithRequestItem:[self.arrayOfScheduleRequests objectAtIndex:i]];
                 
                 break;
@@ -1395,11 +1448,14 @@
 
 -(void)addToArrayOfJoins:(id)currentThing{
     
-    if (!self.arrayOfJoinsAll){
-        self.arrayOfJoinsAll = [NSMutableArray arrayWithCapacity:1];
+    if (currentThing){
+        
+        if (!self.arrayOfJoinsAll){
+            self.arrayOfJoinsAll = [NSMutableArray arrayWithCapacity:1];
+        }
+        
+        [self.arrayOfJoinsAll addObject:currentThing];
     }
-    
-    [self.arrayOfJoinsAll addObject:currentThing];
 }
 
 
