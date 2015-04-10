@@ -24,6 +24,9 @@ typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
 
 @property (nonatomic, weak) id <EQRWebDataDelegate> delegateDataFeed;
 
+//block as property
+@property (copy)void (^CompletionBlockWithBoolForAsyncCompletion) (BOOL isLoadingFlagUp);
+
 //@property BOOL cancelTheScheduleDownloadFlag;
 //@property (strong, nonatomic) NSMutableArray* totalEquip;
 //@property (strong, nonatomic) NSMutableArray* muteArray;
@@ -48,5 +51,7 @@ typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
 @protocol EQRWebDataDelegate <NSObject>
 
 -(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action;
+@optional
+-(void)completionSignal;
 
 @end

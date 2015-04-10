@@ -37,8 +37,10 @@
 @property (strong, nonatomic) NSArray* alphaNumericaArray;
 @property int returnClassInt;
 @property BOOL abortXMLParsingFlag;
+@property BOOL XMLParsingIsCompleteFlag;
 
 @property SEL aSyncSelector;
+
 
 @end
 
@@ -895,9 +897,7 @@ const int intEQRTextElement = 10;
         //________********** TEST FOR ASYNC METHODS ***********___________
         //will only do anything if it has a delegate
         [self asyncDispatchWithObject:self.currentThing];
-        
-        
-        
+
         self.currentThing = nil;
         
         return;
@@ -1639,6 +1639,15 @@ const int intEQRTextElement = 10;
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser{
     
+    self.XMLParsingIsCompleteFlag = YES;
+    
+    if (self.XMLParsingIsCompleteFlag){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegateDataFeed  completionSignal];
+        });
+    }
+//    NSLog(@"Webdata > XML Parser did end Document" );
+    
 }
 
 
@@ -1657,6 +1666,7 @@ const int intEQRTextElement = 10;
 
 -(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString selector:(SEL)action completion:(CompletionBlockWithBool)completeBlock{
     
+    self.XMLParsingIsCompleteFlag = NO;
     self.abortXMLParsingFlag = NO;
     
     //set chosen selector
@@ -1786,6 +1796,7 @@ const int intEQRTextElement = 10;
         
     }
     
+    
     //__________NOTE, IT IS REQUIRED TO SEND THE COMPLETION BLOCK ON THE MAIN THREAD!!!!_____________
     dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -1803,6 +1814,8 @@ const int intEQRTextElement = 10;
 
 -(void)asyncDispatchWithObject:(id)currentThing {
     
+
+    
     if (self.abortXMLParsingFlag){
         return;
     }
@@ -1813,9 +1826,7 @@ const int intEQRTextElement = 10;
             
             [self.delegateDataFeed addASyncDataItem:currentThing toSelector:self.aSyncSelector];
         });
-    } 
-    
-    
+    }
 }
 
 

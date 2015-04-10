@@ -30,6 +30,7 @@ typedef NS_OPTIONS(NSUInteger, EQRItineraryFilter){
 
 //webData DelegateDataFeed methods
 -(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action;
+-(void)completionSignal;
 
 
 @end

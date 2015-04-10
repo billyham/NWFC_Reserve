@@ -276,6 +276,11 @@
     self.filteredArrayOfScheduleRequests = nil;
     self.readyToCheckForScheduleWarningsFlag = NO;
     
+    self.finishedAsyncDBCallForPickup = NO;
+    self.finishedAsyncDBCallForReturn = NO;
+    self.finishedAsyncDBCallForEquipJoins = NO;
+    self.finishedAsyncDBCallForMiscJoins = NO;
+    
     //test if a cell is now displaying a status that has been filtered out
     //change bitmask to allow for that status
     BOOL needToReloadTheView = NO;
@@ -430,27 +435,7 @@
             
             if (self.finishedAsyncDBCallForMiscJoins){
                 
-                self.finishedAsyncDBCallForEquipJoins = NO;
-                self.finishedAsyncDBCallForMiscJoins = NO;
-                
-                //tell cells to check for and show warning message
-                self.readyToCheckForScheduleWarningsFlag = YES;
-                
-                NSArray *tempArray = [NSArray arrayWithArray:[self.myMasterItineraryCollection visibleCells]];
-                for (EQRItineraryRowCell *cell in tempArray){
-                    
-                    NSInteger tempInt = [[self.myMasterItineraryCollection indexPathForCell:cell] row];
-                    
-                    if ([self.arrayOfScheduleRequests count] > tempInt){
-                        EQRScheduleRequestItem *thisItem = [self.arrayOfScheduleRequests objectAtIndex:tempInt];
-                        
-                        for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfJoinsAll){
-                            if ([thisItem.key_id isEqualToString:join.scheduleTracking_foreignKey]){
-                                [cell checkForJoinWarnings:join];
-                            }
-                        }
-                    }
-                }
+                [self continueAfterJoinCallCompleted];
             }
             
         }];
@@ -470,33 +455,40 @@
             
             if (self.finishedAsyncDBCallForEquipJoins){
                 
-                self.finishedAsyncDBCallForEquipJoins = NO;
-                self.finishedAsyncDBCallForMiscJoins = NO;
-            
-                //tell cells to check for and show warning message
-                self.readyToCheckForScheduleWarningsFlag = YES;
-                
-                NSArray *tempArray = [NSArray arrayWithArray:[self.myMasterItineraryCollection visibleCells]];
-                for (EQRItineraryRowCell *cell in tempArray){
-                    
-                    NSInteger tempInt = [[self.myMasterItineraryCollection indexPathForCell:cell] row];
-                    
-                    if ([self.arrayOfScheduleRequests count] > tempInt){
-                        
-                        EQRScheduleRequestItem *thisItem = [self.arrayOfScheduleRequests objectAtIndex:tempInt];
-                        
-                        for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfJoinsAll){
-                            if ([thisItem.key_id isEqualToString:join.scheduleTracking_foreignKey]){
-                                [cell checkForJoinWarnings:join];
-                            }
-                        }
-                    }
-                }
+                [self continueAfterJoinCallCompleted];
             }
         }];
     });
+}
+
+
+-(void)continueAfterJoinCallCompleted{
     
-  
+    NSLog(@"this should appear only AFTER all the joins have been loaded");
+    
+    self.finishedAsyncDBCallForEquipJoins = NO;
+    self.finishedAsyncDBCallForMiscJoins = NO;
+    
+    //tell cells to check for and show warning message
+    self.readyToCheckForScheduleWarningsFlag = YES;
+    
+    NSArray *tempArray = [NSArray arrayWithArray:[self.myMasterItineraryCollection visibleCells]];
+    for (EQRItineraryRowCell *cell in tempArray){
+        
+        NSInteger tempInt = [[self.myMasterItineraryCollection indexPathForCell:cell] row];
+        
+        if ([self.arrayOfScheduleRequests count] > tempInt){
+            
+            EQRScheduleRequestItem *thisItem = [self.arrayOfScheduleRequests objectAtIndex:tempInt];
+            
+            for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfJoinsAll){
+                if ([thisItem.key_id isEqualToString:join.scheduleTracking_foreignKey]){
+                    [cell checkForJoinWarnings:join];
+                }
+            }
+        }
+    }
+    
 }
 
 
@@ -1454,8 +1446,14 @@
             self.arrayOfJoinsAll = [NSMutableArray arrayWithCapacity:1];
         }
         
+        NSLog(@"adding to array of joins");
         [self.arrayOfJoinsAll addObject:currentThing];
     }
+}
+
+-(void)completionSignal{
+    
+    NSLog(@"completion signal fires");
 }
 
 
