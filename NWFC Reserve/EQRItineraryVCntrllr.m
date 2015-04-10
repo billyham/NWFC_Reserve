@@ -464,7 +464,7 @@
 
 -(void)continueAfterJoinCallCompleted{
     
-    NSLog(@"this should appear only AFTER all the joins have been loaded");
+//    NSLog(@"this should appear only AFTER all the joins have been loaded");
     
     self.finishedAsyncDBCallForEquipJoins = NO;
     self.finishedAsyncDBCallForMiscJoins = NO;
@@ -1400,31 +1400,45 @@
     
     //the new index of the newly added item
     indexpathRow = [self.arrayOfScheduleRequests indexOfObject:currentThing];
+
     
     //uptick on the index
     self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
     
-    //_____ reinitialize all cells at this index and at a higher index (because they got displaced with the sort)
-    //_____!!!!! OK, maybe not so genius afterall. The async call for joins is returning info to the wrong cell....  !!!!_____
-    NSInteger i;
-    for (i = indexpathRow ; i <= self.indexOfLastReturnedItem ; i++){
-        
-        //test to see if the cell is visible...
-        for (NSIndexPath* indexPath in [self.myMasterItineraryCollection indexPathsForVisibleItems]){
-            
-            if (i == indexPath.row){
-                
-                NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
-                //            NSArray* rowsOfIndexPaths = @[newIndexPath];
-                
-                //_____!!!!!!!!  this causes cells to call for initialSetup multiple times   !!!!!_______
-                [(EQRItineraryRowCell *)[self.myMasterItineraryCollection cellForItemAtIndexPath:newIndexPath] initialSetupWithRequestItem:[self.arrayOfScheduleRequests objectAtIndex:i]];
-                
-                break;
-            }
-        }
-    }
+    
+    //__1__
+    //try inserting in the collection view
+    NSInteger countOfCollectionView = [self.myMasterItineraryCollection numberOfItemsInSection:0];
+    
+    NSLog(@"this is the insertion index: %u  this is the current count of items in array: %u  this is the count of items in collection view: %u", indexpathRow, [self.arrayOfScheduleRequests count], countOfCollectionView );
+    
+    NSArray *tempArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexpathRow inSection:0]];
+    [self.myMasterItineraryCollection insertItemsAtIndexPaths:tempArray];
+    
+    
+    //__2__
+    //try re-intializing all cells at and above the new cell's row
+//    NSInteger i;
+//    for (i = indexpathRow ; i <= self.indexOfLastReturnedItem ; i++){
+//        
+//        //test to see if the cell is visible...
+//        for (NSIndexPath* indexPath in [self.myMasterItineraryCollection indexPathsForVisibleItems]){
+//            
+//            if (i == indexPath.row){
+//                
+//                NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+//                //            NSArray* rowsOfIndexPaths = @[newIndexPath];
+//                
+//                //_____!!!!!!!!  this causes cells to call for initialSetup multiple times   !!!!!_______
+//                [(EQRItineraryRowCell *)[self.myMasterItineraryCollection cellForItemAtIndexPath:newIndexPath] initialSetupWithRequestItem:[self.arrayOfScheduleRequests objectAtIndex:i]];
+//                
+//                break;
+//            }
+//        }
+//    }
 }
+
+
 
 -(void)addReturnToItineraryList:(id)currentThing{
     
@@ -1446,7 +1460,7 @@
             self.arrayOfJoinsAll = [NSMutableArray arrayWithCapacity:1];
         }
         
-        NSLog(@"adding to array of joins");
+//        NSLog(@"adding to array of joins");
         [self.arrayOfJoinsAll addObject:currentThing];
     }
 }
@@ -1468,7 +1482,12 @@
     if (self.currentFilterBitmask == EQRFilterAll){
         //no filter
         
-        return self.countOfUltimageReturnedItems;
+        //__1__
+//        return self.countOfUltimageReturnedItems;
+        
+        //__2__
+        return [self.arrayOfScheduleRequests count];
+        
         
     }else{
         //yes filter
@@ -1501,7 +1520,6 @@
     if (self.currentFilterBitmask == EQRFilterAll){
         //no filter
         
-        
         //determine if data is loaded
         if ([self.arrayOfScheduleRequests count] > indexPath.row){ //yes, indexed object has arrived
             
@@ -1513,7 +1531,6 @@
                 EQRScheduleRequestItem* thisItem = [self.arrayOfScheduleRequests objectAtIndex:indexPath.row];
                 for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfJoinsAll){
                     if ([join.scheduleTracking_foreignKey isEqualToString:thisItem.key_id]){
-                        NSLog(@"inside itineraryVC > collectionview check for matching joins");
                         [cell checkForJoinWarnings:join];
                     }
                 }

@@ -1640,7 +1640,7 @@ const int intEQRTextElement = 10;
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser{
     
-    NSLog(@"Webdata > XML Parser did end Document" );
+//    NSLog(@"Webdata > XML Parser did end Document" );
 
     //only if completion block is up, then send block
     self.XMLParsingIsCompleteFlag = YES;
@@ -1797,7 +1797,7 @@ const int intEQRTextElement = 10;
         
     }
     
-    NSLog(@"at end of query method and assiging completion block property");
+//    NSLog(@"at end of query method and assiging completion block property");
     
     //copy completion block to use later, when XML parsing is finished
     self.delayedCompletionBlock = completeBlock;
