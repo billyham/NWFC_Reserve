@@ -1451,13 +1451,6 @@
     }
 }
 
--(void)completionSignal{
-    
-    NSLog(@"completion signal fires");
-}
-
-
-
 
 
 #pragma mark - collection view data source methods

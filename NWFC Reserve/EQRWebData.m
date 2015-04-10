@@ -38,6 +38,7 @@
 @property int returnClassInt;
 @property BOOL abortXMLParsingFlag;
 @property BOOL XMLParsingIsCompleteFlag;
+@property BOOL completionBlockSignalFlag;
 
 @property SEL aSyncSelector;
 
@@ -1639,15 +1640,13 @@ const int intEQRTextElement = 10;
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser{
     
+    NSLog(@"Webdata > XML Parser did end Document" );
+
+    //only if completion block is up, then send block
     self.XMLParsingIsCompleteFlag = YES;
-    
-    if (self.XMLParsingIsCompleteFlag){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegateDataFeed  completionSignal];
-        });
+    if (self.completionBlockSignalFlag){
+        [self sendAsyncCompletionBlock];
     }
-//    NSLog(@"Webdata > XML Parser did end Document" );
-    
 }
 
 
@@ -1666,8 +1665,10 @@ const int intEQRTextElement = 10;
 
 -(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString selector:(SEL)action completion:(CompletionBlockWithBool)completeBlock{
     
+    self.completionBlockSignalFlag = NO;
     self.XMLParsingIsCompleteFlag = NO;
     self.abortXMLParsingFlag = NO;
+    
     
     //set chosen selector
     self.aSyncSelector = action;
@@ -1796,13 +1797,23 @@ const int intEQRTextElement = 10;
         
     }
     
+    NSLog(@"at end of query method and assiging completion block property");
+    
+    //copy completion block to use later, when XML parsing is finished
+    self.delayedCompletionBlock = completeBlock;
+    
+    //only if xml parsing is complete, send completion block
+    self.completionBlockSignalFlag = YES;
+    if (self.XMLParsingIsCompleteFlag){
+        [self sendAsyncCompletionBlock];
+    }
     
     //__________NOTE, IT IS REQUIRED TO SEND THE COMPLETION BLOCK ON THE MAIN THREAD!!!!_____________
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        //send completion block to indicate when loading is finished
-        completeBlock(YES);
-    });
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        
+//        //send completion block to indicate when loading is finished
+//        completeBlock(YES);
+//    });
     
     //reset variable string
     self.variableClassString = nil;
@@ -1827,6 +1838,25 @@ const int intEQRTextElement = 10;
             [self.delegateDataFeed addASyncDataItem:currentThing toSelector:self.aSyncSelector];
         });
     }
+}
+
+-(void)sendAsyncCompletionBlock{
+    
+    self.XMLParsingIsCompleteFlag = NO;
+    self.completionBlockSignalFlag = NO;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        //___Very importand that this if statement is INSIDE the dispatch
+        if (self.delayedCompletionBlock != nil){
+            
+//            NSLog(@"Webdata > says it is sending a completion block" );
+            
+            self.delayedCompletionBlock(YES);
+            self.delayedCompletionBlock = nil;
+        }
+    });
+    
 }
 
 
