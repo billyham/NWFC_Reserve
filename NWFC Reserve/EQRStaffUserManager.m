@@ -59,14 +59,14 @@
             if ([thisVC.title isEqualToString:@"Request"]){
                 [arrayToKeep addObject:thisVC];
                 
-            }else if ([thisVC.title isEqualToString:@"Inbox"]){
-                [self.arrayOfHiddenVCs addObject:thisVC];
+            }else if ([thisVC.title isEqualToString:@"Month"]){
+                [self.arrayOfHiddenVCs insertObject:thisVC  atIndex:0];
                 
             }else if ([thisVC.title isEqualToString:@"Day"]){
-                [self.arrayOfHiddenVCs addObject:thisVC];
+                [self.arrayOfHiddenVCs insertObject:thisVC atIndex:0];
                 
-            }else if ([thisVC.title isEqualToString:@"Month"]){
-                [self.arrayOfHiddenVCs addObject:thisVC];
+            }else if ([thisVC.title isEqualToString:@"Inbox"]){
+                [self.arrayOfHiddenVCs insertObject:thisVC atIndex:0];
                 
             }else if ([thisVC.title isEqualToString:@"Settings"]){
                 [arrayToKeep addObject:thisVC];
@@ -75,27 +75,6 @@
                 
                 NSLog(@"EQRStaffUserManager > goToKioskMode  Failed to identify the VC");
             }
-            
-//            if ([thisVC class] == [UISplitViewController class]){  //must be a splitview
-//                if ([[(UINavigationController *)[[(UISplitViewController *)thisVC viewControllers] objectAtIndex:0] topViewController] class] == [EQRInboxLeftTableVC class]){   //must be inbox
-//                    NSLog(@"Identifed as Inbox");
-//                } else {
-//                    [arrayToKeep addObject:thisVC];   //must be settings
-//                    NSLog(@"Identifed as Settings");
-//                }
-//            }else if ([thisVC respondsToSelector:@selector(topViewController)] ){
-//                if ([[(UINavigationController*)thisVC topViewController] class] == [EQRItineraryVCntrllr class]){
-//                    [self.arrayOfHiddenVCs addObject:thisVC];
-//                }else if ([[(UINavigationController*)thisVC topViewController] class] == [EQRScheduleTopVCntrllr class]){
-//                    [self.arrayOfHiddenVCs addObject:thisVC];
-//                }else{
-//                    [arrayToKeep addObject:thisVC];  //must be Request?
-//                }
-//            }else{
-//                [arrayToKeep addObject:thisVC];  //must be Request?
-//            }
-            
-            
         }
         
         [(UITabBarController*)thisApp.keyWindow.rootViewController setViewControllers:arrayToKeep];
@@ -112,7 +91,9 @@
         
         //combined hidden and visible arrays
         [arrayToKeep addObjectsFromArray:originalArray];
-        [arrayToKeep addObjectsFromArray:self.arrayOfHiddenVCs];
+        for (id object in self.arrayOfHiddenVCs){
+            [arrayToKeep insertObject:object atIndex:1];
+        }
         
         [self.arrayOfHiddenVCs removeAllObjects];
         

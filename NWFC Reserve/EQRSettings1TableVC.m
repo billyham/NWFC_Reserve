@@ -11,11 +11,11 @@
 #import "EQRGlobals.h"
 #import "EQRStaffUserManager.h"
 #import "EQRColors.h"
+#import "EQRSettingsLeftTableVC.h"
 
 @interface EQRSettings1TableVC ()
 
 //@property (strong, nonatomic) IBOutlet UIView* lockableItemsView;
-@property (strong, nonatomic) IBOutlet UILabel* urlString;
 @property (strong, nonatomic) IBOutlet UILabel* termString;
 @property (strong, nonatomic) IBOutlet UILabel* campTermString;
 @property (strong, nonatomic) IBOutlet UISwitch* demoModeSwitch;
@@ -29,16 +29,16 @@
 
 @implementation EQRSettings1TableVC
 
+@synthesize delegate;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     //populate text field with information from user settings
-    NSString* currentUrl = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
     NSString* currentTerm = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
     NSString* currentCampTerm = [[[NSUserDefaults standardUserDefaults] objectForKey:@"campTerm"] objectForKey:@"campTerm"];
     
     self.termString.text = currentTerm;
-    self.urlString.text = currentUrl;
     self.campTermString.text = currentCampTerm;
     
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
@@ -46,7 +46,6 @@
     if (isInKioskMode){
         self.kioskModeSwitch.on = YES;
         
-        [self.urlString setUserInteractionEnabled:NO];
         [self.termString setUserInteractionEnabled:NO];
         [self.campTermString setUserInteractionEnabled:NO];
         [self.demoModeSwitch setUserInteractionEnabled:NO];
@@ -55,6 +54,11 @@
 //        self.lockableItemsView.alpha = 0.25;
     }
     
+    //set left side as delegate
+    UINavigationController *navCon = [[[self splitViewController] viewControllers] objectAtIndex:0];
+    EQRSettingsLeftTableVC *leftTable = (EQRSettingsLeftTableVC *)[navCon topViewController];
+    self.delegate = leftTable;
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -62,7 +66,30 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-
+-(void)viewWillAppear:(BOOL)animated{
+    
+    //update navigation bar
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    if (modeManager.isInDemoMode){
+        
+        //set prompt
+        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        
+        //set color of navigation bar
+        EQRColors* colors = [EQRColors sharedInstance];
+        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
+        
+    }else{
+        
+        //set prompt
+        self.navigationItem.prompt = nil;
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = nil;
+    }
+    
+    [super viewWillAppear:animated];
+}
 
 
 
@@ -90,17 +117,6 @@
     }];
 }
 
--(IBAction)tapInDatabaseURL:(id)sender{
-    
-    self.genericTextEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
-    self.genericTextEditor.modalPresentationStyle = UIModalPresentationFormSheet;
-    self.genericTextEditor.delegate = self;
-    [self.genericTextEditor initalSetupWithTitle:@"Enter the database URL" subTitle:nil currentText:self.urlString.text keyboard:@"UIKeyboardTypeURL" returnMethod:@"urlTextFieldDidChange:"];
-    
-    [self presentViewController:self.genericTextEditor animated:YES completion:^{
-    }];
-}
-
 
 #pragma mark - EQRGenericTextEditor delegate methods
 
@@ -117,22 +133,6 @@
         
         self.genericTextEditor = nil;
     }];
-    
-}
-
-
--(void)urlTextFieldDidChange:(NSString *)returnText{
-    
-    self.urlString.text = returnText;
-    
-    //change user defaults with new string text
-    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                            self.urlString.text, @"url"
-                            , nil];
-    
-    [defaults setObject:newDic forKey:@"url"];
-    [defaults synchronize];
     
 }
 
@@ -184,6 +184,7 @@
         EQRModeManager* modeManager = [EQRModeManager sharedInstance];
         modeManager.isInDemoMode = YES;
         
+        [self.delegate demoModeChanged:YES];
         
     }else{
         
@@ -196,6 +197,8 @@
         //set singleton
         EQRModeManager* modeManager = [EQRModeManager sharedInstance];
         modeManager.isInDemoMode = NO;
+        
+        [self.delegate demoModeChanged:NO];
     }
     
     //inform other VCs that they need to reload their data
@@ -213,13 +216,7 @@
         
         [staffUserManager goToKioskMode:YES];
         
-        [self.urlString setUserInteractionEnabled:NO];
-        [self.termString setUserInteractionEnabled:NO];
-        [self.campTermString setUserInteractionEnabled:NO];
         [self.demoModeSwitch setUserInteractionEnabled:NO];
-        
-        //dim lockable items
-//        self.lockableItemsView.alpha = 0.25;
         
         setStringForDefaults = @"yes";
         
@@ -231,7 +228,7 @@
         [defaults setObject:newDic forKey:@"kioskModeIsOn"];
         [defaults synchronize];
         
-        
+        [self.delegate kioskModeChanged:YES];
         
     }else{
         
@@ -264,13 +261,7 @@
         
         [staffUserManager goToKioskMode:NO];
         
-        [self.urlString setUserInteractionEnabled:YES];
-        [self.termString setUserInteractionEnabled:YES];
-        [self.campTermString setUserInteractionEnabled:YES];
         [self.demoModeSwitch setUserInteractionEnabled:YES];
-        
-        //make lockable items opaque
-//        self.lockableItemsView.alpha = 1.0;
         
         setStringForDefaults = @"no";
         
@@ -284,6 +275,8 @@
         
         [self.passwordPopover dismissPopoverAnimated:YES];
         self.passwordPopover = nil;
+        
+        [self.delegate kioskModeChanged:NO];
     }
     
 }
@@ -318,15 +311,6 @@
             
         }
         
-    }
-    
-    if (indexPath.section == 2){
-        
-        if (indexPath.row == 0){
-            
-            [self tapInDatabaseURL:nil];
-            
-        }
     }
 }
 

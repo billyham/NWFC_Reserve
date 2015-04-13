@@ -1,0 +1,202 @@
+//
+//  EQRSettings2TableVC.m
+//  Gear
+//
+//  Created by Ray Smith on 4/12/15.
+//  Copyright (c) 2015 Ham Again LLC. All rights reserved.
+//
+
+#import "EQRSettings2TableVC.h"
+#import "EQRStaffUserManager.h"
+#import "EQRModeManager.h"
+#import "EQRColors.h"
+
+@interface EQRSettings2TableVC ()
+
+@property (strong, nonatomic) IBOutlet UILabel* urlString;
+@property (strong, nonatomic) EQRGenericTextEditor* genericTextEditor;
+
+@end
+
+@implementation EQRSettings2TableVC
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    //populate text field with information from user settings
+    NSString* currentUrl = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
+    self.urlString.text = currentUrl;
+    
+    //hide the back button
+    self.navigationItem.hidesBackButton = YES;
+    
+    // Uncomment the following line to preserve selection between presentations.
+//     self.clearsSelectionOnViewWillAppear = NO;
+    
+    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    //update navigation bar
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    if (modeManager.isInDemoMode){
+        
+        //set prompt
+        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        
+        //set color of navigation bar
+        EQRColors* colors = [EQRColors sharedInstance];
+        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
+        
+    }else{
+        
+        //set prompt
+        self.navigationItem.prompt = nil;
+        
+        //set color of navigation bar
+        self.navigationController.navigationBar.barTintColor = nil;
+    }
+    
+    [super viewWillAppear:animated];
+}
+
+
+-(IBAction)tapInDatabaseURL:(id)sender{
+    
+    self.genericTextEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
+    self.genericTextEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    self.genericTextEditor.delegate = self;
+    [self.genericTextEditor initalSetupWithTitle:@"Enter the database URL" subTitle:nil currentText:self.urlString.text keyboard:@"UIKeyboardTypeURL" returnMethod:@"urlTextFieldDidChange:"];
+    
+    [self presentViewController:self.genericTextEditor animated:YES completion:^{
+    }];
+}
+
+#pragma mark - EQRGenericTextEditor delegate methods
+
+-(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod{
+    
+    self.genericTextEditor.delegate = nil;
+    
+    [self.genericTextEditor dismissViewControllerAnimated:YES completion:^{
+        
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        [self performSelector:NSSelectorFromString(returnMethod) withObject:returnText];
+#pragma clang diagnostic pop
+        
+        self.genericTextEditor = nil;
+    }];
+    
+}
+
+
+-(void)urlTextFieldDidChange:(NSString *)returnText{
+    
+    self.urlString.text = returnText;
+    
+    //change user defaults with new string text
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                            self.urlString.text, @"url"
+                            , nil];
+    
+    [defaults setObject:newDic forKey:@"url"];
+    [defaults synchronize];
+    
+}
+
+#pragma mark - table view delegate methods
+
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
+    if (indexPath.section == 0){
+        
+        if (indexPath.row == 0){
+            
+            [self tapInDatabaseURL:nil];
+        }
+    }
+}
+
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+#pragma mark - Table view data source
+
+//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+//#warning Potentially incomplete method implementation.
+//    // Return the number of sections.
+//    return 0;
+//}
+//
+//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+//#warning Incomplete method implementation.
+//    // Return the number of rows in the section.
+//    return 0;
+//}
+
+/*
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    
+    // Configure the cell...
+    
+    return cell;
+}
+*/
+
+/*
+// Override to support conditional editing of the table view.
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+}
+*/
+
+/*
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }   
+}
+*/
+
+/*
+// Override to support rearranging the table view.
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+}
+*/
+
+/*
+// Override to support conditional rearranging of the table view.
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the item to be re-orderable.
+    return YES;
+}
+*/
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

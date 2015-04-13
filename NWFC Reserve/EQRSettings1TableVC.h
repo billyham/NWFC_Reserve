@@ -10,9 +10,15 @@
 #import "EQRPasswordEntryVC.h"
 #import "EQRGenericTextEditor.h"
 
-@interface EQRSettings1TableVC : UITableViewController  <EQRPasswordEntryDelegate, UIPopoverControllerDelegate, EQRGenericTextEditorDelegate, UITableViewDelegate>
+@protocol EQRSettings1TableDelegate;
 
--(IBAction)urlTextFieldDidChange:(id)sender;
+@interface EQRSettings1TableVC : UITableViewController  <EQRPasswordEntryDelegate, UIPopoverControllerDelegate, EQRGenericTextEditorDelegate, UITableViewDelegate>{
+    __weak id <EQRSettings1TableDelegate> delegate;
+}
+
+@property (weak, nonatomic) id <EQRSettings1TableDelegate> delegate;
+
+//-(IBAction)urlTextFieldDidChange:(id)sender;
 -(IBAction)termTextFieldDidChange:(id)sender;
 -(IBAction)campTermTextFieldDidChange:(id)sender;
 
@@ -21,5 +27,13 @@
 
 //EQRGenericTextEditorDelegate methods
 -(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod;
+
+@end
+
+
+@protocol EQRSettings1TableDelegate <NSObject>
+
+-(void)demoModeChanged:(BOOL)demoModeOn;
+-(void)kioskModeChanged:(BOOL)kioskModeOn;
 
 @end
