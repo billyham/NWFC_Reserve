@@ -12,6 +12,7 @@
 #import "EQRStaffUserManager.h"
 #import "EQRWebData.h"
 #import "EQRContactNameItem.h"
+#import "EQRInboxLeftTableVC.h"
 
 @interface EQRAppDelegate ()
 
@@ -129,6 +130,22 @@
         [staffUserManager goToKioskMode:YES];
     }
     
+    //set preferred display modes on slitviews
+    UIApplication* thisApp = [UIApplication sharedApplication];
+    NSArray* originalArray = [(UITabBarController*)thisApp.keyWindow.rootViewController viewControllers];
+    for (UIViewController* VC in originalArray){
+        if ([VC class] == [UISplitViewController class]){   //must be a split view
+            
+            //need to discern inbox from settings
+            if ([VC.title isEqualToString:@"Inbox"]){   //must be inbox
+                [(UISplitViewController *)VC setPreferredDisplayMode:UISplitViewControllerDisplayModeAutomatic];
+                NSLog(@"Identifed as Inbox");
+            } else if ([VC.title isEqualToString:@"Settings"]){  //must be settings
+                NSLog(@"identified as Settings, this is the title: %@", VC.title);
+                [(UISplitViewController *)VC setPreferredDisplayMode:UISplitViewControllerDisplayModeAllVisible];
+            }
+        }
+    }
 
 }
 

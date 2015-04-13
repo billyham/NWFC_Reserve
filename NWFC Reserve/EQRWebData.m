@@ -1640,7 +1640,7 @@ const int intEQRTextElement = 10;
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser{
     
-//    NSLog(@"Webdata > XML Parser did end Document" );
+    NSLog(@"Webdata > XML Parser did end Document" );
 
     //only if completion block is up, then send block
     self.XMLParsingIsCompleteFlag = YES;
@@ -1656,6 +1656,11 @@ const int intEQRTextElement = 10;
     
     self.abortXMLParsingFlag = YES;
     self.aSyncSelector = nil;
+    
+    //this does nothing
+//    self.XMLParsingIsCompleteFlag = NO;
+//    self.completionBlockSignalFlag = NO;
+//    self.delayedCompletionBlock = nil;
     
     [self.xmlParser abortParsing];
 }
@@ -1825,8 +1830,8 @@ const int intEQRTextElement = 10;
 
 -(void)asyncDispatchWithObject:(id)currentThing {
     
+//    NSLog(@"Webdata > is transmitting async dispatch with object" );
 
-    
     if (self.abortXMLParsingFlag){
         return;
     }
@@ -1845,12 +1850,17 @@ const int intEQRTextElement = 10;
     self.XMLParsingIsCompleteFlag = NO;
     self.completionBlockSignalFlag = NO;
     
+    //___doesn't send the completion block if the parsing is aborted!!!
+    if (self.abortXMLParsingFlag == YES){
+        return;
+    }
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         
         //___Very importand that this if statement is INSIDE the dispatch
         if (self.delayedCompletionBlock != nil){
             
-//            NSLog(@"Webdata > says it is sending a completion block" );
+            NSLog(@"Webdata > says it is sending a completion block" );
             
             self.delayedCompletionBlock(YES);
             self.delayedCompletionBlock = nil;

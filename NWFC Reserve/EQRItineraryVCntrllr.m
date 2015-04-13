@@ -57,13 +57,16 @@
 @property BOOL aChangeWasMade;
 
 //async webData properties
-@property NSInteger countOfUltimageReturnedItems;
+//@property NSInteger countOfUltimageReturnedItems;
 @property NSInteger indexOfLastReturnedItem;
 @property BOOL finishedAsyncDBCallForPickup;
 @property BOOL finishedAsyncDBCallForReturn;
 @property BOOL finishedAsyncDBCallForEquipJoins;
 @property BOOL finishedAsyncDBCallForMiscJoins;
 @property BOOL readyToCheckForScheduleWarningsFlag;
+@property BOOL freezeOnInsertionsFlag;
+@property (strong, nonatomic) NSTimer *delayTheInsertions;
+//@property BOOL newDataHasOccurredWhileFreezeWasOnFlag;
 @property (strong, nonatomic) EQRWebData *webDataForPickup;
 @property (strong, nonatomic) EQRWebData *webDataForReturn;
 @property (strong, nonatomic) EQRWebData *webDataForEquipJoins;
@@ -76,6 +79,8 @@
 @end
 
 @implementation EQRItineraryVCntrllr
+
+#pragma mark - init methods
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -236,12 +241,25 @@
     self.aChangeWasMade = YES;
 }
 
+#pragma mark - refresh the view
+
+-(void)releaseFreezeAndRefreshTheView{
+    
+    self.freezeOnInsertionsFlag = NO;
+    [self refreshTheView];
+}
+
 
 -(void)refreshTheView{
 
+    NSLog(@"refreshTheView fires");
+    
+    if ([self.arrayOfScheduleRequests count] > 0){
+        self.freezeOnInsertionsFlag = YES;
+    }
     
     //_____this doesn't help
-    self.countOfUltimageReturnedItems = 0;
+//    self.countOfUltimageReturnedItems = 0;
     [self.arrayOfScheduleRequests removeAllObjects];
     
     //reload the view
@@ -278,8 +296,7 @@
     
     self.finishedAsyncDBCallForPickup = NO;
     self.finishedAsyncDBCallForReturn = NO;
-    self.finishedAsyncDBCallForEquipJoins = NO;
-    self.finishedAsyncDBCallForMiscJoins = NO;
+
     
     //test if a cell is now displaying a status that has been filtered out
     //change bitmask to allow for that status
@@ -338,14 +355,15 @@
     
     self.indexOfLastReturnedItem = -1;
     
-    //__1__ get total count of items that will be ultimately be returned
     EQRWebData *webData = [EQRWebData sharedInstance];
     self.webDataForPickup = webData;
     self.webDataForPickup.delegateDataFeed = self;
-    NSString* countOfPickUps = [self.webDataForPickup queryForStringWithLink:@"EQGetCountOfScheduleItemsWithBeginDate.php" parameters:topArray];
-    self.countOfUltimageReturnedItems = [countOfPickUps integerValue];
-    NSString *countOfReturns = [self.webDataForPickup queryForStringWithLink:@"EQGetCountOfScheduleItemsWithEndDate.php" parameters:topArray];
-    self.countOfUltimageReturnedItems = self.countOfUltimageReturnedItems + [countOfReturns  intValue];
+    
+    //__1__ get total count of items that will be ultimately be returned
+//    NSString* countOfPickUps = [self.webDataForPickup queryForStringWithLink:@"EQGetCountOfScheduleItemsWithBeginDate.php" parameters:topArray];
+//    self.countOfUltimageReturnedItems = [countOfPickUps integerValue];
+//    NSString *countOfReturns = [self.webDataForPickup queryForStringWithLink:@"EQGetCountOfScheduleItemsWithEndDate.php" parameters:topArray];
+//    self.countOfUltimageReturnedItems = self.countOfUltimageReturnedItems + [countOfReturns  intValue];
     
     //__2__ do asynchronous call
     SEL thisSelectorPickup = @selector(addPickupToIntineraryList:);
@@ -415,6 +433,11 @@
 
 -(void)continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray:(NSArray *)topArray{
     
+//    NSLog(@"continueAfterPartial... fired");
+    
+    self.finishedAsyncDBCallForEquipJoins = NO;
+    self.finishedAsyncDBCallForMiscJoins = NO;
+    
     //top array has RequestDateBegin and RequestDateEnd values
     
     if (self.arrayOfJoinsAll){
@@ -464,7 +487,8 @@
 
 -(void)continueAfterJoinCallCompleted{
     
-//    NSLog(@"this should appear only AFTER all the joins have been loaded");
+//    NSLog(@"this should appear only AFTER all the joins have been loaded, this is the count of joins: %ld", (long)[self.arrayOfJoinsAll count]);
+//    NSLog(@"this is the value for EquipJoinsFlag: %u, this is MiscJoins: %u", self.finishedAsyncDBCallForEquipJoins, self.finishedAsyncDBCallForMiscJoins);
     
     self.finishedAsyncDBCallForEquipJoins = NO;
     self.finishedAsyncDBCallForMiscJoins = NO;
@@ -1410,11 +1434,31 @@
     //try inserting in the collection view
     NSInteger countOfCollectionView = [self.myMasterItineraryCollection numberOfItemsInSection:0];
     
-    NSLog(@"this is the insertion index: %u  this is the current count of items in array: %u  this is the count of items in collection view: %u", indexpathRow, [self.arrayOfScheduleRequests count], countOfCollectionView );
+//    NSLog(@"this is the insertion index: %ld  this is the current count of items in array: %lu  this is the count of items in collection view: %ld", (long)indexpathRow, (unsigned long)[self.arrayOfScheduleRequests count], (long)countOfCollectionView );
     
-    NSArray *tempArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:indexpathRow inSection:0]];
-    [self.myMasterItineraryCollection insertItemsAtIndexPaths:tempArray];
+    NSMutableArray *tempArray = [NSMutableArray arrayWithObject:[NSIndexPath indexPathForRow:indexpathRow inSection:0]];
+
     
+    //it is instructing to make 1 insertion. The count of items array should be exactly one more than the items in the collection view. If the difference is greater or less than 1, don't insert, fire the timer to reload the collection view.
+    
+    NSInteger y = [self.arrayOfScheduleRequests count] - countOfCollectionView;
+    if (y != 1){
+        
+        self.freezeOnInsertionsFlag = YES;
+    }
+    
+    if (self.freezeOnInsertionsFlag == NO){
+        
+        [self.myMasterItineraryCollection insertItemsAtIndexPaths:tempArray];
+        
+    }else{
+        
+        if (self.delayTheInsertions){
+            [self.delayTheInsertions invalidate];
+        }
+        
+        self.delayTheInsertions = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self.myMasterItineraryCollection selector:@selector(reloadData) userInfo:nil repeats:NO];
+    }
     
     //__2__
     //try re-intializing all cells at and above the new cell's row
@@ -1558,6 +1602,26 @@
     
     
     return cell;
+}
+
+
+#pragma mark - collection view delegate methods
+
+- (void)collectionView:(UICollectionView *)collectionView
+       willDisplayCell:(UICollectionViewCell *)cell
+    forItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+//    NSLog(@"willDisplayCell for indexPathRow: %lu", (long)indexPath.row);
+    
+}
+
+- (void)collectionView:(UICollectionView *)collectionView
+  didEndDisplayingCell:(UICollectionViewCell *)cell
+    forItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+//     NSLog(@"didEndDisplayCell for indexPathRow: %lu", (long)indexPath.row);
+    
+    self.freezeOnInsertionsFlag = NO;
 }
 
 #pragma mark - dealloc and such
