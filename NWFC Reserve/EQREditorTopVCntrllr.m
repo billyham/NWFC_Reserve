@@ -301,7 +301,7 @@
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSArray* arrayWithKey = [NSArray arrayWithObjects:@"key_id",[userInfo objectForKey:@"key_ID"], nil];
     NSArray* topArrayWithKey = [NSArray arrayWithObject:arrayWithKey];
-    [webData queryWithLink:@"EQGetScheduleRequestComplete.php" parameters:topArrayWithKey class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:topArrayWithKey class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
         
         //____ERROR HANDLING WHEN NOTHING IS RETURNED_______
         if ([muteArray count] > 0){
@@ -370,19 +370,23 @@
     if (modeManager.isInDemoMode){
         
         //set prompt
+        [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = @"!!! DEMO MODE !!!";
         
         //set color of navigation bar
         EQRColors* colors = [EQRColors sharedInstance];
         self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
+        [UIView setAnimationsEnabled:YES];
         
     }else{
         
         //set prompt
+        [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = nil;
         
         //set color of navigation bar
         self.navigationController.navigationBar.barTintColor = nil;
+        [UIView setAnimationsEnabled:YES];
     }
     
     [super viewWillAppear:animated];

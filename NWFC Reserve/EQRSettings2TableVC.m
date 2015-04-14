@@ -30,6 +30,8 @@
     //hide the back button
     self.navigationItem.hidesBackButton = YES;
     
+    
+    
     // Uncomment the following line to preserve selection between presentations.
 //     self.clearsSelectionOnViewWillAppear = NO;
     
@@ -40,26 +42,37 @@
 -(void)viewWillAppear:(BOOL)animated{
     
     //update navigation bar
+    [self updateNavItemPromptWithDemoModeState];
+    
+    [super viewWillAppear:animated];
+}
+
+
+-(void)updateNavItemPromptWithDemoModeState{
+    
     EQRModeManager* modeManager = [EQRModeManager sharedInstance];
     if (modeManager.isInDemoMode){
         
         //set prompt
+        [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = @"!!! DEMO MODE !!!";
         
         //set color of navigation bar
         EQRColors* colors = [EQRColors sharedInstance];
         self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
+        [UIView setAnimationsEnabled:YES];
         
     }else{
         
         //set prompt
+        [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = nil;
         
         //set color of navigation bar
         self.navigationController.navigationBar.barTintColor = nil;
+        [UIView setAnimationsEnabled:YES];
     }
     
-    [super viewWillAppear:animated];
 }
 
 

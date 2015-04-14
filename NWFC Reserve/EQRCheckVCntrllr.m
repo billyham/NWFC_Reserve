@@ -10,7 +10,6 @@
 #import "EQRCheckRowCell.h"
 #import "EQRCheckRowMiscItemCell.h"
 #import "EQRMiscJoin.h"
-#import "EQRWebData.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRGlobals.h"
 //#import <Foundation/Foundation.h>
@@ -59,6 +58,19 @@
 @property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedEquipIDs;
 @property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedMiscJoins;
 
+@property NSInteger indexOfLastReturnedItem;
+@property (strong, nonatomic) EQRWebData *webDataForFullyComplete;
+@property (strong, nonatomic) EQRWebData *webDataForContactComplete;
+@property (strong, nonatomic) EQRWebData *webDataForEquipJoins;
+@property (strong, nonatomic) EQRWebData *webDataForMiscJoins;
+@property BOOL didLoadFullyCompleteFlag;
+@property BOOL didLoadContactCompleteFlag;
+@property BOOL didLoadEquipJoinsFlag;
+@property BOOL didLoadMiscJoinsFlag;
+@property (strong, nonatomic) EQRContactNameItem *tempContact;
+
+
+
 //for staff user picker
 @property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
 
@@ -95,21 +107,85 @@
 
 -(void)initialSetupWithInfo:(NSDictionary*)userInfo{
     
+    self.didLoadFullyCompleteFlag = NO;
+    self.didLoadContactCompleteFlag = NO;
+    self.didLoadEquipJoinsFlag = NO;
+    self.didLoadMiscJoinsFlag = NO;
+    self.myScheduleRequestItem = nil;
+    self.tempContact = nil;
+    
     self.scheduleRequestKeyID = [userInfo objectForKey:@"scheduleKey"];
     self.marked_for_returning = [[userInfo objectForKey:@"marked_for_returning"] boolValue];
     self.switch_num = [[userInfo objectForKey:@"switch_num"] integerValue];
     
-    //get notes from data layer
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    NSArray* alphaArray = @[@"key_id", self.scheduleRequestKeyID];
-    NSArray* omegaArray = @[alphaArray];
-    [webData queryWithLink:@"EQGetScheduleRequestNotes.php" parameters:omegaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    self.webDataForFullyComplete = webData;
+    self.webDataForFullyComplete.delegateDataFeed = self;
+    NSArray *firstArray = @[@"key_id", self.scheduleRequestKeyID];
+    NSArray *topArray = @[firstArray];
+    SEL thisSelector = @selector(addRequestObject:);
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+       
+        [self.webDataForFullyComplete queryWithAsync:@"EQGetScheduleRequestFullyComplete.php" parameters:topArray class:@"EQRScheduleRequestItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+            
+            self.didLoadFullyCompleteFlag = YES;
+            
+            if (self.didLoadContactCompleteFlag){
+                
+                self.didLoadFullyCompleteFlag = NO;
+                self.didLoadContactCompleteFlag = NO;
+                
+                //only continue if a valid request got returned
+                if (self.myScheduleRequestItem){
+                    [self initialSetupStage2];
+                }
+            }
+        }];
+    });
+    
+    //do asynchronous call to a different implementation of webdata for the contact info
+    EQRWebData *webData2 = [EQRWebData sharedInstance];
+    self.webDataForContactComplete = webData2;
+    self.webDataForContactComplete.delegateDataFeed = self;
+    SEL thisSelector2 = @selector(addContactComplete:);
+    
+    dispatch_queue_t queue2 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue2, ^{
+       
+        [self.webDataForContactComplete queryWithAsync:@"EQGetContactCompleteWithScheduleRequestKey.php" parameters:topArray class:@"EQRContactNameItem" selector:thisSelector2 completion:^(BOOL isLoadingFlagUp) {
+            
+            self.didLoadContactCompleteFlag = YES;
+            
+            if (self.didLoadFullyCompleteFlag){
+                
+                self.didLoadFullyCompleteFlag = NO;
+                self.didLoadContactCompleteFlag = NO;
+                
+                //only continue if a valid request got returned
+                if (self.myScheduleRequestItem){
+                    [self initialSetupStage2];
+                }
+            }
+            
+        }];
         
-        if ([muteArray count] > 0){
-            self.notesText = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] notes];
-        }
-    }];
-        
+    });
+    
+    
+//    //get notes from data layer
+//    NSArray* alphaArray = @[@"key_id", self.scheduleRequestKeyID];
+//    NSArray* omegaArray = @[alphaArray];
+//    [webData queryWithLink:@"EQGetScheduleRequestNotes.php" parameters:omegaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+//        
+//        if ([muteArray count] > 0){
+//            self.notesText = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] notes];
+//        }
+//    }];
+    
+    
     //figure out the literal column name in the database to use
     if (!self.marked_for_returning){
         
@@ -133,44 +209,58 @@
         }
     }
     
+    
+    
+    
+    
+//    //get scheduleRequest object using key
+//    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.scheduleRequestKeyID, nil];
+//    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
+//    
+//    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+//        
+//        if ([muteArray count] > 0){
+//            
+//            self.myScheduleRequestItem = [muteArray objectAtIndex:0];
+//        } else {
+//            
+//            //error handling if nothing is returned
+//            return;
+//        }
+//    }];
+    
+    
+    
+    
+    
+//    //get contactNameItem and assign to request
+//    if (self.myScheduleRequestItem.contact_foreignKey){
+//        if (![self.myScheduleRequestItem.contact_foreignKey isEqualToString:@""]){
+//            
+//            NSArray* contact1Array = @[@"key_id", self.myScheduleRequestItem.contact_foreignKey];
+//            NSArray* contactTopArray = @[contact1Array];
+//            [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:contactTopArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+//                
+//                if ([muteArray count] > 0){
+//                    self.myScheduleRequestItem.contactNameItem = [muteArray objectAtIndex:0];
+//                }
+//            }];
+//        }
+//    }
+    
+    
+
+    
+ 
+}
+
+
+-(void)initialSetupStage2{
+    
+    self.myScheduleRequestItem.contactNameItem = self.tempContact;
+    
     [self renewTheArrayWithScheduleTracking_foreignKey:self.scheduleRequestKeyID];
-    
-    
-    //get scheduleRequest object using key
-    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.scheduleRequestKeyID, nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-    
-    [webData queryWithLink:@"EQGetScheduleRequestComplete.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-        
-        if ([muteArray count] > 0){
-            
-            self.myScheduleRequestItem = [muteArray objectAtIndex:0];
-        } else {
-            
-            //error handling if nothing is returned
-            return;
-        }
-    }];
-    
-    
-    //get contactNameItem and assign to request
-    if (self.myScheduleRequestItem.contact_foreignKey){
-        if (![self.myScheduleRequestItem.contact_foreignKey isEqualToString:@""]){
-            
-            NSArray* contact1Array = @[@"key_id", self.myScheduleRequestItem.contact_foreignKey];
-            NSArray* contactTopArray = @[contact1Array];
-            [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:contactTopArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-                
-                if ([muteArray count] > 0){
-                    self.myScheduleRequestItem.contactNameItem = [muteArray objectAtIndex:0];
-                }
-            }];
-        }
-    }
-    
-    
-    
-    
+
     //____set up private request manager______
     
     //create private request manager as ivar
@@ -185,6 +275,8 @@
     //important methods that initiate requestManager ivar arrays
     [self.privateRequestManager resetEquipListAndAvailableQuantites];
     [self.privateRequestManager retrieveAllEquipUniqueItems];
+
+    
 }
 
 
@@ -336,19 +428,23 @@
     if (modeManager.isInDemoMode){
         
         //set prompt
+        [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = @"!!! DEMO MODE !!!";
         
         //set color of navigation bar
         EQRColors* colors = [EQRColors sharedInstance];
         self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
+        [UIView setAnimationsEnabled:YES];
         
     }else{
         
         //set prompt
+        [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = nil;
         
         //set color of navigation bar
         self.navigationController.navigationBar.barTintColor = nil;
+        [UIView setAnimationsEnabled:YES];
     }
     
     [super viewWillAppear:animated];
@@ -994,7 +1090,7 @@
     NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", scheduleKey, nil];
     NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
     __block EQRScheduleRequestItem* chosenItem;
-    [webData queryWithLink:@"EQGetScheduleRequestComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
         
         if ([muteArray count] > 0){
             
@@ -1404,6 +1500,59 @@
     self.myStaffUserPicker = nil;
     
 }
+
+
+#pragma mark - webdata delegate methods
+
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    
+    //abort if selector is unrecognized, otherwise crash
+    if (![self respondsToSelector:action]){
+        NSLog(@"inside EQRCheckVC, cannot perform selector: %@", NSStringFromSelector(action));
+        return;
+    }
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+    
+}
+
+-(void)addRequestObject:(id)currentThing{
+    
+    if (!currentThing){
+        return;
+    }
+    
+    //set reqeust item property
+    self.myScheduleRequestItem = currentThing;
+    
+    //set notes for dispaly
+    self.notesText = self.myScheduleRequestItem.notes;
+    
+    
+}
+
+-(void)addContactComplete:(id)currentThing{
+    
+    if (!currentThing){
+        return;
+    }
+    
+    //set property
+    self.tempContact = currentThing;
+    
+}
+
+-(void)addEquipJoinToArray:(id)currentThing{
+    
+}
+
+-(void)addMiscJoinToArray:(id)currentThing{
+    
+}
+
 
 
 #pragma mark - datasource methods

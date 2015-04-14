@@ -69,7 +69,7 @@
     
     NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
     
-    [webData queryWithLink:@"EQGetScheduleRequestComplete.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
         
         for (EQRScheduleRequestItem* item in muteArray){
             
@@ -226,7 +226,7 @@
     NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", self.mykeyID, nil];
     NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
     __block EQRScheduleRequestItem* chosenItem;
-    [webData queryWithLink:@"EQGetScheduleRequestComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
         
         if ([muteArray count] > 0){
             

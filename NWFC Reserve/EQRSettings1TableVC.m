@@ -73,19 +73,23 @@
     if (modeManager.isInDemoMode){
         
         //set prompt
+        [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = @"!!! DEMO MODE !!!";
         
         //set color of navigation bar
         EQRColors* colors = [EQRColors sharedInstance];
         self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
+        [UIView setAnimationsEnabled:YES];
         
     }else{
         
         //set prompt
+        [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = nil;
         
         //set color of navigation bar
         self.navigationController.navigationBar.barTintColor = nil;
+        [UIView setAnimationsEnabled:YES];
     }
     
     [super viewWillAppear:animated];
@@ -174,11 +178,13 @@
     if (self.demoModeSwitch.on){
         
         //set prompt
+        [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = @"!!! DEMO MODE !!!";
         
         //set color of navigation bar
         EQRColors* colors = [EQRColors sharedInstance];
         self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
+        [UIView setAnimationsEnabled:YES];
         
         //set singleton
         EQRModeManager* modeManager = [EQRModeManager sharedInstance];
@@ -189,10 +195,12 @@
     }else{
         
         //set prompt
+        [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = nil;
         
         //set color of navigation bar
         self.navigationController.navigationBar.barTintColor = nil;
+        [UIView setAnimationsEnabled:YES];
         
         //set singleton
         EQRModeManager* modeManager = [EQRModeManager sharedInstance];
@@ -217,6 +225,16 @@
         [staffUserManager goToKioskMode:YES];
         
         [self.demoModeSwitch setUserInteractionEnabled:NO];
+        UITableViewCell *cell2 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+        UITableViewCell *cell3 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
+        UITableViewCell *cell4 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1]];
+        [cell2 setUserInteractionEnabled:NO];
+        cell2.alpha = 0.5;
+        [cell3 setUserInteractionEnabled:NO];
+        cell3.alpha = 0.5;
+        [cell4 setUserInteractionEnabled:NO];
+        cell4.alpha = 0.5;
+        
         
         setStringForDefaults = @"yes";
         
@@ -262,6 +280,15 @@
         [staffUserManager goToKioskMode:NO];
         
         [self.demoModeSwitch setUserInteractionEnabled:YES];
+        UITableViewCell *cell2 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+        UITableViewCell *cell3 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
+        UITableViewCell *cell4 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1]];
+        [cell2 setUserInteractionEnabled:YES];
+        cell2.alpha = 1.0;
+        [cell3 setUserInteractionEnabled:YES];
+        cell3.alpha = 1.0;
+        [cell4 setUserInteractionEnabled:YES];
+        cell4.alpha = 1.0;
         
         setStringForDefaults = @"no";
         

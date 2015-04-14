@@ -222,19 +222,23 @@
     if (modeManager.isInDemoMode){
         
         //set prompt
+        [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = @"";
         
         //set color of navigation bar
         EQRColors* colors = [EQRColors sharedInstance];
         self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
+        [UIView setAnimationsEnabled:YES];
         
     }else{
         
         //set prompt
+        [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = nil;
         
         //set color of navigation bar
         self.navigationController.navigationBar.barTintColor = nil;
+        [UIView setAnimationsEnabled:YES];
     }
     
     
@@ -311,7 +315,7 @@
     __block EQRScheduleRequestItem* thisItem = nil;
     
     EQRWebData* webData = [EQRWebData sharedInstance];
-    [webData queryWithLink:@"EQGetScheduleRequestComplete.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
     
         if ([muteArray count] == 0){
             
