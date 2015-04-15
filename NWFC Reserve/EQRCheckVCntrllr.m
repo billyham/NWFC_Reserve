@@ -174,18 +174,6 @@
         
     });
     
-    
-//    //get notes from data layer
-//    NSArray* alphaArray = @[@"key_id", self.scheduleRequestKeyID];
-//    NSArray* omegaArray = @[alphaArray];
-//    [webData queryWithLink:@"EQGetScheduleRequestNotes.php" parameters:omegaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-//        
-//        if ([muteArray count] > 0){
-//            self.notesText = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] notes];
-//        }
-//    }];
-    
-    
     //figure out the literal column name in the database to use
     if (!self.marked_for_returning){
         
@@ -208,50 +196,6 @@
             self.myProperty = @"shelf_flag";
         }
     }
-    
-    
-    
-    
-    
-//    //get scheduleRequest object using key
-//    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.scheduleRequestKeyID, nil];
-//    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-//    
-//    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-//        
-//        if ([muteArray count] > 0){
-//            
-//            self.myScheduleRequestItem = [muteArray objectAtIndex:0];
-//        } else {
-//            
-//            //error handling if nothing is returned
-//            return;
-//        }
-//    }];
-    
-    
-    
-    
-    
-//    //get contactNameItem and assign to request
-//    if (self.myScheduleRequestItem.contact_foreignKey){
-//        if (![self.myScheduleRequestItem.contact_foreignKey isEqualToString:@""]){
-//            
-//            NSArray* contact1Array = @[@"key_id", self.myScheduleRequestItem.contact_foreignKey];
-//            NSArray* contactTopArray = @[contact1Array];
-//            [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:contactTopArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-//                
-//                if ([muteArray count] > 0){
-//                    self.myScheduleRequestItem.contactNameItem = [muteArray objectAtIndex:0];
-//                }
-//            }];
-//        }
-//    }
-    
-    
-
-    
- 
 }
 
 
@@ -264,6 +208,14 @@
     
     NSLog(@"checkVCntrllr > intialSetupStage2 with count of joins array: %ul", [self.arrayOfEquipJoins count]);
 
+    
+    //set notes text
+    self.noteView.text = self.notesText;
+    
+    //set name label
+    if (self.myScheduleRequestItem.contactNameItem){
+        self.nameTextLabel.text = self.myScheduleRequestItem.contactNameItem.first_and_last;
+    }
     
     //____set up private request manager______
     
@@ -414,13 +366,7 @@
     
     //___________
     
-    //set notes text
-    self.noteView.text = self.notesText;
-    
-    //set name label
-    if (self.myScheduleRequestItem.contactNameItem){
-        self.nameTextLabel.text = self.myScheduleRequestItem.contactNameItem.first_and_last;
-    }
+
     
 }
 
