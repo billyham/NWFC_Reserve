@@ -260,7 +260,11 @@
     self.myScheduleRequestItem.contactNameItem = self.tempContact;
     
     [self renewTheArrayWithScheduleTracking_foreignKey:self.scheduleRequestKeyID];
+    [self.myEquipCollection reloadData];
+    
+    NSLog(@"checkVCntrllr > intialSetupStage2 with count of joins array: %ul", [self.arrayOfEquipJoins count]);
 
+    
     //____set up private request manager______
     
     //create private request manager as ivar
