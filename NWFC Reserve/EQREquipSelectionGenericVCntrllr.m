@@ -399,10 +399,40 @@
             
             return [string1 compare:string2];
         }];
+
+        //resort the nested array to have alphabetizing going down the columns instead across the rows
+        NSMutableArray *tempSubNestUsingColumns = [NSMutableArray arrayWithCapacity:1];
+        NSInteger countOfItems = [tempSubNestArray count];
+        NSInteger countOfItemsDividedByTwo = countOfItems / 2; //will round down
+        NSInteger countOfItemsDividedByTwoRoundingUp = countOfItemsDividedByTwo;
         
-        [tempSortedArrayWithSections addObject:tempSubNestArray];
+        //add one to half count if count is an odd number
+        float moduloOfCount = countOfItems % 2;
+        if (moduloOfCount > 0){
+            countOfItemsDividedByTwoRoundingUp++;
+        }
+        
+        
+        NSArray *firstHalfOfItems = [tempSubNestArray subarrayWithRange:NSMakeRange(0, countOfItemsDividedByTwoRoundingUp)];
+        NSIndexSet *thisSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, countOfItemsDividedByTwoRoundingUp)];
+        [tempSubNestUsingColumns insertObjects:firstHalfOfItems atIndexes:thisSet];
+        
+        NSArray *secondHalfOfItems = [tempSubNestArray subarrayWithRange:NSMakeRange(countOfItemsDividedByTwoRoundingUp, countOfItemsDividedByTwo)];
+        NSInteger countOfItemsInSecondHalf = [secondHalfOfItems count];
+        
+        int i;
+        for (i = 0 ; i < countOfItemsInSecondHalf ; i++){
+            
+            NSInteger indexOfItemInSecondHalf = countOfItemsDividedByTwoRoundingUp + i;
+            id object = [tempSubNestArray objectAtIndex:indexOfItemInSecondHalf];
+            [tempSubNestUsingColumns insertObject:object atIndex:(i * 2) + 1];
+        }
+        
+        [tempSortedArrayWithSections addObject:tempSubNestUsingColumns];
+        
     };
     self.equipTitleArrayWithSections = tempSortedArrayWithSections;
+    
     
     //is this necessary_____???
     [self.equipCollectionView reloadData];
