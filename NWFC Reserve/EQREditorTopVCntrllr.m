@@ -757,7 +757,7 @@
     [self.myClassPicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
     
     //convert coordinates of textField frame to self.view
-    UIView* originalRect = self.classField;
+    UIView* originalRect = self.view;
     CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
     CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
     

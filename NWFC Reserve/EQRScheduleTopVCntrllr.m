@@ -31,6 +31,7 @@
 #import "EQRNavBarDatesView.h"
 #import "EQRNavBarWeeksView.h"
 #import "EQRDataStructure.h"
+#import "EQRClassItem.h"
 
 
 @interface EQRScheduleTopVCntrllr ()
@@ -72,6 +73,9 @@
 
 @property NSInteger weekIndicatorOffset;
 
+@property (strong, nonatomic) UIPopoverController* myClassPicker;
+@property (strong, nonatomic) NSString *filter_classSectionKey;
+@property BOOL filterIsOnFlag;
 
 -(IBAction)moveToNextMonth:(id)sender;
 -(IBAction)moveToPreviousMonth:(id)sender;
@@ -180,9 +184,10 @@
     UIBarButtonItem* todayBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Today" style:UIBarButtonItemStylePlain target:self action:@selector(moveToCurrentMonth:)];
     UIBarButtonItem* rightBarButtonArrow = [[UIBarButtonItem alloc] initWithImage:rightArrow style:UIBarButtonItemStylePlain target:self action:@selector(moveToNextMonth:)];
     UIBarButtonItem* searchBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(showDatePicker)];
+    UIBarButtonItem *filterBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Filter" style:UIBarButtonItemStylePlain target:self action:@selector(filterResults)];
     
     //array that shit
-    NSArray* arrayOfLeftButtons = [NSArray arrayWithObjects:twentySpace, searchBarButton, thirtySpace, leftBarButtonArrow, thirtySpace, todayBarButton, thirtySpace, rightBarButtonArrow, nil];
+    NSArray* arrayOfLeftButtons = [NSArray arrayWithObjects:twentySpace, searchBarButton, thirtySpace, leftBarButtonArrow, thirtySpace, todayBarButton, thirtySpace, rightBarButtonArrow, thirtySpace, filterBarButton, nil];
     
     //set leftBarButton item on SELF
     [self.navigationItem setLeftBarButtonItems:arrayOfLeftButtons];
@@ -528,22 +533,54 @@
     [self.myActivityIndicator startAnimating];
     
     SEL thisSelector = @selector(timerFiredReloadCollectionView);
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
-    dispatch_async(queue, ^{
+    
+    if (self.filterIsOnFlag == NO){
         
-        [webData queryWithAsync:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+        dispatch_async(queue, ^{
             
-            //lower the isLoading flag
-            self.isLoadingEquipDataFlag = NO;
+            [webData queryWithAsync:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+                
+                //lower the isLoading flag
+                self.isLoadingEquipDataFlag = NO;
+                
+                //stop activity indicator
+                [self.myActivityIndicator stopAnimating];
+                self.myActivityIndicator.hidden = YES;
+            }];
             
-            //stop activity indicator
-            [self.myActivityIndicator stopAnimating];
-            self.myActivityIndicator.hidden = YES;
-        }];
+        });
         
-    });
+    } else{
+        
+        
+        NSArray* classFilter = @[@"classSection_foreignKey", self.filter_classSectionKey];
+        NSArray* topArray1 = [NSArray arrayWithObjects:request_date_begin, request_date_end, classFilter,  nil];
+        
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+        dispatch_async(queue, ^{
+            
+            [webData queryWithAsync:@"EQGetScheduleEquipUniqueJoinsWithDateRangeAndClassSectionKey.php" parameters:topArray1 class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+                
+                //lower the isLoading flag
+                self.isLoadingEquipDataFlag = NO;
+                
+                //stop activity indicator
+                [self.myActivityIndicator stopAnimating];
+                self.myActivityIndicator.hidden = YES;
+            }];
+            
+        });
+        
+    }
+    
+
+    
+    
     //_________________________________
 
+    
     
 
 }
@@ -601,7 +638,13 @@
     monthNameFormatter.dateFormat =@"MMMM yyyy";
     
     //assign month to nav bar title
-    self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    if (self.filterIsOnFlag == NO){
+        self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    }else{
+        //assign month to nav bar title
+        self.navigationItem.title = [NSString stringWithFormat:@"%@ - Filtered Results",
+                                     [monthNameFormatter stringFromDate:self.dateForShow]];
+    }
     
     [self renewTheView];
     
@@ -658,7 +701,13 @@
     monthNameFormatter.dateFormat =@"MMMM yyyy";
     
     //assign month to nav bar title
-    self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    if (self.filterIsOnFlag == NO){
+        self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    }else{
+        //assign month to nav bar title
+        self.navigationItem.title = [NSString stringWithFormat:@"%@ - Filtered Results",
+                                     [monthNameFormatter stringFromDate:self.dateForShow]];
+    }
     
     [self renewTheView];
     
@@ -688,7 +737,13 @@
     monthNameFormatter.dateFormat =@"MMMM yyyy";
     
     //assign month to nav bar title
-    self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    if (self.filterIsOnFlag == NO){
+        self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    }else{
+        //assign month to nav bar title
+        self.navigationItem.title = [NSString stringWithFormat:@"%@ - Filtered Results",
+                                     [monthNameFormatter stringFromDate:self.dateForShow]];
+    }
     
     [self renewTheView];
     
@@ -782,7 +837,13 @@
     monthNameFormatter.dateFormat =@"MMMM yyyy";
     
     //assign month to nav bar title
-    self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    if (self.filterIsOnFlag == NO){
+        self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
+    }else{
+        //assign month to nav bar title
+        self.navigationItem.title = [NSString stringWithFormat:@"%@ - Filtered Results",
+                                     [monthNameFormatter stringFromDate:self.dateForShow]];
+    }
     
     //dismiss the picker
     [self.myDayDatePicker dismissPopoverAnimated:YES];
@@ -792,6 +853,85 @@
     
     //reload dates
     [self.myDateBarCollection reloadData];
+}
+
+
+-(void)filterResults{
+    
+    if (self.filterIsOnFlag == YES){
+        self.filterIsOnFlag = NO;
+        self.filter_classSectionKey = nil;
+        
+        //update month label
+        NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
+        monthNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        monthNameFormatter.dateFormat =@"MMMM yyyy";
+        
+        //assign month to nav bar title
+        self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
+        
+        [self renewTheView];
+        
+    }else{
+
+        
+        EQRClassPickerVC* classPickerVC = [[EQRClassPickerVC alloc] initWithNibName:@"EQRClassPickerVC" bundle:nil];
+        
+        UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:classPickerVC];
+        self.myClassPicker = popOver;
+        self.myClassPicker.delegate = self;
+        
+        //set the size
+        [self.myClassPicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
+        
+        //convert coordinates of textField frame to self.view
+        UIView* originalRect = self.navigationItem.titleView;
+        CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
+        CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
+        
+        
+        //present the popover
+        [self.myClassPicker presentPopoverFromRect:step2Rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
+        
+        //assign as delegate
+        classPickerVC.delegate = self;
+    }
+    
+    
+    
+    
+}
+
+#pragma mark - class picker 
+
+-(void)initiateRetrieveClassItem{
+    
+    self.filterIsOnFlag = YES;
+    
+    //update month label
+    NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
+    monthNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    monthNameFormatter.dateFormat =@"MMMM yyyy";
+    
+    //assign month to nav bar title
+    self.navigationItem.title = [NSString stringWithFormat:@"%@ - Filtered Results",
+                                 [monthNameFormatter stringFromDate:self.dateForShow]];
+    
+    EQRClassPickerVC* classPickerVC = (EQRClassPickerVC*)[self.myClassPicker contentViewController];
+    
+    //can be nil... no class assigned to request
+    EQRClassItem* thisClassItem = [classPickerVC retrieveClassItem];
+    
+    self.filter_classSectionKey = thisClassItem.key_id;
+    
+    [self renewTheView];
+    
+    //release self as delegate
+    self.myClassPicker.delegate = nil;
+    
+    //dismiss popover
+    [self.myClassPicker dismissPopoverAnimated:YES];
+    self.myClassPicker = nil;
 }
 
 
@@ -1711,6 +1851,10 @@
         return;
     }
     
+    //test if filter is on, act accordingly???
+    
+    
+    
 //    NSLog(@"WEBDATA SUCCESSFULLY CALLED DELEGATE'S METHOD: %@", [currentThing class]);
     
     //save array to requestManager (for rowCell to access it as needed)
@@ -1759,6 +1903,10 @@
     }else if (popoverController == self.myScheduleRowQuickView){
         
         self.myScheduleRowQuickView = nil;
+        
+    }else if (popoverController == self.myClassPicker){
+        
+        self.myClassPicker = nil;
     }
 }
 

@@ -8,11 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "EQRWebData.h"
+#import "EQRClassPickerVC.h"
 
-@interface EQRScheduleTopVCntrllr : UIViewController <UICollectionViewDelegateFlowLayout, EQRWebDataDelegate, UIAlertViewDelegate, UIPopoverControllerDelegate>
+@interface EQRScheduleTopVCntrllr : UIViewController <UICollectionViewDelegateFlowLayout, EQRWebDataDelegate, UIAlertViewDelegate, UIPopoverControllerDelegate, EQRClassPickerDelegate>
 
 //EQRWebData Delegate methods
 -(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action;
 
+//EQRClassPicker delegate
+-(void)initiateRetrieveClassItem;
 
 @end
