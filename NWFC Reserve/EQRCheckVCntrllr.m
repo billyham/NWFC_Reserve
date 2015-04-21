@@ -118,7 +118,29 @@
     self.marked_for_returning = [[userInfo objectForKey:@"marked_for_returning"] boolValue];
     self.switch_num = [[userInfo objectForKey:@"switch_num"] integerValue];
     
-
+    //figure out the literal column name in the database to use
+    if (!self.marked_for_returning){
+        
+        if (self.switch_num == 1){
+            
+            self.myProperty = @"prep_flag";
+            
+        }else {
+            
+            self.myProperty = @"checkout_flag";
+        }
+    }else{
+        
+        if (self.switch_num == 1){
+            
+            self.myProperty = @"checkin_flag";
+            
+        }else {
+            
+            self.myProperty = @"shelf_flag";
+        }
+    }
+    
     EQRWebData *webData = [EQRWebData sharedInstance];
     self.webDataForFullyComplete = webData;
     self.webDataForFullyComplete.delegateDataFeed = self;
@@ -169,45 +191,12 @@
                     [self initialSetupStage2];
                 }
             }
-            
         }];
-        
     });
-    
-    //figure out the literal column name in the database to use
-    if (!self.marked_for_returning){
-        
-        if (self.switch_num == 1){
-            
-            self.myProperty = @"prep_flag";
-            
-        }else {
-            
-            self.myProperty = @"checkout_flag";
-        }
-    }else{
-        
-        if (self.switch_num == 1){
-            
-            self.myProperty = @"checkin_flag";
-            
-        }else {
-            
-            self.myProperty = @"shelf_flag";
-        }
-    }
 }
 
 
 -(void)initialSetupStage2{
-    
-    self.myScheduleRequestItem.contactNameItem = self.tempContact;
-    
-    [self renewTheArrayWithScheduleTracking_foreignKey:self.scheduleRequestKeyID];
-    [self.myEquipCollection reloadData];
-    
-    NSLog(@"checkVCntrllr > intialSetupStage2 with count of joins array: %ul", [self.arrayOfEquipJoins count]);
-
     
     //set notes text
     self.noteView.text = self.notesText;
@@ -216,6 +205,75 @@
     if (self.myScheduleRequestItem.contactNameItem){
         self.nameTextLabel.text = self.myScheduleRequestItem.contactNameItem.first_and_last;
     }
+    
+    
+    //initiate the nsmutable arrays if necessary
+    if (!self.arrayOfEquipJoins){
+        self.arrayOfEquipJoins = [NSMutableArray arrayWithCapacity:1];
+    }
+    [self.arrayOfEquipJoins removeAllObjects];
+    
+    if (!self.arrayOfMiscJoins){
+        self.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
+    }
+    [self.arrayOfMiscJoins removeAllObjects];
+    
+    self.indexOfLastReturnedItem = -1;
+    
+    self.myScheduleRequestItem.contactNameItem = self.tempContact;
+    
+//    [self renewTheArrayWithScheduleTracking_foreignKey:self.scheduleRequestKeyID];
+//    [self.myEquipCollection reloadData];
+
+    //populate arrays using schedule key
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    self.webDataForEquipJoins = webData;
+    self.webDataForEquipJoins.delegateDataFeed = self;
+    
+    NSArray* ayeArray = @[@"scheduleTracking_foreignKey", self.scheduleRequestKeyID];
+    NSArray* bigArray = @[ayeArray];
+    SEL equipJoinSelector = @selector(addEquipJoinToArray:);
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [self.webDataForEquipJoins queryWithAsync:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:bigArray class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:equipJoinSelector completion:^(BOOL isLoadingFlagUp) {
+            
+            self.didLoadEquipJoinsFlag = isLoadingFlagUp;
+            
+            if (self.didLoadMiscJoinsFlag){
+                self.didLoadMiscJoinsFlag = NO;
+                self.didLoadEquipJoinsFlag = NO;
+                
+                [self initialSetupStage3];
+            }
+        }];
+    });
+
+    EQRWebData *webData2 = [EQRWebData sharedInstance];
+    self.webDataForMiscJoins = webData2;
+    self.webDataForMiscJoins.delegateDataFeed = self;
+    SEL miscJoinsSelector = @selector(addMiscJoinToArray:);
+    
+    dispatch_queue_t queue2 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue2, ^{
+       
+        [self.webDataForMiscJoins queryWithAsync:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:bigArray class:@"EQRMiscJoin" selector:miscJoinsSelector completion:^(BOOL isLoadingFlagUp) {
+            
+            self.didLoadMiscJoinsFlag = isLoadingFlagUp;
+            
+            if (self.didLoadEquipJoinsFlag){
+                self.didLoadEquipJoinsFlag = NO;
+                self.didLoadMiscJoinsFlag = NO;
+                
+                [self initialSetupStage3];
+            }
+        }];
+    });
+}
+
+
+-(void)initialSetupStage3{
     
     //____set up private request manager______
     
@@ -231,59 +289,47 @@
     //important methods that initiate requestManager ivar arrays
     [self.privateRequestManager resetEquipListAndAvailableQuantites];
     [self.privateRequestManager retrieveAllEquipUniqueItems];
-
-    
 }
 
 
--(void)renewTheArrayWithScheduleTracking_foreignKey:(NSString*)scheduleRequestKeyID{
-    
-    //populate arrays using schedule key
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    
-    NSMutableArray* altMuteArray = [NSMutableArray arrayWithCapacity:1];
-    NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", scheduleRequestKeyID, nil];
-    NSArray* bigArray = [NSArray arrayWithObject:ayeArray];
-    [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:bigArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
-        
-        for (EQRScheduleTracking_EquipmentUnique_Join* object in muteArray){
-            
-            [altMuteArray addObject:object];
-        }
-    }];
-    
-    //initiate the nsmutable array if necessary
-    if (!self.arrayOfEquipJoins){
-        self.arrayOfEquipJoins = [NSMutableArray arrayWithCapacity:1];
-    }
-    [self.arrayOfEquipJoins removeAllObjects];
-    
-    [self.arrayOfEquipJoins addObjectsFromArray:altMuteArray];
-    
-
-    //gather any misc joins
-    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
-    NSArray* alphaArray = @[@"scheduleTracking_foreignKey", scheduleRequestKeyID];
-    NSArray* omegaArray = @[alphaArray];
-    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
-        for (id object in muteArray2){
-            [tempMiscMuteArray addObject:object];
-        }
-    }];
-    
-    //initiate the nsmutable array if necessary
-    if (!self.arrayOfMiscJoins){
-        self.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
-    }
-    [self.arrayOfMiscJoins removeAllObjects];
-
-    [self.arrayOfMiscJoins addObjectsFromArray:tempMiscMuteArray];
-    
-    
-    
-    //add nested structure to the array of equip items
-    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
-}
+//-(void)renewTheArrayWithScheduleTracking_foreignKey:(NSString*)scheduleRequestKeyID{
+//    
+//
+//    NSMutableArray* altMuteArray = [NSMutableArray arrayWithCapacity:1];
+//
+//    
+//    //initiate the nsmutable array if necessary
+//    if (!self.arrayOfEquipJoins){
+//        self.arrayOfEquipJoins = [NSMutableArray arrayWithCapacity:1];
+//    }
+//    [self.arrayOfEquipJoins removeAllObjects];
+//    
+//    [self.arrayOfEquipJoins addObjectsFromArray:altMuteArray];
+//    
+//
+//    //gather any misc joins
+//    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
+//    NSArray* alphaArray = @[@"scheduleTracking_foreignKey", scheduleRequestKeyID];
+//    NSArray* omegaArray = @[alphaArray];
+//    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
+//        for (id object in muteArray2){
+//            [tempMiscMuteArray addObject:object];
+//        }
+//    }];
+//    
+//    //initiate the nsmutable array if necessary
+//    if (!self.arrayOfMiscJoins){
+//        self.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
+//    }
+//    [self.arrayOfMiscJoins removeAllObjects];
+//
+//    [self.arrayOfMiscJoins addObjectsFromArray:tempMiscMuteArray];
+//    
+//    
+//    
+//    //add nested structure to the array of equip items
+//    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
+//}
 
 
 - (void)viewDidLoad{
@@ -924,7 +970,8 @@
     [self.arrayOfToBeDeletedMiscJoins removeAllObjects];
     
     //renew the array of equipment
-    [self renewTheArrayWithScheduleTracking_foreignKey:self.scheduleRequestKeyID];
+//    [self renewTheArrayWithScheduleTracking_foreignKey:self.scheduleRequestKeyID];
+    [self initialSetupStage2];
     
     //reload the collection view
     [self.myEquipCollection reloadData];
@@ -1398,7 +1445,9 @@
     self.myEquipSelectionPopover = nil;
 
     //renew the list of joins by going to the data layer
-    [self renewTheArrayWithScheduleTracking_foreignKey:self.myScheduleRequestItem.key_id];
+//    [self renewTheArrayWithScheduleTracking_foreignKey:self.myScheduleRequestItem.key_id];
+    [self initialSetupStage2];
+    
     
     //this is necessary
     [self.myEquipCollection reloadData];
@@ -1497,9 +1546,71 @@
 
 -(void)addEquipJoinToArray:(id)currentThing{
     
+    if (!currentThing){
+        return;
+    }
+    
+    __block NSInteger indexPathSection;
+    __block NSInteger indexPathRow;
+    
+    [self.arrayOfEquipJoins addObject:currentThing];
+    
+    //sort
+    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
+    
+    [self.arrayOfEquipJoinsWithStructure enumerateObjectsUsingBlock:^(NSArray *subArray, NSUInteger idx, BOOL *stop) {
+        
+        [subArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx2, BOOL *stop2) {
+            
+            if (obj == currentThing){
+                indexPathRow = idx2;
+                indexPathSection = idx;
+            }
+        }];
+     }];
+    
+    //test if need to create new section
+    BOOL createNewSection = NO;
+    NSInteger countOfSectionInCollectionView;
+    countOfSectionInCollectionView = [self.myEquipCollection numberOfSections];
+    if (((indexPathSection + 1) - countOfSectionInCollectionView) > 0 ){
+        createNewSection = YES;
+    }
+    
+    //the new index of the newly added item
+    NSIndexPath *chosenIndexPath = [NSIndexPath indexPathForRow:indexPathRow inSection:indexPathSection];
+    
+    NSLog(@"this is the indexPathRow and Section for equipItem: %ld, %ld", (long)indexPathRow, (long)indexPathSection);
+    
+    //uptick on the index
+    self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
+    
+    [self.myEquipCollection performBatchUpdates:^{
+       
+        //if necessary, insert section in collection view
+        if (createNewSection){
+            NSLog(@"yes, i'm creating a new section");
+            NSIndexSet *indexSet;
+            indexSet = [NSIndexSet indexSetWithIndex:indexPathSection];
+            [self.myEquipCollection insertSections:indexSet];
+        }
+        
+        //insert row in the collection view
+        NSMutableArray *tempArray = [NSMutableArray arrayWithObject:chosenIndexPath];
+        [self.myEquipCollection insertItemsAtIndexPaths:tempArray];
+        
+    } completion:^(BOOL finished) {
+
+    }];
+    
 }
 
 -(void)addMiscJoinToArray:(id)currentThing{
+    
+    if (!currentThing){
+        return;
+    }
+    
     
 }
 

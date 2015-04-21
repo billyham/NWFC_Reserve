@@ -30,8 +30,12 @@
 //                                   @"http://dhanagan02262.local/nwfc/", @"url",
 //                                   nil];
     
+//    NSDictionary* EQRWebDataUrl = [NSDictionary dictionaryWithObjectsAndKeys:
+//                                   @"http://EducationAssistant-5.local/nwfc/", @"url",
+//                                   nil];
+    
     NSDictionary* EQRWebDataUrl = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   @"http://EducationAssistant-5.local/nwfc/", @"url",
+                                   @"http://www.kitschplayer.com/nwfc/", @"url",
                                    nil];
     
     NSDictionary* EQRCurrentTermCode = [NSDictionary dictionaryWithObjectsAndKeys:
