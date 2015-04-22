@@ -67,6 +67,7 @@
 @property BOOL didLoadContactCompleteFlag;
 @property BOOL didLoadEquipJoinsFlag;
 @property BOOL didLoadMiscJoinsFlag;
+@property double timeOfLastCallback;
 @property (strong, nonatomic) EQRContactNameItem *tempContact;
 
 
@@ -109,8 +110,6 @@
     
     self.didLoadFullyCompleteFlag = NO;
     self.didLoadContactCompleteFlag = NO;
-    self.didLoadEquipJoinsFlag = NO;
-    self.didLoadMiscJoinsFlag = NO;
     self.myScheduleRequestItem = nil;
     self.tempContact = nil;
     
@@ -198,6 +197,20 @@
 
 -(void)initialSetupStage2{
     
+    self.didLoadEquipJoinsFlag = NO;
+    self.didLoadMiscJoinsFlag = NO;
+    
+    //stop existing xml stream
+    [self.webDataForEquipJoins stopXMLParsing];
+    [self.webDataForMiscJoins stopXMLParsing];
+    
+    //empty the existing collection view
+    self.arrayOfEquipJoinsWithStructure = nil;
+    [self.myEquipCollection reloadData];
+    
+    //remove any existing delaytimer
+    self.timeOfLastCallback = 0;
+    
     //set notes text
     self.noteView.text = self.notesText;
     
@@ -218,7 +231,7 @@
     }
     [self.arrayOfMiscJoins removeAllObjects];
     
-    self.indexOfLastReturnedItem = -1;
+//    self.indexOfLastReturnedItem = -1;
     
     self.myScheduleRequestItem.contactNameItem = self.tempContact;
     
@@ -245,7 +258,8 @@
                 self.didLoadMiscJoinsFlag = NO;
                 self.didLoadEquipJoinsFlag = NO;
                 
-                [self initialSetupStage3];
+                //this delay has no real effect
+                [self performSelector:@selector(initialSetupStage3) withObject:nil afterDelay:1.0];
             }
         }];
     });
@@ -266,7 +280,8 @@
                 self.didLoadEquipJoinsFlag = NO;
                 self.didLoadMiscJoinsFlag = NO;
                 
-                [self initialSetupStage3];
+                //this delay has no real effect
+                [self performSelector:@selector(initialSetupStage3) withObject:nil afterDelay:1.0];
             }
         }];
     });
@@ -974,7 +989,7 @@
     [self initialSetupStage2];
     
     //reload the collection view
-    [self.myEquipCollection reloadData];
+//    [self.myEquipCollection reloadData];
     
     //send note to schedule that a change has been saved
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
@@ -986,6 +1001,11 @@
 
 -(void)cancelAction{
 
+    [self.webDataForEquipJoins stopXMLParsing];
+    [self.webDataForMiscJoins stopXMLParsing];
+    self.webDataForMiscJoins.delegateDataFeed = nil;
+    self.webDataForEquipJoins.delegateDataFeed = nil;
+    
     [self dismissViewControllerAnimated:YES completion:^{
 
 
@@ -1450,7 +1470,7 @@
     
     
     //this is necessary
-    [self.myEquipCollection reloadData];
+//    [self.myEquipCollection reloadData];
 }
 
 
@@ -1513,7 +1533,9 @@
     
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    
     [self performSelector:action withObject:currentThing];
+    
 #pragma clang diagnostic pop
     
 }
@@ -1545,6 +1567,55 @@
 }
 
 -(void)addEquipJoinToArray:(id)currentThing{
+ 
+    float delayTime = 0.0;
+    
+    double currentTime = [[NSDate date] timeIntervalSince1970];
+    
+    if (!self.timeOfLastCallback || (self.timeOfLastCallback == 0)){
+        self.timeOfLastCallback = currentTime;
+    }
+    
+    //delay between calls is 0.05 seconds
+    delayTime = self.timeOfLastCallback - currentTime  + 0.1;
+    
+    //guard against a negative delay
+    if (delayTime < 0.05) delayTime = 0.05;
+    
+    self.timeOfLastCallback = currentTime + delayTime;
+    
+    NSLog(@"this is the delay time: %f", delayTime);
+    
+    [self performSelector:@selector(addEquipJoinToArrayAfterDelay:) withObject:currentThing afterDelay:delayTime];
+    
+}
+
+
+
+-(void)addMiscJoinToArray:(id)currentThing{
+    
+    if (!currentThing){
+        return;
+    }
+    
+    [self.arrayOfMiscJoins addObject:currentThing];
+    [self genericAddItemToArray:currentThing];
+}
+
+-(void)addEquipJoinToArrayAfterDelay:(id)currentThing{
+    
+    
+    if (!currentThing){
+        return;
+    }
+    
+    [self.arrayOfEquipJoins addObject:currentThing];
+    [self genericAddItemToArray:currentThing];
+    
+}
+
+
+-(void)genericAddItemToArray:(id)currentThing{
     
     if (!currentThing){
         return;
@@ -1552,8 +1623,6 @@
     
     __block NSInteger indexPathSection;
     __block NSInteger indexPathRow;
-    
-    [self.arrayOfEquipJoins addObject:currentThing];
     
     //sort
     self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
@@ -1567,29 +1636,32 @@
                 indexPathSection = idx;
             }
         }];
-     }];
+    }];
     
     //test if need to create new section
     BOOL createNewSection = NO;
     NSInteger countOfSectionInCollectionView;
     countOfSectionInCollectionView = [self.myEquipCollection numberOfSections];
-    if (((indexPathSection + 1) - countOfSectionInCollectionView) > 0 ){
+    if (([self.arrayOfEquipJoinsWithStructure count] - countOfSectionInCollectionView) > 0 ){
         createNewSection = YES;
     }
     
     //the new index of the newly added item
     NSIndexPath *chosenIndexPath = [NSIndexPath indexPathForRow:indexPathRow inSection:indexPathSection];
     
-    NSLog(@"this is the indexPathRow and Section for equipItem: %ld, %ld", (long)indexPathRow, (long)indexPathSection);
+    //    NSLog(@"this is the indexPathRow and Section for equipItem: %ld, %ld", (long)indexPathRow, (long)indexPathSection);
+    //    NSLog(@"this is the current number for sections in the collection: %ld", (long)[self.myEquipCollection numberOfSections]);
     
     //uptick on the index
-    self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
+    //    self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
+
+    
     
     [self.myEquipCollection performBatchUpdates:^{
-       
+    
         //if necessary, insert section in collection view
         if (createNewSection){
-            NSLog(@"yes, i'm creating a new section");
+            //            NSLog(@"yes, i'm creating a new section");
             NSIndexSet *indexSet;
             indexSet = [NSIndexSet indexSetWithIndex:indexPathSection];
             [self.myEquipCollection insertSections:indexSet];
@@ -1600,16 +1672,11 @@
         [self.myEquipCollection insertItemsAtIndexPaths:tempArray];
         
     } completion:^(BOOL finished) {
-
+        NSLog(@"finished batch updates");
     }];
-    
-}
 
--(void)addMiscJoinToArray:(id)currentThing{
     
-    if (!currentThing){
-        return;
-    }
+
     
     
 }
