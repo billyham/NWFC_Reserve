@@ -530,7 +530,7 @@
             //2. get list of key_id contacts from class_registrations table
             NSArray* regArray = [NSArray arrayWithObjects:@"classSection_foreignKey", classKeyId, nil];
             NSArray* regArray2= [NSArray arrayWithObject:regArray];
-            [webData queryWithLink:@"EQGetClassRegistrationsForSectionKey" parameters:regArray2 class:@"EQRClassRegistrationItem" completion:^(NSMutableArray* muteArray){
+            [webData queryWithLink:@"EQGetClassRegistrationsForSectionKey.php" parameters:regArray2 class:@"EQRClassRegistrationItem" completion:^(NSMutableArray* muteArray){
                 
                 //array of contact key ids
                 NSArray* arrayOfClassRegistrationItems = [NSArray arrayWithArray: muteArray];

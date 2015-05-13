@@ -30,7 +30,6 @@
 
 
 @protocol EQRContactPickerDelegate <NSObject>
-
 -(void)retrieveSelectedNameItem;
 
 @optional

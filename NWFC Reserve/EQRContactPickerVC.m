@@ -11,7 +11,7 @@
 #import "EQRContactNameItem.h"
 #import "EQRContactAddNewVC.h"
 
-@interface EQRContactPickerVC ()
+@interface EQRContactPickerVC () <UISearchResultsUpdating, UISearchBarDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView* tableView;
 @property (strong, nonatomic) NSArray* arrayOfContacts;
@@ -27,8 +27,10 @@
 
 @property (strong, nonatomic) EQRContactAddNewVC* addContactVC;
 
-@property (strong, nonatomic) IBOutlet UISearchBar* mySearchBar;
-@property (strong, nonatomic) UISearchDisplayController* mySearchDisplayController;
+//@property (strong, nonatomic) IBOutlet UISearchBar* mySearchBar;
+//@property (strong, nonatomic) UISearchDisplayController* mySearchDisplayController;
+
+@property (strong, nonatomic) UISearchController *mySearchController;
 
 
 
@@ -47,22 +49,27 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
     
     //_____!!!!!!!   DEPRECATED IN IOS8 - use UISearchController    !!!!!!_______
-    UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.mySearchBar contentsController:self];
-    [searchController setDelegate:self];
-    [searchController setSearchResultsDelegate:self];
-    [searchController setSearchResultsDataSource:self];
-    [self setMySearchDisplayController:searchController];
-    
-    
-    //_______some messed up shit_______
-    //bug in ios7 needs the retain count for the UISearchDisplayController bumped up by 1
-    //http://stackoverflow.com/questions/19214286/having-a-zombie-issue-on-uisearchdisplaycontroller
-//    self.mySearchDisplayController = (__bridge UISearchDisplayController *)(CFBridgingRetain(self.searchDisplayController));
-    //_______!!!!!! AAUUUGGGHHHH this is not a fix because it prevents self (the view controller) from getting deallocated properly
-    //________!!!!! as evidenced when rotating the device after opening the contact VC at least twice
-    //_______!!!!!!! Damned if you do, damned if you don't
-    
+//    UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.mySearchBar contentsController:self];
+//    [searchController setDelegate:self];
+//    [searchController setSearchResultsDelegate:self];
+//    [searchController setSearchResultsDataSource:self];
+//    [self setMySearchDisplayController:searchController];
 
+    self.mySearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    
+    self.mySearchController.searchResultsUpdater = self;
+    
+    self.mySearchController.dimsBackgroundDuringPresentation = NO;
+    self.mySearchController.hidesNavigationBarDuringPresentation = NO;
+    
+    self.mySearchController.searchBar.frame = CGRectMake(self.mySearchController.searchBar.frame.origin.x, self.mySearchController.searchBar.frame.origin.y, self.mySearchController.searchBar.frame.size.width, 44.0);
+
+    self.tableView.tableHeaderView = self.mySearchController.searchBar;
+
+    self.mySearchController.searchBar.delegate = self;
+    
+    //what does this do?
+    self.definesPresentationContext = YES;
     
     [self renewTheView];
     
@@ -292,8 +299,7 @@
     [self.addContactButton setTitle:@"Show All Contacts in Database" forState:UIControlStateHighlighted & UIControlStateNormal & UIControlStateSelected];
 
     //remove the search display if it exists
-    //______!!!!!!!  UISearchDisplayController is DEPRECATED in ios8     !!!!!______
-    [self.mySearchDisplayController setActive:NO animated:YES];
+    [self.mySearchController setActive:NO];
     
     //set arrays
     self.arrayOfContacts = substituteContactArray;
@@ -329,7 +335,7 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     
-    if (tableView == self.searchDisplayController.searchResultsTableView){
+    if (self.mySearchController.active){
         
         return 1;
         
@@ -342,7 +348,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (self.mySearchController.active) {
     
         return [self.searchResultArrayOfContacts count];
         
@@ -377,7 +383,7 @@
     NSString* nameString;
     
     //_______determine either search results table or normal table
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (self.mySearchController.active) {
         
         nameString = [(EQRContactNameItem*)[self.searchResultArrayOfContacts objectAtIndex:indexPath.row] first_and_last];
         
@@ -396,7 +402,7 @@
 
 -(NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     
-    if (tableView == self.searchDisplayController.searchResultsTableView){
+    if (self.mySearchController.active){
         
         return @"";
         
@@ -435,7 +441,7 @@
     
     //identify the selected request for later
     //____determine if search view is present
-    if (self.searchDisplayController.active) {
+    if (self.mySearchController.active) {
         
         self.selectedNameItem = [self.searchResultArrayOfContacts objectAtIndex:indexPath.row];
         
@@ -452,29 +458,57 @@
     
 }
 
+#pragma mark - UISearchResultsUpdating
 
-#pragma mark - search box methods
+-(void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    
+    
+    NSString *searchString = [self.mySearchController.searchBar text];
+    
+    if ([searchString isEqualToString:@""]){
+        searchString = @" ";
+    }
+    
+//    NSLog(@"inside updateSearchResultsForSearchController with search text: %@", searchString);
+    
+    NSString *scope = nil;
+    
+    [self filterContentForSearchText:searchString scope:scope];
+    
+    [self.tableView reloadData];
+}
+
+#pragma mark - UISearchBarDelegate
+
+// Workaround for bug: -updateSearchResultsForSearchController: is not called when scope buttons change
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+    [self updateSearchResultsForSearchController:self.mySearchController];
+}
+
+
+#pragma mark - Content Filtering
 
 //Basically, a predicate is an expression that returns a Boolean value (true or false). You specify the search criteria in the format of NSPredicate and use it to filter data in the array. As the search is on the name of recipe, we specify the predicate as “name contains[c] %@”. The “name” refers to the name property of the Recipe object. NSPredicate supports a wide range of filters including: BEGINSWITH, ENDSWITH, LIKE, MATCHES, CONTAINS. Here we choose to use the “contains” filter. The operator “[c]” means the comparison is case-insensitive.
 
-- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
-{
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope{
     
     NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"first_and_last contains[c] %@", searchText];
     self.searchResultArrayOfContacts = [self.arrayOfContacts filteredArrayUsingPredicate:resultPredicate];
 }
 
 
--(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
-{
-    
-    [self filterContentForSearchText:searchString
-                               scope:[[self.searchDisplayController.searchBar scopeButtonTitles]
-                                      objectAtIndex:[self.searchDisplayController.searchBar
-                                                     selectedScopeButtonIndex]]];
-    
-    return YES;
-}
+#pragma mark - search box methods
+
+//-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString{
+//    
+//    [self filterContentForSearchText:searchString
+//                               scope:[[self.searchDisplayController.searchBar scopeButtonTitles]
+//                                      objectAtIndex:[self.searchDisplayController.searchBar
+//                                                     selectedScopeButtonIndex]]];
+//    
+//    return YES;
+//}
+
 
 -(void)viewDidDisappear:(BOOL)animated{
     
@@ -487,7 +521,7 @@
     //must do this to lower the retain count as an offset for when we upped the retain count in viewDidLoad
 //    self.mySearchDisplayController = CFBridgingRelease((__bridge void*)(self.mySearchDisplayController));
     
-    self.mySearchDisplayController = nil;
+//    self.mySearchDisplayController = nil;
     
 }
 
