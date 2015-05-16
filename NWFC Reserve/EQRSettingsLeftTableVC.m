@@ -42,10 +42,25 @@
     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
     
     // Uncomment the following line to preserve selection between presentations.
-     self.clearsSelectionOnViewWillAppear = NO;
+    self.clearsSelectionOnViewWillAppear = NO;
     
     EQRStaffUserManager *userManager = [EQRStaffUserManager sharedInstance];
     self.kioskModeIsOnFlag = [userManager currentKioskMode];
+    
+    //set background color on cells by looping through all cells
+    for (int section = 0; section < [self.tableView numberOfSections]; section++){
+        for (int row = 0; row < [self.tableView numberOfRowsInSection:section]; row++) {
+            
+            NSIndexPath* cellPath = [NSIndexPath indexPathForRow:row inSection:section];
+            UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:cellPath];
+            
+            //set custom bg color on selection
+            EQRColors *colors = [EQRColors sharedInstance];
+            UIView *bgColorView = [[UIView alloc] init];
+            bgColorView.backgroundColor = [colors.colorDic objectForKey:EQRColorSelectionBlue];
+            [cell setSelectedBackgroundView:bgColorView];
+        }
+    }
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;

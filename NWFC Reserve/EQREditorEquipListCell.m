@@ -58,7 +58,7 @@
     }else{
         
         EQRColors *colors = [EQRColors sharedInstance];
-        self.myContentVC.myDistIDButton.backgroundColor = [colors.colorDic objectForKey:EQRVeryNiceBlue];
+        self.myContentVC.myDistIDButton.backgroundColor = [colors.colorDic objectForKey:EQRColorEditModeBGBlue];
         [self.myContentVC.myDistIDButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
         [self.myContentVC.myDistIDButton setUserInteractionEnabled:YES];
     }
@@ -99,7 +99,7 @@
     //delete button
     [self.myContentVC.myDeleteButton setTitle:thisButtonText forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
     [self.myContentVC.myDeleteButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal & UIControlStateSelected];
-    [self.myContentVC.myDeleteButton setTitleColor:[colors.colorDic objectForKey:EQRColorLightBlue] forState:UIControlStateHighlighted];
+    [self.myContentVC.myDeleteButton setTitleColor:[colors.colorDic objectForKey:EQRColorSelectionBlue] forState:UIControlStateHighlighted];
     self.myContentVC.myDeleteButton.reversesTitleShadowWhenHighlighted = YES;
     self.myContentVC.myDeleteButton.userInteractionEnabled = YES;
     
@@ -159,7 +159,7 @@
     self.myContentVC.issueTrailingConstraint.constant = 50.f;
     
     EQRColors *colors = [EQRColors sharedInstance];
-    self.myContentVC.myDistIDButton.backgroundColor = [colors.colorDic objectForKey:EQRVeryNiceBlue];
+    self.myContentVC.myDistIDButton.backgroundColor = [colors.colorDic objectForKey:EQRColorEditModeBGBlue];
     [self.myContentVC.myDistIDButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
     [self.myContentVC.myDistIDButton setUserInteractionEnabled:YES];
     

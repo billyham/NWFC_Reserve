@@ -10,6 +10,8 @@
 #import "EQRWebData.h"
 #import "EQRContactNameItem.h"
 #import "EQRContactAddNewVC.h"
+#import "EQRColors.h"
+
 
 @interface EQRContactPickerVC () <UISearchResultsUpdating, UISearchBarDelegate>
 
@@ -375,8 +377,14 @@
     
     if (cell == nil) {
         
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+        //set custom bg color on selection
+        EQRColors *colors = [EQRColors sharedInstance];
+        UIView *bgColorView = [[UIView alloc] init];
+        bgColorView.backgroundColor = [colors.colorDic objectForKey:EQRColorSelectionBlue];
+        [cell setSelectedBackgroundView:bgColorView];
     }
     
     //name
@@ -422,7 +430,11 @@
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView{
     
-    return self.arrayOfIndexLetter;
+    if (self.mySearchController.active) {
+        return nil;
+    }else{
+        return self.arrayOfIndexLetter;
+    }
 }
 
 

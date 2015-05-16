@@ -59,6 +59,21 @@
     EQRSettingsLeftTableVC *leftTable = (EQRSettingsLeftTableVC *)[navCon topViewController];
     self.delegate = leftTable;
     
+    //set background color on cells by looping through all cells
+    for (int section = 0; section < [self.tableView numberOfSections]; section++){
+        for (int row = 0; row < [self.tableView numberOfRowsInSection:section]; row++) {
+            
+            NSIndexPath* cellPath = [NSIndexPath indexPathForRow:row inSection:section];
+            UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:cellPath];
+            
+            //set custom bg color on selection
+            EQRColors *colors = [EQRColors sharedInstance];
+            UIView *bgColorView = [[UIView alloc] init];
+            bgColorView.backgroundColor = [colors.colorDic objectForKey:EQRColorSelectionBlue];
+            [cell setSelectedBackgroundView:bgColorView];
+        }
+    }
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -137,6 +152,12 @@
         
         self.genericTextEditor = nil;
     }];
+    
+    //de-select cell
+    NSArray *selectedIndexes = self.tableView.indexPathsForSelectedRows;
+    for (NSIndexPath *indexPath in selectedIndexes){
+        [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+    }
     
 }
 

@@ -85,7 +85,7 @@
     //delete button
     [self.myContentVC.myDeleteButton setTitle:thisButtonText forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
     [self.myContentVC.myDeleteButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal & UIControlStateSelected];
-    [self.myContentVC.myDeleteButton setTitleColor:[colors.colorDic objectForKey:EQRColorLightBlue] forState:UIControlStateHighlighted];
+    [self.myContentVC.myDeleteButton setTitleColor:[colors.colorDic objectForKey:EQRColorSelectionBlue] forState:UIControlStateHighlighted];
     self.myContentVC.myDeleteButton.reversesTitleShadowWhenHighlighted = YES;
     self.myContentVC.myDeleteButton.userInteractionEnabled = YES;
     

@@ -814,7 +814,7 @@
     
     //background color for notes
     EQRColors* colors = [EQRColors sharedInstance];
-    self.notesView.backgroundColor = [colors.colorDic objectForKey:EQRVeryNiceBlue];
+    self.notesView.backgroundColor = [colors.colorDic objectForKey:EQRColorEditModeBGBlue];
     
 }
 

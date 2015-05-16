@@ -229,7 +229,7 @@
     
     //background color for notes
     EQRColors* colors = [EQRColors sharedInstance];
-    self.notesView.backgroundColor = [colors.colorDic objectForKey:EQRVeryNiceBlue];
+    self.notesView.backgroundColor = [colors.colorDic objectForKey:EQRColorEditModeBGBlue];
     
     
 }
@@ -755,15 +755,10 @@
     
     //set the size
     [self.myClassPicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
-    
-    //convert coordinates of textField frame to self.view
-    UIView* originalRect = self.view;
-    CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
-    CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
-    
+
     
     //present the popover
-    [self.myClassPicker presentPopoverFromRect:step2Rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
+    [self.myClassPicker presentPopoverFromRect:self.classField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
     
     //assign as delegate
     classPickerVC.delegate = self;

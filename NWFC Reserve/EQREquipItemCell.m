@@ -204,7 +204,7 @@
         self.myEquipVCntrllr.quantityTextField.text = self.itemQuantityString;
         
         //set new subview background color
-        self.myEquipVCntrllr.view.backgroundColor = [myColors.colorDic objectForKey:EQRColorLightBlue];
+        self.myEquipVCntrllr.view.backgroundColor = [myColors.colorDic objectForKey:EQRColorSelectionBlue];
         
         //reveal plus minus buttons
         //_____BUT ONLY THE PLUS BUTTON IF THERE IS STILL AN AVAILABLE QUANTITY
@@ -251,10 +251,10 @@
     //highlight the background color
     if (self.itemQuantity > 0){
         
-        self.myEquipVCntrllr.view.backgroundColor = [UIColor yellowColor];
+        self.myEquipVCntrllr.view.backgroundColor = [myColors.colorDic objectForKey:EQRColorSelectionYellow];
         
         //set color after delay
-        [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[myColors.colorDic objectForKey:EQRColorLightBlue] afterDelay:EQRHighlightTappingTime];
+        [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[myColors.colorDic objectForKey:EQRColorSelectionBlue] afterDelay:EQRHighlightTappingTime];
     }
     
     //______******  test if we have hit the total count of Unique items for this title item
@@ -287,10 +287,10 @@
         
         self.itemQuantity = self.itemQuantity - 1;
         
-        self.myEquipVCntrllr.view.backgroundColor = [UIColor yellowColor];
+        self.myEquipVCntrllr.view.backgroundColor = [myColors.colorDic objectForKey:EQRColorSelectionYellow];
         
         //set color after delay
-        [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[myColors.colorDic objectForKey:EQRColorLightBlue] afterDelay:EQRHighlightTappingTime];
+        [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[myColors.colorDic objectForKey:EQRColorSelectionBlue] afterDelay:EQRHighlightTappingTime];
         
         //____***** reactivate plus button if one is in effect
         if (self.quantityLimitFlag){
@@ -312,7 +312,7 @@
         
         self.itemQuantityString = @"";
         
-        self.myEquipVCntrllr.view.backgroundColor = [UIColor yellowColor];
+        self.myEquipVCntrllr.view.backgroundColor = [myColors.colorDic objectForKey:EQRColorSelectionYellow];
         
         //set color after delay
         [self.myEquipVCntrllr.view performSelector:@selector(setBackgroundColor:) withObject:[UIColor clearColor] afterDelay:EQRHighlightTappingTime];

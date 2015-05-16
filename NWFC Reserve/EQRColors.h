@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString* EQRColorLightBlue;
-extern NSString* EQRVeryNiceBlue;
+extern NSString *EQRColorSelectionYellow;
+extern NSString* EQRColorSelectionBlue;  //selected equipList cell bg, selected schedule nav bar cell bg
+extern NSString* EQRColorEditModeBGBlue;  //edit mode blue
 extern NSString* EQRColorVeryLightGrey;
 
 extern NSString* EQRColorCalStudent;
@@ -22,7 +23,7 @@ extern NSString* EQRColorCalInClass;
 extern NSString* EQRColorNeedsPrep;
 extern NSString* EQRColorDonePrep;
 extern NSString* EQRColorFilterOn;
-extern NSString* EQRColorCoolGreen;
+extern NSString* EQRColorCoolGreen;  //currently not used 5-15-15
 
 extern NSString* EQRColorStatusNil;
 extern NSString* EQRColorStatusGoing;

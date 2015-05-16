@@ -387,6 +387,12 @@
         
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+        //set custom bg color on selection
+        EQRColors *colors = [EQRColors sharedInstance];
+        UIView *bgColorView = [[UIView alloc] init];
+        bgColorView.backgroundColor = [colors.colorDic objectForKey:EQRColorSelectionBlue];
+        [cell setSelectedBackgroundView:bgColorView];
     }
     
     //nsattributedstrings

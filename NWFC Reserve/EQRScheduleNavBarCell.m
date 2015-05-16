@@ -79,7 +79,7 @@
         
         if ([sectionString isEqualToString:self.titleLabel.text]){
             
-            self.titleLabel.backgroundColor = [myColors.colorDic objectForKey:EQRColorLightBlue];
+            self.titleLabel.backgroundColor = [myColors.colorDic objectForKey:EQRColorSelectionBlue];
         }
     }
     
@@ -97,7 +97,7 @@
     if ([titleString isEqualToString:self.titleLabel.text]){
         
         //found a match, so Highlight the button
-        self.titleLabel.backgroundColor = [myColors.colorDic objectForKey:EQRColorLightBlue];
+        self.titleLabel.backgroundColor = [myColors.colorDic objectForKey:EQRColorSelectionBlue];
     }
     
 }
