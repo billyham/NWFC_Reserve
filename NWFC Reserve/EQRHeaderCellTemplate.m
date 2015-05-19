@@ -32,7 +32,7 @@
 
 #pragma mark - methods
 
--(void)initialSetupWithTitle:(NSString*) titleName isHidden:(BOOL)yesHidden{
+-(void)initialSetupWithTitle:(NSString*) titleName isHidden:(BOOL)yesHidden isSearchResult:(BOOL)yesSearch{
     
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshViewFromAllButton:) name:EQRRefreshEquipTable object:nil];
     
@@ -42,6 +42,8 @@
     //size!
 //    CGRect newSize = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (self.frame.size.height) + 10);
 //    self.frame = newSize;
+    
+
     
     
     //label
@@ -103,6 +105,12 @@
     [self.contentView addSubview:self.titleLabel];
     [self.contentView addSubview:self.revealButton];
     [self.contentView addSubview:self.allButton];
+    
+    //if search result, disable hide and expand buttons    
+    [self.revealButton setHidden:yesSearch];
+    [self.allButton setHidden:yesSearch];
+
+    
 }
 
 

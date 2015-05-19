@@ -22,7 +22,7 @@
 @property (strong, nonatomic) IBOutlet UIButton* allButton;
 
 
--(void)initialSetupWithTitle:(NSString*) titleName isHidden:(BOOL)yesHidden;
+-(void)initialSetupWithTitle:(NSString*) titleName isHidden:(BOOL)yesHidden isSearchResult:(BOOL)yesSearch;
 -(IBAction)revealButtonTapped:(id)sender;
 
 @end

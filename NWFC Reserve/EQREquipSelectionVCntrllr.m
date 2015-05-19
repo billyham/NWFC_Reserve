@@ -515,7 +515,7 @@
     }
     
     //cell's initial setup method with label
-    [cell initialSetupWithTitle:[self.equipTitleCategoriesList objectAtIndex:indexPath.section] isHidden:iAmHidden];
+    [cell initialSetupWithTitle:[self.equipTitleCategoriesList objectAtIndex:indexPath.section] isHidden:iAmHidden isSearchResult:NO];
     
     return cell;
 }

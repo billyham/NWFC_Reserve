@@ -1675,7 +1675,7 @@
         NSString* thisTitleString = [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)];
         
         //cell's initial setup method with label
-        [cell initialSetupWithTitle:thisTitleString isHidden:iAmHidden];
+        [cell initialSetupWithTitle:thisTitleString isHidden:iAmHidden isSearchResult:NO];
         
         
         

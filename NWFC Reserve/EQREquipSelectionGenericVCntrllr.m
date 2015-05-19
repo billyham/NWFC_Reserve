@@ -21,7 +21,7 @@
 #import "EQREquipOptionsTableVC.h"
 #import "EQRColors.h"
 
-@interface EQREquipSelectionGenericVCntrllr ()
+@interface EQREquipSelectionGenericVCntrllr () <UISearchResultsUpdating, UISearchBarDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView* mainSubView;
 @property (strong, nonatomic) NSArray* equipTitleArray;
@@ -44,6 +44,13 @@
 // add miscellaneous button
 @property (strong, nonatomic) IBOutlet UIButton *addMiscellaneousButton;
 @property (strong, nonatomic) UIPopoverController* miscPopover;
+
+//UISearchController
+@property (strong, nonatomic) IBOutlet UIView *searchBoxView;
+@property (strong, nonatomic) UISearchController *mySearchController;
+@property (strong, nonatomic) NSArray *searchResultArrayOfEquipTitles;
+@property (strong, nonatomic) NSArray *verticalConstraintsForSearchBar;
+@property (strong, nonatomic) NSArray *horizontalConstraintsForSearchBar;
 
 @end
 
@@ -119,6 +126,24 @@
 //        self.equipCollectionView.contentInset = UIEdgeInsetsMake(-60, 0, 0, 0);
     }
     
+    //searchcontroller setup
+    self.mySearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    
+    self.mySearchController.searchResultsUpdater = self;
+    
+    self.mySearchController.dimsBackgroundDuringPresentation = NO;
+    self.mySearchController.hidesNavigationBarDuringPresentation = NO;
+    
+    self.mySearchController.searchBar.frame = CGRectMake(0, 0, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
+    
+    [self.searchBoxView addSubview:self.mySearchController.searchBar];
+    
+    self.mySearchController.searchBar.delegate = self;
+    self.mySearchController.searchBar.searchBarStyle = UISearchBarStyleMinimal;
+    
+    //what does this do?
+    self.definesPresentationContext = YES;
+    
     //do everything else
     [self renewTheViewWithRequestManager:requestManager];
   
@@ -188,6 +213,43 @@
     //add replacement constraints
     [[self.mainSubView superview] addConstraints:constraint_POS_V];
     [[self.mainSubView superview] addConstraints:constraint_POS_VB];
+    
+    
+    //_______these following constraints appear to have no effect_______
+    //add constraints for search box...
+    self.mySearchController.searchBar.translatesAutoresizingMaskIntoConstraints = YES;
+    
+    //dismiss existing constraints
+//    if (self.verticalConstraintsForSearchBar){
+//        [self.mainSubView removeConstraints:self.verticalConstraintsForSearchBar];
+//    }
+//    if (self.horizontalConstraintsForSearchBar){
+//        [self.mainSubView removeConstraints:self.horizontalConstraintsForSearchBar];
+//    }
+//    
+//    NSDictionary *viewsDictionary2 = @{@"searchSubView":self.mySearchController.searchBar};
+//    
+//    NSArray *constraint2_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[searchSubView]-0-|"
+//                                                                         options:0
+//                                                                         metrics:nil
+//                                                                           views:viewsDictionary2];
+//    self.verticalConstraintsForSearchBar = constraint2_POS_V;
+//    
+//    
+//    
+//    NSArray *constraint2_POS_H = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[searchSubView]-0-|"
+//                                                                         options:0
+//                                                                         metrics:nil
+//                                                                           views:viewsDictionary2];
+//    self.horizontalConstraintsForSearchBar = constraint2_POS_H;
+//    
+//    
+//    //add constraints
+//    [self.mainSubView addConstraints:constraint2_POS_V];
+//    [self.mainSubView addConstraints:constraint2_POS_H];
+    
+    
+    
     
     [super viewWillAppear:animated];
 }
@@ -685,11 +747,37 @@
 
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-
+    
     //needs to update the headings...
     [self.equipCollectionView reloadData];
     
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    
+    //____!!!! yuck   !!!!!_____
+    //this works and is necessary to overcome a bug in the change in origin of the search bar
+    //when rotated... but man does it look ugly....
+    //only needs update if search bar is currently active
+    if (self.mySearchController.active){
+        [self performSelector:@selector(delayedSearchBarResizeWithText:) withObject:self.mySearchController.searchBar.text afterDelay:0.15];
+        
+        self.mySearchController.active = NO;
+    }
+}
+
+-(void)delayedSearchBarResizeWithText:(NSString *)searchText{
+    
+    CGRect thisRect = CGRectMake(self.searchBoxView.bounds.origin.x, self.searchBoxView.bounds.origin.y, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
+
+    [UIView animateWithDuration:0.3 animations:^{
+        
+        self.mySearchController.searchBar.frame = thisRect;
+        
+    } completion:^(BOOL finished) {
+        
+        self.mySearchController.active = YES;
+        
+        [self.mySearchController.searchBar setText:searchText];
+    }];
 }
 
 
@@ -802,6 +890,81 @@
 
 
 
+#pragma mark - UISearchResultsUpdating
+
+-(void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    
+    NSString *searchString = [self.mySearchController.searchBar text];
+    
+    if ([searchString isEqualToString:@""]){
+        searchString = @" ";
+    }
+    
+    //    NSLog(@"inside updateSearchResultsForSearchController with search text: %@", searchString);
+    
+    NSString *scope = nil;
+    
+    [self filterContentForSearchText:searchString scope:scope];
+    
+    [self.equipCollectionView reloadData];
+}
+
+#pragma mark - UISearchBarDelegate
+
+// Workaround for bug: -updateSearchResultsForSearchController: is not called when scope buttons change
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+    [self updateSearchResultsForSearchController:self.mySearchController];
+}
+
+- (void)willPresentSearchController:(UISearchController *)searchController{
+    
+    [self.editNotesButton setEnabled:NO];
+    self.editNotesButton.alpha = 0.2;
+    
+    [self.addMiscellaneousButton setEnabled:NO];
+    self.addMiscellaneousButton.alpha = 0.2;
+    
+    [self.continueButton setEnabled:NO];
+    self.continueButton.alpha = 0.2;
+    
+    [self.listAllEquipButton setEnabled:NO];
+    self.listAllEquipButton.alpha = 0.2;
+    
+}
+
+- (void)willDismissSearchController:(UISearchController *)searchController{
+    
+    
+    [self.editNotesButton setEnabled:YES];
+    self.editNotesButton.alpha = 1.0;
+    
+    [self.addMiscellaneousButton setEnabled:YES];
+    self.addMiscellaneousButton.alpha = 1.0;
+    
+    [self.continueButton setEnabled:YES];
+    self.continueButton.alpha = 1.0;
+    
+    [self.listAllEquipButton setEnabled:YES];
+    self.listAllEquipButton.alpha = 1.0;
+    
+    
+}
+
+
+
+#pragma mark - Content Filtering
+
+//Basically, a predicate is an expression that returns a Boolean value (true or false). You specify the search criteria in the format of NSPredicate and use it to filter data in the array. As the search is on the name of recipe, we specify the predicate as “name contains[c] %@”. The “name” refers to the name property of the Recipe object. NSPredicate supports a wide range of filters including: BEGINSWITH, ENDSWITH, LIKE, MATCHES, CONTAINS. Here we choose to use the “contains” filter. The operator “[c]” means the comparison is case-insensitive.
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope{
+    
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"shortname contains[c] %@", searchText];
+    self.searchResultArrayOfEquipTitles = [self.equipTitleArray filteredArrayUsingPredicate:resultPredicate];
+}
+
+
+
+
 
 #pragma mark - view collection data source protocol methods
 
@@ -823,8 +986,6 @@
     //    [cell setUserInteractionEnabled:YES];
     
     
-    
-    
     //_____test whether the section is collapsed or expanded
     BOOL iAmHidden = NO;
     
@@ -836,6 +997,14 @@
     }
     
     [cell setDelegate:requestManager];
+    
+    
+    //test if in search mode, and tap out
+    if (self.mySearchController.active){
+        [cell initialSetupWithTitle:@"Search results" isHidden:NO isSearchResult:YES];
+        return  cell;
+    }
+    
     
     for (NSString* sectionString in requestManager.arrayOfEquipSectionsThatShouldBeHidden){
         
@@ -849,7 +1018,9 @@
     }
     
     //cell's initial setup method with label
-    [cell initialSetupWithTitle:[self.equipTitleCategoriesList objectAtIndex:indexPath.section] isHidden:iAmHidden];
+    [cell initialSetupWithTitle:[self.equipTitleCategoriesList objectAtIndex:indexPath.section]
+                       isHidden:iAmHidden
+                 isSearchResult:NO];
     
     return cell;
 }
@@ -859,6 +1030,11 @@
 //Cell Methods
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    
+    //test if in search, tap out with count of search array
+    if (self.mySearchController.active){
+        return [self.searchResultArrayOfEquipTitles count];
+    }
     
     //test if this section is flagged to be collapsed
     EQRScheduleRequestManager* requestManager;
@@ -888,7 +1064,12 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     
-    return [self.equipTitleArrayWithSections count];
+    //test if in search, tap out with 1
+    if (self.mySearchController.active){
+        return 1;
+    }else{
+        return [self.equipTitleArrayWithSections count];
+    }
 }
 
 
@@ -921,9 +1102,17 @@
     
     if ([self.equipTitleArray count] > 0){
         
-        [cell initialSetupWithTitle:[[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]  shortname] andEquipItem:[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
-        
-        //        [cell initialSetupWithTitle:[(EQREquipItem*)[self.equipTitleArray objectAtIndex:indexPath.row] name] andEquipItem:[self.equipTitleArray objectAtIndex:indexPath.row]];
+        //_______determine either search results table or normal table
+        if (self.mySearchController.active) {
+            
+            [cell initialSetupWithTitle:[[self.searchResultArrayOfEquipTitles objectAtIndex:indexPath.row]  shortname] andEquipItem:[self.searchResultArrayOfEquipTitles objectAtIndex:indexPath.row]];
+            
+        }else{
+            
+            [cell initialSetupWithTitle:[[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]  shortname] andEquipItem:[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+            
+            //        [cell initialSetupWithTitle:[(EQREquipItem*)[self.equipTitleArray objectAtIndex:indexPath.row] name] andEquipItem:[self.equipTitleArray objectAtIndex:indexPath.row]];
+        }
         
     }else{
         
@@ -945,7 +1134,7 @@
 //for equip item
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    NSLog(@"view collection delegate fires touch with indexPath: %u, %u", (int)indexPath.section, (int)indexPath.row);
+//    NSLog(@"view collection delegate fires touch with indexPath: %u, %u", (int)indexPath.section, (int)indexPath.row);
     
     //if the selected cell has 0 for quantity, add one. otherwise, do nothing
     EQREquipItemCell* selectedCell = (EQREquipItemCell*)[collectionView cellForItemAtIndexPath:indexPath];

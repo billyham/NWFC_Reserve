@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQREquipSelectionGenericVCntrllr">
@@ -14,6 +13,7 @@
                 <outlet property="equipCollectionView" destination="Hha-K8-upK" id="RGE-rh-XRI"/>
                 <outlet property="listAllEquipButton" destination="Aq7-zw-7GS" id="l8i-1X-dfP"/>
                 <outlet property="mainSubView" destination="KF1-XO-Q8h" id="4WZ-wg-Ghd"/>
+                <outlet property="searchBoxView" destination="8Cb-ae-gFG" id="T8q-wA-rnD"/>
                 <outlet property="topGuideLayoutThingy" destination="79i-Xm-dLN" id="9O9-dV-jQK"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -52,7 +52,7 @@
                             </connections>
                         </button>
                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Hha-K8-upK">
-                            <rect key="frame" x="20" y="81" width="728" height="943"/>
+                            <rect key="frame" x="20" y="121" width="728" height="903"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="AnF-kN-2P9">
                                 <size key="itemSize" width="320" height="32"/>
@@ -90,21 +90,31 @@
                                 <action selector="miscButtonTapped:" destination="-1" eventType="touchUpInside" id="58C-qv-Bna"/>
                             </connections>
                         </button>
+                        <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Cb-ae-gFG" userLabel="search box View">
+                            <rect key="frame" x="150" y="69" width="468" height="44"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="i2B-q5-ewP"/>
+                                <constraint firstAttribute="width" constant="468" id="vDO-UE-0yb"/>
+                            </constraints>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="Aq7-zw-7GS" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="33" id="3N4-Oc-n6N"/>
+                        <constraint firstAttribute="centerX" secondItem="8Cb-ae-gFG" secondAttribute="centerX" id="3r6-Ga-RT9"/>
                         <constraint firstAttribute="trailing" secondItem="Aq7-zw-7GS" secondAttribute="trailing" constant="30" id="5yH-rW-95F"/>
                         <constraint firstAttribute="bottom" secondItem="Hha-K8-upK" secondAttribute="bottom" id="8Uh-jn-gZc"/>
                         <constraint firstItem="BdW-53-E2C" firstAttribute="leading" secondItem="sdD-j5-3PE" secondAttribute="trailing" constant="38" id="A17-aw-18s"/>
                         <constraint firstItem="Hha-K8-upK" firstAttribute="leading" secondItem="KF1-XO-Q8h" secondAttribute="leading" constant="20" id="CqT-0p-n9k"/>
                         <constraint firstItem="6bK-FM-VHe" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="33" id="DGQ-wP-dIG"/>
+                        <constraint firstItem="Hha-K8-upK" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="121" id="J4E-eU-HqN"/>
                         <constraint firstAttribute="trailing" secondItem="Hha-K8-upK" secondAttribute="trailing" constant="20" id="JNt-lT-ucX"/>
+                        <constraint firstItem="8Cb-ae-gFG" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="69" id="f9I-a4-cao"/>
                         <constraint firstItem="sdD-j5-3PE" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="33" id="gdb-NM-m0k"/>
                         <constraint firstItem="sdD-j5-3PE" firstAttribute="leading" secondItem="KF1-XO-Q8h" secondAttribute="leading" constant="20" id="kDT-2T-Rpo"/>
                         <constraint firstAttribute="centerX" secondItem="6bK-FM-VHe" secondAttribute="centerX" id="rWL-xu-aZB"/>
                         <constraint firstItem="BdW-53-E2C" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="33" id="tga-F1-jUP"/>
-                        <constraint firstItem="Hha-K8-upK" firstAttribute="top" secondItem="Aq7-zw-7GS" secondAttribute="bottom" constant="18" id="xYI-fK-o0k"/>
                     </constraints>
                 </view>
             </subviews>
