@@ -15,7 +15,7 @@
 #import "EQRColors.h"
 
 
-@interface EQRInboxLeftTableVC ()
+@interface EQRInboxLeftTableVC () <UISearchResultsUpdating, UISearchBarDelegate>
 
 @property (strong, nonatomic) NSMutableArray* arrayOfRequests;
 @property NSInteger countOfUltimageReturnedItems;
@@ -24,8 +24,7 @@
 @property (strong, nonatomic) NSArray* searchResultArrayOfRequests;
 @property (strong, nonatomic) EQRScheduleRequestItem* chosenRequest;
 
-@property (strong, nonatomic) IBOutlet UISearchDisplayController* mySearechDisplayController;
-@property (strong, nonatomic) IBOutlet UISearchBar *mySearchBar;
+@property (strong, nonatomic) UISearchController *mySearchController;
 
 @property (strong, nonatomic) EQRWebData* myWebData;
 
@@ -51,13 +50,22 @@
     
     [super viewDidLoad];
     
-    //_______some messed up shit_______
-    //bug in ios7 needs the retain count for the UISearchDisplayController bumped up by 1
-    //http://stackoverflow.com/questions/19214286/having-a-zombie-issue-on-uisearchdisplaycontroller
-//    self.mySearchDisplayController = (__bridge  UISearchDisplayController *)(CFBridgingRetain(self.searchDisplayController));
-    //_______!!!!!! AAUUUGGGHHHH this is not a fix because it prevents self (the view controller) from getting deallocated properly
-    //________!!!!! as evidenced when rotating the device after opening the contact VC at least twice
-    //_______!!!!!!! Damned if you do, damned if you don't
+    self.mySearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    
+    self.mySearchController.searchResultsUpdater = self;
+    
+    self.mySearchController.dimsBackgroundDuringPresentation = NO;
+    self.mySearchController.hidesNavigationBarDuringPresentation = NO;
+    
+    self.mySearchController.searchBar.frame = CGRectMake(self.mySearchController.searchBar.frame.origin.x, self.mySearchController.searchBar.frame.origin.y, self.mySearchController.searchBar.frame.size.width, 44.0);
+    
+    self.tableView.tableHeaderView = self.mySearchController.searchBar;
+    
+    self.mySearchController.searchBar.delegate = self;
+    
+    //what does this do?
+    self.definesPresentationContext = YES;
+    
  
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
@@ -161,6 +169,9 @@
         
     }else if ([selectionType isEqualToString:@"AllRequestsByName"]){     //get ALL requests
     
+        //set the search bar placeholder text
+        self.mySearchController.searchBar.placeholder = @"Search by Name";
+        
         //set nav bar title (override nav bar title from nib)
         self.navigationItem.title = @"Archive";
         
@@ -186,7 +197,7 @@
     }else if ([selectionType isEqualToString:@"AllRequestsByClassTitle"]){
         
         //set the search bar placeholder text
-        self.mySearchBar.placeholder = @"Search by Class";
+        self.mySearchController.searchBar.placeholder = @"Search by Class";
         
         //set nav bar title (override nav bar title from nib)
         self.navigationItem.title = @"Archive";
@@ -253,7 +264,34 @@
 }
 
 
-#pragma mark - search box methods
+#pragma mark - UISearchResultsUpdating
+
+-(void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    
+    
+    NSString *searchString = [self.mySearchController.searchBar text];
+    
+    if ([searchString isEqualToString:@""]){
+        searchString = @" ";
+    }
+    
+    NSString *scope = nil;
+    
+    [self filterContentForSearchText:searchString scope:scope];
+    
+    [self.tableView reloadData];
+}
+
+#pragma mark - UISearchBarDelegate
+
+// Workaround for bug: -updateSearchResultsForSearchController: is not called when scope buttons change
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+    [self updateSearchResultsForSearchController:self.mySearchController];
+}
+
+
+
+#pragma mark - Content Filtering
 
 //Basically, a predicate is an expression that returns a Boolean value (true or false). You specify the search criteria in the format of NSPredicate and use it to filter data in the array. As the search is on the name of recipe, we specify the predicate as “name contains[c] %@”. The “name” refers to the name property of the Recipe object. NSPredicate supports a wide range of filters including: BEGINSWITH, ENDSWITH, LIKE, MATCHES, CONTAINS. Here we choose to use the “contains” filter. The operator “[c]” means the comparison is case-insensitive.
 
@@ -273,18 +311,6 @@
     }
     
     self.searchResultArrayOfRequests = [self.arrayOfRequests filteredArrayUsingPredicate:resultPredicate];
-}
-
-
--(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
-{
-    
-    [self filterContentForSearchText:searchString
-                               scope:[[self.searchDisplayController.searchBar scopeButtonTitles]
-                                      objectAtIndex:[self.searchDisplayController.searchBar
-                                                     selectedScopeButtonIndex]]];
-    
-    return YES;
 }
 
 
@@ -344,7 +370,7 @@
 {
     
     //determine either search results table or normal table
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (self.mySearchController.active) {
         
         return 1;
         
@@ -359,7 +385,7 @@
 {
     
     //determine either search results table or normal table
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (self.mySearchController.active) {
         
         return [self.searchResultArrayOfRequests count];
         
@@ -433,9 +459,9 @@
     
     
     //_______determine either search results table or normal table
-    if (tableView == self.searchDisplayController.searchResultsTableView) {         //search results!!!
+    if (self.mySearchController.active) {         //search results!!!
         
-        //this seems like a weird place to put the row heigh, but it works
+        //this seems like a weird place to put the row height, but it works
         tableView.rowHeight = 80.f;
         
         nameString = [(EQRScheduleRequestItem*)[self.searchResultArrayOfRequests objectAtIndex:indexPath.row] contact_name];
@@ -541,7 +567,7 @@
     
     //identify the selected request for later
     //____determine if search view is present
-    if (self.searchDisplayController.active) {
+    if (self.mySearchController.active) {
         
         self.chosenRequest = [self.searchResultArrayOfRequests objectAtIndex:indexPath.row];
         

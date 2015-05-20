@@ -14,7 +14,7 @@
 
 
 
-@interface EQRClassPickerVC ()
+@interface EQRClassPickerVC () <UISearchResultsUpdating, UISearchBarDelegate>
 
 
 @property (strong, nonatomic) IBOutlet UITableView* tableView;
@@ -25,8 +25,7 @@
 
 @property (strong, nonatomic) NSArray* searchResultsArrayOfClasses;
 
-@property (strong, nonatomic) IBOutlet UISearchDisplayController* mySearchDisplayController;
-
+@property (strong, nonatomic) UISearchController *mySearchController;
 
 @end
 
@@ -41,13 +40,23 @@
     //register table view cell
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
     
-    //_______some messed up shit_______
-    //bug in ios7 needs the retain count for the UISearchDisplayController bumped up by 1
-    //http://stackoverflow.com/questions/19214286/having-a-zombie-issue-on-uisearchdisplaycontroller
-//    self.mySearchDisplayController = (__bridge  UISearchDisplayController *)(CFBridgingRetain(self.searchDisplayController));
-    //_______!!!!!! AAUUUGGGHHHH this is not a fix because it prevents self (the view controller) from getting deallocated properly
-    //________!!!!! as evidenced when rotating the device after opening the contact VC at least twice
-    //_______!!!!!!! Damned if you do, damned if you don't
+    
+    self.mySearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    
+    self.mySearchController.searchResultsUpdater = self;
+    
+    self.mySearchController.dimsBackgroundDuringPresentation = NO;
+    self.mySearchController.hidesNavigationBarDuringPresentation = NO;
+    
+    self.mySearchController.searchBar.frame = CGRectMake(self.mySearchController.searchBar.frame.origin.x, self.mySearchController.searchBar.frame.origin.y, self.mySearchController.searchBar.frame.size.width, 44.0);
+    
+    self.tableView.tableHeaderView = self.mySearchController.searchBar;
+    
+    self.mySearchController.searchBar.delegate = self;
+    
+    //what does this do?
+    self.definesPresentationContext = YES;
+    
     
     //get list of classes
     EQRWebData* webData = [EQRWebData sharedInstance];
@@ -196,7 +205,7 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     
-    if (self.searchDisplayController.active) {
+    if (self.mySearchController.active) {
         
         return 1;
         
@@ -209,7 +218,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    if (self.searchDisplayController.active) {
+    if (self.mySearchController.active) {
         
         return [self.searchResultsArrayOfClasses count];
         
@@ -242,7 +251,7 @@
     
     NSString* className;
     
-    if (self.searchDisplayController.active) {
+    if (self.mySearchController.active) {
         
         className = [(EQRClassItem*)[self.searchResultsArrayOfClasses objectAtIndex:indexPath.row] section_name];
         
@@ -264,7 +273,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    if (self.searchDisplayController.active) {
+    if (self.mySearchController.active) {
         
         self.myClassItem = [self.searchResultsArrayOfClasses objectAtIndex:indexPath.row];
         
@@ -283,7 +292,7 @@
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView{
     
-    if (self.searchDisplayController.active){
+    if (self.mySearchController.active){
         
         return nil;
     }
@@ -300,9 +309,34 @@
 }
 
 
+#pragma mark - UISearchResultsUpdating
 
+-(void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    
+    
+    NSString *searchString = [self.mySearchController.searchBar text];
+    
+    if ([searchString isEqualToString:@""]){
+        searchString = @" ";
+    }
+    
+    //    NSLog(@"inside updateSearchResultsForSearchController with search text: %@", searchString);
+    
+    NSString *scope = nil;
+    
+    [self filterContentForSearchText:searchString scope:scope];
+    
+    [self.tableView reloadData];
+}
 
-#pragma mark - search box methods
+#pragma mark - UISearchBarDelegate
+
+// Workaround for bug: -updateSearchResultsForSearchController: is not called when scope buttons change
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+    [self updateSearchResultsForSearchController:self.mySearchController];
+}
+
+#pragma mark - Content Filtering
 
 //Basically, a predicate is an expression that returns a Boolean value (true or false). You specify the search criteria in the format of NSPredicate and use it to filter data in the array. As the search is on the name of recipe, we specify the predicate as “name contains[c] %@”. The “name” refers to the name property of the Recipe object. NSPredicate supports a wide range of filters including: BEGINSWITH, ENDSWITH, LIKE, MATCHES, CONTAINS. Here we choose to use the “contains” filter. The operator “[c]” means the comparison is case-insensitive.
 
@@ -311,18 +345,6 @@
     
     NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"section_name contains[c] %@", searchText];
     self.searchResultsArrayOfClasses = [self.arrayOfClasses filteredArrayUsingPredicate:resultPredicate];
-}
-
-
--(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
-{
-    
-    [self filterContentForSearchText:searchString
-                               scope:[[self.searchDisplayController.searchBar scopeButtonTitles]
-                                      objectAtIndex:[self.searchDisplayController.searchBar
-                                                     selectedScopeButtonIndex]]];
-    
-    return YES;
 }
 
 

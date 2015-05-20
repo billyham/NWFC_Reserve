@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRClassPickerVC">
             <connections>
-                <outlet property="mySearchDisplayController" destination="0NV-B0-UOd" id="nyO-a5-eXC"/>
-                <outlet property="searchDisplayController" destination="0NV-B0-UOd" id="Y9f-Ta-GHG"/>
                 <outlet property="tableView" destination="63o-L0-Osj" id="BrJ-S0-dbn"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -23,14 +21,6 @@
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="63o-L0-Osj">
                             <rect key="frame" x="0.0" y="0.0" width="300" height="450"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <searchBar key="tableHeaderView" contentMode="redraw" id="CsH-Wv-zXc">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <outlet property="delegate" destination="-1" id="01P-fa-riE"/>
-                                </connections>
-                            </searchBar>
                             <connections>
                                 <outlet property="dataSource" destination="-1" id="jTF-4Y-6ca"/>
                                 <outlet property="delegate" destination="-1" id="Tfl-kE-1wZ"/>
@@ -127,14 +117,5 @@
                 </mask>
             </variation>
         </view>
-        <searchDisplayController id="0NV-B0-UOd">
-            <connections>
-                <outlet property="delegate" destination="-1" id="6eJ-yS-fwd"/>
-                <outlet property="searchBar" destination="CsH-Wv-zXc" id="aqv-e6-GkH"/>
-                <outlet property="searchContentsController" destination="-1" id="WLN-36-l1U"/>
-                <outlet property="searchResultsDataSource" destination="-1" id="zFx-9B-Oca"/>
-                <outlet property="searchResultsDelegate" destination="-1" id="4o6-pI-Oiu"/>
-            </connections>
-        </searchDisplayController>
     </objects>
 </document>
