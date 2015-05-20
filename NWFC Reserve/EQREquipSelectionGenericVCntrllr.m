@@ -894,6 +894,11 @@
 
 -(void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     
+    if (self.mySearchController.active){
+        [self hideTheButtons];
+    }
+    
+    
     NSString *searchString = [self.mySearchController.searchBar text];
     
     if ([searchString isEqualToString:@""]){
@@ -916,40 +921,38 @@
     [self updateSearchResultsForSearchController:self.mySearchController];
 }
 
-- (void)willPresentSearchController:(UISearchController *)searchController{
+- (void)hideTheButtons{
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        
+        self.editNotesButton.alpha = 0.3;
+        self.addMiscellaneousButton.alpha = 0.3;
+        self.continueButton.alpha = 0.3;
+        self.listAllEquipButton.alpha = 0.3;
+    }];
     
     [self.editNotesButton setEnabled:NO];
-    self.editNotesButton.alpha = 0.2;
-    
     [self.addMiscellaneousButton setEnabled:NO];
-    self.addMiscellaneousButton.alpha = 0.2;
-    
     [self.continueButton setEnabled:NO];
-    self.continueButton.alpha = 0.2;
-    
     [self.listAllEquipButton setEnabled:NO];
-    self.listAllEquipButton.alpha = 0.2;
     
 }
 
-- (void)willDismissSearchController:(UISearchController *)searchController{
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
     
+    [UIView animateWithDuration:0.25 animations:^{
+        
+        self.editNotesButton.alpha = 1.0;
+        self.addMiscellaneousButton.alpha = 1.0;
+        self.continueButton.alpha = 1.0;
+        self.listAllEquipButton.alpha = 1.0;
+    }];
     
     [self.editNotesButton setEnabled:YES];
-    self.editNotesButton.alpha = 1.0;
-    
     [self.addMiscellaneousButton setEnabled:YES];
-    self.addMiscellaneousButton.alpha = 1.0;
-    
     [self.continueButton setEnabled:YES];
-    self.continueButton.alpha = 1.0;
-    
     [self.listAllEquipButton setEnabled:YES];
-    self.listAllEquipButton.alpha = 1.0;
-    
-    
 }
-
 
 
 #pragma mark - Content Filtering
