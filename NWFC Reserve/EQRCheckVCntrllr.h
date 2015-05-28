@@ -10,7 +10,7 @@
 #import "EQRDistIDPickerTableVC.h"
 #import "EQRWebData.h"
 
-@interface EQRCheckVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRDistIDPickerDelegate, UIPopoverControllerDelegate, EQRWebDataDelegate>
+@interface EQRCheckVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRDistIDPickerDelegate, UIPopoverControllerDelegate, EQRWebDataDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) NSString* scheduleRequestKeyID;
 @property BOOL marked_for_returning;

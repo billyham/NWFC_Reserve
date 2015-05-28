@@ -1033,6 +1033,34 @@
         return;
     }
     
+    //2 strings to use in message text
+    NSString *userName = staffManager.currentStaffUser.first_and_last;
+    NSString *typeOfMark;
+    if ([self.myProperty isEqualToString:@"prep_flag"]){
+        typeOfMark = @"Prepped";
+    }else if ([self.myProperty isEqualToString:@"checkout_flag"]){
+        typeOfMark = @"Checked Out";
+    }else if ([self.myProperty isEqualToString:@"checkin_flag"]){
+        typeOfMark = @"Checked in";
+    }else if ([self.myProperty isEqualToString:@"shelf_flag"]) {
+        typeOfMark = @"Shelved";
+    }else{
+        typeOfMark = @"Error in TypeOfMark";
+    }
+
+    UIAlertView *alertConfirmation = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Mark as %@", typeOfMark] message:[NSString stringWithFormat:@"Stamped with staff signature: %@", userName] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    
+    [alertConfirmation show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if (buttonIndex == 1){
+        [self confirmMarkAsComplete];
+    }
+}
+
+-(void)confirmMarkAsComplete{
     
     //make special note if any of the joins in the ivar array are not complete
     BOOL foundOutstandingItem = NO;
@@ -1040,9 +1068,9 @@
     for (EQRScheduleTracking_EquipmentUnique_Join* join in self.arrayOfEquipJoins){
         
         if ([join respondsToSelector:NSSelectorFromString(self.myProperty)]){
-         
+            
             SEL thisSelector = NSSelectorFromString(self.myProperty);
-
+            
             NSString* thisLiteralProperty = [join performSelector:thisSelector];
             
             if (([thisLiteralProperty isEqualToString:@""]) || (thisLiteralProperty == nil)){
@@ -1085,8 +1113,9 @@
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];
-
+    
 }
+
 #pragma clang diagnostic pop
 
 

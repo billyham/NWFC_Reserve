@@ -88,6 +88,10 @@
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
 @property (strong, nonatomic) UIPopoverController* myAddEquipPopover;
 
+//alerts
+@property (strong, nonatomic) UIAlertView *confirmationAlert;
+@property (strong, nonatomic) UIAlertView *sendEmailAlert;
+
 @property BOOL inEditModeFlag;
 @property BOOL aChangeWasMade;
 
@@ -558,6 +562,8 @@
     
     UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Send Email" message:@"Message options:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Student Confirmation", @"Send Blank Email", nil];
     
+    self.sendEmailAlert = alertView;
+    
     [alertView show];
 }
 
@@ -627,6 +633,32 @@
 
 -(IBAction)confirm:(id)sender{
     
+    //MUST CHECK THAT THE USER HAS LOGGED IN FIRST:
+    EQRStaffUserManager* staffManager = [EQRStaffUserManager sharedInstance];
+    if (!staffManager.currentStaffUser){
+        
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Current User" message:@"Please log in as a user before marking an item complete or incomplete" delegate:[self presentingViewController] cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+            
+            [alert show];
+        }];
+        
+        return;
+    }
+    
+    //2 strings to use in message text
+    NSString *userName = staffManager.currentStaffUser.first_and_last;
+    
+    UIAlertView *alertConfirmation = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Mark as Confirmed"] message:[NSString stringWithFormat:@"Stamped with staff signature: %@", userName] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    
+    self.confirmationAlert = alertConfirmation;
+    
+    [alertConfirmation show];
+}
+
+-(void)confirmedTheConfirm{
+    
     //get staff user id
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     NSString* staffUserKeyID = staffUserManager.currentStaffUser.key_id;
@@ -644,9 +676,10 @@
     NSArray* thirdArray = [NSArray arrayWithObjects:@"staff_confirmation_date", dateString, nil];
     NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
     
-    NSString* returnKey = [webData queryForStringWithLink:@"EQSetConfirmation.php" parameters:topArray];
+    [webData queryForStringWithLink:@"EQSetConfirmation.php" parameters:topArray];
+//    NSLog(@"this is the return key id: %@", returnKey);
     
-    NSLog(@"this is the return key id: %@", returnKey);
+    [self composeEmail];
     
     //hide right side to indicate completion
     [self.rightView setHidden:YES];
@@ -1473,20 +1506,30 @@
     
     //0 is cancel, 1 is use template, 2 is blank email
     
-    switch (buttonIndex) {
-        case 0:
-            break;
-            
-        case 1:
-            [self confirmWithEmail:self];
-            break;
-            
-        case 2:
-            [self sendEmail];
-            break;
-            
-        default:
-            break;
+    
+    if (alertView == self.sendEmailAlert){
+        switch (buttonIndex) {
+            case 0:
+                break;
+                
+            case 1:
+                [self confirmWithEmail:self];
+                break;
+                
+            case 2:
+                [self sendEmail];
+                break;
+                
+            default:
+                break;
+        }
+    }
+    
+    if (alertView == self.confirmationAlert){
+        
+        if (buttonIndex == 1){
+            [self confirmedTheConfirm];
+        }
     }
     
 }
