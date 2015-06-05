@@ -258,7 +258,7 @@
             NSDictionary* arrayAtt14 = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName,
                                         paraStyle, NSParagraphStyleAttributeName,
                                         nil];
-            NSAttributedString* thisHereAttStringAgain = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"   _____   %@\r", miscJoin.name] attributes:arrayAtt14];
+            NSAttributedString* thisHereAttStringAgain = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"   __|__   %@\r", miscJoin.name] attributes:arrayAtt14];
             
             [self.summaryTotalAtt appendAttributedString:thisHereAttStringAgain];
         }
