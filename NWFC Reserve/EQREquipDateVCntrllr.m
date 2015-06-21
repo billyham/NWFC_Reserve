@@ -73,7 +73,9 @@
     
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     requestManager.request.request_date_begin = self.pickUpDate;
+    requestManager.request.request_time_begin = self.pickUpDate;
     requestManager.request.request_date_end = self.returnDate;
+    requestManager.request.request_time_end = self.returnDate;
     
 }
 
@@ -201,8 +203,17 @@
         //also receive actions from time pickers
         [[(EQREditorExtendedDateVC*)viewController pickupTimeField] addTarget:self action:@selector(receivePickUpDate:) forControlEvents:UIControlEventValueChanged];
         [[(EQREditorExtendedDateVC*)viewController returnTimeField] addTarget:self action:@selector(receiveReturnDate:) forControlEvents:UIControlEventValueChanged];
+        
+        [[(EQREditorExtendedDateVC*)viewController pickupDateField] setDate:self.pickUpDate animated:YES];
+        [[(EQREditorExtendedDateVC*)viewController pickupTimeField] setDate:self.pickUpDate animated:YES];
+        [[(EQREditorExtendedDateVC*)viewController returnDateField] setDate:self.returnDate animated:YES];
+        [[(EQREditorExtendedDateVC*)viewController returnTimeField] setDate:self.returnDate animated:YES];
+        
+    }else if([viewController class] == [EQREditorDateVCntrllr class] ){
+        
+        [[(EQREditorDateVCntrllr*)viewController pickupDateField] setDate:self.pickUpDate animated:YES];
+        [[(EQREditorDateVCntrllr*)viewController returnDateField] setDate:self.returnDate animated:YES];
     }
-    
 }
 
 
@@ -312,9 +323,11 @@
     //assign pu date to the scheduleRequest
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     requestManager.request.request_date_begin = self.pickUpDate;
+    requestManager.request.request_time_begin = self.pickUpDate;
     
     //MUST also send returnd date because it always change due to the minimumDate property
     requestManager.request.request_date_end = tempReturnDate;
+    requestManager.request.request_time_end = tempReturnDate;
     
     self.datePickupSelectionFlag = YES;
 }
@@ -343,6 +356,7 @@
     //assign return date to the scheduleRequest
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     requestManager.request.request_date_end = self.returnDate;
+    requestManager.request.request_time_end = self.returnDate;
 }
 
 

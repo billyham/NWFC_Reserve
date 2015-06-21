@@ -534,8 +534,8 @@
     NSDateFormatter* dateFormatForTime = [[NSDateFormatter alloc] init];
     [dateFormatForTime setLocale:usLocale];
     [dateFormatForTime setDateFormat:@"HH:mm"];
-    NSString* timeBeginStringPartOne = [dateFormatForTime stringFromDate:self.request.request_date_begin];
-    NSString* timeEndStringPartOne = [dateFormatForTime stringFromDate:self.request.request_date_end];
+    NSString* timeBeginStringPartOne = [dateFormatForTime stringFromDate:self.request.request_time_begin];
+    NSString* timeEndStringPartOne = [dateFormatForTime stringFromDate:self.request.request_time_end];
     NSString* timeBeginString = [NSString stringWithFormat:@"%@:00", timeBeginStringPartOne];
     NSString* timeEndString = [NSString stringWithFormat:@"%@:00", timeEndStringPartOne];
     
@@ -917,6 +917,25 @@
     //the PHP call
     self.arrayOfEquipUniqueItemsByDateCollision = [self getArrayOfEquipUniquesWithBeginDate:dateBeginString EndDate:dateEndString];
     
+    
+    //remove duplicate equipUniqueItems so they don't get double counted in the next step
+    NSMutableArray *arrayOfEquipUniqueItemsByDataCollisionDeDuped = [NSMutableArray arrayWithCapacity:1];
+    for (EQREquipUniqueItem *thisItem in self.arrayOfEquipUniqueItemsByDateCollision){
+        BOOL addMeToTheArray = YES;
+        for (EQREquipUniqueItem *thisOtherItem in arrayOfEquipUniqueItemsByDataCollisionDeDuped){
+            if ([thisItem.key_id isEqualToString:thisOtherItem.key_id]){
+                //found a match to an existing uniqueItem, so dismiss me
+                addMeToTheArray = NO;
+                break;
+            }
+        }
+        if (addMeToTheArray){
+            [arrayOfEquipUniqueItemsByDataCollisionDeDuped addObject:thisItem];
+        }
+    }
+    
+    //assign de-duped array to property
+    self.arrayOfEquipUniqueItemsByDateCollision = arrayOfEquipUniqueItemsByDataCollisionDeDuped;
     
     //Update the array that tracks the COUNT of equipTitleItems
     //loop through arrayOfEquipUniqueItems

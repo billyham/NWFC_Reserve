@@ -1146,7 +1146,7 @@
     
     //add the notes
     chosenItem.notes = self.notesText;
-    NSLog(@"these are the notes >>%@<<", chosenItem.notes);
+//    NSLog(@"these are the notes >>%@<<", chosenItem.notes);
     
     //add contact information
     NSString* email;

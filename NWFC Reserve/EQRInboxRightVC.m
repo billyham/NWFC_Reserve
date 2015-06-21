@@ -1102,11 +1102,10 @@
     [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(returnToStandardDate:) forControlEvents:UIControlEventTouchUpInside];
     
     //need to set the date and time
-    myDateViewController.pickupDateField.date = self.myScheduleRequest.request_date_begin;
-    myDateViewController.pickupTimeField.date = self.myScheduleRequest.request_time_begin;
-    myDateViewController.returnDateField.date = self.myScheduleRequest.request_date_end;
-    myDateViewController.returnTimeField.date = self.myScheduleRequest.request_time_end;
-    
+    myDateViewController.pickupDateField.date = [self.myDayDateVC retrievePickUpDate];
+    myDateViewController.pickupTimeField.date = [self.myDayDateVC retrievePickUpDate];
+    myDateViewController.returnDateField.date = [self.myDayDateVC retrieveReturnDate];
+    myDateViewController.returnTimeField.date = [self.myDayDateVC retrieveReturnDate];
     
     //assign content VC as ivar (necessary, because VCs always need to be retained)
     self.myDayDateVC = myDateViewController;
@@ -1127,8 +1126,8 @@
     [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(showExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
     
     //need to set the date
-    myDateViewController.pickupDateField.date = self.myScheduleRequest.request_date_begin;
-    myDateViewController.returnDateField.date = self.myScheduleRequest.request_date_end;
+    myDateViewController.pickupDateField.date = [self.myDayDateVC retrievePickUpDate];
+    myDateViewController.returnDateField.date = [self.myDayDateVC retrieveReturnDate];
     
     //assign content VC as ivar
     self.myDayDateVC = myDateViewController;

@@ -857,10 +857,10 @@
     [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(returnToStandardDate:) forControlEvents:UIControlEventTouchUpInside];
     
     //need to set the date and time
-    myDateViewController.pickupDateField.date = self.pickUpDateDate;
-    myDateViewController.pickupTimeField.date = self.pickUpDateDate;
-    myDateViewController.returnDateField.date = self.returnDateDate;
-    myDateViewController.returnTimeField.date = self.returnDateDate;
+    myDateViewController.pickupDateField.date = [self.myDateVC retrievePickUpDate];
+    myDateViewController.pickupTimeField.date = [self.myDateVC retrievePickUpDate];
+    myDateViewController.returnDateField.date = [self.myDateVC retrieveReturnDate];
+    myDateViewController.returnTimeField.date = [self.myDateVC retrieveReturnDate];
     
     
     //assign content VC as ivar (necessary, because VCs always need to be retained)
@@ -882,8 +882,8 @@
     [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(showExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
     
     //need to set the date
-    myDateViewController.pickupDateField.date = self.pickUpDateDate;
-    myDateViewController.returnDateField.date = self.returnDateDate;
+    myDateViewController.pickupDateField.date = [self.myDateVC retrievePickUpDate];
+    myDateViewController.returnDateField.date = [self.myDateVC retrieveReturnDate];
     
     //assign content VC as ivar
     self.myDateVC = myDateViewController;
