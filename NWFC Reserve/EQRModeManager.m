@@ -42,9 +42,26 @@
 }
 
 
--(void)enableDemoMode{
+-(void)enableDemoMode:(BOOL)demoModeIsOn{
     
+    //change user defaults with new string text
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     
+    NSString *setStringForDefaults;
+    if (demoModeIsOn){
+        setStringForDefaults = @"yes";
+        self.isInDemoMode = YES;
+    }else{
+        setStringForDefaults = @"no";
+        self.isInDemoMode = NO;
+    }
+    
+    NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                            setStringForDefaults, @"demoModeIsOn"
+                            , nil];
+    
+    [defaults setObject:newDic forKey:@"demoModeIsOn"];
+    [defaults synchronize];
 }
 
 

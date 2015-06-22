@@ -20,6 +20,6 @@
 -(void)enableStaffMode;
 -(void)enableManagerMode;
 
--(void)enableDemoMode;
+-(void)enableDemoMode:(BOOL)demoModeIsOn;
 
 @end

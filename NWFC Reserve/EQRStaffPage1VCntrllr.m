@@ -186,7 +186,7 @@
         
         //set singleton
         EQRModeManager* modeManager = [EQRModeManager sharedInstance];
-        modeManager.isInDemoMode = YES;
+        [modeManager enableDemoMode:YES];
         
         
     }else{
@@ -201,7 +201,7 @@
         
         //set singleton
         EQRModeManager* modeManager = [EQRModeManager sharedInstance];
-        modeManager.isInDemoMode = NO;
+        [modeManager enableDemoMode:NO];
     }
     
     //inform other VCs that they need to reload their data

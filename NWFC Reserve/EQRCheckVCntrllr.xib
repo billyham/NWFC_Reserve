@@ -15,6 +15,7 @@
                 <outlet property="noteView" destination="LCR-FF-L8e" id="mhk-yq-WZk"/>
                 <outlet property="rightSubView" destination="sls-74-3hL" id="c20-pd-zsi"/>
                 <outlet property="searchBoxView" destination="Nbu-3Q-0PJ" id="0ic-st-Was"/>
+                <outlet property="tableTopGuideConstraint" destination="1wS-NF-SRP" id="j37-lS-F0A"/>
                 <outlet property="updateLabel" destination="j4E-ZN-M9v" id="oqh-Hd-D9D"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -28,7 +29,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3kH-Fl-Al8" userLabel="View - status display">
-                            <rect key="frame" x="178" y="0.0" width="590" height="100"/>
+                            <rect key="frame" x="178" y="50" width="590" height="100"/>
                             <subviews>
                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j4E-ZN-M9v" userLabel="Text View - display status">
                                     <rect key="frame" x="20" y="0.0" width="552" height="100"/>
@@ -47,7 +48,7 @@
                                 <constraint firstAttribute="trailing" secondItem="j4E-ZN-M9v" secondAttribute="trailing" constant="18" id="z4N-gp-79k"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sls-74-3hL" userLabel="View - right body">
+                        <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sls-74-3hL" userLabel="View - right body">
                             <rect key="frame" x="178" y="0.0" width="590" height="974"/>
                             <subviews>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="fVz-SU-K6t">
@@ -85,7 +86,7 @@
                                     </constraints>
                                 </view>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="fVz-SU-K6t" firstAttribute="top" secondItem="sls-74-3hL" secondAttribute="top" constant="50" id="1wS-NF-SRP"/>
                                 <constraint firstItem="fVz-SU-K6t" firstAttribute="leading" secondItem="sls-74-3hL" secondAttribute="leading" id="4Wm-K3-e6w"/>
@@ -137,7 +138,7 @@
                                     </connections>
                                 </button>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9pr-dk-qkw">
-                                    <rect key="frame" x="20" y="65" width="30.5" height="21"/>
+                                    <rect key="frame" x="20" y="65" width="31" height="21"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="21" id="IfM-kX-UqX"/>
                                     </constraints>
@@ -174,7 +175,7 @@
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notes" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8PK-sl-nJT">
-                                    <rect key="frame" x="74" y="372" width="30.5" height="21"/>
+                                    <rect key="frame" x="74" y="372" width="31" height="21"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="21" id="YCB-2X-APm"/>
                                     </constraints>
@@ -260,7 +261,7 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="3kH-Fl-Al8" firstAttribute="top" secondItem="5b2-Dd-rG3" secondAttribute="top" id="07p-fl-qSV"/>
+                        <constraint firstItem="3kH-Fl-Al8" firstAttribute="top" secondItem="5b2-Dd-rG3" secondAttribute="top" constant="50" id="07p-fl-qSV"/>
                         <constraint firstAttribute="bottom" secondItem="sls-74-3hL" secondAttribute="bottom" constant="50" id="Crl-9S-7fM"/>
                         <constraint firstAttribute="trailing" secondItem="3kH-Fl-Al8" secondAttribute="trailing" id="Kfh-bS-w0I"/>
                         <constraint firstItem="sls-74-3hL" firstAttribute="leading" secondItem="DTX-f9-bSI" secondAttribute="trailing" id="QCa-bq-EtL"/>

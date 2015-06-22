@@ -13,6 +13,7 @@
 #import "EQRWebData.h"
 #import "EQRContactNameItem.h"
 #import "EQRInboxLeftTableVC.h"
+#import "EQRModeManager.h"
 
 @interface EQRAppDelegate ()
 
@@ -52,6 +53,8 @@
     
     NSDictionary* EQRKioskModeIsOn = @{@"kioskModeIsOn":@"no"};
     
+    NSDictionary *EQRDemoModeIsOn = @{@"demoModeIsOn":@"no"};
+    
     
     NSDictionary* appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
                                  EQRWebDataUrl, @"url",
@@ -59,6 +62,7 @@
                                  EQRCurrentCampTermCode, @"campTerm",
                                  EQRDefaultStaffUserKeyID, @"staffUserKey",
                                  EQRKioskModeIsOn, @"kioskModeIsOn",
+                                 EQRDemoModeIsOn, @"demoModeIsOn",
                                  nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
@@ -103,6 +107,13 @@
         staffUserManager.currentStaffUser = contactObject;
     }
     
+    //set to demo mode if it was last in demo mode
+    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
+    NSString *currentDemoMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"demoModeIsOn"] objectForKey:@"demoModeIsOn"];
+    if ([currentDemoMode isEqualToString:@"yes"]){
+        modeManager.isInDemoMode = YES;
+    }
+    
     return YES;
 }
 							
@@ -134,7 +145,8 @@
         [staffUserManager goToKioskMode:YES];
     }
     
-    //set preferred display modes on slitviews
+    
+    //set preferred display modes on splitviews
     UIApplication* thisApp = [UIApplication sharedApplication];
     NSArray* originalArray = [(UITabBarController*)thisApp.keyWindow.rootViewController viewControllers];
     for (UIViewController* VC in originalArray){

@@ -96,6 +96,8 @@
         self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
         [UIView setAnimationsEnabled:YES];
         
+        [self.demoModeSwitch setOn:YES];
+        
     }else{
         
         //set prompt
@@ -105,9 +107,23 @@
         //set color of navigation bar
         self.navigationController.navigationBar.barTintColor = nil;
         [UIView setAnimationsEnabled:YES];
+        
+        [self.demoModeSwitch setOn:NO];
     }
     
     [super viewWillAppear:animated];
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+    BOOL isInKioskMode = [staffUserManager currentKioskMode];
+    if (isInKioskMode){
+        [self changeUserInteractionAndAlphaForKioskMode:YES];
+    }else{
+        [self changeUserInteractionAndAlphaForKioskMode:NO];
+    }
+    
 }
 
 
@@ -209,7 +225,7 @@
         
         //set singleton
         EQRModeManager* modeManager = [EQRModeManager sharedInstance];
-        modeManager.isInDemoMode = YES;
+        [modeManager enableDemoMode:YES];
         
         [self.delegate demoModeChanged:YES];
         
@@ -225,7 +241,7 @@
         
         //set singleton
         EQRModeManager* modeManager = [EQRModeManager sharedInstance];
-        modeManager.isInDemoMode = NO;
+        [modeManager enableDemoMode:NO];
         
         [self.delegate demoModeChanged:NO];
     }
@@ -245,17 +261,7 @@
         
         [staffUserManager goToKioskMode:YES];
         
-        [self.demoModeSwitch setUserInteractionEnabled:NO];
-        UITableViewCell *cell2 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
-        UITableViewCell *cell3 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
-        UITableViewCell *cell4 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1]];
-        [cell2 setUserInteractionEnabled:NO];
-        cell2.alpha = 0.5;
-        [cell3 setUserInteractionEnabled:NO];
-        cell3.alpha = 0.5;
-        [cell4 setUserInteractionEnabled:NO];
-        cell4.alpha = 0.5;
-        
+        [self changeUserInteractionAndAlphaForKioskMode:YES];
         
         setStringForDefaults = @"yes";
         
@@ -300,16 +306,7 @@
         
         [staffUserManager goToKioskMode:NO];
         
-        [self.demoModeSwitch setUserInteractionEnabled:YES];
-        UITableViewCell *cell2 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
-        UITableViewCell *cell3 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
-        UITableViewCell *cell4 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1]];
-        [cell2 setUserInteractionEnabled:YES];
-        cell2.alpha = 1.0;
-        [cell3 setUserInteractionEnabled:YES];
-        cell3.alpha = 1.0;
-        [cell4 setUserInteractionEnabled:YES];
-        cell4.alpha = 1.0;
+        [self changeUserInteractionAndAlphaForKioskMode:NO];
         
         setStringForDefaults = @"no";
         
@@ -325,6 +322,38 @@
         self.passwordPopover = nil;
         
         [self.delegate kioskModeChanged:NO];
+    }
+    
+}
+
+-(void)changeUserInteractionAndAlphaForKioskMode:(BOOL)isInKioskMode{
+    
+    if (isInKioskMode == YES){
+        
+        [self.demoModeSwitch setUserInteractionEnabled:NO];
+        UITableViewCell *cell2 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+        UITableViewCell *cell3 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
+        UITableViewCell *cell4 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1]];
+        [cell2 setUserInteractionEnabled:NO];
+        cell2.alpha = 0.5;
+        [cell3 setUserInteractionEnabled:NO];
+        cell3.alpha = 0.5;
+        [cell4 setUserInteractionEnabled:NO];
+        cell4.alpha = 0.5;
+        
+    }else{
+        
+        [self.demoModeSwitch setUserInteractionEnabled:YES];
+        UITableViewCell *cell2 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+        UITableViewCell *cell3 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
+        UITableViewCell *cell4 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1]];
+        [cell2 setUserInteractionEnabled:YES];
+        cell2.alpha = 1.0;
+        [cell3 setUserInteractionEnabled:YES];
+        cell3.alpha = 1.0;
+        [cell4 setUserInteractionEnabled:YES];
+        cell4.alpha = 1.0;
+        
     }
     
 }

@@ -628,6 +628,11 @@
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection {
     
+    //test if in search, tap out
+    if (self.mySearchController.active){
+        return;
+    }
+    
     for(AVMetadataMachineReadableCodeObject *recognizedObject in metadataObjects) {
         
         BOOL alreadyInArray = NO;
@@ -977,7 +982,7 @@
     self.updateLabel.text = [self.updateLabel.text stringByAppendingString:[NSString stringWithFormat:@"%@    \n", updateText]];
     
     //lower collectionView to reveal update display
-    self.tableTopGuideConstraint.constant = 100.f;
+    self.tableTopGuideConstraint.constant = 150.f;
     
     [self.myEquipCollection setNeedsUpdateConstraints];
     
