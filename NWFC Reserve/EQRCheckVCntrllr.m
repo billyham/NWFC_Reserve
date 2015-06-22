@@ -32,11 +32,12 @@
 #import "EQRColors.h"
 
 
-@interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate>
+@interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate, UISearchBarDelegate, UISearchResultsUpdating>
 
 @property (strong, nonatomic) EQRScheduleRequestItem* myScheduleRequestItem;
 
 @property (strong, nonatomic) IBOutlet UIView* mainSubView;
+@property (strong, nonatomic) IBOutlet UIView *rightSubView;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* mainSubTopGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* mainSubBottomGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* tableTopGuideConstraint;
@@ -70,7 +71,12 @@
 @property double timeOfLastCallback;
 @property (strong, nonatomic) EQRContactNameItem *tempContact;
 
-
+//searchController
+@property (strong, nonatomic) UISearchController *mySearchController;
+@property (strong, nonatomic) IBOutlet UIView *searchBoxView;
+@property (strong, nonatomic) NSArray *searchResultArrayOfEquipTitles;
+//@property (strong, nonatomic) NSArray *verticalConstraintsForSearchBar;
+//@property (strong, nonatomic) NSArray *horizontalConstraintsForSearchBar;
 
 //for staff user picker
 @property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
@@ -427,6 +433,27 @@
     
     //___________
     
+    //searchcontroller setup
+    self.mySearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    
+    self.mySearchController.searchResultsUpdater = self;
+    
+    self.mySearchController.dimsBackgroundDuringPresentation = NO;
+    self.mySearchController.hidesNavigationBarDuringPresentation = NO;
+    
+    self.mySearchController.searchBar.frame = CGRectMake(0, 0, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
+    
+    [self.searchBoxView addSubview:self.mySearchController.searchBar];
+    
+    //search bar needs constraints???
+    
+    
+    self.mySearchController.searchBar.delegate = self;
+    self.mySearchController.searchBar.searchBarStyle = UISearchBarStyleMinimal;
+    
+    //what does this do?
+    self.definesPresentationContext = YES;
+    
 
     
 }
@@ -458,7 +485,7 @@
         [UIView setAnimationsEnabled:YES];
     }
     
-    [super viewWillAppear:animated];
+ 
     
     //add constraints
     //______this MUST be added programmatically because you CANNOT specify the topLayoutGuide of a VC in a nib______
@@ -494,6 +521,16 @@
     self.mainSubTopGuideConstraint = [constraint_POS_V objectAtIndex:0];
     self.mainSubBottomGuideConstraint = [constraint_POS_VB objectAtIndex:0];
     
+    
+    [super viewWillAppear:animated];
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+
+    //this doesn't really help...
+//    [UIView animateWithDuration:0.1 animations:^{
+//        self.mySearchController.searchBar.frame = CGRectMake(0, 0, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
+//    }];
 }
 
 
@@ -1712,15 +1749,76 @@
 
 
 
+#pragma mark - UISearchResultsUpdating
+
+-(void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    
+    if (self.mySearchController.active){
+        
+    }
+    
+    
+    NSString *searchString = [self.mySearchController.searchBar text];
+    
+    if ([searchString isEqualToString:@""]){
+        searchString = @" ";
+    }
+    
+    //    NSLog(@"inside updateSearchResultsForSearchController with search text: %@", searchString);
+    
+    NSString *scope = nil;
+    
+    [self filterContentForSearchText:searchString scope:scope];
+    
+    [self.myEquipCollection reloadData];
+}
+
+#pragma mark - UISearchBarDelegate
+
+// Workaround for bug: -updateSearchResultsForSearchController: is not called when scope buttons change
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+    [self updateSearchResultsForSearchController:self.mySearchController];
+}
+
+
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
+    
+}
+
+
+#pragma mark - Content Filtering
+
+//Basically, a predicate is an expression that returns a Boolean value (true or false). You specify the search criteria in the format of NSPredicate and use it to filter data in the array. As the search is on the name of recipe, we specify the predicate as “name contains[c] %@”. The “name” refers to the name property of the Recipe object. NSPredicate supports a wide range of filters including: BEGINSWITH, ENDSWITH, LIKE, MATCHES, CONTAINS. Here we choose to use the “contains” filter. The operator “[c]” means the comparison is case-insensitive.
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope{
+    
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
+    self.searchResultArrayOfEquipTitles = [self.arrayOfEquipJoins filteredArrayUsingPredicate:resultPredicate];
+}
+
+
+
+
 #pragma mark - datasource methods
 
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     
-    return [self.arrayOfEquipJoinsWithStructure count];
+    //test if in search, tap out with 1
+    if (self.mySearchController.active){
+        return 1;
+    }else{
+        return [self.arrayOfEquipJoinsWithStructure count];
+    }
 }
 
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    
+    //test if in search, tap out with count of search array
+    if (self.mySearchController.active){
+        return [self.searchResultArrayOfEquipTitles count];
+    }
     
     return  [[self.arrayOfEquipJoinsWithStructure objectAtIndex:section] count];
 }
@@ -1730,6 +1828,40 @@
     
     //__1__ An equipUniqueJoin item
     //__2__ A MiscJoin Item
+    
+    //_______determine either search results table or normal table
+    if (self.mySearchController.active) {
+        
+        EQRCheckRowCell* cell = [self.myEquipCollection dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
+        
+        //remove subviews
+        for (UIView* view in cell.contentView.subviews){
+            
+            [view removeFromSuperview];
+        }
+        
+        //and reset the cell's background color...
+        cell.backgroundColor = [UIColor whiteColor];
+        
+        //tell the cell's contentVC to be marked for deletion or not
+        BOOL toBeDeleted = NO;
+        for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
+            
+            if ([keyToDelete isEqualToString:[[self.searchResultArrayOfEquipTitles objectAtIndex:indexPath.row] key_id]]){
+                
+                toBeDeleted = YES;
+            }
+        }
+        
+        //cell setup
+        [cell initialSetupWithEquipUnique:[self.searchResultArrayOfEquipTitles objectAtIndex:indexPath.row]
+                                   marked:self.marked_for_returning
+                               switch_num:self.switch_num
+                        markedForDeletion:toBeDeleted
+                                indexPath:indexPath];
+        
+        return cell;
+    }
     
     if ([[[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] respondsToSelector:@selector(schedule_grouping)]){
         
@@ -1811,6 +1943,11 @@
     for (UIView* view in cell.contentView.subviews){
         
         [view removeFromSuperview];
+    }
+    //test if in search mode, and tap out
+    if (self.mySearchController.active){
+        [cell initialSetupWithCategoryText:@"Search Results"];
+        return  cell;
     }
     
     if ([[[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:0] respondsToSelector:@selector(schedule_grouping)]){

@@ -13,8 +13,8 @@
                 <outlet property="myEquipCollection" destination="fVz-SU-K6t" id="iPW-h8-2sF"/>
                 <outlet property="nameTextLabel" destination="XRl-J1-VbJ" id="cE4-b1-0lq"/>
                 <outlet property="noteView" destination="LCR-FF-L8e" id="mhk-yq-WZk"/>
-                <outlet property="tableTopGuideConstraint" destination="08l-ad-hN8" id="IDz-E7-bpx"/>
-                <outlet property="tablebottomGuideConstraint" destination="gB7-Wp-ptH" id="cCF-3p-qbj"/>
+                <outlet property="rightSubView" destination="sls-74-3hL" id="c20-pd-zsi"/>
+                <outlet property="searchBoxView" destination="Nbu-3Q-0PJ" id="0ic-st-Was"/>
                 <outlet property="updateLabel" destination="j4E-ZN-M9v" id="oqh-Hd-D9D"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -47,21 +47,55 @@
                                 <constraint firstAttribute="trailing" secondItem="j4E-ZN-M9v" secondAttribute="trailing" constant="18" id="z4N-gp-79k"/>
                             </constraints>
                         </view>
-                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="fVz-SU-K6t">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sls-74-3hL" userLabel="View - right body">
                             <rect key="frame" x="178" y="0.0" width="590" height="974"/>
-                            <color key="backgroundColor" white="0.96983348540145986" alpha="1" colorSpace="calibratedWhite"/>
-                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="4" id="V8l-3e-9FX">
-                                <size key="itemSize" width="590" height="40"/>
-                                <size key="headerReferenceSize" width="590" height="30"/>
-                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                <inset key="sectionInset" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
-                            </collectionViewFlowLayout>
-                            <cells/>
-                            <connections>
-                                <outlet property="dataSource" destination="-1" id="j04-5t-GrS"/>
-                                <outlet property="delegate" destination="-1" id="2Ig-pb-IV3"/>
-                            </connections>
-                        </collectionView>
+                            <subviews>
+                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="fVz-SU-K6t">
+                                    <rect key="frame" x="0.0" y="50" width="590" height="924"/>
+                                    <color key="backgroundColor" white="0.96983348540145986" alpha="1" colorSpace="calibratedWhite"/>
+                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="4" id="V8l-3e-9FX">
+                                        <size key="itemSize" width="590" height="40"/>
+                                        <size key="headerReferenceSize" width="590" height="30"/>
+                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                        <inset key="sectionInset" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
+                                    </collectionViewFlowLayout>
+                                    <cells/>
+                                    <connections>
+                                        <outlet property="dataSource" destination="-1" id="j04-5t-GrS"/>
+                                        <outlet property="delegate" destination="-1" id="2Ig-pb-IV3"/>
+                                    </connections>
+                                </collectionView>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Usz-rY-9Yi" userLabel="View - right top menu">
+                                    <rect key="frame" x="0.0" y="0.0" width="590" height="50"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nbu-3Q-0PJ" userLabel="View - search box">
+                                            <rect key="frame" x="126" y="3" width="338" height="44"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="44" id="1tX-Xf-jo9"/>
+                                                <constraint firstAttribute="width" constant="338" id="CIu-R5-05q"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="50" id="8oH-sf-BXX"/>
+                                        <constraint firstAttribute="centerX" secondItem="Nbu-3Q-0PJ" secondAttribute="centerX" id="RJk-Jc-CSQ"/>
+                                        <constraint firstItem="Nbu-3Q-0PJ" firstAttribute="top" secondItem="Usz-rY-9Yi" secondAttribute="top" constant="3" id="wfN-sN-M8u"/>
+                                    </constraints>
+                                </view>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="fVz-SU-K6t" firstAttribute="top" secondItem="sls-74-3hL" secondAttribute="top" constant="50" id="1wS-NF-SRP"/>
+                                <constraint firstItem="fVz-SU-K6t" firstAttribute="leading" secondItem="sls-74-3hL" secondAttribute="leading" id="4Wm-K3-e6w"/>
+                                <constraint firstItem="Usz-rY-9Yi" firstAttribute="leading" secondItem="sls-74-3hL" secondAttribute="leading" id="OpK-IA-ukc"/>
+                                <constraint firstAttribute="trailing" secondItem="fVz-SU-K6t" secondAttribute="trailing" id="Z9P-nd-iSb"/>
+                                <constraint firstItem="Usz-rY-9Yi" firstAttribute="top" secondItem="sls-74-3hL" secondAttribute="top" id="dcm-wD-OSs"/>
+                                <constraint firstAttribute="bottom" secondItem="fVz-SU-K6t" secondAttribute="bottom" id="tLF-wz-Soz"/>
+                                <constraint firstAttribute="trailing" secondItem="Usz-rY-9Yi" secondAttribute="trailing" id="xZk-LZ-utU"/>
+                            </constraints>
+                        </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DTX-f9-bSI" userLabel="View - left sidebar">
                             <rect key="frame" x="0.0" y="0.0" width="178" height="1024"/>
                             <subviews>
@@ -227,16 +261,16 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="3kH-Fl-Al8" firstAttribute="top" secondItem="5b2-Dd-rG3" secondAttribute="top" id="07p-fl-qSV"/>
-                        <constraint firstItem="fVz-SU-K6t" firstAttribute="top" secondItem="5b2-Dd-rG3" secondAttribute="top" id="08l-ad-hN8"/>
-                        <constraint firstAttribute="trailing" secondItem="fVz-SU-K6t" secondAttribute="trailing" id="7aH-lu-8hX"/>
+                        <constraint firstAttribute="bottom" secondItem="sls-74-3hL" secondAttribute="bottom" constant="50" id="Crl-9S-7fM"/>
                         <constraint firstAttribute="trailing" secondItem="3kH-Fl-Al8" secondAttribute="trailing" id="Kfh-bS-w0I"/>
+                        <constraint firstItem="sls-74-3hL" firstAttribute="leading" secondItem="DTX-f9-bSI" secondAttribute="trailing" id="QCa-bq-EtL"/>
+                        <constraint firstItem="sls-74-3hL" firstAttribute="top" secondItem="5b2-Dd-rG3" secondAttribute="top" id="RJr-Er-88m"/>
                         <constraint firstItem="pAS-4h-6RA" firstAttribute="leading" secondItem="DTX-f9-bSI" secondAttribute="trailing" id="TKs-Kl-ZWI"/>
+                        <constraint firstAttribute="trailing" secondItem="sls-74-3hL" secondAttribute="trailing" id="WVa-yg-PSi"/>
                         <constraint firstItem="3kH-Fl-Al8" firstAttribute="leading" secondItem="DTX-f9-bSI" secondAttribute="trailing" id="Zf8-mb-MM3"/>
                         <constraint firstAttribute="trailing" secondItem="pAS-4h-6RA" secondAttribute="trailing" id="aJC-3V-1TU"/>
                         <constraint firstAttribute="bottom" secondItem="pAS-4h-6RA" secondAttribute="bottom" id="f9Y-xj-4dY"/>
-                        <constraint firstAttribute="bottom" secondItem="fVz-SU-K6t" secondAttribute="bottom" constant="50" id="gB7-Wp-ptH"/>
                         <constraint firstAttribute="bottom" secondItem="DTX-f9-bSI" secondAttribute="bottom" id="lj8-22-Nci"/>
-                        <constraint firstItem="fVz-SU-K6t" firstAttribute="leading" secondItem="DTX-f9-bSI" secondAttribute="trailing" id="oQc-Rp-xs5"/>
                         <constraint firstItem="DTX-f9-bSI" firstAttribute="leading" secondItem="5b2-Dd-rG3" secondAttribute="leading" id="pGh-eZ-bQl"/>
                         <constraint firstItem="DTX-f9-bSI" firstAttribute="top" secondItem="5b2-Dd-rG3" secondAttribute="top" id="tC5-O9-3x9"/>
                     </constraints>
