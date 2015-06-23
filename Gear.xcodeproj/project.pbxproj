@@ -66,6 +66,10 @@
 		54032FE21872AC9000481D86 /* EQREquipDateVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54032FE11872AC9000481D86 /* EQREquipDateVCntrllr.m */; };
 		54032FE61872D36F00481D86 /* EQRScheduleRequestItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 54032FE51872D36F00481D86 /* EQRScheduleRequestItem.m */; };
 		54032FE91872D39E00481D86 /* EQRScheduleRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 54032FE81872D39E00481D86 /* EQRScheduleRequestManager.m */; };
+		5407292D1B3939AA00D454F5 /* PPSSignatureView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5407292C1B3939AA00D454F5 /* PPSSignatureView.m */; };
+		5407292F1B3939F100D454F5 /* SigCapture.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5407292E1B3939F100D454F5 /* SigCapture.storyboard */; };
+		540729311B393A9700D454F5 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 540729301B393A9700D454F5 /* GLKit.framework */; };
+		540729341B39439100D454F5 /* EQRSigCaptureMainVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 540729331B39439100D454F5 /* EQRSigCaptureMainVC.m */; };
 		540AEA1A19A02FD50092522D /* EQREditorHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 540AEA1919A02FD50092522D /* EQREditorHeaderCell.m */; };
 		540B551A187687D60025FDEE /* EQRGlobals.m in Sources */ = {isa = PBXBuildFile; fileRef = 540B5519187687D60025FDEE /* EQRGlobals.m */; };
 		540B551D18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 540B551C18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m */; };
@@ -284,6 +288,12 @@
 		54032FE51872D36F00481D86 /* EQRScheduleRequestItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleRequestItem.m; sourceTree = "<group>"; };
 		54032FE71872D39E00481D86 /* EQRScheduleRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleRequestManager.h; sourceTree = "<group>"; };
 		54032FE81872D39E00481D86 /* EQRScheduleRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRScheduleRequestManager.m; sourceTree = "<group>"; };
+		5407292B1B3939AA00D454F5 /* PPSSignatureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPSSignatureView.h; sourceTree = "<group>"; };
+		5407292C1B3939AA00D454F5 /* PPSSignatureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPSSignatureView.m; sourceTree = "<group>"; };
+		5407292E1B3939F100D454F5 /* SigCapture.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SigCapture.storyboard; sourceTree = "<group>"; };
+		540729301B393A9700D454F5 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		540729321B39439100D454F5 /* EQRSigCaptureMainVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRSigCaptureMainVC.h; sourceTree = "<group>"; };
+		540729331B39439100D454F5 /* EQRSigCaptureMainVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRSigCaptureMainVC.m; sourceTree = "<group>"; };
 		540AEA1819A02FD50092522D /* EQREditorHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREditorHeaderCell.h; sourceTree = "<group>"; };
 		540AEA1919A02FD50092522D /* EQREditorHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREditorHeaderCell.m; sourceTree = "<group>"; };
 		540B5518187687D60025FDEE /* EQRGlobals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EQRGlobals.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -463,6 +473,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				540729311B393A9700D454F5 /* GLKit.framework in Frameworks */,
 				54BB2D1719F77AF900CF4AE8 /* CoreData.framework in Frameworks */,
 				011353F419B9200300E7BF02 /* MessageUI.framework in Frameworks */,
 				5447B096193C3305004C6DB9 /* CoreMedia.framework in Frameworks */,
@@ -602,6 +613,7 @@
 		438EDCDE182B7ABD0090F882 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				540729301B393A9700D454F5 /* GLKit.framework */,
 				54331E001AB6B59B00AA0E1C /* CloudKit.framework */,
 				54BB2D1619F77AF900CF4AE8 /* CoreData.framework */,
 				011353F319B9200300E7BF02 /* MessageUI.framework */,
@@ -637,6 +649,7 @@
 				018EB75618E5DC8600FBDEA0 /* Request Editor */,
 				542F5FF51923559C001C28CA /* Itinerary */,
 				542F5FF919235784001C28CA /* Check Out/In */,
+				5407292A1B39397000D454F5 /* Signature Capture */,
 				542CC203197B514B00BFD581 /* Inbox */,
 				0115506619956A03009A459F /* Request */,
 				438EDCF7182B7ABE0090F882 /* EQRSecondViewController.h */,
@@ -690,6 +703,18 @@
 				54032FE81872D39E00481D86 /* EQRScheduleRequestManager.m */,
 			);
 			name = "Schedule objects";
+			sourceTree = "<group>";
+		};
+		5407292A1B39397000D454F5 /* Signature Capture */ = {
+			isa = PBXGroup;
+			children = (
+				5407292E1B3939F100D454F5 /* SigCapture.storyboard */,
+				540729321B39439100D454F5 /* EQRSigCaptureMainVC.h */,
+				540729331B39439100D454F5 /* EQRSigCaptureMainVC.m */,
+				5407292B1B3939AA00D454F5 /* PPSSignatureView.h */,
+				5407292C1B3939AA00D454F5 /* PPSSignatureView.m */,
+			);
+			name = "Signature Capture";
 			sourceTree = "<group>";
 		};
 		541167BA18E545630059BA3C /* Art */ = {
@@ -1120,6 +1145,7 @@
 				01735F1E193FAC38007E85C1 /* EQRCheckPrintPage.xib in Resources */,
 				01A4755B18EB9BDF006F32EB /* EQREditorDateVCntrllr.xib in Resources */,
 				54A0DB8F1AB0123400EE4281 /* EQRGenericTextEditor.xib in Resources */,
+				5407292F1B3939F100D454F5 /* SigCapture.storyboard in Resources */,
 				5497F5041A1DCA79008A7E52 /* EQRClassPickerVC.xib in Resources */,
 				54263FFC1AAF043D0095797E /* tab_settings.png in Resources */,
 				54263FED1AAF03490095797E /* tabInbox@2x.png in Resources */,
@@ -1184,6 +1210,7 @@
 				54A0DB8E1AB0123400EE4281 /* EQRGenericTextEditor.m in Sources */,
 				01B4830519AE8290009F15F6 /* EQRInboxLeftTableVC.m in Sources */,
 				438EDCF6182B7ABE0090F882 /* EQRReserveTopVCntrllr.m in Sources */,
+				540729341B39439100D454F5 /* EQRSigCaptureMainVC.m in Sources */,
 				541167BD18E5458A0059BA3C /* EQRNavBarDatesView.m in Sources */,
 				0109F95E18E11A8B0069BE6A /* EQRHeaderCellForSchedule.m in Sources */,
 				54E046EF192499E9006912F9 /* EQRItineraryRowCell.m in Sources */,
@@ -1240,6 +1267,7 @@
 				01600B3C18CA53080006D75A /* EQRHeaderCellTemplate.m in Sources */,
 				438EDCF0182B7ABE0090F882 /* EQRAppDelegate.m in Sources */,
 				5402D234186C242F0091C080 /* EQRClassItem.m in Sources */,
+				5407292D1B3939AA00D454F5 /* PPSSignatureView.m in Sources */,
 				54BB2D1A19F77BB200CF4AE8 /* Gear.xcdatamodeld in Sources */,
 				54ECF1E81998A9D900298996 /* EQRQuickViewPage3VCntrllr.m in Sources */,
 				010E2CFB18E6293B000B7711 /* EQRColors.m in Sources */,

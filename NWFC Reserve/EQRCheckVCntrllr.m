@@ -1592,6 +1592,20 @@
 }
 
 
+#pragma mark - capture signature
+
+-(IBAction)captureSig:(id)sender{
+    
+    UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"SigCapture" bundle:nil];
+    UIViewController *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"main"];
+    [self presentViewController:newView animated:YES completion:^{
+        
+        
+    }];
+    
+}
+
+
 #pragma mark - webdata delegate methods
 
 -(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
