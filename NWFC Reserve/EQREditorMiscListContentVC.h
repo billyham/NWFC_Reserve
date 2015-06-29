@@ -11,7 +11,10 @@
 @interface EQREditorMiscListContentVC : UIViewController
 
 @property (strong, nonatomic) IBOutlet UIButton* myDeleteButton;
+@property (strong, nonatomic) IBOutlet UIButton *myMiscEditButton;
 @property (strong, nonatomic) IBOutlet UILabel* myLabel;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* labelTrailingConstraint;
+
+
 
 @end

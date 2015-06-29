@@ -71,6 +71,8 @@
 		540B551D18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 540B551C18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m */; };
 		541167BD18E5458A0059BA3C /* EQRNavBarDatesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 541167BC18E5458A0059BA3C /* EQRNavBarDatesView.m */; };
 		541167C018E54FB80059BA3C /* EQRNavBarTopBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 541167BF18E54FB80059BA3C /* EQRNavBarTopBar.m */; };
+		5413905F1B3BC1BD0041281D /* EQRCheckCellContentAltVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5413905D1B3BC1BD0041281D /* EQRCheckCellContentAltVC.m */; };
+		541390601B3BC1BD0041281D /* EQRCheckCellContentAltVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5413905E1B3BC1BD0041281D /* EQRCheckCellContentAltVC.xib */; };
 		5414F8AE1A931F7A007A38B2 /* EQRDateRangeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5414F8AD1A931F7A007A38B2 /* EQRDateRangeVC.m */; };
 		5416F99F1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 5416F99D1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.m */; };
 		5416F9A01918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5416F99E1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.xib */; };
@@ -294,6 +296,9 @@
 		541167BC18E5458A0059BA3C /* EQRNavBarDatesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRNavBarDatesView.m; sourceTree = "<group>"; };
 		541167BE18E54FB80059BA3C /* EQRNavBarTopBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRNavBarTopBar.h; sourceTree = "<group>"; };
 		541167BF18E54FB80059BA3C /* EQRNavBarTopBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRNavBarTopBar.m; sourceTree = "<group>"; };
+		5413905C1B3BC1BD0041281D /* EQRCheckCellContentAltVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRCheckCellContentAltVC.h; sourceTree = "<group>"; };
+		5413905D1B3BC1BD0041281D /* EQRCheckCellContentAltVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRCheckCellContentAltVC.m; sourceTree = "<group>"; };
+		5413905E1B3BC1BD0041281D /* EQRCheckCellContentAltVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRCheckCellContentAltVC.xib; sourceTree = "<group>"; };
 		5414F8AC1A931F7A007A38B2 /* EQRDateRangeVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRDateRangeVC.h; sourceTree = "<group>"; };
 		5414F8AD1A931F7A007A38B2 /* EQRDateRangeVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRDateRangeVC.m; sourceTree = "<group>"; };
 		5416F99C1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSelectionGenericVCntrllr.h; sourceTree = "<group>"; };
@@ -837,6 +842,9 @@
 				5427C1FD1A135DB200C653B6 /* EQRCheckHeaderCell.xib */,
 				54BD4FBE1A8219F600BA72BA /* EQRCheckRowMiscItemCell.h */,
 				54BD4FBF1A8219F600BA72BA /* EQRCheckRowMiscItemCell.m */,
+				5413905C1B3BC1BD0041281D /* EQRCheckCellContentAltVC.h */,
+				5413905D1B3BC1BD0041281D /* EQRCheckCellContentAltVC.m */,
+				5413905E1B3BC1BD0041281D /* EQRCheckCellContentAltVC.xib */,
 			);
 			name = "Check Out/In";
 			sourceTree = "<group>";
@@ -1113,6 +1121,7 @@
 				54D4548B1A3856F50099DFE4 /* EQRDistIDPickerTableVC.xib in Resources */,
 				5493CA8F1990942F008A9221 /* EQRStaffUserPickerViewController.xib in Resources */,
 				54457ED21935B7B900E9061A /* EQRCheckCellContentVCntrllr.xib in Resources */,
+				541390601B3BC1BD0041281D /* EQRCheckCellContentAltVC.xib in Resources */,
 				5431456C197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib in Resources */,
 				54263FF71AAF043D0095797E /* tab_day@2x.png in Resources */,
 				545547CC197F987C001AC986 /* GenericLeftArrow.png in Resources */,
@@ -1192,6 +1201,7 @@
 				54E2FDE71A88AF9B00B51D45 /* EQRPasswordEntryVC.m in Sources */,
 				542CC20D197B56B100BFD581 /* EQRInboxCellContentVCntrllr.m in Sources */,
 				541E54971ADB562B00EE8909 /* EQRSettings2TableVC.m in Sources */,
+				5413905F1B3BC1BD0041281D /* EQRCheckCellContentAltVC.m in Sources */,
 				5416F99F1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.m in Sources */,
 				54A375B41A40040C00FD8A7B /* EQRNotesVC.m in Sources */,
 				01C79939189C723300D29625 /* EQREquipSummaryVCntrllr.m in Sources */,

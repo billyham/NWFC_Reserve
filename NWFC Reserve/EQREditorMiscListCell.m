@@ -8,10 +8,14 @@
 
 #import "EQREditorMiscListCell.h"
 #import "EQRColors.h"
+#import "EQRWebData.h"
 
 @interface EQREditorMiscListCell ()
 @property (strong, nonatomic) EQRMiscJoin* myMiscJoin;
 @property (nonatomic, strong) NSString* myKey_id;
+
+@property (nonatomic, strong) EQRGenericTextEditor *myGenericTextEditor;
+
 @end
 
 @implementation EQREditorMiscListCell
@@ -45,6 +49,7 @@
     //hide or show the delete button
     if (editModeFlag == NO){
         [self.myContentVC.myDeleteButton setHidden:YES];
+        [self.myContentVC.myMiscEditButton setHidden:YES];
         
         self.myContentVC.labelTrailingConstraint.constant = 2.f;
     }
@@ -89,9 +94,11 @@
     self.myContentVC.myDeleteButton.reversesTitleShadowWhenHighlighted = YES;
     self.myContentVC.myDeleteButton.userInteractionEnabled = YES;
     
-    //target of button
+    //target of delete button
     [self.myContentVC.myDeleteButton addTarget:self action:@selector(deleteEquipItem:) forControlEvents:UIControlEventTouchUpInside];
     
+    //target of edit button
+    [self.myContentVC.myMiscEditButton addTarget:self action:@selector(editMiscText:) forControlEvents:UIControlEventTouchUpInside];
     
     //label
     self.myContentVC.myLabel.text = miscJoin.name;
@@ -102,7 +109,7 @@
 -(void)enterEditMode{
     
     //shorten issue text and show edit button
-    self.myContentVC.labelTrailingConstraint.constant = 62.f;
+    self.myContentVC.labelTrailingConstraint.constant = 100.f;
     
     [UIView animateWithDuration:0.25 animations:^{
         
@@ -111,6 +118,7 @@
     } completion:^(BOOL finished) {
         
         [self.myContentVC.myDeleteButton setHidden:NO];
+        [self.myContentVC.myMiscEditButton setHidden:NO];
     }];
 }
 
@@ -125,6 +133,7 @@
         [self.myContentVC.view layoutIfNeeded];
         
         [self.myContentVC.myDeleteButton setHidden:YES];
+        [self.myContentVC.myMiscEditButton setHidden:YES];
         
     } completion:^(BOOL finished) {
         
@@ -157,6 +166,55 @@
         
         self.toBeDeletedFlag = NO;
     }
+}
+
+
+-(IBAction)editMiscText:(id)sender{
+    
+    EQRGenericTextEditor *textEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
+    self.myGenericTextEditor = textEditor;
+    self.myGenericTextEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    self.myGenericTextEditor.delegate = self;
+    
+    [self.myGenericTextEditor initalSetupWithTitle:@"Edit Miscellaneous" subTitle:@"Change Text" currentText:self.myMiscJoin.name keyboard:nil returnMethod:@"miscTextDidChange:"];
+    
+    [self.myContentVC presentViewController:self.myGenericTextEditor animated:YES completion:^{
+        
+        
+    }];
+    
+    
+}
+
+-(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod{
+    
+    self.myGenericTextEditor.delegate = nil;
+    
+    [self.myGenericTextEditor dismissViewControllerAnimated:YES completion:^{
+        
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        [self performSelector:NSSelectorFromString(returnMethod) withObject:returnText];
+#pragma clang diagnostic pop
+        
+        self.myGenericTextEditor = nil;
+    }];
+}
+
+
+-(void)miscTextDidChange:(NSString *)returnText{
+    
+    self.myMiscJoin.name = returnText;
+    self.myContentVC.myLabel.text = returnText;
+    
+    //_____!!!!!  send to data layer  !!!_______
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    NSArray *oneArray = @[@"name", returnText];
+    NSArray *twoArray = @[@"key_id", self.myMiscJoin.key_id];
+    NSArray *topArray = @[oneArray, twoArray];
+    
+    NSString *returnKey = [webData queryForStringWithLink:@"EQAlterMiscJoinName.php" parameters:topArray];
+    NSLog(@"this is the return key: %@", returnKey);
 }
 
 

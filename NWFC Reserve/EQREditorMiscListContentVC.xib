@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQREditorMiscListContentVC">
@@ -10,6 +9,7 @@
                 <outlet property="labelTrailingConstraint" destination="iDg-XG-atm" id="xrK-pG-sYK"/>
                 <outlet property="myDeleteButton" destination="m4x-e4-TRm" id="X2f-aw-O5L"/>
                 <outlet property="myLabel" destination="BZm-OJ-Rjs" id="cI6-5R-wDB"/>
+                <outlet property="myMiscEditButton" destination="rPR-fc-ZqN" id="lPk-eX-tUc"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -19,7 +19,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="277" placeholderIntrinsicHeight="35" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="277" translatesAutoresizingMaskIntoConstraints="NO" id="BZm-OJ-Rjs">
-                    <rect key="frame" x="7" y="0.0" width="277" height="35"/>
+                    <rect key="frame" x="7" y="0.0" width="227" height="35"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="35" id="J9W-YU-oyn"/>
                     </constraints>
@@ -38,12 +38,24 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rPR-fc-ZqN">
+                    <rect key="frame" x="253" y="3" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="dUH-Wf-IBy"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <state key="normal" title="Edit">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="m4x-e4-TRm" secondAttribute="trailing" constant="13" id="EVt-f4-N7M"/>
+                <constraint firstItem="rPR-fc-ZqN" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="3" id="SRq-ew-asB"/>
                 <constraint firstItem="m4x-e4-TRm" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="3" id="bLV-3D-fZA"/>
-                <constraint firstAttribute="trailing" secondItem="BZm-OJ-Rjs" secondAttribute="trailing" constant="62" id="iDg-XG-atm"/>
+                <constraint firstAttribute="trailing" secondItem="BZm-OJ-Rjs" secondAttribute="trailing" constant="112" id="iDg-XG-atm"/>
+                <constraint firstAttribute="trailing" secondItem="rPR-fc-ZqN" secondAttribute="trailing" constant="63" id="n86-IQ-Ybv"/>
                 <constraint firstItem="BZm-OJ-Rjs" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="qZh-8S-L9l"/>
                 <constraint firstItem="BZm-OJ-Rjs" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="7" id="t4Z-NE-S9K"/>
             </constraints>

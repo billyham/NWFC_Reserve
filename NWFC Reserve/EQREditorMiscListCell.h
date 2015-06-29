@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "EQREditorMiscListContentVC.h"
 #import "EQRMiscJoin.h"
+#import "EQRGenericTextEditor.h"
 
 @protocol EQREditorMiscCellDelegate;
 
-@interface EQREditorMiscListCell : UICollectionViewCell{
+@interface EQREditorMiscListCell : UICollectionViewCell <EQRGenericTextEditorDelegate> {
     __weak id <EQREditorMiscCellDelegate> delegate;
 }
 
@@ -23,6 +24,10 @@
 -(void)initialSetupWithMiscJoin:(EQRMiscJoin*)miscJoin deleteFlag:(BOOL)deleteFlag editMode:(BOOL)editModeFlag;
 -(void)enterEditMode;
 -(void)leaveEditMode;
+
+//generic text editor delegate method
+-(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod;
+
 
 @end
 
