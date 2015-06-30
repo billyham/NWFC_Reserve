@@ -264,6 +264,12 @@
 
 -(void)renewTheViewWithRequestManager:(EQRScheduleRequestManager*)requestManager{
     
+    //first, renew the list of uniqueItems
+    [requestManager retrieveAllEquipUniqueItems];
+    
+    
+    
+    
     //_______********  try allocating the gear list here... *****______
     
     //must entirely build or rebuild list available equipment as the user could go back and change the dates at anytime

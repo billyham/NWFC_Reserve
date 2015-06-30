@@ -629,10 +629,24 @@
         //add to array of arrays
         if (addFlag){
             
-            [tempListOfUniqueItemsJustRequested addObject:listOfAllUniqueKeys];
+            //____!!!!!!  objects added recently may not be in the arrayOfEquipUniqueItemsWithSubarray   !!!!!!_____
+            //____!!!!!!   will crash if adding empty array   !!!!!!_____
+            if ([listOfAllUniqueKeys count] > 0){
+                [tempListOfUniqueItemsJustRequested addObject:listOfAllUniqueKeys];
+            }
         }
     }
     //______the result is a nested array of just the titleItems requested, with sub_arrays of ALL uniqueItems
+    
+    
+    //if not items are in the tempListOfUniqueItemsJustRequests, then fail gracefully....
+    //not true!!!!!  it could just be a misc item!!!!!!
+//    if ([tempListOfUniqueItemsJustRequested count] < 1){
+////        NSLog(@"failing gracefully in requestManager > justConfirm");
+//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to identify part of the gear list, please modify the request in Inbox with the correct gear" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+//        [alertView show];
+//        return;
+//    }
     
     
     //____now remove the unique items that have date collisions

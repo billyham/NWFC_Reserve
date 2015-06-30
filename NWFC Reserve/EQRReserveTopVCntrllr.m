@@ -239,18 +239,19 @@
         [self.myContactPickerVC replaceDefaultContactArrayWith:noneArray];
     }];
     
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
-    //refresh the list of ALL equipUniqueItems
-    //_______!!!!!!!!!   if this fails because the database url is wrong, it doesn't get loaded until AFTER the first request is made
-    //________!!!!!!!!!  resulting in the WRONG equipUnique key (Canon XA10 key)
-    NSArray *returnArray = [requestManager retrieveAllEquipUniqueItems];
-    
-    if (returnArray == nil){
-//        NSLog(@"returned array is nil");
-        
-        self.needsToRetrieveAllUniqueEquipItemsFlag = YES;
-    }
+//    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+//    
+//    //refresh the list of ALL equipUniqueItems
+//    //_______!!!!!!!!!   if this fails because the database url is wrong, it doesn't get loaded until AFTER the first request is made
+//    //________!!!!!!!!!  resulting in the WRONG equipUnique key (Canon XA10 key)
+//    NSArray *returnArray = [requestManager retrieveAllEquipUniqueItems];
+//    
+//    if (returnArray == nil){
+////        NSLog(@"returned array is nil");
+//        
+//        self.needsToRetrieveAllUniqueEquipItemsFlag = YES;
+//    }
     
     //hide name list until a type is selected
     [self.myContactPickerVC.view setHidden:YES];
