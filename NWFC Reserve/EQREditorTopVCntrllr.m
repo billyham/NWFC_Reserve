@@ -1265,6 +1265,7 @@
             if ([keyToDelete isEqualToString:[[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] equipUniqueItem_foreignKey]]){
                 
                 toBeDeleted = YES;
+                break;
             }
         }
         
@@ -1287,11 +1288,12 @@
         cell.delegate = self;
         
         BOOL toBeDeleted = NO;
-        for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
+        for (NSString* keyToDelete in self.arrayOfToBeDeletedMiscJoinIDs){
             
-            if ([keyToDelete isEqualToString:[[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] equipUniqueItem_foreignKey]]){
+            if ([keyToDelete isEqualToString:[[[self.arrayOfSchedule_Unique_JoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]]){
                 
                 toBeDeleted = YES;
+                break;
             }
         }
         

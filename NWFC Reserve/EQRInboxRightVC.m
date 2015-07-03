@@ -1699,7 +1699,7 @@
         BOOL toBeDeleted = NO;
         for (NSString* keyToDelete in self.arrayOfToBeDeletedMiscJoins){
             
-            if ([keyToDelete isEqualToString:[[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] equipUniqueItem_foreignKey]]){
+            if ([keyToDelete isEqualToString:[[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]]){
                 
                 toBeDeleted = YES;
             }
