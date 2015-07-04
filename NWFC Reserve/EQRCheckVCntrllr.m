@@ -203,6 +203,9 @@
 
 -(void)initialSetupStage2{
     
+    //force out of search mode
+    self.mySearchController.active = NO;
+    
     self.didLoadEquipJoinsFlag = NO;
     self.didLoadMiscJoinsFlag = NO;
     
@@ -1855,6 +1858,7 @@
             if ([keyToDelete isEqualToString:[[self.searchResultArrayOfEquipTitles objectAtIndex:indexPath.row] key_id]]){
                 
                 toBeDeleted = YES;
+                break;
             }
         }
         
@@ -1888,6 +1892,7 @@
             if ([keyToDelete isEqualToString:[[[self.arrayOfEquipJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]]){
                 
                 toBeDeleted = YES;
+                break;
             }
         }
         
