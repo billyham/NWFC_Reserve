@@ -20,8 +20,23 @@ NSString* EQRColorCalFaculty = @"EQRColorCalFaculty";
 NSString* EQRColorCalYouth = @"EQRColorCalYouth";
 NSString* EQRColorCalInClass = @"EQRColorCalInClass";
 
-NSString* EQRColorNeedsPrep = @"EQRColorNeedsPrep";
-NSString* EQRColorDonePrep = @"EQRColorDonePrep";
+NSString *EQRColorStudentFull = @"EQRColorStudentFull";
+NSString *EQRColorStudentDark = @"EQRColorStudentDark";
+NSString *EQRColorPublicFull = @"EQRColorPublicFull";
+NSString *EQRColorPublicDark = @"EQRColorPublicDark";
+NSString *EQRColorStaffFull = @"EQRColorStaffFull";
+NSString *EQRColorStaffDark = @"EQRColorStaffDark";
+NSString *EQRColorFacultyFull = @"EQRColorFacultyFull";
+NSString *EQRColorFacultyDark = @"EQRColorFacultyDark";
+NSString *EQRColorYouthFull = @"EQRColorYouthFull";
+NSString *EQRColorYouthDark = @"EQRColorYouthDark";
+NSString *EQRColorInClassFull = @"EQRColorInClassFull";
+NSString *EQRColorInClassDark = @"EQRColorInClassDark";
+
+NSString *EQRColorButtonGreen = @"EQRColorButtonGreen";
+
+//NSString* EQRColorNeedsPrep = @"EQRColorNeedsPrep";
+//NSString* EQRColorDonePrep = @"EQRColorDonePrep";
 NSString* EQRColorFilterOn = @"EQRColorFilterOn";
 NSString* EQRColorCoolGreen = @"EQRColorCoolGreen";
 
@@ -36,6 +51,11 @@ NSString* EQRColorIssueSerious = @"EQRColorIssueSerious";
 NSString* EQRColorDemoMode = @"EQRColorDemoMode";
 
 @implementation EQRColors
+
+
+-(UIColor *)colorFromR:(float)red G:(float)green B:(float)blue{
+    return [UIColor colorWithRed:red / 255.0 green:green / 255.0 blue:blue / 255.0 alpha:1.0];
+}
 
 
 +(EQRColors*)sharedInstance{
@@ -91,6 +111,19 @@ NSString* EQRColorDemoMode = @"EQRColorDemoMode";
                          [UIColor colorWithRed:0.88 green:0.65 blue:0.2 alpha:1.0], EQRColorIssueMinor,
                          [UIColor redColor], EQRColorIssueSerious,
                          [UIColor colorWithRed:1.0 green:0.9 blue:0.85 alpha:1.0], EQRColorDemoMode,
+                         [self colorFromR:229 G:243 B:252], EQRColorStudentFull,
+                         [self colorFromR:131 G:196 B:242], EQRColorStudentDark,
+                         [self colorFromR:246 G:223 B:238], EQRColorPublicFull,
+                         [self colorFromR:236 G:133 B:201], EQRColorPublicDark,
+                         [self colorFromR:243 G:224 B:206], EQRColorFacultyFull,
+                         [self colorFromR:229 G:157 B:86], EQRColorFacultyDark,
+                         [self colorFromR:232 G:221 B:208], EQRColorStaffFull,
+                         [self colorFromR:193 G:150 B:93], EQRColorStaffDark,
+                         [self colorFromR:213 G:254 B:243], EQRColorYouthFull,
+                         [self colorFromR:47 G:223 B:188], EQRColorYouthDark,
+                         [self colorFromR:252 G:242 B:225], EQRColorInClassFull,
+                         [self colorFromR:239 G:185 B:80], EQRColorInClassDark,
+                         [self colorFromR:15 G:219 B:116], EQRColorButtonGreen,
                          nil];
     }
 }

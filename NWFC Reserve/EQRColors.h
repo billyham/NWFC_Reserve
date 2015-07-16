@@ -20,8 +20,23 @@ extern NSString* EQRColorCalFaculty;
 extern NSString* EQRColorCalYouth;
 extern NSString* EQRColorCalInClass;
 
-extern NSString* EQRColorNeedsPrep;
-extern NSString* EQRColorDonePrep;
+extern NSString *EQRColorStudentFull;
+extern NSString *EQRColorStudentDark;
+extern NSString *EQRColorPublicFull;
+extern NSString *EQRColorPublicDark;
+extern NSString *EQRColorStaffFull;
+extern NSString *EQRColorStaffDark;
+extern NSString *EQRColorFacultyFull;
+extern NSString *EQRColorFacultyDark;
+extern NSString *EQRColorYouthFull;
+extern NSString *EQRColorYouthDark;
+extern NSString *EQRColorInClassFull;
+extern NSString *EQRColorInClassDark;
+
+extern NSString *EQRColorButtonGreen;
+
+//extern NSString* EQRColorNeedsPrep;
+//extern NSString* EQRColorDonePrep;
 extern NSString* EQRColorFilterOn;
 extern NSString* EQRColorCoolGreen;  //currently not used 5-15-15
 

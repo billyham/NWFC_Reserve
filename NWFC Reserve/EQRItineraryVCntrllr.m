@@ -8,6 +8,7 @@
 
 #import "EQRItineraryVCntrllr.h"
 #import "EQRItineraryRowCell.h"
+#import "EQRItineraryRowCell2.h"
 #import "EQRGlobals.h"
 #import "EQRColors.h"
 #import "EQRScheduleRequestItem.h"
@@ -110,6 +111,9 @@
     
     //register collection view cell
     [self.myMasterItineraryCollection registerClass:[EQRItineraryRowCell class] forCellWithReuseIdentifier:@"Cell"];
+    [self.myMasterItineraryCollection registerClass:[EQRItineraryRowCell2 class] forCellWithReuseIdentifier:@"Cell2"];
+    
+    self.myMasterItineraryCollection.backgroundColor = [UIColor darkGrayColor];
     
     //set initial filter bitmask to 'all'
     self.currentFilterBitmask = EQRFilterAll;
@@ -1547,10 +1551,12 @@
 
 -(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    static NSString* CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"Cell2";
     
     
-    EQRItineraryRowCell* cell = [self.myMasterItineraryCollection dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+//    EQRItineraryRowCell* cell = [self.myMasterItineraryCollection dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    EQRItineraryRowCell2 *cell = [self.myMasterItineraryCollection dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+
     
     //remove subviews
     for (UIView* view in cell.contentView.subviews){

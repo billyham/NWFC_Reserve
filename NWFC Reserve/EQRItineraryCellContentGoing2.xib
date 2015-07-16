@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRItineraryCellContent2VC">
+            <connections>
+                <outlet property="arrow" destination="Prj-BL-fma" id="zER-o3-e1g"/>
+                <outlet property="bigArrow1" destination="GTc-B7-HuR" id="bDP-gf-Fk2"/>
+                <outlet property="bigArrow2" destination="bF4-rv-orC" id="xCz-fD-Fxg"/>
+                <outlet property="button1" destination="J7S-Rw-974" id="WsA-fS-cGX"/>
+                <outlet property="button1Status" destination="GDv-Ha-lS3" id="bVJ-ea-Xd1"/>
+                <outlet property="button2" destination="RZF-l9-XHf" id="Nok-9a-yG6"/>
+                <outlet property="button2Status" destination="Hdk-w8-cvV" id="tya-Ip-sNa"/>
+                <outlet property="detailsButton" destination="vxs-YL-3e5" id="kqt-Hs-wu7"/>
+                <outlet property="requestClass" destination="pSk-Sh-tW0" id="l4Z-wG-R1f"/>
+                <outlet property="requestName" destination="SUZ-Z2-7lk" id="VYZ-rh-1Jg"/>
+                <outlet property="requestRenterType" destination="Que-Uw-LtD" id="mcY-yo-Zi4"/>
+                <outlet property="requestTime" destination="jcB-cD-EKr" id="tU5-hg-TLr"/>
+                <outlet property="subViewFullSize" destination="Xzt-J1-qq5" id="d6p-kQ-WTA"/>
+                <outlet property="textOverButton1" destination="OSc-DU-y7Z" id="no0-OC-pc1"/>
+                <outlet property="textOverButton2" destination="5bp-RU-CAN" id="8Dt-Jt-6iK"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="668" height="100"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xzt-J1-qq5" userLabel="View with arrows">
+                    <rect key="frame" x="0.0" y="0.0" width="668" height="100"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bigArrowPointsRight2.png" translatesAutoresizingMaskIntoConstraints="NO" id="bF4-rv-orC">
+                            <rect key="frame" x="0.0" y="0.0" width="484" height="100"/>
+                        </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bigArrowPointsRight1.png" translatesAutoresizingMaskIntoConstraints="NO" id="GTc-B7-HuR">
+                            <rect key="frame" x="0.0" y="0.0" width="308" height="100"/>
+                        </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="arrowsPointRight.png" translatesAutoresizingMaskIntoConstraints="NO" id="Prj-BL-fma">
+                            <rect key="frame" x="0.0" y="25" width="92" height="50"/>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vxs-YL-3e5">
+                            <rect key="frame" x="19" y="69" width="46" height="30"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <state key="normal" title="Details">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="showQuickView:" destination="-1" eventType="touchUpInside" id="nEN-Db-W6q"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hbW-pI-dMf" userLabel="button 1">
+                    <rect key="frame" x="294" y="0.0" width="170" height="100"/>
+                    <subviews>
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="105 of 109 items not Checked Out" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GDv-Ha-lS3">
+                            <rect key="frame" x="0.0" y="80" width="170" height="21"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="10"/>
+                            <color key="textColor" red="0.68359375" green="0.1107016856" blue="0.13759704240000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J7S-Rw-974">
+                            <rect key="frame" x="48" y="8" width="74" height="67"/>
+                            <state key="normal" image="dottedCircle.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="switch1Fires:" destination="-1" eventType="touchUpInside" id="4WC-H7-LtW"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Prep" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OSc-DU-y7Z">
+                            <rect key="frame" x="56" y="32" width="54" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </view>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X3M-oS-88R" userLabel="button 2">
+                    <rect key="frame" x="486" y="0.0" width="170" height="100"/>
+                    <subviews>
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="105 of 109 items not Checked Out" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hdk-w8-cvV">
+                            <rect key="frame" x="0.0" y="80" width="170" height="21"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="10"/>
+                            <color key="textColor" red="0.68359375" green="0.1107016856" blue="0.13759704240000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RZF-l9-XHf">
+                            <rect key="frame" x="48" y="8" width="74" height="67"/>
+                            <state key="normal" image="dottedCircle.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="switch2Fires:" destination="-1" eventType="touchUpInside" id="alK-IE-bGQ"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Check Out" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5bp-RU-CAN">
+                            <rect key="frame" x="58" y="29" width="53" height="30"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </view>
+                <view opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m2f-gz-Haj" userLabel="text box">
+                    <rect key="frame" x="70" y="0.0" width="261" height="100"/>
+                    <subviews>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Student" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Que-Uw-LtD">
+                            <rect key="frame" x="16" y="46" width="221" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Digital Movie Making for 6-8 Starting July 28, 2015 at 9:15 AM" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pSk-Sh-tW0">
+                            <rect key="frame" x="16" y="65" width="210" height="35"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="8:30 PM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jcB-cD-EKr">
+                            <rect key="frame" x="16" y="6" width="221" height="21"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="First and Last Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SUZ-Z2-7lk">
+                            <rect key="frame" x="16" y="27" width="221" height="21"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="arrowsPointRight.png" width="71" height="38"/>
+        <image name="bigArrowPointsRight1.png" width="307" height="98"/>
+        <image name="bigArrowPointsRight2.png" width="486" height="98"/>
+        <image name="dottedCircle.png" width="67" height="67"/>
+    </resources>
+</document>
