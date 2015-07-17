@@ -175,8 +175,7 @@
             self.contentVC.subViewFullSize.backgroundColor = [fullColor colorWithAlphaComponent:0.9];
         }
         
-    } else {
-        // status must be equal to 2
+    } else {           // status must be equal to 2
         
         //set first and second swith to on
         [self makeButtonTinted:self.contentVC.button1];
@@ -209,7 +208,7 @@
             self.contentVC.button1Status.textColor = [UIColor redColor];
             self.contentVC.button2Status.textColor = [UIColor whiteColor];
             
-        }else{ //status must be 2
+        }else{       //status must be 2
             self.contentVC.textOverButton1.text = @"Prepped";
             self.contentVC.textOverButton2.text = @"Checked Out";
 
@@ -259,11 +258,6 @@
     //assign time
     self.contentVC.requestTime.text = timeString;
     
-    //update button label
-    [self updateButtonLabels];
-    
-
-    
 }
 
 -(void)makeButtonTinted:(UIButton *)button{
@@ -278,106 +272,55 @@
 }
 
 
--(BOOL)checkForJoinWarnings:(EQRScheduleTracking_EquipmentUnique_Join *)join{
-    
-    BOOL returnValue = NO;
-//    NSString *buttonText;
-    
-    //only apply caution to switch 1 if it is on
-    if (self.contentVC.myStatus == 1){
-        
-        BOOL foundOutstandingItemSwitch1 = NO;
-        
-        //decide between returning or going
-        
-        if (!self.contentVC.markedForReturning){     //going
-            
-            //            NSLog(@"this is the prep_flag value: %@ this is the join's key_id: %@", join.prep_flag, join.key_id);
-            
-            if (([join.prep_flag isEqualToString:@""]) || (join.prep_flag == nil)){
-                
-                foundOutstandingItemSwitch1 = YES;
-//                buttonText = @"Prepped";
-            }
-            
-        }else{              //returning
-            
-            if (([join.checkin_flag isEqualToString:@""]) || (join.checkin_flag == nil)){
-                
-                foundOutstandingItemSwitch1 = YES;
-//                buttonText = @"Checked In";
-            }
-        }
-        
-        if (foundOutstandingItemSwitch1 == YES){
-            
-            self.unTickedJoinCountForButton1++;
-            returnValue = YES;
-            
-            //update button labels
-//            self.contentVC.button1Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)self.unTickedJoinCountForButton1, (long)self.totalJoinCoint, buttonText];
-            
-            self.contentVC.button1Status.hidden = NO;
-        }
-    }
-    
-    //only apply caution to switch 2 if it is on
-    if (self.contentVC.myStatus == 2){
-        
-        BOOL foundOutstandingItemSwitch2 = NO;
-        
-        //decide between returning or going
-        
-        if (!self.contentVC.markedForReturning){
-            //going
-            
-            if (([join.checkout_flag isEqualToString:@""]) || (join.checkout_flag == nil)){
-                
-                foundOutstandingItemSwitch2 = YES;
-//                buttonText = @"Checked Out";
-            }
-            
-        }else{
-            //returning
-            
-            if (([join.shelf_flag isEqualToString:@""]) || (join.shelf_flag == nil)){
-                
-                foundOutstandingItemSwitch2 = YES;
-//                buttonText = @"Shelved";
-            }
-        }
-        
-        if (foundOutstandingItemSwitch2 == YES){
-        
-            self.unTickedJoinCountForButton2++;
-            returnValue = YES;
-            
-            //update button labels
-//            self.contentVC.button2Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)self.unTickedJoinCountForButton2, (long)self.totalJoinCoint, buttonText];
-            
-            self.contentVC.button2Status.hidden = NO;
-        }
-    }
-    return returnValue;
-}
 
--(void)updateButtonLabels{
+
+    
+
+
+-(void)updateButtonLabels:(EQRScheduleRequestItem *)requestItem{
     
     //only apply caution to switch 1 if it is on
     if (!self.contentVC.markedForReturning){
         
-        self.contentVC.button1Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)self.unTickedJoinCountForButton1, (long)self.totalJoinCoint, @"Prepped"];
+        self.contentVC.button1Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)requestItem.unTickedJoinCountForButton1, (long)requestItem.totalJoinCoint, @"Prepped"];
         
-        self.contentVC.button2Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)self.unTickedJoinCountForButton2, (long)self.totalJoinCoint, @"Checked Out"];
+        self.contentVC.button2Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)requestItem.unTickedJoinCountForButton2, (long)requestItem.totalJoinCoint, @"Checked Out"];
         
     }else{
         
-        self.contentVC.button1Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)self.unTickedJoinCountForButton1, (long)self.totalJoinCoint, @"Checked In"];
+        self.contentVC.button1Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)requestItem.unTickedJoinCountForButton1, (long)requestItem.totalJoinCoint, @"Checked In"];
         
-        self.contentVC.button2Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)self.unTickedJoinCountForButton2, (long)self.totalJoinCoint, @"Shelved"];
-        
+        self.contentVC.button2Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)requestItem.unTickedJoinCountForButton2, (long)requestItem.totalJoinCoint, @"Shelved"];
     }
     
+    //hide or unhide labels as appropriate
+    
+    if (self.contentVC.myStatus == 1){
+        
+        //definitely show label for button 2
+        self.contentVC.button2Status.hidden = NO;
+
+        //only show label for button 1 if there are outstanding items
+        if (requestItem.unTickedJoinCountForButton1 > 0){
+            self.contentVC.button1Status.hidden = NO;
+        }else{
+            self.contentVC.button1Status.hidden = YES;
+        }
+        
+    }else if(self.contentVC.myStatus == 2){
+        
+        //only show label for button 2 if there are outstanding items
+        if (requestItem.unTickedJoinCountForButton2 > 0){
+            self.contentVC.button2Status.hidden = NO;
+        }else{
+            self.contentVC.button2Status.hidden = YES;
+        }
+        
+    }else{  //must be status 0
+        self.contentVC.button1Status.hidden = NO;
+        self.contentVC.button2Status.hidden = YES;
+        
+    }
 }
 
 

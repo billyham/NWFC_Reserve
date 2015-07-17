@@ -14,15 +14,15 @@
 
 @interface EQRItineraryRowCell2 : UICollectionViewCell
 
-@property NSInteger totalJoinCoint;
-@property NSInteger unTickedJoinCountForButton1;
-@property NSInteger unTickedJoinCountForButton2;
+//@property NSInteger totalJoinCoint;
+//@property NSInteger unTickedJoinCountForButton1;
+//@property NSInteger unTickedJoinCountForButton2;
 
 
 
 -(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem;
--(BOOL)checkForJoinWarnings:(EQRScheduleTracking_EquipmentUnique_Join *)join;
--(void)updateButtonLabels;
+//-(BOOL)checkForJoinWarnings:(EQRScheduleTracking_EquipmentUnique_Join *)join;
+-(void)updateButtonLabels:(EQRScheduleRequestItem *)requestItem;
 
 
 @end

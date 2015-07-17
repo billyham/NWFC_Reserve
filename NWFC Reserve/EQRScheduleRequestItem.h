@@ -60,6 +60,12 @@
 
 @property BOOL markedForReturn;
 
+//used in itinerary to consolidate info about state of requests to keep from doing DB calls when loading cells
+@property NSInteger totalJoinCoint ;
+@property NSInteger unTickedJoinCountForButton1;
+@property NSInteger unTickedJoinCountForButton2;
+
+
 //-(id)copyWithZone:(NSZone *)zone;
 
 @end

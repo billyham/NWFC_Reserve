@@ -501,23 +501,48 @@
     self.finishedAsyncDBCallForEquipJoins = NO;
     self.finishedAsyncDBCallForMiscJoins = NO;
     
+    //_____update array of scheduleRequests with info about completed and uncompleted joins_____
+    
+    for (EQRScheduleRequestItem* thisItem in self.arrayOfScheduleRequests){
+        for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfJoinsAll){
+            if ([join.scheduleTracking_foreignKey isEqualToString:thisItem.key_id]){
+                thisItem.totalJoinCoint++;
+                
+                //further test if this join item is incomplete
+                if (!thisItem.markedForReturn){  //marked to be out bound
+                    if (([join.prep_flag isEqualToString:@""]) || (join.prep_flag == nil)){
+                        thisItem.unTickedJoinCountForButton1++;
+                    }
+                    
+                    if (([join.checkout_flag isEqualToString:@""]) || (join.checkout_flag == nil)){
+                        thisItem.unTickedJoinCountForButton2++;
+                    }
+                    
+                }else{  //is marked for return
+                    if (([join.checkin_flag isEqualToString:@""]) || (join.checkin_flag == nil)){
+                        thisItem.unTickedJoinCountForButton1++;
+                    }
+                    
+                    if (([join.shelf_flag isEqualToString:@""]) || (join.shelf_flag == nil)){
+                        thisItem.unTickedJoinCountForButton2++;
+                    }
+                }
+            }
+        }
+    }
+
     //tell cells to check for and show warning message
     self.readyToCheckForScheduleWarningsFlag = YES;
     
     NSArray *tempArray = [NSArray arrayWithArray:[self.myMasterItineraryCollection visibleCells]];
-    for (EQRItineraryRowCell *cell in tempArray){
+    for (EQRItineraryRowCell2 *cell in tempArray){
         
         NSInteger tempInt = [[self.myMasterItineraryCollection indexPathForCell:cell] row];
         
         if ([self.arrayOfScheduleRequests count] > tempInt){
             
             EQRScheduleRequestItem *thisItem = [self.arrayOfScheduleRequests objectAtIndex:tempInt];
-            
-            for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfJoinsAll){
-                if ([thisItem.key_id isEqualToString:join.scheduleTracking_foreignKey]){
-                    [cell checkForJoinWarnings:join];
-                }
-            }
+            [cell updateButtonLabels:thisItem];
         }
     }
     
@@ -1403,7 +1428,12 @@
         return;
     }
     
-    NSInteger indexpathRow;
+    NSInteger indexpathRow;\
+    
+    //set some properties at 0
+    [(EQRScheduleRequestItem *)currentThing setTotalJoinCoint:0];
+    [(EQRScheduleRequestItem *)currentThing setUnTickedJoinCountForButton1:0];
+    [(EQRScheduleRequestItem *)currentThing setUnTickedJoinCountForButton2:0];
     
     [self.arrayOfScheduleRequests addObject:currentThing];
     
@@ -1582,31 +1612,14 @@
             //determine if all joins are loaded
             if (self.readyToCheckForScheduleWarningsFlag){
                 
-                cell.totalJoinCoint = 0;
-                cell.unTickedJoinCountForButton1 = 0;
-                cell.unTickedJoinCountForButton2 = 0;
-                
                 EQRScheduleRequestItem* thisItem = [self.arrayOfScheduleRequests objectAtIndex:indexPath.row];
-                for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfJoinsAll){
-                    if ([join.scheduleTracking_foreignKey isEqualToString:thisItem.key_id]){
-                        [cell checkForJoinWarnings:join];
-                        
-                        cell.totalJoinCoint++;
-                    }
-                }
-                
-                [cell updateButtonLabels];
+                [cell updateButtonLabels:thisItem];
             }
             
         }else{ // no, the data is no loaded yet
             
-//            cell.backgroundColor = [UIColor yellowColor];
             return cell;
-            
         }
-        
-        
-        
         
     }else{
         //yes filter
