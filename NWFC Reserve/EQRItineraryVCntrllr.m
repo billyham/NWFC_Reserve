@@ -1582,12 +1582,20 @@
             //determine if all joins are loaded
             if (self.readyToCheckForScheduleWarningsFlag){
                 
+                cell.totalJoinCoint = 0;
+                cell.unTickedJoinCountForButton1 = 0;
+                cell.unTickedJoinCountForButton2 = 0;
+                
                 EQRScheduleRequestItem* thisItem = [self.arrayOfScheduleRequests objectAtIndex:indexPath.row];
                 for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfJoinsAll){
                     if ([join.scheduleTracking_foreignKey isEqualToString:thisItem.key_id]){
                         [cell checkForJoinWarnings:join];
+                        
+                        cell.totalJoinCoint++;
                     }
                 }
+                
+                [cell updateButtonLabels];
             }
             
         }else{ // no, the data is no loaded yet
@@ -1606,10 +1614,6 @@
         [cell initialSetupWithRequestItem:[self.filteredArrayOfScheduleRequests objectAtIndex:indexPath.row]];
 
     }
-    
-    
-    
-    
     
     return cell;
 }

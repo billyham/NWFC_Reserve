@@ -259,6 +259,9 @@
     //assign time
     self.contentVC.requestTime.text = timeString;
     
+    //update button label
+    [self updateButtonLabels];
+    
 
     
 }
@@ -275,7 +278,10 @@
 }
 
 
--(void)checkForJoinWarnings:(EQRScheduleTracking_EquipmentUnique_Join *)join{
+-(BOOL)checkForJoinWarnings:(EQRScheduleTracking_EquipmentUnique_Join *)join{
+    
+    BOOL returnValue = NO;
+//    NSString *buttonText;
     
     //only apply caution to switch 1 if it is on
     if (self.contentVC.myStatus == 1){
@@ -291,6 +297,7 @@
             if (([join.prep_flag isEqualToString:@""]) || (join.prep_flag == nil)){
                 
                 foundOutstandingItemSwitch1 = YES;
+//                buttonText = @"Prepped";
             }
             
         }else{              //returning
@@ -298,10 +305,17 @@
             if (([join.checkin_flag isEqualToString:@""]) || (join.checkin_flag == nil)){
                 
                 foundOutstandingItemSwitch1 = YES;
+//                buttonText = @"Checked In";
             }
         }
         
         if (foundOutstandingItemSwitch1 == YES){
+            
+            self.unTickedJoinCountForButton1++;
+            returnValue = YES;
+            
+            //update button labels
+//            self.contentVC.button1Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)self.unTickedJoinCountForButton1, (long)self.totalJoinCoint, buttonText];
             
             self.contentVC.button1Status.hidden = NO;
         }
@@ -320,6 +334,7 @@
             if (([join.checkout_flag isEqualToString:@""]) || (join.checkout_flag == nil)){
                 
                 foundOutstandingItemSwitch2 = YES;
+//                buttonText = @"Checked Out";
             }
             
         }else{
@@ -328,17 +343,42 @@
             if (([join.shelf_flag isEqualToString:@""]) || (join.shelf_flag == nil)){
                 
                 foundOutstandingItemSwitch2 = YES;
+//                buttonText = @"Shelved";
             }
         }
         
         if (foundOutstandingItemSwitch2 == YES){
+        
+            self.unTickedJoinCountForButton2++;
+            returnValue = YES;
+            
+            //update button labels
+//            self.contentVC.button2Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)self.unTickedJoinCountForButton2, (long)self.totalJoinCoint, buttonText];
             
             self.contentVC.button2Status.hidden = NO;
         }
     }
+    return returnValue;
 }
 
-
+-(void)updateButtonLabels{
+    
+    //only apply caution to switch 1 if it is on
+    if (!self.contentVC.markedForReturning){
+        
+        self.contentVC.button1Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)self.unTickedJoinCountForButton1, (long)self.totalJoinCoint, @"Prepped"];
+        
+        self.contentVC.button2Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)self.unTickedJoinCountForButton2, (long)self.totalJoinCoint, @"Checked Out"];
+        
+    }else{
+        
+        self.contentVC.button1Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)self.unTickedJoinCountForButton1, (long)self.totalJoinCoint, @"Checked In"];
+        
+        self.contentVC.button2Status.text = [NSString stringWithFormat:@"%ld of %ld items not %@", (long)self.unTickedJoinCountForButton2, (long)self.totalJoinCoint, @"Shelved"];
+        
+    }
+    
+}
 
 
 
