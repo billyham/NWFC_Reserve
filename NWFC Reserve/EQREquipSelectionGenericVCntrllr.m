@@ -24,6 +24,7 @@
 @interface EQREquipSelectionGenericVCntrllr () <UISearchResultsUpdating, UISearchBarDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView* mainSubView;
+@property (strong, nonatomic) IBOutlet UIView *dataIsLoadingView;
 @property (strong, nonatomic) NSArray* equipTitleArray;
 @property (strong, nonatomic) NSMutableArray* equipTitleCategoriesList;
 @property (strong, nonatomic) NSMutableArray* equipTitleArrayWithSections;
@@ -32,6 +33,9 @@
 @property (strong, nonatomic) IBOutlet UIButton* listAllEquipButton;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* topGuideLayoutThingy;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* bottomGuideLayoutThingy;
+
+@property BOOL dontReloadTheViewBecauseItWillEraseSelections;
+
 
 //options button
 @property (strong, nonatomic) EQREquipOptionsTableVC* optionsVC;
@@ -75,6 +79,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.dontReloadTheViewBecauseItWillEraseSelections = NO;
     
     //register for notifications
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
@@ -255,6 +261,13 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     
+    if (self.dontReloadTheViewBecauseItWillEraseSelections){
+        self.dataIsLoadingView.hidden = YES;
+        return;
+    }
+    
+//    self.dataIsLoadingView.hidden = NO;
+    
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
         
@@ -268,7 +281,9 @@
     //do everything else
     [self renewTheViewWithRequestManager:requestManager];
     
+    self.dataIsLoadingView.hidden = YES;
     
+    self.dontReloadTheViewBecauseItWillEraseSelections = YES;
 }
 
 

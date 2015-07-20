@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQREquipSelectionGenericVCntrllr">
@@ -9,6 +9,7 @@
                 <outlet property="addMiscellaneousButton" destination="BdW-53-E2C" id="r5q-Fu-Dl1"/>
                 <outlet property="bottomGuideLayoutThingy" destination="1nF-ZA-a2L" id="atb-ya-rh1"/>
                 <outlet property="continueButton" destination="6bK-FM-VHe" id="l7o-BL-vMz"/>
+                <outlet property="dataIsLoadingView" destination="Yod-ik-QIO" id="7Q6-1d-pJg"/>
                 <outlet property="editNotesButton" destination="sdD-j5-3PE" id="LsB-YM-x4y"/>
                 <outlet property="equipCollectionView" destination="Hha-K8-upK" id="RGE-rh-XRI"/>
                 <outlet property="listAllEquipButton" destination="Aq7-zw-7GS" id="l8i-1X-dfP"/>
@@ -98,6 +99,27 @@
                                 <constraint firstAttribute="width" constant="468" id="vDO-UE-0yb"/>
                             </constraints>
                         </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yod-ik-QIO" userLabel="data loading View">
+                            <rect key="frame" x="234" y="362" width="300" height="300"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Data is loading..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hwu-6U-w9Y">
+                                    <rect key="frame" x="86" y="140" width="128.5" height="21"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="21" id="f2f-TV-nqM"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" red="0.94022817460317465" green="0.94022817460317465" blue="0.94022817460317465" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="centerY" secondItem="Hwu-6U-w9Y" secondAttribute="centerY" id="P6Y-Da-cAk"/>
+                                <constraint firstAttribute="centerX" secondItem="Hwu-6U-w9Y" secondAttribute="centerX" id="PN0-ND-BZO"/>
+                                <constraint firstAttribute="width" constant="300" id="lsF-Ik-3Xd"/>
+                                <constraint firstAttribute="height" constant="300" id="uGN-7e-DMo"/>
+                            </constraints>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
@@ -110,11 +132,13 @@
                         <constraint firstItem="6bK-FM-VHe" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="33" id="DGQ-wP-dIG"/>
                         <constraint firstItem="Hha-K8-upK" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="121" id="J4E-eU-HqN"/>
                         <constraint firstAttribute="trailing" secondItem="Hha-K8-upK" secondAttribute="trailing" constant="20" id="JNt-lT-ucX"/>
+                        <constraint firstAttribute="centerX" secondItem="Yod-ik-QIO" secondAttribute="centerX" id="VSM-gg-7Xl"/>
                         <constraint firstItem="8Cb-ae-gFG" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="69" id="f9I-a4-cao"/>
                         <constraint firstItem="sdD-j5-3PE" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="33" id="gdb-NM-m0k"/>
                         <constraint firstItem="sdD-j5-3PE" firstAttribute="leading" secondItem="KF1-XO-Q8h" secondAttribute="leading" constant="20" id="kDT-2T-Rpo"/>
                         <constraint firstAttribute="centerX" secondItem="6bK-FM-VHe" secondAttribute="centerX" id="rWL-xu-aZB"/>
                         <constraint firstItem="BdW-53-E2C" firstAttribute="top" secondItem="KF1-XO-Q8h" secondAttribute="top" constant="33" id="tga-F1-jUP"/>
+                        <constraint firstAttribute="centerY" secondItem="Yod-ik-QIO" secondAttribute="centerY" id="tnq-GH-RvI"/>
                     </constraints>
                 </view>
             </subviews>

@@ -59,7 +59,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	
     
     //add the cancel button
     UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelTheThing:)];
@@ -297,8 +296,7 @@
         }
     }
     
-    
-    
+
     
     self.summaryTextView.attributedText = self.summaryTotalAtt;
 }

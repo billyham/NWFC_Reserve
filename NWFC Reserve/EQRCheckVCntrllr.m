@@ -1062,8 +1062,11 @@
 //    [self renewTheArrayWithScheduleTracking_foreignKey:self.scheduleRequestKeyID];
     [self initialSetupStage2];
     
-    //reload the collection view
-//    [self.myEquipCollection reloadData];
+    //if the collection view is emptied of all items, the structured array is never updated and the collection view never gets reloaded.
+    if ([self.arrayOfEquipJoins count] < 1){
+        self.arrayOfEquipJoinsWithStructure = nil;
+        [self.myEquipCollection reloadData];
+    }
     
     //send note to schedule that a change has been saved
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
