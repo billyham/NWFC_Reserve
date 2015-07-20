@@ -43,6 +43,7 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* tableTopGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* tablebottomGuideConstraint;
 
+@property (strong, nonatomic) IBOutlet UIView *updateView;
 @property (strong, nonatomic) IBOutlet UITextView* updateLabel;
 
 @property (strong, nonatomic) IBOutlet UILabel* nameTextLabel;
@@ -53,6 +54,7 @@
 @property (strong, nonatomic) NSString* myProperty;
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myEquipCollection;
+@property CGPoint myEquipCollectionContentOffset;
 @property (strong, nonatomic) NSMutableArray* arrayOfEquipJoins;
 @property (strong, nonatomic) NSMutableArray* arrayOfMiscJoins;
 @property (strong, nonatomic) NSArray* arrayOfEquipJoinsWithStructure;
@@ -213,9 +215,14 @@
     [self.webDataForEquipJoins stopXMLParsing];
     [self.webDataForMiscJoins stopXMLParsing];
     
+    //_____!!!!! not sure why this is here, adding items and deleting items look better without it.  !!!!!____
     //empty the existing collection view
-    self.arrayOfEquipJoinsWithStructure = nil;
-    [self.myEquipCollection reloadData];
+//    self.arrayOfEquipJoinsWithStructure = nil;
+//    [self.myEquipCollection reloadData];
+    
+    //dim the collection view to indicate it's loading data
+    self.myEquipCollection.alpha = 0.3;
+    self.updateView.alpha = 0.0;
     
     //remove any existing delaytimer
     self.timeOfLastCallback = 0;
@@ -298,6 +305,23 @@
 
 
 -(void)initialSetupStage3{
+
+    //content height minus the window height will result in the maximum offset value
+    float differenceBetweenHeights = self.myEquipCollection.contentSize.height - self.myEquipCollection.frame.size.height;
+    //but it can't be a negative number
+    if (differenceBetweenHeights < 0){
+        differenceBetweenHeights = 0;
+    }
+    if (self.myEquipCollectionContentOffset.y > differenceBetweenHeights){
+        self.myEquipCollectionContentOffset = CGPointMake(0, differenceBetweenHeights);
+    }
+    //move the colleciton view scroll to the place before add or delete was used
+    [self.myEquipCollection setContentOffset:self.myEquipCollectionContentOffset];
+    
+    //un-dim the collection view
+    self.myEquipCollection.alpha = 1.0;
+    self.updateView.alpha = 1.0;
+    
     
     //____set up private request manager______
     
@@ -309,10 +333,12 @@
     
     //set the request as ivar in requestManager
     self.privateRequestManager.request = self.myScheduleRequestItem;
-    
+
+    //________!!!!!!!!!!!!  THIS IS A BIG PERFORMANCE HIT, A FULL 2 SECONDS BEFORE VIEW BECOMES RESPONSIVE   !!!!!!!!__________
+    //____and it they seem unneccesary, tapping on add item generates the same methods___
     //important methods that initiate requestManager ivar arrays
-    [self.privateRequestManager resetEquipListAndAvailableQuantites];
-    [self.privateRequestManager retrieveAllEquipUniqueItems];
+//    [self.privateRequestManager resetEquipListAndAvailableQuantites];
+//    [self.privateRequestManager retrieveAllEquipUniqueItems];
 }
 
 
@@ -1004,6 +1030,9 @@
 
 -(IBAction)deleteMarkedItemsButton:(id)sender{
     
+    //save the current content offset
+    self.myEquipCollectionContentOffset = self.myEquipCollection.contentOffset;
+    
     EQRWebData* webData = [EQRWebData sharedInstance];
     
     //delete the marked scheduleTracking_equip_joins
@@ -1395,11 +1424,11 @@
     CGRect fixedrect4 = [thisButton.superview.superview.superview.superview convertRect:fixedRect3 fromView:thisButton.superview.superview.superview];
     CGRect fixedRect5 = [thisButton.superview.superview.superview.superview.superview convertRect:fixedrect4 fromView:thisButton.superview.superview.superview.superview];
     CGRect fixedRect6 = [thisButton.superview.superview.superview.superview.superview.superview convertRect:fixedRect5 fromView:thisButton.superview.superview.superview.superview.superview];
-//    CGRect fixedRect7 = [thisButton.superview.superview.superview.superview.superview.superview.superview convertRect:fixedRect6 fromView:thisButton.superview.superview.superview.superview.superview.superview];
+    CGRect fixedRect7 = [thisButton.superview.superview.superview.superview.superview.superview.superview convertRect:fixedRect6 fromView:thisButton.superview.superview.superview.superview.superview.superview];
 //    CGRect fixedRect8 = [thisButton.superview.superview.superview.superview.superview.superview.superview.superview convertRect:fixedRect7 fromView:thisButton.superview.superview.superview.superview.superview.superview.superview];
     
     //present popover
-    [self.distIDPopover presentPopoverFromRect:fixedRect6 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self.distIDPopover presentPopoverFromRect:fixedRect7 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
 }
 
@@ -1520,9 +1549,13 @@
     //must manually set the size, cannot be wider than 600px!!!!???? But seems to work ok at 800 anyway???
     self.myEquipSelectionPopover.popoverContentSize = CGSizeMake(700, 600);
     
-    CGRect rect1 = [self.addButton.superview.superview convertRect:self.addButton.frame fromView:self.addButton.superview];
+    //save the current content offset to return to the same place
+    self.myEquipCollectionContentOffset = self.myEquipCollection.contentOffset;
     
-    [self.myEquipSelectionPopover presentPopoverFromRect:rect1 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated: YES];
+    CGRect rect1 = [self.addButton.superview.superview convertRect:self.addButton.frame fromView:self.addButton.superview];
+    CGRect rect2  = [self.addButton.superview.superview.superview convertRect:rect1 fromView:self.addButton.superview.superview];
+    
+    [self.myEquipSelectionPopover presentPopoverFromRect:rect2 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated: YES];
     
     //need to reprogram the target of the save button
     [genericEquipVCntrllr.continueButton removeTarget:genericEquipVCntrllr action:NULL forControlEvents:UIControlEventAllEvents];
@@ -1539,9 +1572,10 @@
     self.myEquipSelectionPopover = nil;
 
     //renew the list of joins by going to the data layer
-//    [self renewTheArrayWithScheduleTracking_foreignKey:self.myScheduleRequestItem.key_id];
+    //    [self renewTheArrayWithScheduleTracking_foreignKey:self.myScheduleRequestItem.key_id];
     [self initialSetupStage2];
     
+    [self.myEquipCollection setContentOffset:self.myEquipCollectionContentOffset];
     
     //this is necessary
 //    [self.myEquipCollection reloadData];
@@ -1623,7 +1657,7 @@
     //set reqeust item property
     self.myScheduleRequestItem = currentThing;
     
-    //set notes for dispaly
+    //set notes for display
     self.notesText = self.myScheduleRequestItem.notes;
     
     
@@ -1644,21 +1678,22 @@
  
     float delayTime = 0.0;
     
-    double currentTime = [[NSDate date] timeIntervalSince1970];
-    
-    if (!self.timeOfLastCallback || (self.timeOfLastCallback == 0)){
-        self.timeOfLastCallback = currentTime;
-    }
-    
-    //delay between calls is 0.05 seconds
-    delayTime = self.timeOfLastCallback - currentTime  + 0.1;
-    
-    //guard against a negative delay
-    if (delayTime < 0.05) delayTime = 0.05;
-    
-    self.timeOfLastCallback = currentTime + delayTime;
-    
-    NSLog(@"this is the delay time: %f", delayTime);
+//    double currentTime = [[NSDate date] timeIntervalSince1970];
+//    
+//    if (!self.timeOfLastCallback || (self.timeOfLastCallback == 0)){
+//        self.timeOfLastCallback = currentTime;
+//    }
+//    
+//    //delay between calls is 0.05 seconds
+//    delayTime = self.timeOfLastCallback - currentTime  + 0.1;
+//    
+//    //guard against a negative delay
+//    if (delayTime < 0.05) delayTime = 0.05;
+//    
+//    self.timeOfLastCallback = currentTime + delayTime;
+//    
+//    NSLog(@"this is the delay time: %f", delayTime);
+
     
     [self performSelector:@selector(addEquipJoinToArrayAfterDelay:) withObject:currentThing afterDelay:delayTime];
     
@@ -1695,59 +1730,67 @@
         return;
     }
     
-    __block NSInteger indexPathSection;
-    __block NSInteger indexPathRow;
-    
-    //sort
+    //expand the array
     self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
     
-    [self.arrayOfEquipJoinsWithStructure enumerateObjectsUsingBlock:^(NSArray *subArray, NSUInteger idx, BOOL *stop) {
-        
-        [subArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx2, BOOL *stop2) {
-            
-            if (obj == currentThing){
-                indexPathRow = idx2;
-                indexPathSection = idx;
-            }
-        }];
-    }];
-    
-    //test if need to create new section
-    BOOL createNewSection = NO;
-    NSInteger countOfSectionInCollectionView;
-    countOfSectionInCollectionView = [self.myEquipCollection numberOfSections];
-    if (([self.arrayOfEquipJoinsWithStructure count] - countOfSectionInCollectionView) > 0 ){
-        createNewSection = YES;
-    }
-    
-    //the new index of the newly added item
-    NSIndexPath *chosenIndexPath = [NSIndexPath indexPathForRow:indexPathRow inSection:indexPathSection];
-    
-    //    NSLog(@"this is the indexPathRow and Section for equipItem: %ld, %ld", (long)indexPathRow, (long)indexPathSection);
-    //    NSLog(@"this is the current number for sections in the collection: %ld", (long)[self.myEquipCollection numberOfSections]);
-    
-    //uptick on the index
-    //    self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
-
+    //________!!!!!!!!!!!   USE THIS TO TURN OFF ANIMATED INSERTIONS   !!!!!!!!!!_________
+    [self.myEquipCollection reloadData];
+    return;
+    //_____________
     
     
-    [self.myEquipCollection performBatchUpdates:^{
     
-        //if necessary, insert section in collection view
-        if (createNewSection){
-            //            NSLog(@"yes, i'm creating a new section");
-            NSIndexSet *indexSet;
-            indexSet = [NSIndexSet indexSetWithIndex:indexPathSection];
-            [self.myEquipCollection insertSections:indexSet];
-        }
-        
-        //insert row in the collection view
-        NSMutableArray *tempArray = [NSMutableArray arrayWithObject:chosenIndexPath];
-        [self.myEquipCollection insertItemsAtIndexPaths:tempArray];
-        
-    } completion:^(BOOL finished) {
-        NSLog(@"finished batch updates");
-    }];
+    
+//    __block NSInteger indexPathSection;
+//    __block NSInteger indexPathRow;
+//    
+//    [self.arrayOfEquipJoinsWithStructure enumerateObjectsUsingBlock:^(NSArray *subArray, NSUInteger idx, BOOL *stop) {
+//        
+//        [subArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx2, BOOL *stop2) {
+//            
+//            if (obj == currentThing){
+//                indexPathRow = idx2;
+//                indexPathSection = idx;
+//            }
+//        }];
+//    }];
+//    
+//    //test if need to create new section
+//    BOOL createNewSection = NO;
+//    NSInteger countOfSectionInCollectionView;
+//    countOfSectionInCollectionView = [self.myEquipCollection numberOfSections];
+//    if (([self.arrayOfEquipJoinsWithStructure count] - countOfSectionInCollectionView) > 0 ){
+//        createNewSection = YES;
+//    }
+//    
+//    //the new index of the newly added item
+//    NSIndexPath *chosenIndexPath = [NSIndexPath indexPathForRow:indexPathRow inSection:indexPathSection];
+//    
+//    //    NSLog(@"this is the indexPathRow and Section for equipItem: %ld, %ld", (long)indexPathRow, (long)indexPathSection);
+//    //    NSLog(@"this is the current number for sections in the collection: %ld", (long)[self.myEquipCollection numberOfSections]);
+//    
+//    //uptick on the index
+//    //    self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
+//
+//    
+//    
+//    [self.myEquipCollection performBatchUpdates:^{
+//    
+//        //if necessary, insert section in collection view
+//        if (createNewSection){
+//            //            NSLog(@"yes, i'm creating a new section");
+//            NSIndexSet *indexSet;
+//            indexSet = [NSIndexSet indexSetWithIndex:indexPathSection];
+//            [self.myEquipCollection insertSections:indexSet];
+//        }
+//        
+//        //insert row in the collection view
+//        NSMutableArray *tempArray = [NSMutableArray arrayWithObject:chosenIndexPath];
+//        [self.myEquipCollection insertItemsAtIndexPaths:tempArray];
+//        
+//    } completion:^(BOOL finished) {
+//        NSLog(@"finished batch updates");
+//    }];
 
     
 
@@ -1906,7 +1949,7 @@
         
         return cell;
         
-    }else{
+    }else{  //a misc item
         
         EQRCheckRowMiscItemCell* cell = [self.myEquipCollection dequeueReusableCellWithReuseIdentifier:@"CellForMiscJoin" forIndexPath:indexPath];
         

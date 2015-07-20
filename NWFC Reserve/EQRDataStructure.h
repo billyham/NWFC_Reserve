@@ -13,9 +13,11 @@
 +(EQRDataStructure*)sharedInstance;
 
 //enter array of any object that has values for equipTitleItem_foreignKey, schedule_grouping, and distinquishing_id)
+//(also need to include EQUIPMENT TITLE??)
 //returns array of arrays, the subarrays are grouped together based on schedule_grouping,
 //the subarrays are populated with ScheduleTracking_EquipmentUnique_Joins
 +(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray;
++(NSArray*)turnFlatArrayToStructuredArrayTheOldWay:(NSArray*)flatArray;
 
 //expands on the method to incorporate seperate MiscJoin objects
 +(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray withMiscJoins:(NSArray*)arrayOfMisc;

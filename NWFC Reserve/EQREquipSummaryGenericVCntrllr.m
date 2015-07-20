@@ -205,10 +205,20 @@
     NSDictionary* arrayAtt10 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
     NSAttributedString* equipHead = [[NSAttributedString alloc] initWithString:@"\r\r\rEquipment Items:\r" attributes:arrayAtt10];
     [self.summaryTotalAtt appendAttributedString:equipHead];
-        
+    
+    
+//    NSLog(@"this is the class in arrayOfEquipJoins: %@", [[requestManager.request.arrayOfEquipmentJoins objectAtIndex:0] class]);
+//    EQRScheduleTracking_EquipmentUnique_Join *thisJoinForTesting = [requestManager.request.arrayOfEquipmentJoins objectAtIndex:0];
+//    NSLog(@"this is the titleForeignKey: %@  this is the schedule_grouping: %@  this is the dist_id: %@",
+//          thisJoinForTesting.equipTitleItem_foreignKey,
+//          thisJoinForTesting.schedule_grouping,
+//          thisJoinForTesting.distinquishing_id);
+    
     // 2. first, cycle through scheduleTracking_equip_joins
     //add structure to the array
-    NSArray* arrayOfEquipmentJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:requestManager.request.arrayOfEquipmentJoins];
+    //________!!!!!!!!!!!  THIS WILL CAUSE A CRASH WHEN USING THE DESIRABLE VERSION OF THE METHOD   !!!!!!!!!!____________
+    //________!!!!!!!!!!!  BECAUSE THERE IS NO VALUE FOR scheduleGrouping or distinguishing_ID in the join objects  !!!!!!!!!____________
+    NSArray* arrayOfEquipmentJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArrayTheOldWay:requestManager.request.arrayOfEquipmentJoins];
     
     //  3. cycle through subarrays and decompose scheduleTracking_EquipmentUniue_Joins to dictionaries with EquipTitleItems and quantities
     NSMutableArray* topArrayOfDecomposedEquipTitlesAndJoins = [NSMutableArray arrayWithCapacity:1];

@@ -51,7 +51,6 @@
 //EQREquipItemCellDelegate protocal methods
 -(NSArray*)retrieveArrayOfEquipJoins;
 -(NSArray*)retrieveArrayOfEquipTitlesWithCountOfUniqueItems;
-
 -(void)addNewRequestEquipJoin:(EQREquipItem*)thisEquipItem;
 -(void)removeRequestEquipJoin:(EQREquipItem*)thisEquipItem;
 -(void)emptyTheArrayOfEquipJoins;

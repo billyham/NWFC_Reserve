@@ -452,6 +452,7 @@
     
     newJoin.equipTitleItem_foreignKey = thisEquipItem.key_id;
     newJoin.scheduleTracking_foreignKey = self.request.key_id;
+    newJoin.schedule_grouping = thisEquipItem.schedule_grouping;
     
     if (self.request.arrayOfEquipmentJoins){
    

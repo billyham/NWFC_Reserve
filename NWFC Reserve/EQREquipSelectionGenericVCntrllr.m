@@ -144,9 +144,7 @@
     //what does this do?
     self.definesPresentationContext = YES;
     
-    //do everything else
-    [self renewTheViewWithRequestManager:requestManager];
-  
+
 }
 
 
@@ -257,17 +255,29 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     
+    EQRScheduleRequestManager* requestManager;
+    if (self.privateRequestManagerFlag){
+        
+        requestManager = self.privateRequestManager;
+        
+    }else{
+        
+        requestManager = [EQRScheduleRequestManager sharedInstance];
+    }
 
-
+    //do everything else
+    [self renewTheViewWithRequestManager:requestManager];
+    
+    
 }
 
 
 -(void)renewTheViewWithRequestManager:(EQRScheduleRequestManager*)requestManager{
     
+
+    //______!!!!!!  where should this go?   !!!!!!_______
     //first, renew the list of uniqueItems
     [requestManager retrieveAllEquipUniqueItems];
-    
-    
     
     
     //_______********  try allocating the gear list here... *****______
@@ -933,13 +943,13 @@
         
         self.editNotesButton.alpha = 0.3;
         self.addMiscellaneousButton.alpha = 0.3;
-        self.continueButton.alpha = 0.3;
+//        self.continueButton.alpha = 0.3;
         self.listAllEquipButton.alpha = 0.3;
     }];
     
     [self.editNotesButton setEnabled:NO];
     [self.addMiscellaneousButton setEnabled:NO];
-    [self.continueButton setEnabled:NO];
+//    [self.continueButton setEnabled:NO];
     [self.listAllEquipButton setEnabled:NO];
     
 }
@@ -950,13 +960,13 @@
         
         self.editNotesButton.alpha = 1.0;
         self.addMiscellaneousButton.alpha = 1.0;
-        self.continueButton.alpha = 1.0;
+//        self.continueButton.alpha = 1.0;
         self.listAllEquipButton.alpha = 1.0;
     }];
     
     [self.editNotesButton setEnabled:YES];
     [self.addMiscellaneousButton setEnabled:YES];
-    [self.continueButton setEnabled:YES];
+//    [self.continueButton setEnabled:YES];
     [self.listAllEquipButton setEnabled:YES];
 }
 

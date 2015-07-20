@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
@@ -17,6 +17,7 @@
                 <outlet property="searchBoxView" destination="Nbu-3Q-0PJ" id="0ic-st-Was"/>
                 <outlet property="tableTopGuideConstraint" destination="1wS-NF-SRP" id="j37-lS-F0A"/>
                 <outlet property="updateLabel" destination="j4E-ZN-M9v" id="oqh-Hd-D9D"/>
+                <outlet property="updateView" destination="3kH-Fl-Al8" id="C8i-Gw-sf0"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
