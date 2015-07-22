@@ -43,7 +43,7 @@
     //... OR provides NSString parameter with scheduleTracking key to pull related objects from database
 
     
-    NSArray* regularArray = [self turnFlatArrayToStructuredArray:flatArray];
+    NSArray* regularArray = [self turnFlatArrayToStructuredArrayTheOldWay:flatArray];
 
     NSMutableArray* sortedTopArrayWithMisc = [NSMutableArray arrayWithCapacity:1];
     [sortedTopArrayWithMisc addObjectsFromArray:regularArray];
