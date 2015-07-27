@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 extern NSString* EQRApplicationKey;
+extern BOOL EQRUseICloud;
 
 //renter type Strings
 extern NSString* EQRRenterStudent;

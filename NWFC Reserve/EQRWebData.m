@@ -7,6 +7,7 @@
 //
 
 #import "EQRWebData.h"
+#import "EQRGlobals.h"
 #import "EQREquipItem.h"
 #import "EQRContactNameItem.h"
 #import "EQRClassItem.h"
@@ -17,6 +18,7 @@
 #import "EQRScheduleRequestItem.h"
 #import "EQRModeManager.h"
 #import "EQRTextElement.h"
+#import "EQRCloudData.h"
 
 @interface EQRWebData ()
 
@@ -67,16 +69,16 @@ const int intEQRTextElement = 10;
 
 +(EQRWebData*)sharedInstance{
     
-    //    static EQRWebData* myInstance = nil;
-    //
-    //    if (!myInstance){
-    //
-    //        myInstance = [[EQRWebData alloc] init];
-    //    }
-    
-    EQRWebData* myInstance = [[EQRWebData alloc] init];
-    
-    return myInstance;
+    if (EQRUseICloud){
+        
+        EQRCloudData *myInstance = [[EQRCloudData alloc] init];
+        return myInstance;
+        
+    }else{
+        
+        EQRWebData* myInstance = [[EQRWebData alloc] init];
+        return myInstance;
+    }
 }
 
 #pragma mark - efficiency methods
