@@ -18,6 +18,7 @@
 @interface EQRAppDelegate ()
 
 @property (strong, nonatomic) UITabBarController* myTabBarController;
+@property BOOL isInitialLaunch;
 
 @end
 
@@ -114,6 +115,8 @@
         modeManager.isInDemoMode = YES;
     }
     
+    self.isInitialLaunch = YES;
+    
     return YES;
 }
 							
@@ -163,6 +166,17 @@
         }
     }
 
+    //set initial seleted tab bar view
+    if (self.isInitialLaunch){
+        UITabBarController *rootViewController = (UITabBarController*)thisApp.keyWindow.rootViewController;
+        NSArray* originalArray2 = [(UITabBarController*)thisApp.keyWindow.rootViewController viewControllers];
+        for (UIViewController* VC in originalArray2){
+            if ([VC.title isEqualToString:@"Settings"]){
+                rootViewController.selectedViewController = VC;
+            }
+        }
+        self.isInitialLaunch = NO;
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
