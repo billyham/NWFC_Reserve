@@ -13,6 +13,7 @@ typedef void (^CompletionBlock) ();
 typedef void (^CompletionBlockWithArray) (NSMutableArray* muteArray);
 typedef void (^CompletionBlockWithNestedArray) (NSMutableArray* nestedMuteArray);
 typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
+typedef void (^CompletionBlockWithString) (NSString *stringReturn);
 
 @protocol EQRWebDataDelegate;
 
@@ -41,6 +42,7 @@ typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
 
 //asynchronous methods, used in conjunction with WebData delegate
 -(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString selector:(SEL)action completion:(CompletionBlockWithBool)completeBlock;
+-(void)queryForStringwithAsync:(NSString *)link parameters:(NSArray *)para completion:(CompletionBlockWithString)completeBlock;
 
 //stop parsing
 -(void)stopXMLParsing;

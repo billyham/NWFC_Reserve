@@ -1601,8 +1601,7 @@
     
     //test if a filter has been applied
     
-    if (self.currentFilterBitmask == EQRFilterAll){
-        //no filter
+    if (self.currentFilterBitmask == EQRFilterAll){          //no filter
         
         //determine if data is loaded
         if ([self.arrayOfScheduleRequests count] > indexPath.row){ //yes, indexed object has arrived
@@ -1621,11 +1620,9 @@
             return cell;
         }
         
-    }else{
-        //yes filter
+    }else{        //yes filter
         
         [cell initialSetupWithRequestItem:[self.filteredArrayOfScheduleRequests objectAtIndex:indexPath.row]];
-
     }
     
     return cell;

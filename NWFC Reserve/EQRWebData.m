@@ -1670,6 +1670,17 @@ const int intEQRTextElement = 10;
 
 #pragma mark - Asynchronous methods
 
+-(void)queryForStringwithAsync:(NSString *)link parameters:(NSArray *)para completion:(CompletionBlockWithString)completeBlock{
+
+    NSString *returnString = [self queryForStringWithLink:link parameters:para];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        completeBlock(returnString);
+    });
+
+}
+
+
 -(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString selector:(SEL)action completion:(CompletionBlockWithBool)completeBlock{
     
     self.completionBlockSignalFlag = NO;

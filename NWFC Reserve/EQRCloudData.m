@@ -14,7 +14,8 @@
 
 @interface EQRCloudData ()
 
-
+//@property BOOL completionBlockSignalFlag;
+@property SEL aSyncSelector;
 
 @end
 
@@ -31,6 +32,8 @@
 #pragma mark - public methods
 
 -(void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock{
+    
+    NSLog(@"queryWithLink with: %@", link);
     
     [self authenticateICloud];
     
@@ -108,6 +111,8 @@
 
 -(NSString*)queryForStringWithLink:(NSString*)link parameters:(NSArray*)para{
     
+    NSLog(@"queryForStringWithLink with: %@", link);
+    
     if ([link isEqualToString:@"EQSetNewContact.php"]){
         
         CKRecord *contactRecord = [[CKRecord alloc] initWithRecordType:@"Contact"];
@@ -133,23 +138,145 @@
             }
         }];
     }
-    
-    
-    
-    
+
     return @"nonsense";
+}
+
+
+-(void)queryForStringwithAsync:(NSString *)link parameters:(NSArray *)para completion:(CompletionBlockWithString)completeBlock{
+    
+    NSLog(@"queryForStringWithAsync with: %@", link);
+    
+    if ([link isEqualToString:@"EQSetNewContact.php"]){
+        
+        CKRecord *contactRecord = [[CKRecord alloc] initWithRecordType:@"Contact"];
+        
+        for (NSArray *subArray in para){
+            contactRecord[[subArray objectAtIndex:0]] = [subArray objectAtIndex:1];
+        }
+        
+        contactRecord[@"decommissioned" ] = @"";
+        
+        CKContainer *myContainer = [CKContainer defaultContainer];
+        CKDatabase *privateDatabase = [myContainer privateCloudDatabase];
+        
+        [privateDatabase saveRecord:contactRecord completionHandler:^(CKRecord *record, NSError *error) {
+            
+            if (!error){
+                //successfully saved record
+                NSLog(@"successfully saved record");
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completeBlock(record.recordID.recordName);
+                });
+                
+            }else{
+                
+                NSLog(@"failed to save record with this error: %@", error);
+            }
+        }];
+    }
 }
 
 
 
 -(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString selector:(SEL)action completion:(CompletionBlockWithBool)completeBlock{
     
+    NSLog(@"queryWithAsync with: %@", link);
+    
+//    self.completionBlockSignalFlag = NO;
+
+    self.aSyncSelector = action;
+    
+    [self authenticateICloud];
+    
+    if ([link isEqualToString:@"EQGetContactNameWithKey.php"]){
+        
+        //        CKDatabase *privateDatabase = [[CKContainer defaultContainer] privateCloudDatabase];
+        //        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"key_id = %@", @"10"];
+        //        CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Contact" predicate:predicate];
+        //        [privateDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+        //            if (error) {
+        //                // Error handling for failed fetch from public database
+        //                NSLog(@"Error handling for failed fetch from private database: %@", error);
+        //            }
+        //            else {
+        //                // Display the fetched records
+        //                NSLog(@"Display the fetched records");
+        //            }
+        //        }];
+        
+    }
+    
+    if ([link isEqualToString:@"EQGetAllContactNames.php"]){
+        
+        CKDatabase *privateDatabase = [[CKContainer defaultContainer] privateCloudDatabase];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"decommissioned != %@", @"1"];
+        CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Contact" predicate:predicate];
+        [privateDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+            if (error) {
+                // Error handling for failed fetch from public database
+                NSLog(@"Error handling for failed fetch from private database: %@", error);
+                completeBlock(NO);
+            }
+            else {
+                // Display the fetched records
+//                NSLog(@"Display the fetched records with count: %ld", (unsigned long)[results count]);
+                
+                for (CKRecord *recordObject in results){
+                    EQRContactNameItem *newRecord = [[EQRContactNameItem alloc] init];
+                    newRecord.key_id = recordObject.recordID.recordName;
+                    newRecord.first_name = [recordObject objectForKey:@"first_name"];
+                    newRecord.last_name = [recordObject objectForKey:@"last_name"];
+                    newRecord.first_and_last = [recordObject objectForKey:@"first_and_last"];
+                    
+                    [self asyncDispatchWithObject:newRecord];
+                }
+                
+                self.delayedCompletionBlock = completeBlock;
+                [self sendAsyncCompletionBlock];
+            }
+        }];
+    }
     
 }
+
+-(void)asyncDispatchWithObject:(id)currentThing {
+
+    if (self.delegateDataFeed != nil){
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [self.delegateDataFeed addASyncDataItem:currentThing toSelector:self.aSyncSelector];
+        });
+    }
+}
+
+
+-(void)sendAsyncCompletionBlock{
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        //___Very importand that this if statement is INSIDE the dispatch
+        if (self.delayedCompletionBlock != nil){
+            
+            NSLog(@"CloudData > says it is sending a completion block" );
+            
+            self.delayedCompletionBlock(YES);
+//            self.delayedCompletionBlock = nil;
+        }
+    });
+}
+
 
 -(void)stopXMLParsing{
     
 }
+
+
+
+
+
 
 
 @end

@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "EQRContactAddNewVC.h"
+#import "EQRWebData.h"
 
 @protocol EQRContactPickerDelegate;
 
 
-@interface EQRContactPickerVC : UIViewController <UITableViewDataSource, UITableViewDelegate, EQRContactAddDelegate, UISearchDisplayDelegate>{
+@interface EQRContactPickerVC : UIViewController <UITableViewDataSource, UITableViewDelegate, EQRContactAddDelegate, UISearchDisplayDelegate, EQRWebDataDelegate>{
     
     __weak id <EQRContactPickerDelegate> delegate;
 }
@@ -25,6 +26,8 @@
 //EQRContactAddDelegate method
 -(void)informAdditionHasHappended:(NSString*)newContactKeyID;
 
+//webData dataFeedDelegate methods
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action;
 
 @end
 

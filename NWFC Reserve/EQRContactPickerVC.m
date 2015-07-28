@@ -7,10 +7,10 @@
 //
 
 #import "EQRContactPickerVC.h"
-#import "EQRWebData.h"
 #import "EQRContactNameItem.h"
 #import "EQRContactAddNewVC.h"
 #import "EQRColors.h"
+#import "EQRGlobals.h"
 
 
 @interface EQRContactPickerVC () <UISearchResultsUpdating, UISearchBarDelegate>
@@ -33,6 +33,9 @@
 //@property (strong, nonatomic) UISearchDisplayController* mySearchDisplayController;
 
 @property (strong, nonatomic) UISearchController *mySearchController;
+
+@property (strong, nonatomic) EQRWebData *webData;
+
 
 
 
@@ -73,7 +76,8 @@
     //what does this do?
     self.definesPresentationContext = YES;
     
-    [self renewTheView];
+    [self renewTheViewCompletion:^{
+    }];
     
 }
 
@@ -83,7 +87,7 @@
 }
 
 
--(void)renewTheView{
+-(void)renewTheViewCompletion:(CompletionBlock)completeBlock{
     
     //when using a substitute array, just reload the data in the table call it good
     if (self.useSubstituteArrayFlag == YES){
@@ -97,42 +101,70 @@
     self.showAllContactsButtonHasBeenTapped = YES;
     [self.addContactButton setTitle:@"Add New Contact" forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
     
+    self.arrayOfContacts = nil;
+    self.arrayOfContactsWithStructure = nil;
+    
     //get ALL contacts ???
     EQRWebData* webData = [EQRWebData sharedInstance];
     
-    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-    
-    [webData queryWithLink:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-       
-        for (EQRContactNameItem* nameItem in muteArray){
-            
-            [tempMuteArray addObject:nameItem];
-        }
-    }];
-    
-    if ([tempMuteArray count] < 1){
+    if (EQRUseICloud){
+        self.webData = webData;
+        self.webData.delegateDataFeed = self;
+        SEL thisSelector = @selector(addToArrayOfContacts:);
         
-        //error handling if 0 is returned
-        NSLog(@"no items in the returned array");
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+            
+            [self.webData queryWithAsync:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+                
+                if (isLoadingFlagUp){
+                    NSLog(@"isLoadingFlagUP is YES");
+                }
+                
+                //_____this is for moving the table to newly created contact but it doesn't work_____
+                completeBlock();
+            }];
+        });
+        
+    }else{
+        
+        NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+        
+        [webData queryWithLink:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+            
+            for (EQRContactNameItem* nameItem in muteArray){
+                
+                [tempMuteArray addObject:nameItem];
+            }
+        }];
+        
+        if ([tempMuteArray count] < 1){
+            
+            //error handling if 0 is returned
+            NSLog(@"no items in the returned array");
+        }
+        
+        //_______move to expand method??_____
+        //alphabatize the name list
+        NSArray* sortedArray = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            
+            NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
+            NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
+            
+            return [string1 compare:string2];
+        }];
+        //__________
+        
+        self.arrayOfContacts = [NSArray arrayWithArray:sortedArray];
+        
+        //put some structure on that array of namesItems
+        self.arrayOfContactsWithStructure = [NSArray arrayWithArray: [self expandFlatArrayToStructuredArray:sortedArray]];
+        
+        [self.tableView reloadData];
+        
+        completeBlock();
     }
     
-    //_______move to expand method??_____
-    //alphabatize the name list
-    NSArray* sortedArray = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-       
-        NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
-        NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
-        
-        return [string1 compare:string2];
-    }];
-    //__________
-    
-    self.arrayOfContacts = [NSArray arrayWithArray:sortedArray];
-    
-    //put some structure on that array of namesItems
-    self.arrayOfContactsWithStructure = [NSArray arrayWithArray: [self expandFlatArrayToStructuredArray:sortedArray]];
-    
-//    [self.tableView reloadData];
 }
 
 
@@ -241,7 +273,8 @@
         
         [self.addContactButton setTitle:@"Add New Contact" forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
         
-        [self renewTheView];
+        [self renewTheViewCompletion:^{
+        }];
         [self.tableView reloadData];
         
     }else{
@@ -259,25 +292,29 @@
 
 -(void)informAdditionHasHappended:(NSString*)newContactKeyID{
     
-    [self renewTheView];
+    NSLog(@"ContactPickerVC > informaAdditionHasHappened");
     
-    __block NSIndexPath* chosenIndexPath;
+    [self.navigationController popViewControllerAnimated:YES];
     
-    //automatically choose the newly created contact
-    [self.arrayOfContactsWithStructure enumerateObjectsUsingBlock:^(NSArray* subarray, NSUInteger idxSection, BOOL *stopInTop) {
+    [self renewTheViewCompletion:^{
         
-        [subarray enumerateObjectsUsingBlock:^(EQRContactNameItem* contactItem, NSUInteger idxRow, BOOL *stopInSub) {
-           
-            if ([contactItem.key_id isEqualToString:newContactKeyID]){
+        __block NSIndexPath* chosenIndexPath;
+        
+        //automatically choose the newly created contact
+        [self.arrayOfContactsWithStructure enumerateObjectsUsingBlock:^(NSArray* subarray, NSUInteger idxSection, BOOL *stopInTop) {
+            
+            [subarray enumerateObjectsUsingBlock:^(EQRContactNameItem* contactItem, NSUInteger idxRow, BOOL *stopInSub) {
                 
-                chosenIndexPath = [NSIndexPath indexPathForRow:idxRow inSection:idxSection];
-            }
+                if ([contactItem.key_id isEqualToString:newContactKeyID]){
+                    
+                    chosenIndexPath = [NSIndexPath indexPathForRow:idxRow inSection:idxSection];
+                }
+            }];
         }];
+        
+        //move table to new contact
+        [self.tableView scrollToRowAtIndexPath:chosenIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }];
-    
-    //move table to new contact
-    [self.tableView scrollToRowAtIndexPath:chosenIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    
 }
 
 #pragma mark - public methods
@@ -286,7 +323,8 @@
 
     if (!substituteContactArray){   //error handling and used when public is selected from renters
         self.useSubstituteArrayFlag = NO;
-        [self renewTheView];
+        [self renewTheViewCompletion:^{
+        }];
         [self.tableView reloadData];
         return;
     }
@@ -330,6 +368,53 @@
     //release addContactVC
     self.addContactVC = nil;
 }
+
+
+#pragma mark - webData dataFeedDelegate methods
+
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    
+    //abort if selector is unrecognized, otherwise crash
+    if (![self respondsToSelector:action]){
+        NSLog(@"cannot perform selector: %@", NSStringFromSelector(action));
+        return;
+    }
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+    
+}
+
+-(void)addToArrayOfContacts:(id)currentThing{
+    
+    NSMutableArray *tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+    
+    if (currentThing){
+        
+        tempMuteArray = [NSMutableArray arrayWithArray:self.arrayOfContacts];
+        [tempMuteArray addObject:currentThing];
+    }
+    
+    //alphabatize the name list
+    NSArray* sortedArray = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
+        NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
+        
+        return [string1 compare:string2];
+    }];
+    //__________
+    
+    self.arrayOfContacts = [NSArray arrayWithArray:sortedArray];
+    
+    //put some structure on that array of namesItems
+    self.arrayOfContactsWithStructure = [NSArray arrayWithArray: [self expandFlatArrayToStructuredArray:sortedArray]];
+
+    [self.tableView reloadData];
+}
+
 
 
 

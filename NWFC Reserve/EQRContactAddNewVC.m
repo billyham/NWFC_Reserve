@@ -75,16 +75,23 @@
                          nil];
     
     EQRWebData* webData = [EQRWebData sharedInstance];
-    NSString* returnString = [webData queryForStringWithLink:@"EQSetNewContact.php" parameters:topArray];
-//    NSLog(@"key for new contact: %@", returnString);
     
-    
-    //alert contactPicker that an update has been made
-    [self.delegate informAdditionHasHappended:returnString];
-    
-    //go back to previous VC
-    [self.navigationController popViewControllerAnimated:YES];
-    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryForStringwithAsync:@"EQSetNewContact.php" parameters:topArray completion:^(NSString *stringReturn) {
+            
+            NSLog(@"this is the return booger: %@", stringReturn);
+            //    NSLog(@"key for new contact: %@", returnString);
+            
+            //continue...
+            //alert contactPicker that an update has been made
+            [self.delegate informAdditionHasHappended:stringReturn];
+            
+            //go back to previous VC
+//            [self.navigationController popViewControllerAnimated:YES];
+        }];
+    });
 }
 
 -(IBAction)cancelButton:(id)sender{

@@ -10,6 +10,7 @@
 
 NSString* EQRApplicationKey = @"3j654FP00o91wer";
 BOOL EQRUseICloud = YES;
+//BOOL EQRUseICloud = NO;
 
 //renter type strings
 NSString* EQRRenterStudent = @"student";
