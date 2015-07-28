@@ -518,7 +518,7 @@
                                     <action selector="receiveContinueAction:" destination="W9r-1m-gIx" eventType="touchUpInside" id="9zf-Tx-is9"/>
                                 </connections>
                             </button>
-                            <datePicker hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="JKh-Fc-SNU">
+                            <datePicker hidden="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="JKh-Fc-SNU">
                                 <rect key="frame" x="224" y="150" width="320" height="216"/>
                                 <date key="date" timeIntervalSinceReferenceDate="410169188.53517598">
                                     <!--2013-12-31 07:53:08 +0000-->
@@ -527,7 +527,7 @@
                                     <action selector="receivePickUpDate:" destination="W9r-1m-gIx" eventType="valueChanged" id="WtO-1V-fsx"/>
                                 </connections>
                             </datePicker>
-                            <datePicker hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="hRx-uz-EVI">
+                            <datePicker hidden="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="hRx-uz-EVI">
                                 <rect key="frame" x="224" y="454" width="320" height="216"/>
                                 <date key="date" timeIntervalSinceReferenceDate="410169200.87450302">
                                     <!--2013-12-31 07:53:20 +0000-->
@@ -541,7 +541,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Return Date and Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tu2-Wb-pwg">
+                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Return Date and Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tu2-Wb-pwg">
                                 <rect key="frame" x="300" y="425" width="168" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
@@ -936,6 +936,40 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Cell" id="JjX-SL-xFZ">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JjX-SL-xFZ" id="2ot-rq-Del">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use Apple CloudKit" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qhq-Si-fXi">
+                                                    <rect key="frame" x="17" y="11" width="185" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="21" id="BN7-7g-PAV"/>
+                                                        <constraint firstAttribute="width" constant="185" id="ghF-t8-5FT"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="mKM-I3-XMg">
+                                                    <rect key="frame" x="678" y="6" width="51" height="31"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="31" id="qon-ev-KCP"/>
+                                                        <constraint firstAttribute="width" constant="49" id="vJE-Be-Mil"/>
+                                                    </constraints>
+                                                    <connections>
+                                                        <action selector="cloudKitDidChange:" destination="uWU-dA-MfO" eventType="valueChanged" id="nI6-Kj-AZJ"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="mKM-I3-XMg" firstAttribute="top" secondItem="2ot-rq-Del" secondAttribute="top" constant="6" id="DqX-wC-KTQ"/>
+                                                <constraint firstItem="Qhq-Si-fXi" firstAttribute="top" secondItem="2ot-rq-Del" secondAttribute="topMargin" constant="3" id="UNj-dI-G5O"/>
+                                                <constraint firstAttribute="trailing" secondItem="mKM-I3-XMg" secondAttribute="trailing" constant="8" id="jwP-zG-iXB"/>
+                                                <constraint firstItem="Qhq-Si-fXi" firstAttribute="leading" secondItem="2ot-rq-Del" secondAttribute="leadingMargin" constant="9" id="vSp-2Q-7pp"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -950,6 +984,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="urlString" destination="FYF-GO-Tbd" id="TB5-yG-Mhp"/>
+                        <outlet property="useCloudKitSwitch" destination="mKM-I3-XMg" id="npa-ht-ZVh"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lId-75-Qij" userLabel="First Responder" sceneMemberID="firstResponder"/>

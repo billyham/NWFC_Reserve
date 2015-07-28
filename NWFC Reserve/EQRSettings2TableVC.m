@@ -14,6 +14,7 @@
 @interface EQRSettings2TableVC ()
 
 @property (strong, nonatomic) IBOutlet UILabel* urlString;
+@property (strong, nonatomic) IBOutlet UISwitch *useCloudKitSwitch;
 @property (strong, nonatomic) EQRGenericTextEditor* genericTextEditor;
 
 @end
@@ -56,6 +57,14 @@
     
     //update navigation bar
     [self updateNavItemPromptWithDemoModeState];
+    
+    //set useCloudKit switch
+    NSString* useCloudKit = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useCloudKit"] objectForKey:@"useCloudKit"];
+    if ([useCloudKit isEqualToString:@"yes"]){
+        [self.useCloudKitSwitch setOn:YES];
+    }else{
+        [self.useCloudKitSwitch setOn:NO];
+    }
     
     [super viewWillAppear:animated];
 }
@@ -139,6 +148,28 @@
     [defaults synchronize];
     
     
+}
+
+
+-(IBAction)cloudKitDidChange:(id)sender{
+    
+    NSString* setStringForDefaults;
+    
+    if (self.useCloudKitSwitch.on){
+        setStringForDefaults = @"yes";
+    }else{
+        setStringForDefaults = @"no";
+    }
+    
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    
+    //change user defaults with new string text
+    NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                            setStringForDefaults, @"useCloudKit"
+                            , nil];
+    
+    [defaults setObject:newDic forKey:@"useCloudKit"];
+    [defaults synchronize];
 }
 
 #pragma mark - table view delegate methods

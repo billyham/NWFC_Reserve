@@ -69,7 +69,9 @@ const int intEQRTextElement = 10;
 
 +(EQRWebData*)sharedInstance{
     
-    if (EQRUseICloud){
+    NSString *useCloudKit = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useCloudKit"] objectForKey:@"useCloudKit"];
+    
+    if ([useCloudKit isEqualToString:@"yes"]){
         
         EQRCloudData *myInstance = [[EQRCloudData alloc] init];
         return myInstance;

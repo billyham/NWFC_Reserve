@@ -56,6 +56,8 @@
     
     NSDictionary *EQRDemoModeIsOn = @{@"demoModeIsOn":@"no"};
     
+    NSDictionary *EQRUseCloudKit = @{@"useCloudKit":@"no"};
+    
     
     NSDictionary* appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
                                  EQRWebDataUrl, @"url",
@@ -64,6 +66,7 @@
                                  EQRDefaultStaffUserKeyID, @"staffUserKey",
                                  EQRKioskModeIsOn, @"kioskModeIsOn",
                                  EQRDemoModeIsOn, @"demoModeIsOn",
+                                 EQRUseCloudKit, @"useCloudKit",
                                  nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
