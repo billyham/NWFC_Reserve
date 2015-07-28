@@ -107,7 +107,7 @@
     //get ALL contacts ???
     EQRWebData* webData = [EQRWebData sharedInstance];
     
-    if (EQRUseICloud){
+//    if (EQRUseICloud){
         self.webData = webData;
         self.webData.delegateDataFeed = self;
         SEL thisSelector = @selector(addToArrayOfContacts:);
@@ -123,47 +123,71 @@
                 
                 //_____this is for moving the table to newly created contact but it doesn't work_____
                 completeBlock();
+                
+                [self renewTheViewStage2];
             }];
         });
         
-    }else{
+//    }else{
+//        
+//        NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+//        
+//        [webData queryWithLink:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+//            
+//            for (EQRContactNameItem* nameItem in muteArray){
+//                
+//                [tempMuteArray addObject:nameItem];
+//            }
+//        }];
+//        
+//        if ([tempMuteArray count] < 1){
+//            
+//            //error handling if 0 is returned
+//            NSLog(@"no items in the returned array");
+//        }
+//        
+//        //_______move to expand method??_____
+//        //alphabatize the name list
+//        NSArray* sortedArray = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+//            
+//            NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
+//            NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
+//            
+//            return [string1 compare:string2];
+//        }];
+//        //__________
+//        
+//        self.arrayOfContacts = [NSArray arrayWithArray:sortedArray];
+//        
+//        //put some structure on that array of namesItems
+//        self.arrayOfContactsWithStructure = [NSArray arrayWithArray: [self expandFlatArrayToStructuredArray:sortedArray]];
+//        
+//        [self.tableView reloadData];
+//        
+//        completeBlock();
+//    }
+    
+}
+
+
+-(void)renewTheViewStage2{
+    
+    //alphabatize the name list
+    NSArray* sortedArray = [self.arrayOfContacts sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         
-        NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+        NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
+        NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
         
-        [webData queryWithLink:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-            
-            for (EQRContactNameItem* nameItem in muteArray){
-                
-                [tempMuteArray addObject:nameItem];
-            }
-        }];
-        
-        if ([tempMuteArray count] < 1){
-            
-            //error handling if 0 is returned
-            NSLog(@"no items in the returned array");
-        }
-        
-        //_______move to expand method??_____
-        //alphabatize the name list
-        NSArray* sortedArray = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            
-            NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
-            NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
-            
-            return [string1 compare:string2];
-        }];
-        //__________
-        
-        self.arrayOfContacts = [NSArray arrayWithArray:sortedArray];
-        
-        //put some structure on that array of namesItems
-        self.arrayOfContactsWithStructure = [NSArray arrayWithArray: [self expandFlatArrayToStructuredArray:sortedArray]];
-        
-        [self.tableView reloadData];
-        
-        completeBlock();
-    }
+        return [string1 compare:string2];
+    }];
+    //__________
+    
+    self.arrayOfContacts = [NSArray arrayWithArray:sortedArray];
+    
+    //put some structure on that array of namesItems
+    self.arrayOfContactsWithStructure = [NSArray arrayWithArray: [self expandFlatArrayToStructuredArray:sortedArray]];
+    
+    [self.tableView reloadData];
     
 }
 
@@ -397,22 +421,26 @@
         [tempMuteArray addObject:currentThing];
     }
     
-    //alphabatize the name list
-    NSArray* sortedArray = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        
-        NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
-        NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
-        
-        return [string1 compare:string2];
-    }];
-    //__________
+    self.arrayOfContacts = [NSArray arrayWithArray:tempMuteArray];
     
-    self.arrayOfContacts = [NSArray arrayWithArray:sortedArray];
-    
-    //put some structure on that array of namesItems
-    self.arrayOfContactsWithStructure = [NSArray arrayWithArray: [self expandFlatArrayToStructuredArray:sortedArray]];
-
-    [self.tableView reloadData];
+//    //alphabatize the name list
+//    NSArray* sortedArray = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+//        
+//        NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
+//        NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
+//        
+//        return [string1 compare:string2];
+//    }];
+//    //__________
+//    
+//    self.arrayOfContacts = [NSArray arrayWithArray:sortedArray];
+//    
+//    //put some structure on that array of namesItems
+//    self.arrayOfContactsWithStructure = [NSArray arrayWithArray: [self expandFlatArrayToStructuredArray:sortedArray]];
+//
+//    
+//    
+//    [self.tableView reloadData];
 }
 
 
