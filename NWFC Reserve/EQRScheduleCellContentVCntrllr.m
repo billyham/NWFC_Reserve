@@ -13,6 +13,7 @@
 @interface EQRScheduleCellContentVCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myUniqueItemCollectionView;
+@property (strong, nonatomic) UIView *currentDayHighlight;
 
 @end
 
@@ -34,14 +35,29 @@
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(changeInOrientation:) name:EQRRefreshViewWhenOrientationRotates object:nil];
     
+    float widthOfColumns = EQRScheduleItemWidthForDay;
+    
     //make opacity of navBarDates less if in portrait orientation
     UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
     if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
         
         self.navBarDates.alpha = 0.5;
         self.navBarWeeks.alpha = 0.5;
+        
+        widthOfColumns = EQRScheduleItemWidthForDayNarrow;
     }
 
+    //indicate the current day
+    NSInteger dayAsNumber = [self getCurrentDayAsInt];
+    float originForX = (dayAsNumber - 1) * widthOfColumns + self.navBarDates.frame.origin.x;
+    CGRect rectForDay = CGRectMake(originForX, 0, widthOfColumns, EQRScheduleItemHeightForDay);
+    
+    //create a view over the day
+    self.currentDayHighlight = [[UIView alloc] initWithFrame:rectForDay];
+    self.currentDayHighlight.backgroundColor = [UIColor yellowColor];
+    self.currentDayHighlight.alpha = 0.15;
+    
+    [self.view addSubview:self.currentDayHighlight];
     
     [super viewDidLoad];
     
@@ -62,6 +78,17 @@
 ////
 //    [self.view addSubview:self.myUniqueItemCollectionView];
     
+}
+
+-(NSInteger)getCurrentDayAsInt{
+    
+    NSDate *todayDate = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatter setDateFormat:@"d"];
+    NSString *dayAsString = [dateFormatter stringFromDate:todayDate];
+    NSInteger dayAsNumber = [dayAsString integerValue];
+    return dayAsNumber;
 }
 
 
@@ -85,6 +112,16 @@
         [self.navBarDates setNeedsDisplay];
         [self.navBarWeeks setNeedsDisplay];
         
+        //dayhighlight
+        NSInteger dayAsNumber = [self getCurrentDayAsInt];
+        float originForX = (dayAsNumber - 1) * EQRScheduleItemWidthForDayNarrow + self.navBarDates.frame.origin.x;
+        CGRect rectForDay = CGRectMake(originForX, 0, EQRScheduleItemWidthForDayNarrow, EQRScheduleItemHeightForDay);
+        
+        [UIView animateWithDuration:0.25 animations:^{
+            
+            self.currentDayHighlight.frame = rectForDay;
+        }];
+        
     }else{
         
         self.navBarDates.isNarrowFlag = NO;
@@ -97,6 +134,16 @@
         
         [self.navBarDates setNeedsDisplay];
         [self.navBarWeeks setNeedsDisplay];
+        
+        //dayhighlight
+        NSInteger dayAsNumber = [self getCurrentDayAsInt];
+        float originForX = (dayAsNumber - 1) * EQRScheduleItemWidthForDay + self.navBarDates.frame.origin.x;
+        CGRect rectForDay = CGRectMake(originForX, 0, EQRScheduleItemWidthForDay, EQRScheduleItemHeightForDay);
+        
+        [UIView animateWithDuration:0.25 animations:^{
+            
+            self.currentDayHighlight.frame = rectForDay;
+        }];
     }
     
 }

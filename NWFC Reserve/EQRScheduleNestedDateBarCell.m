@@ -37,10 +37,35 @@
     self.dayOfWeekLabel.backgroundColor = [UIColor clearColor];
     self.dayOfWeekLabel.textAlignment = NSTextAlignmentCenter;
     
-    
-    
     [self.contentView addSubview:self.dateLabel];
     [self.contentView addSubview:self.dayOfWeekLabel];
+
+    //_____!!!!!!  JUST DOESN'T QUITE LINE UP RIGHT   !!!!!_______
+//    [self isDateTheCurrentDay];
+    
+}
+
+-(void)isDateTheCurrentDay{
+    
+    NSDate *todayDate = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatter setDateFormat:@"d"];
+    NSString *dayAsString = [dateFormatter stringFromDate:todayDate];
+    NSInteger dayAsNumber = [dayAsString integerValue];
+    
+    NSInteger dateLabelAsInt = [self.dateLabel.text integerValue];
+    
+    if (dateLabelAsInt == dayAsNumber){
+        CGRect thisFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+        UIView *highlight = [[UIView alloc] initWithFrame:thisFrame];
+        highlight.backgroundColor = [UIColor yellowColor];
+        highlight.alpha = 0.15;
+        [self.contentView addSubview:highlight];
+        
+//        self.backgroundColor = [UIColor yellowColor];
+//        self.backgroundView.alpha = 0.15;
+    }
     
 }
 

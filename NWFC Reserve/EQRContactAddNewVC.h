@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRContactNameItem.h"
 
 @protocol EQRContactAddDelegate;
 
@@ -24,7 +25,7 @@
 
 @protocol EQRContactAddDelegate <NSObject>
 
--(void)informAdditionHasHappended:(NSString*)newContactKeyID;
+-(void)informAdditionHasHappended:(EQRContactNameItem*)newContact;
 
 @end
 

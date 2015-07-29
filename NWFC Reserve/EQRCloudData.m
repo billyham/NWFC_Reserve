@@ -31,6 +31,28 @@
 
 #pragma mark - public methods
 
+-(void)authenticateICloud{
+    
+    [[CKContainer defaultContainer] accountStatusWithCompletionHandler:^(CKAccountStatus accountStatus, NSError *error) {
+        if (accountStatus == CKAccountStatusNoAccount) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Sign in to iCloud"
+                                                                           message:@"Sign in to your iCloud account to write records. On the Home screen, launch Settings, tap iCloud, and enter your Apple ID. Turn iCloud Drive on. If you don't have an iCloud account, tap Create a new Apple ID."
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"Okay"
+                                                      style:UIAlertActionStyleCancel
+                                                    handler:nil]];
+            
+            UIViewController *thisViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+            [thisViewController presentViewController:alert animated:YES completion:nil];
+            
+        }
+        else {
+            // Insert your just-in-time schema code here
+        }
+    }];
+}
+
+
 -(void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock{
     
     NSLog(@"queryWithLink with: %@", link);
@@ -87,27 +109,6 @@
     
 }
 
--(void)authenticateICloud{
-    
-    [[CKContainer defaultContainer] accountStatusWithCompletionHandler:^(CKAccountStatus accountStatus, NSError *error) {
-        if (accountStatus == CKAccountStatusNoAccount) {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Sign in to iCloud"
-                                                                           message:@"Sign in to your iCloud account to write records. On the Home screen, launch Settings, tap iCloud, and enter your Apple ID. Turn iCloud Drive on. If you don't have an iCloud account, tap Create a new Apple ID."
-                                                                    preferredStyle:UIAlertControllerStyleAlert];
-            [alert addAction:[UIAlertAction actionWithTitle:@"Okay"
-                                                      style:UIAlertActionStyleCancel
-                                                    handler:nil]];
-            
-            UIViewController *thisViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-            [thisViewController presentViewController:alert animated:YES completion:nil];
-            
-        }
-        else {
-            // Insert your just-in-time schema code here
-        }
-    }];
-}
-
 
 -(NSString*)queryForStringWithLink:(NSString*)link parameters:(NSArray*)para{
     
@@ -143,7 +144,7 @@
 }
 
 
--(void)queryForStringwithAsync:(NSString *)link parameters:(NSArray *)para completion:(CompletionBlockWithString)completeBlock{
+-(void)queryForStringwithAsync:(NSString *)link parameters:(NSArray *)para completion:(CompletionBlockWithUnknownObject)completeBlock{
     
     NSLog(@"queryForStringWithAsync with: %@", link);
     
@@ -164,10 +165,18 @@
             
             if (!error){
                 //successfully saved record
+                //__________!!!!!!!!!!!!    THIS IS UGLY    !!!!!!!!!!!!_______________
                 NSLog(@"successfully saved record");
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    completeBlock(record.recordID.recordName);
+                    
+                    EQRContactNameItem *newRecord = [[EQRContactNameItem alloc] init];
+                    newRecord.key_id = record.recordID.recordName;
+                    newRecord.first_name = [record objectForKey:@"first_name"];
+                    newRecord.last_name = [record objectForKey:@"last_name"];
+                    newRecord.first_and_last = [record objectForKey:@"first_and_last"];
+                    
+                    completeBlock(newRecord);
                 });
                 
             }else{
@@ -260,7 +269,7 @@
         //___Very importand that this if statement is INSIDE the dispatch
         if (self.delayedCompletionBlock != nil){
             
-            NSLog(@"CloudData > says it is sending a completion block" );
+            NSLog(@"CloudData > is sending a completion block" );
             
             self.delayedCompletionBlock(YES);
 //            self.delayedCompletionBlock = nil;

@@ -107,66 +107,25 @@
     //get ALL contacts ???
     EQRWebData* webData = [EQRWebData sharedInstance];
     
-//    if (EQRUseICloud){
-        self.webData = webData;
-        self.webData.delegateDataFeed = self;
-        SEL thisSelector = @selector(addToArrayOfContacts:);
-        
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-        dispatch_async(queue, ^{
-            
-            [self.webData queryWithAsync:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
-                
-                if (isLoadingFlagUp){
-                    NSLog(@"isLoadingFlagUP is YES");
-                }
-                
-                //_____this is for moving the table to newly created contact but it doesn't work_____
-                completeBlock();
-                
-                [self renewTheViewStage2];
-            }];
-        });
-        
-//    }else{
-//        
-//        NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-//        
-//        [webData queryWithLink:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-//            
-//            for (EQRContactNameItem* nameItem in muteArray){
-//                
-//                [tempMuteArray addObject:nameItem];
-//            }
-//        }];
-//        
-//        if ([tempMuteArray count] < 1){
-//            
-//            //error handling if 0 is returned
-//            NSLog(@"no items in the returned array");
-//        }
-//        
-//        //_______move to expand method??_____
-//        //alphabatize the name list
-//        NSArray* sortedArray = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-//            
-//            NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
-//            NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
-//            
-//            return [string1 compare:string2];
-//        }];
-//        //__________
-//        
-//        self.arrayOfContacts = [NSArray arrayWithArray:sortedArray];
-//        
-//        //put some structure on that array of namesItems
-//        self.arrayOfContactsWithStructure = [NSArray arrayWithArray: [self expandFlatArrayToStructuredArray:sortedArray]];
-//        
-//        [self.tableView reloadData];
-//        
-//        completeBlock();
-//    }
+    self.webData = webData;
+    self.webData.delegateDataFeed = self;
+    SEL thisSelector = @selector(addToArrayOfContacts:);
     
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [self.webData queryWithAsync:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+            
+            if (isLoadingFlagUp){
+                NSLog(@"isLoadingFlagUP is YES");
+            }
+            
+            //_____this is for moving the table to newly created contact but it doesn't work_____
+            completeBlock();
+            
+            [self renewTheViewStage2];
+        }];
+    });
 }
 
 
@@ -314,31 +273,48 @@
 }
 
 
--(void)informAdditionHasHappended:(NSString*)newContactKeyID{
+-(void)informAdditionHasHappended:(EQRContactNameItem*)newContact{
     
-    NSLog(@"ContactPickerVC > informaAdditionHasHappened");
+//    NSLog(@"ContactPickerVC > informaAdditionHasHappened");
     
     [self.navigationController popViewControllerAnimated:YES];
     
-    [self renewTheViewCompletion:^{
+    //manually insert the new contact into the arrays
+    NSMutableArray *tempMute = [NSMutableArray arrayWithArray:self.arrayOfContacts];
+    [tempMute addObject:newContact];
+    
+    //alphabatize the name list
+    NSArray* sortedArray = [tempMute sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         
-        __block NSIndexPath* chosenIndexPath;
+        NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
+        NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
         
-        //automatically choose the newly created contact
-        [self.arrayOfContactsWithStructure enumerateObjectsUsingBlock:^(NSArray* subarray, NSUInteger idxSection, BOOL *stopInTop) {
-            
-            [subarray enumerateObjectsUsingBlock:^(EQRContactNameItem* contactItem, NSUInteger idxRow, BOOL *stopInSub) {
-                
-                if ([contactItem.key_id isEqualToString:newContactKeyID]){
-                    
-                    chosenIndexPath = [NSIndexPath indexPathForRow:idxRow inSection:idxSection];
-                }
-            }];
-        }];
-        
-        //move table to new contact
-        [self.tableView scrollToRowAtIndexPath:chosenIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        return [string1 compare:string2];
     }];
+    
+    self.arrayOfContacts = [NSArray arrayWithArray:sortedArray];
+    
+    self.arrayOfContactsWithStructure = [self expandFlatArrayToStructuredArray:self.arrayOfContacts];
+    
+    [self.tableView reloadData];
+    
+    
+    //______automatically choose the newly created contact______
+    __block NSIndexPath* chosenIndexPath;
+    
+    [self.arrayOfContactsWithStructure enumerateObjectsUsingBlock:^(NSArray* subarray, NSUInteger idxSection, BOOL *stopInTop) {
+        
+        [subarray enumerateObjectsUsingBlock:^(EQRContactNameItem* contactItem, NSUInteger idxRow, BOOL *stopInSub) {
+            
+            if ([contactItem.key_id isEqualToString:newContact.key_id]){
+                
+                chosenIndexPath = [NSIndexPath indexPathForRow:idxRow inSection:idxSection];
+            }
+        }];
+    }];
+    
+    //move table to new contact
+    [self.tableView scrollToRowAtIndexPath:chosenIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
 #pragma mark - public methods
@@ -397,6 +373,8 @@
 #pragma mark - webData dataFeedDelegate methods
 
 -(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    
+    NSLog(@"addSyncDataItem: received");
     
     //abort if selector is unrecognized, otherwise crash
     if (![self respondsToSelector:action]){

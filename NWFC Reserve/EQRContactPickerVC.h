@@ -24,7 +24,7 @@
 -(id)retrieveContactItem;
 
 //EQRContactAddDelegate method
--(void)informAdditionHasHappended:(NSString*)newContactKeyID;
+-(void)informAdditionHasHappended:(EQRContactNameItem*)newContact;
 
 //webData dataFeedDelegate methods
 -(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action;

@@ -1672,14 +1672,38 @@ const int intEQRTextElement = 10;
 
 #pragma mark - Asynchronous methods
 
--(void)queryForStringwithAsync:(NSString *)link parameters:(NSArray *)para completion:(CompletionBlockWithString)completeBlock{
+//-(void)queryForStringwithAsync:(NSString *)link parameters:(NSArray *)para completion:(CompletionBlockWithString)completeBlock{
+//
+//    NSString *returnString = [self queryForStringWithLink:link parameters:para];
+//    
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        completeBlock(returnString);
+//    });
+//
+//}
 
-    NSString *returnString = [self queryForStringWithLink:link parameters:para];
+-(void)queryForStringwithAsync:(NSString *)link parameters:(NSArray *)para completion:(CompletionBlockWithUnknownObject)completeBlock{
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        completeBlock(returnString);
-    });
-
+    NSString *returnedKeyID = [self queryForStringWithLink:link parameters:para];
+    
+    if ([link isEqualToString:@"EQSetNewContact.php"]){
+        
+        //return the Contact object
+        NSArray *firstArray = @[@"key_id", returnedKeyID];
+        NSArray *topArray = @[firstArray];
+        
+        [self queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:topArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+           
+            if ([muteArray count] > 0){
+                
+                EQRContactNameItem *contactObject = [muteArray objectAtIndex:0];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completeBlock(contactObject);
+                });
+            }
+        }];
+    }
 }
 
 

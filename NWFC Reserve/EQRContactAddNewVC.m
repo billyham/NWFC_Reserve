@@ -79,14 +79,14 @@
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
         
-        [webData queryForStringwithAsync:@"EQSetNewContact.php" parameters:topArray completion:^(NSString *stringReturn) {
+        [webData queryForStringwithAsync:@"EQSetNewContact.php" parameters:topArray completion:^(EQRContactNameItem *contactObject) {
             
-            NSLog(@"this is the return booger: %@", stringReturn);
+            NSLog(@"this is the return contact key: %@", contactObject.key_id);
             //    NSLog(@"key for new contact: %@", returnString);
             
             //continue...
             //alert contactPicker that an update has been made
-            [self.delegate informAdditionHasHappended:stringReturn];
+            [self.delegate informAdditionHasHappended:contactObject];
             
             //go back to previous VC
 //            [self.navigationController popViewControllerAnimated:YES];
