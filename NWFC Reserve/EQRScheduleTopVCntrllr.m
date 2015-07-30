@@ -72,6 +72,7 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *navWeeksConstraint;
 
 @property NSInteger weekIndicatorOffset;
+@property BOOL dateForShowIsNOTCurrentMonth;
 
 @property (strong, nonatomic) UIPopoverController* myClassPicker;
 @property (strong, nonatomic) NSString *filter_classSectionKey;
@@ -632,6 +633,8 @@
     //assign date to ivar
     self.dateForShow = newMonthDate;
     
+    self.dateForShowIsNOTCurrentMonth = [self evaluateIfDateForShowIsNOTCurrentMonth];
+    
     //assign new month label
     NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
     monthNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -695,6 +698,8 @@
     //assign date to ivar
     self.dateForShow = newMonthDate;
     
+    self.dateForShowIsNOTCurrentMonth = [self evaluateIfDateForShowIsNOTCurrentMonth];
+    
     //assign new month label
     NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
     monthNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -717,6 +722,8 @@
 
 
 -(IBAction)moveToCurrentMonth:(id)sender{
+    
+    self.dateForShowIsNOTCurrentMonth = NO;
     
     //cancel any existing web data parsing
     if (self.myWebData){
@@ -751,6 +758,23 @@
     [self.myDateBarCollection reloadData];
 }
 
+-(BOOL)evaluateIfDateForShowIsNOTCurrentMonth{
+    
+    NSDate *currentDate = [NSDate date];
+    
+    NSDateFormatter *monthFormatter = [[NSDateFormatter alloc] init];
+    monthFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [monthFormatter setDateFormat:@"MM yyyy"];
+    
+    NSString *currentDateAsString = [monthFormatter stringFromDate:currentDate];
+    NSString *dateForShowAsString = [monthFormatter stringFromDate:self.dateForShow];
+    
+    if ([currentDateAsString isEqualToString:dateForShowAsString]){
+        return NO;
+    }else{
+        return YES;
+    }
+}
 
 
 -(void)showStaffUserPicker{
@@ -830,6 +854,8 @@
     
     //get date from the popover's content view controller, a public method
     self.dateForShow = [(EQRDayDatePickerVCntrllr*)[self.myDayDatePicker contentViewController] retrieveSelectedDate];
+    
+    self.dateForShowIsNOTCurrentMonth = [self evaluateIfDateForShowIsNOTCurrentMonth];
     
     //assign new month label
     NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
@@ -1487,6 +1513,13 @@
         //_____!!!!! in the interest of smoother scrolling
         //add content view from xib
         EQRScheduleCellContentVCntrllr* myContentViewController = [[EQRScheduleCellContentVCntrllr alloc] initWithNibName:@"EQRScheduleCellContentVCntrllr" bundle:nil];
+        
+        //tell cell content view if it is in the current month
+        if (self.dateForShowIsNOTCurrentMonth){
+            myContentViewController.dateForShowIsCurrentMonth = NO;
+        }else{
+            myContentViewController.dateForShowIsCurrentMonth = YES;
+        }
         
         //assign to cell's ivar
         cell.cellContentVC = myContentViewController;

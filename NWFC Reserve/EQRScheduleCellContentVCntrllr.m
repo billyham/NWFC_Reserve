@@ -48,16 +48,18 @@
     }
 
     //indicate the current day
-    NSInteger dayAsNumber = [self getCurrentDayAsInt];
-    float originForX = (dayAsNumber - 1) * widthOfColumns + self.navBarDates.frame.origin.x;
-    CGRect rectForDay = CGRectMake(originForX, 0, widthOfColumns, EQRScheduleItemHeightForDay);
-    
-    //create a view over the day
-    self.currentDayHighlight = [[UIView alloc] initWithFrame:rectForDay];
-    self.currentDayHighlight.backgroundColor = [UIColor yellowColor];
-    self.currentDayHighlight.alpha = 0.15;
-    
-    [self.view addSubview:self.currentDayHighlight];
+    if (self.dateForShowIsCurrentMonth){
+        NSInteger dayAsNumber = [self getCurrentDayAsInt];
+        float originForX = (dayAsNumber - 1) * widthOfColumns + self.navBarDates.frame.origin.x;
+        CGRect rectForDay = CGRectMake(originForX, 0, widthOfColumns, EQRScheduleItemHeightForDay);
+        
+        //create a view over the day
+        self.currentDayHighlight = [[UIView alloc] initWithFrame:rectForDay];
+        self.currentDayHighlight.backgroundColor = [UIColor yellowColor];
+        self.currentDayHighlight.alpha = 0.15;
+        
+        [self.view addSubview:self.currentDayHighlight];
+    }
     
     [super viewDidLoad];
     
@@ -113,14 +115,16 @@
         [self.navBarWeeks setNeedsDisplay];
         
         //dayhighlight
-        NSInteger dayAsNumber = [self getCurrentDayAsInt];
-        float originForX = (dayAsNumber - 1) * EQRScheduleItemWidthForDayNarrow + self.navBarDates.frame.origin.x;
-        CGRect rectForDay = CGRectMake(originForX, 0, EQRScheduleItemWidthForDayNarrow, EQRScheduleItemHeightForDay);
-        
-        [UIView animateWithDuration:0.25 animations:^{
+        if (self.dateForShowIsCurrentMonth){
+            NSInteger dayAsNumber = [self getCurrentDayAsInt];
+            float originForX = (dayAsNumber - 1) * EQRScheduleItemWidthForDayNarrow + self.navBarDates.frame.origin.x;
+            CGRect rectForDay = CGRectMake(originForX, 0, EQRScheduleItemWidthForDayNarrow, EQRScheduleItemHeightForDay);
             
-            self.currentDayHighlight.frame = rectForDay;
-        }];
+            [UIView animateWithDuration:0.25 animations:^{
+                
+                self.currentDayHighlight.frame = rectForDay;
+            }];
+        }
         
     }else{
         
@@ -136,14 +140,16 @@
         [self.navBarWeeks setNeedsDisplay];
         
         //dayhighlight
-        NSInteger dayAsNumber = [self getCurrentDayAsInt];
-        float originForX = (dayAsNumber - 1) * EQRScheduleItemWidthForDay + self.navBarDates.frame.origin.x;
-        CGRect rectForDay = CGRectMake(originForX, 0, EQRScheduleItemWidthForDay, EQRScheduleItemHeightForDay);
-        
-        [UIView animateWithDuration:0.25 animations:^{
+        if (self.dateForShowIsCurrentMonth){
+            NSInteger dayAsNumber = [self getCurrentDayAsInt];
+            float originForX = (dayAsNumber - 1) * EQRScheduleItemWidthForDay + self.navBarDates.frame.origin.x;
+            CGRect rectForDay = CGRectMake(originForX, 0, EQRScheduleItemWidthForDay, EQRScheduleItemHeightForDay);
             
-            self.currentDayHighlight.frame = rectForDay;
-        }];
+            [UIView animateWithDuration:0.25 animations:^{
+                
+                self.currentDayHighlight.frame = rectForDay;
+            }];
+        }
     }
     
 }

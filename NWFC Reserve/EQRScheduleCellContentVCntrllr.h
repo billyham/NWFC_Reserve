@@ -20,7 +20,7 @@
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *weeksLeadingConstraint;
 @property NSInteger weekIndicatorOffset;
-
+@property BOOL dateForShowIsCurrentMonth;
 
 
 

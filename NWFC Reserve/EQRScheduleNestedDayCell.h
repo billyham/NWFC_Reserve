@@ -11,7 +11,6 @@
 
 @interface EQRScheduleNestedDayCell : EQRCellTemplate
 
-
 -(void)initialSetupWithTitle:(NSString*) titleName joinKeyID:(NSString*)joinKeyID joinTitleKeyID:(NSString*)joinTitleKeyID indexPath:(NSIndexPath*)indexPath;
 
 @end
