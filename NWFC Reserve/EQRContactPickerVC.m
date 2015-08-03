@@ -299,22 +299,33 @@
     [self.tableView reloadData];
     
     
-    //______automatically choose the newly created contact______
-    __block NSIndexPath* chosenIndexPath;
-    
-    [self.arrayOfContactsWithStructure enumerateObjectsUsingBlock:^(NSArray* subarray, NSUInteger idxSection, BOOL *stopInTop) {
+    //______automatically choose the newly created contact______... BUT only if it's not currently displaying a search result
+    if (self.mySearchController.active == NO){
         
-        [subarray enumerateObjectsUsingBlock:^(EQRContactNameItem* contactItem, NSUInteger idxRow, BOOL *stopInSub) {
+        __block NSIndexPath* chosenIndexPath;
+        
+        [self.arrayOfContactsWithStructure enumerateObjectsUsingBlock:^(NSArray* subarray, NSUInteger idxSection, BOOL *stopInTop) {
             
-            if ([contactItem.key_id isEqualToString:newContact.key_id]){
+            [subarray enumerateObjectsUsingBlock:^(EQRContactNameItem* contactItem, NSUInteger idxRow, BOOL *stopInSub) {
                 
-                chosenIndexPath = [NSIndexPath indexPathForRow:idxRow inSection:idxSection];
-            }
+                if ([contactItem.key_id isEqualToString:newContact.key_id]){
+                    
+                    chosenIndexPath = [NSIndexPath indexPathForRow:idxRow inSection:idxSection];
+                }
+            }];
         }];
-    }];
-    
-    //move table to new contact
-    [self.tableView scrollToRowAtIndexPath:chosenIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        
+        //move table to new contact
+        [self.tableView scrollToRowAtIndexPath:chosenIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        
+    }else{
+        
+        NSMutableArray *tempMuteArray = [NSMutableArray arrayWithArray:self.searchResultArrayOfContacts];
+        [tempMuteArray insertObject:newContact atIndex:0];
+        self.searchResultArrayOfContacts = [NSArray arrayWithArray:tempMuteArray];
+        
+        [self.tableView reloadData];
+    }
 }
 
 #pragma mark - public methods

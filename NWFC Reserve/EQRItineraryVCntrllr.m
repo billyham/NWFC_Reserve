@@ -101,7 +101,7 @@
     //refresh the view when a change is made
     [nc addObserver:self selector:@selector(raiseFlagThatAChangeHasBeenMade:) name:EQRAChangeWasMadeToTheSchedule object:nil];
     //partial refresh to when a switch is thrown in the itinarary cell view
-    [nc addObserver:self selector:@selector(partialRefreshToUpdateTheArrayOfRequests:) name:EQRPartialRefreshToItineraryArray object:nil];
+    [nc addObserver:self selector:@selector(partialRefreshFromCheckInOutCellNotification:) name:EQRPartialRefreshToItineraryArray object:nil];
     //receive note from cellContentView to show check in out v controllr
     [nc addObserver:self selector:@selector(showCheckInOut:) name:EQRPresentCheckInOut object:nil];
     //receive note from itinerary row to show quick view
@@ -260,7 +260,7 @@
 
 -(void)refreshTheView{
 
-    NSLog(@"refreshTheView fires");
+//    NSLog(@"refreshTheView fires");
     
     if ([self.arrayOfScheduleRequests count] > 0){
         self.freezeOnInsertionsFlag = YES;
@@ -297,7 +297,24 @@
 }
 
 
+-(void)partialRefreshFromCheckInOutCellNotification:(NSNotification*)note{
+    
+    //remove all filters
+    self.currentFilterBitmask = EQRFilterAll;
+    [self resetColorsOnFilterButtons];
+    
+    //the list of requests will load twice and show duplicate information without this timer
+    if (self.partialRefreshTimer){
+        [self.partialRefreshTimer invalidate];
+    }
+    
+    self.partialRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(partialRefreshToUpdateTheArrayOfRequests:) userInfo:nil repeats:NO];
+}
+
+
 -(void)partialRefreshToUpdateTheArrayOfRequests:(NSNotification*)note{
+
+    NSLog(@"Itinerary > partialRefreshToUpdate fires");
     
     self.filteredArrayOfScheduleRequests = nil;
     self.readyToCheckForScheduleWarningsFlag = NO;
@@ -904,6 +921,10 @@
     //assign day to nav bar title
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
     
+    //remove all filters
+    self.currentFilterBitmask = EQRFilterAll;
+    [self resetColorsOnFilterButtons];
+    
     [self refreshTheView];
     
 }
@@ -922,6 +943,10 @@
     //assign day to nav bar title
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
     
+    //remove all filters
+    self.currentFilterBitmask = EQRFilterAll;
+    [self resetColorsOnFilterButtons];
+    
     [self refreshTheView];
     
 }
@@ -938,6 +963,10 @@
     
     //assign day to nav bar title
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
+    
+    //remove all filters
+    self.currentFilterBitmask = EQRFilterAll;
+    [self resetColorsOnFilterButtons];
     
     [self refreshTheView];
     
@@ -979,6 +1008,10 @@
     //dismiss the picker
     [self.myDayDatePicker dismissPopoverAnimated:YES];
     self.myDayDatePicker = nil;
+    
+    //remove all filters
+    self.currentFilterBitmask = EQRFilterAll;
+    [self resetColorsOnFilterButtons];
     
     [self refreshTheView];
 }
@@ -1163,18 +1196,26 @@
     //if all filters are added, switch 'all' on
     if ((self.currentFilterBitmask == EQRFilterAll) && ([sender tag] != 0)){
         
-        [self.buttonAll setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
-        
-        //set all other buttons to white (off color)
-        [self.buttonGoingShelf setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.buttonGoingPrepped setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.buttonGoingPickedUp setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.buttonReturningOut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.buttonReturningReturned setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.buttonReturningShelved setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self resetColorsOnFilterButtons];
     }
     
 //    NSLog(@"this is the bitmask: %u", (int)self.currentFilterBitmask);
+}
+
+
+-(void)resetColorsOnFilterButtons{
+    
+    EQRColors *sharedColors = [EQRColors sharedInstance];
+    [self.buttonAll setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
+    
+    //set all other buttons to white (off color)
+    [self.buttonGoingShelf setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.buttonGoingPrepped setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.buttonGoingPickedUp setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.buttonReturningOut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.buttonReturningReturned setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.buttonReturningShelved setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
 }
 
 
