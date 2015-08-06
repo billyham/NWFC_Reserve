@@ -1689,6 +1689,15 @@
     self.freezeOnInsertionsFlag = NO;
 }
 
+
+//cell size
+//- (CGSize)collectionView:(UICollectionView *)collectionView
+//                  layout:(UICollectionViewLayout *)collectionViewLayout
+//  sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+//    
+//
+//}
+
 #pragma mark - dealloc and such
 
 -(void)dealloc{

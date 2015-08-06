@@ -1019,126 +1019,148 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kLT-RF-p4Y">
-                                <rect key="frame" x="0.0" y="144" width="768" height="831"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="10" id="QDg-pa-dIL">
-                                    <size key="itemSize" width="768" height="50"/>
-                                    <size key="headerReferenceSize" width="768" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="DlY-VL-CxQ">
-                                        <rect key="frame" x="0.0" y="64" width="768" height="50"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="768" height="50"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </view>
-                                    </collectionViewCell>
-                                </cells>
-                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SuppCell" id="9XK-hF-XVh">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </collectionReusableView>
-                                <connections>
-                                    <outlet property="dataSource" destination="Gsi-rN-Qaw" id="0xv-8C-Ppw"/>
-                                    <outlet property="delegate" destination="Gsi-rN-Qaw" id="vXf-RN-JmL"/>
-                                </connections>
-                            </collectionView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="nYS-BS-rsv">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JrW-TI-6Bj" userLabel="Filter Box View">
                                 <rect key="frame" x="0.0" y="64" width="768" height="50"/>
+                                <color key="backgroundColor" red="0.68359375" green="0.1107016856" blue="0.13759704240000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="LCN-fi-JAY"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c8L-sw-PQ8" userLabel="Main Subview">
+                                <rect key="frame" x="0.0" y="64" width="768" height="960"/>
+                                <subviews>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kLT-RF-p4Y">
+                                        <rect key="frame" x="0.0" y="80" width="768" height="831"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="10" id="QDg-pa-dIL">
+                                            <size key="itemSize" width="768" height="50"/>
+                                            <size key="headerReferenceSize" width="768" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="DlY-VL-CxQ">
+                                                <rect key="frame" x="0.0" y="64" width="768" height="50"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                    <rect key="frame" x="0.0" y="0.0" width="768" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </collectionViewCell>
+                                        </cells>
+                                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SuppCell" id="9XK-hF-XVh">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </collectionReusableView>
+                                        <connections>
+                                            <outlet property="dataSource" destination="Gsi-rN-Qaw" id="0xv-8C-Ppw"/>
+                                            <outlet property="delegate" destination="Gsi-rN-Qaw" id="vXf-RN-JmL"/>
+                                        </connections>
+                                    </collectionView>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="nYS-BS-rsv">
+                                        <rect key="frame" x="0.0" y="0.0" width="768" height="50"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="zWQ-qW-g4A"/>
+                                        </constraints>
+                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="xg8-i3-gWM">
+                                            <size key="itemSize" width="70" height="50"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="Uzz-Rf-Nc9" customClass="EQRScheduleNavBarCell">
+                                                <rect key="frame" x="0.0" y="0.0" width="70" height="50"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                    <rect key="frame" x="0.0" y="0.0" width="70" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </collectionViewCell>
+                                        </cells>
+                                        <connections>
+                                            <outlet property="dataSource" destination="Gsi-rN-Qaw" id="aAl-Bs-Vk5"/>
+                                            <outlet property="delegate" destination="Gsi-rN-Qaw" id="eij-iT-bZI"/>
+                                        </connections>
+                                    </collectionView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DtK-sQ-FRE" customClass="EQRNavBarDatesView">
+                                        <rect key="frame" x="200" y="50" width="568" height="30"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="2Mn-oB-Az2"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qc0-W5-n0m" customClass="EQRNavBarWeeksView">
+                                        <rect key="frame" x="200" y="50" width="568" height="30"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="Xho-6B-3yh"/>
+                                        </constraints>
+                                    </view>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="2Hl-Wv-twa">
+                                        <rect key="frame" x="4" y="55" width="20" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="20" id="5xP-FD-2F7"/>
+                                            <constraint firstAttribute="height" constant="20" id="cg4-vN-BnS"/>
+                                        </constraints>
+                                    </activityIndicatorView>
+                                    <collectionView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="qH3-up-537">
+                                        <rect key="frame" x="200" y="50" width="568" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="Wj1-WE-DRQ"/>
+                                        </constraints>
+                                        <collectionViewLayout key="collectionViewLayout" id="vy3-Sb-IRJ" customClass="EQRScheduleDateBarLayout"/>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CellForDateBar" id="Www-u1-Ru3" customClass="EQRScheduleNestedDateBarCell">
+                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </collectionViewCell>
+                                        </cells>
+                                        <connections>
+                                            <outlet property="dataSource" destination="Gsi-rN-Qaw" id="LLc-HQ-7vC"/>
+                                            <outlet property="delegate" destination="Gsi-rN-Qaw" id="Uff-NM-TLu"/>
+                                        </connections>
+                                    </collectionView>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="zWQ-qW-g4A"/>
-                                </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="xg8-i3-gWM">
-                                    <size key="itemSize" width="70" height="50"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="Uzz-Rf-Nc9" customClass="EQRScheduleNavBarCell">
-                                        <rect key="frame" x="0.0" y="0.0" width="70" height="50"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="70" height="50"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </view>
-                                    </collectionViewCell>
-                                </cells>
-                                <connections>
-                                    <outlet property="dataSource" destination="Gsi-rN-Qaw" id="aAl-Bs-Vk5"/>
-                                    <outlet property="delegate" destination="Gsi-rN-Qaw" id="eij-iT-bZI"/>
-                                </connections>
-                            </collectionView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DtK-sQ-FRE" customClass="EQRNavBarDatesView">
-                                <rect key="frame" x="200" y="114" width="568" height="30"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="2Mn-oB-Az2"/>
+                                    <constraint firstItem="kLT-RF-p4Y" firstAttribute="top" secondItem="DtK-sQ-FRE" secondAttribute="bottom" id="0MH-6Y-2BI"/>
+                                    <constraint firstAttribute="bottom" secondItem="kLT-RF-p4Y" secondAttribute="bottom" constant="49" id="DS4-dm-nNx"/>
+                                    <constraint firstItem="nYS-BS-rsv" firstAttribute="top" secondItem="c8L-sw-PQ8" secondAttribute="top" id="FO4-K5-0Ze"/>
+                                    <constraint firstAttribute="trailing" secondItem="kLT-RF-p4Y" secondAttribute="trailing" id="HT4-q5-ATb"/>
+                                    <constraint firstItem="nYS-BS-rsv" firstAttribute="leading" secondItem="c8L-sw-PQ8" secondAttribute="leading" id="KzH-wZ-xJa"/>
+                                    <constraint firstItem="kLT-RF-p4Y" firstAttribute="leading" secondItem="c8L-sw-PQ8" secondAttribute="leading" id="Rmm-GU-s0R"/>
+                                    <constraint firstAttribute="trailing" secondItem="qc0-W5-n0m" secondAttribute="trailing" id="bdX-fF-X38"/>
+                                    <constraint firstAttribute="trailing" secondItem="qH3-up-537" secondAttribute="trailing" id="fre-wc-Nd2"/>
+                                    <constraint firstAttribute="trailing" secondItem="DtK-sQ-FRE" secondAttribute="trailing" id="hXo-6j-geC"/>
+                                    <constraint firstItem="DtK-sQ-FRE" firstAttribute="leading" secondItem="c8L-sw-PQ8" secondAttribute="leading" constant="200" id="iRu-JM-gis"/>
+                                    <constraint firstAttribute="trailing" secondItem="nYS-BS-rsv" secondAttribute="trailing" id="k5W-ZJ-cQ8"/>
+                                    <constraint firstItem="2Hl-Wv-twa" firstAttribute="top" secondItem="nYS-BS-rsv" secondAttribute="bottom" constant="5" id="kXg-BR-9iv"/>
+                                    <constraint firstItem="qH3-up-537" firstAttribute="leading" secondItem="c8L-sw-PQ8" secondAttribute="leading" constant="200" id="kj3-rm-p0P"/>
+                                    <constraint firstItem="qH3-up-537" firstAttribute="top" secondItem="nYS-BS-rsv" secondAttribute="bottom" id="lSE-SR-cUc"/>
+                                    <constraint firstItem="2Hl-Wv-twa" firstAttribute="leading" secondItem="c8L-sw-PQ8" secondAttribute="leading" constant="4" id="mp9-KA-5NU"/>
+                                    <constraint firstItem="qc0-W5-n0m" firstAttribute="top" secondItem="nYS-BS-rsv" secondAttribute="bottom" id="oeE-lG-eXl"/>
+                                    <constraint firstItem="DtK-sQ-FRE" firstAttribute="top" secondItem="nYS-BS-rsv" secondAttribute="bottom" id="s8I-r8-jgh"/>
+                                    <constraint firstItem="qc0-W5-n0m" firstAttribute="leading" secondItem="c8L-sw-PQ8" secondAttribute="leading" constant="200" id="w8m-Ve-8QE"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qc0-W5-n0m" customClass="EQRNavBarWeeksView">
-                                <rect key="frame" x="200" y="114" width="568" height="30"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="Xho-6B-3yh"/>
-                                </constraints>
-                            </view>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="2Hl-Wv-twa">
-                                <rect key="frame" x="24" y="119" width="20" height="20"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="20" id="5xP-FD-2F7"/>
-                                    <constraint firstAttribute="height" constant="20" id="cg4-vN-BnS"/>
-                                </constraints>
-                            </activityIndicatorView>
-                            <collectionView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="qH3-up-537">
-                                <rect key="frame" x="200" y="114" width="568" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="Wj1-WE-DRQ"/>
-                                </constraints>
-                                <collectionViewLayout key="collectionViewLayout" id="vy3-Sb-IRJ" customClass="EQRScheduleDateBarLayout"/>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CellForDateBar" id="Www-u1-Ru3" customClass="EQRScheduleNestedDateBarCell">
-                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </view>
-                                    </collectionViewCell>
-                                </cells>
-                                <connections>
-                                    <outlet property="dataSource" destination="Gsi-rN-Qaw" id="LLc-HQ-7vC"/>
-                                    <outlet property="delegate" destination="Gsi-rN-Qaw" id="Uff-NM-TLu"/>
-                                </connections>
-                            </collectionView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="qc0-W5-n0m" firstAttribute="top" secondItem="nYS-BS-rsv" secondAttribute="bottom" id="2B3-jx-oUC"/>
-                            <constraint firstItem="qH3-up-537" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" constant="200" id="2qR-1t-ZP0"/>
-                            <constraint firstAttribute="trailing" secondItem="qH3-up-537" secondAttribute="trailing" id="EAY-Ws-5hW"/>
-                            <constraint firstAttribute="trailing" secondItem="kLT-RF-p4Y" secondAttribute="trailing" id="OBZ-HU-VI1"/>
-                            <constraint firstItem="2Hl-Wv-twa" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leadingMargin" constant="4" id="V6t-FA-8lX"/>
-                            <constraint firstAttribute="bottom" secondItem="kLT-RF-p4Y" secondAttribute="bottom" constant="49" id="WwD-Wr-nb7"/>
-                            <constraint firstItem="qH3-up-537" firstAttribute="top" secondItem="nYS-BS-rsv" secondAttribute="bottom" id="Xwj-N6-qJp"/>
-                            <constraint firstItem="kLT-RF-p4Y" firstAttribute="top" secondItem="DtK-sQ-FRE" secondAttribute="bottom" id="aD9-vK-eO4"/>
-                            <constraint firstItem="DtK-sQ-FRE" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" constant="200" id="cyD-hk-Pn0"/>
-                            <constraint firstItem="qc0-W5-n0m" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" constant="200" id="gPF-EJ-xcs"/>
-                            <constraint firstItem="kLT-RF-p4Y" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" id="ln5-jm-a8Q"/>
-                            <constraint firstAttribute="trailing" secondItem="nYS-BS-rsv" secondAttribute="trailing" id="luz-x0-wEK"/>
-                            <constraint firstItem="2Hl-Wv-twa" firstAttribute="top" secondItem="nYS-BS-rsv" secondAttribute="bottom" constant="5" id="qZr-aW-fHv"/>
-                            <constraint firstAttribute="trailing" secondItem="qc0-W5-n0m" secondAttribute="trailing" id="rnw-Ic-nSf"/>
-                            <constraint firstAttribute="trailing" secondItem="DtK-sQ-FRE" secondAttribute="trailing" id="sgp-LO-W0a"/>
-                            <constraint firstItem="nYS-BS-rsv" firstAttribute="top" secondItem="E5Z-bZ-E8P" secondAttribute="bottom" id="uEq-kF-1tS"/>
-                            <constraint firstItem="DtK-sQ-FRE" firstAttribute="top" secondItem="nYS-BS-rsv" secondAttribute="bottom" id="xdh-AC-m91"/>
-                            <constraint firstItem="nYS-BS-rsv" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" id="yQk-M8-PmJ"/>
+                            <constraint firstAttribute="trailing" secondItem="c8L-sw-PQ8" secondAttribute="trailing" id="Jzo-Un-Fdc"/>
+                            <constraint firstItem="c8L-sw-PQ8" firstAttribute="top" secondItem="E5Z-bZ-E8P" secondAttribute="bottom" id="PlJ-Ae-o50"/>
+                            <constraint firstAttribute="trailing" secondItem="JrW-TI-6Bj" secondAttribute="trailing" id="QAz-0y-l1j"/>
+                            <constraint firstItem="JrW-TI-6Bj" firstAttribute="top" secondItem="E5Z-bZ-E8P" secondAttribute="bottom" id="fDh-EH-3dk"/>
+                            <constraint firstItem="c8L-sw-PQ8" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" id="ff4-hb-cAS"/>
+                            <constraint firstAttribute="bottom" secondItem="c8L-sw-PQ8" secondAttribute="bottom" id="jLn-KK-ca5"/>
+                            <constraint firstItem="JrW-TI-6Bj" firstAttribute="leading" secondItem="8QP-Ue-DdR" secondAttribute="leading" id="plk-Jd-Hba"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Schedule for Month" id="TlY-ai-kDl">
@@ -1170,13 +1192,14 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="mainSubView" destination="c8L-sw-PQ8" id="2Xy-7r-rEg"/>
+                        <outlet property="mainSubViewTopConstraint" destination="PlJ-Ae-o50" id="Ox4-ZF-sRx"/>
                         <outlet property="myActivityIndicator" destination="2Hl-Wv-twa" id="aLg-tI-oXm"/>
                         <outlet property="myDateBarCollection" destination="qH3-up-537" id="fyu-hj-dyH"/>
                         <outlet property="myMasterScheduleCollectionView" destination="kLT-RF-p4Y" id="qE8-bG-Dlb"/>
                         <outlet property="myNavBarCollectionView" destination="nYS-BS-rsv" id="tik-yU-tbf"/>
                         <outlet property="navBarDates" destination="DtK-sQ-FRE" id="RVb-2d-1VQ"/>
                         <outlet property="navBarWeeks" destination="qc0-W5-n0m" id="JYe-Z7-RtT"/>
-                        <outlet property="navWeeksConstraint" destination="gPF-EJ-xcs" id="jM1-BV-whS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ghd-kE-bkn" userLabel="First Responder" sceneMemberID="firstResponder"/>

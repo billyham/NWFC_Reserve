@@ -40,6 +40,8 @@
 @property (strong ,nonatomic) IBOutlet UICollectionView* myNavBarCollectionView;
 @property (strong, nonatomic) IBOutlet UICollectionView* myDateBarCollection;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView* myActivityIndicator;
+@property (strong, nonatomic) IBOutlet UIView *mainSubView;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *mainSubViewTopConstraint;
 
 @property (strong, nonatomic) NSArray* equipUniqueArray;
 @property (strong, nonatomic) NSMutableArray* equipUniqueArrayWithSections;
@@ -896,6 +898,12 @@
         //assign month to nav bar title
         self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
         
+        [UIView animateWithDuration:0.3 animations:^{
+            self.mainSubViewTopConstraint.constant = 0;
+            
+            [self.view layoutIfNeeded];
+        }];
+        
         [self renewTheView];
         
     }else{
@@ -949,6 +957,12 @@
     EQRClassItem* thisClassItem = [classPickerVC retrieveClassItem];
     
     self.filter_classSectionKey = thisClassItem.key_id;
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        self.mainSubViewTopConstraint.constant = 50;
+        
+        [self.view layoutIfNeeded];
+    }];
     
     [self renewTheView];
     
@@ -1075,8 +1089,10 @@
     NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
     CGRect selectedRect = [valueOfRect CGRectValue];
 
+    CGRect rect1 = [self.view convertRect:selectedRect fromView:self.mainSubView];
+    
     //show popover  MUST use NOT allow using the arrow directin from below, keyboard may cover the textview
-    [self.myScheduleRowQuickView presentPopoverFromRect:selectedRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionDown animated:YES];
+    [self.myScheduleRowQuickView presentPopoverFromRect:rect1 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionDown animated:YES];
     
     //attach page 1 & 2
     [self.myQuickViewScrollVCntrllr.myContentPage1 addSubview:quickViewPage1.view];
@@ -1217,13 +1233,13 @@
 
         
         
-        [self.view addSubview:self.movingNestedCellView];
+        [self.mainSubView addSubview:self.movingNestedCellView];
     }
     
     if (gesture.state == UIGestureRecognizerStateChanged){
         
         //get the y value
-        CGPoint thisPoint = [gesture locationInView:self.view];
+        CGPoint thisPoint = [gesture locationInView:self.mainSubView];
         
         //add 15 pts becasue origin is about the touch... plus a little sumptin' sumptin'
         float valueWithHalfHeight = thisPoint.y + (EQRScheduleItemHeightForDay * 0.5) + 10;
@@ -1271,13 +1287,15 @@
         //must also add in the collection view offset
         //______!!!!!!  need to add in the added distance of the VC prompt with in demo mode   !!!!_______
         int addedYValueForPromptInNavItem = 0;
-        if ([[EQRModeManager sharedInstance] isInDemoMode]){
-            
-            addedYValueForPromptInNavItem = 30;
-        }
+//        if ([[EQRModeManager sharedInstance] isInDemoMode]){
+//            addedYValueForPromptInNavItem = 30;
+//        }
+//        if (self.filterIsOnFlag == YES){
+//            addedYValueForPromptInNavItem = addedYValueForPromptInNavItem - self.mainSubViewTopConstraint.constant;
+//        }
         
         CGPoint offsetPoint = self.myMasterScheduleCollectionView.contentOffset;
-        int newRowInt = (((thatPoint.y - 144) + offsetPoint.y) - addedYValueForPromptInNavItem) / EQRScheduleItemHeightForDay;
+        int newRowInt = (((thatPoint.y - 80) + offsetPoint.y) - addedYValueForPromptInNavItem) / EQRScheduleItemHeightForDay;
         
         for (EQRScheduleTracking_EquipmentUnique_Join* thisJoin in requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins){
             
@@ -1654,7 +1672,7 @@
             letterString = @"Su";
         }
         
-        NSString *dateString = [NSString stringWithFormat:@"%d", (NSInteger)indexPath.row + 1];
+        NSString *dateString = [NSString stringWithFormat:@"%ld", (NSInteger)indexPath.row + 1];
         
         //delete the datestring if the month doesn't extend that far
         if (!letterString){

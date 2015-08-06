@@ -120,7 +120,7 @@
                 NSLog(@"isLoadingFlagUP is YES");
             }
             
-            //_____this is for moving the table to newly created contact but it doesn't work_____
+            //_____this is for moving the table to newly created contact
             completeBlock();
             
             [self renewTheViewStage2];
