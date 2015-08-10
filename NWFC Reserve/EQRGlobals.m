@@ -11,6 +11,8 @@
 NSString* EQRApplicationKey = @"3j654FP00o91wer";
 //BOOL EQRUseICloud = YES;
 //BOOL EQRUseICloud = NO;
+NSString *EQRCloudKitContainer = @"iCloud.com.David-Vincent-Hanagan.GlobalGear";
+NSString *EQRRecordZoneDemo = @"demoPrimary";
 
 //renter type strings
 NSString* EQRRenterStudent = @"student";

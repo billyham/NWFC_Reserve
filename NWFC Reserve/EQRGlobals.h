@@ -10,6 +10,8 @@
 
 extern NSString* EQRApplicationKey;
 //extern BOOL EQRUseICloud;
+extern NSString *EQRCloudKitContainer;
+extern NSString *EQRRecordZoneDemo;
 
 //renter type Strings
 extern NSString* EQRRenterStudent;

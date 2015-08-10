@@ -13,6 +13,7 @@
 typedef void (^CompletionBlockWithArray) (NSMutableArray* muteArray);
 typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
 
+
 @protocol EQRCloudDataDelegate;
 
 @interface EQRCloudData : EQRWebData{
