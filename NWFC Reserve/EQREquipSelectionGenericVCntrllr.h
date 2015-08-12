@@ -12,12 +12,14 @@
 #import "EQREquipOptionsTableVC.h"
 #import "EQRNotesVC.h"
 #import "EQRMiscEditVC.h"
+#import "EQRScheduleRequestManager.h"
 
 
-@interface EQREquipSelectionGenericVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREquipOptionsDelegate, EQRNoteDelegate, EQRMiscEditVCDelegate, UIPopoverControllerDelegate>{
-    
+@interface EQREquipSelectionGenericVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREquipOptionsDelegate, EQRNoteDelegate, EQRMiscEditVCDelegate, UIPopoverControllerDelegate, EQREquipSelectionDelegate>{
     
 }
+
+
 
 @property (nonatomic, strong) IBOutlet UICollectionView* equipCollectionView;
 @property (nonatomic, strong) IBOutlet UIButton* continueButton;
@@ -34,6 +36,9 @@
 //miscEditVC methods
 -(void)receiveMiscData:(NSString *)miscItemText;
 
-@end
+//scheduleRequestManager delegate method
+-(void)refreshTheCollectionWithType:(NSString *)type SectionArray:(NSArray *)array;
 
+
+@end
 

@@ -31,7 +31,7 @@
     return myInstance;
 }
 
-#pragma mark - public methods
+#pragma mark - house keeping methods
 
 -(void)authenticateICloud{
     
@@ -87,6 +87,9 @@
         }
     }];
 }
+
+
+#pragma mark - query methods
 
 
 -(void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock{
@@ -319,6 +322,8 @@
     }
 }
 
+#pragma mark - async dispatch
+
 -(void)asyncDispatchWithObject:(id)currentThing {
 
     if (self.delegateDataFeed != nil){
@@ -338,17 +343,12 @@
         //___Very importand that this if statement is INSIDE the dispatch
         if (self.delayedCompletionBlock != nil){
             
-            NSLog(@"CloudData > is sending a completion block" );
+//            NSLog(@"CloudData > is sending a completion block" );
             
             self.delayedCompletionBlock(YES);
 //            self.delayedCompletionBlock = nil;
         }
     });
-}
-
-
--(void)stopXMLParsing{
-    
 }
 
 

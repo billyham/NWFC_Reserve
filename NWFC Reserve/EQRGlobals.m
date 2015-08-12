@@ -31,7 +31,7 @@ NSString* EQRErrorCode88888888 = @"88888888";
 
 //Notification selectors
 NSString* EQRVoidScheduleItemObjects = @"EQRVoidScheduleItemObjects";
-NSString* EQRRefreshEquipTable = @"EQRRefreshEquipTable";
+//NSString* EQRRefreshEquipTable = @"EQRRefreshEquipTable";
 NSString* EQRRefreshScheduleTable = @"EQRRefreshScheduleTable";
 NSString* EQRButtonHighlight = @"EQRButtonHighlight";
 NSString* EQRButtonUnHighlight = @"EQRButtonUnHighlight";

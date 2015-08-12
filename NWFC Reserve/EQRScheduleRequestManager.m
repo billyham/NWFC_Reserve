@@ -23,6 +23,7 @@
 
 @implementation EQRScheduleRequestManager
 
+@synthesize equipSelectionDelegate;
 
 +(EQRScheduleRequestManager*)sharedInstance{
     
@@ -1156,21 +1157,12 @@
         //remove all objects from ivar array
         [self.arrayOfEquipSectionsThatShouldBeHidden removeAllObjects];
         
-        //inserts objects into colection view
-        NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 @"insert", @"type",
-                                 chosenArray, @"sectionArray",
-                                 nil];
-        
-        
-        //send note
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshEquipTable object:nil userInfo:thisDic];
+        [self.equipSelectionDelegate refreshTheCollectionWithType:@"insert" SectionArray:chosenArray];
         
         return;
-
     }
     
-    //when all sections are to hidden
+    //when all sections are to be hidden
     //need to use a list of all equipSections (strings) and subtract out the EquipSectionThatShouldBeHidden
     if (withAllFlag && hideMeFlag){
         
@@ -1200,14 +1192,7 @@
         //delete objects from collection view
         chosenArray = [NSArray arrayWithArray:arrayOfObjectsToAdd];
         
-        NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 @"delete", @"type",
-                                 chosenArray, @"sectionArray",
-                                 nil];
-        
-        
-        //send note
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshEquipTable object:nil userInfo:thisDic];
+        [self.equipSelectionDelegate refreshTheCollectionWithType:@"delete" SectionArray:chosenArray];
         
         return;
     }
@@ -1224,15 +1209,7 @@
         
 //        NSLog(@"in requestManager count of chosenSection for arrayOfEquipSectionsThatShouldBeHidden: %u", (int)[chosenArray count]);
         
-        NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      @"delete", @"type",
-                                    chosenArray, @"sectionArray",
-                                      nil];
-        
-        
-        //send note
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshEquipTable object:nil userInfo:thisDic];
-
+        [self.equipSelectionDelegate refreshTheCollectionWithType:@"delete" SectionArray:chosenArray];
         
     }else{
         
@@ -1245,14 +1222,7 @@
         
         chosenArray = [NSArray arrayWithObject:chosenSection];
         
-        NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 @"insert", @"type",
-                                 chosenArray, @"sectionArray",
-                                 nil];;
-        
-        //send note
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshEquipTable object:nil userInfo:thisDic];
-
+        [self.equipSelectionDelegate refreshTheCollectionWithType:@"insert" SectionArray:chosenArray];
     }
 }
 

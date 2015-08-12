@@ -33,9 +33,7 @@
 #pragma mark - methods
 
 -(void)initialSetupWithTitle:(NSString*) titleName isHidden:(BOOL)yesHidden isSearchResult:(BOOL)yesSearch{
-    
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshViewFromAllButton:) name:EQRRefreshEquipTable object:nil];
-    
+        
     //cell's background color
     self.backgroundColor = [UIColor colorWithRed:0.92 green:0.92 blue:0.92 alpha:1.0];
     
@@ -109,6 +107,36 @@
     //if search result, disable hide and expand buttons    
     [self.revealButton setHidden:yesSearch];
     [self.allButton setHidden:yesSearch];
+
+    
+}
+
+-(void)updateButtons{
+    
+    NSLog(@"is this thing on??");
+
+    
+    //change text of button
+    BOOL isCurrentlyHidden = NO;
+    for (NSString* sectionString in [self.delegate retrieveArrayOfEquipSectionsThatShouldBeHidden]){
+        
+        if ([sectionString isEqualToString:self.titleLabel.text]){
+            
+            isCurrentlyHidden = YES;
+            break;
+        }
+    }
+    
+    if (isCurrentlyHidden){
+        
+        [self.revealButton setTitle:@"Hide" forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+        [self.allButton setTitle:@"Hide All" forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+        
+    }else{
+        
+        [self.revealButton setTitle:@"Expand" forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+        [self.allButton setTitle:@"Expand All" forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+    }
 
     
 }

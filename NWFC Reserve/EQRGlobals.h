@@ -26,7 +26,7 @@ extern NSString* EQRErrorCode88888888;
 
 //Notification selectors
 extern NSString* EQRVoidScheduleItemObjects;
-extern NSString* EQRRefreshEquipTable;
+//extern NSString* EQRRefreshEquipTable;
 extern NSString* EQRRefreshScheduleTable;
 extern NSString* EQRButtonHighlight;
 extern NSString* EQRButtonUnHighlight;

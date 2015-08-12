@@ -13,7 +13,14 @@
 #import "EQRHeaderCellTemplate.h"
 #import "EQRMiscJoin.h"
 
-@interface EQRScheduleRequestManager : NSObject <EQREquipItemCellDelegate, EQRHeaderCellTemplateDelegate>
+@protocol EQREquipSelectionDelegate;
+
+
+@interface EQRScheduleRequestManager : NSObject <EQREquipItemCellDelegate, EQRHeaderCellTemplateDelegate>{
+    __weak id <EQREquipSelectionDelegate> equipSelectionDelegate;
+}
+
+@property (nonatomic, weak) id <EQREquipSelectionDelegate> equipSelectionDelegate;
 
 @property (strong, nonatomic) EQRScheduleRequestItem* request;
 
@@ -63,5 +70,10 @@
 //Check In/Out methods for obtaining available equipUniqueItems for equipment title
 -(NSArray*)retrieveAvailableEquipUniquesForTitleKey:(NSString*)equipTitleItem_foreignKey;
 
+@end
+
+@protocol EQREquipSelectionDelegate
+
+-(void)refreshTheCollectionWithType:(NSString *)type SectionArray:(NSArray *)array;
 
 @end

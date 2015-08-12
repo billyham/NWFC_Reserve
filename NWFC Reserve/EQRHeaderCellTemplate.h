@@ -24,6 +24,7 @@
 
 -(void)initialSetupWithTitle:(NSString*) titleName isHidden:(BOOL)yesHidden isSearchResult:(BOOL)yesSearch;
 -(IBAction)revealButtonTapped:(id)sender;
+-(void)updateButtons;
 
 @end
 

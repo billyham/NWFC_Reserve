@@ -43,8 +43,8 @@
     [super viewDidLoad];
     
     //register for notifications
-    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
-    [nc addObserver:self selector:@selector(refreshTable:) name:EQRRefreshEquipTable object:nil];
+//    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+//    [nc addObserver:self selector:@selector(refreshTable:) name:EQRRefreshEquipTable object:nil];
     
     
     //add longpress gesture recognizer, need to circumvent existing longpress gesture first

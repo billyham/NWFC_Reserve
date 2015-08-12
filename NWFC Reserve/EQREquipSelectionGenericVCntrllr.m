@@ -82,11 +82,6 @@
     
     self.dontReloadTheViewBecauseItWillEraseSelections = NO;
     
-    //register for notifications
-    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
-    [nc addObserver:self selector:@selector(refreshTable:) name:EQRRefreshEquipTable object:nil];
-    
-    
     //add longpress gesture recognizer, need to circumvent existing longpress gesture first
     //    UILongPressGestureRecognizer* pressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
     //
@@ -131,6 +126,7 @@
 //        self.equipCollectionView.scrollIndicatorInsets = UIEdgeInsetsMake(-60, 0, 0, 0);
 //        self.equipCollectionView.contentInset = UIEdgeInsetsMake(-60, 0, 0, 0);
     }
+    requestManager.equipSelectionDelegate = self;
     
     //searchcontroller setup
     self.mySearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
@@ -277,6 +273,7 @@
         
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
+    requestManager.equipSelectionDelegate = self;
 
     //do everything else
     [self renewTheViewWithRequestManager:requestManager];
@@ -559,8 +556,9 @@
         requestManager = self.privateRequestManager;
     }else{
         requestManager = [EQRScheduleRequestManager sharedInstance];
-
     }
+    requestManager.equipSelectionDelegate = self;
+    
     [requestManager dismissRequest:YES];
     
     //_____!!!!!! is this OK, does it get triggered too soon?   !!!!_____
@@ -579,6 +577,7 @@
     }else{
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
+    requestManager.equipSelectionDelegate = self;
     
     //show options submenu in popover
     EQREquipOptionsTableVC* optionsVC = [[EQREquipOptionsTableVC alloc] initWithNibName:@"EQREquipOptionsTableVC" bundle:nil];
@@ -612,6 +611,7 @@
     }else{
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
+    requestManager.equipSelectionDelegate = self;
     
     //sync flags
     requestManager.request.showAllEquipmentFlag = self.optionsVC.showAllEquipFlag;
@@ -640,6 +640,7 @@
     }else{
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
+    requestManager.equipSelectionDelegate = self;
     
     notesVC.delegate = self;
     
@@ -669,6 +670,7 @@
     }else{
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
+    requestManager.equipSelectionDelegate = self;
     
     requestManager.request.notes = noteText;
     
@@ -694,6 +696,7 @@
     }else{
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
+    requestManager.equipSelectionDelegate = self;
     
     UIPopoverController* miscEditPopover = [[UIPopoverController alloc] initWithContentViewController:miscEditVC];
     self.miscPopover = miscEditPopover;
@@ -720,6 +723,7 @@
     }else{
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
+    requestManager.equipSelectionDelegate = self;
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSArray* firstArray = @[@"scheduleTracking_foreignKey", requestManager.request.key_id];
@@ -812,18 +816,16 @@
 }
 
 
+#pragma mark - schedule request manager delegate methods
 
-#pragma mark - notifications
-
--(void)refreshTable:(NSNotification*)note{
-
-    //use for testing if the equipSelectionVC gets dealloc'ed
-//    NSLog(@"RECEIVED NOTE TO REFRESH EQUIP TABLE");
-//    return;
+-(void)refreshTheCollectionWithType:(NSString *)type SectionArray:(NSArray *)array{
     
-    NSString* typeOfChange = [[note userInfo] objectForKey:@"type"];
-    //    NSString* sectionString = [[note userInfo] objectForKey:@"sectionString"];
-    NSArray* sectionArray = [[note userInfo] objectForKey:@"sectionArray"];
+    //use for testing if the equipSelectionVC gets dealloc'ed
+    //    NSLog(@"RECEIVED NOTE TO REFRESH EQUIP TABLE");
+    //    return;
+    
+    NSString* typeOfChange = type;
+    NSArray* sectionArray = array;
     
     
     //    NSLog(@"this is the type: %@", typeOfChange);
@@ -860,7 +862,20 @@
         }
         
         //do the insert
-        [self.equipCollectionView insertItemsAtIndexPaths:arrayOfIndexPaths];
+        [self.equipCollectionView performBatchUpdates:^{
+            
+            [self.equipCollectionView insertItemsAtIndexPaths:arrayOfIndexPaths];
+            
+        } completion:^(BOOL finished) {
+            
+            [self.equipTitleArrayWithSections enumerateObjectsUsingBlock:^(NSArray *subArray, NSUInteger idx, BOOL *stop) {
+                
+                EQRHeaderCellTemplate *cell = (EQRHeaderCellTemplate *)[self collectionView:self.equipCollectionView viewForSupplementaryElementOfKind:nil atIndexPath:[NSIndexPath indexPathForRow:0 inSection:idx]];
+                
+                [cell updateButtons];
+                
+            }];
+        }];
         
         
     }else if([typeOfChange isEqualToString:@"delete"]) {
@@ -889,17 +904,26 @@
         }
         
         //do the deletions
-        [self.equipCollectionView deleteItemsAtIndexPaths:arrayOfIndexPaths];
-        
-        
-        //        [self.equipCollectionView reloadData];
+        [self.equipCollectionView performBatchUpdates:^{
+            
+            [self.equipCollectionView deleteItemsAtIndexPaths:arrayOfIndexPaths];
+
+        } completion:^(BOOL finished) {
+            
+            [self.equipTitleArrayWithSections enumerateObjectsUsingBlock:^(NSArray *subArray, NSUInteger idx, BOOL *stop) {
+                
+                EQRHeaderCellTemplate *cell = (EQRHeaderCellTemplate *)[self collectionView:self.equipCollectionView viewForSupplementaryElementOfKind:nil atIndexPath:[NSIndexPath indexPathForRow:0 inSection:idx]];
+                
+                [cell updateButtons];
+                
+            }];
+        }];
     }
     
     //reload data to ensure that header cells are updated correctly when the "All" button is tapped
-    [self.equipCollectionView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5];
+//    [self.equipCollectionView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5];
+    
 }
-
-
 
 
 #pragma mark - allocation
@@ -913,6 +937,8 @@
 //        NSLog(@"INSIDE THE ALLOCATE GEAR LIST AND IS USING SHARED REQUEST MANAGER");
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
+    requestManager.equipSelectionDelegate = self;
+    
     
     //_______*********  MOVED METHOD TO REQUESTMANAGER  **********___________
     [requestManager allocateGearListWithDates:nil];
@@ -1029,6 +1055,7 @@
     }else{
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
+    requestManager.equipSelectionDelegate = self;
     
     [cell setDelegate:requestManager];
     
@@ -1077,6 +1104,7 @@
     }else{
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
+    requestManager.equipSelectionDelegate = self;
 
     EQREquipItem* sampleItem = [[self.equipTitleArrayWithSections objectAtIndex:section] objectAtIndex:0];
     
@@ -1131,6 +1159,7 @@
     }else{
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
+    requestManager.equipSelectionDelegate = self;
     
     [cell setDelegate: requestManager];
     
