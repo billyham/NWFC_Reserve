@@ -47,6 +47,7 @@ extern NSString* EQRPartialRefreshToItineraryArray;
 extern NSString* EQRQRCodeFlipsSwitchInRowCellContent;
 extern NSString* EQRRefreshViewWhenOrientationRotates;
 extern NSString* EQRDistIDPickerTapped;
+extern NSString *EQRUpdateHeaderCellsInEquipSelection;
 
 //Timing
 extern float EQRHighlightTappingTime;

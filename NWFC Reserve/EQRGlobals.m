@@ -52,6 +52,7 @@ NSString* EQRPartialRefreshToItineraryArray = @"EQRPartialRefreshToItineraryArra
 NSString* EQRQRCodeFlipsSwitchInRowCellContent = @"EQRQRCodeFlipsSwitchInRowCellContent";
 NSString* EQRRefreshViewWhenOrientationRotates = @"EQRRefreshViewWhenOrientationRotates";
 NSString* EQRDistIDPickerTapped = @"EQRDistIDPickerTapped";
+NSString *EQRUpdateHeaderCellsInEquipSelection = @"EQRUpdateHeaderCellsInEquipSelection";
 
 //Timing
 float EQRHighlightTappingTime = 0.125;

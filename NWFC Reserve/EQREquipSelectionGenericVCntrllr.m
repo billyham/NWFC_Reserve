@@ -820,15 +820,13 @@
 
 -(void)refreshTheCollectionWithType:(NSString *)type SectionArray:(NSArray *)array{
     
-    //use for testing if the equipSelectionVC gets dealloc'ed
-    //    NSLog(@"RECEIVED NOTE TO REFRESH EQUIP TABLE");
-    //    return;
-    
     NSString* typeOfChange = type;
     NSArray* sectionArray = array;
     
-    
-    //    NSLog(@"this is the type: %@", typeOfChange);
+    //abort if in search mode
+    if (self.mySearchController.active){
+        return;
+    }
     
     //array of index paths to add or delete
     NSMutableArray* arrayOfIndexPaths = [NSMutableArray arrayWithCapacity:1];
@@ -868,13 +866,8 @@
             
         } completion:^(BOOL finished) {
             
-            [self.equipTitleArrayWithSections enumerateObjectsUsingBlock:^(NSArray *subArray, NSUInteger idx, BOOL *stop) {
-                
-                EQRHeaderCellTemplate *cell = (EQRHeaderCellTemplate *)[self collectionView:self.equipCollectionView viewForSupplementaryElementOfKind:nil atIndexPath:[NSIndexPath indexPathForRow:0 inSection:idx]];
-                
-                [cell updateButtons];
-                
-            }];
+            [[NSNotificationCenter defaultCenter] postNotificationName:EQRUpdateHeaderCellsInEquipSelection object:nil];
+            
         }];
         
         
@@ -910,13 +903,8 @@
 
         } completion:^(BOOL finished) {
             
-            [self.equipTitleArrayWithSections enumerateObjectsUsingBlock:^(NSArray *subArray, NSUInteger idx, BOOL *stop) {
-                
-                EQRHeaderCellTemplate *cell = (EQRHeaderCellTemplate *)[self collectionView:self.equipCollectionView viewForSupplementaryElementOfKind:nil atIndexPath:[NSIndexPath indexPathForRow:0 inSection:idx]];
-                
-                [cell updateButtons];
-                
-            }];
+            [[NSNotificationCenter defaultCenter] postNotificationName:EQRUpdateHeaderCellsInEquipSelection object:nil];
+            
         }];
     }
     
@@ -1084,6 +1072,12 @@
                  isSearchResult:NO];
     
     return cell;
+}
+
+//_____________  DO THIS EVERYWHERE A CELL IS REGISTERED TO OBSERVE NOTIFICATIONS!!! _________________
+-(void)collectionView:(UICollectionView *)collectionView didEndDisplayingSupplementaryView:(UICollectionReusableView *)view forElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath{
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:view];
 }
 
 

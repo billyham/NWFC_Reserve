@@ -41,7 +41,9 @@
 //    CGRect newSize = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, (self.frame.size.height) + 10);
 //    self.frame = newSize;
     
-
+    //Notifications
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(updateButtons:) name:EQRUpdateHeaderCellsInEquipSelection object:nil];
     
     
     //label
@@ -111,14 +113,14 @@
     
 }
 
--(void)updateButtons{
+-(void)updateButtons:(NSNotification *)note{
     
-    NSLog(@"is this thing on??");
-
     
     //change text of button
     BOOL isCurrentlyHidden = NO;
     for (NSString* sectionString in [self.delegate retrieveArrayOfEquipSectionsThatShouldBeHidden]){
+        
+//        NSLog(@"inside array of section arrays_____");
         
         if ([sectionString isEqualToString:self.titleLabel.text]){
             
@@ -128,14 +130,14 @@
     }
     
     if (isCurrentlyHidden){
-        
-        [self.revealButton setTitle:@"Hide" forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
-        [self.allButton setTitle:@"Hide All" forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+    
+        [self.revealButton setTitle:@"Expand" forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+        [self.allButton setTitle:@"Expand All" forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
         
     }else{
         
-        [self.revealButton setTitle:@"Expand" forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
-        [self.allButton setTitle:@"Expand All" forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+        [self.revealButton setTitle:@"Hide" forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+        [self.allButton setTitle:@"Hide All" forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
     }
 
     
