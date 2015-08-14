@@ -38,6 +38,7 @@
 
 @property (strong, nonatomic) IBOutlet UIView* mainSubView;
 @property (strong, nonatomic) IBOutlet UIView *rightSubView;
+@property (strong, nonatomic) IBOutlet UIView *rightSubviewTopBar;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* mainSubTopGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* mainSubBottomGuideConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* tableTopGuideConstraint;
@@ -306,6 +307,10 @@
 
 -(void)initialSetupStage3{
 
+    //expand the array
+    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
+    [self.myEquipCollection reloadData];
+    
     //content height minus the window height will result in the maximum offset value
     float differenceBetweenHeights = self.myEquipCollection.contentSize.height - self.myEquipCollection.frame.size.height;
     //but it can't be a negative number
@@ -1734,7 +1739,24 @@
     }
     
     //expand the array
-    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
+    //    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
+    
+    NSMutableArray *newSubArray = [NSMutableArray arrayWithCapacity:1];
+    
+    if (self.arrayOfEquipJoinsWithStructure){
+        if ([self.arrayOfEquipJoinsWithStructure objectAtIndex:0]){
+            [newSubArray addObjectsFromArray:[self.arrayOfEquipJoinsWithStructure objectAtIndex:0]];
+            [newSubArray addObject:currentThing];
+            self.arrayOfEquipJoinsWithStructure = [NSArray arrayWithObject:newSubArray];
+        }else{  //if no sub array exists yet
+            [newSubArray addObject:currentThing];
+            self.arrayOfEquipJoinsWithStructure = [NSArray arrayWithObject:newSubArray];
+        }
+    }else{  //if the main array doesn't exist yet
+        [newSubArray addObject:currentThing];
+        self.arrayOfEquipJoinsWithStructure = [NSArray arrayWithObject:newSubArray];
+    }
+    
     
     //________!!!!!!!!!!!   USE THIS TO TURN OFF ANIMATED INSERTIONS   !!!!!!!!!!_________
     [self.myEquipCollection reloadData];
@@ -1811,7 +1833,6 @@
         
     }
     
-    
     NSString *searchString = [self.mySearchController.searchBar text];
     
     if ([searchString isEqualToString:@""]){
@@ -1835,9 +1856,24 @@
 }
 
 
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+    
+    //change background color
+    EQRColors *colors = [EQRColors sharedInstance];
+    self.rightSubviewTopBar.backgroundColor = [colors.colorDic objectForKey:EQRColorFilterBarAndSearchBarBackground];
+    self.searchBoxView.backgroundColor = [colors.colorDic objectForKey:EQRColorFilterBarAndSearchBarBackground];
+    self.mySearchController.searchBar.tintColor = [UIColor whiteColor];
+    self.mySearchController.searchBar.searchBarStyle = UISearchBarStyleProminent;
+    self.mySearchController.searchBar.barTintColor = [colors.colorDic objectForKey:EQRColorFilterBarAndSearchBarBackground];
+}
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
     
+    //change background color
+    self.rightSubviewTopBar.backgroundColor = [UIColor whiteColor];
+    self.searchBoxView.backgroundColor = [UIColor whiteColor];
+    self.mySearchController.searchBar.tintColor = nil;
+    self.mySearchController.searchBar.searchBarStyle = UISearchBarStyleMinimal;
 }
 
 

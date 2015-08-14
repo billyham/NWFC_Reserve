@@ -983,7 +983,24 @@
     
 }
 
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+    
+    //change background color
+//    EQRColors *colors = [EQRColors sharedInstance];
+//    self.searchBoxView.backgroundColor = [colors.colorDic objectForKey:EQRColorFilterBarAndSearchBarBackground];
+//    self.mySearchController.searchBar.tintColor = [UIColor whiteColor];
+//    self.mySearchController.searchBar.searchBarStyle = UISearchBarStyleProminent;
+//    self.mySearchController.searchBar.barTintColor = [colors.colorDic objectForKey:EQRColorFilterBarAndSearchBarBackground];
+}
+
+
+
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
+    
+    //change background color
+//    self.searchBoxView.backgroundColor = [UIColor whiteColor];
+//    self.mySearchController.searchBar.tintColor = nil;
+//    self.mySearchController.searchBar.searchBarStyle = UISearchBarStyleMinimal;
     
     [UIView animateWithDuration:0.25 animations:^{
         

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
@@ -14,6 +14,7 @@
                 <outlet property="nameTextLabel" destination="XRl-J1-VbJ" id="cE4-b1-0lq"/>
                 <outlet property="noteView" destination="LCR-FF-L8e" id="mhk-yq-WZk"/>
                 <outlet property="rightSubView" destination="sls-74-3hL" id="c20-pd-zsi"/>
+                <outlet property="rightSubviewTopBar" destination="Usz-rY-9Yi" id="HJp-w2-Deg"/>
                 <outlet property="searchBoxView" destination="Nbu-3Q-0PJ" id="0ic-st-Was"/>
                 <outlet property="tableTopGuideConstraint" destination="1wS-NF-SRP" id="j37-lS-F0A"/>
                 <outlet property="updateLabel" destination="j4E-ZN-M9v" id="oqh-Hd-D9D"/>
@@ -67,7 +68,7 @@
                                         <outlet property="delegate" destination="-1" id="2Ig-pb-IV3"/>
                                     </connections>
                                 </collectionView>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Usz-rY-9Yi" userLabel="View - right top menu">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Usz-rY-9Yi" userLabel="View - right top bar">
                                     <rect key="frame" x="0.0" y="0.0" width="590" height="50"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nbu-3Q-0PJ" userLabel="View - search box">

@@ -48,6 +48,8 @@ extern NSString* EQRColorIssueDescriptive;
 extern NSString* EQRColorIssueMinor;
 extern NSString* EQRColorIssueSerious;
 
+extern NSString *EQRColorFilterBarAndSearchBarBackground;
+
 extern NSString* EQRColorDemoMode;
 
 

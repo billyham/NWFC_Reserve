@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -1192,6 +1192,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="filterBoxView" destination="JrW-TI-6Bj" id="YQW-QP-wh6"/>
                         <outlet property="mainSubView" destination="c8L-sw-PQ8" id="2Xy-7r-rEg"/>
                         <outlet property="mainSubViewTopConstraint" destination="PlJ-Ae-o50" id="Ox4-ZF-sRx"/>
                         <outlet property="myActivityIndicator" destination="2Hl-Wv-twa" id="aLg-tI-oXm"/>

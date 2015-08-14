@@ -48,6 +48,8 @@ NSString* EQRColorIssueDescriptive = @"EQRColorIssueDescriptive";
 NSString* EQRColorIssueMinor = @"EQRColorIssueMinor";
 NSString* EQRColorIssueSerious = @"EQRColorIssueSerious";
 
+NSString *EQRColorFilterBarAndSearchBarBackground = @"EQRColorFilterBarAndSearchBarBackground";
+
 NSString* EQRColorDemoMode = @"EQRColorDemoMode";
 
 @implementation EQRColors
@@ -110,6 +112,7 @@ NSString* EQRColorDemoMode = @"EQRColorDemoMode";
                          [UIColor grayColor], EQRColorIssueDescriptive,
                          [UIColor colorWithRed:0.88 green:0.65 blue:0.2 alpha:1.0], EQRColorIssueMinor,
                          [UIColor redColor], EQRColorIssueSerious,
+                         [UIColor grayColor], EQRColorFilterBarAndSearchBarBackground,
                          [UIColor colorWithRed:1.0 green:0.9 blue:0.85 alpha:1.0], EQRColorDemoMode,
                          [self colorFromR:229 G:243 B:252], EQRColorStudentFull,
                          [self colorFromR:131 G:196 B:242], EQRColorStudentDark,

@@ -41,6 +41,7 @@
 @property (strong, nonatomic) IBOutlet UICollectionView* myDateBarCollection;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView* myActivityIndicator;
 @property (strong, nonatomic) IBOutlet UIView *mainSubView;
+@property (strong, nonatomic) IBOutlet UIView *filterBoxView;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *mainSubViewTopConstraint;
 
 @property (strong, nonatomic) NSArray* equipUniqueArray;
@@ -158,7 +159,9 @@
     self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
     
     //background color of collection view
+    EQRColors *colors = [EQRColors sharedInstance];
     self.myDateBarCollection.backgroundColor = [UIColor clearColor];
+    self.filterBoxView.backgroundColor = [colors.colorDic objectForKey:EQRColorFilterBarAndSearchBarBackground];
     
     //assign flow layout programmatically
 //    self.scheduleMasterFlowLayout = [[UICollectionViewFlowLayout alloc] init];
