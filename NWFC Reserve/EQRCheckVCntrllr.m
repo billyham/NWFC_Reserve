@@ -224,6 +224,8 @@
     //dim the collection view to indicate it's loading data
     self.myEquipCollection.alpha = 0.3;
     self.updateView.alpha = 0.0;
+    //prevent scrolling because that costs time
+    self.myEquipCollection.userInteractionEnabled = NO;
     
     //remove any existing delaytimer
     self.timeOfLastCallback = 0;
@@ -326,6 +328,7 @@
     //un-dim the collection view
     self.myEquipCollection.alpha = 1.0;
     self.updateView.alpha = 1.0;
+    self.myEquipCollection.userInteractionEnabled = YES;
     
     
     //____set up private request manager______
@@ -1744,7 +1747,7 @@
     NSMutableArray *newSubArray = [NSMutableArray arrayWithCapacity:1];
     
     if (self.arrayOfEquipJoinsWithStructure){
-        if ([self.arrayOfEquipJoinsWithStructure objectAtIndex:0]){
+        if ([self.arrayOfEquipJoinsWithStructure count] > 0){
             [newSubArray addObjectsFromArray:[self.arrayOfEquipJoinsWithStructure objectAtIndex:0]];
             [newSubArray addObject:currentThing];
             self.arrayOfEquipJoinsWithStructure = [NSArray arrayWithObject:newSubArray];
@@ -1760,66 +1763,24 @@
     
     //________!!!!!!!!!!!   USE THIS TO TURN OFF ANIMATED INSERTIONS   !!!!!!!!!!_________
     [self.myEquipCollection reloadData];
-    return;
     //_____________
     
-    
-    
-    
-//    __block NSInteger indexPathSection;
-//    __block NSInteger indexPathRow;
-//    
-//    [self.arrayOfEquipJoinsWithStructure enumerateObjectsUsingBlock:^(NSArray *subArray, NSUInteger idx, BOOL *stop) {
-//        
-//        [subArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx2, BOOL *stop2) {
-//            
-//            if (obj == currentThing){
-//                indexPathRow = idx2;
-//                indexPathSection = idx;
-//            }
-//        }];
-//    }];
-//    
-//    //test if need to create new section
-//    BOOL createNewSection = NO;
-//    NSInteger countOfSectionInCollectionView;
-//    countOfSectionInCollectionView = [self.myEquipCollection numberOfSections];
-//    if (([self.arrayOfEquipJoinsWithStructure count] - countOfSectionInCollectionView) > 0 ){
-//        createNewSection = YES;
-//    }
-//    
-//    //the new index of the newly added item
-//    NSIndexPath *chosenIndexPath = [NSIndexPath indexPathForRow:indexPathRow inSection:indexPathSection];
-//    
-//    //    NSLog(@"this is the indexPathRow and Section for equipItem: %ld, %ld", (long)indexPathRow, (long)indexPathSection);
-//    //    NSLog(@"this is the current number for sections in the collection: %ld", (long)[self.myEquipCollection numberOfSections]);
-//    
-//    //uptick on the index
-//    //    self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
-//
-//    
-//    
+    //________THIS WORKS BUT IT DOESN'T REALLY HELP AND IT ADDS A SMALL AMOUNT OF TIME______
 //    [self.myEquipCollection performBatchUpdates:^{
 //    
-//        //if necessary, insert section in collection view
-//        if (createNewSection){
-//            //            NSLog(@"yes, i'm creating a new section");
-//            NSIndexSet *indexSet;
-//            indexSet = [NSIndexSet indexSetWithIndex:indexPathSection];
+//        if ([self.myEquipCollection numberOfSections] == 0){
+//            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:0];
 //            [self.myEquipCollection insertSections:indexSet];
 //        }
 //        
 //        //insert row in the collection view
-//        NSMutableArray *tempArray = [NSMutableArray arrayWithObject:chosenIndexPath];
+//        NSIndexPath *thisIndexPath = [NSIndexPath indexPathForRow:[newSubArray count] - 1 inSection:0];
+//        NSMutableArray *tempArray = [NSMutableArray arrayWithObject:thisIndexPath];
 //        [self.myEquipCollection insertItemsAtIndexPaths:tempArray];
 //        
 //    } completion:^(BOOL finished) {
 //        NSLog(@"finished batch updates");
 //    }];
-
-    
-
-    
     
 }
 
