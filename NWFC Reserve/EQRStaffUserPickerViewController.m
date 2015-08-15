@@ -10,13 +10,13 @@
 #import "EQRWebData.h"
 #import "EQRContactNameItem.h"
 
-@interface EQRStaffUserPickerViewController ()
+@interface EQRStaffUserPickerViewController () <EQRWebDataDelegate>
 
 
 
 @end
 
-@implementation EQRStaffUserPickerViewController
+@implementation EQRStaffUserPickerViewController 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -24,32 +24,87 @@
     if (self) {
         
         EQRWebData* webData = [EQRWebData sharedInstance];
+        webData.delegateDataFeed = self;
         
-        NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+        SEL thisSelector = NSSelectorFromString(@"addToArrayOfContactObjects:");
         
-        //get array of staff and interns
-        [webData queryWithLink:@"EQGetEQRoomStaffAndInterns.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-            
-            for (id object in muteArray){
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+            [webData queryWithAsync:@"EQGetEQRoomStaffAndInterns.php" parameters:nil class:@"EQRContactNameItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
                 
-                [tempMuteArray addObject:object];
-            }
-        }];
+                //sort the array...
+                
+                //reload the pickerview
+                [self.myPicker reloadAllComponents];
+            }];
+        });
         
-        _arrayOfContactObjects = [NSArray arrayWithArray:tempMuteArray];
+        
+        
+//        NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+//        
+//        //get array of staff and interns
+//        [webData queryWithLink:@"EQGetEQRoomStaffAndInterns.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+//            
+//            for (id object in muteArray){
+//                
+//                [tempMuteArray addObject:object];
+//            }
+//        }];
+//        
+//        _arrayOfContactObjects = [NSArray arrayWithArray:tempMuteArray];
+        
+        
     }
     
     return self;
 }
 
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
+- (void)viewDidLoad{
     
+    [super viewDidLoad];
+}
+
+
+-(void)initStage2{
     
     
 }
+
+
+#pragma mark - webData dataFeedDelegate methods
+
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    
+    //abort if selector is unrecognized, otherwise crash
+    if (![self respondsToSelector:action]){
+        NSLog(@"cannot perform selector: %@", NSStringFromSelector(action));
+        return;
+    }
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+    
+}
+
+
+-(void)addToArrayOfContactObjects:(id)currentThing{
+
+    NSMutableArray *tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+    
+    if (currentThing){
+        
+        tempMuteArray = [NSMutableArray arrayWithArray:self.arrayOfContactObjects];
+        [tempMuteArray addObject:currentThing];
+    }
+    
+    self.arrayOfContactObjects = [NSArray arrayWithArray:tempMuteArray];
+}
+
+
 
 
 #pragma mark - uipicker delegate methods (provides content)

@@ -1684,16 +1684,34 @@ const int intEQRTextElement = 10;
 
 -(void)queryForStringwithAsync:(NSString *)link parameters:(NSArray *)para completion:(CompletionBlockWithUnknownObject)completeBlock{
     
-    NSString *returnedKeyID = [self queryForStringWithLink:link parameters:para];
     
     if ([link isEqualToString:@"EQSetNewContact.php"]){
         
-        //return the Contact object
+        //run the local method to set the data and retrieve a string of the key
+        NSString *returnedKeyID = [self queryForStringWithLink:link parameters:para];
+        
+        //... but return the Contact object
         NSArray *firstArray = @[@"key_id", returnedKeyID];
         NSArray *topArray = @[firstArray];
         
         [self queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:topArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
            
+            if ([muteArray count] > 0){
+                
+                EQRContactNameItem *contactObject = [muteArray objectAtIndex:0];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completeBlock(contactObject);
+                });
+            }
+        }];
+    }
+    
+    if ([link isEqualToString:@"EQGetContactNameWithKey.php"]){
+        
+        //return the Contact object
+        [self queryWithLink:@"EQGetContactNameWithKey.php" parameters:para class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+            
             if ([muteArray count] > 0){
                 
                 EQRContactNameItem *contactObject = [muteArray objectAtIndex:0];

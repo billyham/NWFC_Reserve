@@ -90,14 +90,32 @@
         
         NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", keyID, nil];
         NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-        __block EQRContactNameItem* contactObject;
-        [webData queryWithLink:@"EQGetContactNameWithKey.php" parameters:topArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
             
-            if ([muteArray count] > 0){
+            [webData queryForStringwithAsync:@"EQGetContactNameWithKey.php" parameters:topArray completion:^(id object) {
                 
-                contactObject = (EQRContactNameItem*)[muteArray objectAtIndex:0];
-            }
-        }];
+                //completion block may not ever run??
+                
+                //set the current staffUser as the last previous user
+                if (object){
+                    staffUserManager.currentStaffUser = (EQRContactNameItem *)object;
+                }
+            }];
+        });
+        
+        
+        
+        
+//        __block EQRContactNameItem* contactObject;
+//        [webData queryWithLink:@"EQGetContactNameWithKey.php" parameters:topArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+//            
+//            if ([muteArray count] > 0){
+//                
+//                contactObject = (EQRContactNameItem*)[muteArray objectAtIndex:0];
+//            }
+//        }];
         
         //__________ERROR HANDLING WHEN NO CURRENTSTAFFUSER EXISTS______________
         //This isn't doing it...
@@ -108,7 +126,11 @@
 //        }
         
         //set the current staffUser as the last previous user
-        staffUserManager.currentStaffUser = contactObject;
+//        staffUserManager.currentStaffUser = contactObject;
+        
+        
+        
+        
     }
     
     //set to demo mode if it was last in demo mode

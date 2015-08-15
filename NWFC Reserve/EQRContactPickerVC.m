@@ -385,7 +385,7 @@
 
 -(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
     
-    NSLog(@"addSyncDataItem: received");
+//    NSLog(@"addSyncDataItem: received");
     
     //abort if selector is unrecognized, otherwise crash
     if (![self respondsToSelector:action]){
@@ -411,25 +411,6 @@
     }
     
     self.arrayOfContacts = [NSArray arrayWithArray:tempMuteArray];
-    
-//    //alphabatize the name list
-//    NSArray* sortedArray = [tempMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-//        
-//        NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
-//        NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
-//        
-//        return [string1 compare:string2];
-//    }];
-//    //__________
-//    
-//    self.arrayOfContacts = [NSArray arrayWithArray:sortedArray];
-//    
-//    //put some structure on that array of namesItems
-//    self.arrayOfContactsWithStructure = [NSArray arrayWithArray: [self expandFlatArrayToStructuredArray:sortedArray]];
-//
-//    
-//    
-//    [self.tableView reloadData];
 }
 
 
