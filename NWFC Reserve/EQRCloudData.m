@@ -151,6 +151,8 @@
 
 -(NSString*)queryForStringWithLink:(NSString*)link parameters:(NSArray*)para{
     
+    //___________When does this get called??? ever??
+    
     NSLog(@"queryForStringWithLink with: %@", link);
     
     if ([link isEqualToString:@"EQSetNewContact.php"]){
@@ -178,7 +180,7 @@
             }
         }];
     }
-
+    
     return @"nonsense";
 }
 
@@ -202,12 +204,11 @@
         
         [self confirmExistenceOfZone:recordZone.zoneName completion:^(BOOL successBool) {
             
-            //        CKRecordID *contactRecordID = [[CKRecordID alloc] initWithRecordName:[[NSUUID UUID] UUIDString]  zoneID:recordZone];
-            
             CKRecord *contactRecord = [[CKRecord alloc] initWithRecordType:@"Contact" zoneID:recordZone];
             
             //set the contact's key_id
             for (NSArray *subArray in para){
+
                 contactRecord[[subArray objectAtIndex:0]] = [subArray objectAtIndex:1];
             }
             
@@ -239,6 +240,7 @@
                 }
             }];
         }];
+        return;
     }
     
     if ([link isEqualToString:@"EQGetContactNameWithKey.php"]){
@@ -290,6 +292,7 @@
                 }
             }];
         }];
+        return;
     }
 }
 
@@ -349,13 +352,21 @@
                 }
             }];
         }];
+        return;
     }
     
     if ([link isEqualToString:@"EQGetEQRoomStaffAndInterns.php"]){
         
+        //_________!!!!!!!!!!!   AAAUUUUGGHHHH!!!!! CKQUERY can't do OR comparisons   !!!!!!!!_______________
+        
         CKDatabase *privateDatabase = [[CKContainer containerWithIdentifier:EQRCloudKitContainer] privateCloudDatabase];
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"current_eq_staff beginswith '1'"];
-        CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Contact" predicate:predicate];
+        NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"(current_eq_staff beginswith '1') AND (decommissioned != '1')"];
+        NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"(current_eq_intern beginswith '1') AND (decommissioned != '1')"];
+        NSMutableSet *set1 = [NSMutableSet setWithCapacity:1];
+        NSMutableSet *set2 = [NSMutableSet setWithCapacity:1];
+        
+        CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Contact" predicate:predicate1];
+        CKQuery *query2 = [[CKQuery alloc] initWithRecordType:@"Contact" predicate:predicate2];
         
         EQRModeManager *modeManager = [EQRModeManager sharedInstance];
         BOOL isInDemoMode = [modeManager isInDemoMode];
@@ -377,9 +388,7 @@
                     completeBlock(NO);
                 }
                 else {
-                    // Display the fetched records
-                    //                NSLog(@"Display the fetched records with count: %ld", (unsigned long)[results count]);
-                    
+ 
                     for (CKRecord *recordObject in results){
                         EQRContactNameItem *newRecord = [[EQRContactNameItem alloc] init];
                         newRecord.key_id = recordObject.recordID.recordName;
@@ -389,17 +398,62 @@
                         newRecord.phone = [recordObject objectForKey:@"phone"];
                         newRecord.email = [recordObject objectForKey:@"email"];
                         
-                        [self asyncDispatchWithObject:newRecord];
+                        [set1 addObject:newRecord];
                     }
                     
-                    self.delayedCompletionBlock = completeBlock;
-                    [self sendAsyncCompletionBlock];
+                    [privateDatabase performQuery:query2 inZoneWithID:recordZone completionHandler:^(NSArray *results, NSError *error) {
+                        if (error) {
+                            // Error handling for failed fetch from public database
+                            NSLog(@"Error handling for failed fetch from private database: %@", error);
+                            completeBlock(NO);
+                        }
+                        else {
+                         
+                            for (CKRecord *recordObject in results){
+                                BOOL foundInSet1 = NO;
+
+                                for (EQRContactNameItem *recordFromSet1 in set1){
+                                    
+                                    if ([recordFromSet1.key_id isEqualToString:recordObject.recordID.recordName]){
+                                        foundInSet1 = YES;
+                                        break;
+                                    }
+                                }
+                                
+                                if (foundInSet1 == NO){
+                                    
+                                    EQRContactNameItem *newRecord = [[EQRContactNameItem alloc] init];
+                                    newRecord.key_id = recordObject.recordID.recordName;
+                                    newRecord.first_name = [recordObject objectForKey:@"first_name"];
+                                    newRecord.last_name = [recordObject objectForKey:@"last_name"];
+                                    newRecord.first_and_last = [recordObject objectForKey:@"first_and_last"];
+                                    newRecord.phone = [recordObject objectForKey:@"phone"];
+                                    newRecord.email = [recordObject objectForKey:@"email"];
+                                    
+                                    [set2 addObject:newRecord];
+                                }
+                            }
+                            
+                            //combine the sets
+                            [set1 unionSet:set2];
+                            
+                            //send EQRContactNameItems back
+                            for (EQRContactNameItem *recordObjectYep in set1){
+                                
+                                [self asyncDispatchWithObject:recordObjectYep];
+                                
+                                self.delayedCompletionBlock = completeBlock;
+                                [self sendAsyncCompletionBlock];
+                            }
+                        }
+                    }];
                 }
             }];
         }];
-        
+        return;
     }
 }
+
 
 #pragma mark - async dispatch
 
