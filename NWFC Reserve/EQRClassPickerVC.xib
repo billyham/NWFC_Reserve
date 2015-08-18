@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRClassPickerVC">
             <connections>
+                <outlet property="segmentButton" destination="Q5b-jJ-KB6" id="Z5k-FP-G2K"/>
                 <outlet property="tableView" destination="63o-L0-Osj" id="BrJ-S0-dbn"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -16,10 +17,10 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ffo-mm-fgN" userLabel="View - with table">
-                    <rect key="frame" x="0.0" y="0.0" width="300" height="450"/>
+                    <rect key="frame" x="0.0" y="50" width="300" height="400"/>
                     <subviews>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="63o-L0-Osj">
-                            <rect key="frame" x="0.0" y="0.0" width="300" height="450"/>
+                            <rect key="frame" x="0.0" y="0.0" width="300" height="400"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <outlet property="dataSource" destination="-1" id="jTF-4Y-6ca"/>
@@ -33,6 +34,30 @@
                         <constraint firstAttribute="bottom" secondItem="63o-L0-Osj" secondAttribute="bottom" id="Spr-vm-kc3"/>
                         <constraint firstItem="63o-L0-Osj" firstAttribute="leading" secondItem="Ffo-mm-fgN" secondAttribute="leading" id="Y1T-tA-5ag"/>
                         <constraint firstItem="63o-L0-Osj" firstAttribute="top" secondItem="Ffo-mm-fgN" secondAttribute="top" id="k1T-Kw-DcP"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GaY-5Q-xRE" userLabel="View - with segment">
+                    <rect key="frame" x="0.0" y="0.0" width="300" height="50"/>
+                    <subviews>
+                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Q5b-jJ-KB6">
+                            <rect key="frame" x="57.5" y="8" width="185" height="29"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="28" id="x5M-5K-cQD"/>
+                            </constraints>
+                            <segments>
+                                <segment title="All"/>
+                                <segment title="Current Term"/>
+                            </segments>
+                            <connections>
+                                <action selector="segmentButtonTapped:" destination="-1" eventType="valueChanged" id="kBe-w9-tYH"/>
+                            </connections>
+                        </segmentedControl>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="Q5b-jJ-KB6" firstAttribute="top" secondItem="GaY-5Q-xRE" secondAttribute="top" constant="8" id="3BE-Zb-TU7"/>
+                        <constraint firstAttribute="height" constant="50" id="MU7-qr-p11"/>
+                        <constraint firstAttribute="centerX" secondItem="Q5b-jJ-KB6" secondAttribute="centerX" id="qNW-Tn-7J6"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e6N-uR-6cy" userLabel="View - remove class">
@@ -93,11 +118,13 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="hUq-wg-vjG" secondAttribute="trailing" id="0RJ-e7-v8N"/>
+                <constraint firstItem="GaY-5Q-xRE" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="37g-d9-KqR"/>
                 <constraint firstItem="hUq-wg-vjG" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="8bL-V5-BUr"/>
                 <constraint firstItem="e6N-uR-6cy" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Emk-Ls-VhI"/>
                 <constraint firstAttribute="trailing" secondItem="Ffo-mm-fgN" secondAttribute="trailing" id="Ffs-4d-10c"/>
                 <constraint firstAttribute="bottom" secondItem="e6N-uR-6cy" secondAttribute="bottom" id="Fos-v3-biQ"/>
-                <constraint firstItem="Ffo-mm-fgN" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="O8l-Nx-Dx7"/>
+                <constraint firstItem="GaY-5Q-xRE" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Mmc-Fv-FFg"/>
+                <constraint firstItem="Ffo-mm-fgN" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="50" id="O8l-Nx-Dx7"/>
                 <constraint firstItem="e6N-uR-6cy" firstAttribute="top" secondItem="Ffo-mm-fgN" secondAttribute="bottom" id="SlL-m8-a5i"/>
                 <constraint firstItem="hUq-wg-vjG" firstAttribute="top" secondItem="Ffo-mm-fgN" secondAttribute="bottom" id="Xq9-04-kfc"/>
                 <constraint firstAttribute="bottom" secondItem="Ffo-mm-fgN" secondAttribute="bottom" constant="50" id="bPC-lG-Apj"/>
@@ -105,6 +132,7 @@
                 <constraint firstAttribute="bottom" secondItem="Ffo-mm-fgN" secondAttribute="bottom" constant="50" id="gyw-0I-U5p"/>
                 <constraint firstAttribute="bottom" secondItem="hUq-wg-vjG" secondAttribute="bottom" id="qgi-gx-TUe"/>
                 <constraint firstItem="Ffo-mm-fgN" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="wNM-eb-qzJ"/>
+                <constraint firstAttribute="trailing" secondItem="GaY-5Q-xRE" secondAttribute="trailing" id="zOg-fV-GGL"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>

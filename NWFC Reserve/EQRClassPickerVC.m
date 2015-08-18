@@ -12,14 +12,14 @@
 #import "EQRClassItem.h"
 #import "EQRColors.h"
 
-
-
-@interface EQRClassPickerVC () <UISearchResultsUpdating, UISearchBarDelegate>
-
+@interface EQRClassPickerVC () <UISearchResultsUpdating, UISearchBarDelegate, EQRWebDataDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView* tableView;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *segmentButton;
+
 @property (strong, nonatomic) NSArray* arrayOfClasses;
 @property (strong, nonatomic) NSArray* arrayOfClassesWithAlphaStructure;
+@property (strong, nonatomic) NSArray *arrayOfAllClassesForPreservation;
 @property (strong, nonatomic) NSArray* arrayOfIndexLetter;
 @property (strong, nonatomic) EQRClassItem* myClassItem;
 
@@ -54,31 +54,43 @@
     
     self.mySearchController.searchBar.delegate = self;
     
+    //__________Scope Buttons when Search bar is activated...
+//    NSArray *scopeButtonTitles = @[@"All", @"Current Term"];
+//    self.mySearchController.searchBar.scopeButtonTitles = scopeButtonTitles;
+    //__________
+    
     //what does this do?
     self.definesPresentationContext = YES;
     
     
     //get list of classes
     EQRWebData* webData = [EQRWebData sharedInstance];
-    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+    webData.delegateDataFeed = self;
+    SEL thisSelector = @selector(addToArrayOfClasses:);
     
-    [webData queryWithLink:@"EQGetClassesAll.php" parameters:nil class:@"EQRClassItem" completion:^(NSMutableArray *muteArray) {
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
         
-        for (EQRClassItem* classItem in muteArray){
+        [webData queryWithAsync:@"EQGetClassesAll.php" parameters:nil class:@"EQRClassItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
             
-            [tempMuteArray addObject:classItem];
-        }
-    }];
-    
-    if ([tempMuteArray count] < 1){
-        
-        //error handling when no objects returned
-    }
+            if (isLoadingFlagUp){
+                NSLog(@"isLoadingFlagUP is YES");
+            }
+            
+            [self loadTheViewStage2];
+        }];
+    });
+}
 
-    self.arrayOfClasses = [self sortArrayByAlphabetical:tempMuteArray];
+
+-(void)loadTheViewStage2{
+    
+    self.arrayOfClasses = [self sortArrayByAlphabetical:self.arrayOfClasses];
+    self.arrayOfAllClassesForPreservation = [self.arrayOfClasses copy];
     
     self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
     
+    [self.tableView reloadData];
 }
 
 
@@ -93,6 +105,36 @@
 
 }
 
+
+-(IBAction)segmentButtonTapped:(id)sender{
+    
+    NSInteger index = [(UISegmentedControl *)sender selectedSegmentIndex];
+    if (index == 1){    //current term selected
+        
+        NSMutableArray *muteArray = [NSMutableArray arrayWithCapacity:1];
+        NSString* currentTerm = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
+        
+        //must not pass a nil parameter in localizedCaseInsensitiveCompare:
+        if (currentTerm){
+            for (EQRClassItem * classItem in self.arrayOfClasses){
+                if ([classItem.term localizedCaseInsensitiveCompare:currentTerm] == NSOrderedSame){
+                    [muteArray addObject:classItem];
+                }
+            }
+            self.arrayOfClasses = [muteArray copy];
+        }
+            
+        self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
+        [self.tableView reloadData];
+        
+    }else{     //all selected
+        
+        self.arrayOfClasses = [self.arrayOfAllClassesForPreservation copy];
+        self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
+        [self.tableView reloadData];
+    }
+    
+}
 
 #pragma mark - retrieval methods
 
@@ -198,6 +240,37 @@
     }
     
     return topArray;
+}
+
+
+#pragma mark - webdata delegate methods
+
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    
+    //abort if selector is unrecognized, otherwise crash
+    if (![self respondsToSelector:action]){
+        NSLog(@"cannot perform selector: %@", NSStringFromSelector(action));
+        return;
+    }
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+    
+}
+
+-(void)addToArrayOfClasses:(id)currentThing{
+    
+    NSMutableArray *tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+    
+    if (currentThing){
+        
+        tempMuteArray = [NSMutableArray arrayWithArray:self.arrayOfClasses];
+        [tempMuteArray addObject:currentThing];
+    }
+    
+    self.arrayOfClasses = [NSArray arrayWithArray:tempMuteArray];
 }
 
 
