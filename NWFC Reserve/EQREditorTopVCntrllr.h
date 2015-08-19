@@ -42,7 +42,7 @@
 -(void)retrieveNotesData:(NSString*)noteText;
 
 //class picker delegate method
--(void)initiateRetrieveClassItem;
+-(void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem;;
 
 
 @end

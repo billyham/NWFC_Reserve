@@ -27,6 +27,8 @@
 
 @property (strong, nonatomic) UISearchController *mySearchController;
 
+@property (strong, nonatomic) EQRAddNewClassVC *addNewClassVC;
+
 @end
 
 @implementation EQRClassPickerVC
@@ -96,15 +98,6 @@
 
 #pragma mark - Actions
 
--(IBAction)removeClassButton:(id)sender{
-    
-    self.myClassItem = nil;
-    
-    //tell delegate to retrieve the nil item
-    [self.delegate initiateRetrieveClassItem];
-
-}
-
 
 -(IBAction)segmentButtonTapped:(id)sender{
     
@@ -113,6 +106,8 @@
         
         NSMutableArray *muteArray = [NSMutableArray arrayWithCapacity:1];
         NSString* currentTerm = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
+        
+        self.arrayOfClasses = [self.arrayOfAllClassesForPreservation copy];
         
         //must not pass a nil parameter in localizedCaseInsensitiveCompare:
         if (currentTerm){
@@ -127,6 +122,26 @@
         self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
         [self.tableView reloadData];
         
+    }else if (index == 2){
+        
+        NSMutableArray *muteArray = [NSMutableArray arrayWithCapacity:1];
+        NSString* currentCampTerm = [[[NSUserDefaults standardUserDefaults] objectForKey:@"campTerm"] objectForKey:@"campTerm"];
+        
+        self.arrayOfClasses = [self.arrayOfAllClassesForPreservation copy];
+        
+        //must not pass a nil parameter in localizedCaseInsensitiveCompare:
+        if (currentCampTerm){
+            for (EQRClassItem * classItem in self.arrayOfClasses){
+                if ([classItem.term localizedCaseInsensitiveCompare:currentCampTerm] == NSOrderedSame){
+                    [muteArray addObject:classItem];
+                }
+            }
+            self.arrayOfClasses = [muteArray copy];
+        }
+        
+        self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
+        [self.tableView reloadData];
+    
     }else{     //all selected
         
         self.arrayOfClasses = [self.arrayOfAllClassesForPreservation copy];
@@ -136,13 +151,90 @@
     
 }
 
+-(IBAction)addNewClassButton:(id)sender{
+ 
+    EQRAddNewClassVC* newClass = [[EQRAddNewClassVC alloc] initWithNibName:@"EQRAddNewClassVC" bundle:nil];
+    
+    self.addNewClassVC = newClass;
+    self.addNewClassVC.delegate = self;
+    
+    [self.navigationController pushViewController:self.addNewClassVC animated:YES];
+    
+}
+
+
+#pragma mark AddClassVC delegate method
+
+-(void)informClassAdditionHasHappended:(EQRClassItem *)classItem{
+    
+    //do something with information
+    //add the object directly into the array of classes
+    //and move to that addition
+
+    [self.navigationController popViewControllerAnimated:YES];
+
+    if (!classItem){
+        //error handling
+        return;
+    }
+    
+    //manually insert the new class into the arrays
+    NSMutableArray *tempMute = [NSMutableArray arrayWithArray:self.arrayOfClasses];
+    [tempMute addObject:classItem];
+    
+    //alphabatize the name list
+    NSArray* sortedArray = [tempMute sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        NSString* string1 = [(EQRClassItem*)obj1 section_name];
+        NSString* string2 = [(EQRClassItem*)obj2 section_name];
+        
+        return [string1 compare:string2];
+    }];
+    
+    self.arrayOfClasses = [NSArray arrayWithArray:sortedArray];
+    
+    self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
+    
+    [self.tableView reloadData];
+    
+    
+    //______automatically choose the newly created contact______... BUT only if it's not currently displaying a search result
+    if (self.mySearchController.active == NO){
+        
+        __block NSIndexPath* chosenIndexPath;
+        
+        [self.arrayOfClassesWithAlphaStructure enumerateObjectsUsingBlock:^(NSArray* subarray, NSUInteger idxSection, BOOL *stopInTop) {
+            
+            [subarray enumerateObjectsUsingBlock:^(EQRClassItem* thisClassItem, NSUInteger idxRow, BOOL *stopInSub) {
+                
+                if ([thisClassItem.key_id isEqualToString:classItem.key_id]){
+                    
+                    chosenIndexPath = [NSIndexPath indexPathForRow:idxRow inSection:idxSection];
+                }
+            }];
+        }];
+        
+        //move table to new contact
+        [self.tableView scrollToRowAtIndexPath:chosenIndexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        
+    }else{
+        
+        NSMutableArray *tempMuteArray = [NSMutableArray arrayWithArray:self.searchResultsArrayOfClasses];
+        [tempMuteArray insertObject:classItem atIndex:0];
+        self.searchResultsArrayOfClasses = [NSArray arrayWithArray:tempMuteArray];
+        
+        [self.tableView reloadData];
+    }
+}
+
+
 #pragma mark - retrieval methods
 
--(id)retrieveClassItem{
-    
-    
-    return self.myClassItem;
-}
+//-(id)retrieveClassItem{
+//    
+//    
+//    return self.myClassItem;
+//}
 
 
 -(NSArray*)sortArrayByAlphabetical:(NSArray*)thisArray{
@@ -356,7 +448,7 @@
     }
     
     //tell delegate to retrieve the selected class item
-    [self.delegate initiateRetrieveClassItem];
+    [self.delegate initiateRetrieveClassItem:self.myClassItem];
     
 }
 

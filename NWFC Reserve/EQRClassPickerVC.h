@@ -7,24 +7,29 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRClassItem.h"
+#import "EQRAddNewClassVC.h"
 
 @protocol EQRClassPickerDelegate;
 
 
-@interface EQRClassPickerVC : UIViewController <UITableViewDataSource, UITableViewDelegate>{
+@interface EQRClassPickerVC : UIViewController <UITableViewDataSource, UITableViewDelegate, EQRClassAddDelegate>{
     
     __weak id <EQRClassPickerDelegate> delegate;
 }
 
 @property (weak, nonatomic) id <EQRClassPickerDelegate> delegate;
 
--(id)retrieveClassItem;
+//-(id)retrieveClassItem;
+
+//add new class delegate method
+-(void)informClassAdditionHasHappended:(EQRClassItem *)classItem;
 
 @end
 
 
 @protocol EQRClassPickerDelegate <NSObject>
 
--(void)initiateRetrieveClassItem;
+-(void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem;
 
 @end

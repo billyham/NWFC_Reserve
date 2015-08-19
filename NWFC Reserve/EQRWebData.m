@@ -1722,6 +1722,15 @@ const int intEQRTextElement = 10;
             }
         }];
     }
+    
+    if ([link isEqualToString:@"EQGetClassCatalogTitleWithKey.php"]){
+        
+        NSString *returnString = [self queryForStringWithLink:@"EQGetClassCatalogTitleWithKey.php" parameters:para];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+    }
 }
 
 

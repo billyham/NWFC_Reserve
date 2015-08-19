@@ -914,7 +914,10 @@
         
         EQRClassPickerVC* classPickerVC = [[EQRClassPickerVC alloc] initWithNibName:@"EQRClassPickerVC" bundle:nil];
         
-        UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:classPickerVC];
+        UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:classPickerVC];
+        [navController setNavigationBarHidden:YES];
+        
+        UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:navController];
         self.myClassPicker = popOver;
         self.myClassPicker.delegate = self;
         
@@ -941,7 +944,7 @@
 
 #pragma mark - class picker 
 
--(void)initiateRetrieveClassItem{
+-(void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem{
     
     self.filterIsOnFlag = YES;
     
@@ -954,12 +957,12 @@
     self.navigationItem.title = [NSString stringWithFormat:@"%@ - Filtered Results",
                                  [monthNameFormatter stringFromDate:self.dateForShow]];
     
-    EQRClassPickerVC* classPickerVC = (EQRClassPickerVC*)[self.myClassPicker contentViewController];
+//    EQRClassPickerVC* classPickerVC = (EQRClassPickerVC*)[self.myClassPicker contentViewController];
+//    
+//    //can be nil... no class assigned to request
+//    EQRClassItem* thisClassItem = [classPickerVC retrieveClassItem];
     
-    //can be nil... no class assigned to request
-    EQRClassItem* thisClassItem = [classPickerVC retrieveClassItem];
-    
-    self.filter_classSectionKey = thisClassItem.key_id;
+    self.filter_classSectionKey = selectedClassItem.key_id;
     
     [UIView animateWithDuration:0.3 animations:^{
         self.mainSubViewTopConstraint.constant = 50;

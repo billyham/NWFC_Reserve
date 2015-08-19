@@ -16,6 +16,6 @@
 -(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action;
 
 //EQRClassPicker delegate
--(void)initiateRetrieveClassItem;
+-(void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem;
 
 @end

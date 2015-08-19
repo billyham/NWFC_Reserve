@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
@@ -19,6 +19,7 @@
                 <outlet property="notesView" destination="1e6-uK-hFI" id="bk6-eC-mKm"/>
                 <outlet property="pickUpTimeValue" destination="u0E-eI-hJR" id="Jad-wb-vi9"/>
                 <outlet property="pickUpTimeValueField" destination="MiT-xo-BtN" id="ibF-bl-86Z"/>
+                <outlet property="removeClassButton" destination="oLn-oN-sz1" id="Jk3-Hn-EAu"/>
                 <outlet property="returnTimeValue" destination="jFc-lz-Nn7" id="NOx-lz-cXD"/>
                 <outlet property="returnTimeValueField" destination="f4d-wf-tFC" id="AJu-jI-UPJ"/>
                 <outlet property="rightView" destination="gRA-am-cUZ" id="IuP-zo-EqK"/>
@@ -86,7 +87,7 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" alpha="0.20000000000000001" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select a Request" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qCN-Bz-hug">
-                            <rect key="frame" x="266" y="494" width="235" height="36"/>
+                            <rect key="frame" x="266" y="494" width="234.5" height="36"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="36" id="1YU-jt-bS5"/>
                             </constraints>
@@ -355,9 +356,9 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="llR-8O-tyv">
-                                    <rect key="frame" x="16" y="75" width="277" height="30"/>
+                                    <rect key="frame" x="16" y="75" width="173" height="30"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" constant="277" id="ED8-Li-eK6"/>
+                                        <constraint firstAttribute="width" constant="173" id="ED8-Li-eK6"/>
                                         <constraint firstAttribute="height" constant="30" id="bJE-1U-JhU"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -368,16 +369,32 @@
                                         <action selector="changeClassTextField:" destination="-1" eventType="touchUpInside" id="O3c-7x-sMh"/>
                                     </connections>
                                 </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oLn-oN-sz1">
+                                    <rect key="frame" x="197" y="75" width="50" height="30"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="30" id="UXa-EI-SrN"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                    <state key="normal" title="Remove">
+                                        <color key="titleColor" red="0.68359375" green="0.1107016856" blue="0.13759704240000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="removeClassButton:" destination="-1" eventType="touchUpInside" id="hTy-6m-pV5"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="TXh-yj-hnW" firstAttribute="leading" secondItem="Oqx-Zn-x5k" secondAttribute="leading" constant="16" id="0eQ-gp-X5f"/>
                                 <constraint firstItem="TXh-yj-hnW" firstAttribute="top" secondItem="HdU-Y9-Idv" secondAttribute="bottom" constant="8" id="1hj-L0-fZq"/>
+                                <constraint firstItem="oLn-oN-sz1" firstAttribute="top" secondItem="llR-8O-tyv" secondAttribute="top" id="2LN-44-aoE"/>
                                 <constraint firstAttribute="height" constant="185" id="6fk-Kf-vwi"/>
                                 <constraint firstItem="MiT-xo-BtN" firstAttribute="top" secondItem="llR-8O-tyv" secondAttribute="bottom" constant="8" id="BZm-cE-fd4"/>
                                 <constraint firstItem="MiT-xo-BtN" firstAttribute="leading" secondItem="Oqx-Zn-x5k" secondAttribute="leading" constant="16" id="E1Y-ib-Uxd"/>
                                 <constraint firstItem="llR-8O-tyv" firstAttribute="leading" secondItem="Oqx-Zn-x5k" secondAttribute="leading" constant="16" id="We3-SC-CCG"/>
                                 <constraint firstItem="HdU-Y9-Idv" firstAttribute="leading" secondItem="Oqx-Zn-x5k" secondAttribute="leading" constant="16" id="XN2-Me-elN"/>
+                                <constraint firstItem="oLn-oN-sz1" firstAttribute="leading" secondItem="llR-8O-tyv" secondAttribute="trailing" constant="8" id="emH-XY-njN"/>
                                 <constraint firstItem="f4d-wf-tFC" firstAttribute="top" secondItem="MiT-xo-BtN" secondAttribute="bottom" constant="8" id="tYk-EZ-YmD"/>
                                 <constraint firstItem="llR-8O-tyv" firstAttribute="top" secondItem="TXh-yj-hnW" secondAttribute="bottom" constant="7" id="xaS-Ji-2Ly"/>
                                 <constraint firstItem="f4d-wf-tFC" firstAttribute="leading" secondItem="Oqx-Zn-x5k" secondAttribute="leading" constant="16" id="zQt-YD-p1D"/>

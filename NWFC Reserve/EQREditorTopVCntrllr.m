@@ -44,6 +44,7 @@
 @property (strong, nonatomic) EQREditorRenterVCntrllr* myRenterViewController;
 
 @property (strong, nonatomic) IBOutlet UIButton* classField;
+@property (strong, nonatomic) IBOutlet UIButton *removeClassButton;
 
 @property (strong, nonatomic) IBOutlet UIButton* addEquipItemButton;
 
@@ -749,7 +750,10 @@
     
     EQRClassPickerVC* classPickerVC = [[EQRClassPickerVC alloc] initWithNibName:@"EQRClassPickerVC" bundle:nil];
     
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:classPickerVC];
+    UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:classPickerVC];
+    [navController setNavigationBarHidden:YES];
+    
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:navController];
     self.myClassPicker = popOver;
     self.myClassPicker.delegate = self;
     
@@ -766,17 +770,24 @@
 }
 
 
+-(IBAction)removeClassButton:(id)sender{
+    
+    [self initiateRetrieveClassItem:nil];
+    
+}
 
--(void)initiateRetrieveClassItem{
+
+
+-(void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem;{
     
-    EQRClassPickerVC* classPickerVC = (EQRClassPickerVC*)[self.myClassPicker contentViewController];
-    
-    //can be nil... no class assigned to request
-    EQRClassItem* thisClassItem = [classPickerVC retrieveClassItem];
+//    EQRClassPickerVC* classPickerVC = (EQRClassPickerVC*)[self.myClassPicker contentViewController];
+//    
+//    //can be nil... no class assigned to request
+//    EQRClassItem* thisClassItem = [classPickerVC retrieveClassItem];
     
     //update view objects
 //    [self.classField setHidden:NO];
-    if (!thisClassItem){
+    if (!selectedClassItem){
         
         [self.classField setTitle:@"(No Class Selected)" forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
         
@@ -787,12 +798,12 @@
         
     }else{
         
-        [self.classField setTitle:thisClassItem.section_name forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+        [self.classField setTitle:selectedClassItem.section_name forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
         
         //update schedule request
-        self.privateRequestManager.request.classItem = thisClassItem;
-        self.privateRequestManager.request.classSection_foreignKey = thisClassItem.key_id;
-        self.privateRequestManager.request.classTitle_foreignKey = thisClassItem.catalog_foreign_key;
+        self.privateRequestManager.request.classItem = selectedClassItem;
+        self.privateRequestManager.request.classSection_foreignKey = selectedClassItem.key_id;
+        self.privateRequestManager.request.classTitle_foreignKey = selectedClassItem.catalog_foreign_key;
     }
 
     //____data layer is updated with save button___

@@ -53,6 +53,7 @@
 @property (strong, nonatomic) IBOutlet UIButton* nameValueField;
 @property (strong, nonatomic) IBOutlet UIButton* typeValueField;
 @property (strong, nonatomic) IBOutlet UIButton* classValueField;
+@property (strong, nonatomic) IBOutlet UIButton *removeClassButton;
 @property (strong, nonatomic) IBOutlet UIButton* pickUpTimeValueField;
 @property (strong, nonatomic) IBOutlet UIButton* returnTimeValueField;
 @property (strong, nonatomic) IBOutlet UITextView* notesView;
@@ -1026,7 +1027,10 @@
     EQRClassPickerVC* classPickerVC = [[EQRClassPickerVC alloc] initWithNibName:@"EQRClassPickerVC" bundle:nil];
     self.myClassPickerVC = classPickerVC;
     
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.myClassPickerVC];
+    UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:self.myClassPickerVC];
+    [navController setNavigationBarHidden:YES];
+    
+    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:navController];
     self.myClassPicker = popOver;
     self.myClassPicker.delegate = self;
     
@@ -1045,6 +1049,11 @@
     //assign as delegate
     self.myClassPickerVC.delegate = self;
     
+}
+
+-(IBAction)removeClassButton:(id)sender{
+    
+    [self initiateRetrieveClassItem:nil];
 }
 
 
@@ -1265,14 +1274,14 @@
 }
 
 
--(void)initiateRetrieveClassItem{
+-(void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem;{
     
     //can be nil... no class assigned to request
-    EQRClassItem* thisClassItem = [self.myClassPickerVC retrieveClassItem];
+//    EQRClassItem* thisClassItem = [self.myClassPickerVC retrieveClassItem];
     
     //update view objects
     //    [self.classField setHidden:NO];
-    if (!thisClassItem){
+    if (!selectedClassItem){
         
         self.classValue.text = @"(No Class Selected)";
         [self.classValueField setTitle:@"(No Class Selected)" forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
@@ -1285,13 +1294,13 @@
     }else{
         
         //update view objects
-        self.classValue.text = thisClassItem.section_name;
-        [self.classValueField setTitle:thisClassItem.section_name forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+        self.classValue.text = selectedClassItem.section_name;
+        [self.classValueField setTitle:selectedClassItem.section_name forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
         
         //update schedule request
-        self.myScheduleRequest.classItem = thisClassItem;
-        self.myScheduleRequest.classSection_foreignKey = thisClassItem.key_id;
-        self.myScheduleRequest.classTitle_foreignKey = thisClassItem.catalog_foreign_key;
+        self.myScheduleRequest.classItem = selectedClassItem;
+        self.myScheduleRequest.classSection_foreignKey = selectedClassItem.key_id;
+        self.myScheduleRequest.classTitle_foreignKey = selectedClassItem.catalog_foreign_key;
     }
     
     //update data layer
