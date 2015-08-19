@@ -772,6 +772,16 @@
                             string4 = [NSString stringWithFormat:@"0%@", string4];
                         }
                         
+                        //only if app is set to randomize equipment selection:
+                        if (EQRRandomizeEquipSelection == YES){
+                            float randomNumber = arc4random() % 2;
+                            if (randomNumber > 0){
+                                NSString *tempString = string3;
+                                string3 = string4;
+                                string4 = tempString;
+                            }
+                        }
+                        
                         return [string3 compare:string4];
                         
                     }else{

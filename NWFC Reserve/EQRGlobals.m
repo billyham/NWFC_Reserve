@@ -75,6 +75,7 @@ BOOL EQRDisableTimeLimitForRequest = YES;
 BOOL EQRIncludeQRCodeReader = YES;
 BOOL EQRAllowHardcodedPassword = YES;
 NSString* EQRHardcodedPassword = @"super8";
+BOOL EQRRandomizeEquipSelection = YES;
 
 //service issue thresholds
 NSInteger EQRThresholdForDescriptiveNote = 2;

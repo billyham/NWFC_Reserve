@@ -70,6 +70,7 @@ extern BOOL EQRDisableTimeLimitForRequest;
 extern BOOL EQRIncludeQRCodeReader;
 extern BOOL EQRAllowHardcodedPassword;
 extern NSString* EQRHardcodedPassword;
+extern BOOL EQRRandomizeEquipSelection;
 
 //service issue thresholds
 extern NSInteger EQRThresholdForDescriptiveNote;
