@@ -1705,6 +1705,7 @@ const int intEQRTextElement = 10;
                 });
             }
         }];
+        return;
     }
     
     if ([link isEqualToString:@"EQGetContactNameWithKey.php"]){
@@ -1721,6 +1722,7 @@ const int intEQRTextElement = 10;
                 });
             }
         }];
+        return;
     }
     
     if ([link isEqualToString:@"EQGetClassCatalogTitleWithKey.php"]){
@@ -1730,6 +1732,28 @@ const int intEQRTextElement = 10;
         dispatch_async(dispatch_get_main_queue(), ^{
             completeBlock(returnString);
         });
+        return;
+    }
+    
+    if ([link isEqualToString:@"EQSetNewClassCatalog.php"]){
+        
+        NSString *returnString = [self queryForStringWithLink:@"EQSetNewClassCatalog.php" parameters:para];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        return;
+    }
+    
+    if ([link isEqualToString:@"EQSetNewClassSection.php"]){
+        
+        NSString *returnString = [self queryForStringWithLink:@"EQSetNewClassSection.php" parameters:para];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        
+        return;
     }
 }
 

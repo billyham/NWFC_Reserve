@@ -11,6 +11,7 @@
 #import "EQRContactPickerVC.h"
 #import "EQRGlobals.h"
 #import "EQRWebData.h"
+#import "EQRClassCatalog.h"
 
 @interface EQRAddNewClassVC () <UITextFieldDelegate, EQRClassPickerDelegate, EQRContactPickerDelegate, EQRWebDataDelegate>
 
@@ -24,6 +25,7 @@
 @property (strong, nonatomic) EQRContactNameItem *instructorContactItem;
 
 @property BOOL isMakingNewClassCatalogItem;
+@property BOOL hasInstructorID;
 
 @end
 
@@ -43,8 +45,105 @@
 
 -(IBAction)doneButton:(id)sender{
     
-    [self.delegate informClassAdditionHasHappended:self.myClassItem];
- 
+    //determine if classCatalog is new or not
+    //if new, submit information to database and receive the catalogObject (or at least the key)
+    
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    
+    if (self.isMakingNewClassCatalogItem){  //create a classCatalog item
+        
+        if (!self.titleView.text || [self.titleView.text isEqualToString:@""]){
+            //error handling if no title exists.
+            //
+            [self.delegate informClassAdditionHasHappended:nil];
+        }
+        
+        EQRClassCatalog *classCatalogItem = [[EQRClassCatalog alloc] init];
+        classCatalogItem.title = self.titleView.text;
+        classCatalogItem.instructor_foreign_key = @"";
+        classCatalogItem.instructor_name = @"";
+        
+        if (self.hasInstructorID){
+            classCatalogItem.instructor_foreign_key = self.instructorContactItem.key_id;
+            classCatalogItem.instructor_name = self.instructorContactItem.first_and_last;
+        }
+        
+        NSArray *firstArray = @[@"title", classCatalogItem.title];
+        NSArray *secondArray = @[@"instructor_foreign_key", classCatalogItem.instructor_foreign_key];
+        NSArray *thirdArray = @[@"instructor_name", classCatalogItem.instructor_name];
+        NSArray *topArray = @[firstArray, secondArray, thirdArray];
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+            
+            [webData queryForStringwithAsync:@"EQSetNewClassCatalog.php" parameters:topArray completion:^(NSString *returnKey) {
+                
+                if (returnKey){
+                    [self doneButtonStage2:returnKey];
+                }else{
+                    //error handle failed return key
+                    NSLog(@"EQRAddNewClassVC > dontButton, failed to get a returnString classCatalog key");
+                    [self.delegate informClassAdditionHasHappended:nil];
+                }
+            }];
+        });
+        
+    }else{    //use existing classCatalog item
+        
+        if (self.referenceClassItem) {
+            
+            if (self.referenceClassItem.catalog_foreign_key){
+                
+                [self doneButtonStage2:self.referenceClassItem.catalog_foreign_key];
+                
+            }else{
+                //error handling if no catalog foreign key exists
+                NSLog(@"EQRAddNewClassVC > doneButton, expects a reference class item, but its catalog foreign key is nil");
+                [self.delegate informClassAdditionHasHappended:nil];
+            }
+        }else{
+            //error handling if no reference class object exists
+            NSLog(@"EQRAddNewClassVC > doneButton, expects a reference class item, but property is nil");
+            [self.delegate informClassAdditionHasHappended:nil];
+        }
+    }
+}
+
+
+-(void)doneButtonStage2:(NSString *)classCatalogForeignKey{
+    
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    
+    //submit information about new class section to database and receive sectionObject
+    EQRClassItem *classItem = [[EQRClassItem alloc] init];
+    classItem.catalog_foreign_key = classCatalogForeignKey;
+    classItem.section_name = [NSString stringWithFormat:@"%@ - Starts %@", self.titleView.text, self.sectionStartDate.text];
+    classItem.term = self.term.text;
+    
+    NSArray *firstArray = @[@"section_name", classItem.section_name];
+    NSArray *secondArray = @[@"catalog_foreign_key", classItem.catalog_foreign_key];
+    NSArray *thirdArray = @[@"term", classItem.term];
+    NSArray *topArray = @[firstArray, secondArray, thirdArray];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryForStringwithAsync:@"EQSetNewClassSection.php" parameters:topArray completion:^(NSString *returnKey) {
+            
+            if (returnKey){
+            
+                classItem.key_id = returnKey;
+                [self.delegate informClassAdditionHasHappended:classItem];
+
+            }else{
+                //error handle failed return key
+                NSLog(@"EQRAddNewClassVC > dontButtonStage2, failed to get a return from classSection key");
+                [self.delegate informClassAdditionHasHappended:nil];
+            }
+        }];
+    });
 }
 
 
@@ -120,14 +219,16 @@
 #pragma mark - contact picker delegate methods
 
 -(void)retrieveSelectedNameItem{
-    
-    
-    
-    
+    //this is a required method in the protocol, but
+    //no need to do anything because the next method does the work
 }
 
 
 -(void)retrieveSelectedNameItemWithObject:(id)contactObject{
+    
+    if (contactObject){
+        self.hasInstructorID = YES;
+    }
     
     self.instructorContactItem = contactObject;
     

@@ -12,6 +12,8 @@
 #import "EQRGlobals.h"
 #import "EQRStaffUserManager.h"
 #import "EQRModeManager.h"
+#import "EQRClassCatalog.h"
+#import "EQRClassItem.h"
 
 @interface EQRCloudData ()
 
@@ -189,18 +191,19 @@
     
     NSLog(@"queryForStringWithAsync with: %@", link);
     
+    EQRModeManager *modeManager = [EQRModeManager sharedInstance];
+    BOOL isInDemoMode = [modeManager isInDemoMode];
+    
+    CKRecordZoneID *recordZone;
+    
+    if (isInDemoMode){
+        recordZone = [[CKRecordZoneID alloc] initWithZoneName:EQRRecordZoneDemo  ownerName:CKOwnerDefaultName];
+    }else{
+        recordZone = [[CKRecordZoneID alloc] initWithZoneName:CKRecordZoneDefaultName  ownerName:CKOwnerDefaultName];
+    }
+    
+    
     if ([link isEqualToString:@"EQSetNewContact.php"]){
-        
-        EQRModeManager *modeManager = [EQRModeManager sharedInstance];
-        BOOL isInDemoMode = [modeManager isInDemoMode];
-        
-        CKRecordZoneID *recordZone;
-        
-        if (isInDemoMode){
-            recordZone = [[CKRecordZoneID alloc] initWithZoneName:EQRRecordZoneDemo  ownerName:CKOwnerDefaultName];
-        }else{
-            recordZone = [[CKRecordZoneID alloc] initWithZoneName:CKRecordZoneDefaultName  ownerName:CKOwnerDefaultName];
-        }
         
         [self confirmExistenceOfZone:recordZone.zoneName completion:^(BOOL successBool) {
             
@@ -244,18 +247,7 @@
     }
     
     if ([link isEqualToString:@"EQGetContactNameWithKey.php"]){
-        
-        EQRModeManager *modeManager = [EQRModeManager sharedInstance];
-        BOOL isInDemoMode = [modeManager isInDemoMode];
-        
-        CKRecordZoneID *recordZone;
-        
-        if (isInDemoMode){
-            recordZone = [[CKRecordZoneID alloc] initWithZoneName:EQRRecordZoneDemo  ownerName:CKOwnerDefaultName];
-        }else{
-            recordZone = [[CKRecordZoneID alloc] initWithZoneName:CKRecordZoneDefaultName  ownerName:CKOwnerDefaultName];
-        }
-        
+
         [self confirmExistenceOfZone:recordZone.zoneName completion:^(BOOL successBool) {
             
             NSString *recordIDAsString;
@@ -294,6 +286,119 @@
         }];
         return;
     }
+    
+    if ([link isEqualToString:@"EQGetClassCatalogTitleWithKey.php"]){
+        
+        [self confirmExistenceOfZone:recordZone.zoneName completion:^(BOOL successBool) {
+            
+            NSString *recordIDAsString;
+            
+            //set the contact's key_id
+            for (NSArray *subArray in para){
+                recordIDAsString = [subArray objectAtIndex:1];
+            }
+            
+            CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:recordIDAsString zoneID:recordZone];
+            
+            CKContainer *myContainer = [CKContainer containerWithIdentifier:EQRCloudKitContainer];
+            CKDatabase *privateDatabase = [myContainer privateCloudDatabase];
+            [privateDatabase fetchRecordWithID:recordID completionHandler:^(CKRecord *record, NSError *error) {
+                
+                if (!error){
+                    //successfully saved record
+                    //__________!!!!!!!!!!!!    THIS IS UGLY    !!!!!!!!!!!!_______________
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        if ([record objectForKey:@"title"]){
+                            
+                            completeBlock([record objectForKey:@"title"]);
+                            
+                        }else{
+                            //error handling when no recoredName is returend
+                            NSLog(@"EQRCloudData > queryForStringAsync for EQGetClassCatalogTitleWithKey, no key returned  %@", error);
+                        }
+                    });
+                    
+                }else{
+                    NSLog(@"failed to pull record with this error: %@", error);
+                }
+            }];
+        }];
+
+        return;
+    }
+    
+    if ([link isEqualToString:@"EQSetNewClassCatalog.php"]){
+        
+        [self confirmExistenceOfZone:recordZone.zoneName completion:^(BOOL successBool) {
+            
+            CKRecord *classCatalogRecord = [[CKRecord alloc] initWithRecordType:@"ClassCatalog" zoneID:recordZone];
+            
+            //set the contact's key_id
+            for (NSArray *subArray in para){
+                
+                classCatalogRecord[[subArray objectAtIndex:0]] = [subArray objectAtIndex:1];
+            }
+            
+            classCatalogRecord[@"decommissioned" ] = @"";
+            
+            CKContainer *myContainer = [CKContainer containerWithIdentifier:EQRCloudKitContainer];
+            CKDatabase *privateDatabase = [myContainer privateCloudDatabase];
+            [privateDatabase saveRecord:classCatalogRecord completionHandler:^(CKRecord *record, NSError *error) {
+                
+                if (!error){
+                    //successfully saved record
+                    //__________!!!!!!!!!!!!    THIS IS UGLY    !!!!!!!!!!!!_______________
+//                    NSLog(@"successfully saved record");
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        completeBlock(record.recordID.recordName);
+                    });
+                    
+                }else{
+                    
+                    NSLog(@"failed to save record with this error: %@", error);
+                }
+            }];
+        }];
+
+        return;
+    }
+    
+    if ([link isEqualToString:@"EQSetNewClassSection.php"]){
+        
+        [self confirmExistenceOfZone:recordZone.zoneName completion:^(BOOL successBool) {
+            
+            CKRecord *classSectionRecord = [[CKRecord alloc] initWithRecordType:@"ClassSection" zoneID:recordZone];
+            
+            //set the contact's key_id
+            for (NSArray *subArray in para){
+                
+                classSectionRecord[[subArray objectAtIndex:0]] = [subArray objectAtIndex:1];
+            }
+            
+            CKContainer *myContainer = [CKContainer containerWithIdentifier:EQRCloudKitContainer];
+            CKDatabase *privateDatabase = [myContainer privateCloudDatabase];
+            [privateDatabase saveRecord:classSectionRecord completionHandler:^(CKRecord *record, NSError *error) {
+                
+                if (!error){
+
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        completeBlock(record.recordID.recordName);
+                    });
+                    
+                }else{
+                    
+                    NSLog(@"failed to save record with this error: %@", error);
+                }
+            }];
+        }];
+        
+        return;
+    }
 }
 
 
@@ -308,23 +413,23 @@
     
     [self authenticateICloud];
     
+    EQRModeManager *modeManager = [EQRModeManager sharedInstance];
+    BOOL isInDemoMode = [modeManager isInDemoMode];
+    
+    CKRecordZoneID *recordZone;
+    
+    if (isInDemoMode){
+        recordZone = [[CKRecordZoneID alloc] initWithZoneName:EQRRecordZoneDemo  ownerName:CKOwnerDefaultName];
+    }else{
+        recordZone = [[CKRecordZoneID alloc] initWithZoneName:CKRecordZoneDefaultName  ownerName:CKOwnerDefaultName];
+    }
+    
     if ([link isEqualToString:@"EQGetAllContactNames.php"]){
         
         CKDatabase *privateDatabase = [[CKContainer containerWithIdentifier:EQRCloudKitContainer] privateCloudDatabase];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"decommissioned != %@", @"1"];
         CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Contact" predicate:predicate];
-        
-        EQRModeManager *modeManager = [EQRModeManager sharedInstance];
-        BOOL isInDemoMode = [modeManager isInDemoMode];
-        
-        CKRecordZoneID *recordZone;
-        
-        if (isInDemoMode){
-            recordZone = [[CKRecordZoneID alloc] initWithZoneName:EQRRecordZoneDemo  ownerName:CKOwnerDefaultName];
-        }else{
-            recordZone = [[CKRecordZoneID alloc] initWithZoneName:CKRecordZoneDefaultName  ownerName:CKOwnerDefaultName];
-        }
-        
+
         [self confirmExistenceOfZone:recordZone.zoneName completion:^(BOOL successBool) {
             
             [privateDatabase performQuery:query inZoneWithID:recordZone completionHandler:^(NSArray *results, NSError *error) {
@@ -367,17 +472,6 @@
         
         CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Contact" predicate:predicate1];
         CKQuery *query2 = [[CKQuery alloc] initWithRecordType:@"Contact" predicate:predicate2];
-        
-        EQRModeManager *modeManager = [EQRModeManager sharedInstance];
-        BOOL isInDemoMode = [modeManager isInDemoMode];
-        
-        CKRecordZoneID *recordZone;
-        
-        if (isInDemoMode){
-            recordZone = [[CKRecordZoneID alloc] initWithZoneName:EQRRecordZoneDemo  ownerName:CKOwnerDefaultName];
-        }else{
-            recordZone = [[CKRecordZoneID alloc] initWithZoneName:CKRecordZoneDefaultName  ownerName:CKOwnerDefaultName];
-        }
         
         [self confirmExistenceOfZone:recordZone.zoneName completion:^(BOOL successBool) {
             
@@ -447,6 +541,43 @@
                             }
                         }
                     }];
+                }
+            }];
+        }];
+        return;
+    }
+    
+    if ([link isEqualToString:@"EQGetClassesAll.php"]){
+        
+        CKDatabase *privateDatabase = [[CKContainer containerWithIdentifier:EQRCloudKitContainer] privateCloudDatabase];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"TRUEPREDICATE"];
+        CKQuery *query = [[CKQuery alloc] initWithRecordType:@"ClassSection" predicate:predicate];
+        
+        [self confirmExistenceOfZone:recordZone.zoneName completion:^(BOOL successBool) {
+            
+            [privateDatabase performQuery:query inZoneWithID:recordZone completionHandler:^(NSArray *results, NSError *error) {
+                if (error) {
+                    // Error handling for failed fetch from public database
+                    NSLog(@"Error handling for failed fetch from private database: %@", error);
+                    completeBlock(NO);
+                }
+                else {
+                    // Display the fetched records
+                    //                NSLog(@"Display the fetched records with count: %ld", (unsigned long)[results count]);
+                    
+                    for (CKRecord *recordObject in results){
+                        EQRClassItem *newRecord = [[EQRClassItem alloc] init];
+                        newRecord.key_id = recordObject.recordID.recordName;
+                        newRecord.section_name = [recordObject objectForKey:@"section_name"];
+                        newRecord.term = [recordObject objectForKey:@"term"];
+                        newRecord.instructor_foreign_key = [recordObject objectForKey:@"instructor_foreign_key"];
+                        newRecord.catalog_foreign_key = [recordObject objectForKey:@"catalog_foreign_key"];
+                        
+                        [self asyncDispatchWithObject:newRecord];
+                    }
+                    
+                    self.delayedCompletionBlock = completeBlock;
+                    [self sendAsyncCompletionBlock];
                 }
             }];
         }];
