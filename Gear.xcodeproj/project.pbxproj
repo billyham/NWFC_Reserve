@@ -694,8 +694,6 @@
 				542F5FF919235784001C28CA /* Check Out/In */,
 				542CC203197B514B00BFD581 /* Inbox */,
 				0115506619956A03009A459F /* Request */,
-				438EDCF7182B7ABE0090F882 /* EQRSecondViewController.h */,
-				438EDCF8182B7ABE0090F882 /* EQRSecondViewController.m */,
 				54A0DB901AB048C600EE4281 /* Settings */,
 				54CE45AD186AF4790023FDA4 /* collection objects */,
 				54CE45A9186AF3680023FDA4 /* collectionViewCells */,
@@ -938,6 +936,8 @@
 		54482499191CC8A300E285E2 /* deprecated */ = {
 			isa = PBXGroup;
 			children = (
+				438EDCF7182B7ABE0090F882 /* EQRSecondViewController.h */,
+				438EDCF8182B7ABE0090F882 /* EQRSecondViewController.m */,
 				540B551B18769CCE0025FDEE /* EQRStaffPage1VCntrllr.h */,
 				540B551C18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m */,
 				5464C0121A0A21A600469C45 /* EQREquipSelectionLayout.h */,

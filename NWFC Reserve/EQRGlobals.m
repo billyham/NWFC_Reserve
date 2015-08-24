@@ -43,6 +43,7 @@ NSString* EQRPresentCheckInOut = @"EQRPresentCheckInOut";
 NSString* EQRUpdateCheckInOutArrayOfJoins = @"EQRUpdateCheckInOutArrayOfJoins";
 NSString* EQRMarkItineraryAsCompleteOrNot = @"EQRMarkItineraryAsCompleteOrNot";
 NSString* EQRAChangeWasMadeToTheSchedule = @"EQRAChangeWasMadeToTheSchedule";
+NSString *EQRAChangeWasMadeToTheDatabaseSource = @"EQRAChangeWasMadeToTheDatabaseSource";
 //NSString* EQREquipUniqueToBeDeleted = @"EQREquipUniqueToBeDeleted";
 //NSString* EQREquipUniqueToBeDeletedCancel = @"EQREquipUniqueToBeDeletedCancel";
 NSString* EQRJoinToBeDeletedInCheckInOut = @"EQRJoinToBeDeletedInCheckInOut";

@@ -38,6 +38,7 @@ extern NSString* EQRPresentCheckInOut;
 extern NSString* EQRUpdateCheckInOutArrayOfJoins;
 extern NSString* EQRMarkItineraryAsCompleteOrNot;
 extern NSString* EQRAChangeWasMadeToTheSchedule;
+extern NSString *EQRAChangeWasMadeToTheDatabaseSource;
 //extern NSString* EQREquipUniqueToBeDeleted;
 //extern NSString* EQREquipUniqueToBeDeletedCancel;
 extern NSString* EQRJoinToBeDeletedInCheckInOut;

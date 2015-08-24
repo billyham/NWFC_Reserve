@@ -20,9 +20,10 @@
 
 @property (weak, nonatomic) id <EQRClassPickerDelegate> delegate;
 
-//-(id)retrieveClassItem;
 
-//add new class delegate method
+-(void)reloadTheData;
+
+//EQRAddNewClass delegate method
 -(void)informClassAdditionHasHappended:(EQRClassItem *)classItem;
 
 @end

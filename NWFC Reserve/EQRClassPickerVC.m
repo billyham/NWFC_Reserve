@@ -39,6 +39,10 @@
     
     [super viewDidLoad];
     
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    //when a change is made
+    [nc addObserver:self selector:@selector(resetAfterAChangeIsMade:) name:EQRAChangeWasMadeToTheSchedule object:nil];
+    
     //register table view cell
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
     
@@ -93,6 +97,51 @@
     self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
     
     [self.tableView reloadData];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    
+}
+
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    
+}
+
+
+-(void)reloadTheData{
+    
+    self.arrayOfClasses = nil;
+    
+    //get list of classes
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    SEL thisSelector = @selector(addToArrayOfClasses:);
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryWithAsync:@"EQGetClassesAll.php" parameters:nil class:@"EQRClassItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+            
+            if (isLoadingFlagUp){
+                NSLog(@"isLoadingFlagUP is YES");
+            }
+            
+            [self loadTheViewStage2];
+        }];
+    });
+    
+    //move to original tab
+    self.segmentButton.selectedSegmentIndex = 0;
+}
+
+-(void)resetAfterAChangeIsMade:(NSNotification *)note{
+    
+    //removes highlights
+    [self.tableView reloadData];
+    
 }
 
 

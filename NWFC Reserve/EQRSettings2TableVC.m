@@ -10,6 +10,7 @@
 #import "EQRStaffUserManager.h"
 #import "EQRModeManager.h"
 #import "EQRColors.h"
+#import "EQRGlobals.h"
 
 @interface EQRSettings2TableVC ()
 
@@ -170,6 +171,9 @@
     
     [defaults setObject:newDic forKey:@"useCloudKit"];
     [defaults synchronize];
+    
+    //tell app that all info has changed
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheDatabaseSource object:nil];
 }
 
 #pragma mark - table view delegate methods
