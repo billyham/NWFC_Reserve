@@ -172,6 +172,8 @@
     [defaults setObject:newDic forKey:@"useCloudKit"];
     [defaults synchronize];
     
+    //inform other VCs that they need to reload their data
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
     //tell app that all info has changed
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheDatabaseSource object:nil];
 }
