@@ -20,7 +20,7 @@
 
 @property (weak, nonatomic) id <EQRClassPickerDelegate> delegate;
 
-
+-(void)goToSegmentNumber:(NSInteger)tag;
 -(void)reloadTheData;
 
 //EQRAddNewClass delegate method

@@ -144,6 +144,18 @@
     
 }
 
+-(void)goToSegmentNumber:(NSInteger)tag{
+    
+    if (tag != self.segmentButton.selectedSegmentIndex){
+        
+        if (self.segmentButton.numberOfSegments > tag){
+            self.segmentButton.selectedSegmentIndex = tag;
+        }
+        
+        [self segmentButtonTapped:self.segmentButton];
+    }
+}
+
 
 #pragma mark - Actions
 

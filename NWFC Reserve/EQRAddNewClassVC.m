@@ -90,6 +90,7 @@
         });
         
     }else{    //use existing classCatalog item
+            //Is an instructor explicitly added? Or shoud it retrieve the classCatalog's instructor?
         
         if (self.referenceClassItem) {
             
@@ -121,6 +122,10 @@
     classItem.catalog_foreign_key = classCatalogForeignKey;
     classItem.section_name = [NSString stringWithFormat:@"%@ - Starts %@", self.titleView.text, self.sectionStartDate.text];
     classItem.term = self.term.text;
+    
+    //set instructor info on classItem
+    classItem.instructor_foreign_key = self.instructorContactItem.key_id;
+    classItem.first_and_last = self.instructorContactItem.first_and_last;
     
     NSArray *firstArray = @[@"section_name", classItem.section_name];
     NSArray *secondArray = @[@"catalog_foreign_key", classItem.catalog_foreign_key];
@@ -208,6 +213,8 @@
             
             self.titleView.text = catalogTitle;
             
+            //________should it also set the Instructor Button text? with the class catalog info on the instructor?________
+        
         }];
     
     });

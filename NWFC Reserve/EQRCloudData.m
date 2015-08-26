@@ -549,6 +549,8 @@
     
     if ([link isEqualToString:@"EQGetClassesAll.php"]){
         
+        //_______!!!!!!!!!!  NEEDS TO GET INSTRUCTOR INFO FROM CLASS CATALOG RECORD TYPE   !!!!!!!!!!___________
+        
         CKDatabase *privateDatabase = [[CKContainer containerWithIdentifier:EQRCloudKitContainer] privateCloudDatabase];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"TRUEPREDICATE"];
         CKQuery *query = [[CKQuery alloc] initWithRecordType:@"ClassSection" predicate:predicate];

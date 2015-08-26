@@ -727,6 +727,7 @@
                 self.classWidthConstraint.constant = 354;
                 self.renterLeadingConstraint.constant = 0.0;
                 self.nameListLeadingConstraint.constant = 2.0;
+                [self.myClassPickerVC goToSegmentNumber:1];
                 
                 //animate change
                 [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
@@ -994,6 +995,7 @@
                 //contact size of rentor type list
                 self.renterLeadingConstraint.constant = 0.0;
                 self.nameListLeadingConstraint.constant = 2.0;
+                [self.myClassPickerVC goToSegmentNumber:2];
                 
                 //animate change
                 [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
@@ -1069,6 +1071,7 @@
                 self.classWidthConstraint.constant = 354;
                 self.renterLeadingConstraint.constant = 0.0;
                 self.nameListLeadingConstraint.constant = 2.0;
+                [self.myClassPickerVC goToSegmentNumber:1];
                 
                 //animate change
                 [UIView animateWithDuration:EQRResizingCollectionViewTime animations:^{
