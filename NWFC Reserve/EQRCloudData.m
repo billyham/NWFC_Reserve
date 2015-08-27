@@ -339,6 +339,13 @@
             for (NSArray *subArray in para){
                 
                 classCatalogRecord[[subArray objectAtIndex:0]] = [subArray objectAtIndex:1];
+                
+                //if the key is a foreign key, make a reference field
+                if ([[subArray objectAtIndex:0] isEqualToString:@"instructor_foreign_key"]){
+                    CKRecordID *instructorRecordID = [[CKRecordID alloc] initWithRecordName:[subArray objectAtIndex:1]];
+                    CKReference *instructorReference = [[CKReference alloc] initWithRecordID:instructorRecordID action:CKReferenceActionNone];
+                    classCatalogRecord[@"instructorReference"] = instructorReference;
+                }
             }
             
             classCatalogRecord[@"decommissioned" ] = @"";
@@ -377,6 +384,13 @@
             for (NSArray *subArray in para){
                 
                 classSectionRecord[[subArray objectAtIndex:0]] = [subArray objectAtIndex:1];
+                
+                //if the key is a foreign key, make a reference field
+                if ([[subArray objectAtIndex:0] isEqualToString:@"catalog_foreign_key"]){
+                    CKRecordID *catalogRecordID = [[CKRecordID alloc] initWithRecordName:[subArray objectAtIndex:1]];
+                    CKReference *catalogReference = [[CKReference alloc] initWithRecordID:catalogRecordID action:CKReferenceActionNone];
+                    classSectionRecord[@"catalogReference"] = catalogReference;
+                }
             }
             
             CKContainer *myContainer = [CKContainer containerWithIdentifier:EQRCloudKitContainer];
@@ -567,19 +581,91 @@
                     // Display the fetched records
                     //                NSLog(@"Display the fetched records with count: %ld", (unsigned long)[results count]);
                     
-                    for (CKRecord *recordObject in results){
+                    NSInteger arrayCount = [results count];
+                    __block NSInteger tallySoFar = 0;
+                    [results enumerateObjectsUsingBlock:^(CKRecord *recordObject, NSUInteger idx, BOOL *stop) {
+                        
                         EQRClassItem *newRecord = [[EQRClassItem alloc] init];
                         newRecord.key_id = recordObject.recordID.recordName;
                         newRecord.section_name = [recordObject objectForKey:@"section_name"];
                         newRecord.term = [recordObject objectForKey:@"term"];
-                        newRecord.instructor_foreign_key = [recordObject objectForKey:@"instructor_foreign_key"];
                         newRecord.catalog_foreign_key = [recordObject objectForKey:@"catalog_foreign_key"];
                         
-                        [self asyncDispatchWithObject:newRecord];
-                    }
-                    
-                    self.delayedCompletionBlock = completeBlock;
-                    [self sendAsyncCompletionBlock];
+                        
+                        //use CloudKit references to get catalog and instructor info
+                        CKReference *catalogReference = recordObject[@"catalogReference"];
+                        
+                        if (catalogReference.recordID){
+                            
+                            CKRecordID *catalogRecordID = catalogReference.recordID;
+                            
+                            [privateDatabase fetchRecordWithID:catalogRecordID completionHandler:^(CKRecord *catalogRecord, NSError *error) {
+                                if (error) {
+                                    
+                                    [self asyncDispatchWithObject:newRecord];
+                                    
+                                    tallySoFar += 1;
+                                    if ((tallySoFar) == arrayCount){
+                                        self.delayedCompletionBlock = completeBlock;
+                                        [self sendAsyncCompletionBlock];
+                                    }
+                                }
+                                else {
+                                    
+                                    //now get the instructor first_and_last
+                                    CKReference *instructorReference = catalogRecord[@"instructorReference"];
+                                    
+                                    if (instructorReference.recordID){
+                                        
+                                        CKRecordID *instructorRecordID = instructorReference.recordID;
+                                        
+                                        [privateDatabase fetchRecordWithID:instructorRecordID completionHandler:^(CKRecord *instructorRecord, NSError *error) {
+                                            if (error) {
+                                                
+                                                [self asyncDispatchWithObject:newRecord];
+                                                
+                                                tallySoFar += 1;
+                                                if ((tallySoFar) == arrayCount){
+                                                    self.delayedCompletionBlock = completeBlock;
+                                                    [self sendAsyncCompletionBlock];
+                                                }
+                                            }
+                                            else {
+                                                NSLog(@"cloudData is setting first_and_last");
+                                                newRecord.first_and_last = instructorRecord[@"first_and_last"];
+                                                newRecord.instructor_foreign_key = instructorRecord.recordID.recordName;
+                                                
+                                                [self asyncDispatchWithObject:newRecord];
+                                                
+                                                tallySoFar += 1;
+                                                if ((tallySoFar) == arrayCount){
+                                                    self.delayedCompletionBlock = completeBlock;
+                                                    [self sendAsyncCompletionBlock];
+                                                }
+                                            }
+                                        }];
+                                    }else{
+                                        [self asyncDispatchWithObject:newRecord];
+                                        
+                                        tallySoFar += 1;
+                                        if ((tallySoFar) == arrayCount){
+                                            self.delayedCompletionBlock = completeBlock;
+                                            [self sendAsyncCompletionBlock];
+                                        }
+                                    }
+                                }
+                            }];
+                            
+                        }else{
+                            [self asyncDispatchWithObject:newRecord];
+                            
+                            tallySoFar += 1;
+                            if ((tallySoFar) == arrayCount){
+                                self.delayedCompletionBlock = completeBlock;
+                                [self sendAsyncCompletionBlock];
+                            }
+                        }
+                    }];
                 }
             }];
         }];

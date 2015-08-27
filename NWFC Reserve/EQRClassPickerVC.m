@@ -39,13 +39,13 @@
     
     [super viewDidLoad];
     
+    //_____this is a bad idea...
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     //when a change is made
     [nc addObserver:self selector:@selector(resetAfterAChangeIsMade:) name:EQRAChangeWasMadeToTheSchedule object:nil];
     
     //register table view cell
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
-    
     
     self.mySearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     
@@ -68,6 +68,9 @@
     //what does this do?
     self.definesPresentationContext = YES;
     
+    self.arrayOfClasses = nil;
+    self.arrayOfAllClassesForPreservation = nil;
+    self.arrayOfClassesWithAlphaStructure = nil;
     
     //get list of classes
     EQRWebData* webData = [EQRWebData sharedInstance];
@@ -113,7 +116,11 @@
 
 -(void)reloadTheData{
     
+    NSLog(@"EQRClassPickerVC > reloadTheData fires");
+    
     self.arrayOfClasses = nil;
+    self.arrayOfAllClassesForPreservation = nil;
+    self.arrayOfClassesWithAlphaStructure = nil;
     
     //get list of classes
     EQRWebData* webData = [EQRWebData sharedInstance];
@@ -134,7 +141,8 @@
     });
     
     //move to original tab
-    self.segmentButton.selectedSegmentIndex = 0;
+    [self goToSegmentNumber:0];
+    
 }
 
 -(void)resetAfterAChangeIsMade:(NSNotification *)note{
