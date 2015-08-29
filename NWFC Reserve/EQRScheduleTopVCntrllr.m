@@ -339,25 +339,31 @@
         
         NSArray* tempSubNestArray = [obj sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
             
-            //first, adjust the distinquishing id by adding a 0 in front of single digits
+            //_____need to accommodate dist ids in the hundreds.
+            
+            //______first change the single digits...
             NSString* newDist1;
             if ([(NSString*)[(EQREquipUniqueItem*)obj1 distinquishing_id] length] < 2){
-                
-                newDist1 = [NSString stringWithFormat:@"0%@", (NSString*)[(EQREquipUniqueItem*)obj1 distinquishing_id]];
-                
+                newDist1 = [NSString stringWithFormat:@"00%@", (NSString*)[(EQREquipUniqueItem*)obj1 distinquishing_id]];
             }else{
-                
                 newDist1 =(NSString*)[(EQREquipUniqueItem*)obj1 distinquishing_id];
             }
             
             NSString* newDist2;
             if ([(NSString*)[(EQREquipUniqueItem*)obj2 distinquishing_id] length] < 2){
-                
-                newDist2 = [NSString stringWithFormat:@"0%@", (NSString*)[(EQREquipUniqueItem*)obj2 distinquishing_id]];
-                
+                newDist2 = [NSString stringWithFormat:@"00%@", (NSString*)[(EQREquipUniqueItem*)obj2 distinquishing_id]];
             }else{
-                
                 newDist2 =(NSString*)[(EQREquipUniqueItem*)obj2 distinquishing_id];
+            }
+            
+            //______next change the double digits...
+            //if dist id is only one character in length, add a 0 to the start.
+            if ([newDist1 length] < 3){
+                newDist1 = [NSString stringWithFormat:@"0%@", newDist1];
+            }
+            
+            if ([newDist2 length] < 3){
+                newDist2 = [NSString stringWithFormat:@"0%@", newDist2];
             }
             
             

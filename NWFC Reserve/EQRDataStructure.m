@@ -184,11 +184,25 @@
                 NSString* string4 = [(EQREquipUniqueItem*)obj2 distinquishing_id];
                 
                 //if dist id is only one character in length, add a 0 to the start.
+                //_____need to accommodate dist ids in the hundreds.
+                
+                //______first change the single digits...
+                
+                //if dist id is only one character in length, add a 0 to the start.
                 if ([string3 length] < 2){
-                    string3 = [NSString stringWithFormat:@"0%@", string3];
+                    string3 = [NSString stringWithFormat:@"00%@", string3];
+                }
+                if ([string4 length] < 2){
+                    string4 = [NSString stringWithFormat:@"00%@", string4];
                 }
                 
-                if ([string4 length] < 2){
+                //______next change the double digits...
+                
+                //if dist id is only one character in length, add a 0 to the start.
+                if ([string3 length] < 3){
+                    string3 = [NSString stringWithFormat:@"0%@", string3];
+                }
+                if ([string4 length] < 3){
                     string4 = [NSString stringWithFormat:@"0%@", string4];
                 }
                 

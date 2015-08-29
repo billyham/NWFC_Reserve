@@ -563,8 +563,6 @@
     
     if ([link isEqualToString:@"EQGetClassesAll.php"]){
         
-        //_______!!!!!!!!!!  NEEDS TO GET INSTRUCTOR INFO FROM CLASS CATALOG RECORD TYPE   !!!!!!!!!!___________
-        
         CKDatabase *privateDatabase = [[CKContainer containerWithIdentifier:EQRCloudKitContainer] privateCloudDatabase];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"TRUEPREDICATE"];
         CKQuery *query = [[CKQuery alloc] initWithRecordType:@"ClassSection" predicate:predicate];
@@ -595,7 +593,17 @@
                         //use CloudKit references to get catalog and instructor info
                         CKReference *catalogReference = recordObject[@"catalogReference"];
                         
-                        if (catalogReference.recordID){
+                        if (!catalogReference.recordID){
+                            
+                            [self asyncDispatchWithObject:newRecord];
+                            
+                            tallySoFar += 1;
+                            if ((tallySoFar) == arrayCount){
+                                self.delayedCompletionBlock = completeBlock;
+                                [self sendAsyncCompletionBlock];
+                            }
+                            
+                        }else{
                             
                             CKRecordID *catalogRecordID = catalogReference.recordID;
                             
@@ -615,7 +623,17 @@
                                     //now get the instructor first_and_last
                                     CKReference *instructorReference = catalogRecord[@"instructorReference"];
                                     
-                                    if (instructorReference.recordID){
+                                    if (!instructorReference.recordID){
+                                        
+                                        [self asyncDispatchWithObject:newRecord];
+                                        
+                                        tallySoFar += 1;
+                                        if ((tallySoFar) == arrayCount){
+                                            self.delayedCompletionBlock = completeBlock;
+                                            [self sendAsyncCompletionBlock];
+                                        }
+                                        
+                                    }else{
                                         
                                         CKRecordID *instructorRecordID = instructorReference.recordID;
                                         
@@ -631,6 +649,7 @@
                                                 }
                                             }
                                             else {
+                                                
                                                 NSLog(@"cloudData is setting first_and_last");
                                                 newRecord.first_and_last = instructorRecord[@"first_and_last"];
                                                 newRecord.instructor_foreign_key = instructorRecord.recordID.recordName;
@@ -644,26 +663,10 @@
                                                 }
                                             }
                                         }];
-                                    }else{
-                                        [self asyncDispatchWithObject:newRecord];
-                                        
-                                        tallySoFar += 1;
-                                        if ((tallySoFar) == arrayCount){
-                                            self.delayedCompletionBlock = completeBlock;
-                                            [self sendAsyncCompletionBlock];
-                                        }
                                     }
                                 }
                             }];
                             
-                        }else{
-                            [self asyncDispatchWithObject:newRecord];
-                            
-                            tallySoFar += 1;
-                            if ((tallySoFar) == arrayCount){
-                                self.delayedCompletionBlock = completeBlock;
-                                [self sendAsyncCompletionBlock];
-                            }
                         }
                     }];
                 }

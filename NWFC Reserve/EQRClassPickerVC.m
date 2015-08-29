@@ -94,12 +94,20 @@
 
 -(void)loadTheViewStage2{
     
+    NSLog(@"loadTheViewStage2 says arrayOfClasses count is: %ld", (unsigned long)[self.arrayOfClasses count]);
+    [self performSelector:@selector(delayedLog) withObject:nil afterDelay:1.0];
+    
     self.arrayOfClasses = [self sortArrayByAlphabetical:self.arrayOfClasses];
     self.arrayOfAllClassesForPreservation = [self.arrayOfClasses copy];
-    
     self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
     
     [self.tableView reloadData];
+}
+
+-(void)delayedLog{
+    
+    NSLog(@"delayedLog says arrayOfClasses count is: %ld", (unsigned long)[self.arrayOfClasses count]);
+
 }
 
 -(void)viewWillAppear:(BOOL)animated{
