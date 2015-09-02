@@ -572,7 +572,7 @@
             [privateDatabase performQuery:query inZoneWithID:recordZone completionHandler:^(NSArray *results, NSError *error) {
                 if (error) {
                     // Error handling for failed fetch from public database
-                    NSLog(@"Error handling for failed fetch from private database: %@", error);
+                    NSLog(@"EQRCloudKit > EQGetClassAll, failed ClassSection query from private database: %@", error);
                     completeBlock(NO);
                 }
                 else {
@@ -595,6 +595,8 @@
                         
                         if (!catalogReference.recordID){
                             
+                            NSLog(@"EQRCloudKit > EQGetClassAll error, no recordID present, tally is %d", tallySoFar);
+                            
                             [self asyncDispatchWithObject:newRecord];
                             
                             tallySoFar += 1;
@@ -609,6 +611,8 @@
                             
                             [privateDatabase fetchRecordWithID:catalogRecordID completionHandler:^(CKRecord *catalogRecord, NSError *error) {
                                 if (error) {
+                                    
+                                    NSLog(@"EQRCloudKit > EQGetClassAll error, when fetching catalogReference from teh section, tally is %d", tallySoFar);
                                     
                                     [self asyncDispatchWithObject:newRecord];
                                     
@@ -625,6 +629,8 @@
                                     
                                     if (!instructorReference.recordID){
                                         
+                                        NSLog(@"EQRCloudKit > EQGetClassAll error, when examining the recoredID from the instructor refernece, tally is %d", tallySoFar);
+                                        
                                         [self asyncDispatchWithObject:newRecord];
                                         
                                         tallySoFar += 1;
@@ -640,6 +646,8 @@
                                         [privateDatabase fetchRecordWithID:instructorRecordID completionHandler:^(CKRecord *instructorRecord, NSError *error) {
                                             if (error) {
                                                 
+                                                NSLog(@"EQRCloudKit > EQGetClassAll error, when fetching the instructorRecoredID, tally is %d", tallySoFar);
+                                                
                                                 [self asyncDispatchWithObject:newRecord];
                                                 
                                                 tallySoFar += 1;
@@ -650,7 +658,7 @@
                                             }
                                             else {
                                                 
-                                                NSLog(@"cloudData is setting first_and_last");
+                                                NSLog(@"cloudData is setting instructor first_and_last in a class section, tally is %d", tallySoFar);
                                                 newRecord.first_and_last = instructorRecord[@"first_and_last"];
                                                 newRecord.instructor_foreign_key = instructorRecord.recordID.recordName;
                                                 
@@ -698,7 +706,7 @@
         //___Very importand that this if statement is INSIDE the dispatch
         if (self.delayedCompletionBlock != nil){
             
-//            NSLog(@"CloudData > is sending a completion block" );
+            NSLog(@"CloudData > is sending a completion block" );
             
             self.delayedCompletionBlock(YES);
 //            self.delayedCompletionBlock = nil;

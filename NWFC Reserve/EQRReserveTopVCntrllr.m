@@ -700,15 +700,6 @@
         }
     }];
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
     if (collectionView == self.rentorTypeListTable){
         
         //reveal class list

@@ -17,9 +17,9 @@
 @property (strong, nonatomic) IBOutlet UITableView* tableView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segmentButton;
 
-@property (strong, nonatomic) NSArray* arrayOfClasses;
-@property (strong, nonatomic) NSArray* arrayOfClassesWithAlphaStructure;
-@property (strong, nonatomic) NSArray *arrayOfAllClassesForPreservation;
+@property (strong, nonatomic) NSMutableArray* arrayOfClasses;
+@property (strong, nonatomic) NSMutableArray* arrayOfClassesWithAlphaStructure;
+@property (strong, nonatomic) NSMutableArray *arrayOfAllClassesForPreservation;
 @property (strong, nonatomic) NSArray* arrayOfIndexLetter;
 @property (strong, nonatomic) EQRClassItem* myClassItem;
 
@@ -68,7 +68,12 @@
     //what does this do?
     self.definesPresentationContext = YES;
     
-    self.arrayOfClasses = nil;
+    if (!self.arrayOfClasses){
+        self.arrayOfClasses = [NSMutableArray arrayWithCapacity:1];
+    }else{
+        [self.arrayOfClasses removeAllObjects];
+    }
+    
     self.arrayOfAllClassesForPreservation = nil;
     self.arrayOfClassesWithAlphaStructure = nil;
     
@@ -97,8 +102,11 @@
     NSLog(@"loadTheViewStage2 says arrayOfClasses count is: %ld", (unsigned long)[self.arrayOfClasses count]);
     [self performSelector:@selector(delayedLog) withObject:nil afterDelay:1.0];
     
+    if (!self.arrayOfClasses){
+        self.arrayOfClasses = [NSMutableArray arrayWithCapacity:1];
+    }
     self.arrayOfClasses = [self sortArrayByAlphabetical:self.arrayOfClasses];
-    self.arrayOfAllClassesForPreservation = [self.arrayOfClasses copy];
+    self.arrayOfAllClassesForPreservation = [NSMutableArray arrayWithArray:[self.arrayOfClasses copy]];
     self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
     
     [self.tableView reloadData];
@@ -126,7 +134,12 @@
     
     NSLog(@"EQRClassPickerVC > reloadTheData fires");
     
-    self.arrayOfClasses = nil;
+    if (!self.arrayOfClasses){
+        self.arrayOfClasses = [NSMutableArray arrayWithCapacity:1];
+    }else{
+        NSLog(@"this is the class: %@  and count: %d", [self.arrayOfClasses class], [self.arrayOfClasses count]);
+        [self.arrayOfClasses removeAllObjects];
+    }
     self.arrayOfAllClassesForPreservation = nil;
     self.arrayOfClassesWithAlphaStructure = nil;
     
@@ -156,7 +169,7 @@
 -(void)resetAfterAChangeIsMade:(NSNotification *)note{
     
     //removes highlights
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
     
 }
 
@@ -184,7 +197,7 @@
         NSMutableArray *muteArray = [NSMutableArray arrayWithCapacity:1];
         NSString* currentTerm = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
         
-        self.arrayOfClasses = [self.arrayOfAllClassesForPreservation copy];
+        self.arrayOfClasses = [NSMutableArray arrayWithArray:[self.arrayOfAllClassesForPreservation copy]];
         
         //must not pass a nil parameter in localizedCaseInsensitiveCompare:
         if (currentTerm){
@@ -193,7 +206,7 @@
                     [muteArray addObject:classItem];
                 }
             }
-            self.arrayOfClasses = [muteArray copy];
+            self.arrayOfClasses = [NSMutableArray arrayWithArray:[muteArray copy]];
         }
             
         self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
@@ -204,7 +217,7 @@
         NSMutableArray *muteArray = [NSMutableArray arrayWithCapacity:1];
         NSString* currentCampTerm = [[[NSUserDefaults standardUserDefaults] objectForKey:@"campTerm"] objectForKey:@"campTerm"];
         
-        self.arrayOfClasses = [self.arrayOfAllClassesForPreservation copy];
+        self.arrayOfClasses = [NSMutableArray arrayWithArray:[self.arrayOfAllClassesForPreservation copy]];
         
         //must not pass a nil parameter in localizedCaseInsensitiveCompare:
         if (currentCampTerm){
@@ -213,7 +226,7 @@
                     [muteArray addObject:classItem];
                 }
             }
-            self.arrayOfClasses = [muteArray copy];
+            self.arrayOfClasses = [NSMutableArray arrayWithArray:[muteArray copy]];
         }
         
         self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
@@ -221,7 +234,7 @@
     
     }else{     //all selected
         
-        self.arrayOfClasses = [self.arrayOfAllClassesForPreservation copy];
+        self.arrayOfClasses = [NSMutableArray arrayWithArray:[self.arrayOfAllClassesForPreservation copy]];
         self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
         [self.tableView reloadData];
     }
@@ -268,7 +281,7 @@
         return [string1 compare:string2];
     }];
     
-    self.arrayOfClasses = [NSArray arrayWithArray:sortedArray];
+    self.arrayOfClasses = [NSMutableArray arrayWithArray:sortedArray];
     
     self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
     
@@ -314,7 +327,7 @@
 //}
 
 
--(NSArray*)sortArrayByAlphabetical:(NSArray*)thisArray{
+-(NSMutableArray*)sortArrayByAlphabetical:(NSMutableArray *)thisArray{
     
     NSArray* newArray = [thisArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
        
@@ -322,7 +335,7 @@
         
     }];
     
-    return newArray;
+    return [NSMutableArray arrayWithArray: newArray];
 }
 
 
@@ -333,7 +346,7 @@
 //}
 
 
--(NSArray*)expandFlatArrayToStructuredArray:(NSArray*)thisArray{
+-(NSMutableArray*)expandFlatArrayToStructuredArray:(NSArray*)thisArray{
     
     //_______read user defaults to determine if sort should be based on first or last name_____
     //    NSString* nameSorter = @"first_and_last";
@@ -431,15 +444,12 @@
 
 -(void)addToArrayOfClasses:(id)currentThing{
     
-    NSMutableArray *tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-    
     if (currentThing){
-        
-        tempMuteArray = [NSMutableArray arrayWithArray:self.arrayOfClasses];
-        [tempMuteArray addObject:currentThing];
-    }
     
-    self.arrayOfClasses = [NSArray arrayWithArray:tempMuteArray];
+        NSLog(@"EQRClassPIcker > addToArrayOfClasses fires");
+        
+        [self.arrayOfClasses addObject:currentThing];
+    }
 }
 
 
