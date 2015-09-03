@@ -191,6 +191,9 @@
     [defaults setObject:newDic forKey:@"term"];
     [defaults synchronize];
     
+    //this reloads the information in the request view
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheDatabaseSource object:nil];
+    
 }
 
 
@@ -206,6 +209,9 @@
     
     [defaults setObject:newDic forKey:@"campTerm"];
     [defaults synchronize];
+    
+    //this reloads the information in the request view
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheDatabaseSource object:nil];
     
 }
 
