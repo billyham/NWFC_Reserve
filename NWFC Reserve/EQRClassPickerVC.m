@@ -20,6 +20,7 @@
 @property (strong, nonatomic) NSMutableArray* arrayOfClasses;
 @property (strong, nonatomic) NSMutableArray* arrayOfClassesWithAlphaStructure;
 @property (strong, nonatomic) NSMutableArray *arrayOfAllClassesForPreservation;
+@property (strong, nonatomic) NSArray *arrayForCurrentSegmentFilter;
 @property (strong, nonatomic) NSArray* arrayOfIndexLetter;
 @property (strong, nonatomic) EQRClassItem* myClassItem;
 
@@ -206,10 +207,12 @@
                     [muteArray addObject:classItem];
                 }
             }
-            self.arrayOfClasses = [NSMutableArray arrayWithArray:[muteArray copy]];
+            
+//            self.arrayOfClasses = [NSMutableArray arrayWithArray:[muteArray copy]];
+            self.arrayForCurrentSegmentFilter = [muteArray copy];
         }
             
-        self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
+        self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:muteArray];
         [self.tableView reloadData];
         
     }else if (index == 2){
@@ -226,15 +229,18 @@
                     [muteArray addObject:classItem];
                 }
             }
-            self.arrayOfClasses = [NSMutableArray arrayWithArray:[muteArray copy]];
+
+//            self.arrayOfClasses = [NSMutableArray arrayWithArray:[muteArray copy]];
+            self.arrayForCurrentSegmentFilter = [muteArray copy];
+
         }
         
-        self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
+        self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:muteArray];
         [self.tableView reloadData];
     
     }else{     //all selected
         
-        self.arrayOfClasses = [NSMutableArray arrayWithArray:[self.arrayOfAllClassesForPreservation copy]];
+//        self.arrayOfClasses = [NSMutableArray arrayWithArray:[self.arrayOfAllClassesForPreservation copy]];
         self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
         [self.tableView reloadData];
     }
@@ -577,7 +583,7 @@
     NSString *scope = nil;
     
     [self filterContentForSearchText:searchString scope:scope];
-    
+        
     [self.tableView reloadData];
 }
 
@@ -596,7 +602,17 @@
 {
     
     NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"section_name contains[c] %@", searchText];
-    self.searchResultsArrayOfClasses = [self.arrayOfClasses filteredArrayUsingPredicate:resultPredicate];
+    
+    //test if it is currently filtering the array by way of a segment button
+    if (self.segmentButton.selectedSegmentIndex == 0){    //no filter
+        
+        self.searchResultsArrayOfClasses = [self.arrayOfClasses filteredArrayUsingPredicate:resultPredicate];
+        
+    }else{   //yes filter
+        
+        self.searchResultsArrayOfClasses = [self.arrayForCurrentSegmentFilter filteredArrayUsingPredicate:resultPredicate];
+        
+    }
 }
 
 

@@ -595,7 +595,7 @@
                         
                         if (!catalogReference.recordID){
                             
-                            NSLog(@"EQRCloudKit > EQGetClassAll error, no recordID present, tally is %d", tallySoFar);
+//                            NSLog(@"EQRCloudKit > EQGetClassAll error, no recordID present, tally is %ld", (long)tallySoFar);
                             
                             [self asyncDispatchWithObject:newRecord];
                             
@@ -612,7 +612,7 @@
                             [privateDatabase fetchRecordWithID:catalogRecordID completionHandler:^(CKRecord *catalogRecord, NSError *error) {
                                 if (error) {
                                     
-                                    NSLog(@"EQRCloudKit > EQGetClassAll error, when fetching catalogReference from teh section, tally is %d", tallySoFar);
+                                    NSLog(@"EQRCloudKit > EQGetClassAll error, when fetching catalogReference from the section, tally is %ld", (long)tallySoFar);
                                     
                                     [self asyncDispatchWithObject:newRecord];
                                     
@@ -629,7 +629,7 @@
                                     
                                     if (!instructorReference.recordID){
                                         
-                                        NSLog(@"EQRCloudKit > EQGetClassAll error, when examining the recoredID from the instructor refernece, tally is %d", tallySoFar);
+                                        NSLog(@"EQRCloudKit > EQGetClassAll, no recoredID for the instructor refernece, tally is %ld", (long)tallySoFar);
                                         
                                         [self asyncDispatchWithObject:newRecord];
                                         
@@ -646,7 +646,7 @@
                                         [privateDatabase fetchRecordWithID:instructorRecordID completionHandler:^(CKRecord *instructorRecord, NSError *error) {
                                             if (error) {
                                                 
-                                                NSLog(@"EQRCloudKit > EQGetClassAll error, when fetching the instructorRecoredID, tally is %d", tallySoFar);
+                                                NSLog(@"EQRCloudKit > EQGetClassAll error, when fetching the instructorRecoredID, tally is %ld", (long)tallySoFar);
                                                 
                                                 [self asyncDispatchWithObject:newRecord];
                                                 
@@ -658,7 +658,7 @@
                                             }
                                             else {
                                                 
-                                                NSLog(@"cloudData is setting instructor first_and_last in a class section, tally is %d", tallySoFar);
+//                                                NSLog(@"cloudData is setting instructor first_and_last in a class section, tally is %ld", (long)tallySoFar);
                                                 newRecord.first_and_last = instructorRecord[@"first_and_last"];
                                                 newRecord.instructor_foreign_key = instructorRecord.recordID.recordName;
                                                 
