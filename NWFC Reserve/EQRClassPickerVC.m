@@ -19,10 +19,10 @@
 
 @property (strong, nonatomic) NSMutableArray* arrayOfClasses;
 @property (strong, nonatomic) NSMutableArray* arrayOfClassesWithAlphaStructure;
-@property (strong, nonatomic) NSMutableArray *arrayOfAllClassesForPreservation;
 @property (strong, nonatomic) NSArray *arrayForCurrentSegmentFilter;
 @property (strong, nonatomic) NSArray* arrayOfIndexLetter;
 @property (strong, nonatomic) EQRClassItem* myClassItem;
+//@property (strong, nonatomic) NSMutableArray *arrayOfAllClassesForPreservation;
 
 @property (strong, nonatomic) NSArray* searchResultsArrayOfClasses;
 
@@ -75,7 +75,6 @@
         [self.arrayOfClasses removeAllObjects];
     }
     
-    self.arrayOfAllClassesForPreservation = nil;
     self.arrayOfClassesWithAlphaStructure = nil;
     
     //get list of classes
@@ -107,10 +106,12 @@
         self.arrayOfClasses = [NSMutableArray arrayWithCapacity:1];
     }
     self.arrayOfClasses = [self sortArrayByAlphabetical:self.arrayOfClasses];
-    self.arrayOfAllClassesForPreservation = [NSMutableArray arrayWithArray:[self.arrayOfClasses copy]];
     self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
     
-    [self.tableView reloadData];
+    //this will reload the tableView and ensure correct data is displayed (all vs filtered)
+    [self segmentButtonTapped:self.segmentButton];
+
+//    [self.tableView reloadData];
 }
 
 -(void)delayedLog{
@@ -138,10 +139,9 @@
     if (!self.arrayOfClasses){
         self.arrayOfClasses = [NSMutableArray arrayWithCapacity:1];
     }else{
-        NSLog(@"this is the class: %@  and count: %d", [self.arrayOfClasses class], [self.arrayOfClasses count]);
+//        NSLog(@"this is the class: %@  and count: %d", [self.arrayOfClasses class], [self.arrayOfClasses count]);
         [self.arrayOfClasses removeAllObjects];
     }
-    self.arrayOfAllClassesForPreservation = nil;
     self.arrayOfClassesWithAlphaStructure = nil;
     
     //get list of classes
@@ -163,7 +163,7 @@
     });
     
     //move to original tab
-    [self goToSegmentNumber:0];
+//    [self goToSegmentNumber:0];
     
 }
 
@@ -192,13 +192,14 @@
 
 -(IBAction)segmentButtonTapped:(id)sender{
     
+    //leave search mode
+    self.mySearchController.active = NO;
+    
     NSInteger index = [(UISegmentedControl *)sender selectedSegmentIndex];
     if (index == 1){    //current term selected
         
         NSMutableArray *muteArray = [NSMutableArray arrayWithCapacity:1];
         NSString* currentTerm = [[[NSUserDefaults standardUserDefaults] objectForKey:@"term"] objectForKey:@"term"];
-        
-        self.arrayOfClasses = [NSMutableArray arrayWithArray:[self.arrayOfAllClassesForPreservation copy]];
         
         //must not pass a nil parameter in localizedCaseInsensitiveCompare:
         if (currentTerm){
@@ -208,7 +209,6 @@
                 }
             }
             
-//            self.arrayOfClasses = [NSMutableArray arrayWithArray:[muteArray copy]];
             self.arrayForCurrentSegmentFilter = [muteArray copy];
         }
             
@@ -220,8 +220,6 @@
         NSMutableArray *muteArray = [NSMutableArray arrayWithCapacity:1];
         NSString* currentCampTerm = [[[NSUserDefaults standardUserDefaults] objectForKey:@"campTerm"] objectForKey:@"campTerm"];
         
-        self.arrayOfClasses = [NSMutableArray arrayWithArray:[self.arrayOfAllClassesForPreservation copy]];
-        
         //must not pass a nil parameter in localizedCaseInsensitiveCompare:
         if (currentCampTerm){
             for (EQRClassItem * classItem in self.arrayOfClasses){
@@ -230,7 +228,6 @@
                 }
             }
 
-//            self.arrayOfClasses = [NSMutableArray arrayWithArray:[muteArray copy]];
             self.arrayForCurrentSegmentFilter = [muteArray copy];
 
         }
@@ -240,7 +237,6 @@
     
     }else{     //all selected
         
-//        self.arrayOfClasses = [NSMutableArray arrayWithArray:[self.arrayOfAllClassesForPreservation copy]];
         self.arrayOfClassesWithAlphaStructure = [self expandFlatArrayToStructuredArray:self.arrayOfClasses];
         [self.tableView reloadData];
     }
@@ -259,7 +255,7 @@
 }
 
 
-#pragma mark AddClassVC delegate method
+#pragma mark - AddClassVC delegate method
 
 -(void)informClassAdditionHasHappended:(EQRClassItem *)classItem{
     
