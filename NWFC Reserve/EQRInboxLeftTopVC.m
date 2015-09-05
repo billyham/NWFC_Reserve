@@ -109,6 +109,11 @@
         self.segueSelectionType = @"NeedsConfirmation";
     }
     
+    if ([segue.identifier isEqualToString:@"PastDue"]){
+        
+        self.segueSelectionType = @"PastDue";
+    }
+    
     if ([segue.identifier isEqualToString:@"AllRequestsByName"]){
         
         self.segueSelectionType = @"AllRequestsByName";

@@ -163,10 +163,35 @@
                 //identify when loading is complete
                 self.finishedAsyncDBCall = isLoadingFlagUp;
                 
-                NSLog(@"loading is DONE!!");
+//                NSLog(@"loading is DONE!!");
             }];
         });
         
+    }else if ([selectionType isEqualToString:@"PastDue"]){   //get all past due
+        
+        //set nav bar title
+        self.navigationItem.title = @"Past Due";
+        
+        //__1__ get total count of items that will be ultimately be returned
+        NSString* countOfRequests = [webData queryForStringWithLink:@"EQGetCountOfRequestsPastDue.php" parameters:topArray];
+        
+        self.countOfUltimageReturnedItems = [countOfRequests integerValue];
+        
+        //__2__ do asynchronous call to webData
+        SEL thisSelector = @selector(addToArrayOfRequests:);
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+        dispatch_async(queue, ^{
+            
+            [webData queryWithAsync:@"EQGetScheduleRequestsPastDue.php" parameters:topArray class:@"EQRScheduleRequestItem" selector:thisSelector  completion:^(BOOL isLoadingFlagUp) {
+                
+                //identify when loading is complete
+                self.finishedAsyncDBCall = isLoadingFlagUp;
+                
+                //                NSLog(@"loading is DONE!!");
+            }];
+        });
+    
+    
     }else if ([selectionType isEqualToString:@"AllRequestsByName"]){     //get ALL requests
     
         //set the search bar placeholder text
