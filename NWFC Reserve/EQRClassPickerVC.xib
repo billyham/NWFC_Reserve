@@ -6,6 +6,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRClassPickerVC">
             <connections>
+                <outlet property="mySearchBarView" destination="Ua8-20-DJg" id="6as-Eg-e46"/>
                 <outlet property="segmentButton" destination="Q5b-jJ-KB6" id="Z5k-FP-G2K"/>
                 <outlet property="tableView" destination="63o-L0-Osj" id="BrJ-S0-dbn"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -17,10 +18,10 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ffo-mm-fgN" userLabel="View - with table">
-                    <rect key="frame" x="0.0" y="50" width="300" height="400"/>
+                    <rect key="frame" x="0.0" y="94" width="300" height="356"/>
                     <subviews>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="63o-L0-Osj">
-                            <rect key="frame" x="0.0" y="0.0" width="300" height="400"/>
+                            <rect key="frame" x="0.0" y="0.0" width="300" height="356"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <outlet property="dataSource" destination="-1" id="jTF-4Y-6ca"/>
@@ -59,6 +60,13 @@
                         <constraint firstItem="Q5b-jJ-KB6" firstAttribute="top" secondItem="GaY-5Q-xRE" secondAttribute="top" constant="8" id="3BE-Zb-TU7"/>
                         <constraint firstAttribute="height" constant="50" id="MU7-qr-p11"/>
                         <constraint firstAttribute="centerX" secondItem="Q5b-jJ-KB6" secondAttribute="centerX" id="qNW-Tn-7J6"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ua8-20-DJg" userLabel="View - with search bar">
+                    <rect key="frame" x="0.0" y="50" width="300" height="44"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="W5i-mA-Tf7"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e6N-uR-6cy" userLabel="View - add class">
@@ -125,12 +133,15 @@
                 <constraint firstAttribute="trailing" secondItem="Ffo-mm-fgN" secondAttribute="trailing" id="Ffs-4d-10c"/>
                 <constraint firstAttribute="bottom" secondItem="e6N-uR-6cy" secondAttribute="bottom" id="Fos-v3-biQ"/>
                 <constraint firstItem="GaY-5Q-xRE" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Mmc-Fv-FFg"/>
-                <constraint firstItem="Ffo-mm-fgN" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="50" id="O8l-Nx-Dx7"/>
+                <constraint firstItem="Ffo-mm-fgN" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="94" id="O8l-Nx-Dx7"/>
                 <constraint firstItem="e6N-uR-6cy" firstAttribute="top" secondItem="Ffo-mm-fgN" secondAttribute="bottom" id="SlL-m8-a5i"/>
+                <constraint firstAttribute="trailing" secondItem="Ua8-20-DJg" secondAttribute="trailing" id="WqL-HU-pkg"/>
                 <constraint firstItem="hUq-wg-vjG" firstAttribute="top" secondItem="Ffo-mm-fgN" secondAttribute="bottom" id="Xq9-04-kfc"/>
                 <constraint firstAttribute="bottom" secondItem="Ffo-mm-fgN" secondAttribute="bottom" constant="50" id="bPC-lG-Apj"/>
                 <constraint firstAttribute="trailing" secondItem="e6N-uR-6cy" secondAttribute="trailing" id="dA0-6e-WJh"/>
                 <constraint firstAttribute="bottom" secondItem="Ffo-mm-fgN" secondAttribute="bottom" constant="50" id="gyw-0I-U5p"/>
+                <constraint firstItem="Ua8-20-DJg" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="50" id="nXD-rW-a0f"/>
+                <constraint firstItem="Ua8-20-DJg" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="oNl-HN-TWx"/>
                 <constraint firstAttribute="bottom" secondItem="hUq-wg-vjG" secondAttribute="bottom" id="qgi-gx-TUe"/>
                 <constraint firstItem="Ffo-mm-fgN" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="wNM-eb-qzJ"/>
                 <constraint firstAttribute="trailing" secondItem="GaY-5Q-xRE" secondAttribute="trailing" id="zOg-fV-GGL"/>

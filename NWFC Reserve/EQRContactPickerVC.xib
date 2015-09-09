@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRContactPickerVC">
             <connections>
                 <outlet property="addContactButton" destination="28b-Xt-A1t" id="ya5-SR-OxD"/>
+                <outlet property="mySearchBarView" destination="J4f-E7-trW" id="jWw-Nu-VSa"/>
                 <outlet property="tableView" destination="s3k-NH-6My" id="0sl-uU-jJp"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -19,8 +20,15 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gVB-SH-xSi" userLabel="main subview">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="500"/>
                     <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J4f-E7-trW" userLabel="search bar view">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="rRQ-fY-gxX"/>
+                            </constraints>
+                        </view>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="s3k-NH-6My">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="450"/>
+                            <rect key="frame" x="0.0" y="44" width="320" height="406"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <outlet property="dataSource" destination="-1" id="K0S-hq-dED"/>
@@ -62,10 +70,13 @@
                         <constraint firstAttribute="bottom" secondItem="qNS-DK-ngq" secondAttribute="bottom" id="5CV-Hq-SeA"/>
                         <constraint firstAttribute="trailing" secondItem="qNS-DK-ngq" secondAttribute="trailing" id="E1Q-93-2WV"/>
                         <constraint firstAttribute="bottom" secondItem="s3k-NH-6My" secondAttribute="bottom" constant="50" id="Eoc-Vi-rBD"/>
-                        <constraint firstItem="s3k-NH-6My" firstAttribute="top" secondItem="gVB-SH-xSi" secondAttribute="top" id="Fu4-Ti-kkZ"/>
+                        <constraint firstItem="s3k-NH-6My" firstAttribute="top" secondItem="gVB-SH-xSi" secondAttribute="top" constant="44" id="Fu4-Ti-kkZ"/>
+                        <constraint firstAttribute="trailing" secondItem="J4f-E7-trW" secondAttribute="trailing" id="Jnl-Vq-EFh"/>
+                        <constraint firstItem="J4f-E7-trW" firstAttribute="top" secondItem="gVB-SH-xSi" secondAttribute="top" id="MNk-qi-qiQ"/>
                         <constraint firstAttribute="trailing" secondItem="s3k-NH-6My" secondAttribute="trailing" id="NRT-YK-Tek"/>
                         <constraint firstItem="s3k-NH-6My" firstAttribute="leading" secondItem="gVB-SH-xSi" secondAttribute="leading" id="Yzx-bX-8It"/>
                         <constraint firstItem="qNS-DK-ngq" firstAttribute="leading" secondItem="gVB-SH-xSi" secondAttribute="leading" id="hPv-aP-ZJd"/>
+                        <constraint firstItem="J4f-E7-trW" firstAttribute="leading" secondItem="gVB-SH-xSi" secondAttribute="leading" id="uic-hi-BVo"/>
                     </constraints>
                 </view>
             </subviews>

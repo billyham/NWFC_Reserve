@@ -16,6 +16,7 @@
 
 @property (strong, nonatomic) IBOutlet UITableView* tableView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segmentButton;
+@property (strong, nonatomic) IBOutlet UIView *mySearchBarView;
 
 @property (strong, nonatomic) NSMutableArray* arrayOfClasses;
 @property (strong, nonatomic) NSMutableArray* arrayOfClassesWithAlphaStructure;
@@ -55,9 +56,15 @@
     self.mySearchController.dimsBackgroundDuringPresentation = NO;
     self.mySearchController.hidesNavigationBarDuringPresentation = NO;
     
-    self.mySearchController.searchBar.frame = CGRectMake(self.mySearchController.searchBar.frame.origin.x, self.mySearchController.searchBar.frame.origin.y, self.mySearchController.searchBar.frame.size.width, 44.0);
+    //__1.__keep search bar attached to the top of the table view scroll view
+    //    self.mySearchController.searchBar.frame = CGRectMake(self.mySearchController.searchBar.frame.origin.x, self.mySearchController.searchBar.frame.origin.y, self.mySearchController.searchBar.frame.size.width, 44.0);
+    //    self.tableView.tableHeaderView = self.mySearchController.searchBar;
     
-    self.tableView.tableHeaderView = self.mySearchController.searchBar;
+    //__2.__keep search above above and outside of table view
+    self.mySearchController.searchBar.frame = CGRectMake(0,0, self.mySearchBarView.frame.size.width, 44.0);
+    [self.mySearchBarView addSubview:self.mySearchController.searchBar];
+    
+
     
     self.mySearchController.searchBar.delegate = self;
     
@@ -128,6 +135,7 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     
+
     
 }
 
@@ -448,7 +456,7 @@
     
     if (currentThing){
     
-        NSLog(@"EQRClassPIcker > addToArrayOfClasses fires");
+//        NSLog(@"EQRClassPIcker > addToArrayOfClasses fires");
         
         [self.arrayOfClasses addObject:currentThing];
     }
