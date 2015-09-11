@@ -9,6 +9,7 @@
 #import "EQRSigCaptureMainVC.h"
 #import "PPSSignatureView.h"
 #import <OpenGLES/ES2/glext.h>
+//#import "EQRSigConfirmationVC.h"
 
 @interface EQRSigCaptureMainVC ()
 
@@ -81,10 +82,12 @@
 
 -(IBAction)enterButton:(id)sender{
     
-    [self dismissViewControllerAnimated:YES completion:^{
-        
-        
-    }];
+//    EQRSigConfirmationVC *confirmVC = [[EQRSigConfirmationVC alloc] initWithNibName:@"EQRSigConfirmationVC" bundle:nil];
+//    
+//    [self.navigationController pushViewController:confirmVC animated:YES];
+    
+    [self performSegueWithIdentifier:@"sigConfirmation" sender:self];
+    
 }
 
 -(IBAction)otherOptionsButton:(id)sender{

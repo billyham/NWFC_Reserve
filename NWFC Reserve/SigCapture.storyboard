@@ -1,13 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Qry-53-oLo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="PU4-Pt-Tvm">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <scenes>
+        <!--Sig Rental Fee-->
+        <scene sceneID="2GT-d6-2cU">
+            <objects>
+                <viewController id="moY-8J-Iic" customClass="EQRSigRentalFee" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jw7-tS-uwR"/>
+                        <viewControllerLayoutGuide type="bottom" id="cPN-ce-0Rh"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xlD-5B-ju6">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zr9-0S-KbJ">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xUD-2H-onh">
+                                        <rect key="frame" x="352" y="318" width="65" height="30"/>
+                                        <state key="normal" title="Confirm">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="confirmButton:" destination="DKT-sJ-f9J" eventType="touchUpInside" id="M4X-KX-WcC"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SbA-mL-gac">
+                                        <rect key="frame" x="347" y="408" width="75" height="30"/>
+                                        <state key="normal" title="Cancel">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="cancelButton:" destination="DKT-sJ-f9J" eventType="touchUpInside" id="9kz-lF-Ppb"/>
+                                        </connections>
+                                    </button>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="This is total Rental Fee. And Deposit. $8 Million Billion Dollars!" translatesAutoresizingMaskIntoConstraints="NO" id="HmJ-Zf-krS">
+                                        <rect key="frame" x="264" y="129" width="240" height="128"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Sny-sA-T1q"/>
+                    <connections>
+                        <segue destination="Qry-53-oLo" kind="show" identifier="sigSignature" id="JPD-0T-e1j"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ka4-ex-9Ey" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="514" y="-2054"/>
+        </scene>
         <!--Sig Capture MainVC-->
         <scene sceneID="rMZ-fh-ArW">
             <objects>
-                <viewController storyboardIdentifier="main" id="Qry-53-oLo" customClass="EQRSigCaptureMainVC" sceneMemberID="viewController">
+                <viewController id="Qry-53-oLo" customClass="EQRSigCaptureMainVC" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="oby-LR-9MV"/>
                         <viewControllerLayoutGuide type="bottom" id="AhQ-bR-Hl3"/>
@@ -94,16 +148,87 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="Jbh-Zz-5g3"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
                     <connections>
                         <outlet property="agreementTextView" destination="OcR-tQ-0FI" id="IPS-K3-5cQ"/>
                         <outlet property="nameLabel" destination="9t7-Wf-nWW" id="eV9-wh-Tdq"/>
                         <outlet property="returnDateLabel" destination="Jg3-cB-yhj" id="XQP-Xx-8dM"/>
+                        <segue destination="DKT-sJ-f9J" kind="show" identifier="sigConfirmation" id="nKc-sN-hSe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dAg-sG-6zR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="530" y="-718"/>
+        </scene>
+        <!--Sig ConfirmationVC-->
+        <scene sceneID="rlo-ag-eNA">
+            <objects>
+                <viewController id="DKT-sJ-f9J" customClass="EQRSigConfirmationVC" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="nVf-e4-iab"/>
+                        <viewControllerLayoutGuide type="bottom" id="IqB-Bw-D4o"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="psv-7T-j72">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wce-8s-gBz" userLabel="main subview">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mOh-Uu-E5e">
+                                        <rect key="frame" x="352" y="285" width="65" height="30"/>
+                                        <state key="normal" title="Confirm">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="confirmButton:" destination="DKT-sJ-f9J" eventType="touchUpInside" id="ff4-Jj-LRq"/>
+                                        </connections>
+                                    </button>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="This is your confirmation. Don't lose it or you will be sorry. Like that board game from the 70s, called Sorry. " translatesAutoresizingMaskIntoConstraints="NO" id="nvR-r4-1Nf">
+                                        <rect key="frame" x="264" y="96" width="240" height="128"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a8Q-cW-Gop">
+                                        <rect key="frame" x="347" y="375" width="75" height="30"/>
+                                        <state key="normal" title="Cancel">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="cancelButton:" destination="DKT-sJ-f9J" eventType="touchUpInside" id="hE0-ba-VGe"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="qRk-RO-fzy"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="61q-iZ-QzH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="530" y="499"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="ohv-67-312">
+            <objects>
+                <navigationController storyboardIdentifier="main" navigationBarHidden="YES" id="PU4-Pt-Tvm" sceneMemberID="viewController">
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="DzD-mR-Ksy">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="moY-8J-Iic" kind="relationship" relationship="rootViewController" id="Ocd-eK-xLO"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zuR-j5-99W" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-570" y="-1534"/>
         </scene>
         <!--GLKit View Controller-->
         <scene sceneID="Py0-tl-AjO">
@@ -127,7 +252,7 @@
                 </glkViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a95-7A-kvt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="538" y="438"/>
+            <point key="canvasLocation" x="1474" y="-718"/>
         </scene>
     </scenes>
 </document>

@@ -1597,9 +1597,10 @@
 -(IBAction)captureSig:(id)sender{
     
     UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"SigCapture" bundle:nil];
-    UIViewController *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"main"];
+    UINavigationController *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"main"];
     newView.modalPresentationStyle = UIModalPresentationPageSheet;
     [self presentViewController:newView animated:YES completion:^{
+        
         
         
     }];
