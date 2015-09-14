@@ -16,6 +16,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    NSLog(@"EQRSigConfirmationVC > viewDidLoad");
+    
     // Do any additional setup after loading the view.
 }
 
@@ -23,20 +26,16 @@
 
 -(IBAction)confirmButton:(id)sender{
     
-    [[self navigationController] dismissViewControllerAnimated:YES completion:^{
-        
+    
+    [[[self presentingViewController] presentingViewController] dismissViewControllerAnimated:YES completion:^{
+
         
     }];
-    
 }
 
 
 -(IBAction)cancelButton:(id)sender{
     
-    [[self navigationController] dismissViewControllerAnimated:YES completion:^{
-        
-        
-    }];
     
 }
 

@@ -17,8 +17,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self performSegueWithIdentifier:@"sigSignature" sender:self];
-
     
     // Do any additional setup after loading the view.
 }

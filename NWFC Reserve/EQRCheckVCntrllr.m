@@ -30,6 +30,7 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRContactNameItem.h"
 #import "EQRColors.h"
+#import "EQRSigEquipListVC.h"
 
 
 @interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate, UISearchBarDelegate, UISearchResultsUpdating>
@@ -306,6 +307,7 @@
     
     //set the request as ivar in requestManager
     self.privateRequestManager.request = self.myScheduleRequestItem;
+    self.privateRequestManager.request.arrayOfEquipmentJoins = self.arrayOfEquipJoins;
     
     //important methods that initiate requestManager ivar arrays
     [self.privateRequestManager resetEquipListAndAvailableQuantites];
@@ -1601,7 +1603,10 @@
     newView.modalPresentationStyle = UIModalPresentationPageSheet;
     [self presentViewController:newView animated:YES completion:^{
         
+        //___________this is ugly, it assumes the subclass type of VC at the root of the nav controller 
+        [(EQRSigEquipListVC*)[[newView viewControllers] objectAtIndex:0] setRequestItem:self.myScheduleRequestItem];
         
+        [(EQRSigEquipListVC*)[[newView viewControllers] objectAtIndex:0] loadTheData];
         
     }];
     

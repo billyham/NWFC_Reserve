@@ -144,6 +144,8 @@
 		54974B8F19C17D88002C9DB1 /* EQRDataStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = 54974B8E19C17D88002C9DB1 /* EQRDataStructure.m */; };
 		5497F5031A1DCA79008A7E52 /* EQRClassPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5497F5011A1DCA79008A7E52 /* EQRClassPickerVC.m */; };
 		5497F5041A1DCA79008A7E52 /* EQRClassPickerVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5497F5021A1DCA79008A7E52 /* EQRClassPickerVC.xib */; };
+		549966921BA53D4300F6DCE6 /* EQRSigEquipListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 549966911BA53D4300F6DCE6 /* EQRSigEquipListVC.m */; };
+		549966961BA546EE00F6DCE6 /* EQRReqeustDatesAndEquipListVM.m in Sources */ = {isa = PBXBuildFile; fileRef = 549966951BA546EE00F6DCE6 /* EQRReqeustDatesAndEquipListVM.m */; };
 		549BF3BC191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 549BF3BA191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m */; };
 		549BF3BD191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 549BF3BB191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib */; };
 		54A0DB8E1AB0123400EE4281 /* EQRGenericTextEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A0DB8C1AB0123400EE4281 /* EQRGenericTextEditor.m */; };
@@ -410,6 +412,10 @@
 		5497F5001A1DCA79008A7E52 /* EQRClassPickerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRClassPickerVC.h; sourceTree = "<group>"; };
 		5497F5011A1DCA79008A7E52 /* EQRClassPickerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRClassPickerVC.m; sourceTree = "<group>"; };
 		5497F5021A1DCA79008A7E52 /* EQRClassPickerVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRClassPickerVC.xib; sourceTree = "<group>"; };
+		549966901BA53D4300F6DCE6 /* EQRSigEquipListVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRSigEquipListVC.h; sourceTree = "<group>"; };
+		549966911BA53D4300F6DCE6 /* EQRSigEquipListVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRSigEquipListVC.m; sourceTree = "<group>"; };
+		549966941BA546EE00F6DCE6 /* EQRReqeustDatesAndEquipListVM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRReqeustDatesAndEquipListVM.h; sourceTree = "<group>"; };
+		549966951BA546EE00F6DCE6 /* EQRReqeustDatesAndEquipListVM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRReqeustDatesAndEquipListVM.m; sourceTree = "<group>"; };
 		549BF3B9191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSummaryGenericVCntrllr.h; sourceTree = "<group>"; };
 		549BF3BA191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipSummaryGenericVCntrllr.m; sourceTree = "<group>"; };
 		549BF3BB191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREquipSummaryGenericVCntrllr.xib; sourceTree = "<group>"; };
@@ -650,6 +656,7 @@
 				54ED1906199B403A00CF1A8F /* print renderers */,
 				542CC23A197CECA800BFD581 /* shared nibs */,
 				54E9DB151993531B0080FF1B /* shared singletons */,
+				549966931BA5467A00F6DCE6 /* ViewModels */,
 				54032FE31872D2EA00481D86 /* Schedule objects */,
 				01600B3918CA51D70006D75A /* Schedule Display */,
 				018EB75618E5DC8600FBDEA0 /* Request Editor */,
@@ -719,6 +726,8 @@
 				540729331B39439100D454F5 /* EQRSigCaptureMainVC.m */,
 				5407292B1B3939AA00D454F5 /* PPSSignatureView.h */,
 				5407292C1B3939AA00D454F5 /* PPSSignatureView.m */,
+				549966901BA53D4300F6DCE6 /* EQRSigEquipListVC.h */,
+				549966911BA53D4300F6DCE6 /* EQRSigEquipListVC.m */,
 				54AB4DCD1BA2D53B00A0358C /* EQRSigRentalFee.h */,
 				54AB4DCE1BA2D53B00A0358C /* EQRSigRentalFee.m */,
 				54AB4DCA1BA2CE6300A0358C /* EQRSigConfirmationVC.h */,
@@ -916,6 +925,15 @@
 				54ECF1E71998A9D900298996 /* EQRQuickViewPage3VCntrllr.xib */,
 			);
 			name = "Page VCs";
+			sourceTree = "<group>";
+		};
+		549966931BA5467A00F6DCE6 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				549966941BA546EE00F6DCE6 /* EQRReqeustDatesAndEquipListVM.h */,
+				549966951BA546EE00F6DCE6 /* EQRReqeustDatesAndEquipListVM.m */,
+			);
+			name = ViewModels;
 			sourceTree = "<group>";
 		};
 		54A0DB901AB048C600EE4281 /* Settings */ = {
@@ -1229,6 +1247,7 @@
 				01B4830919AE82B1009F15F6 /* EQRInboxRightVC.m in Sources */,
 				54E2FDE71A88AF9B00B51D45 /* EQRPasswordEntryVC.m in Sources */,
 				542CC20D197B56B100BFD581 /* EQRInboxCellContentVCntrllr.m in Sources */,
+				549966961BA546EE00F6DCE6 /* EQRReqeustDatesAndEquipListVM.m in Sources */,
 				541E54971ADB562B00EE8909 /* EQRSettings2TableVC.m in Sources */,
 				5416F99F1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.m in Sources */,
 				54A375B41A40040C00FD8A7B /* EQRNotesVC.m in Sources */,
@@ -1275,6 +1294,7 @@
 				0190DAE218E234EA00B55D82 /* EQRScheduleNestedDayCell.m in Sources */,
 				01470A911A82C3B100A0C2A6 /* EQRMiscEditVC.m in Sources */,
 				54ECF1E41998A7E100298996 /* EQRModeManager.m in Sources */,
+				549966921BA53D4300F6DCE6 /* EQRSigEquipListVC.m in Sources */,
 				5402D237186C24A50091C080 /* EQRClassCell.m in Sources */,
 				01600B3C18CA53080006D75A /* EQRHeaderCellTemplate.m in Sources */,
 				438EDCF0182B7ABE0090F882 /* EQRAppDelegate.m in Sources */,

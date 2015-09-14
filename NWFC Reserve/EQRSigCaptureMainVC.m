@@ -99,10 +99,10 @@
     [self.signatureView erase];
 }
 
--(IBAction)viewGearListButton:(id)sender{
-    
-    
-}
+//-(IBAction)viewGearListButton:(id)sender{
+//    
+//    
+//}
 
 
 @end
