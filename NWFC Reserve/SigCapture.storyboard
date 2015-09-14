@@ -41,7 +41,7 @@
                                         </connections>
                                     </button>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="List of Gear" translatesAutoresizingMaskIntoConstraints="NO" id="7Gv-N3-8cD">
-                                        <rect key="frame" x="202" y="110" width="364" height="433"/>
+                                        <rect key="frame" x="119" y="109" width="530" height="433"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
