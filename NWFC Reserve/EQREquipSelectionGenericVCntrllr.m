@@ -20,6 +20,7 @@
 #import "EQRModeManager.h"
 #import "EQREquipOptionsTableVC.h"
 #import "EQRColors.h"
+#import "EQRPriceMatrixVC.h"
 
 @interface EQREquipSelectionGenericVCntrllr () <UISearchResultsUpdating, UISearchBarDelegate>
 
