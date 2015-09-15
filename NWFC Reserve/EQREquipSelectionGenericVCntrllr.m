@@ -21,6 +21,7 @@
 #import "EQREquipOptionsTableVC.h"
 #import "EQRColors.h"
 #import "EQRPriceMatrixVC.h"
+#import "EQRRequestWrapperPriceMatrixVC.h"
 #import "EQRStaffUserManager.h"
 
 @interface EQREquipSelectionGenericVCntrllr () <UISearchResultsUpdating, UISearchBarDelegate>
@@ -779,7 +780,7 @@
         ([staffUserManager currentKioskMode] == NO)) {
         
         UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"Pricing" bundle:nil];
-        EQRPriceMatrixVC *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"price_main"];
+        EQRRequestWrapperPriceMatrixVC *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"price_main_wrapper"];
         
         newView.edgesForExtendedLayout = UIRectEdgeAll;
         

@@ -182,6 +182,7 @@
 		54C8E2191B843F25006CBB58 /* EQRAddNewClassVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C8E2171B843F25006CBB58 /* EQRAddNewClassVC.m */; };
 		54C8E21A1B843F25006CBB58 /* EQRAddNewClassVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54C8E2181B843F25006CBB58 /* EQRAddNewClassVC.xib */; };
 		54CE45AC186AF4680023FDA4 /* EQREquipItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54CE45AB186AF4680023FDA4 /* EQREquipItemCell.m */; };
+		54CFE7991BA7DFFC00E643FC /* EQRRequestWrapperPriceMatrixVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54CFE7981BA7DFFC00E643FC /* EQRRequestWrapperPriceMatrixVC.m */; };
 		54D3D8231A7DC53700562699 /* EQRMiscJoin.m in Sources */ = {isa = PBXBuildFile; fileRef = 54D3D8221A7DC53700562699 /* EQRMiscJoin.m */; };
 		54D4548A1A3856F50099DFE4 /* EQRDistIDPickerTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54D454881A3856F50099DFE4 /* EQRDistIDPickerTableVC.m */; };
 		54D4548B1A3856F50099DFE4 /* EQRDistIDPickerTableVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54D454891A3856F50099DFE4 /* EQRDistIDPickerTableVC.xib */; };
@@ -483,6 +484,8 @@
 		54C8E2181B843F25006CBB58 /* EQRAddNewClassVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRAddNewClassVC.xib; sourceTree = "<group>"; };
 		54CE45AA186AF4680023FDA4 /* EQREquipItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipItemCell.h; sourceTree = "<group>"; };
 		54CE45AB186AF4680023FDA4 /* EQREquipItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipItemCell.m; sourceTree = "<group>"; };
+		54CFE7971BA7DFFC00E643FC /* EQRRequestWrapperPriceMatrixVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRRequestWrapperPriceMatrixVC.h; sourceTree = "<group>"; };
+		54CFE7981BA7DFFC00E643FC /* EQRRequestWrapperPriceMatrixVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRRequestWrapperPriceMatrixVC.m; sourceTree = "<group>"; };
 		54D3D8211A7DC53700562699 /* EQRMiscJoin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRMiscJoin.h; sourceTree = "<group>"; };
 		54D3D8221A7DC53700562699 /* EQRMiscJoin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRMiscJoin.m; sourceTree = "<group>"; };
 		54D454871A3856F50099DFE4 /* EQRDistIDPickerTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRDistIDPickerTableVC.h; sourceTree = "<group>"; };
@@ -645,6 +648,8 @@
 				01DBB57E1BA74E20000F1D3C /* Pricing.storyboard */,
 				01DBB5801BA75325000F1D3C /* EQRPriceMatrixVC.h */,
 				01DBB5811BA75325000F1D3C /* EQRPriceMatrixVC.m */,
+				54CFE7971BA7DFFC00E643FC /* EQRRequestWrapperPriceMatrixVC.h */,
+				54CFE7981BA7DFFC00E643FC /* EQRRequestWrapperPriceMatrixVC.m */,
 			);
 			name = "Pricing Matrix";
 			sourceTree = "<group>";
@@ -1358,6 +1363,7 @@
 				54C22B0E1A52A86F00F6610E /* EQREditorEquipListContentVC.m in Sources */,
 				5427C1FE1A135DB200C653B6 /* EQRCheckHeaderCell.m in Sources */,
 				54E1D6061A80C01400B41121 /* EQREditorMiscListCell.m in Sources */,
+				54CFE7991BA7DFFC00E643FC /* EQRRequestWrapperPriceMatrixVC.m in Sources */,
 				54DFE0F0186ECD610089B9EA /* EQRClassRegistrationItem.m in Sources */,
 				01A4755A18EB9BDF006F32EB /* EQREditorDateVCntrllr.m in Sources */,
 				0190DAE218E234EA00B55D82 /* EQRScheduleNestedDayCell.m in Sources */,

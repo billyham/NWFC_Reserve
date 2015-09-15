@@ -27,6 +27,8 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRColors.h"
 #import "EQRMiscJoin.h"
+#import "EQRPriceMatrixVC.h"
+
 
 @interface EQRInboxRightVC ()
 
@@ -1141,6 +1143,21 @@
     //assign content VC as ivar
     self.myDayDateVC = myDateViewController;
 }
+
+#pragma mark - Pricing Matrix 
+
+-(IBAction)showPricingButton:(id)sender{
+         
+        UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"Pricing" bundle:nil];
+        EQRPriceMatrixVC *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"price_main"];
+    
+    
+    
+        
+        newView.edgesForExtendedLayout = UIRectEdgeAll;
+        [self.navigationController pushViewController:newView animated:YES];
+}
+
 
 
 #pragma mark - handle add equip item

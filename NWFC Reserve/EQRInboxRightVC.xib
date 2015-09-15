@@ -228,6 +228,19 @@
                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hzn-Nc-GEY">
+                                    <rect key="frame" x="97" y="410" width="81" height="30"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="30" id="Jgy-Yy-RXN"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                    <state key="normal" title="Edit Pricing">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="showPricingButton:" destination="-1" eventType="touchUpInside" id="zar-ns-F72"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
@@ -240,6 +253,7 @@
                                 <constraint firstItem="u0E-eI-hJR" firstAttribute="leading" secondItem="bpD-Kp-48w" secondAttribute="trailing" constant="27" id="Fgb-CH-LKX"/>
                                 <constraint firstItem="aoB-5J-EgF" firstAttribute="top" secondItem="evo-GZ-jxt" secondAttribute="bottom" constant="19" id="Fhd-db-L5G"/>
                                 <constraint firstItem="bpD-Kp-48w" firstAttribute="top" secondItem="aoB-5J-EgF" secondAttribute="bottom" constant="18" id="Gzr-zZ-mMb"/>
+                                <constraint firstItem="hzn-Nc-GEY" firstAttribute="leading" secondItem="zZA-FD-EOX" secondAttribute="leading" constant="97" id="JZa-tn-HpO"/>
                                 <constraint firstAttribute="trailing" secondItem="jFc-lz-Nn7" secondAttribute="trailing" constant="8" id="MNL-bj-v4m"/>
                                 <constraint firstItem="1e6-uK-hFI" firstAttribute="leading" secondItem="FpB-OX-7cd" secondAttribute="trailing" constant="8" id="NE5-Pp-GGh"/>
                                 <constraint firstItem="jcG-Tz-l46" firstAttribute="top" secondItem="FTv-bn-yfJ" secondAttribute="bottom" constant="18" id="OLG-Rd-XBu"/>
@@ -254,6 +268,7 @@
                                 <constraint firstItem="jcG-Tz-l46" firstAttribute="leading" secondItem="evo-GZ-jxt" secondAttribute="trailing" constant="16" id="Ynv-6K-nHg"/>
                                 <constraint firstItem="q4h-Q8-p31" firstAttribute="top" secondItem="cN6-IW-UhZ" secondAttribute="bottom" constant="49" id="aP5-Vc-UZO"/>
                                 <constraint firstItem="FTv-bn-yfJ" firstAttribute="top" secondItem="TfA-qg-Q3P" secondAttribute="bottom" constant="49" id="aYt-bg-pw5"/>
+                                <constraint firstItem="hzn-Nc-GEY" firstAttribute="top" secondItem="zZA-FD-EOX" secondAttribute="top" constant="410" id="egL-2l-ZGg"/>
                                 <constraint firstItem="q4h-Q8-p31" firstAttribute="leading" secondItem="zZA-FD-EOX" secondAttribute="leading" constant="14" id="fDf-xa-nJ3"/>
                                 <constraint firstItem="evo-GZ-jxt" firstAttribute="top" secondItem="q4h-Q8-p31" secondAttribute="bottom" constant="16" id="fIP-Yh-5HB"/>
                                 <constraint firstItem="jFc-lz-Nn7" firstAttribute="top" secondItem="u0E-eI-hJR" secondAttribute="bottom" constant="16" id="fIk-s6-Lv1"/>
