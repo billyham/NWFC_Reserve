@@ -31,6 +31,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    NSLog(@"nominal change");
+    
     //add the cancel button
     UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButton:)];
     
