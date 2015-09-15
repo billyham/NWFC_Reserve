@@ -23,6 +23,7 @@
 #import "EQRPriceMatrixVC.h"
 #import "EQRRequestWrapperPriceMatrixVC.h"
 #import "EQRStaffUserManager.h"
+#import "EQRMiscJoin.h"
 
 @interface EQREquipSelectionGenericVCntrllr () <UISearchResultsUpdating, UISearchBarDelegate>
 
@@ -719,6 +720,8 @@
 
 -(void)receiveMiscData:(NSString*)miscItemText{
     
+
+    
     //update data layer new entry in db with item text
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
@@ -732,7 +735,19 @@
     NSArray* firstArray = @[@"scheduleTracking_foreignKey", requestManager.request.key_id];
     NSArray* secondArray = @[@"name", miscItemText];
     NSArray *topArray = @[firstArray, secondArray];
-    [webData queryForStringWithLink:@"EQSetNewMiscJoin" parameters:topArray];
+    NSString *miscKeyID = [webData queryForStringWithLink:@"EQSetNewMiscJoin" parameters:topArray];
+
+    
+    //update misc array in request
+    EQRMiscJoin *miscJoin = [[EQRMiscJoin alloc] init];
+    miscJoin.name = miscItemText;
+    miscJoin.key_id = miscKeyID;
+    miscJoin.scheduleTracking_foreignKey = requestManager.request.key_id;
+    if (!requestManager.request.arrayOfMiscJoins){
+        requestManager.request.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
+    }
+    [requestManager.request.arrayOfMiscJoins addObject:miscJoin];
+    
     
     //refresh the popover's view
     [(EQRMiscEditVC*)[self.miscPopover contentViewController] renewTheViewWithScheduleKey:requestManager.request.key_id];

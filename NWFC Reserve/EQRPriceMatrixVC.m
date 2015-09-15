@@ -13,111 +13,190 @@
 #import "EQRGlobals.h"
 #import "EQRColors.h"
 #import "EQRScheduleRequestManager.h"
+#import "EQRWebData.h"
 
-@interface EQRPriceMatrixVC ()
+
+@interface EQRPriceMatrixVC () <EQRWebDataDelegate>
+
+
+@property (strong, nonatomic) EQRScheduleRequestItem *myRequestItem;
+
+@property (strong, nonatomic) IBOutlet UICollectionView *lineItemsCollection;
+@property (strong, nonatomic) NSMutableArray *arrayOfLineItems;
 
 @property (strong, nonatomic) IBOutlet UIView *mainSubView;
-//@property (strong, nonatomic) IBOutlet NSLayoutConstraint* topGuideLayoutThingy;
-//@property (strong, nonatomic) IBOutlet NSLayoutConstraint* bottomGuideLayoutThingy;
+@property (strong, nonatomic) IBOutlet UILabel *datesAndTimes;
+@property (strong, nonatomic) IBOutlet UILabel *renterName;
+@property (strong, nonatomic) IBOutlet UITextField *daysForPrice;
+@property (strong, nonatomic) IBOutlet UIButton *renterPricingType;
+@property (strong, nonatomic) IBOutlet UIButton *addDiscount;
+@property (strong, nonatomic) IBOutlet UIButton *removeDiscount;
+@property (strong, nonatomic) IBOutlet UIButton *markAsPaid;
+@property (strong, nonatomic) IBOutlet UIButton *removeAsPaid;
+@property (strong, nonatomic) IBOutlet UITextView *notesView;
+@property (strong, nonatomic) IBOutlet UILabel *subtotal;
+@property (strong, nonatomic) IBOutlet UILabel *discountTotal;
+@property (strong, nonatomic) IBOutlet UILabel *total;
+@property (strong, nonatomic) IBOutlet UILabel *totalPaid;
+@property (strong, nonatomic) IBOutlet UILabel *totalDue;
 
-@property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
-@property BOOL privateRequestManagerFlag;
 
 
 @end
 
 @implementation EQRPriceMatrixVC
 
+#pragma mark - methods
+
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
     
 
-    
-    
-//    EQRScheduleRequestManager* requestManager;
-//    if (self.privateRequestManagerFlag){
-//        
-//        requestManager = self.privateRequestManager;
-//                
-//    }else{
-//        
-//        requestManager = [EQRScheduleRequestManager sharedInstance];
-//    }
+}
 
+
+-(void)viewWillAppear:(BOOL)animated{
     
+    
+    [super viewWillAppear:animated];
+}
+
+
+
+#pragma mark - public methods
+
+-(void)startNewTransaction:(EQRScheduleRequestItem *)request{
+    
+    //Is called from Request. Use info in reqeustManager.request.
+    //Create a transaction
+    //Create line items for each equipUnique
+    
+    NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %u  and of misc items: %u", request.key_id, [request.arrayOfEquipmentJoins count], [request.arrayOfMiscJoins count]);
+
+    //yes, array is good
+    
+    self.myRequestItem = request;
+    
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    NSArray *firstArray = @[@"scheduleTracking_foreignKey", self.myRequestItem.key_id];
+    NSArray *topArray = @[firstArray];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+       
+        [webData queryForStringwithAsync:@"EQSetNewTransaction.php" parameters:topArray completion:^(id object) {
+           
+            //string of key_id
+            
+            
+        }];
+        
+    });
+    
+}
+
+
+-(void)editExistingTransaction:(EQRScheduleRequestItem *)request{
+    
+    //Is called from requestEditor or inbox
+    //DB call to get existing transaction using scheduleTracking_foreignKey
+    //DB call to get existing lineItems using transaction_foreignKey
+    //...however, the transaction may not exist. If the reqeust changed from a non-public type to a public type in the editor.
+    //error handle when no transaction returns to create a new one... call above method – startNewTransaction
+    
+    NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %u  and of misc items: %u", request.key_id, [request.arrayOfEquipmentJoins count], [request.arrayOfMiscJoins count]);
+    
+    //no, array is bad
+    
+    self.myRequestItem = request;
     
 }
 
 
 
-//-(void)viewWillAppear:(BOOL)animated{
+
+
+
+#pragma mark - webData delegate
+
+
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    
+    //abort if selector is unrecognized, otherwise crash
+    if (![self respondsToSelector:action]){
+        return;
+    }
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    
+    [self performSelector:action withObject:currentThing];
+    
+#pragma clang diagnostic pop
+    
+}
+
+
+
+//-(void)addEquipJoinToArray:(id)currentThing{
 //    
-//    //update navigation bar
-//    self.navigationItem.title = @"Pricing Details";
+//    float delayTime = 0.0;
 //    
-//    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
-//    if (modeManager.isInDemoMode){
-//        
-//        //set prompt
-//        [UIView setAnimationsEnabled:NO];
-//        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
-//        
-//        //set color of navigation bar
-//        EQRColors* colors = [EQRColors sharedInstance];
-//        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
-//        [UIView setAnimationsEnabled:YES];
-//        
-//    }else{
-//        
-//        //set prompt
-//        [UIView setAnimationsEnabled:NO];
-//        self.navigationItem.prompt = nil;
-//        
-//        //set color of navigation bar
-//        self.navigationController.navigationBar.barTintColor = nil;
-//        [UIView setAnimationsEnabled:YES];
+//    [self performSelector:@selector(addEquipJoinToArrayAfterDelay:) withObject:currentThing afterDelay:delayTime];
+//    
+//}
+//
+//
+//
+//-(void)addMiscJoinToArray:(id)currentThing{
+//    
+//    if (!currentThing){
+//        return;
 //    }
 //    
-//    
-//    //add constraints
-//    //______this MUST be added programmatically because you CANNOT specify the topLayoutGuide of a VC in a nib______
-//    
-//    self.mainSubView.translatesAutoresizingMaskIntoConstraints = NO;
-//    id topGuide = self.topLayoutGuide;
-//    id bottomGuide = self.bottomLayoutGuide;
-//    
-//    NSDictionary *viewsDictionary = @{@"mainSubView":self.mainSubView, @"topGuide":topGuide, @"bottomGuide":bottomGuide};
-//    
-//    NSArray *constraint_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-0-[mainSubView]"
-//                                                                        options:0
-//                                                                        metrics:nil
-//                                                                          views:viewsDictionary];
-//    
-//    
-//    
-//    NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[mainSubView]-0-[bottomGuide]"
-//                                                                         options:0
-//                                                                         metrics:nil
-//                                                                           views:viewsDictionary];
-//    
-//    //drop exisiting constraints
-//    [[self.mainSubView superview] removeConstraints:[NSArray arrayWithObjects:self.topGuideLayoutThingy, self.bottomGuideLayoutThingy, nil]];
-//    
-//    //add replacement constraints
-//    [[self.mainSubView superview] addConstraints:constraint_POS_V];
-//    [[self.mainSubView superview] addConstraints:constraint_POS_VB];
-//    
-//    
-//    [super viewWillAppear:animated];
+//    [self.arrayOfMiscJoins addObject:currentThing];
+//    [self genericAddItemToArray:currentThing];
 //}
-
-
-
-
-
-
-
-
+//
+//-(void)addEquipJoinToArrayAfterDelay:(id)currentThing{
+//    
+//    
+//    if (!currentThing){
+//        return;
+//    }
+//    
+//    [self.arrayOfEquipJoins addObject:currentThing];
+//    [self genericAddItemToArray:currentThing];
+//    
+//}
+//
+//
+//-(void)genericAddItemToArray:(id)currentThing{
+//    
+//    if (!currentThing){
+//        return;
+//    }
+//    
+//    NSMutableArray *newSubArray = [NSMutableArray arrayWithCapacity:1];
+//    
+//    if (self.arrayOfEquipJoinsWithStructure){
+//        if ([self.arrayOfEquipJoinsWithStructure count] > 0){
+//            [newSubArray addObjectsFromArray:[self.arrayOfEquipJoinsWithStructure objectAtIndex:0]];
+//            [newSubArray addObject:currentThing];
+//            self.arrayOfEquipJoinsWithStructure = [NSArray arrayWithObject:newSubArray];
+//        }else{  //if no sub array exists yet
+//            [newSubArray addObject:currentThing];
+//            self.arrayOfEquipJoinsWithStructure = [NSArray arrayWithObject:newSubArray];
+//        }
+//    }else{  //if the main array doesn't exist yet
+//        [newSubArray addObject:currentThing];
+//        self.arrayOfEquipJoinsWithStructure = [NSArray arrayWithObject:newSubArray];
+//    }
+//    
+//    [self.myEquipCollection reloadData];
+//}
 
 
 

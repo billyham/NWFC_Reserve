@@ -1,56 +1,39 @@
 //
-//  EQRRequestWrapperPriceMatrixVC.m
+//  EQRAlternateWrappperPriceMatrix.m
 //  Gear
 //
 //  Created by Ray Smith on 9/14/15.
 //  Copyright (c) 2015 Ham Again LLC. All rights reserved.
 //
 
-#import "EQRRequestWrapperPriceMatrixVC.h"
-#import "EQREquipSummaryGenericVCntrllr.h"
-#import "EQRScheduleRequestManager.h"
+#import "EQRAlternateWrappperPriceMatrix.h"
 #import "EQRModeManager.h"
 #import "EQRColors.h"
-#import "EQRGlobals.h"
 #import "EQRPriceMatrixVC.h"
 
 
 
-@interface EQRRequestWrapperPriceMatrixVC ()
+@interface EQRAlternateWrappperPriceMatrix ()
 
 @property (strong, nonatomic) IBOutlet UIView *mainSubView;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* topGuideLayoutThingy;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* bottomGuideLayoutThingy;
 
-@property BOOL privateRequestManagerFlag;
-
 @property (weak, nonatomic) EQRPriceMatrixVC *myPriceMatrixVC;
+
+//@property BOOL privateRequestManagerFlag;
 
 @end
 
-@implementation EQRRequestWrapperPriceMatrixVC
+@implementation EQRAlternateWrappperPriceMatrix
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    
-    //add the cancel button
-    UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButton:)];
-    
-    //add button to the current navigation item
-    [self.navigationItem setRightBarButtonItem:cancelButton];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    // Do any additional setup after loading the view.
 }
 
 
 -(void)viewWillAppear:(BOOL)animated{
-    
-    //update navigation bar
-    self.navigationItem.title = @"Pricing Details";
     
     EQRModeManager* modeManager = [EQRModeManager sharedInstance];
     if (modeManager.isInDemoMode){
@@ -108,6 +91,7 @@
     [super viewWillAppear:animated];
 }
 
+
 -(void)viewDidLayoutSubviews{
     
     //________Accessing childviewcontrollers
@@ -129,9 +113,6 @@
                     
                     //set self as delegate???
                     
-                    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-                    [self.myPriceMatrixVC startNewTransaction:requestManager.request];
-                    
                 }
             }
         }
@@ -139,29 +120,32 @@
 }
 
 
-#pragma mark - actions
 
 
--(IBAction)continueButton:(id)sender{
+#pragma mark - public methods
+
+-(void)provideScheduleRequest:(EQRScheduleRequestItem *)requestItem{
     
-    EQREquipSummaryGenericVCntrllr* summaryVCntrllr = [[EQREquipSummaryGenericVCntrllr alloc] initWithNibName:@"EQREquipSummaryGenericVCntrllr" bundle:nil];
-    
-    summaryVCntrllr.edgesForExtendedLayout = UIRectEdgeAll;
-    
-    [self.navigationController pushViewController:summaryVCntrllr animated:YES];
+    if (self.myPriceMatrixVC){
+        [self.myPriceMatrixVC editExistingTransaction:requestItem];
+    }
+
 }
 
 
--(IBAction)cancelButton:(id)sender{
+-(IBAction)dismissMe:(id)sender{
     
-    //go back to first page in nav
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        
+    }];
     
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-    [requestManager dismissRequest:YES];
 }
 
-
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 
 /*
 #pragma mark - Navigation

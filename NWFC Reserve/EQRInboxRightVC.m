@@ -28,6 +28,7 @@
 #import "EQRColors.h"
 #import "EQRMiscJoin.h"
 #import "EQRPriceMatrixVC.h"
+#import "EQRAlternateWrappperPriceMatrix.h"
 
 
 @interface EQRInboxRightVC ()
@@ -448,6 +449,7 @@
     //_____******   error checking when no joins exist   *******____
     
     self.arrayOfJoins = [NSArray arrayWithArray:tempMuteArray];
+    self.myScheduleRequest.arrayOfEquipmentJoins = [NSMutableArray arrayWithArray:tempMuteArray];
     
     //gather any misc joins
     NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
@@ -459,6 +461,7 @@
         }
     }];
     self.arrayOfMiscJoins = [NSArray arrayWithArray:tempMiscMuteArray];
+    self.myScheduleRequest.arrayOfMiscJoins = [NSMutableArray arrayWithArray:tempMiscMuteArray];
     
     
     //add structure to that array
@@ -1147,15 +1150,23 @@
 #pragma mark - Pricing Matrix 
 
 -(IBAction)showPricingButton:(id)sender{
-         
-        UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"Pricing" bundle:nil];
-        EQRPriceMatrixVC *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"price_main"];
     
+    UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"Pricing" bundle:nil];
+    EQRAlternateWrappperPriceMatrix *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"price_alternate_wrapper"];
     
-    
+    newView.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self presentViewController:newView animated:YES completion:^{
         
-        newView.edgesForExtendedLayout = UIRectEdgeAll;
-        [self.navigationController pushViewController:newView animated:YES];
+        //provide VC with request information
+        [newView provideScheduleRequest:self.myScheduleRequest];
+        
+        
+    }];
+    
+    
+//    
+//    newView.edgesForExtendedLayout = UIRectEdgeAll;
+//    [self.navigationController pushViewController:newView animated:YES];
 }
 
 

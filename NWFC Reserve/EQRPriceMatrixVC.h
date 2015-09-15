@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRScheduleRequestItem.h"
 
 @interface EQRPriceMatrixVC : UIViewController
 
+-(void)startNewTransaction:(EQRScheduleRequestItem *)request;
+-(void)editExistingTransaction:(EQRScheduleRequestItem *)request;
 @end
 
 

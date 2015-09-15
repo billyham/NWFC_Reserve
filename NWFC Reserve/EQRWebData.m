@@ -1755,6 +1755,17 @@ const int intEQRTextElement = 10;
         
         return;
     }
+    
+    if ([link isEqualToString:@"EQSetNewTransaction.php"]){
+        
+        NSString *returnString = [self queryForStringWithLink:@"EQSetNewTransaction.php" parameters:para];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        
+        return;
+    }
 }
 
 
