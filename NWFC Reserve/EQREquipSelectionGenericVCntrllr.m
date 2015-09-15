@@ -21,6 +21,7 @@
 #import "EQREquipOptionsTableVC.h"
 #import "EQRColors.h"
 #import "EQRPriceMatrixVC.h"
+#import "EQRStaffUserManager.h"
 
 @interface EQREquipSelectionGenericVCntrllr () <UISearchResultsUpdating, UISearchBarDelegate>
 
@@ -763,12 +764,36 @@
 
 -(IBAction)receiveContinueAction:(id)sender{
     
-    EQREquipSummaryGenericVCntrllr* summaryVCntrllr = [[EQREquipSummaryGenericVCntrllr alloc] initWithNibName:@"EQREquipSummaryGenericVCntrllr" bundle:nil];
+    //____show pricing ONLY if it is a public rental AND it is not in kiosk mode.
     
-    summaryVCntrllr.edgesForExtendedLayout = UIRectEdgeAll;
+    EQRStaffUserManager *staffUserManager = [EQRStaffUserManager sharedInstance];
     
-    [self.navigationController pushViewController:summaryVCntrllr animated:YES];
+    EQRScheduleRequestManager* requestManager;
+    if (self.privateRequestManagerFlag){
+        requestManager = self.privateRequestManager;
+    }else{
+        requestManager = [EQRScheduleRequestManager sharedInstance];
+    }
     
+    if (([requestManager.request.renter_type isEqualToString:EQRRenterPublic]) &&
+        ([staffUserManager currentKioskMode] == NO)) {
+        
+        UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"Pricing" bundle:nil];
+        EQRPriceMatrixVC *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"price_main"];
+        
+        newView.edgesForExtendedLayout = UIRectEdgeAll;
+        
+        [self.navigationController pushViewController:newView animated:YES];
+        
+    }else{
+        
+        
+        EQREquipSummaryGenericVCntrllr* summaryVCntrllr = [[EQREquipSummaryGenericVCntrllr alloc] initWithNibName:@"EQREquipSummaryGenericVCntrllr" bundle:nil];
+        
+        summaryVCntrllr.edgesForExtendedLayout = UIRectEdgeAll;
+        
+        [self.navigationController pushViewController:summaryVCntrllr animated:YES];
+    }
 }
 
 
