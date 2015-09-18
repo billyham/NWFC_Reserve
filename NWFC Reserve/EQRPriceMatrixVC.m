@@ -73,7 +73,7 @@
     //Create a transaction
     //Create line items for each equipUnique
     
-    NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %u  and of misc items: %u", request.key_id, [request.arrayOfEquipmentJoins count], [request.arrayOfMiscJoins count]);
+    NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %lu  and of misc items: %lu", request.key_id, (unsigned long)[request.arrayOfEquipmentJoins count], (unsigned long)[request.arrayOfMiscJoins count]);
 
     //yes, array is good
     
@@ -133,7 +133,7 @@
     //...however, the transaction may not exist. If the reqeust changed from a non-public type to a public type in the editor.
     //error handle when no transaction returns to create a new one... call above method – startNewTransaction
     
-    NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %u  and of misc items: %u", request.key_id, [request.arrayOfEquipmentJoins count], [request.arrayOfMiscJoins count]);
+    NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %lu  and of misc items: %lu", request.key_id, (unsigned long)[request.arrayOfEquipmentJoins count], (unsigned long)[request.arrayOfMiscJoins count]);
     
     //no, array is bad
     
