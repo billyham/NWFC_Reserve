@@ -14,6 +14,7 @@
 #import "EQRColors.h"
 #import "EQRScheduleRequestManager.h"
 #import "EQRWebData.h"
+#import "EQRDataStructure.h"
 
 
 @interface EQRPriceMatrixVC () <EQRWebDataDelegate>
@@ -78,6 +79,22 @@
     
     self.myRequestItem = request;
     
+    //fill scheduleReqeust info: name and dates
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatter setDateFormat:@"EEE, MMM d"];
+    NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [timeFormatter setDateFormat:@"h:mm a"];
+    
+    NSString *pickUpDate = [NSString stringWithFormat:@"%@, %@", [dateFormatter stringFromDate:self.myRequestItem.request_date_begin], [timeFormatter stringFromDate:self.myRequestItem.request_time_begin]];
+    
+    NSString *returnDate = [NSString stringWithFormat:@"%@, %@", [dateFormatter stringFromDate:self.myRequestItem.request_date_end], [timeFormatter stringFromDate:self.myRequestItem.request_time_end]];
+    
+    self.datesAndTimes.text = [NSString stringWithFormat:@"%@ — %@", pickUpDate, returnDate];
+    
+    self.renterName.text = request.contact_name;
+    
     EQRWebData *webData = [EQRWebData sharedInstance];
     webData.delegateDataFeed = self;
     NSArray *firstArray = @[@"scheduleTracking_foreignKey", self.myRequestItem.key_id];
@@ -86,16 +103,26 @@
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
        
-        [webData queryForStringwithAsync:@"EQSetNewTransaction.php" parameters:topArray completion:^(id object) {
+        [webData queryForStringwithAsync:@"EQSetNewTransaction.php" parameters:topArray completion:^(NSString *object) {
            
             //string of key_id
-            
-            
+            if (object){
+                [self startNewStage2];
+            }else{
+                //error handling
+            }
         }];
-        
     });
+}
+
+-(void)startNewStage2{
+    
+    
+    //create line items for each equipment join
+    
     
 }
+
 
 
 -(void)editExistingTransaction:(EQRScheduleRequestItem *)request{

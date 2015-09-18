@@ -490,9 +490,20 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="addDiscount" destination="4Yz-Ef-Dc8" id="9mK-7l-K7j"/>
                         <outlet property="datesAndTimes" destination="tlC-WZ-DRf" id="7p7-Q9-PyX"/>
+                        <outlet property="daysForPrice" destination="goH-Ti-UEj" id="W4b-xV-1sh"/>
+                        <outlet property="discountTotal" destination="mRG-K1-MVP" id="PHj-06-JIK"/>
+                        <outlet property="lineItemsCollection" destination="Tyv-7o-MEM" id="TeX-ga-4EI"/>
                         <outlet property="mainSubView" destination="FZs-e1-Xnc" id="DMZ-2i-ow6"/>
+                        <outlet property="markAsPaid" destination="0zS-mh-isf" id="ysY-XB-a4B"/>
+                        <outlet property="notesView" destination="Q8r-8q-IVi" id="NR6-1B-SoD"/>
                         <outlet property="renterName" destination="lv9-BN-fJ1" id="o0R-QX-P4Z"/>
+                        <outlet property="renterPricingType" destination="o0v-J5-Vhy" id="tmr-Mm-k2j"/>
+                        <outlet property="subtotal" destination="kNL-Np-FgJ" id="G5C-KA-9wR"/>
+                        <outlet property="total" destination="VW0-dT-Wlf" id="rbe-LF-kXr"/>
+                        <outlet property="totalDue" destination="a7D-zB-lyE" id="1w5-sT-JkQ"/>
+                        <outlet property="totalPaid" destination="pTL-Js-21J" id="ndF-Ea-omF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NHX-0d-KDv" userLabel="First Responder" sceneMemberID="firstResponder"/>
