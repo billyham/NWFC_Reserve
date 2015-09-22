@@ -30,6 +30,7 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRContactNameItem.h"
 #import "EQRColors.h"
+#import "EQRSigEquipListVC.h"
 
 
 @interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate, UISearchBarDelegate, UISearchResultsUpdating>
@@ -1636,6 +1637,25 @@
     //dismiss the picker
     [self.myStaffUserPicker dismissPopoverAnimated:YES];
     self.myStaffUserPicker = nil;
+    
+}
+
+
+#pragma mark - capture signature
+
+-(IBAction)captureSig:(id)sender{
+    
+    UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"SigCapture" bundle:nil];
+    UINavigationController *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"main"];
+    newView.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self presentViewController:newView animated:YES completion:^{
+        
+        //___________this is ugly, it assumes the subclass type of VC at the root of the nav controller 
+        [(EQRSigEquipListVC*)[[newView viewControllers] objectAtIndex:0] setRequestItem:self.myScheduleRequestItem];
+        
+        [(EQRSigEquipListVC*)[[newView viewControllers] objectAtIndex:0] loadTheData];
+        
+    }];
     
 }
 
