@@ -342,9 +342,8 @@
     
     //set the request as ivar in requestManager
     self.privateRequestManager.request = self.myScheduleRequestItem;
-
-    //________!!!!!!!!!!!!  THIS IS A BIG PERFORMANCE HIT, A FULL 2 SECONDS BEFORE VIEW BECOMES RESPONSIVE   !!!!!!!!__________
-    //____and it they seem unneccesary, tapping on add item generates the same methods___
+    self.privateRequestManager.request.arrayOfEquipmentJoins = self.arrayOfEquipJoins;
+    
     //important methods that initiate requestManager ivar arrays
 //    [self.privateRequestManager resetEquipListAndAvailableQuantites];
 //    [self.privateRequestManager retrieveAllEquipUniqueItems];

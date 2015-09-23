@@ -77,7 +77,7 @@ const int intEQRTextElement = 10;
         return myInstance;
         
     }else{
-        
+    
         EQRWebData* myInstance = [[EQRWebData alloc] init];
         return myInstance;
     }
