@@ -15,9 +15,11 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRWebData.h"
 #import "EQRDataStructure.h"
+#import "EQRLineItem.h"
+#import "EQRPriceMatrixCllctnViewContentVC.h"
 
 
-@interface EQRPriceMatrixVC () <EQRWebDataDelegate>
+@interface EQRPriceMatrixVC () <EQRWebDataDelegate, UICollectionViewDataSource, UICollectionViewDelegate>
 
 
 @property (strong, nonatomic) EQRScheduleRequestItem *myRequestItem;
@@ -224,6 +226,41 @@
 //    
 //    [self.myEquipCollection reloadData];
 //}
+
+
+#pragma mark - collection view data source
+
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    
+    return 1;
+}
+
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    
+    return [self.arrayOfLineItems count];
+}
+
+
+-(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
+    
+    for (UIView *subview in cell.subviews){
+        [subview removeFromSuperview];
+    }
+    
+    EQRPriceMatrixCllctnViewContentVC *pmcontent = [[EQRPriceMatrixCllctnViewContentVC alloc] initWithNibName:@"EQRPriceMatrixCllctnViewContentVC" bundle:nil];
+    
+    [cell.contentView addSubview:pmcontent.view];
+    
+    EQRLineItem *lineItem = [self.arrayOfLineItems objectAtIndex:indexPath.row];
+    pmcontent.equipNameLabel.text = lineItem.equipName;
+    pmcontent.distIdLabel.text = lineItem.equipDist_id;
+    pmcontent.costField.text = lineItem.cost;
+    
+    
+    return cell;
+}
 
 
 

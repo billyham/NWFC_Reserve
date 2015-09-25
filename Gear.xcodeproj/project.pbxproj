@@ -175,6 +175,9 @@
 		54A0DB8F1AB0123400EE4281 /* EQRGenericTextEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54A0DB8D1AB0123400EE4281 /* EQRGenericTextEditor.xib */; };
 		54A375B41A40040C00FD8A7B /* EQRNotesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A375B21A40040C00FD8A7B /* EQRNotesVC.m */; };
 		54A375B51A40040C00FD8A7B /* EQRNotesVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54A375B31A40040C00FD8A7B /* EQRNotesVC.xib */; };
+		54A5E7A21BB5363B0095DF10 /* EQRLineItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A5E7A11BB5363B0095DF10 /* EQRLineItem.m */; settings = {ASSET_TAGS = (); }; };
+		54A5E7A61BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A5E7A41BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m */; settings = {ASSET_TAGS = (); }; };
+		54A5E7A71BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54A5E7A51BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib */; settings = {ASSET_TAGS = (); }; };
 		54A97EF01B5796800052A265 /* bigArrowPointsLeftSoloAlt.png in Resources */ = {isa = PBXBuildFile; fileRef = 54A97EEE1B5796800052A265 /* bigArrowPointsLeftSoloAlt.png */; };
 		54A97EF11B5796800052A265 /* bigArrowPointsLeftSoloAlt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 54A97EEF1B5796800052A265 /* bigArrowPointsLeftSoloAlt@2x.png */; };
 		54AB4DCC1BA2CE6300A0358C /* EQRSigConfirmationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AB4DCB1BA2CE6300A0358C /* EQRSigConfirmationVC.m */; };
@@ -481,6 +484,11 @@
 		54A375B11A40040C00FD8A7B /* EQRNotesVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRNotesVC.h; sourceTree = "<group>"; };
 		54A375B21A40040C00FD8A7B /* EQRNotesVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRNotesVC.m; sourceTree = "<group>"; };
 		54A375B31A40040C00FD8A7B /* EQRNotesVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRNotesVC.xib; sourceTree = "<group>"; };
+		54A5E7A01BB5363B0095DF10 /* EQRLineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRLineItem.h; sourceTree = "<group>"; };
+		54A5E7A11BB5363B0095DF10 /* EQRLineItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRLineItem.m; sourceTree = "<group>"; };
+		54A5E7A31BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRPriceMatrixCllctnViewContentVC.h; sourceTree = "<group>"; };
+		54A5E7A41BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRPriceMatrixCllctnViewContentVC.m; sourceTree = "<group>"; };
+		54A5E7A51BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRPriceMatrixCllctnViewContentVC.xib; sourceTree = "<group>"; };
 		54A97EEE1B5796800052A265 /* bigArrowPointsLeftSoloAlt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bigArrowPointsLeftSoloAlt.png; sourceTree = "<group>"; };
 		54A97EEF1B5796800052A265 /* bigArrowPointsLeftSoloAlt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bigArrowPointsLeftSoloAlt@2x.png"; sourceTree = "<group>"; };
 		54AB4DCA1BA2CE6300A0358C /* EQRSigConfirmationVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRSigConfirmationVC.h; sourceTree = "<group>"; };
@@ -678,6 +686,9 @@
 				54CFE7981BA7DFFC00E643FC /* EQRRequestWrapperPriceMatrixVC.m */,
 				54CFE79A1BA7E90600E643FC /* EQRAlternateWrappperPriceMatrix.h */,
 				54CFE79B1BA7E90600E643FC /* EQRAlternateWrappperPriceMatrix.m */,
+				54A5E7A31BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.h */,
+				54A5E7A41BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m */,
+				54A5E7A51BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib */,
 			);
 			name = "Pricing Matrix";
 			sourceTree = "<group>";
@@ -1101,6 +1112,8 @@
 				54D3D8221A7DC53700562699 /* EQRMiscJoin.m */,
 				54E2FDE11A88801D00B51D45 /* EQRTextElement.h */,
 				54E2FDE21A88801D00B51D45 /* EQRTextElement.m */,
+				54A5E7A01BB5363B0095DF10 /* EQRLineItem.h */,
+				54A5E7A11BB5363B0095DF10 /* EQRLineItem.m */,
 			);
 			name = "collection objects";
 			sourceTree = "<group>";
@@ -1281,6 +1294,7 @@
 				0119D30018DBB25D009126CB /* EQRScheduleCellContentVCntrllr.xib in Resources */,
 				541479E61B524EEE009CE8A2 /* dottedCircle@2x.png in Resources */,
 				54263FF61AAF043D0095797E /* tab_day.png in Resources */,
+				54A5E7A71BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib in Resources */,
 				01C83A7B199E792800CD5E9C /* EQRDayExtendedPickerVC.xib in Resources */,
 				54263FEC1AAF03490095797E /* tabInbox.png in Resources */,
 				54A97EF01B5796800052A265 /* bigArrowPointsLeftSoloAlt.png in Resources */,
@@ -1386,6 +1400,7 @@
 				5413905F1B3BC1BD0041281D /* EQRCheckCellContentAltVC.m in Sources */,
 				5416F99F1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.m in Sources */,
 				54A375B41A40040C00FD8A7B /* EQRNotesVC.m in Sources */,
+				54A5E7A61BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m in Sources */,
 				01C79939189C723300D29625 /* EQREquipSummaryVCntrllr.m in Sources */,
 				0119D30318DBC736009126CB /* EQRScheduleRowCell.m in Sources */,
 				54032FE21872AC9000481D86 /* EQREquipDateVCntrllr.m in Sources */,
@@ -1430,6 +1445,7 @@
 				54DFE0F0186ECD610089B9EA /* EQRClassRegistrationItem.m in Sources */,
 				01A4755A18EB9BDF006F32EB /* EQREditorDateVCntrllr.m in Sources */,
 				0190DAE218E234EA00B55D82 /* EQRScheduleNestedDayCell.m in Sources */,
+				54A5E7A21BB5363B0095DF10 /* EQRLineItem.m in Sources */,
 				01470A911A82C3B100A0C2A6 /* EQRMiscEditVC.m in Sources */,
 				54C8E2191B843F25006CBB58 /* EQRAddNewClassVC.m in Sources */,
 				54ECF1E41998A7E100298996 /* EQRModeManager.m in Sources */,
