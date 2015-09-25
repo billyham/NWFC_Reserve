@@ -258,7 +258,6 @@
     pmcontent.distIdLabel.text = lineItem.equipDist_id;
     pmcontent.costField.text = lineItem.cost;
     
-    
     return cell;
 }
 
