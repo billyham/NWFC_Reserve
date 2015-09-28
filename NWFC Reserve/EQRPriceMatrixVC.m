@@ -15,7 +15,7 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRWebData.h"
 #import "EQRDataStructure.h"
-#import "EQRLineItem.h"
+//#import "EQRLineItem.h"
 #import "EQRPriceMatrixCllctnViewContentVC.h"
 
 
@@ -53,9 +53,10 @@
 
 - (void)viewDidLoad {
     
-    [super viewDidLoad];
     
-
+    
+    
+    [super viewDidLoad];
 }
 
 
@@ -73,7 +74,15 @@
     
     //Is called from Request. Use info in reqeustManager.request.
     //Create a transaction
-    //Create line items for each equipUnique
+    //populate collection view with Join objects
+    
+    //get an array of dictionaries of alternate costs for all equipTitles included in this request
+    //assign cost to each join (based on request's renter_pricing_class)
+    
+    //get array of available discounts
+    //get array of available items for purchase (add-ons)
+    
+    
     
     NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %lu  and of misc items: %lu", request.key_id, (unsigned long)[request.arrayOfEquipmentJoins count], (unsigned long)[request.arrayOfMiscJoins count]);
 
@@ -120,7 +129,6 @@
 -(void)startNewStage2{
     
     
-    //create line items for each equipment join
     
     
 }
@@ -131,9 +139,17 @@
     
     //Is called from requestEditor or inbox
     //DB call to get existing transaction using scheduleTracking_foreignKey
-    //DB call to get existing lineItems using transaction_foreignKey
+    //DB call to get existing equipJoins and miscJoins using scheduleTracking_foreignKey
     //...however, the transaction may not exist. If the reqeust changed from a non-public type to a public type in the editor.
     //error handle when no transaction returns to create a new one... call above method – startNewTransaction
+    
+    //populate collection view with Join objects
+    
+    //get an array of dictionaries of alternate costs for all equipTitles included in this request
+    //assign cost to each join (based on request's renter_pricing_class) and any existing discount
+    
+    //get array of available discounts
+    //get array of available items for purchase (add-ons)
     
     NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %lu  and of misc items: %lu", request.key_id, (unsigned long)[request.arrayOfEquipmentJoins count], (unsigned long)[request.arrayOfMiscJoins count]);
     
@@ -253,10 +269,10 @@
     
     [cell.contentView addSubview:pmcontent.view];
     
-    EQRLineItem *lineItem = [self.arrayOfLineItems objectAtIndex:indexPath.row];
-    pmcontent.equipNameLabel.text = lineItem.equipName;
-    pmcontent.distIdLabel.text = lineItem.equipDist_id;
-    pmcontent.costField.text = lineItem.cost;
+    EQRScheduleTracking_EquipmentUnique_Join *join = [self.arrayOfLineItems objectAtIndex:indexPath.row];
+    pmcontent.equipNameLabel.text = join.name;
+    pmcontent.distIdLabel.text = join.distinquishing_id;
+    pmcontent.costField.text = join.cost;
     
     return cell;
 }

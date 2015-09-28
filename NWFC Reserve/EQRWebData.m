@@ -861,6 +861,12 @@ const int intEQRTextElement = 10;
         return;
     }
     
+    if ([elementName isEqualToString:@"cost"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
 }
 
 
@@ -1608,6 +1614,17 @@ const int intEQRTextElement = 10;
         if ([self.currentThing respondsToSelector:@selector(distinguishing_id)]){
             
             [(EQRTextElement*)self.currentThing setDistinguishing_id:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"cost"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(cost)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join *)self.currentThing setCost:self.currentValue];
             
             self.currentValue = nil;
         }
