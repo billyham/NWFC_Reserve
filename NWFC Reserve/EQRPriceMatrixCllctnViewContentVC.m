@@ -10,18 +10,34 @@
 
 @interface EQRPriceMatrixCllctnViewContentVC ()
 
+@property (strong, nonatomic) NSString *myName;
+@property (strong, nonatomic) NSString *myDistID;
+@property (strong, nonatomic) NSString *myCost;
+
 @end
 
 @implementation EQRPriceMatrixCllctnViewContentVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.equipNameLabel.text = self.myName;
+    self.distIdLabel.text = self.myDistID;
+    self.costField.text = self.myCost;
+    
     // Do any additional setup after loading the view from its nib.
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)initialSetupWithName:(NSString *)name distID:(NSString *)distID cost:(NSString *)cost{
+    
+    self.myName = name;
+    self.myDistID = distID;
+    self.myCost = cost;
 }
 
 /*

@@ -15,5 +15,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *resetButton;
 @property (strong, nonatomic) IBOutlet UITextField *costField;
 
+-(void)initialSetupWithName:(NSString *)name distID:(NSString *)distID cost:(NSString *)cost;
 
 @end

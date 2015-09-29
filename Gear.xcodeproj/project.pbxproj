@@ -131,6 +131,7 @@
 		54331E011AB6B59B00AA0E1C /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54331E001AB6B59B00AA0E1C /* CloudKit.framework */; };
 		5433FCD21A8CB30500057B4F /* EQREnterPhoneVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5433FCD01A8CB30500057B4F /* EQREnterPhoneVC.m */; };
 		5433FCD31A8CB30500057B4F /* EQREnterPhoneVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5433FCD11A8CB30500057B4F /* EQREnterPhoneVC.xib */; };
+		543786351BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m in Sources */ = {isa = PBXBuildFile; fileRef = 543786341BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m */; settings = {ASSET_TAGS = (); }; };
 		5439B08D19AEC835007CC11C /* EQRInboxLeftTopVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439B08C19AEC835007CC11C /* EQRInboxLeftTopVC.m */; };
 		5439DCBD1A87363C006252E5 /* EQRScheduleNestedDateBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439DCBC1A87363C006252E5 /* EQRScheduleNestedDateBarCell.m */; };
 		5439DCC01A8739E9006252E5 /* EQRScheduleDateBarLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439DCBF1A8739E9006252E5 /* EQRScheduleDateBarLayout.m */; };
@@ -416,6 +417,8 @@
 		5433FCCF1A8CB30500057B4F /* EQREnterPhoneVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREnterPhoneVC.h; sourceTree = "<group>"; };
 		5433FCD01A8CB30500057B4F /* EQREnterPhoneVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREnterPhoneVC.m; sourceTree = "<group>"; };
 		5433FCD11A8CB30500057B4F /* EQREnterPhoneVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREnterPhoneVC.xib; sourceTree = "<group>"; };
+		543786331BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRPriceMatrixCllctnVwCll.h; sourceTree = "<group>"; };
+		543786341BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRPriceMatrixCllctnVwCll.m; sourceTree = "<group>"; };
 		5439B08B19AEC835007CC11C /* EQRInboxLeftTopVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRInboxLeftTopVC.h; sourceTree = "<group>"; };
 		5439B08C19AEC835007CC11C /* EQRInboxLeftTopVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRInboxLeftTopVC.m; sourceTree = "<group>"; };
 		5439DCBB1A87363C006252E5 /* EQRScheduleNestedDateBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleNestedDateBarCell.h; sourceTree = "<group>"; };
@@ -689,6 +692,8 @@
 				54A5E7A31BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.h */,
 				54A5E7A41BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m */,
 				54A5E7A51BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib */,
+				543786331BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.h */,
+				543786341BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m */,
 			);
 			name = "Pricing Matrix";
 			sourceTree = "<group>";
@@ -1368,6 +1373,7 @@
 				5402D22B186BFCDA0091C080 /* EQRContactNameCell.m in Sources */,
 				54AB4DCF1BA2D53B00A0358C /* EQRSigRentalFee.m in Sources */,
 				54D3D8231A7DC53700562699 /* EQRMiscJoin.m in Sources */,
+				543786351BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m in Sources */,
 				549BF3BC191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m in Sources */,
 				01C83A7F199E818C00CD5E9C /* EQREditorExtendedDateVC.m in Sources */,
 				541E548A1ADA7E6B00EE8909 /* EQRSettings1TableVC.m in Sources */,

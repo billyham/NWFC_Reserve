@@ -17,14 +17,18 @@
 #import "EQRDataStructure.h"
 //#import "EQRLineItem.h"
 #import "EQRPriceMatrixCllctnViewContentVC.h"
+#import "EQRPriceMatrixCllctnVwCll.h"
+#import "EQRScheduleTracking_EquipmentUnique_Join.h"
 
 
 @interface EQRPriceMatrixVC () <EQRWebDataDelegate, UICollectionViewDataSource, UICollectionViewDelegate>
 
-
 @property (strong, nonatomic) EQRScheduleRequestItem *myRequestItem;
 
 @property (strong, nonatomic) IBOutlet UICollectionView *lineItemsCollection;
+
+@property (strong, nonatomic) NSMutableArray *arrayOfEquipJoins;
+@property (strong, nonatomic) NSMutableArray *arrayOfMiscJoins;
 @property (strong, nonatomic) NSMutableArray *arrayOfLineItems;
 
 @property (strong, nonatomic) IBOutlet UIView *mainSubView;
@@ -53,7 +57,8 @@
 
 - (void)viewDidLoad {
     
-    
+    [self.lineItemsCollection registerClass:[EQRPriceMatrixCllctnVwCll class] forCellWithReuseIdentifier:@"Cell"];
+
     
     
     [super viewDidLoad];
@@ -66,6 +71,25 @@
     [super viewWillAppear:animated];
 }
 
+
+-(void)sharedInitialSetup{
+    
+    //fill scheduleReqeust info: name and dates
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatter setDateFormat:@"EEE, MMM d"];
+    NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [timeFormatter setDateFormat:@"h:mm a"];
+    
+    NSString *pickUpDate = [NSString stringWithFormat:@"%@, %@", [dateFormatter stringFromDate:self.myRequestItem.request_date_begin], [timeFormatter stringFromDate:self.myRequestItem.request_time_begin]];
+    
+    NSString *returnDate = [NSString stringWithFormat:@"%@, %@", [dateFormatter stringFromDate:self.myRequestItem.request_date_end], [timeFormatter stringFromDate:self.myRequestItem.request_time_end]];
+    
+    self.datesAndTimes.text = [NSString stringWithFormat:@"%@ — %@", pickUpDate, returnDate];
+    
+    self.renterName.text = self.myRequestItem.contact_name;
+}
 
 
 #pragma mark - public methods
@@ -90,21 +114,7 @@
     
     self.myRequestItem = request;
     
-    //fill scheduleReqeust info: name and dates
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [dateFormatter setDateFormat:@"EEE, MMM d"];
-    NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [timeFormatter setDateFormat:@"h:mm a"];
-    
-    NSString *pickUpDate = [NSString stringWithFormat:@"%@, %@", [dateFormatter stringFromDate:self.myRequestItem.request_date_begin], [timeFormatter stringFromDate:self.myRequestItem.request_time_begin]];
-    
-    NSString *returnDate = [NSString stringWithFormat:@"%@, %@", [dateFormatter stringFromDate:self.myRequestItem.request_date_end], [timeFormatter stringFromDate:self.myRequestItem.request_time_end]];
-    
-    self.datesAndTimes.text = [NSString stringWithFormat:@"%@ — %@", pickUpDate, returnDate];
-    
-    self.renterName.text = request.contact_name;
+    [self sharedInitialSetup];
     
     EQRWebData *webData = [EQRWebData sharedInstance];
     webData.delegateDataFeed = self;
@@ -118,6 +128,8 @@
            
             //string of key_id
             if (object){
+                
+                //______!!!!!!!!   NO!! THIS DOESN'T WORK BECAUSE THE REQUEST DOES NOT EXIST IN THE DATABASE YET !!!!________
                 [self startNewStage2];
             }else{
                 //error handling
@@ -126,10 +138,16 @@
     });
 }
 
+
 -(void)startNewStage2{
     
+
+}
+
+
+-(void)startNewStage3{
     
-    
+
     
 }
 
@@ -157,6 +175,47 @@
     
     self.myRequestItem = request;
     
+    [self sharedInitialSetup];
+    
+    [self editExistingStage2];
+    
+}
+
+-(void)editExistingStage2{
+    
+    NSLog(@"EQRPriceMatrix > editExistingStage2");
+    
+    //________!!!!!!!! The arrays already attached to the Reqeust are meaningless  !!!!!______
+    
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    NSArray *firstArray = @[@"scheduleTracking_foreignKey", self.myRequestItem.key_id];
+    NSArray *topArray = @[firstArray];
+    
+    SEL thisSelector = @selector(addEquipJoinToArray:);
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryWithAsync:@"EQGetScheduleEquipJoinsForPriceMatrix.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+            
+            [self editExistingStage3];
+        }];
+    });
+    
+}
+
+-(void)editExistingStage3{
+    
+    if (!self.arrayOfLineItems){
+        self.arrayOfLineItems = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    self.arrayOfLineItems = self.arrayOfEquipJoins;
+    
+    [self.lineItemsCollection reloadData];
+    
+    NSLog(@"this is the count of the collection view: %lu", (long)[self.lineItemsCollection numberOfItemsInSection:0]);
 }
 
 
@@ -184,40 +243,30 @@
 }
 
 
+-(void)addMiscJoinToArray:(id)currentThing{
+    
+    if (!currentThing){
+        return;
+    }
+    
+    [self.arrayOfMiscJoins addObject:currentThing];
+}
 
-//-(void)addEquipJoinToArray:(id)currentThing{
-//    
-//    float delayTime = 0.0;
-//    
-//    [self performSelector:@selector(addEquipJoinToArrayAfterDelay:) withObject:currentThing afterDelay:delayTime];
-//    
-//}
-//
-//
-//
-//-(void)addMiscJoinToArray:(id)currentThing{
-//    
-//    if (!currentThing){
-//        return;
-//    }
-//    
-//    [self.arrayOfMiscJoins addObject:currentThing];
-//    [self genericAddItemToArray:currentThing];
-//}
-//
-//-(void)addEquipJoinToArrayAfterDelay:(id)currentThing{
-//    
-//    
-//    if (!currentThing){
-//        return;
-//    }
-//    
-//    [self.arrayOfEquipJoins addObject:currentThing];
-//    [self genericAddItemToArray:currentThing];
-//    
-//}
-//
-//
+
+-(void)addEquipJoinToArray:(id)currentThing{
+    
+    if (!currentThing){
+        return;
+    }
+    
+    if (!self.arrayOfEquipJoins){
+        self.arrayOfEquipJoins = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    [self.arrayOfEquipJoins addObject:currentThing];
+}
+
+
 //-(void)genericAddItemToArray:(id)currentThing{
 //    
 //    if (!currentThing){
@@ -259,20 +308,22 @@
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
+    EQRPriceMatrixCllctnVwCll *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
     
-    for (UIView *subview in cell.subviews){
+    for (UIView *subview in cell.contentView.subviews){
         [subview removeFromSuperview];
     }
     
     EQRPriceMatrixCllctnViewContentVC *pmcontent = [[EQRPriceMatrixCllctnViewContentVC alloc] initWithNibName:@"EQRPriceMatrixCllctnViewContentVC" bundle:nil];
-    
-    [cell.contentView addSubview:pmcontent.view];
+    cell.myContentVC = pmcontent;
     
     EQRScheduleTracking_EquipmentUnique_Join *join = [self.arrayOfLineItems objectAtIndex:indexPath.row];
-    pmcontent.equipNameLabel.text = join.name;
-    pmcontent.distIdLabel.text = join.distinquishing_id;
-    pmcontent.costField.text = join.cost;
+    
+    NSLog(@"name: %@  distID: %@  cost: %@", join.name, join.distinquishing_id, join.cost);
+    
+    [cell.myContentVC initialSetupWithName:join.name distID:join.distinquishing_id cost:join.cost];
+    
+    [cell.contentView addSubview:cell.myContentVC.view];
     
     return cell;
 }

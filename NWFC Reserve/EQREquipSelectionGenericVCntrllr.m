@@ -803,7 +803,6 @@
         
     }else{
         
-        
         EQREquipSummaryGenericVCntrllr* summaryVCntrllr = [[EQREquipSummaryGenericVCntrllr alloc] initWithNibName:@"EQREquipSummaryGenericVCntrllr" bundle:nil];
         
         summaryVCntrllr.edgesForExtendedLayout = UIRectEdgeAll;
