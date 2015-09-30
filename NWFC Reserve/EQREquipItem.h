@@ -14,6 +14,7 @@
 @property (strong, nonatomic) NSString* name;
 @property (strong, nonatomic) NSString* shortname;
 @property (strong, nonatomic) NSString* price_commercial;
+@property (strong, nonatomic) NSString *price_staff;
 @property (strong, nonatomic) NSString* price_artist;
 @property (strong, nonatomic) NSString* price_nonprofit;
 @property (strong, nonatomic) NSString* price_student;

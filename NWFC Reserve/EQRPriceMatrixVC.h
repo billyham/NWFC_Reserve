@@ -13,6 +13,11 @@
 
 -(void)startNewTransaction:(EQRScheduleRequestItem *)request;
 -(void)editExistingTransaction:(EQRScheduleRequestItem *)request;
+
+//generic number editor method
+-(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod;
+
+
 @end
 
 

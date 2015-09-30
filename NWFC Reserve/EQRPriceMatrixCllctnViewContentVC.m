@@ -38,6 +38,10 @@
     self.myName = name;
     self.myDistID = distID;
     self.myCost = cost;
+    
+    self.equipNameLabel.text = self.myName;
+    self.distIdLabel.text = self.myDistID;
+    self.costField.text = self.myCost;
 }
 
 /*

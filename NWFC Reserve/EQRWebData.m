@@ -867,6 +867,36 @@ const int intEQRTextElement = 10;
         return;
     }
     
+    if ([elementName isEqualToString:@"price_commercial"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"price_artist"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"price_staff"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"price_nonprofit"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"price_student"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
 }
 
 
@@ -1620,16 +1650,61 @@ const int intEQRTextElement = 10;
         return;
     }
     
-    if ([prop isEqualToString:@"cost"]){
+    if ([prop isEqualToString:@"price_commercial"]){
         
-        if ([self.currentThing respondsToSelector:@selector(cost)]){
+        if ([self.currentThing respondsToSelector:@selector(price_commercial)]){
             
-            [(EQRScheduleTracking_EquipmentUnique_Join *)self.currentThing setCost:self.currentValue];
+            [(EQREquipItem *)self.currentThing setPrice_commercial:self.currentValue];
             
             self.currentValue = nil;
         }
         return;
     }
+    
+    if ([prop isEqualToString:@"price_artist"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(price_artist)]){
+            
+            [(EQREquipItem *)self.currentThing setPrice_artist:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"price_staff"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(price_staff)]){
+            
+            [(EQREquipItem *)self.currentThing setPrice_staff:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"price_nonprofit"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(price_nonprofit)]){
+            
+            [(EQREquipItem *)self.currentThing setPrice_nonprofit:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"price_student"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(price_student)]){
+            
+            [(EQREquipItem *)self.currentThing setPrice_student:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
     
     
     

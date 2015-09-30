@@ -19,9 +19,11 @@
 #import "EQRPriceMatrixCllctnViewContentVC.h"
 #import "EQRPriceMatrixCllctnVwCll.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
+#import "EQREquipItem.h"
+#import "EQRGenericNumberEditor.h"
 
 
-@interface EQRPriceMatrixVC () <EQRWebDataDelegate, UICollectionViewDataSource, UICollectionViewDelegate>
+@interface EQRPriceMatrixVC () <EQRWebDataDelegate, UICollectionViewDataSource, UICollectionViewDelegate, EQRGenericNumberEditorDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem *myRequestItem;
 
@@ -30,6 +32,7 @@
 @property (strong, nonatomic) NSMutableArray *arrayOfEquipJoins;
 @property (strong, nonatomic) NSMutableArray *arrayOfMiscJoins;
 @property (strong, nonatomic) NSMutableArray *arrayOfLineItems;
+@property (strong, nonatomic) NSMutableArray *arrayOfPriceEquipTitles;
 
 @property (strong, nonatomic) IBOutlet UIView *mainSubView;
 @property (strong, nonatomic) IBOutlet UILabel *datesAndTimes;
@@ -59,6 +62,7 @@
     
     [self.lineItemsCollection registerClass:[EQRPriceMatrixCllctnVwCll class] forCellWithReuseIdentifier:@"Cell"];
 
+
     
     
     [super viewDidLoad];
@@ -67,14 +71,21 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    
     [super viewWillAppear:animated];
 }
 
+-(void)viewDidLayoutSubviews{
+    
+    //add targets for tapping in text fields
+    UITapGestureRecognizer* tapDaysPrice = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pricingDaysFieldTapped:)];
+    [self.daysForPrice addGestureRecognizer:tapDaysPrice];
+    
+    [super viewDidLayoutSubviews];
+}
 
 -(void)sharedInitialSetup{
     
-    //fill scheduleReqeust info: name and dates
+    //__fill scheduleReqeust info: name and dates
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     [dateFormatter setDateFormat:@"EEE, MMM d"];
@@ -89,6 +100,18 @@
     self.datesAndTimes.text = [NSString stringWithFormat:@"%@ — %@", pickUpDate, returnDate];
     
     self.renterName.text = self.myRequestItem.contact_name;
+    
+    //__calculate default days for pricing
+    NSDate *beginDateJustDay = [EQRDataStructure dateByStrippingOffTime:self.myRequestItem.request_date_begin];
+    NSDate *endDateJustDay = [EQRDataStructure dateByStrippingOffTime:self.myRequestItem.request_date_end];
+    float timeDifference = [endDateJustDay timeIntervalSinceDate:beginDateJustDay];
+    // 86400 seconds in a day
+    NSInteger daysDifference = timeDifference / 86400;
+    if (daysDifference < 1){
+        daysDifference = 1;
+    }
+    self.daysForPrice.text = [NSString stringWithFormat:@"%ld", (long)daysDifference];
+    
 }
 
 
@@ -129,8 +152,8 @@
             //string of key_id
             if (object){
                 
-                //______!!!!!!!!   NO!! THIS DOESN'T WORK BECAUSE THE REQUEST DOES NOT EXIST IN THE DATABASE YET !!!!________
                 [self startNewStage2];
+                
             }else{
                 //error handling
             }
@@ -181,7 +204,7 @@
     
 }
 
--(void)editExistingStage2{
+-(void)editExistingStage2{  //get EquipJoins and MiscJoins
     
     NSLog(@"EQRPriceMatrix > editExistingStage2");
     
@@ -205,7 +228,7 @@
     
 }
 
--(void)editExistingStage3{
+-(void)editExistingStage3{  //get prices for equip titles
     
     if (!self.arrayOfLineItems){
         self.arrayOfLineItems = [NSMutableArray arrayWithCapacity:1];
@@ -216,9 +239,108 @@
     [self.lineItemsCollection reloadData];
     
     NSLog(@"this is the count of the collection view: %lu", (long)[self.lineItemsCollection numberOfItemsInSection:0]);
+    
+    
+    //get list of all equip prices
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    NSArray *firstArray = @[@"scheduleTracking_foreignKey", self.myRequestItem.key_id];
+    NSArray *topArray = @[firstArray];
+    
+    SEL thisSelector = @selector(addToArrayOfPriceEquipTitles:);
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryWithAsync:@"EQGetEquipTitleCostsWithScheduleRequest.php" parameters:topArray class:@"EQREquipItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+            
+            [self editExistingStage4];
+        }];
+    });
+}
+
+-(void)editExistingStage4{ //populate collection view objects with available prices
+    
+    NSLog(@"inside editExistingStage 4, count of arrayOfPriceEquipTitles: %lu", (unsigned long)[self.arrayOfPriceEquipTitles count]);
+    
+    for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfEquipJoins){
+        for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
+            
+            if ([join.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
+                //found an equipTitle match
+                join.cost = titleItem.price_artist;
+                break;
+            }
+        }
+    }
+    
+    
+    //do the same for line items array????
+    for (EQRScheduleTracking_EquipmentUnique_Join *join2 in self.arrayOfLineItems){
+        
+        //only continue if the lineItem is an EquipJoin
+        if ([join2 respondsToSelector:@selector(equipTitleItem_foreignKey)]){
+            
+            for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
+                
+                NSLog(@"this is titleItem.key_id: %@  and join.equipTitleItem_foreignKey: %@", titleItem.key_id, join2.equipTitleItem_foreignKey);
+                
+                if ([join2.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
+                    NSLog(@"found a match");
+                    //found an equipTitle match
+                    join2.cost = titleItem.price_artist;
+                    break;
+                }
+            }
+        }
+    }
+    
+    //reload the collection view to display cost data
+    [self.lineItemsCollection reloadData];
+    
+    
+    
 }
 
 
+-(IBAction)pricingDaysFieldTapped:(id)sender{
+    
+    EQRGenericNumberEditor *numberEditor = [[EQRGenericNumberEditor alloc] initWithNibName:@"EQRGenericNumberEditor" bundle:nil];
+    numberEditor.delegate = self;
+    numberEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    
+    [self presentViewController:numberEditor animated:YES completion:^{
+       
+        
+        [numberEditor initalSetupWithTitle:@"Enter Number of Days for Pricing" subTitle:[NSString stringWithFormat:@"For rental happening %@", self.daysForPrice.text] currentText:@"6" returnMethod:@"updateDaysForPrice:"];
+        
+    }];
+    
+    
+
+}
+
+
+#pragma mark - Generic Number Editor protocol method
+
+-(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod{
+    
+    SEL returnMethodForReal = NSSelectorFromString(returnMethod);
+
+    [self performSelector:returnMethodForReal withObject:returnText afterDelay:0];
+    
+}
+
+-(void)updateDaysForPrice:(NSString *)returnText{
+    
+    self.daysForPrice.text = returnText;
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        
+    }];
+    
+}
 
 
 
@@ -265,6 +387,20 @@
     
     [self.arrayOfEquipJoins addObject:currentThing];
 }
+
+-(void)addToArrayOfPriceEquipTitles:(id)currentThing{
+
+    if (!currentThing){
+        return;
+    }
+    
+    if (!self.arrayOfPriceEquipTitles){
+        self.arrayOfPriceEquipTitles = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    [self.arrayOfPriceEquipTitles addObject:currentThing];
+}
+
 
 
 //-(void)genericAddItemToArray:(id)currentThing{
