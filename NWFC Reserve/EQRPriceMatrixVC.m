@@ -21,9 +21,10 @@
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQREquipItem.h"
 #import "EQRGenericNumberEditor.h"
+#import "EQRTransaction.h"
 
 
-@interface EQRPriceMatrixVC () <EQRWebDataDelegate, UICollectionViewDataSource, UICollectionViewDelegate, EQRGenericNumberEditorDelegate>
+@interface EQRPriceMatrixVC () <EQRWebDataDelegate, UICollectionViewDataSource, UICollectionViewDelegate, EQRGenericNumberEditorDelegate, EQRPriceMatrixContentDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem *myRequestItem;
 
@@ -50,7 +51,11 @@
 @property (strong, nonatomic) IBOutlet UILabel *totalPaid;
 @property (strong, nonatomic) IBOutlet UILabel *totalDue;
 
+@property BOOL finishedLoadingEquipJoins;
+@property BOOL finishedLoadingMiscJoins;
+@property (strong, nonatomic) NSIndexPath *tempIndexPath;
 
+@property (strong, nonatomic) EQRTransaction *myTransaction;
 
 @end
 
@@ -129,9 +134,7 @@
     //get array of available discounts
     //get array of available items for purchase (add-ons)
     
-    
-    
-    NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %lu  and of misc items: %lu", request.key_id, (unsigned long)[request.arrayOfEquipmentJoins count], (unsigned long)[request.arrayOfMiscJoins count]);
+//    NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %lu  and of misc items: %lu", request.key_id, (unsigned long)[request.arrayOfEquipmentJoins count], (unsigned long)[request.arrayOfMiscJoins count]);
 
     //yes, array is good
     
@@ -152,7 +155,15 @@
             //string of key_id
             if (object){
                 
-                [self startNewStage2];
+                EQRTransaction *newTransaction = [[EQRTransaction alloc] init];
+                newTransaction.key_id = object;
+                newTransaction.scheduleTracking_foreignKey = self.myRequestItem.key_id;
+                self.myTransaction = newTransaction;
+                
+                //__________!!!!!!!!  Just testing this... remove  !!!!!________
+                [self editExistingStage2];
+                
+//                [self startNewStage2];
                 
             }else{
                 //error handling
@@ -192,7 +203,7 @@
     //get array of available discounts
     //get array of available items for purchase (add-ons)
     
-    NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %lu  and of misc items: %lu", request.key_id, (unsigned long)[request.arrayOfEquipmentJoins count], (unsigned long)[request.arrayOfMiscJoins count]);
+//    NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %lu  and of misc items: %lu", request.key_id, (unsigned long)[request.arrayOfEquipmentJoins count], (unsigned long)[request.arrayOfMiscJoins count]);
     
     //no, array is bad
     
@@ -200,11 +211,50 @@
     
     [self sharedInitialSetup];
     
-    [self editExistingStage2];
+    //test that a transaction exists and continue with transaction properties
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    NSArray *firstArray = @[@"scheduleTracking_foreignKey", self.myRequestItem.key_id];
+    NSArray *topArray = @[firstArray];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryForStringwithAsync:@"EQGetTransactionWithScheduleRequestKey.php" parameters:topArray completion:^(EQRTransaction *transaction) {
+            
+            if (transaction){
+                
+                NSLog(@"this is the transaction's key_id: %@", transaction.key_id);
+                
+                self.myTransaction = transaction;
+                
+                //found a matching transaction for this schedule Request, go on...
+                [self editExistingStage2];
+
+            }else{
+                
+                //no matching transaction, create a fresh one.
+                [self startNewTransaction:self.myRequestItem];
+                NSLog(@"creating a new transaction because it didn't find an existing one");
+            }
+        }];
+    });
     
 }
 
 -(void)editExistingStage2{  //get EquipJoins and MiscJoins
+    
+    self.finishedLoadingEquipJoins = NO;
+    self.finishedLoadingMiscJoins = NO;
+    
+    //if the transaction object has a value for days_for_pricing, then override the calculated value...
+    if (self.myTransaction.rental_days_for_pricing){
+        
+        //and make sure it isn't a blank value
+        if (![self.myTransaction.rental_days_for_pricing isEqualToString:@""]){
+            self.daysForPrice.text = self.myTransaction.rental_days_for_pricing;
+        }
+    }
     
     NSLog(@"EQRPriceMatrix > editExistingStage2");
     
@@ -222,19 +272,46 @@
         
         [webData queryWithAsync:@"EQGetScheduleEquipJoinsForPriceMatrix.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
             
-            [self editExistingStage3];
+            self.finishedLoadingEquipJoins = YES;
+            if (self.finishedLoadingMiscJoins == YES){
+                [self editExistingStage3];
+            }
         }];
     });
     
+    SEL thatSelector = @selector(addMiscJoinToArray:);
+    
+    EQRWebData *webData2 = [EQRWebData sharedInstance];
+    webData2.delegateDataFeed = self;
+    dispatch_queue_t queue2 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue2, ^{
+        
+        [webData2 queryWithAsync:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:topArray class:@"EQRMiscJoin" selector:thatSelector completion:^(BOOL isLoadingFlagUp) {
+            
+            self.finishedLoadingMiscJoins = YES;
+            if (self.finishedLoadingEquipJoins == YES){
+                [self editExistingStage3];
+            }
+        }];
+    });
 }
 
 -(void)editExistingStage3{  //get prices for equip titles
     
+    NSLog(@"this is the count of equipJoins: %lu", (long)[self.arrayOfEquipJoins count]);
+    
     if (!self.arrayOfLineItems){
         self.arrayOfLineItems = [NSMutableArray arrayWithCapacity:1];
     }
+    [self.arrayOfLineItems removeAllObjects];
     
-    self.arrayOfLineItems = self.arrayOfEquipJoins;
+    if (self.arrayOfEquipJoins){
+        [self.arrayOfLineItems addObjectsFromArray:self.arrayOfEquipJoins];
+    }
+    
+    if (self.arrayOfMiscJoins){
+        [self.arrayOfLineItems addObjectsFromArray:self.arrayOfMiscJoins];
+    }
     
     [self.lineItemsCollection reloadData];
     
@@ -257,6 +334,8 @@
             [self editExistingStage4];
         }];
     });
+    
+   
 }
 
 -(void)editExistingStage4{ //populate collection view objects with available prices
@@ -264,12 +343,17 @@
     NSLog(@"inside editExistingStage 4, count of arrayOfPriceEquipTitles: %lu", (unsigned long)[self.arrayOfPriceEquipTitles count]);
     
     for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfEquipJoins){
-        for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
+        
+        //only continue if join.cost has no value yet
+        if (!join.cost){
             
-            if ([join.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
-                //found an equipTitle match
-                join.cost = titleItem.price_artist;
-                break;
+            for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
+                
+                if ([join.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
+                    //found an equipTitle match
+                    join.cost = titleItem.price_artist;
+                    break;
+                }
             }
         }
     }
@@ -281,15 +365,19 @@
         //only continue if the lineItem is an EquipJoin
         if ([join2 respondsToSelector:@selector(equipTitleItem_foreignKey)]){
             
-            for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
+            //only continue if join.cost has no value yet
+            if (!join2.cost){
                 
-                NSLog(@"this is titleItem.key_id: %@  and join.equipTitleItem_foreignKey: %@", titleItem.key_id, join2.equipTitleItem_foreignKey);
-                
-                if ([join2.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
-                    NSLog(@"found a match");
-                    //found an equipTitle match
-                    join2.cost = titleItem.price_artist;
-                    break;
+                for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
+                    
+                    NSLog(@"this is titleItem.key_id: %@  and join.equipTitleItem_foreignKey: %@", titleItem.key_id, join2.equipTitleItem_foreignKey);
+                    
+                    if ([join2.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
+                        NSLog(@"found a match");
+                        //found an equipTitle match
+                        join2.cost = titleItem.price_artist;
+                        break;
+                    }
                 }
             }
         }
@@ -302,6 +390,8 @@
     
 }
 
+#pragma mark - Target for Actions
+
 
 -(IBAction)pricingDaysFieldTapped:(id)sender{
     
@@ -311,17 +401,50 @@
     
     [self presentViewController:numberEditor animated:YES completion:^{
        
-        
         [numberEditor initalSetupWithTitle:@"Enter Number of Days for Pricing" subTitle:[NSString stringWithFormat:@"For rental happening %@", self.daysForPrice.text] currentText:@"6" returnMethod:@"updateDaysForPrice:"];
         
     }];
-    
-    
+}
 
+#pragma mark - Price Matrix Content VC delegate method
+
+-(void)launchCostEditorWithJoinKeyID:(NSString *)joinKeyID isEquipJoin:(BOOL)isEquipJoin cost:(NSString *)cost{
+    
+    __block NSIndexPath *savedIndexPath;
+    [self.arrayOfLineItems enumerateObjectsUsingBlock:^(EQRScheduleTracking_EquipmentUnique_Join *_Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        //continue only if there is agreement that both joins are an equipJoin or not
+        if (isEquipJoin == [obj respondsToSelector:@selector(distinquishing_id)]){
+            
+            if ([obj.key_id isEqualToString:joinKeyID]){
+                //found a match
+                savedIndexPath = [NSIndexPath indexPathForRow:idx inSection:0];
+                self.tempIndexPath = savedIndexPath;
+            }
+        }
+    }];
+    
+    if (!savedIndexPath){
+        //error handling...
+        return;
+        NSLog(@"EQRPriceMatrix > launchCostEditorWithJoinKeyID says no match from contentVC to lineItems array");
+    }
+    
+    EQRGenericNumberEditor *numberEditor = [[EQRGenericNumberEditor alloc] initWithNibName:@"EQRGenericNumberEditor" bundle:nil];
+    numberEditor.delegate = self;
+    numberEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    
+    [self presentViewController:numberEditor animated:YES completion:^{
+        
+        [numberEditor initalSetupWithTitle:@"Enter New Daily Cost" subTitle:nil currentText:cost returnMethod:@"updateJoinRowWithNewCost:"];
+        
+    }];
 }
 
 
-#pragma mark - Generic Number Editor protocol method
+
+
+#pragma mark - Generic Number Editor delegate method
 
 -(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod{
     
@@ -335,13 +458,54 @@
     
     self.daysForPrice.text = returnText;
     
+    NSLog(@"this is the transaction key_id: %@", self.myTransaction.key_id);
+    
+    //udpate database
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    NSArray *firstArray = @[@"key_id", self.myTransaction.key_id];
+    NSArray *secondArray = @[@"rental_days_for_pricing", returnText];
+    NSArray *topArray = @[firstArray, secondArray];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryForStringwithAsync:@"EQAlterTransactionDaysForPrice.php" parameters:topArray completion:^(NSString *returnKey) {
+            
+            if ([returnKey isEqualToString:self.myTransaction.key_id]){
+                
+                //everthign is cool
+                
+            }else{
+                
+                //error handling
+                NSLog(@"failed to successfully alter transaction days for pricing");
+            }
+        }];
+    });
+    
+    
+    
+    
+    
     [self dismissViewControllerAnimated:YES completion:^{
         
-        
     }];
-    
 }
 
+-(void)updateJoinRowWithNewCost:(NSString *)returnText{
+    
+    EQRScheduleTracking_EquipmentUnique_Join *join = [self.arrayOfLineItems objectAtIndex:self.tempIndexPath.row];
+    join.cost = returnText;
+    
+    [self.lineItemsCollection reloadData];
+    
+    //____________!!!!!!   now update database   !!!!!!!!!!!_____________
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+}
 
 
 
@@ -371,7 +535,12 @@
         return;
     }
     
+    if (!self.arrayOfMiscJoins){
+        self.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
+    }
+    
     [self.arrayOfMiscJoins addObject:currentThing];
+    
 }
 
 
@@ -385,6 +554,7 @@
         self.arrayOfEquipJoins = [NSMutableArray arrayWithCapacity:1];
     }
     
+    NSLog(@"adding equipJoin to array");
     [self.arrayOfEquipJoins addObject:currentThing];
 }
 
@@ -451,14 +621,25 @@
     }
     
     EQRPriceMatrixCllctnViewContentVC *pmcontent = [[EQRPriceMatrixCllctnViewContentVC alloc] initWithNibName:@"EQRPriceMatrixCllctnViewContentVC" bundle:nil];
+    pmcontent.delegate = self;
+    
     cell.myContentVC = pmcontent;
     
-    EQRScheduleTracking_EquipmentUnique_Join *join = [self.arrayOfLineItems objectAtIndex:indexPath.row];
-    
-    NSLog(@"name: %@  distID: %@  cost: %@", join.name, join.distinquishing_id, join.cost);
-    
-    [cell.myContentVC initialSetupWithName:join.name distID:join.distinquishing_id cost:join.cost];
-    
+    if ([[self.arrayOfLineItems objectAtIndex:indexPath.row] respondsToSelector:@selector(distinquishing_id)]){
+        //must be equipJoin
+        
+        EQRScheduleTracking_EquipmentUnique_Join *join = [self.arrayOfLineItems objectAtIndex:indexPath.row];
+        [cell.myContentVC initialSetupWithName:join.name distID:join.distinquishing_id cost:join.cost joinKeyID:join.key_id];
+        
+        NSLog(@"name: %@  distID: %@  cost: %@", join.name, join.distinquishing_id, join.cost);
+        
+    }else{
+        //must be miscJoin
+        
+        EQRMiscJoin *join = [self.arrayOfLineItems objectAtIndex:indexPath.row];
+        [cell.myContentVC initialSetupWithName:join.name distID:nil cost:join.cost joinKeyID:join.key_id];
+    }
+
     [cell.contentView addSubview:cell.myContentVC.view];
     
     return cell;

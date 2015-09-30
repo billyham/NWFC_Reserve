@@ -279,7 +279,7 @@
                 self.didLoadEquipJoinsFlag = NO;
                 
                 //this delay has no real effect
-                [self performSelector:@selector(initialSetupStage3) withObject:nil afterDelay:1.0];
+                [self performSelector:@selector(initialSetupStage3) withObject:nil afterDelay:0];
             }
         }];
     });
@@ -301,7 +301,7 @@
                 self.didLoadMiscJoinsFlag = NO;
                 
                 //this delay has no real effect
-                [self performSelector:@selector(initialSetupStage3) withObject:nil afterDelay:1.0];
+                [self performSelector:@selector(initialSetupStage3) withObject:nil afterDelay:0];
             }
         }];
     });

@@ -19,6 +19,7 @@
 #import "EQRModeManager.h"
 #import "EQRTextElement.h"
 #import "EQRCloudData.h"
+#import "EQRTransaction.h"
 
 @interface EQRWebData ()
 
@@ -58,6 +59,7 @@ const int intEQRScheduleTracking_EquipmentUnique_Join = 7;
 const int intEQREquipUniqueItem = 8;
 const int intEQRMiscJoin = 9;
 const int intEQRTextElement = 10;
+const int intEQRTransaction = 11;
 
 
 @implementation EQRWebData
@@ -136,6 +138,12 @@ const int intEQRTextElement = 10;
         self.returnClassInt = intEQRTextElement;
         return;
     }
+    
+    if ([classString isEqualToString:@"EQRTransaction"]){
+        self.returnClassInt = intEQRTransaction;
+        return;
+    }
+    
     
     NSLog(@"WEBDATA DID NOT FIND A MATCHING INT FOR THE RETURN CLASS OBJECT");
 }
@@ -892,6 +900,12 @@ const int intEQRTextElement = 10;
     }
     
     if ([elementName isEqualToString:@"price_student"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"rental_days_for_pricing"]){
         
         self.currentProperty = elementName;
         return;
@@ -1705,6 +1719,18 @@ const int intEQRTextElement = 10;
         return;
     }
     
+    // Transaction Properties
+    if ([prop isEqualToString:@"rental_days_for_pricing"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(rental_days_for_pricing)]){
+            
+            [(EQRTransaction *)self.currentThing setRental_days_for_pricing:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+
     
     
     
@@ -1858,6 +1884,43 @@ const int intEQRTextElement = 10;
         
         return;
     }
+    
+    if ([link isEqualToString:@"EQGetTransactionWithScheduleRequestKey.php"]){
+        
+        //return the Transaction object
+        [self queryWithLink:@"EQGetTransactionWithScheduleRequestKey.php" parameters:para class:@"EQRTransaction" completion:^(NSMutableArray *muteArray) {
+            
+            if ([muteArray count] > 0){
+                
+                EQRTransaction *transaction = [muteArray objectAtIndex:0];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completeBlock(transaction);
+                });
+                
+            }else{
+                
+                //no object got returned, pass this error downstream... with nil
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completeBlock(nil);
+                });
+            }
+        }];
+        return;
+    }
+    
+    if ([link isEqualToString:@"EQAlterTransactionDaysForPrice.php"]){
+        
+        NSString *returnString = [self queryForStringWithLink:@"EQAlterTransactionDaysForPrice.php" parameters:para];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        
+        return;
+    }
+    
+    
 }
 
 

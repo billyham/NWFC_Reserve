@@ -13,10 +13,13 @@
 @property (strong, nonatomic) NSString *myName;
 @property (strong, nonatomic) NSString *myDistID;
 @property (strong, nonatomic) NSString *myCost;
+@property (strong, nonatomic) NSString *myKeyID;
 
 @end
 
 @implementation EQRPriceMatrixCllctnViewContentVC
+
+@synthesize delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -28,20 +31,41 @@
     // Do any additional setup after loading the view from its nib.
 }
 
+-(void)viewDidLayoutSubviews{
+    
+    //add targets for tapping in text fields
+    UITapGestureRecognizer* tapChangeCost = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(costFieldTapped)];
+    [self.costField addGestureRecognizer:tapChangeCost];
+    
+    [super viewDidLayoutSubviews];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
--(void)initialSetupWithName:(NSString *)name distID:(NSString *)distID cost:(NSString *)cost{
+-(void)initialSetupWithName:(NSString *)name distID:(NSString *)distID cost:(NSString *)cost joinKeyID:(NSString *)keyID{
     
     self.myName = name;
     self.myDistID = distID;
     self.myCost = cost;
+    self.myKeyID = keyID;
     
     self.equipNameLabel.text = self.myName;
     self.distIdLabel.text = self.myDistID;
     self.costField.text = self.myCost;
+}
+
+-(void)costFieldTapped{
+    
+    //if it has a valid dist ID, then it must be an equipJoin
+    if (self.myDistID){
+        [self.delegate launchCostEditorWithJoinKeyID:self.myKeyID isEquipJoin:YES cost:self.myCost];
+    }else{
+        [self.delegate launchCostEditorWithJoinKeyID:self.myKeyID isEquipJoin:NO cost:self.myCost];
+    }
+    
 }
 
 /*

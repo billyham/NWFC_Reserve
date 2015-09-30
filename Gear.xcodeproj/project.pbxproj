@@ -154,6 +154,7 @@
 		545661DC183239520067B40D /* EQRWebData.m in Sources */ = {isa = PBXBuildFile; fileRef = 545661DB183239520067B40D /* EQRWebData.m */; };
 		545661DF18323ABC0067B40D /* EQREquipItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 545661DE18323ABC0067B40D /* EQREquipItem.m */; };
 		5460B69719EFA27700D3ED7B /* EQRNavBarDatesNarrowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5460B69619EFA27700D3ED7B /* EQRNavBarDatesNarrowView.m */; };
+		546436551BBBBF70002BF3FF /* EQRTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 546436541BBBBF70002BF3FF /* EQRTransaction.m */; settings = {ASSET_TAGS = (); }; };
 		5464C0141A0A21A600469C45 /* EQREquipSelectionLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5464C0131A0A21A600469C45 /* EQREquipSelectionLayout.m */; };
 		546F28231A19529C00980221 /* EQRContactPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 546F28211A19529C00980221 /* EQRContactPickerVC.m */; };
 		546F28241A19529C00980221 /* EQRContactPickerVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 546F28221A19529C00980221 /* EQRContactPickerVC.xib */; };
@@ -454,6 +455,8 @@
 		545661DE18323ABC0067B40D /* EQREquipItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipItem.m; sourceTree = "<group>"; };
 		5460B69519EFA27700D3ED7B /* EQRNavBarDatesNarrowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRNavBarDatesNarrowView.h; sourceTree = "<group>"; };
 		5460B69619EFA27700D3ED7B /* EQRNavBarDatesNarrowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRNavBarDatesNarrowView.m; sourceTree = "<group>"; };
+		546436531BBBBF70002BF3FF /* EQRTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRTransaction.h; sourceTree = "<group>"; };
+		546436541BBBBF70002BF3FF /* EQRTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRTransaction.m; sourceTree = "<group>"; };
 		5464C0121A0A21A600469C45 /* EQREquipSelectionLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSelectionLayout.h; sourceTree = "<group>"; };
 		5464C0131A0A21A600469C45 /* EQREquipSelectionLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipSelectionLayout.m; sourceTree = "<group>"; };
 		546F28201A19529C00980221 /* EQRContactPickerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRContactPickerVC.h; sourceTree = "<group>"; };
@@ -1127,6 +1130,8 @@
 				54E2FDE21A88801D00B51D45 /* EQRTextElement.m */,
 				54A5E7A01BB5363B0095DF10 /* EQRLineItem.h */,
 				54A5E7A11BB5363B0095DF10 /* EQRLineItem.m */,
+				546436531BBBBF70002BF3FF /* EQRTransaction.h */,
+				546436541BBBBF70002BF3FF /* EQRTransaction.m */,
 			);
 			name = "collection objects";
 			sourceTree = "<group>";
@@ -1479,6 +1484,7 @@
 				54882BD21900D588005A4D5A /* EQREditorRenterVCntrllr.m in Sources */,
 				5497F5031A1DCA79008A7E52 /* EQRClassPickerVC.m in Sources */,
 				0119D2FF18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m in Sources */,
+				546436551BBBBF70002BF3FF /* EQRTransaction.m in Sources */,
 				542D59B61A00DD8800989617 /* EQRTextEmailStudent.m in Sources */,
 				540B551D18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m in Sources */,
 				438EDCF9182B7ABE0090F882 /* EQRSecondViewController.m in Sources */,
