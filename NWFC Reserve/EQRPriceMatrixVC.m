@@ -54,6 +54,7 @@
 @property BOOL finishedLoadingEquipJoins;
 @property BOOL finishedLoadingMiscJoins;
 @property (strong, nonatomic) NSIndexPath *tempIndexPath;
+@property BOOL tempIndexPathIsEquipJoin;
 
 @property (strong, nonatomic) EQRTransaction *myTransaction;
 
@@ -61,7 +62,7 @@
 
 @implementation EQRPriceMatrixVC
 
-#pragma mark - methods
+#pragma mark - View methods
 
 - (void)viewDidLoad {
     
@@ -87,6 +88,9 @@
     
     [super viewDidLayoutSubviews];
 }
+
+
+#pragma mark - Setup Methods
 
 -(void)sharedInitialSetup{
     
@@ -118,9 +122,6 @@
     self.daysForPrice.text = [NSString stringWithFormat:@"%ld", (long)daysDifference];
     
 }
-
-
-#pragma mark - public methods
 
 -(void)startNewTransaction:(EQRScheduleRequestItem *)request{
     
@@ -345,7 +346,7 @@
     for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfEquipJoins){
         
         //only continue if join.cost has no value yet
-        if (!join.cost){
+        if ([join.cost isEqualToString:@""]){
             
             for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
                 
@@ -366,7 +367,7 @@
         if ([join2 respondsToSelector:@selector(equipTitleItem_foreignKey)]){
             
             //only continue if join.cost has no value yet
-            if (!join2.cost){
+            if ([join2.cost isEqualToString:@""]){
                 
                 for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
                     
@@ -386,11 +387,33 @@
     //reload the collection view to display cost data
     [self.lineItemsCollection reloadData];
     
-    
+    //set price
+    [self calculatePriceStage1];
     
 }
 
-#pragma mark - Target for Actions
+
+-(void)calculatePriceStage1{
+    
+    //go through lineItem array and add all cost properties
+    //multiply by days for pricing
+    //enter into subtotal
+    
+    NSInteger sumOfCosts = 0;
+    for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfLineItems){
+        NSInteger costAsInt = [join.cost integerValue];
+        sumOfCosts = sumOfCosts + costAsInt;
+    }
+    
+    NSInteger daysForPricingAsInt = [self.daysForPrice.text integerValue];
+    
+    NSInteger subTotal = daysForPricingAsInt * sumOfCosts;
+    
+    self.subtotal.text = [NSString stringWithFormat:@"Subtotal: %u", subTotal];
+    
+}
+
+#pragma mark - Having tapped on things
 
 
 -(IBAction)pricingDaysFieldTapped:(id)sender{
@@ -406,8 +429,7 @@
     }];
 }
 
-#pragma mark - Price Matrix Content VC delegate method
-
+//Price Matrix Content VC delegate method
 -(void)launchCostEditorWithJoinKeyID:(NSString *)joinKeyID isEquipJoin:(BOOL)isEquipJoin cost:(NSString *)cost{
     
     __block NSIndexPath *savedIndexPath;
@@ -420,6 +442,7 @@
                 //found a match
                 savedIndexPath = [NSIndexPath indexPathForRow:idx inSection:0];
                 self.tempIndexPath = savedIndexPath;
+                self.tempIndexPathIsEquipJoin = isEquipJoin;
             }
         }
     }];
@@ -484,26 +507,80 @@
         }];
     });
     
-    
-    
-    
-    
     [self dismissViewControllerAnimated:YES completion:^{
-        
+        [self calculatePriceStage1];
     }];
 }
 
+
 -(void)updateJoinRowWithNewCost:(NSString *)returnText{
     
-    EQRScheduleTracking_EquipmentUnique_Join *join = [self.arrayOfLineItems objectAtIndex:self.tempIndexPath.row];
-    join.cost = returnText;
     
-    [self.lineItemsCollection reloadData];
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
     
-    //____________!!!!!!   now update database   !!!!!!!!!!!_____________
+    //______is it an EquipJoin or a MiscJoin?
+    if (self.tempIndexPathIsEquipJoin){
+        
+        EQRScheduleTracking_EquipmentUnique_Join *join = [self.arrayOfLineItems objectAtIndex:self.tempIndexPath.row];
+        join.cost = returnText;
+        
+        [self.lineItemsCollection reloadData];
+        
+        //udpate database
+        NSArray *firstArray = @[@"key_id", join.key_id];
+        NSArray *secondArray = @[@"cost", returnText];
+        NSArray *topArray = @[firstArray, secondArray];
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+            
+            [webData queryForStringwithAsync:@"EQAlterCostOfScheduleEquipJoin.php" parameters:topArray completion:^(NSString *returnKey) {
+                
+                if ([returnKey isEqualToString:join.key_id]){
+                    
+                    //everthign is cool
+                    
+                }else{
+                    
+                    //error handling
+                    NSLog(@"failed to successfully alter transaction equipJoin price");
+                }
+            }];
+        });
+        
+    }else{     // Must be a MiscJoin
+        
+        EQRMiscJoin *join = [self.arrayOfLineItems objectAtIndex:self.tempIndexPath.row];
+        join.cost = returnText;
+        
+        [self.lineItemsCollection reloadData];
+        
+        //udpate database
+        NSArray *firstArray = @[@"key_id", join.key_id];
+        NSArray *secondArray = @[@"cost", returnText];
+        NSArray *topArray = @[firstArray, secondArray];
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+            
+            [webData queryForStringwithAsync:@"EQAlterCostOfMiscJoin.php" parameters:topArray completion:^(NSString *returnKey) {
+                
+                if ([returnKey isEqualToString:join.key_id]){
+                    
+                    //everthign is cool
+                    
+                }else{
+                    
+                    //error handling
+                    NSLog(@"failed to successfully alter transaction miscJoin price");
+                }
+            }];
+        });
+    }
     
     [self dismissViewControllerAnimated:YES completion:^{
-        
+        [self calculatePriceStage1];
     }];
 }
 
@@ -528,7 +605,6 @@
     
 }
 
-
 -(void)addMiscJoinToArray:(id)currentThing{
     
     if (!currentThing){
@@ -540,9 +616,7 @@
     }
     
     [self.arrayOfMiscJoins addObject:currentThing];
-    
 }
-
 
 -(void)addEquipJoinToArray:(id)currentThing{
     
@@ -571,32 +645,6 @@
     [self.arrayOfPriceEquipTitles addObject:currentThing];
 }
 
-
-
-//-(void)genericAddItemToArray:(id)currentThing{
-//    
-//    if (!currentThing){
-//        return;
-//    }
-//    
-//    NSMutableArray *newSubArray = [NSMutableArray arrayWithCapacity:1];
-//    
-//    if (self.arrayOfEquipJoinsWithStructure){
-//        if ([self.arrayOfEquipJoinsWithStructure count] > 0){
-//            [newSubArray addObjectsFromArray:[self.arrayOfEquipJoinsWithStructure objectAtIndex:0]];
-//            [newSubArray addObject:currentThing];
-//            self.arrayOfEquipJoinsWithStructure = [NSArray arrayWithObject:newSubArray];
-//        }else{  //if no sub array exists yet
-//            [newSubArray addObject:currentThing];
-//            self.arrayOfEquipJoinsWithStructure = [NSArray arrayWithObject:newSubArray];
-//        }
-//    }else{  //if the main array doesn't exist yet
-//        [newSubArray addObject:currentThing];
-//        self.arrayOfEquipJoinsWithStructure = [NSArray arrayWithObject:newSubArray];
-//    }
-//    
-//    [self.myEquipCollection reloadData];
-//}
 
 
 #pragma mark - collection view data source

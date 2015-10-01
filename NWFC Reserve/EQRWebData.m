@@ -1718,6 +1718,17 @@ const int intEQRTransaction = 11;
         }
         return;
     }
+
+    if ([prop isEqualToString:@"cost"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(cost)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join *)self.currentThing setCost:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
     
     // Transaction Properties
     if ([prop isEqualToString:@"rental_days_for_pricing"]){
@@ -1920,6 +1931,27 @@ const int intEQRTransaction = 11;
         return;
     }
     
+    if ([link isEqualToString:@"EQAlterCostOfScheduleEquipJoin.php"]){
+        
+        NSString *returnString = [self queryForStringWithLink:@"EQAlterCostOfScheduleEquipJoin.php" parameters:para];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        
+        return;
+    }
+
+    if ([link isEqualToString:@"EQAlterCostOfMiscJoin.php"]){
+        
+        NSString *returnString = [self queryForStringWithLink:@"EQAlterCostOfMiscJoin.php" parameters:para];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        
+        return;
+    }
     
 }
 
