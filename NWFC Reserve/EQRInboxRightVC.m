@@ -29,9 +29,10 @@
 #import "EQRMiscJoin.h"
 #import "EQRPriceMatrixVC.h"
 #import "EQRAlternateWrappperPriceMatrix.h"
+#import "EQRTextElement.h"
 
 
-@interface EQRInboxRightVC ()
+@interface EQRInboxRightVC () <EQRWebDataDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem* myScheduleRequest;
 
@@ -96,6 +97,7 @@
 @property (strong, nonatomic) UIAlertView *confirmationAlert;
 @property (strong, nonatomic) UIAlertView *sendEmailAlert;
 
+@property (strong, nonatomic) NSString *myEmailSignature;
 @property BOOL inEditModeFlag;
 @property BOOL aChangeWasMade;
 
@@ -130,6 +132,7 @@
     
     //receive changes to the schedule to update the existing view
     [nc addObserver:self selector:@selector(raiseFlagThatAChangeHasBeenMade:) name:EQRAChangeWasMadeToTheSchedule object:nil];
+    [nc addObserver:self selector:@selector(raiseFlagThatDatabaseChanged:) name:EQRAChangeWasMadeToTheDatabaseSource object:nil];
     
     //register to receive delete instructions from equipList cells
 //    [nc addObserver:self selector:@selector(addEquipUniqueToBeDeletedArray:) name:EQREquipUniqueToBeDeleted object:nil];
@@ -193,6 +196,9 @@
     [self.viewEditLeft setHidden:YES];
     [self.addButtonView setHidden:YES];
     [self.doneButtonView setHidden:YES];
+    
+    //get shared email signature
+    [self getEmailSignatureFromDB];
         
 }
 
@@ -497,6 +503,11 @@
     self.aChangeWasMade = YES;
 }
 
+-(void)raiseFlagThatDatabaseChanged:(NSNotification *)note{
+    
+    [self getEmailSignatureFromDB];
+}
+
 
 #pragma mark - data layer updates
 
@@ -618,6 +629,11 @@
     
     NSString* messageTitle = @"";
     NSString* messageBody = @"";
+    
+    if (self.myEmailSignature){
+        messageBody = self.myEmailSignature;
+    }
+    
     NSArray* messageRecipients = [NSArray arrayWithObjects: contactEmail, nil];
     
     MFMailComposeViewController* mfVC = [[MFMailComposeViewController alloc] init];
@@ -750,6 +766,7 @@
     emailBody.returnDateAsDate = self.myScheduleRequest.request_date_end;
     emailBody.returnTimeAsDate = self.myScheduleRequest.request_time_end;
     emailBody.notes = self.myScheduleRequest.notes;
+    emailBody.emailSignature = self.myEmailSignature;
     
     //get staff name
     EQRStaffUserManager* staffUser = [EQRStaffUserManager sharedInstance];
@@ -786,9 +803,57 @@
 
 
 -(IBAction)emailNoConfirmation:(id)sender{
+
     
+}
+
+-(void)getEmailSignatureFromDB{
     
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    NSArray *firstArray = @[@"context", @"emailSignature"];
+    NSArray *topArray = @[firstArray];
     
+    SEL thisSelector = @selector(receiveTextElementForEmailSignature:);
+    
+    [webData queryWithAsync:@"EQGetTextElementsWithContext.php" parameters:topArray class:@"EQRTextElement" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+        
+        if (isLoadingFlagUp){
+            
+            NSLog(@"%@", self.myEmailSignature);
+        }
+    }];
+}
+
+
+#pragma mark - WebData delegate
+
+
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    
+    //abort if selector is unrecognized, otherwise crash
+    if (![self respondsToSelector:action]){
+        NSLog(@"inside EQRItinerary, cannot perform selector: %@", NSStringFromSelector(action));
+        return;
+    }
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+    
+}
+
+-(void)receiveTextElementForEmailSignature:(id)currentThing{
+    
+    //____!!!!!!!  manage if there is more than one  !!!!_____
+    
+    if (currentThing){
+
+        self.myEmailSignature = [(EQRTextElement *)currentThing text];
+    }
+    
+    //do nothing if currentThing is nil, it leaves property as nil
 }
 
 

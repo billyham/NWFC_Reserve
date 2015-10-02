@@ -135,12 +135,20 @@
         }
     }
     
-    
     [self.finalText appendAttributedString:[[NSAttributedString alloc] initWithString:@"\nPlease feel free to call or email if you need to make any changes or have any questions or concerns.\n\n" attributes:normalDic]];
     
     [self.finalText appendAttributedString:[[NSAttributedString alloc] initWithString:@"Thanks,\n" attributes:normalDic]];
     
-    [self.finalText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", self.staffFirstName] attributes:normalDic]];
+    [self.finalText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n\n", self.staffFirstName] attributes:normalDic]];
+
+    //_______Email Signature_________
+    if (self.emailSignature){
+        if (![self.emailSignature isEqualToString:@""]){
+            
+            NSAttributedString *thisHereString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", self.emailSignature] attributes:normalDic];
+            [self.finalText appendAttributedString:thisHereString];
+        }
+    }
     
 //    [self.finalText appendString:[NSString stringWithFormat:@"%@", self.emailSignature]];
 

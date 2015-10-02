@@ -19,8 +19,9 @@
 @property (strong, nonatomic) NSDate* returnDateAsDate;
 @property (strong, nonatomic) NSDate* returnTimeAsDate;
 @property (strong, nonatomic) NSString* staffFirstName;
-//@property (strong, nonatomic) NSString* emailSignature;
 @property (strong, nonatomic) NSString* notes;
+@property (strong, nonatomic) NSString* emailSignature;
+
 
 @property (strong,nonatomic) NSArray* arrayOfEquipTitlesAndQtys;
 

@@ -14,11 +14,13 @@
 #import "EQRContactNameItem.h"
 #import "EQRInboxLeftTableVC.h"
 #import "EQRModeManager.h"
+#import "EQRTextElement.h"
 
-@interface EQRAppDelegate ()
+@interface EQRAppDelegate () <EQRWebDataDelegate>
 
 @property (strong, nonatomic) UITabBarController* myTabBarController;
 @property BOOL isInitialLaunch;
+@property BOOL anEmailSigExists;
 
 @end
 
@@ -140,10 +142,81 @@
         modeManager.isInDemoMode = YES;
     }
     
+    //________!!!!!!!!  set default email signature   !!!!!!!!!!_______
+    // first, test if a signature already exists
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    NSArray *firstArray = @[@"context", @"emailSignature"];
+    NSArray *topArray = @[firstArray];
+    
+    SEL thisSelector = @selector(receiveTextElementForEmailSignature:);
+    
+    [webData queryWithAsync:@"EQGetTextElementsWithContext.php" parameters:topArray class:@"EQRTextElement" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+        
+        if (isLoadingFlagUp){
+            
+            if (!self.anEmailSigExists){
+                
+                NSString *theEmailSig = @"Equipment Room\nNorthwest Film Center\n934 SW Salmon St (street address)\n1219 SW Park Avenue (mailing address)\nPortland, OR 97205\nPhone: (503) 221-1156 x30\nwww.nwfilm.org\n\n---\n\nEquipment Room Hours\nMonday 9a- 5p\nTuesday - Thursday 12p - 7p\nFriday and Saturday 9a - 5p\nSunday CLOSED\n\nEdit Lab Hours*\nMonday 9a - 5p\nTuesday - Thursday 12p - 9p\nFriday and Saturday 9a - 5p\nSunday (by appointment)\n\n*(Edit lab availability is further restricted by class needs. Please contact the equipment room staff to schedule your lab time in advance)";
+                
+                EQRWebData *webData2 = [EQRWebData sharedInstance];
+                webData2.delegateDataFeed = self;
+                NSArray *firstArray = @[@"text", theEmailSig];
+                NSArray *secondArray = @[@"context", @"emailSignature"];
+                NSArray *thirdArray = @[@"distinguishing_id", @"1"];
+                NSArray *topArray = @[firstArray, secondArray, thirdArray];
+                
+                dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+                dispatch_async(queue, ^{
+                    
+                    [webData2 queryForStringwithAsync:@"EQSetNewTextElement.php" parameters:topArray completion:^(NSString *object) {
+                        
+                        //string of key_id
+                        if (object){
+                            
+                            NSLog(@"this is the text element's key_id: %@", object);
+                            
+                        }else{
+                            //error handling
+                        }
+                    }];
+                });
+            }
+            
+        }
+    }];
+    
+    
+    
+    
     self.isInitialLaunch = YES;
     
     return YES;
 }
+
+
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    
+    //abort if selector is unrecognized, otherwise crash
+    if (![self respondsToSelector:action]){
+        NSLog(@"inside EQRItinerary, cannot perform selector: %@", NSStringFromSelector(action));
+        return;
+    }
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+    
+}
+
+-(void)receiveTextElementForEmailSignature:(id)currentThing{
+ 
+    if (currentThing){
+        self.anEmailSigExists= YES;
+    }
+}
+
 							
 - (void)applicationWillResignActive:(UIApplication *)application
 {
