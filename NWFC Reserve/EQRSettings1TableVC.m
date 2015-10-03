@@ -402,7 +402,8 @@
         
         if (indexPath.row == 0){   //Email Signature
             
-            
+            //de-select cell
+            [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
         }
     }
 }

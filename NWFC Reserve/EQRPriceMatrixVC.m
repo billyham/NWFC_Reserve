@@ -20,6 +20,7 @@
 #import "EQRPriceMatrixCllctnVwCll.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQREquipItem.h"
+#import "EQREquipUniqueItem.h"
 #import "EQRGenericNumberEditor.h"
 #import "EQRTransaction.h"
 
@@ -55,8 +56,11 @@
 @property BOOL finishedLoadingMiscJoins;
 @property (strong, nonatomic) NSIndexPath *tempIndexPath;
 @property BOOL tempIndexPathIsEquipJoin;
+@property (strong, nonatomic) NSMutableArray *tempArrayOfEquipUniquesWithInfo;
 
 @property (strong, nonatomic) EQRTransaction *myTransaction;
+
+@property BOOL IAmANewRequest;
 
 @end
 
@@ -125,6 +129,8 @@
 
 -(void)startNewTransaction:(EQRScheduleRequestItem *)request{
     
+    self.IAmANewRequest = YES;
+    
     //Is called from Request. Use info in reqeustManager.request.
     //Create a transaction
     //populate collection view with Join objects
@@ -135,8 +141,12 @@
     //get array of available discounts
     //get array of available items for purchase (add-ons)
     
-//    NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %lu  and of misc items: %lu", request.key_id, (unsigned long)[request.arrayOfEquipmentJoins count], (unsigned long)[request.arrayOfMiscJoins count]);
+    NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %lu  and of misc items: %lu", request.key_id, (unsigned long)[request.arrayOfEquipmentJoins count], (unsigned long)[request.arrayOfMiscJoins count]);
 
+    if ([request.arrayOfEquipmentJoins count] > 0){
+        EQRScheduleTracking_EquipmentUnique_Join *join = [request.arrayOfEquipmentJoins objectAtIndex:0];
+        NSLog(@"this is join.key_id: %@  join.titleKey: %@  join.name: %@  join.dist_id: %@", join.key_id, join.equipTitleItem_foreignKey, join.name, join.distinquishing_id);
+    }
     //yes, array is good
     
     self.myRequestItem = request;
@@ -162,9 +172,11 @@
                 self.myTransaction = newTransaction;
                 
                 //__________!!!!!!!!  Just testing this... remove  !!!!!________
-                [self editExistingStage2];
-                
-//                [self startNewStage2];
+                if (self.IAmANewRequest == NO){
+                    [self editExistingStage2];
+                }else{
+                    [self startNewStage2];
+                }
                 
             }else{
                 //error handling
@@ -174,21 +186,70 @@
 }
 
 
--(void)startNewStage2{
+-(void)startNewStage2{  //populate arrays with info from myRequest.array...
+    
+    if (!self.arrayOfEquipJoins){
+        self.arrayOfEquipJoins = [NSMutableArray arrayWithCapacity:1];
+    }
+    [self.arrayOfEquipJoins removeAllObjects];
+    self.arrayOfEquipJoins = [NSMutableArray arrayWithArray:self.myRequestItem.arrayOfEquipmentJoins];
+    
+    if (!self.arrayOfMiscJoins){
+        self.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
+    }
+    [self.arrayOfMiscJoins removeAllObjects];
+    self.arrayOfMiscJoins = [NSMutableArray arrayWithArray:self.myRequestItem.arrayOfMiscJoins];
+    
+    
+    //____get the the name and dist_id information
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    
+    SEL thisSelector = @selector(addToTempArrayOfEquipJoinsWithInfo:);
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryWithAsync:@"EQGetEquipUniqueItemsAll.php" parameters:nil class:@"EQREquipUniqueItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+            
+            [self startNewStage3];
+        }];
+    });
+    
+    
+    
+    
+    
     
 
+    
 }
 
 
 -(void)startNewStage3{
     
-
+    //populate local array of joins with correct names, dist_ids
+    for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfEquipJoins){
+        for (EQREquipUniqueItem *uniqueItem in self.tempArrayOfEquipUniquesWithInfo){
+            if ([join.equipTitleItem_foreignKey isEqualToString:uniqueItem.equipTitleItem_foreignKey]){
+                join.name = uniqueItem.name;
+                join.distinquishing_id = @"N/A";
+                break;
+            }
+        }
+    }
     
+    
+    //combine equipJoins and miscJoins into LineItem array
+    [self editExistingStage3];
+
 }
 
 
 
 -(void)editExistingTransaction:(EQRScheduleRequestItem *)request{
+    
+    self.IAmANewRequest = NO;
     
     //Is called from requestEditor or inbox
     //DB call to get existing transaction using scheduleTracking_foreignKey
@@ -346,7 +407,7 @@
     for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfEquipJoins){
         
         //only continue if join.cost has no value yet
-        if ([join.cost isEqualToString:@""]){
+        if (([join.cost isEqualToString:@""]) || !join.cost){
             
             for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
                 
@@ -367,7 +428,7 @@
         if ([join2 respondsToSelector:@selector(equipTitleItem_foreignKey)]){
             
             //only continue if join.cost has no value yet
-            if ([join2.cost isEqualToString:@""]){
+            if (([join2.cost isEqualToString:@""]) || !join2.cost){
                 
                 for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
                     
@@ -645,6 +706,18 @@
     [self.arrayOfPriceEquipTitles addObject:currentThing];
 }
 
+-(void)addToTempArrayOfEquipJoinsWithInfo:(id)currentThing{
+    
+    if (!currentThing){
+        return;
+    }
+    
+    if (!self.tempArrayOfEquipUniquesWithInfo){
+        self.tempArrayOfEquipUniquesWithInfo = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    [self.tempArrayOfEquipUniquesWithInfo addObject:currentThing];
+}
 
 
 #pragma mark - collection view data source
