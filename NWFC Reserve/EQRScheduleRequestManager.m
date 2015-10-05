@@ -858,8 +858,40 @@
                                     thirdArrayForJoin,
                                     nil];
         
-        [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:bigArrayForJoin];
+        join.key_id = [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:bigArrayForJoin];
 //        NSLog(@"this is the schedule_equip_join return key_id: %@", returnID2);
+        
+        NSLog(@"this is the join.cost: %@",join.cost);
+        
+        //update cost of the join item
+        if (join.cost)
+            if (![join.cost isEqualToString:@""]){
+                
+                NSLog(@"SchedulerequestManager > justConfirm is altering cost of a join with Key_id: %@  and cost: %@", join.key_id, join.cost);
+                
+                if (join.key_id){
+                    NSArray *firstArray = @[@"key_id", join.key_id];
+                    NSArray *secondArray = @[@"cost", join.cost];
+                    NSArray *topArray = @[firstArray, secondArray];
+                    
+                    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+                    dispatch_async(queue, ^{
+                        
+                        [webData queryForStringwithAsync:@"EQAlterCostOfScheduleEquipJoin.php" parameters:topArray completion:^(NSString *returnKey) {
+                            
+                            if ([returnKey isEqualToString:join.key_id]){
+                                
+                                //everthign is cool
+                                
+                            }else{
+                                
+                                //error handling
+                                NSLog(@"failed to successfully alter transaction equipJoin price");
+                            }
+                        }];
+                    });
+                }
+            }
     }
 }
 

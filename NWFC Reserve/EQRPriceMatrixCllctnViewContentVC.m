@@ -14,6 +14,7 @@
 @property (strong, nonatomic) NSString *myDistID;
 @property (strong, nonatomic) NSString *myCost;
 @property (strong, nonatomic) NSString *myKeyID;
+@property (strong, nonatomic) NSIndexPath *myIndexPath;
 
 @end
 
@@ -45,12 +46,13 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)initialSetupWithName:(NSString *)name distID:(NSString *)distID cost:(NSString *)cost joinKeyID:(NSString *)keyID{
+-(void)initialSetupWithName:(NSString *)name distID:(NSString *)distID cost:(NSString *)cost joinKeyID:(NSString *)keyID indexPath:(NSIndexPath *)indexPath{
     
     self.myName = name;
     self.myDistID = distID;
     self.myCost = cost;
     self.myKeyID = keyID;
+    self.myIndexPath = indexPath;
     
     self.equipNameLabel.text = self.myName;
     self.distIdLabel.text = self.myDistID;
@@ -61,9 +63,9 @@
     
     //if it has a valid dist ID, then it must be an equipJoin
     if (self.myDistID){
-        [self.delegate launchCostEditorWithJoinKeyID:self.myKeyID isEquipJoin:YES cost:self.myCost];
+        [self.delegate launchCostEditorWithJoinKeyID:self.myKeyID isEquipJoin:YES cost:self.myCost indexPath:self.myIndexPath];
     }else{
-        [self.delegate launchCostEditorWithJoinKeyID:self.myKeyID isEquipJoin:NO cost:self.myCost];
+        [self.delegate launchCostEditorWithJoinKeyID:self.myKeyID isEquipJoin:NO cost:self.myCost indexPath:self.myIndexPath];
     }
     
 }
