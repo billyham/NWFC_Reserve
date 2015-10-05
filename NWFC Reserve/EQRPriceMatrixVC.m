@@ -508,7 +508,7 @@
     
     NSInteger subTotal = daysForPricingAsInt * sumOfCosts;
     
-    self.subtotal.text = [NSString stringWithFormat:@"Subtotal: %u", subTotal];
+    self.subtotal.text = [NSString stringWithFormat:@"Subtotal: %ld", (long)subTotal];
     
 }
 

@@ -111,6 +111,9 @@
         NSArray* alphaArray = @[@"scheduleTracking_foreignKey", self.request.key_id];
         NSArray* omegaArray = @[alphaArray];
         [webData queryForStringWithLink:@"EQDeleteAllMiscJoinsWithScheduleKey.php" parameters:omegaArray];
+        
+        //____!!!!!!!  also delete any transaction that has a matching scheduleRequest_foreignKey  !!!!!_____
+        
     }
     
     //set request item to nil

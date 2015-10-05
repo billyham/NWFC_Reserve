@@ -157,7 +157,7 @@
             
             if (!self.anEmailSigExists){
                 
-                NSString *theEmailSig = @"Equipment Room\nNorthwest Film Center\n934 SW Salmon St (street address)\n1219 SW Park Avenue (mailing address)\nPortland, OR 97205\nPhone: (503) 221-1156 x30\nwww.nwfilm.org\n\n---\n\nEquipment Room Hours\nMonday 9a- 5p\nTuesday - Thursday 12p - 7p\nFriday and Saturday 9a - 5p\nSunday CLOSED\n\nEdit Lab Hours*\nMonday 9a - 5p\nTuesday - Thursday 12p - 9p\nFriday and Saturday 9a - 5p\nSunday (by appointment)\n\n*(Edit lab availability is further restricted by class needs. Please contact the equipment room staff to schedule your lab time in advance)";
+                NSString *theEmailSig = @"Equipment Room\nNorthwest Film Center\n934 SW Salmon St (street address)\n1219 SW Park Avenue (mailing address)\nPortland, OR 97205\nPhone: (503) 221-1156 x30\nwww.nwfilm.org\n\n---\n\nEquipment Room Hours\nMonday 9a- 5p\nTuesday - Thursday 12p - 7p\nFriday and Saturday 9a - 5p\nSunday CLOSED\n\nEdit Lab Hours*\nMonday 9a - 5p\nTuesday - Thursday 12p - 9p\nFriday and Saturday 9a - 5p\nSunday (by appointment)\n\n*(Edit lab availability is further restricted by class needs. Please contact the equipment room staff to schedule your lab time in advance)\n\nStay connected! Subscribe to the NWFC newsletter:\nhttp://www.nwfilm.org/enewsletter/";
                 
                 EQRWebData *webData2 = [EQRWebData sharedInstance];
                 webData2.delegateDataFeed = self;
