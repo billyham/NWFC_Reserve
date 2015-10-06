@@ -30,7 +30,7 @@
 #import "EQRPriceMatrixVC.h"
 #import "EQRAlternateWrappperPriceMatrix.h"
 #import "EQRTextElement.h"
-
+#import "EQRPricingWidgetVC.h"
 
 @interface EQRInboxRightVC () <EQRWebDataDelegate>
 
@@ -61,6 +61,9 @@
 @property (strong, nonatomic) IBOutlet UIButton* pickUpTimeValueField;
 @property (strong, nonatomic) IBOutlet UIButton* returnTimeValueField;
 @property (strong, nonatomic) IBOutlet UITextView* notesView;
+
+@property (strong, nonatomic) IBOutlet UIView *priceMatrixSubView;
+@property (strong, nonatomic) EQRPricingWidgetVC *priceWidget;
 
 @property (strong, nonatomic) IBOutlet UIView* addButtonView;
 @property (strong, nonatomic) IBOutlet UIView* doneButtonView;
@@ -312,6 +315,17 @@
 //    NSLog(@"this is bottomLayoutGuide length: %5.2f", self.bottomLayoutGuide.length);
 //    
 //    NSLog(@"this is the CONTAINER view's bottomLayoutGuide length: %5.2f", self.splitViewController.navigationController.bottomLayoutGuide.length);
+    
+    EQRPricingWidgetVC *priceWidget = [[EQRPricingWidgetVC alloc] initWithNibName:@"EQRPricingWidgetVC" bundle:nil];
+    self.priceWidget = priceWidget;
+    CGRect tempRect = CGRectMake(0, 0, self.priceMatrixSubView.frame.size.width, self.priceMatrixSubView.frame.size.height);
+    priceWidget.view.frame = tempRect;
+    
+    [self.priceMatrixSubView addSubview:self.priceWidget.view];
+    
+    //set button target
+    [self.priceWidget.editButton addTarget:self action:@selector(showPricingButton:) forControlEvents:UIControlEventTouchUpInside];
+
 }
 
 

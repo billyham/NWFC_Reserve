@@ -19,12 +19,17 @@
 @property (nonatomic, strong) NSString *deposit_due;
 @property (nonatomic, strong) NSString *deposit_paid;
 @property (nonatomic, strong) NSString *payment_type;
-@property (nonatomic, strong) NSString *payment_timestamp;
+@property (nonatomic, strong) NSDate *payment_timestamp;
 @property (nonatomic, strong) NSString *payment_staff_foreignKey;
 @property (nonatomic, strong) NSString *notes;
 @property (nonatomic, strong) NSString *has_discount;
 @property (nonatomic, strong) NSString *discount_type;
 @property (nonatomic, strong) NSString *discount_value;
+@property (nonatomic, strong) NSString *discount_total;
 @property (nonatomic, strong) NSString *discount_description;
+
+//from Contact
+@property (nonatomic, strong) NSString *first_and_last;
+@property (nonatomic, strong) NSString *first_name;
 
 @end

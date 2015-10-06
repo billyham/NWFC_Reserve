@@ -52,6 +52,13 @@
 @property (strong, nonatomic) IBOutlet UILabel *totalPaid;
 @property (strong, nonatomic) IBOutlet UILabel *totalDue;
 
+@property float subtotalAsFloat;
+@property float discountTotalAsFloat;
+@property float totalAsFloat;
+@property float totalPaidAsFloat;
+@property float totalDueAsFloat;
+
+
 @property BOOL finishedLoadingEquipJoins;
 @property BOOL finishedLoadingMiscJoins;
 @property (strong, nonatomic) NSIndexPath *tempIndexPath;
@@ -61,6 +68,7 @@
 @property (strong, nonatomic) EQRTransaction *myTransaction;
 
 @property BOOL IAmANewRequest;
+@property BOOL IAmANewTransaction;
 
 @end
 
@@ -131,6 +139,14 @@
     
     self.IAmANewRequest = YES;
     
+    [self createANewTransaction:request];
+}
+
+
+-(void)createANewTransaction:(EQRScheduleRequestItem *)request{
+    
+    self.IAmANewTransaction = YES;
+    
     //Is called from Request. Use info in reqeustManager.request.
     //Create a transaction
     //populate collection view with Join objects
@@ -171,7 +187,6 @@
                 newTransaction.scheduleTracking_foreignKey = self.myRequestItem.key_id;
                 self.myTransaction = newTransaction;
                 
-                //__________!!!!!!!!  Just testing this... remove  !!!!!________
                 if (self.IAmANewRequest == NO){
                     [self editExistingStage2];
                 }else{
@@ -288,6 +303,7 @@
 -(void)editExistingTransaction:(EQRScheduleRequestItem *)request{
     
     self.IAmANewRequest = NO;
+    self.IAmANewTransaction = NO;
     
     //Is called from requestEditor or inbox
     //DB call to get existing transaction using scheduleTracking_foreignKey
@@ -334,7 +350,7 @@
             }else{
                 
                 //no matching transaction, create a fresh one.
-                [self startNewTransaction:self.myRequestItem];
+                [self createANewTransaction:self.myRequestItem];
                 NSLog(@"creating a new transaction because it didn't find an existing one");
             }
         }];
@@ -486,9 +502,32 @@
     //reload the collection view to display cost data
     [self.lineItemsCollection reloadData];
     
-    //set price
-    [self calculatePriceStage1];
+    //set prices
+    //FORK!!
+    //_1_ If reading an existing transaction, enter the stored values
+    //_2- If just created a new trasaction, then calculate values
     
+    if (self.IAmANewTransaction){
+        
+        [self calculatePriceStage1];
+        
+    }else{
+     
+        self.subtotalAsFloat = [self.myTransaction.subtotal floatValue];
+        self.subtotal.text = [NSString stringWithFormat:@"Subtotal: %5.2f", self.subtotalAsFloat];
+
+        self.discountTotalAsFloat = [self.myTransaction.discount_total floatValue];
+        self.discountTotal.text = [NSString stringWithFormat:@"Discount Total: %5.2f", self.discountTotalAsFloat];
+        
+        self.totalAsFloat = [self.myTransaction.total_due floatValue];
+        self.total.text = [NSString stringWithFormat:@"Total: %5.2f", self.totalAsFloat];
+
+        self.totalPaidAsFloat = [self.myTransaction.total_paid floatValue];
+        self.totalPaid.text = [NSString stringWithFormat:@"Total Paid: %5.2f", self.totalPaidAsFloat];
+        
+        self.totalDueAsFloat = self.totalAsFloat - self.totalPaidAsFloat;
+        self.totalDue.text = [NSString stringWithFormat:@"Total Due: %5.2f", self.totalDueAsFloat];
+    }
 }
 
 
@@ -498,17 +537,59 @@
     //multiply by days for pricing
     //enter into subtotal
     
-    NSInteger sumOfCosts = 0;
+    float sumOfCosts = 0;
     for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfLineItems){
-        NSInteger costAsInt = [join.cost integerValue];
-        sumOfCosts = sumOfCosts + costAsInt;
+        float costAsFloat = [join.cost floatValue];
+        sumOfCosts = sumOfCosts + costAsFloat;
     }
     
-    NSInteger daysForPricingAsInt = [self.daysForPrice.text integerValue];
+    float daysForPricingAsFloat = [self.daysForPrice.text floatValue];
     
-    NSInteger subTotal = daysForPricingAsInt * sumOfCosts;
+    float subTotal = daysForPricingAsFloat * sumOfCosts;
     
-    self.subtotal.text = [NSString stringWithFormat:@"Subtotal: %ld", (long)subTotal];
+    //subtotal
+    self.subtotalAsFloat = subTotal;
+    self.subtotal.text = [NSString stringWithFormat:@"Subtotal: %5.2f", subTotal];
+    
+    //discount total
+    self.discountTotalAsFloat = 0;
+    self.discountTotal.text = [NSString stringWithFormat:@"Discount Total: %5.2f", self.discountTotalAsFloat];
+    
+    self.totalAsFloat = self.subtotalAsFloat - self.discountTotalAsFloat;
+    self.total.text = [NSString stringWithFormat:@"Total: %5.2f", self.totalAsFloat];
+    
+    self.totalPaidAsFloat = 0;
+    self.totalPaid.text = [NSString stringWithFormat:@"Total Paid: %5.2f", self.totalPaidAsFloat];
+    
+    self.totalDueAsFloat = self.totalAsFloat - self.totalPaidAsFloat;
+    self.totalDue.text = [NSString stringWithFormat:@"Total Due: %5.2f", self.totalDueAsFloat];
+    
+    //____and save these values to Transaction...
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    NSArray *firstArray = @[@"subtotal", [NSString stringWithFormat:@"%5.2f", self.subtotalAsFloat]];
+    NSArray *secondArray = @[@"total_due", [NSString stringWithFormat:@"%5.2f", self.totalAsFloat]];
+    NSArray *thirdArray = @[@"discount_total", [NSString stringWithFormat:@"%5.2f", self.discountTotalAsFloat]];
+    NSArray *fourthArray = @[@"total_paid", [NSString stringWithFormat:@"%5.2f", self.totalPaidAsFloat]];
+    NSArray *fifthArray = @[@"key_id", self.myTransaction.key_id];
+    NSArray *topArray = @[firstArray, secondArray, thirdArray, fourthArray, fifthArray];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryForStringwithAsync:@"EQAlterTransactionTotals.php" parameters:topArray completion:^(NSString *returnKey) {
+            
+            if ([returnKey isEqualToString:self.myTransaction.key_id]){
+                
+                //everthign is cool
+                
+            }else{
+                
+                //error handling
+                NSLog(@"failed to successfully alter transaction prices");
+            }
+        }];
+    });
     
 }
 

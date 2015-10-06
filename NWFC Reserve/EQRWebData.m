@@ -905,11 +905,74 @@ const int intEQRTransaction = 11;
         return;
     }
     
+    // Properties for Transaction
     if ([elementName isEqualToString:@"rental_days_for_pricing"]){
         
         self.currentProperty = elementName;
         return;
     }
+    
+    if ([elementName isEqualToString:@"subtotal"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"total_due"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"total_paid"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"deposit_due"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"deposit_paid"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"discount_value"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"discount_type"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"discount_total"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"payment_timestamp"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"payment_staff_foreignKey"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    
     
 }
 
@@ -1742,6 +1805,120 @@ const int intEQRTransaction = 11;
         return;
     }
 
+    if ([prop isEqualToString:@"subtotal"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(subtotal)]){
+            
+            [(EQRTransaction *)self.currentThing setSubtotal:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"total_due"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(total_due)]){
+            
+            [(EQRTransaction *)self.currentThing setTotal_due:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"total_paid"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(total_paid)]){
+            
+            [(EQRTransaction *)self.currentThing setTotal_paid:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"deposit_due"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(deposit_due)]){
+            
+            [(EQRTransaction *)self.currentThing setDeposit_due:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"deposit_paid"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(deposit_paid)]){
+            
+            [(EQRTransaction *)self.currentThing setDeposit_paid:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"discount_value"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(discount_value)]){
+            
+            [(EQRTransaction *)self.currentThing setDiscount_value:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"discount_type"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(discount_type)]){
+            
+            [(EQRTransaction *)self.currentThing setDiscount_type:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"discount_total"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(discount_total)]){
+            
+            [(EQRTransaction *)self.currentThing setDiscount_total:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"payment_staff_foreignKey"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(payment_staff_foreignKey)]){
+            
+            [(EQRTransaction *)self.currentThing setPayment_staff_foreignKey:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"payment_timestamp"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(payment_timestamp)]){
+            
+            //need to convert date string into dates
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            
+            [(EQRTransaction *)self.currentThing setPayment_timestamp:[dateFormatter dateFromString:self.currentValue]];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
     
     
     
@@ -1956,6 +2133,17 @@ const int intEQRTransaction = 11;
     if ([link isEqualToString:@"EQSetNewTextElement.php"]){
         
         NSString *returnString = [self queryForStringWithLink:@"EQSetNewTextElement.php" parameters:para];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        
+        return;
+    }
+    
+    if ([link isEqualToString:@"EQAlterTransactionTotals.php"]){
+        
+        NSString *returnString = [self queryForStringWithLink:@"EQAlterTransactionTotals.php" parameters:para];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completeBlock(returnString);
