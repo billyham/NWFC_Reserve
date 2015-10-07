@@ -11,6 +11,7 @@
 
 @interface EQRPriceMatrixVC : UIViewController
 
+
 -(void)startNewTransaction:(EQRScheduleRequestItem *)request;
 -(void)editExistingTransaction:(EQRScheduleRequestItem *)request;
 
@@ -19,5 +20,6 @@
 
 
 @end
+
 
 

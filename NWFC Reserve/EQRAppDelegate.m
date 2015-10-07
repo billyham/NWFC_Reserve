@@ -199,7 +199,7 @@
     
     //abort if selector is unrecognized, otherwise crash
     if (![self respondsToSelector:action]){
-        NSLog(@"inside EQRItinerary, cannot perform selector: %@", NSStringFromSelector(action));
+        NSLog(@"inside EQRAppDelegate, cannot perform selector: %@", NSStringFromSelector(action));
         return;
     }
     

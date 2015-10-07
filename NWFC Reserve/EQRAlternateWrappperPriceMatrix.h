@@ -9,9 +9,21 @@
 #import <UIKit/UIKit.h>
 #import "EQRScheduleRequestItem.h"
 
+@protocol EQRPriceMatrixDelegate;
 
-@interface EQRAlternateWrappperPriceMatrix : UIViewController
+@interface EQRAlternateWrappperPriceMatrix : UIViewController{
+    __weak id <EQRPriceMatrixDelegate> delegate;
+}
+
+@property (weak, nonatomic) id <EQRPriceMatrixDelegate> delegate;
+
 
 -(void)provideScheduleRequest:(EQRScheduleRequestItem *)requestItem;
+
+@end
+
+@protocol EQRPriceMatrixDelegate <NSObject>
+
+-(void)aChangeWasMadeToPriceMatrix;
 
 @end

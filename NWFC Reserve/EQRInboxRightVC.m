@@ -31,10 +31,12 @@
 #import "EQRAlternateWrappperPriceMatrix.h"
 #import "EQRTextElement.h"
 #import "EQRPricingWidgetVC.h"
+#import "EQRTransaction.h"
 
-@interface EQRInboxRightVC () <EQRWebDataDelegate>
+@interface EQRInboxRightVC () <EQRWebDataDelegate, EQRPriceMatrixDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem* myScheduleRequest;
+@property (strong, nonatomic) EQRTransaction *myTransaction;
 
 @property (strong, nonatomic) IBOutlet UIView* mainSubView;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* topLayoutGuideConstraint;
@@ -202,7 +204,18 @@
     
     //get shared email signature
     [self getEmailSignatureFromDB];
-        
+    
+    EQRPricingWidgetVC *priceWidget = [[EQRPricingWidgetVC alloc] initWithNibName:@"EQRPricingWidgetVC" bundle:nil];
+    self.priceWidget = priceWidget;
+    CGRect tempRect = CGRectMake(0, 0, self.priceMatrixSubView.frame.size.width, self.priceMatrixSubView.frame.size.height);
+    priceWidget.view.frame = tempRect;
+    
+    [self.priceMatrixSubView addSubview:self.priceWidget.view];
+    
+    //set button target
+    [self.priceWidget.editButton addTarget:self action:@selector(showPricingButton:) forControlEvents:UIControlEventTouchUpInside];
+
+    
 }
 
 -(void)awakeFromNib{
@@ -316,15 +329,6 @@
 //    
 //    NSLog(@"this is the CONTAINER view's bottomLayoutGuide length: %5.2f", self.splitViewController.navigationController.bottomLayoutGuide.length);
     
-    EQRPricingWidgetVC *priceWidget = [[EQRPricingWidgetVC alloc] initWithNibName:@"EQRPricingWidgetVC" bundle:nil];
-    self.priceWidget = priceWidget;
-    CGRect tempRect = CGRectMake(0, 0, self.priceMatrixSubView.frame.size.width, self.priceMatrixSubView.frame.size.height);
-    priceWidget.view.frame = tempRect;
-    
-    [self.priceMatrixSubView addSubview:self.priceWidget.view];
-    
-    //set button target
-    [self.priceWidget.editButton addTarget:self action:@selector(showPricingButton:) forControlEvents:UIControlEventTouchUpInside];
 
 }
 
@@ -510,6 +514,54 @@
     //two important methods that initiate requestManager ivar arrays
     [self.privateRequestManager resetEquipListAndAvailableQuantites];
     [self.privateRequestManager retrieveAllEquipUniqueItems];
+    
+    //pricing info
+    if ([self.myScheduleRequest.renter_type isEqualToString:EQRRenterPublic]){
+        self.priceMatrixSubView.hidden = NO;
+        [self getTransactionInfo];
+    }else{
+        self.priceMatrixSubView.hidden = YES;
+    }
+}
+
+-(void)getTransactionInfo{
+    
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    NSArray *firstArray = @[@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id];
+    NSArray *topArray = @[firstArray];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryForStringwithAsync:@"EQGetTransactionWithScheduleRequestKey.php" parameters:topArray completion:^(EQRTransaction *transaction) {
+            
+            if (transaction){
+                
+                NSLog(@"this is the transaction's key_id: %@", transaction.key_id);
+                
+                self.myTransaction = transaction;
+                
+                //found a matching transaction for this schedule Request, go on...
+                [self populatePricingWidget];
+                
+            }else{
+                
+                //no matching transaction, create a fresh one.
+                NSLog(@"didn't find a matching Transaction");
+                [self.priceWidget deleteExistingData];
+            }
+        }];
+    });
+}
+
+-(void)populatePricingWidget{
+    
+    if (self.myTransaction){
+        [self.priceWidget initialSetupWithTransaction:self.myTransaction pricingCategory:self.myScheduleRequest.renter_pricing_class];
+    }else{
+        [self.priceWidget deleteExistingData];
+    }
+    
 }
 
 -(void)raiseFlagThatAChangeHasBeenMade:(NSNotification*)note{
@@ -847,7 +899,7 @@
     
     //abort if selector is unrecognized, otherwise crash
     if (![self respondsToSelector:action]){
-        NSLog(@"inside EQRItinerary, cannot perform selector: %@", NSStringFromSelector(action));
+        NSLog(@"inside EQRInboxRight, cannot perform selector: %@", NSStringFromSelector(action));
         return;
     }
     
@@ -1232,6 +1284,7 @@
     
     UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"Pricing" bundle:nil];
     EQRAlternateWrappperPriceMatrix *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"price_alternate_wrapper"];
+    newView.delegate = self;
     
     newView.modalPresentationStyle = UIModalPresentationPageSheet;
     [self presentViewController:newView animated:YES completion:^{
@@ -1246,6 +1299,13 @@
 //    
 //    newView.edgesForExtendedLayout = UIRectEdgeAll;
 //    [self.navigationController pushViewController:newView animated:YES];
+}
+
+// EQRPriceMatrixVC delegate method
+
+-(void)aChangeWasMadeToPriceMatrix{
+    
+    [self getTransactionInfo];
 }
 
 
@@ -1378,6 +1438,13 @@
     [self.myRenterTypePicker dismissPopoverAnimated:YES];
     self.myRenterTypePicker = nil;
     
+    //update pricing view
+    if ([self.myScheduleRequest.renter_type isEqualToString:EQRRenterPublic]){
+        self.priceMatrixSubView.hidden = NO;
+        [self getTransactionInfo];
+    }else{
+        self.priceMatrixSubView.hidden = YES;
+    }
 }
 
 

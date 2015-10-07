@@ -74,6 +74,7 @@
 
 @implementation EQRPriceMatrixVC
 
+
 #pragma mark - View methods
 
 - (void)viewDidLoad {
@@ -100,6 +101,8 @@
     
     [super viewDidLayoutSubviews];
 }
+
+
 
 
 #pragma mark - Setup Methods

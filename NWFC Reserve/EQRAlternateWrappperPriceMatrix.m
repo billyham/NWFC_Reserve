@@ -27,6 +27,8 @@
 
 @implementation EQRAlternateWrappperPriceMatrix
 
+@synthesize delegate;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -129,7 +131,7 @@
     if (self.myPriceMatrixVC){
         [self.myPriceMatrixVC editExistingTransaction:requestItem];
     }
-
+    
 }
 
 
@@ -137,7 +139,7 @@
     
     [self dismissViewControllerAnimated:YES completion:^{
         
-        
+        [self.delegate aChangeWasMadeToPriceMatrix];
     }];
     
 }

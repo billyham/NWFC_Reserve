@@ -19,40 +19,69 @@
             <rect key="frame" x="0.0" y="0.0" width="400" height="250"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g5m-XS-yWc" userLabel="main subview">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g5m-XS-yWc" userLabel="main subview">
                     <rect key="frame" x="0.0" y="0.0" width="400" height="250"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UsZ-mW-AoF">
-                            <rect key="frame" x="177" y="23" width="46" height="30"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UsZ-mW-AoF">
+                            <rect key="frame" x="180" y="23" width="40" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="u7J-Pv-NTr"/>
+                            </constraints>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                             <state key="normal" title="Enter"/>
                             <connections>
                                 <action selector="enterButton:" destination="-1" eventType="touchUpInside" id="wh6-bc-AlD"/>
                             </connections>
                         </button>
-                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SHT-OF-wvf">
+                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SHT-OF-wvf">
                             <rect key="frame" x="152" y="61" width="97" height="30"/>
                             <color key="backgroundColor" red="0.92339652059999999" green="0.95954949940000001" blue="0.99919813869999996" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="97" id="VmZ-FR-o67"/>
+                                <constraint firstAttribute="height" constant="30" id="hgg-yZ-Vhy"/>
+                            </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" spellCheckingType="no" keyboardType="numberPad"/>
                         </textField>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3OJ-BI-CQm">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3OJ-BI-CQm">
                             <rect key="frame" x="179" y="114" width="42" height="21"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="21" id="6u0-ky-Ouy"/>
+                            </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Explainatory text" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E8s-WT-kTU">
-                            <rect key="frame" x="142" y="154" width="117" height="21"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Explainatory text" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E8s-WT-kTU">
+                            <rect key="frame" x="143.5" y="154" width="114" height="21"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="21" id="wtI-am-fDF"/>
+                            </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="E8s-WT-kTU" firstAttribute="centerX" secondItem="g5m-XS-yWc" secondAttribute="centerX" id="0iO-Y9-M3L"/>
+                        <constraint firstItem="SHT-OF-wvf" firstAttribute="top" secondItem="UsZ-mW-AoF" secondAttribute="bottom" constant="8" id="DUM-Zj-6fo"/>
+                        <constraint firstItem="UsZ-mW-AoF" firstAttribute="centerX" secondItem="g5m-XS-yWc" secondAttribute="centerX" id="E9c-Oc-tPy"/>
+                        <constraint firstItem="3OJ-BI-CQm" firstAttribute="centerX" secondItem="g5m-XS-yWc" secondAttribute="centerX" id="Kaz-EP-njf"/>
+                        <constraint firstItem="SHT-OF-wvf" firstAttribute="centerX" secondItem="g5m-XS-yWc" secondAttribute="centerX" id="L2K-TI-FFd"/>
+                        <constraint firstItem="3OJ-BI-CQm" firstAttribute="top" secondItem="SHT-OF-wvf" secondAttribute="bottom" constant="23" id="QfM-l2-brz"/>
+                        <constraint firstItem="E8s-WT-kTU" firstAttribute="top" secondItem="3OJ-BI-CQm" secondAttribute="bottom" constant="19" id="bxf-ZK-qeb"/>
+                        <constraint firstItem="UsZ-mW-AoF" firstAttribute="top" secondItem="g5m-XS-yWc" secondAttribute="top" constant="23" id="vVi-P1-yAL"/>
+                    </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="g5m-XS-yWc" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="eAE-8v-T4A"/>
+                <constraint firstAttribute="trailing" secondItem="g5m-XS-yWc" secondAttribute="trailing" id="fkv-tj-RaG"/>
+                <constraint firstItem="g5m-XS-yWc" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="uJr-Nk-SDd"/>
+                <constraint firstAttribute="bottom" secondItem="g5m-XS-yWc" secondAttribute="bottom" id="y7i-51-DWB"/>
+            </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
