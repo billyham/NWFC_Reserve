@@ -13,8 +13,10 @@
 @property (strong, nonatomic) NSString *myName;
 @property (strong, nonatomic) NSString *myDistID;
 @property (strong, nonatomic) NSString *myCost;
+@property (strong, nonatomic) NSString *myDeposit;
 @property (strong, nonatomic) NSString *myKeyID;
 @property (strong, nonatomic) NSIndexPath *myIndexPath;
+@property BOOL isEquipJoin;
 
 @end
 
@@ -28,6 +30,7 @@
     self.equipNameLabel.text = self.myName;
     self.distIdLabel.text = self.myDistID;
     self.costField.text = self.myCost;
+    self.depositField.text = self.myDeposit;
     
     // Do any additional setup after loading the view from its nib.
 }
@@ -38,6 +41,9 @@
     UITapGestureRecognizer* tapChangeCost = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(costFieldTapped)];
     [self.costField addGestureRecognizer:tapChangeCost];
     
+    UITapGestureRecognizer *tapChangeDeposit = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(depositFieldTapped)];
+    [self.depositField addGestureRecognizer:tapChangeDeposit];
+    
     [super viewDidLayoutSubviews];
 }
 
@@ -46,28 +52,46 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)initialSetupWithName:(NSString *)name distID:(NSString *)distID cost:(NSString *)cost joinKeyID:(NSString *)keyID indexPath:(NSIndexPath *)indexPath{
+-(void)initialSetupWithName:(NSString *)name
+                     distID:(NSString *)distID
+                       cost:(NSString *)cost
+                    deposit:(NSString *)deposit
+                  joinKeyID:(NSString *)keyID
+                  indexPath:(NSIndexPath *)indexPath
+                isEquipJoin:(BOOL)isEquipJoin{
     
     self.myName = name;
     self.myDistID = distID;
     self.myCost = cost;
+    self.myDeposit = deposit;
     self.myKeyID = keyID;
     self.myIndexPath = indexPath;
+    self.isEquipJoin = isEquipJoin;
     
     self.equipNameLabel.text = self.myName;
     self.distIdLabel.text = self.myDistID;
     self.costField.text = self.myCost;
+    self.depositField.text = self.myDeposit;
 }
 
 -(void)costFieldTapped{
     
     //if it has a valid dist ID, then it must be an equipJoin
-    if (self.myDistID){
+    if (self.isEquipJoin){
         [self.delegate launchCostEditorWithJoinKeyID:self.myKeyID isEquipJoin:YES cost:self.myCost indexPath:self.myIndexPath];
     }else{
         [self.delegate launchCostEditorWithJoinKeyID:self.myKeyID isEquipJoin:NO cost:self.myCost indexPath:self.myIndexPath];
     }
+}
+
+-(void)depositFieldTapped{
     
+    //if it has a valid dist ID, then it must be an equipJoin
+    if (self.isEquipJoin){
+        [self.delegate launchDepositEditorWithJoinKeyID:self.myKeyID isEquipJoin:YES deposit:self.myDeposit indexPath:self.myIndexPath];
+    }else{
+        [self.delegate launchDepositEditorWithJoinKeyID:self.myKeyID isEquipJoin:NO deposit:self.myDeposit indexPath:self.myIndexPath];
+    }
 }
 
 /*

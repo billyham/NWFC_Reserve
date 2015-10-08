@@ -875,6 +875,12 @@ const int intEQRTransaction = 11;
         return;
     }
     
+    if ([elementName isEqualToString:@"deposit"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
     if ([elementName isEqualToString:@"price_commercial"]){
         
         self.currentProperty = elementName;
@@ -900,6 +906,12 @@ const int intEQRTransaction = 11;
     }
     
     if ([elementName isEqualToString:@"price_student"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"price_deposit"]){
         
         self.currentProperty = elementName;
         return;
@@ -1781,12 +1793,34 @@ const int intEQRTransaction = 11;
         }
         return;
     }
+    
+    if ([prop isEqualToString:@"price_deposit"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(price_deposit)]){
+            
+            [(EQREquipItem *)self.currentThing setPrice_deposit:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
 
     if ([prop isEqualToString:@"cost"]){
         
         if ([self.currentThing respondsToSelector:@selector(cost)]){
             
             [(EQRScheduleTracking_EquipmentUnique_Join *)self.currentThing setCost:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"deposit"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(deposit)]){
+            
+            [(EQRScheduleTracking_EquipmentUnique_Join *)self.currentThing setDeposit:self.currentValue];
             
             self.currentValue = nil;
         }
@@ -2122,6 +2156,28 @@ const int intEQRTransaction = 11;
     if ([link isEqualToString:@"EQAlterCostOfMiscJoin.php"]){
         
         NSString *returnString = [self queryForStringWithLink:@"EQAlterCostOfMiscJoin.php" parameters:para];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        
+        return;
+    }
+    
+    if ([link isEqualToString:@"EQAlterDepositOfScheduleEquipJoin.php"]){
+        
+        NSString *returnString = [self queryForStringWithLink:@"EQAlterDepositOfScheduleEquipJoin.php" parameters:para];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        
+        return;
+    }
+    
+    if ([link isEqualToString:@"EQAlterDepositOfMiscJoin.php"]){
+        
+        NSString *returnString = [self queryForStringWithLink:@"EQAlterDepositOfMiscJoin.php" parameters:para];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completeBlock(returnString);

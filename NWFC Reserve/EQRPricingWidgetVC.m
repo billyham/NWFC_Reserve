@@ -64,7 +64,11 @@
                 
                 self.nameAndTimeStamp.hidden = NO;
                 self.xLabel.hidden = NO;
-                NSString *dateAsString = [EQRDataStructure dateAsStringSansTime:self.myTransaction.payment_timestamp];
+                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+                dateFormatter.locale = locale;
+                [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+                NSString *dateAsString = [dateFormatter stringFromDate:self.myTransaction.payment_timestamp];
                 self.nameAndTimeStamp.text = [NSString stringWithFormat:@"%@ - %@",self.myTransaction.first_name, dateAsString];
                 
             }else{     //no payment

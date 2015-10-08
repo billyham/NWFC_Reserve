@@ -895,6 +895,37 @@
                     });
                 }
             }
+        
+        //update deposit of the join item
+        if (join.deposit)
+            if (![join.deposit isEqualToString:@""]){
+                
+                NSLog(@"SchedulerequestManager > justConfirm is altering deposit of a join with Key_id: %@  and deposit: %@", join.key_id, join.deposit);
+                
+                if (join.key_id){
+                    NSArray *firstArray = @[@"key_id", join.key_id];
+                    NSArray *secondArray = @[@"deposit", join.deposit];
+                    NSArray *topArray = @[firstArray, secondArray];
+                    
+                    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+                    dispatch_async(queue, ^{
+                        
+                        [webData queryForStringwithAsync:@"EQAlterDepositOfScheduleEquipJoin.php" parameters:topArray completion:^(NSString *returnKey) {
+                            
+                            if ([returnKey isEqualToString:join.key_id]){
+                                
+                                //everthign is cool
+                                
+                            }else{
+                                
+                                //error handling
+                                NSLog(@"failed to successfully alter transaction equipJoin deposit");
+                            }
+                        }];
+                    });
+                }
+            }
+        
     }
 }
 

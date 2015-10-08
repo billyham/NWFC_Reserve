@@ -19,15 +19,23 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *equipNameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *distIdLabel;
-@property (strong, nonatomic) IBOutlet UIButton *resetButton;
+//@property (strong, nonatomic) IBOutlet UIButton *resetButton;
 @property (strong, nonatomic) IBOutlet UITextField *costField;
+@property (strong, nonatomic) IBOutlet UITextField *depositField;
 
--(void)initialSetupWithName:(NSString *)name distID:(NSString *)distID cost:(NSString *)cost joinKeyID:(NSString *)keyID indexPath:(NSIndexPath *)indexPath;
+-(void)initialSetupWithName:(NSString *)name
+                     distID:(NSString *)distID
+                       cost:(NSString *)cost
+                    deposit:(NSString *)deposit
+                  joinKeyID:(NSString *)keyID
+                  indexPath:(NSIndexPath *)indexPath
+                isEquipJoin:(BOOL)isEquipJoin;
 
 @end
 
 @protocol EQRPriceMatrixContentDelegate <NSObject>
 
 -(void)launchCostEditorWithJoinKeyID:(NSString *)joinKeyID isEquipJoin:(BOOL)isEquipJoin cost:(NSString *)cost indexPath:(NSIndexPath *)indexPath;
+-(void)launchDepositEditorWithJoinKeyID:(NSString *)joinKeyID isEquipJoin:(BOOL)isEquipJoin deposit:(NSString *)deposit indexPath:(NSIndexPath *)indexPath;
 
 @end

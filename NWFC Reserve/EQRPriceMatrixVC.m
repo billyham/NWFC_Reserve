@@ -51,12 +51,16 @@
 @property (strong, nonatomic) IBOutlet UILabel *total;
 @property (strong, nonatomic) IBOutlet UILabel *totalPaid;
 @property (strong, nonatomic) IBOutlet UILabel *totalDue;
+@property (strong, nonatomic) IBOutlet UILabel *depositPaid;
+@property (strong, nonatomic) IBOutlet UILabel *depositDue;
 
 @property float subtotalAsFloat;
 @property float discountTotalAsFloat;
 @property float totalAsFloat;
 @property float totalPaidAsFloat;
 @property float totalDueAsFloat;
+@property float depositDueAsFloat;
+@property float depositPaidAsFloat;
 
 
 @property BOOL finishedLoadingEquipJoins;
@@ -233,14 +237,6 @@
             [self startNewStage3];
         }];
     });
-    
-    
-    
-    
-    
-    
-
-    
 }
 
 
@@ -475,6 +471,20 @@
                 }
             }
         }
+        
+        //only continue if join.deposit has no value yet
+        if (([join.deposit isEqualToString:@""]) || !join.deposit){
+            
+            for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
+                
+                if ([join.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
+                    //found an equipTitle match
+                    join.deposit = titleItem.price_deposit;
+                    break;
+                }
+            }
+        }
+        
     }
     
     
@@ -489,12 +499,26 @@
                 
                 for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
                     
-                    NSLog(@"this is titleItem.key_id: %@  and join.equipTitleItem_foreignKey: %@", titleItem.key_id, join2.equipTitleItem_foreignKey);
-                    
                     if ([join2.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
-                        NSLog(@"found a match");
                         //found an equipTitle match
                         join2.cost = titleItem.price_artist;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        //only continue if the lineItem is an EquipJoin
+        if ([join2 respondsToSelector:@selector(equipTitleItem_foreignKey)]){
+            
+            //only continue if join.cost has no value yet
+            if (([join2.deposit isEqualToString:@""]) || !join2.deposit){
+                
+                for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
+                    
+                    if ([join2.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
+                        //found an equipTitle match
+                        join2.deposit = titleItem.price_deposit;
                         break;
                     }
                 }
@@ -530,6 +554,12 @@
         
         self.totalDueAsFloat = self.totalAsFloat - self.totalPaidAsFloat;
         self.totalDue.text = [NSString stringWithFormat:@"Total Due: %5.2f", self.totalDueAsFloat];
+        
+        self.depositDueAsFloat = [self.myTransaction.deposit_due floatValue];
+        self.depositDue.text = [NSString stringWithFormat:@"Deposit Due: %5.2f", self.depositDueAsFloat];
+        
+        self.depositPaidAsFloat = [self.myTransaction.deposit_paid floatValue];
+        self.depositPaid.text = [NSString stringWithFormat:@"Deposit Paid: %5.2f", self.depositPaidAsFloat];
     }
 }
 
@@ -541,9 +571,17 @@
     //enter into subtotal
     
     float sumOfCosts = 0;
+    float sumOfDeposits = 0;
     for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfLineItems){
         float costAsFloat = [join.cost floatValue];
+        float depositAsFloat = [join.deposit floatValue];
         sumOfCosts = sumOfCosts + costAsFloat;
+        sumOfDeposits = sumOfDeposits + depositAsFloat;
+    }
+    
+    //limit deposit amount to $1,000
+    if (sumOfDeposits > 1000){
+        sumOfDeposits = 1000;
     }
     
     float daysForPricingAsFloat = [self.daysForPrice.text floatValue];
@@ -567,6 +605,14 @@
     self.totalDueAsFloat = self.totalAsFloat - self.totalPaidAsFloat;
     self.totalDue.text = [NSString stringWithFormat:@"Total Due: %5.2f", self.totalDueAsFloat];
     
+    //--
+    self.depositDueAsFloat = sumOfDeposits;
+    self.depositDue.text = [NSString stringWithFormat:@"Deposit Due: %5.2f", self.depositDueAsFloat];
+    
+    self.depositPaidAsFloat = 0;
+    self.depositPaid.text = [NSString stringWithFormat:@"Deposit Paid: %5.2f", self.depositPaidAsFloat];
+    //--
+    
     //____and save these values to Transaction...
     EQRWebData *webData = [EQRWebData sharedInstance];
     webData.delegateDataFeed = self;
@@ -574,8 +620,10 @@
     NSArray *secondArray = @[@"total_due", [NSString stringWithFormat:@"%5.2f", self.totalAsFloat]];
     NSArray *thirdArray = @[@"discount_total", [NSString stringWithFormat:@"%5.2f", self.discountTotalAsFloat]];
     NSArray *fourthArray = @[@"total_paid", [NSString stringWithFormat:@"%5.2f", self.totalPaidAsFloat]];
-    NSArray *fifthArray = @[@"key_id", self.myTransaction.key_id];
-    NSArray *topArray = @[firstArray, secondArray, thirdArray, fourthArray, fifthArray];
+    NSArray *fifthArray = @[@"deposit_due", [NSString stringWithFormat:@"%5.2f", self.depositDueAsFloat]];
+    NSArray *sixthArray = @[@"deposit_paid", [NSString stringWithFormat:@"%5.2f", self.depositPaidAsFloat]];
+    NSArray *seventhArray = @[@"key_id", self.myTransaction.key_id];
+    NSArray *topArray = @[firstArray, secondArray, thirdArray, fourthArray, fifthArray, sixthArray, seventhArray];
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
@@ -617,33 +665,6 @@
     
     NSLog(@"PriceMatrix > launchCostEditorWithJoinKeyID this is the joinKeyID: %@", joinKeyID);
     
-    
-    
-    
-//    __block NSIndexPath *savedIndexPath;
-//    [self.arrayOfLineItems enumerateObjectsUsingBlock:^(EQRScheduleTracking_EquipmentUnique_Join *_Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//        
-//        //continue only if there is agreement that both joins are an equipJoin or not
-//        if (isEquipJoin == [obj respondsToSelector:@selector(distinquishing_id)]){
-//            
-//            if ([obj.key_id isEqualToString:joinKeyID]){
-//                //found a match
-//                savedIndexPath = [NSIndexPath indexPathForRow:idx inSection:0];
-//                self.tempIndexPath = savedIndexPath;
-//                self.tempIndexPathIsEquipJoin = isEquipJoin;
-//            }
-//        }
-//    }];
-//    
-//    if (!savedIndexPath){
-//        //error handling...
-//        return;
-//        NSLog(@"EQRPriceMatrix > launchCostEditorWithJoinKeyID says no match from contentVC to lineItems array");
-//    }
-    
-    
-    
-    
     self.tempIndexPath = indexPath;
     self.tempIndexPathIsEquipJoin = isEquipJoin;
     
@@ -656,6 +677,23 @@
         [numberEditor initalSetupWithTitle:@"Enter New Daily Cost" subTitle:nil currentText:cost returnMethod:@"updateJoinRowWithNewCost:"];
         
     }];
+}
+
+-(void)launchDepositEditorWithJoinKeyID:(NSString *)joinKeyID isEquipJoin:(BOOL)isEquipJoin deposit:(NSString *)deposit indexPath:(NSIndexPath *)indexPath{
+    
+    self.tempIndexPath = indexPath;
+    self.tempIndexPathIsEquipJoin = isEquipJoin;
+    
+    EQRGenericNumberEditor *numberEditor = [[EQRGenericNumberEditor alloc] initWithNibName:@"EQRGenericNumberEditor" bundle:nil];
+    numberEditor.delegate = self;
+    numberEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    
+    [self presentViewController:numberEditor animated:YES completion:^{
+        
+        [numberEditor initalSetupWithTitle:@"Enter New Deposit Amount" subTitle:nil currentText:deposit returnMethod:@"updateJoinRowWithNewDeposit:"];
+        
+    }];
+    
 }
 
 
@@ -709,6 +747,7 @@
 
 -(void)updateJoinRowWithNewCost:(NSString *)returnText{
     
+    NSLog(@"inside updateJoinRowWithNewCost");
     
     EQRWebData *webData = [EQRWebData sharedInstance];
     webData.delegateDataFeed = self;
@@ -771,6 +810,84 @@
                     
                     //error handling
                     NSLog(@"failed to successfully alter transaction miscJoin price");
+                }
+            }];
+        });
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self calculatePriceStage1];
+    }];
+}
+
+-(void)updateJoinRowWithNewDeposit:(NSString *)returnText{
+    
+    NSLog(@"inside updateJoinRowWithNewDeposit");
+
+    
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    
+    //______is it an EquipJoin or a MiscJoin?
+    if (self.tempIndexPathIsEquipJoin){
+        
+        EQRScheduleTracking_EquipmentUnique_Join *join = [self.arrayOfLineItems objectAtIndex:self.tempIndexPath.row];
+        join.deposit = returnText;
+        
+        NSLog(@"this is the Join.key_id: %@  this is returnText: %@", join.key_id, returnText);
+        
+        [self.lineItemsCollection reloadData];
+        
+        //udpate database
+        //only if join has a key_id, it won't if it's a new request
+        if (join.key_id){
+            NSArray *firstArray = @[@"key_id", join.key_id];
+            NSArray *secondArray = @[@"deposit", returnText];
+            NSArray *topArray = @[firstArray, secondArray];
+            
+            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+            dispatch_async(queue, ^{
+                
+                [webData queryForStringwithAsync:@"EQAlterDepositOfScheduleEquipJoin.php" parameters:topArray completion:^(NSString *returnKey) {
+                    
+                    if ([returnKey isEqualToString:join.key_id]){
+                        
+                        //everthign is cool
+                        
+                    }else{
+                        
+                        //error handling
+                        NSLog(@"failed to successfully alter transaction equipJoin deposit");
+                    }
+                }];
+            });
+        }
+        
+    }else{     // Must be a MiscJoin
+        
+        EQRMiscJoin *join = [self.arrayOfLineItems objectAtIndex:self.tempIndexPath.row];
+        join.deposit = returnText;
+        
+        [self.lineItemsCollection reloadData];
+        
+        //udpate database
+        NSArray *firstArray = @[@"key_id", join.key_id];
+        NSArray *secondArray = @[@"deposit", returnText];
+        NSArray *topArray = @[firstArray, secondArray];
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+            
+            [webData queryForStringwithAsync:@"EQAlterDepositOfMiscJoin.php" parameters:topArray completion:^(NSString *returnKey) {
+                
+                if ([returnKey isEqualToString:join.key_id]){
+                    
+                    //everthign is cool
+                    
+                }else{
+                    
+                    //error handling
+                    NSLog(@"failed to successfully alter transaction miscJoin deposit");
                 }
             }];
         });
@@ -886,15 +1003,15 @@
         //must be equipJoin
         
         EQRScheduleTracking_EquipmentUnique_Join *join = [self.arrayOfLineItems objectAtIndex:indexPath.row];
-        [cell.myContentVC initialSetupWithName:join.name distID:join.distinquishing_id cost:join.cost joinKeyID:join.key_id indexPath:indexPath];
+        [cell.myContentVC initialSetupWithName:join.name distID:join.distinquishing_id cost:join.cost deposit:join.deposit joinKeyID:join.key_id indexPath:indexPath isEquipJoin:YES];
         
-        NSLog(@"name: %@  distID: %@  cost: %@", join.name, join.distinquishing_id, join.cost);
+        NSLog(@"name: %@  distID: %@  cost: %@  deposit: %@", join.name, join.distinquishing_id, join.cost, join.deposit);
         
     }else{
         //must be miscJoin
         
         EQRMiscJoin *join = [self.arrayOfLineItems objectAtIndex:indexPath.row];
-        [cell.myContentVC initialSetupWithName:join.name distID:nil cost:join.cost joinKeyID:join.key_id indexPath:indexPath];
+        [cell.myContentVC initialSetupWithName:join.name distID:nil cost:join.cost deposit:join.deposit joinKeyID:join.key_id indexPath:indexPath isEquipJoin:NO];
     }
 
     [cell.contentView addSubview:cell.myContentVC.view];

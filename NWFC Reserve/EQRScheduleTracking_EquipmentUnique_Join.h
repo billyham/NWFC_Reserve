@@ -19,6 +19,7 @@
 @property (strong, nonatomic) NSString* checkin_flag;
 @property (strong, nonatomic) NSString* shelf_flag;
 @property (nonatomic, strong) NSString *cost;
+@property (nonatomic, strong) NSString *deposit;
 
 @property int itemQuantity;
 

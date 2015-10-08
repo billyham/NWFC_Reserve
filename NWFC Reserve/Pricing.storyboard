@@ -169,13 +169,13 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="168" height="184"/>
                                                 <subviews>
                                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Payment notes for staff to make and edit" translatesAutoresizingMaskIntoConstraints="NO" id="Q8r-8q-IVi">
-                                                        <rect key="frame" x="8" y="33" width="159" height="143"/>
+                                                        <rect key="frame" x="8" y="91" width="159" height="85"/>
                                                         <color key="backgroundColor" red="0.92339652059999999" green="0.95954949940000001" blue="0.99919813869999996" alpha="1" colorSpace="calibratedRGB"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                     </textView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X3r-IA-OoE">
-                                                        <rect key="frame" x="56" y="5" width="55" height="30"/>
+                                                        <rect key="frame" x="57" y="65" width="55" height="30"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="KTp-QU-ziK"/>
                                                         </constraints>
@@ -184,20 +184,44 @@
                                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
                                                     </button>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Deposit Total: XX" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="41S-zR-NqQ">
+                                                        <rect key="frame" x="38" y="8" width="91" height="21"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="21" id="PC7-tG-hNp"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Deposit Paid: XX" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wk7-3F-e74">
+                                                        <rect key="frame" x="40.5" y="31" width="88" height="21"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="21" id="WgH-Gk-43i"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
-                                                    <constraint firstItem="X3r-IA-OoE" firstAttribute="top" secondItem="lDN-yE-XF1" secondAttribute="top" constant="5" id="Arf-Kc-Oai"/>
+                                                    <constraint firstItem="Wk7-3F-e74" firstAttribute="top" secondItem="41S-zR-NqQ" secondAttribute="bottom" constant="2" id="7qu-Lk-0yS"/>
+                                                    <constraint firstItem="X3r-IA-OoE" firstAttribute="top" secondItem="lDN-yE-XF1" secondAttribute="top" constant="65" id="Arf-Kc-Oai"/>
                                                     <constraint firstAttribute="bottom" secondItem="Q8r-8q-IVi" secondAttribute="bottom" constant="8" id="J3A-QQ-svr"/>
                                                     <constraint firstAttribute="centerX" secondItem="X3r-IA-OoE" secondAttribute="centerX" id="QL7-XN-geP"/>
                                                     <constraint firstAttribute="trailing" secondItem="Q8r-8q-IVi" secondAttribute="trailing" constant="1" id="SZf-Kr-W2x"/>
                                                     <constraint firstItem="Q8r-8q-IVi" firstAttribute="leading" secondItem="lDN-yE-XF1" secondAttribute="leading" constant="8" id="Te6-fT-ggj"/>
-                                                    <constraint firstItem="Q8r-8q-IVi" firstAttribute="top" secondItem="lDN-yE-XF1" secondAttribute="top" constant="33" id="Yse-8Z-DDU"/>
+                                                    <constraint firstItem="41S-zR-NqQ" firstAttribute="centerX" secondItem="lDN-yE-XF1" secondAttribute="centerX" id="Uni-Vp-HrH"/>
+                                                    <constraint firstItem="Q8r-8q-IVi" firstAttribute="top" secondItem="lDN-yE-XF1" secondAttribute="top" constant="91" id="Yse-8Z-DDU"/>
+                                                    <constraint firstItem="Wk7-3F-e74" firstAttribute="centerX" secondItem="lDN-yE-XF1" secondAttribute="centerX" id="ays-H6-NGW"/>
+                                                    <constraint firstItem="41S-zR-NqQ" firstAttribute="top" secondItem="lDN-yE-XF1" secondAttribute="top" constant="8" id="m6z-Re-deY"/>
                                                     <constraint firstAttribute="width" constant="168" id="oMy-KR-xHz"/>
+                                                    <constraint firstItem="41S-zR-NqQ" firstAttribute="centerX" secondItem="lDN-yE-XF1" secondAttribute="centerX" id="p4B-6x-1Z8"/>
                                                 </constraints>
                                                 <variation key="default">
                                                     <mask key="constraints">
                                                         <exclude reference="oMy-KR-xHz"/>
+                                                        <exclude reference="p4B-6x-1Z8"/>
                                                     </mask>
                                                 </variation>
                                             </view>
@@ -232,7 +256,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total Due: XX" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a7D-zB-lyE">
-                                                        <rect key="frame" x="14" y="146" width="94" height="21"/>
+                                                        <rect key="frame" x="14" y="146" width="93.5" height="21"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="21" id="Fmp-dW-eKn"/>
                                                         </constraints>
@@ -241,7 +265,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total Paid: XX" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pTL-Js-21J">
-                                                        <rect key="frame" x="24" y="113" width="74" height="21"/>
+                                                        <rect key="frame" x="24" y="113" width="73.5" height="21"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="21" id="mUm-CR-5U4"/>
                                                         </constraints>
@@ -501,6 +525,8 @@
                         <outlet property="addDiscount" destination="4Yz-Ef-Dc8" id="9mK-7l-K7j"/>
                         <outlet property="datesAndTimes" destination="tlC-WZ-DRf" id="7p7-Q9-PyX"/>
                         <outlet property="daysForPrice" destination="goH-Ti-UEj" id="W4b-xV-1sh"/>
+                        <outlet property="depositDue" destination="41S-zR-NqQ" id="Grg-y4-sZa"/>
+                        <outlet property="depositPaid" destination="Wk7-3F-e74" id="Amn-1w-9yE"/>
                         <outlet property="discountTotal" destination="mRG-K1-MVP" id="PHj-06-JIK"/>
                         <outlet property="lineItemsCollection" destination="Tyv-7o-MEM" id="TeX-ga-4EI"/>
                         <outlet property="mainSubView" destination="FZs-e1-Xnc" id="DMZ-2i-ow6"/>
