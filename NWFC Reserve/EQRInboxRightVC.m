@@ -32,6 +32,7 @@
 #import "EQRTextElement.h"
 #import "EQRPricingWidgetVC.h"
 #import "EQRTransaction.h"
+#import "EQRCheckPrintPage.h"
 
 @interface EQRInboxRightVC () <EQRWebDataDelegate, EQRPriceMatrixDelegate>
 
@@ -166,9 +167,10 @@
     
     UIBarButtonItem* confirmBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Confirm" style:UIBarButtonItemStylePlain target:self action:@selector(confirm:)];
     
+    UIBarButtonItem* printBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Print" style:UIBarButtonItemStylePlain target:self action:@selector(printMeForReal:)];
+    
     //array that shit
-    NSArray* arrayOfRightButtons = [NSArray arrayWithObjects:staffUserBarButton, thirtySpace, editModeBarButton, twentySpace, composeEmailBarButton,
-                                    twentySpace, confirmBarButton, nil];
+    NSArray* arrayOfRightButtons = [NSArray arrayWithObjects:staffUserBarButton, thirtySpace, editModeBarButton, twentySpace, composeEmailBarButton, twentySpace, confirmBarButton, twentySpace, printBarButton, nil];
     
     //set rightBarButton item in SELF
     [self.navigationItem setRightBarButtonItems:arrayOfRightButtons];
@@ -866,6 +868,65 @@
     
 }
 
+
+-(IBAction)printMeForReal:(id)sender{
+    
+    [self printPageWithScheduleRequestItemKey:self.myScheduleRequest.key_id];
+}
+
+
+
+-(void)printPageWithScheduleRequestItemKey:(NSString*)scheduleKey{
+    
+    
+    //get complete scheduleRequest item info
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", scheduleKey, nil];
+    NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+    __block EQRScheduleRequestItem* chosenItem;
+    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        if ([muteArray count] > 0){
+            
+            chosenItem = [muteArray objectAtIndex:0];
+        }
+    }];
+    
+    //add the notes
+    chosenItem.notes = self.myScheduleRequest.notes;
+    //    NSLog(@"these are the notes >>%@<<", chosenItem.notes);
+    
+    //add contact information
+    NSString* email;
+    NSString* phone;
+    if (self.myScheduleRequest.contactNameItem){
+        email = self.myScheduleRequest.contactNameItem.email;
+        phone = self.myScheduleRequest.contactNameItem.phone;
+        
+        chosenItem.contactNameItem = self.myScheduleRequest.contactNameItem;
+    }
+    
+    
+    //create printable page view controller
+    EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
+    
+    //add the request item to the view controller
+    [pageForPrint initialSetupWithScheduleRequestItem:chosenItem];
+    
+    //assign ivar variables
+    pageForPrint.rentorNameAtt = chosenItem.contact_name;
+    pageForPrint.rentorEmailAtt = email;
+    pageForPrint.rentorPhoneAtt = phone;
+    
+    
+    //show the view controller
+    [self presentViewController:pageForPrint animated:YES completion:^{
+        
+        
+    }];
+    
+    
+}
 
 
 -(IBAction)emailNoConfirmation:(id)sender{

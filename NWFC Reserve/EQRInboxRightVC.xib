@@ -89,7 +89,7 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" alpha="0.20000000000000001" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Select a Request" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qCN-Bz-hug">
-                            <rect key="frame" x="266" y="494" width="234.5" height="36"/>
+                            <rect key="frame" x="266" y="494" width="235" height="36"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="36" id="1YU-jt-bS5"/>
                             </constraints>
