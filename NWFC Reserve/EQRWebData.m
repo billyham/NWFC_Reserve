@@ -2208,6 +2208,18 @@ const int intEQRTransaction = 11;
         return;
     }
     
+    if ([link isEqualToString:@"EQAlterTransactionMarkAsPaid.php"]){
+        
+        NSString *returnString = [self queryForStringWithLink:@"EQAlterTransactionMarkAsPaid.php" parameters:para];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        
+        return;
+    }
+    
+    
 }
 
 

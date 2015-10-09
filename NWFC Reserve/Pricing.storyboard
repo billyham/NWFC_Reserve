@@ -168,13 +168,13 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lDN-yE-XF1" userLabel="Notes subview - left side">
                                                 <rect key="frame" x="0.0" y="0.0" width="168" height="184"/>
                                                 <subviews>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Payment notes for staff to make and edit" translatesAutoresizingMaskIntoConstraints="NO" id="Q8r-8q-IVi">
+                                                    <textView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Payment notes for staff to make and edit" translatesAutoresizingMaskIntoConstraints="NO" id="Q8r-8q-IVi">
                                                         <rect key="frame" x="8" y="91" width="159" height="85"/>
                                                         <color key="backgroundColor" red="0.92339652059999999" green="0.95954949940000001" blue="0.99919813869999996" alpha="1" colorSpace="calibratedRGB"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                     </textView>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X3r-IA-OoE">
+                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X3r-IA-OoE">
                                                         <rect key="frame" x="57" y="65" width="55" height="30"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="KTp-QU-ziK"/>
@@ -194,7 +194,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Deposit Paid: XX" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wk7-3F-e74">
-                                                        <rect key="frame" x="40.5" y="31" width="88" height="21"/>
+                                                        <rect key="frame" x="40" y="31" width="88" height="21"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="21" id="WgH-Gk-43i"/>
                                                         </constraints>
@@ -315,8 +315,8 @@
                                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
                                                     </button>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Staff name and date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G7a-wD-2XW">
-                                                        <rect key="frame" x="121" y="114" width="156" height="20"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G7a-wD-2XW">
+                                                        <rect key="frame" x="118.5" y="114" width="0.0" height="20"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="20" id="U4t-gt-YzR"/>
                                                         </constraints>
@@ -324,18 +324,6 @@
                                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kM9-c4-te4">
-                                                        <rect key="frame" x="40" y="130" width="72" height="30"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="72" id="9fq-YZ-GNg"/>
-                                                            <constraint firstAttribute="height" constant="30" id="CMn-J8-Jgi"/>
-                                                        </constraints>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                        <state key="normal" title="Unmark">
-                                                            <color key="titleColor" red="0.80000000000000004" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                        </state>
-                                                    </button>
                                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Discount Description" translatesAutoresizingMaskIntoConstraints="NO" id="laC-Z1-qQv">
                                                         <rect key="frame" x="114" y="38" width="171" height="68"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -355,6 +343,9 @@
                                                         <state key="normal" title="Mark as Paid">
                                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
+                                                        <connections>
+                                                            <action selector="markAsPaid:" destination="8AB-YF-tsK" eventType="touchUpInside" id="RRS-gZ-fta"/>
+                                                        </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o0v-J5-Vhy">
                                                         <rect key="frame" x="58" y="5" width="169" height="30"/>
@@ -366,27 +357,56 @@
                                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
                                                     </button>
+                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kM9-c4-te4">
+                                                        <rect key="frame" x="24" y="109" width="89" height="30"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="72" id="9fq-YZ-GNg"/>
+                                                            <constraint firstAttribute="height" constant="30" id="CMn-J8-Jgi"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <state key="normal" title="Mark us Unpaid">
+                                                            <color key="titleColor" red="0.80000000000000004" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <variation key="default">
+                                                            <mask key="constraints">
+                                                                <exclude reference="9fq-YZ-GNg"/>
+                                                            </mask>
+                                                        </variation>
+                                                        <connections>
+                                                            <action selector="markAsNotPaid:" destination="8AB-YF-tsK" eventType="touchUpInside" id="TiT-Ta-5al"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstItem="laC-Z1-qQv" firstAttribute="top" secondItem="XTH-jS-nWC" secondAttribute="top" constant="38" id="1JD-pY-j2d"/>
-                                                    <constraint firstItem="kM9-c4-te4" firstAttribute="top" secondItem="jF8-EH-i2E" secondAttribute="bottom" constant="39" id="4gw-J6-4po"/>
+                                                    <constraint firstItem="kM9-c4-te4" firstAttribute="top" secondItem="jF8-EH-i2E" secondAttribute="bottom" constant="18" id="4gw-J6-4po"/>
                                                     <constraint firstItem="4Yz-Ef-Dc8" firstAttribute="top" secondItem="XTH-jS-nWC" secondAttribute="top" constant="38" id="4jm-Hz-DtA"/>
                                                     <constraint firstItem="jF8-EH-i2E" firstAttribute="leading" secondItem="XTH-jS-nWC" secondAttribute="leading" id="70G-CM-PLz"/>
+                                                    <constraint firstItem="G7a-wD-2XW" firstAttribute="leading" secondItem="kM9-c4-te4" secondAttribute="trailing" constant="5" id="7GZ-pQ-Syh"/>
                                                     <constraint firstAttribute="trailing" secondItem="G7a-wD-2XW" secondAttribute="trailing" constant="8" id="ACl-cW-Tlh"/>
                                                     <constraint firstItem="4Yz-Ef-Dc8" firstAttribute="leading" secondItem="XTH-jS-nWC" secondAttribute="leading" id="B1q-Si-g9V"/>
-                                                    <constraint firstItem="G7a-wD-2XW" firstAttribute="leading" secondItem="kM9-c4-te4" secondAttribute="trailing" constant="9" id="EQ8-uW-OLC"/>
+                                                    <constraint firstItem="G7a-wD-2XW" firstAttribute="leading" secondItem="kM9-c4-te4" secondAttribute="trailing" constant="10.5" id="EQ8-uW-OLC"/>
                                                     <constraint firstItem="laC-Z1-qQv" firstAttribute="leading" secondItem="jF8-EH-i2E" secondAttribute="trailing" constant="2" id="KYm-Fy-FFw"/>
                                                     <constraint firstAttribute="width" constant="285" id="Oz4-G1-vNK"/>
                                                     <constraint firstItem="0zS-mh-isf" firstAttribute="leading" secondItem="XTH-jS-nWC" secondAttribute="leading" constant="15" id="Rz6-Tx-9kY"/>
                                                     <constraint firstItem="G7a-wD-2XW" firstAttribute="top" secondItem="laC-Z1-qQv" secondAttribute="bottom" constant="8" id="Tsw-3M-YoC"/>
+                                                    <constraint firstItem="kM9-c4-te4" firstAttribute="leading" secondItem="XTH-jS-nWC" secondAttribute="leading" constant="24" id="Why-f8-4Ac"/>
                                                     <constraint firstItem="jF8-EH-i2E" firstAttribute="top" secondItem="XTH-jS-nWC" secondAttribute="top" constant="61" id="YEQ-KR-qhp"/>
                                                     <constraint firstAttribute="trailing" secondItem="laC-Z1-qQv" secondAttribute="trailing" id="esE-8g-pEG"/>
                                                     <constraint firstAttribute="centerX" secondItem="o0v-J5-Vhy" secondAttribute="centerX" id="mMP-S1-wdi"/>
                                                     <constraint firstItem="0zS-mh-isf" firstAttribute="top" secondItem="jF8-EH-i2E" secondAttribute="bottom" constant="18" id="mOg-LP-iQF"/>
                                                     <constraint firstItem="o0v-J5-Vhy" firstAttribute="top" secondItem="XTH-jS-nWC" secondAttribute="top" constant="5" id="sJK-2k-Csz"/>
-                                                    <constraint firstItem="kM9-c4-te4" firstAttribute="leading" secondItem="XTH-jS-nWC" secondAttribute="leading" constant="40" id="xmf-bQ-blg"/>
+                                                    <constraint firstItem="kM9-c4-te4" firstAttribute="leading" secondItem="XTH-jS-nWC" secondAttribute="leading" constant="-11" id="xmf-bQ-blg"/>
                                                 </constraints>
+                                                <variation key="default">
+                                                    <mask key="constraints">
+                                                        <exclude reference="xmf-bQ-blg"/>
+                                                        <exclude reference="ACl-cW-Tlh"/>
+                                                        <exclude reference="EQ8-uW-OLC"/>
+                                                    </mask>
+                                                </variation>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -531,7 +551,9 @@
                         <outlet property="lineItemsCollection" destination="Tyv-7o-MEM" id="TeX-ga-4EI"/>
                         <outlet property="mainSubView" destination="FZs-e1-Xnc" id="DMZ-2i-ow6"/>
                         <outlet property="markAsPaid" destination="0zS-mh-isf" id="ysY-XB-a4B"/>
+                        <outlet property="markAsPaidStaffAndTimestamp" destination="G7a-wD-2XW" id="G1H-hM-zAJ"/>
                         <outlet property="notesView" destination="Q8r-8q-IVi" id="NR6-1B-SoD"/>
+                        <outlet property="removeAsPaid" destination="kM9-c4-te4" id="uk5-sU-mVI"/>
                         <outlet property="renterName" destination="lv9-BN-fJ1" id="o0R-QX-P4Z"/>
                         <outlet property="renterPricingType" destination="o0v-J5-Vhy" id="tmr-Mm-k2j"/>
                         <outlet property="subtotal" destination="kNL-Np-FgJ" id="G5C-KA-9wR"/>

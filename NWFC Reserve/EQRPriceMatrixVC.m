@@ -25,7 +25,7 @@
 #import "EQRTransaction.h"
 
 
-@interface EQRPriceMatrixVC () <EQRWebDataDelegate, UICollectionViewDataSource, UICollectionViewDelegate, EQRGenericNumberEditorDelegate, EQRPriceMatrixContentDelegate>
+@interface EQRPriceMatrixVC () <EQRWebDataDelegate, UICollectionViewDataSource, UICollectionViewDelegate, EQRGenericNumberEditorDelegate, EQRPriceMatrixContentDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem *myRequestItem;
 
@@ -53,6 +53,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *totalDue;
 @property (strong, nonatomic) IBOutlet UILabel *depositPaid;
 @property (strong, nonatomic) IBOutlet UILabel *depositDue;
+@property (strong, nonatomic) IBOutlet UILabel *markAsPaidStaffAndTimestamp;
 
 @property float subtotalAsFloat;
 @property float discountTotalAsFloat;
@@ -560,6 +561,24 @@
         
         self.depositPaidAsFloat = [self.myTransaction.deposit_paid floatValue];
         self.depositPaid.text = [NSString stringWithFormat:@"Deposit Paid: %5.2f", self.depositPaidAsFloat];
+        
+        if (self.myTransaction.payment_staff_foreignKey){
+            if (![self.myTransaction.payment_staff_foreignKey isEqualToString:@""]){
+                if (self.myTransaction.payment_timestamp){
+                    
+                    self.markAsPaid.hidden = YES;
+                    self.removeAsPaid.hidden = NO;
+                    
+                    //is a valid marked as paid value
+                    EQRStaffUserManager *staffManager = [EQRStaffUserManager sharedInstance];
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+                    dateFormatter.dateFormat = @"MMM dd, yyyy";
+                    self.markAsPaidStaffAndTimestamp.text = [NSString stringWithFormat:@"%@ - %@", staffManager.currentStaffUser.first_name, [dateFormatter stringFromDate:self.myTransaction.payment_timestamp]];
+                    
+                }
+            }
+        }
     }
 }
 
@@ -646,6 +665,148 @@
 
 #pragma mark - Having tapped on things
 
+
+-(IBAction)markAsPaid:(id)sender{
+    
+    //MUST CHECK THAT THE USER HAS LOGGED IN FIRST:
+    EQRStaffUserManager* staffManager = [EQRStaffUserManager sharedInstance];
+    if (!staffManager.currentStaffUser){
+        
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Current User" message:@"Please log in as a user before marking an item complete or incomplete" delegate:[self presentingViewController] cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+            
+            [alert show];
+        }];
+        
+        return;
+    }
+    
+    NSString *userName = staffManager.currentStaffUser.first_and_last;
+
+    UIAlertView *alertConfirmation = [[UIAlertView alloc] initWithTitle:@"Mark as PAID" message:[NSString stringWithFormat:@"PAID and stamped with staff signature: %@", userName] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    
+    [alertConfirmation show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if ([alertView.title isEqualToString:@"Mark as PAID"]){
+        
+        if (buttonIndex != 1){
+            return;
+        }
+        
+        //update display
+        //update transaction property with staff key_id and timestamp
+        //date Transaction DB with staff key_id and timestamp
+        
+        EQRStaffUserManager *staffManager = [EQRStaffUserManager sharedInstance];
+        
+        self.markAsPaid.hidden = YES;
+        self.removeAsPaid.hidden = NO;
+        
+        //formatted string for display
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        dateFormatter.dateFormat = @"MMM dd, yyyy";
+        self.markAsPaidStaffAndTimestamp.text = [NSString stringWithFormat:@"%@ - %@", staffManager.currentStaffUser.first_name, [dateFormatter stringFromDate:[NSDate date]]];
+        self.totalPaidAsFloat = self.totalAsFloat;
+        self.totalDueAsFloat = 0;
+        self.totalPaid.text = [NSString stringWithFormat:@"Total Paid %5.2f", self.totalPaidAsFloat];
+        self.totalDue.text = @"Total Due: 0";
+        self.depositPaidAsFloat = self.depositDueAsFloat;
+        self.depositPaid.text = [NSString stringWithFormat:@"Deposit Paid: %5.2f", self.depositPaidAsFloat];
+        
+        self.myTransaction.payment_timestamp = [NSDate date];
+        self.myTransaction.payment_staff_foreignKey = staffManager.currentStaffUser.key_id;
+        self.myTransaction.total_paid = [NSString stringWithFormat:@"%5.2f", self.totalPaidAsFloat];
+        self.myTransaction.total_due = @"0";
+        self.myTransaction.deposit_paid = [NSString stringWithFormat:@"%5.2f", self.depositPaidAsFloat];
+        
+        
+        //formatted string for MYSQL
+        NSString *stringForDate = [EQRDataStructure dateAsString:[NSDate date]];
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        NSArray *firstArray = @[@"key_id", self.myTransaction.key_id];
+        NSArray *secondArray = @[@"payment_timestamp", stringForDate];
+        NSArray *thirdarray = @[@"payment_staff_foreignKey", staffManager.currentStaffUser.key_id];
+        NSArray *fourthArray = @[@"payment_type", @""];
+        NSArray *fifthArray = @[@"total_paid", self.myTransaction.total_paid];
+        NSArray *sixthArray = @[@"deposit_paid", self.myTransaction.deposit_paid];
+        NSArray *topArray = @[firstArray, secondArray, thirdarray, fourthArray, fifthArray, sixthArray];
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+            
+            [webData queryForStringwithAsync:@"EQAlterTransactionMarkAsPaid.php" parameters:topArray completion:^(NSString *returnKey) {
+                
+                if ([returnKey isEqualToString:self.myTransaction.key_id]){
+                    
+                    //everthign is cool
+                    
+                }else{
+                    
+                    //error handling
+                    NSLog(@"failed to successfully alter transaction mark as paid");
+                }
+            }];
+        });
+    }
+}
+
+-(IBAction)markAsNotPaid:(id)sender{
+    
+    //update display
+    //update transaction property with staff key_id and timestamp
+    //date Transaction DB with staff key_id and timestamp
+    
+    self.markAsPaid.hidden = NO;
+    self.removeAsPaid.hidden = YES;
+    
+    self.markAsPaidStaffAndTimestamp.text = @"";
+    self.totalPaidAsFloat = 0;
+    self.totalDueAsFloat = self.totalAsFloat;
+    self.totalPaid.text = @"Total Paid: 0";
+    self.totalDue.text = [NSString stringWithFormat:@"Total Due: %5.2f", self.totalDueAsFloat];
+    self.depositPaidAsFloat = 0;
+    self.depositPaid.text = @"Deposit Paid: 0";
+    
+    self.myTransaction.payment_timestamp = nil;
+    self.myTransaction.payment_staff_foreignKey = @"";
+    self.myTransaction.total_paid = @"0";
+    self.myTransaction.total_due = [NSString stringWithFormat:@"%5.2f", self.totalDueAsFloat];
+    self.myTransaction.deposit_paid = @"0";
+    
+    
+    //formatted string for MYSQL
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    NSArray *firstArray = @[@"key_id", self.myTransaction.key_id];
+    NSArray *secondArray = @[@"payment_timestamp", @""];
+    NSArray *thirdarray = @[@"payment_staff_foreignKey", @""];
+    NSArray *fourthArray = @[@"payment_type", @""];
+    NSArray *fifthArray = @[@"total_paid", self.myTransaction.total_paid];
+    NSArray *sixthArray = @[@"deposit_paid", self.myTransaction.deposit_paid];
+    NSArray *topArray = @[firstArray, secondArray, thirdarray, fourthArray, fifthArray, sixthArray];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryForStringwithAsync:@"EQAlterTransactionMarkAsPaid.php" parameters:topArray completion:^(NSString *returnKey) {
+            
+            if ([returnKey isEqualToString:self.myTransaction.key_id]){
+                
+                //everthign is cool
+                
+            }else{
+                
+                //error handling
+                NSLog(@"failed to successfully alter transaction mark as unpaid");
+            }
+        }];
+    });
+    
+}
 
 -(IBAction)pricingDaysFieldTapped:(id)sender{
     
