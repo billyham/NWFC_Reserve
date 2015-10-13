@@ -511,8 +511,8 @@
         //only continue if join.cost has no value yet or if rental pricing type has changed
         if (([join.cost isEqualToString:@""]) || !join.cost || self.needsNewPriceCalculation){
             
-//            //don't continue if the join has a stored value
-//            if (join.hasAStoredCostValue == NO){
+            //don't continue if the join has a stored value
+            if (join.hasAStoredCostValue == NO){
             
                 for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
                     
@@ -525,7 +525,7 @@
                         break;
                     }
                 }
-//            }
+            }
         }
         
         //only continue if join.deposit has no value yet
@@ -552,8 +552,8 @@
             //only continue if join.cost has no value yet, or if rental pricing type has changed
             if (([join2.cost isEqualToString:@""]) || !join2.cost || self.needsNewPriceCalculation){
                 
-//                //don't continue if the join has a stored value
-//                if (join2.hasAStoredCostValue == NO){
+                //don't continue if the join has a stored value
+                if (join2.hasAStoredCostValue == NO){
                 
                     for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
                         
@@ -566,7 +566,7 @@
                             break;
                         }
                     }
-//                }
+                }
             }
         }
         

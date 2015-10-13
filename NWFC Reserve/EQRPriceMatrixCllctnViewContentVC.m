@@ -33,11 +33,11 @@
     self.costField.text = self.myCost;
     self.depositField.text = self.myDeposit;
     
-//    if (self.hasAStoredCostValue){
-//        self.costField.backgroundColor = [UIColor yellowColor];
-//    }
-//    
-    // Do any additional setup after loading the view from its nib.
+    if (self.hasAStoredCostValue){
+        self.costField.backgroundColor = [UIColor yellowColor];
+    }
+    
+     //Do any additional setup after loading the view from its nib.
 }
 
 -(void)viewDidLayoutSubviews{

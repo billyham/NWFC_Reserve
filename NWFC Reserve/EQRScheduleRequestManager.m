@@ -870,29 +870,33 @@
         if (join.cost)
             if (![join.cost isEqualToString:@""]){
                 
-                NSLog(@"SchedulerequestManager > justConfirm is altering cost of a join with Key_id: %@  and cost: %@", join.key_id, join.cost);
-                
-                if (join.key_id){
-                    NSArray *firstArray = @[@"key_id", join.key_id];
-                    NSArray *secondArray = @[@"cost", join.cost];
-                    NSArray *topArray = @[firstArray, secondArray];
+                //only save value if it was manually altered. 
+                if (join.hasAStoredCostValue){
                     
-                    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-                    dispatch_async(queue, ^{
+                    NSLog(@"SchedulerequestManager > justConfirm is altering cost of a join with Key_id: %@  and cost: %@", join.key_id, join.cost);
+                    
+                    if (join.key_id){
+                        NSArray *firstArray = @[@"key_id", join.key_id];
+                        NSArray *secondArray = @[@"cost", join.cost];
+                        NSArray *topArray = @[firstArray, secondArray];
                         
-                        [webData queryForStringwithAsync:@"EQAlterCostOfScheduleEquipJoin.php" parameters:topArray completion:^(NSString *returnKey) {
+                        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+                        dispatch_async(queue, ^{
                             
-                            if ([returnKey isEqualToString:join.key_id]){
+                            [webData queryForStringwithAsync:@"EQAlterCostOfScheduleEquipJoin.php" parameters:topArray completion:^(NSString *returnKey) {
                                 
-                                //everthign is cool
-                                
-                            }else{
-                                
-                                //error handling
-                                NSLog(@"failed to successfully alter transaction equipJoin price");
-                            }
-                        }];
-                    });
+                                if ([returnKey isEqualToString:join.key_id]){
+                                    
+                                    //everthign is cool
+                                    
+                                }else{
+                                    
+                                    //error handling
+                                    NSLog(@"failed to successfully alter transaction equipJoin price");
+                                }
+                            }];
+                        });
+                    }
                 }
             }
         
