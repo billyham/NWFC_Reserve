@@ -559,7 +559,7 @@
 -(void)populatePricingWidget{
     
     if (self.myTransaction){
-        [self.priceWidget initialSetupWithTransaction:self.myTransaction pricingCategory:self.myScheduleRequest.renter_pricing_class];
+        [self.priceWidget initialSetupWithTransaction:self.myTransaction];
     }else{
         [self.priceWidget deleteExistingData];
     }

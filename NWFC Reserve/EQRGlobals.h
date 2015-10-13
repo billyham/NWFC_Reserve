@@ -22,6 +22,13 @@ extern NSString* EQRRenterPublic;
 extern NSString* EQRRenterYouth;
 extern NSString* EQRRenterInClass;
 
+//renter pricing type strings
+extern NSString *EQRPriceCommerial;
+extern NSString *EQRPriceArtist;
+extern NSString *EQRPriceStudent;
+extern NSString *EQRPriceFaculty;
+extern NSString *EQRPriceStaff;
+
 //exception codes
 extern NSString* EQRErrorCode88888888;
 

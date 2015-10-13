@@ -52,6 +52,7 @@
 //EQREditorEquipListCell will use this to mark to be deleted
 //@property BOOL markedForDeletion;
 
+@property BOOL hasAStoredCostValue;
 
 
 

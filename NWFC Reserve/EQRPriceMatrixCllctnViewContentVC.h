@@ -29,7 +29,8 @@
                     deposit:(NSString *)deposit
                   joinKeyID:(NSString *)keyID
                   indexPath:(NSIndexPath *)indexPath
-                isEquipJoin:(BOOL)isEquipJoin;
+                isEquipJoin:(BOOL)isEquipJoin
+        hasAStoredCostValue:(BOOL)hasAStoredCostValue;
 
 @end
 

@@ -12,7 +12,6 @@
 @interface EQRPricingWidgetVC ()
 
 @property (strong, nonatomic) EQRTransaction *myTransaction;
-@property (strong, nonatomic) NSString *myPricingCategory;
 @property (strong, nonatomic) IBOutlet UILabel *pricingCategoryValue;
 @property (strong, nonatomic) IBOutlet UILabel *rentalFeeValue;
 @property (strong, nonatomic) IBOutlet UILabel *depositValue;
@@ -40,10 +39,9 @@
 }
 
 
--(void)initialSetupWithTransaction:(EQRTransaction *)transaction pricingCategory:(NSString *)pricingCategory{
+-(void)initialSetupWithTransaction:(EQRTransaction *)transaction{
     
     self.myTransaction = transaction;
-    self.myPricingCategory = pricingCategory;
     
     [self doAllTheLayoutWork];
 
@@ -51,9 +49,8 @@
 
 -(void)doAllTheLayoutWork{
     
-    self.pricingCategoryValue.text = self.myPricingCategory;
-    
     if (self.myTransaction){  //Transaction is valid
+        self.pricingCategoryValue.text = self.myTransaction.renter_pricing_class;
         self.rentalFeeValue.text = self.myTransaction.total_due;
         self.depositValue.text = self.myTransaction.deposit_due;
         
@@ -84,6 +81,7 @@
         }
     }else{  //Transaction is NIL
         
+        self.pricingCategoryValue.text = nil;
         self.rentalFeeValue.text = nil;
         self.depositValue.text = nil;
         self.nameAndTimeStamp.text = nil;
@@ -95,7 +93,6 @@
 -(void)deleteExistingData{
     
     self.myTransaction = nil;
-    self.myPricingCategory = nil;
     
     [self doAllTheLayoutWork];
 }

@@ -17,6 +17,7 @@
 @property (strong, nonatomic) NSString *myKeyID;
 @property (strong, nonatomic) NSIndexPath *myIndexPath;
 @property BOOL isEquipJoin;
+@property BOOL hasAStoredCostValue;
 
 @end
 
@@ -32,6 +33,10 @@
     self.costField.text = self.myCost;
     self.depositField.text = self.myDeposit;
     
+//    if (self.hasAStoredCostValue){
+//        self.costField.backgroundColor = [UIColor yellowColor];
+//    }
+//    
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -58,7 +63,8 @@
                     deposit:(NSString *)deposit
                   joinKeyID:(NSString *)keyID
                   indexPath:(NSIndexPath *)indexPath
-                isEquipJoin:(BOOL)isEquipJoin{
+                isEquipJoin:(BOOL)isEquipJoin
+        hasAStoredCostValue:(BOOL)hasAStoredCostValue{
     
     self.myName = name;
     self.myDistID = distID;
@@ -67,6 +73,7 @@
     self.myKeyID = keyID;
     self.myIndexPath = indexPath;
     self.isEquipJoin = isEquipJoin;
+    self.hasAStoredCostValue = hasAStoredCostValue;
     
     self.equipNameLabel.text = self.myName;
     self.distIdLabel.text = self.myDistID;

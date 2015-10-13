@@ -924,6 +924,12 @@ const int intEQRTransaction = 11;
         return;
     }
     
+    if ([elementName isEqualToString:@"renter_pricing_class"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
     if ([elementName isEqualToString:@"subtotal"]){
         
         self.currentProperty = elementName;
@@ -1838,6 +1844,16 @@ const int intEQRTransaction = 11;
         }
         return;
     }
+    
+    if ([prop isEqualToString:@"renter_pricing_class"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(renter_pricing_class)]){
+            
+            [(EQRTransaction* )self.currentThing setRenter_pricing_class:self.currentValue];
+            
+            self.currentValue = nil;
+        }
+    }
 
     if ([prop isEqualToString:@"subtotal"]){
         
@@ -2218,6 +2234,19 @@ const int intEQRTransaction = 11;
         
         return;
     }
+    
+    if ([link isEqualToString:@"EQAlterTransactiontRenterPricing.php"]){
+        
+        NSString *returnString = [self queryForStringWithLink:@"EQAlterTransactiontRenterPricing.php" parameters:para];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        
+        return;
+    }
+    
+    
     
     
 }

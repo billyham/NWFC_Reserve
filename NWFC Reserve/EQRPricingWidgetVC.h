@@ -13,7 +13,7 @@
 
 @property (strong, nonatomic) IBOutlet UIButton *editButton;
 
--(void)initialSetupWithTransaction:(EQRTransaction *)transaction pricingCategory:(NSString *)pricingCategory;
+-(void)initialSetupWithTransaction:(EQRTransaction *)transaction;
 -(void)deleteExistingData;
 
 @end

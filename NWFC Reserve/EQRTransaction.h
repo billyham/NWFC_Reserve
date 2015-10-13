@@ -27,6 +27,7 @@
 @property (nonatomic, strong) NSString *discount_value;
 @property (nonatomic, strong) NSString *discount_total;
 @property (nonatomic, strong) NSString *discount_description;
+@property (nonatomic, strong) NSString *renter_pricing_class;
 
 //from Contact
 @property (nonatomic, strong) NSString *first_and_last;

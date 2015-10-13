@@ -23,9 +23,10 @@
 #import "EQREquipUniqueItem.h"
 #import "EQRGenericNumberEditor.h"
 #import "EQRTransaction.h"
+#import "EQRRenterPricingTypeTableVC.h"
 
 
-@interface EQRPriceMatrixVC () <EQRWebDataDelegate, UICollectionViewDataSource, UICollectionViewDelegate, EQRGenericNumberEditorDelegate, EQRPriceMatrixContentDelegate, UIAlertViewDelegate>
+@interface EQRPriceMatrixVC () <EQRWebDataDelegate, UICollectionViewDataSource, UICollectionViewDelegate, EQRGenericNumberEditorDelegate, EQRPriceMatrixContentDelegate, UIAlertViewDelegate, EQRRenterPricingDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem *myRequestItem;
 
@@ -55,6 +56,8 @@
 @property (strong, nonatomic) IBOutlet UILabel *depositDue;
 @property (strong, nonatomic) IBOutlet UILabel *markAsPaidStaffAndTimestamp;
 
+@property (strong, nonatomic) EQRRenterPricingTypeTableVC *renterPricingTableVC;
+
 @property float subtotalAsFloat;
 @property float discountTotalAsFloat;
 @property float totalAsFloat;
@@ -74,10 +77,11 @@
 
 @property BOOL IAmANewRequest;
 @property BOOL IAmANewTransaction;
+@property BOOL needsNewPriceCalculation;
 
 @end
 
-@implementation EQRPriceMatrixVC
+@implementation EQRPriceMatrixVC 
 
 
 #pragma mark - View methods
@@ -86,6 +90,7 @@
     
     [self.lineItemsCollection registerClass:[EQRPriceMatrixCllctnVwCll class] forCellWithReuseIdentifier:@"Cell"];
 
+    
 
     
     
@@ -96,6 +101,11 @@
 -(void)viewWillAppear:(BOOL)animated{
     
     [super viewWillAppear:animated];
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    
+    [super viewDidAppear:animated];
 }
 
 -(void)viewDidLayoutSubviews{
@@ -416,6 +426,14 @@
     
     NSLog(@"this is the count of equipJoins: %lu", (long)[self.arrayOfEquipJoins count]);
     
+    for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfEquipJoins){
+        if (join.cost){
+            if (![join.cost isEqualToString:@""]){
+                join.hasAStoredCostValue = YES;
+            }
+        }
+    }
+    
     if (!self.arrayOfLineItems){
         self.arrayOfLineItems = [NSMutableArray arrayWithCapacity:1];
     }
@@ -454,23 +472,60 @@
    
 }
 
+//this is implemented by both
 -(void)editExistingStage4{ //populate collection view objects with available prices
     
     NSLog(@"inside editExistingStage 4, count of arrayOfPriceEquipTitles: %lu", (unsigned long)[self.arrayOfPriceEquipTitles count]);
     
+    SEL priceSelector;
+    
+    //default to the artist rate
+    priceSelector = @selector(price_artist);
+    
+    //test if a renter Pricing exists yet, if not bring up tableVC
+    if (!self.myTransaction.renter_pricing_class || [self.myTransaction.renter_pricing_class isEqualToString:@""]){
+        
+        [self selectRenterPricingType:nil];
+        
+    } else {
+        
+        [self.renterPricingType setTitle:[NSString stringWithFormat:@"Renter Pricing Type: %@", self.myTransaction.renter_pricing_class] forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+        
+        if ([self.myTransaction.renter_pricing_class isEqualToString:EQRPriceCommerial]){
+            priceSelector = @selector(price_commercial);
+        }else if ([self.myTransaction.renter_pricing_class isEqualToString:EQRPriceArtist]){
+            priceSelector = @selector(price_artist);
+        }else if ([self.myTransaction.renter_pricing_class isEqualToString:EQRPriceStudent]){
+            priceSelector = @selector(price_student);
+        }else if ([self.myTransaction.renter_pricing_class isEqualToString:EQRPriceFaculty]){
+            priceSelector = @selector(price_nonprofit);
+        }else if ([self.myTransaction.renter_pricing_class isEqualToString:EQRPriceStaff]){
+            priceSelector = @selector(price_staff);
+        }
+    }
+    
     for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfEquipJoins){
         
-        //only continue if join.cost has no value yet
-        if (([join.cost isEqualToString:@""]) || !join.cost){
+        NSLog(@"this is the join's cost value: %@", join.cost);
+        
+        //only continue if join.cost has no value yet or if rental pricing type has changed
+        if (([join.cost isEqualToString:@""]) || !join.cost || self.needsNewPriceCalculation){
             
-            for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
-                
-                if ([join.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
-                    //found an equipTitle match
-                    join.cost = titleItem.price_artist;
-                    break;
+//            //don't continue if the join has a stored value
+//            if (join.hasAStoredCostValue == NO){
+            
+                for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
+                    
+                    if ([join.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
+                        //found an equipTitle match
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                        join.cost = [titleItem performSelector:priceSelector];
+#pragma clang diagnostic pop
+                        break;
+                    }
                 }
-            }
+//            }
         }
         
         //only continue if join.deposit has no value yet
@@ -488,24 +543,30 @@
         
     }
     
-    
     //do the same for line items array????
     for (EQRScheduleTracking_EquipmentUnique_Join *join2 in self.arrayOfLineItems){
         
         //only continue if the lineItem is an EquipJoin
         if ([join2 respondsToSelector:@selector(equipTitleItem_foreignKey)]){
             
-            //only continue if join.cost has no value yet
-            if (([join2.cost isEqualToString:@""]) || !join2.cost){
+            //only continue if join.cost has no value yet, or if rental pricing type has changed
+            if (([join2.cost isEqualToString:@""]) || !join2.cost || self.needsNewPriceCalculation){
                 
-                for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
-                    
-                    if ([join2.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
-                        //found an equipTitle match
-                        join2.cost = titleItem.price_artist;
-                        break;
+//                //don't continue if the join has a stored value
+//                if (join2.hasAStoredCostValue == NO){
+                
+                    for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
+                        
+                        if ([join2.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
+                            //found an equipTitle match
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                            join2.cost = [titleItem performSelector:priceSelector];
+#pragma clang diagnostic pop
+                            break;
+                        }
                     }
-                }
+//                }
             }
         }
         
@@ -533,9 +594,11 @@
     //set prices
     //FORK!!
     //_1_ If reading an existing transaction, enter the stored values
-    //_2- If just created a new trasaction, then calculate values
+    //_2- If just created a new trasaction or after having changed the rental pricing type, then calculate values
     
-    if (self.IAmANewTransaction){
+    if (self.IAmANewTransaction || self.needsNewPriceCalculation){
+        
+        self.needsNewPriceCalculation = NO;
         
         [self calculatePriceStage1];
         
@@ -665,6 +728,78 @@
 
 #pragma mark - Having tapped on things
 
+#pragma mark Select Rental Pricing Type
+
+-(IBAction)selectRenterPricingType:(id)sender{
+    
+    UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"Pricing" bundle:nil];
+    EQRRenterPricingTypeTableVC *pricingTableVC = [captureStoryboard instantiateViewControllerWithIdentifier:@"RenterPricingTableVC"];
+    
+    self.renterPricingTableVC = pricingTableVC;
+    self.renterPricingTableVC.delegate = self;
+    self.renterPricingTableVC.modalPresentationStyle = UIModalPresentationFormSheet;
+    
+    if (self.myTransaction.renter_pricing_class){
+        if (![self.myTransaction.renter_pricing_class isEqualToString:@""]){
+            [self.renterPricingTableVC shouldSelect:self.myTransaction.renter_pricing_class];
+        }
+        
+    }
+    
+    [self presentViewController:self.renterPricingTableVC animated:YES completion:^{
+        
+        
+    }];
+}
+
+
+// EQRRentalPricingTypeTableDelegate method
+-(void)didSelectRenterPricingType:(NSString *)renterPricingType{
+    
+    if (renterPricingType){
+        
+        //update view
+//        [self.renterPricingType setTitle:[NSString stringWithFormat:@"Renter Pricing Type: %@", renterPricingType] forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+        
+        //update schedule object
+        self.myTransaction.renter_pricing_class = renterPricingType;
+        
+        //this will update the view
+        self.needsNewPriceCalculation = YES;
+        [self editExistingStage4];
+        
+        
+        
+        //update database
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        NSArray *firstArray = @[@"key_id", self.myTransaction.key_id];
+        NSArray *secondArray = @[@"renter_pricing_class", self.myTransaction.renter_pricing_class];
+        NSArray *topArray = @[firstArray, secondArray];
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+           
+            [webData queryForStringwithAsync:@"EQAlterTransactiontRenterPricing.php" parameters:topArray completion:^(NSString *returnString) {
+               
+                if ([returnString isEqualToString:self.myTransaction.key_id]){
+                    
+                    //it's cool
+                    
+                }else{
+                    
+                    //error handling
+                    NSLog(@"failed to successfully alter scheduleTracking renterPricing");
+                }
+                
+            }];
+            
+        });
+    }
+}
+
+
+
+#pragma mark Mark As Paid or Unpaid
 
 -(IBAction)markAsPaid:(id)sender{
     
@@ -808,6 +943,8 @@
     
 }
 
+#pragma mark Days for Pricing Field
+
 -(IBAction)pricingDaysFieldTapped:(id)sender{
     
     EQRGenericNumberEditor *numberEditor = [[EQRGenericNumberEditor alloc] initWithNibName:@"EQRGenericNumberEditor" bundle:nil];
@@ -918,6 +1055,7 @@
         
         EQRScheduleTracking_EquipmentUnique_Join *join = [self.arrayOfLineItems objectAtIndex:self.tempIndexPath.row];
         join.cost = returnText;
+        join.hasAStoredCostValue = YES;
         
         [self.lineItemsCollection reloadData];
         
@@ -1164,7 +1302,14 @@
         //must be equipJoin
         
         EQRScheduleTracking_EquipmentUnique_Join *join = [self.arrayOfLineItems objectAtIndex:indexPath.row];
-        [cell.myContentVC initialSetupWithName:join.name distID:join.distinquishing_id cost:join.cost deposit:join.deposit joinKeyID:join.key_id indexPath:indexPath isEquipJoin:YES];
+        [cell.myContentVC initialSetupWithName:join.name
+                                        distID:join.distinquishing_id
+                                          cost:join.cost
+                                       deposit:join.deposit
+                                     joinKeyID:join.key_id
+                                     indexPath:indexPath
+                                   isEquipJoin:YES
+                           hasAStoredCostValue:join.hasAStoredCostValue];
         
         NSLog(@"name: %@  distID: %@  cost: %@  deposit: %@", join.name, join.distinquishing_id, join.cost, join.deposit);
         
@@ -1172,7 +1317,14 @@
         //must be miscJoin
         
         EQRMiscJoin *join = [self.arrayOfLineItems objectAtIndex:indexPath.row];
-        [cell.myContentVC initialSetupWithName:join.name distID:nil cost:join.cost deposit:join.deposit joinKeyID:join.key_id indexPath:indexPath isEquipJoin:NO];
+        [cell.myContentVC initialSetupWithName:join.name
+                                        distID:nil
+                                          cost:join.cost
+                                       deposit:join.deposit
+                                     joinKeyID:join.key_id
+                                     indexPath:indexPath
+                                   isEquipJoin:NO
+                           hasAStoredCostValue:NO];
     }
 
     [cell.contentView addSubview:cell.myContentVC.view];

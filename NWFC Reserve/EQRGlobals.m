@@ -22,6 +22,13 @@ NSString* EQRRenterPublic = @"public";
 NSString* EQRRenterYouth = @"youth";
 NSString* EQRRenterInClass = @"in class";
 
+//renter pricing type strings
+NSString *EQRPriceCommerial = @"Commercial";
+NSString *EQRPriceArtist = @"Artist / Non-Profit";
+NSString *EQRPriceStudent = @"Student";
+NSString *EQRPriceFaculty = @"Faculty";
+NSString *EQRPriceStaff = @"Staff";
+
 //______******* if any change is made to these, be sure to update existing renter_type rows in BOTH
 //______******* scheduleTracking AND scheduleTracking_uniqueItem_join tables
 
