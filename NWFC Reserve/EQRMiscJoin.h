@@ -30,4 +30,7 @@
 @property (strong, nonatomic) NSDate* request_time_end;
 @property (strong, nonatomic) NSString* renter_type;
 
+@property BOOL hasAStoredCostValue;
+
+
 @end

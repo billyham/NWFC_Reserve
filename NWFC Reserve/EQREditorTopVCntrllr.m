@@ -22,8 +22,12 @@
 #import "EQRDataStructure.h"
 #import "EQRMiscJoin.h"
 #import "EQRModeManager.h"
+#import "EQRPriceMatrixVC.h"
+#import "EQRPricingWidgetVC.h"
+#import "EQRAlternateWrappperPriceMatrix.h"
+#import "EQRTransaction.h"
 
-@interface EQREditorTopVCntrllr ()
+@interface EQREditorTopVCntrllr () <EQRPriceMatrixDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
 @property (strong, nonatomic) NSDictionary* myUserInfo;
@@ -66,6 +70,9 @@
 @property (strong, nonatomic) UIPopoverController* myNotesPopover;
 @property (strong, nonatomic) UIPopoverController* myClassPicker;
 
+@property (strong, nonatomic) IBOutlet UIView *priceMatrixSubView;
+@property (strong, nonatomic) EQRPricingWidgetVC *priceWidget;
+@property (strong, nonatomic) EQRTransaction *myTransaction;
 
 @end
 
@@ -232,7 +239,16 @@
     EQRColors* colors = [EQRColors sharedInstance];
     self.notesView.backgroundColor = [colors.colorDic objectForKey:EQRColorEditModeBGBlue];
     
+    EQRPricingWidgetVC *priceWidget = [[EQRPricingWidgetVC alloc] initWithNibName:@"EQRPricingWidgetVC" bundle:nil];
+    self.priceWidget = priceWidget;
+    CGRect tempRect = CGRectMake(0, 0, self.priceMatrixSubView.frame.size.width, self.priceMatrixSubView.frame.size.height);
+    priceWidget.view.frame = tempRect;
     
+    [self.priceMatrixSubView addSubview:self.priceWidget.view];
+    
+    //set button target
+    [self.priceWidget.editButton addTarget:self action:@selector(showPricingButton:) forControlEvents:UIControlEventTouchUpInside];
+
 }
 
 
@@ -324,6 +340,14 @@
     //populate...
     //arrayOfSchedule_Unique_Joins
     
+    
+    //pricing info
+    if ([self.privateRequestManager.request.renter_type isEqualToString:EQRRenterPublic]){
+        self.priceMatrixSubView.hidden = NO;
+        [self getTransactionInfo];
+    }else{
+        self.priceMatrixSubView.hidden = YES;
+    }
     
     
 }
@@ -964,6 +988,76 @@
     self.theRenterPopOver = nil;
 }
 
+
+#pragma mark - Pricing Matrix
+
+-(IBAction)showPricingButton:(id)sender{
+    
+    UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"Pricing" bundle:nil];
+    EQRAlternateWrappperPriceMatrix *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"price_alternate_wrapper"];
+    newView.delegate = self;
+    
+    newView.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self presentViewController:newView animated:YES completion:^{
+        
+        //provide VC with request information
+        [newView provideScheduleRequest:self.privateRequestManager.request];
+        
+        
+    }];
+    
+    
+    //
+    //    newView.edgesForExtendedLayout = UIRectEdgeAll;
+    //    [self.navigationController pushViewController:newView animated:YES];
+}
+
+// EQRPriceMatrixVC delegate method
+
+-(void)aChangeWasMadeToPriceMatrix{
+    
+    [self getTransactionInfo];
+}
+
+-(void)getTransactionInfo{
+    
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    NSArray *firstArray = @[@"scheduleTracking_foreignKey", self.privateRequestManager.request.key_id];
+    NSArray *topArray = @[firstArray];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryForStringwithAsync:@"EQGetTransactionWithScheduleRequestKey.php" parameters:topArray completion:^(EQRTransaction *transaction) {
+            
+            if (transaction){
+                
+                NSLog(@"this is the transaction's key_id: %@", transaction.key_id);
+                
+                self.myTransaction = transaction;
+                
+                //found a matching transaction for this schedule Request, go on...
+                [self populatePricingWidget];
+                
+            }else{
+                
+                //no matching transaction, create a fresh one.
+                NSLog(@"didn't find a matching Transaction");
+                [self.priceWidget deleteExistingData];
+            }
+        }];
+    });
+}
+
+-(void)populatePricingWidget{
+    
+    if (self.myTransaction){
+        [self.priceWidget initialSetupWithTransaction:self.myTransaction];
+    }else{
+        [self.priceWidget deleteExistingData];
+    }
+    
+}
 
 #pragma mark - handle add equip item
 

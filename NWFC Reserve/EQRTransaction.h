@@ -33,4 +33,6 @@
 @property (nonatomic, strong) NSString *first_and_last;
 @property (nonatomic, strong) NSString *first_name;
 
+@property BOOL hasAStoredRentalDaysForPricingValue;
+
 @end

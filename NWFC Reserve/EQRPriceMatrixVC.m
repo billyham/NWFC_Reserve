@@ -55,6 +55,8 @@
 @property (strong, nonatomic) IBOutlet UILabel *depositPaid;
 @property (strong, nonatomic) IBOutlet UILabel *depositDue;
 @property (strong, nonatomic) IBOutlet UILabel *markAsPaidStaffAndTimestamp;
+@property (strong, nonatomic) IBOutlet UITextView *calculationWarning;
+@property (strong, nonatomic) IBOutlet UIButton *recalculateTotals;
 
 @property (strong, nonatomic) EQRRenterPricingTypeTableVC *renterPricingTableVC;
 
@@ -375,10 +377,12 @@
     
     //if the transaction object has a value for days_for_pricing, then override the calculated value...
     if (self.myTransaction.rental_days_for_pricing){
-        
-        //and make sure it isn't a blank value
         if (![self.myTransaction.rental_days_for_pricing isEqualToString:@""]){
+            
             self.daysForPrice.text = self.myTransaction.rental_days_for_pricing;
+            
+            self.myTransaction.hasAStoredRentalDaysForPricingValue = YES;
+            self.daysForPrice.backgroundColor = [UIColor yellowColor];
         }
     }
     
@@ -430,6 +434,15 @@
         if (join.cost){
             if (![join.cost isEqualToString:@""]){
                 join.hasAStoredCostValue = YES;
+            }
+        }
+    }
+    
+    
+    for (EQRMiscJoin *miscJoin in self.arrayOfMiscJoins){
+        if (miscJoin.cost){
+            if (![miscJoin.cost isEqualToString:@""]){
+                miscJoin.hasAStoredCostValue = YES;
             }
         }
     }
@@ -597,7 +610,7 @@
     //_2- If just created a new trasaction or after having changed the rental pricing type, then calculate values
     
     if (self.IAmANewTransaction || self.needsNewPriceCalculation){
-        
+    
         self.needsNewPriceCalculation = NO;
         
         [self calculatePriceStage1];
@@ -624,7 +637,7 @@
         
         self.depositPaidAsFloat = [self.myTransaction.deposit_paid floatValue];
         self.depositPaid.text = [NSString stringWithFormat:@"Deposit Paid: %5.2f", self.depositPaidAsFloat];
-        
+    
         if (self.myTransaction.payment_staff_foreignKey){
             if (![self.myTransaction.payment_staff_foreignKey isEqualToString:@""]){
                 if (self.myTransaction.payment_timestamp){
@@ -642,6 +655,9 @@
                 }
             }
         }
+        
+        //check calculations anyway, and show warning if a mismatch exists
+        [self checkCalculations];
     }
 }
 
@@ -681,7 +697,9 @@
     self.totalAsFloat = self.subtotalAsFloat - self.discountTotalAsFloat;
     self.total.text = [NSString stringWithFormat:@"Total: %5.2f", self.totalAsFloat];
     
-    self.totalPaidAsFloat = 0;
+    if (!self.totalPaidAsFloat){
+        self.totalPaidAsFloat = 0;
+    }
     self.totalPaid.text = [NSString stringWithFormat:@"Total Paid: %5.2f", self.totalPaidAsFloat];
     
     self.totalDueAsFloat = self.totalAsFloat - self.totalPaidAsFloat;
@@ -691,7 +709,9 @@
     self.depositDueAsFloat = sumOfDeposits;
     self.depositDue.text = [NSString stringWithFormat:@"Deposit Due: %5.2f", self.depositDueAsFloat];
     
-    self.depositPaidAsFloat = 0;
+    if (!self.depositPaidAsFloat){
+        self.depositPaidAsFloat = 0;
+    }
     self.depositPaid.text = [NSString stringWithFormat:@"Deposit Paid: %5.2f", self.depositPaidAsFloat];
     //--
     
@@ -726,7 +746,87 @@
     
 }
 
+-(void)checkCalculations{
+    
+    float sumOfCosts = 0;
+    float sumOfDeposits = 0;
+    for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfLineItems){
+        float costAsFloat = [join.cost floatValue];
+        float depositAsFloat = [join.deposit floatValue];
+        sumOfCosts = sumOfCosts + costAsFloat;
+        sumOfDeposits = sumOfDeposits + depositAsFloat;
+    }
+    
+    //limit deposit amount to $1,000
+    if (sumOfDeposits > 1000){
+        sumOfDeposits = 1000;
+    }
+    
+    float daysForPricingAsFloat;
+    
+    //if transaction.hasAStoredValueForRentalDays is YES, use the saved value self.daysForPrice
+    //otherwise, calculate the total based on days
+    if (self.myTransaction.hasAStoredRentalDaysForPricingValue){
+        daysForPricingAsFloat = [self.daysForPrice.text floatValue];
+    }else{
+        NSDate *beginDateJustDay = [EQRDataStructure dateByStrippingOffTime:self.myRequestItem.request_date_begin];
+        NSDate *endDateJustDay = [EQRDataStructure dateByStrippingOffTime:self.myRequestItem.request_date_end];
+        float timeDifference = [endDateJustDay timeIntervalSinceDate:beginDateJustDay];
+        // 86400 seconds in a day
+        NSInteger daysDifference = timeDifference / 86400;
+        if (daysDifference < 1){
+            daysDifference = 1;
+        }
+        daysForPricingAsFloat = daysDifference / 1.0;
+    }
+    
+    float subTotal = daysForPricingAsFloat * sumOfCosts;
+    
+    BOOL foundAMismatch = NO;
+    
+    //subtotals
+    if (self.subtotalAsFloat != subTotal){
+        foundAMismatch = YES;
+    }
+    if (self.depositDueAsFloat != sumOfDeposits){
+        foundAMismatch = YES;
+    }
+    
+    if (foundAMismatch){
+        self.calculationWarning.hidden = NO;
+        [self.recalculateTotals setTitleColor:[UIColor redColor] forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+    }else{
+        self.calculationWarning.hidden = YES;
+        [self.recalculateTotals setTitleColor:[UIColor blueColor] forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+    }
+}
+
+
+
 #pragma mark - Having tapped on things
+
+
+-(IBAction)recalculateTotals:(id)sender{
+    
+    //sum of join costs
+    //sum of join deposits
+    
+    //compare sum of costs with request.subtotal
+    //compare sum of deposists with request.deposit.due
+    
+    //if any mismatch
+    //save new values to request object and DB
+    //update labels
+    //what to do with marked as paid???
+    
+    //hide warning, and make recalculate button blue
+    
+    [self calculatePriceStage1];
+    
+    self.calculationWarning.hidden = YES;
+    [self.recalculateTotals setTitleColor:[UIColor blueColor] forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
+    
+}
 
 #pragma mark Select Rental Pricing Type
 
@@ -849,7 +949,7 @@
         self.totalPaidAsFloat = self.totalAsFloat;
         self.totalDueAsFloat = 0;
         self.totalPaid.text = [NSString stringWithFormat:@"Total Paid %5.2f", self.totalPaidAsFloat];
-        self.totalDue.text = @"Total Due: 0";
+        self.totalDue.text = @"Total Due: 0.00";
         self.depositPaidAsFloat = self.depositDueAsFloat;
         self.depositPaid.text = [NSString stringWithFormat:@"Deposit Paid: %5.2f", self.depositPaidAsFloat];
         
@@ -902,10 +1002,10 @@
     self.markAsPaidStaffAndTimestamp.text = @"";
     self.totalPaidAsFloat = 0;
     self.totalDueAsFloat = self.totalAsFloat;
-    self.totalPaid.text = @"Total Paid: 0";
+    self.totalPaid.text = @"Total Paid: 0.00";
     self.totalDue.text = [NSString stringWithFormat:@"Total Due: %5.2f", self.totalDueAsFloat];
     self.depositPaidAsFloat = 0;
-    self.depositPaid.text = @"Deposit Paid: 0";
+    self.depositPaid.text = @"Deposit Paid: 0.00";
     
     self.myTransaction.payment_timestamp = nil;
     self.myTransaction.payment_staff_foreignKey = @"";
@@ -943,7 +1043,7 @@
     
 }
 
-#pragma mark Days for Pricing Field
+#pragma mark Days for Pricing Field change
 
 -(IBAction)pricingDaysFieldTapped:(id)sender{
     
@@ -957,6 +1057,8 @@
         
     }];
 }
+
+#pragma mark Individual Join Cost editor
 
 //Price Matrix Content VC delegate method
 -(void)launchCostEditorWithJoinKeyID:(NSString *)joinKeyID isEquipJoin:(BOOL)isEquipJoin cost:(NSString *)cost indexPath:(NSIndexPath *)indexPath{
@@ -1038,6 +1140,10 @@
     });
     
     [self dismissViewControllerAnimated:YES completion:^{
+        
+        self.myTransaction.hasAStoredRentalDaysForPricingValue = YES;
+        self.daysForPrice.backgroundColor = [UIColor yellowColor];
+        
         [self calculatePriceStage1];
     }];
 }
@@ -1088,6 +1194,7 @@
         
         EQRMiscJoin *join = [self.arrayOfLineItems objectAtIndex:self.tempIndexPath.row];
         join.cost = returnText;
+        join.hasAStoredCostValue = YES;
         
         [self.lineItemsCollection reloadData];
         
@@ -1324,7 +1431,7 @@
                                      joinKeyID:join.key_id
                                      indexPath:indexPath
                                    isEquipJoin:NO
-                           hasAStoredCostValue:NO];
+                           hasAStoredCostValue:join.hasAStoredCostValue];
     }
 
     [cell.contentView addSubview:cell.myContentVC.view];
