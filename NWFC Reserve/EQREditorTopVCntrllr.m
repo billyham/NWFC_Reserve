@@ -340,16 +340,6 @@
     //populate...
     //arrayOfSchedule_Unique_Joins
     
-    
-    //pricing info
-    if ([self.privateRequestManager.request.renter_type isEqualToString:EQRRenterPublic]){
-        self.priceMatrixSubView.hidden = NO;
-        [self getTransactionInfo];
-    }else{
-        self.priceMatrixSubView.hidden = YES;
-    }
-    
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -412,6 +402,14 @@
         //set color of navigation bar
         self.navigationController.navigationBar.barTintColor = nil;
         [UIView setAnimationsEnabled:YES];
+    }
+    
+    //pricing info
+    if ([self.privateRequestManager.request.renter_type isEqualToString:EQRRenterPublic]){
+        self.priceMatrixSubView.hidden = NO;
+        [self getTransactionInfo];
+    }else{
+        self.priceMatrixSubView.hidden = YES;
     }
     
     [super viewWillAppear:animated];
@@ -986,6 +984,14 @@
     //remove popover
     [self.theRenterPopOver dismissPopoverAnimated:YES];
     self.theRenterPopOver = nil;
+    
+    //update pricing info
+    if ([self.privateRequestManager.request.renter_type isEqualToString:EQRRenterPublic]){
+        self.priceMatrixSubView.hidden = NO;
+        [self getTransactionInfo];
+    }else{
+        self.priceMatrixSubView.hidden = YES;
+    }
 }
 
 
