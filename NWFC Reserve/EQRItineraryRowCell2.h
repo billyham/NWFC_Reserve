@@ -14,6 +14,9 @@
 
 @interface EQRItineraryRowCell2 : UICollectionViewCell
 
+@property (strong, nonatomic) EQRItineraryCellContent2VC *contentVC;
+
+
 //@property NSInteger totalJoinCoint;
 //@property NSInteger unTickedJoinCountForButton1;
 //@property NSInteger unTickedJoinCountForButton2;

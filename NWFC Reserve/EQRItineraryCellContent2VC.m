@@ -16,6 +16,8 @@
 
 @property (strong, nonatomic) UIColor* myAssignedColor;
 @property (strong, nonatomic) IBOutlet UIButton *detailsButton;
+@property bool isCollapsed;
+
 
 //@property (strong, nonatomic) IBOutlet UIView *button1Background;
 //@property (strong, nonatomic) IBOutlet UIView *button2Background;
@@ -24,6 +26,8 @@
 @end
 
 @implementation EQRItineraryCellContent2VC
+
+@synthesize delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -120,6 +124,63 @@
     
 }
 
+
+#pragma mark - collapse and expand actions
+
+-(IBAction)collapseCell:(id)sender{
+    
+    if (self.isCollapsed){
+        
+        self.isCollapsed = NO;
+        
+        [self animateExpansionOfCell];
+        
+    }else{
+        
+        self.isCollapsed = YES;
+        
+        [self animateCollapseOfCell];
+        
+    }
+    
+}
+
+//-(IBAction)expandCell:(id)sender{
+//    
+//    self.isCollapsed = NO;
+//    
+//}
+
+-(void)animateCollapseOfCell{
+    
+    self.bottomOfMainSubviewConstraint.constant = 60;
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        
+        [self.view layoutIfNeeded];
+        
+    } completion:^(BOOL finished) {
+        
+        [self.delegate collapseTapped:self.requestKeyId isReturning:self.markedForReturning];
+
+    }];
+}
+
+-(void)animateExpansionOfCell{
+    
+    self.bottomOfMainSubviewConstraint.constant = 0;
+
+    [UIView animateWithDuration:0.2 animations:^{
+        
+        [self.view layoutIfNeeded];
+        
+    } completion:^(BOOL finished) {
+        
+        [self.delegate expandTapped:self.requestKeyId isReturning:self.markedForReturning];
+        
+    }];
+    
+}
 
 
 #pragma mark - notes

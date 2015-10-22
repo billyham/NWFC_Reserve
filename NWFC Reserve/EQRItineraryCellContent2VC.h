@@ -8,11 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQRItineraryCellContent2VC : UIViewController
+@protocol EQRItineraryContentDelegate;
+
+@interface EQRItineraryCellContent2VC : UIViewController{
+    
+    __weak id <EQRItineraryContentDelegate> delegate;
+}
+
+@property (weak, nonatomic) id <EQRItineraryContentDelegate> delegate;
 
 @property BOOL markedForReturning;
 @property NSUInteger myStatus;
 @property (strong, nonatomic) NSString* requestKeyId;
+
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *bottomOfMainSubviewConstraint;
 
 @property (strong, nonatomic) IBOutlet UIView *subViewFullSize;
 
@@ -39,5 +48,13 @@
 
 -(IBAction)switch1Fires:(id)sender;
 -(IBAction)switch2Fires:(id)sender;
+
+@end
+
+
+@protocol EQRItineraryContentDelegate <NSObject>
+
+-(void)collapseTapped:(NSString *) requestKeyId isReturning:(BOOL)markedForReturning;
+-(void)expandTapped:(NSString *) requestKeyId isReturning:(BOOL)markedForReturning;
 
 @end

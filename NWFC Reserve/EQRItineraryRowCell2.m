@@ -13,7 +13,6 @@
 
 @interface EQRItineraryRowCell2 ()
 
-@property (strong, nonatomic) EQRItineraryCellContent2VC *contentVC;
 
 @end
 
@@ -24,6 +23,12 @@
 }
 
 -(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem{
+    
+    //an existing contentVC may already exist
+    //______!!!!!!  THIS DOES NOTHING   !!!!!_____
+//    self.contentVC.bottomOfMainSubviewConstraint = nil;
+//    self.contentVC = nil;
+    //______
     
     if (requestItem.markedForReturn == YES){
         
@@ -104,6 +109,8 @@
     //______add the itinerary view to the cell's content view__________
     [self.contentView addSubview:self.contentVC.view];
     
+    //make bg clear
+    self.backgroundColor = [UIColor clearColor];
     
     
     

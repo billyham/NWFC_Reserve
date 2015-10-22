@@ -24,7 +24,7 @@
 #import "EQRModeManager.h"
 #import "EQRMiscJoin.h"
 
-@interface EQRItineraryVCntrllr ()
+@interface EQRItineraryVCntrllr () <EQRItineraryContentDelegate>
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myMasterItineraryCollection;
 @property (strong ,nonatomic) IBOutlet UICollectionView* myNavBarCollectionView;
@@ -1589,6 +1589,53 @@
 }
 
 
+#pragma mark - EQRItineraryContentDelegate methods
+
+
+-(void)collapseTapped:(NSString *) requestKeyId isReturning:(BOOL)markedForReturning{
+    
+    [self.arrayOfScheduleRequests enumerateObjectsUsingBlock:^(EQRScheduleRequestItem *requestItem, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if (([requestItem.key_id isEqualToString:requestKeyId]) && (requestItem.markedForReturn == markedForReturning)){
+            
+            //mark property
+            requestItem.shouldCollapseCell = YES;
+            
+            //reload the cell
+//            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
+//            NSArray *tempArray = @[indexPath];
+//            [self.myMasterItineraryCollection reloadItemsAtIndexPaths:tempArray];
+            
+            //reload layout?
+            [self.myMasterItineraryCollection.collectionViewLayout invalidateLayout];
+            
+            *stop = YES;
+        }
+    }];
+}
+
+-(void)expandTapped:(NSString *) requestKeyId isReturning:(BOOL)markedForReturning{
+    
+    [self.arrayOfScheduleRequests enumerateObjectsUsingBlock:^(EQRScheduleRequestItem *requestItem, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if (([requestItem.key_id isEqualToString:requestKeyId]) && (requestItem.markedForReturn == markedForReturning)){
+            
+            //mark property
+            requestItem.shouldCollapseCell = NO;
+            
+            //reload the cell
+//            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
+//            NSArray *tempArray = @[indexPath];
+//            [self.myMasterItineraryCollection reloadItemsAtIndexPaths:tempArray];
+            
+            //reload layout?
+            [self.myMasterItineraryCollection.collectionViewLayout invalidateLayout];
+            
+            *stop = YES;
+        }
+    }];
+}
+
 
 #pragma mark - collection view data source methods
 
@@ -1627,7 +1674,6 @@
     
 //    EQRItineraryRowCell* cell = [self.myMasterItineraryCollection dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
     EQRItineraryRowCell2 *cell = [self.myMasterItineraryCollection dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
-
     
     //remove subviews
     for (UIView* view in cell.contentView.subviews){
@@ -1648,6 +1694,7 @@
         if ([self.arrayOfScheduleRequests count] > indexPath.row){ //yes, indexed object has arrived
             
             [cell initialSetupWithRequestItem:[self.arrayOfScheduleRequests objectAtIndex:indexPath.row]];
+            cell.contentVC.delegate = self;
             
             //determine if all joins are loaded
             if (self.readyToCheckForScheduleWarningsFlag){
@@ -1664,6 +1711,7 @@
     }else{        //yes filter
         
         [cell initialSetupWithRequestItem:[self.filteredArrayOfScheduleRequests objectAtIndex:indexPath.row]];
+        cell.contentVC.delegate = self;
     }
     
     return cell;
@@ -1691,12 +1739,22 @@
 
 
 //cell size
-//- (CGSize)collectionView:(UICollectionView *)collectionView
-//                  layout:(UICollectionViewLayout *)collectionViewLayout
-//  sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-//    
-//
-//}
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
+    //if cell button was tapped to collapse
+    //or if cell requestObject has been completed
+    if ([(EQRScheduleRequestItem *)[self.arrayOfScheduleRequests objectAtIndex:indexPath.row] shouldCollapseCell] ){
+        
+        return  CGSizeMake(668.0, 40);
+        
+    }else{
+        
+        return CGSizeMake(668.0, 100.0);
+    }
+}
 
 #pragma mark - dealloc and such
 

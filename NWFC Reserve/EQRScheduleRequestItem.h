@@ -65,6 +65,8 @@
 @property NSInteger totalJoinCoint ;
 @property NSInteger unTickedJoinCountForButton1;
 @property NSInteger unTickedJoinCountForButton2;
+//used in itinerary to show collapsed or expanded cell
+@property BOOL shouldCollapseCell;
 
 
 //-(id)copyWithZone:(NSZone *)zone;

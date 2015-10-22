@@ -133,6 +133,8 @@
 		54331E011AB6B59B00AA0E1C /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54331E001AB6B59B00AA0E1C /* CloudKit.framework */; };
 		5433FCD21A8CB30500057B4F /* EQREnterPhoneVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5433FCD01A8CB30500057B4F /* EQREnterPhoneVC.m */; };
 		5433FCD31A8CB30500057B4F /* EQREnterPhoneVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5433FCD11A8CB30500057B4F /* EQREnterPhoneVC.xib */; };
+		5436CD751BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt.png in Resources */ = {isa = PBXBuildFile; fileRef = 5436CD731BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt.png */; settings = {ASSET_TAGS = (); }; };
+		5436CD761BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5436CD741BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt@2x.png */; settings = {ASSET_TAGS = (); }; };
 		543786351BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m in Sources */ = {isa = PBXBuildFile; fileRef = 543786341BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m */; settings = {ASSET_TAGS = (); }; };
 		5439B08D19AEC835007CC11C /* EQRInboxLeftTopVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439B08C19AEC835007CC11C /* EQRInboxLeftTopVC.m */; };
 		5439DCBD1A87363C006252E5 /* EQRScheduleNestedDateBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439DCBC1A87363C006252E5 /* EQRScheduleNestedDateBarCell.m */; };
@@ -185,8 +187,6 @@
 		54A5E7A21BB5363B0095DF10 /* EQRLineItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A5E7A11BB5363B0095DF10 /* EQRLineItem.m */; settings = {ASSET_TAGS = (); }; };
 		54A5E7A61BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A5E7A41BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m */; settings = {ASSET_TAGS = (); }; };
 		54A5E7A71BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54A5E7A51BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib */; settings = {ASSET_TAGS = (); }; };
-		54A97EF01B5796800052A265 /* bigArrowPointsLeftSoloAlt.png in Resources */ = {isa = PBXBuildFile; fileRef = 54A97EEE1B5796800052A265 /* bigArrowPointsLeftSoloAlt.png */; };
-		54A97EF11B5796800052A265 /* bigArrowPointsLeftSoloAlt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 54A97EEF1B5796800052A265 /* bigArrowPointsLeftSoloAlt@2x.png */; };
 		54AB4DCC1BA2CE6300A0358C /* EQRSigConfirmationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AB4DCB1BA2CE6300A0358C /* EQRSigConfirmationVC.m */; };
 		54AB4DCF1BA2D53B00A0358C /* EQRSigRentalFee.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AB4DCE1BA2D53B00A0358C /* EQRSigRentalFee.m */; };
 		54AF8FAF1A5A9EEA004C4DDC /* EQRMultiColumnTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AF8FAE1A5A9EEA004C4DDC /* EQRMultiColumnTextView.m */; };
@@ -426,6 +426,8 @@
 		5433FCCF1A8CB30500057B4F /* EQREnterPhoneVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREnterPhoneVC.h; sourceTree = "<group>"; };
 		5433FCD01A8CB30500057B4F /* EQREnterPhoneVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREnterPhoneVC.m; sourceTree = "<group>"; };
 		5433FCD11A8CB30500057B4F /* EQREnterPhoneVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREnterPhoneVC.xib; sourceTree = "<group>"; };
+		5436CD731BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bigArrowPointsLeftSoloAlt.png; sourceTree = "<group>"; };
+		5436CD741BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bigArrowPointsLeftSoloAlt@2x.png"; sourceTree = "<group>"; };
 		543786331BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRPriceMatrixCllctnVwCll.h; sourceTree = "<group>"; };
 		543786341BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRPriceMatrixCllctnVwCll.m; sourceTree = "<group>"; };
 		5439B08B19AEC835007CC11C /* EQRInboxLeftTopVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRInboxLeftTopVC.h; sourceTree = "<group>"; };
@@ -508,8 +510,6 @@
 		54A5E7A31BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRPriceMatrixCllctnViewContentVC.h; sourceTree = "<group>"; };
 		54A5E7A41BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRPriceMatrixCllctnViewContentVC.m; sourceTree = "<group>"; };
 		54A5E7A51BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRPriceMatrixCllctnViewContentVC.xib; sourceTree = "<group>"; };
-		54A97EEE1B5796800052A265 /* bigArrowPointsLeftSoloAlt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bigArrowPointsLeftSoloAlt.png; sourceTree = "<group>"; };
-		54A97EEF1B5796800052A265 /* bigArrowPointsLeftSoloAlt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bigArrowPointsLeftSoloAlt@2x.png"; sourceTree = "<group>"; };
 		54AB4DCA1BA2CE6300A0358C /* EQRSigConfirmationVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRSigConfirmationVC.h; sourceTree = "<group>"; };
 		54AB4DCB1BA2CE6300A0358C /* EQRSigConfirmationVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRSigConfirmationVC.m; sourceTree = "<group>"; };
 		54AB4DCD1BA2D53B00A0358C /* EQRSigRentalFee.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRSigRentalFee.h; sourceTree = "<group>"; };
@@ -852,8 +852,8 @@
 		541167BA18E545630059BA3C /* Art */ = {
 			isa = PBXGroup;
 			children = (
-				54A97EEE1B5796800052A265 /* bigArrowPointsLeftSoloAlt.png */,
-				54A97EEF1B5796800052A265 /* bigArrowPointsLeftSoloAlt@2x.png */,
+				5436CD731BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt.png */,
+				5436CD741BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt@2x.png */,
 				541479F71B533867009CE8A2 /* arrowsPointLeft.png */,
 				541479F81B533867009CE8A2 /* arrowsPointLeft@2x.png */,
 				541479F91B533867009CE8A2 /* bigArrowPointsLeftSolo.png */,
@@ -1322,7 +1322,6 @@
 				5427C1FF1A135DB200C653B6 /* EQRCheckHeaderCell.xib in Resources */,
 				54A375B51A40040C00FD8A7B /* EQRNotesVC.xib in Resources */,
 				54263FFD1AAF043D0095797E /* tab_settings@2x.png in Resources */,
-				54A97EF11B5796800052A265 /* bigArrowPointsLeftSoloAlt@2x.png in Resources */,
 				542F5FFE192357AF001C28CA /* EQRCheckVCntrllr.xib in Resources */,
 				0119D30018DBB25D009126CB /* EQRScheduleCellContentVCntrllr.xib in Resources */,
 				541479E61B524EEE009CE8A2 /* dottedCircle@2x.png in Resources */,
@@ -1330,18 +1329,19 @@
 				54A5E7A71BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib in Resources */,
 				01C83A7B199E792800CD5E9C /* EQRDayExtendedPickerVC.xib in Resources */,
 				54263FEC1AAF03490095797E /* tabInbox.png in Resources */,
-				54A97EF01B5796800052A265 /* bigArrowPointsLeftSoloAlt.png in Resources */,
 				541479FE1B533867009CE8A2 /* bigArrowPointsLeftSolo@2x.png in Resources */,
 				54D4548B1A3856F50099DFE4 /* EQRDistIDPickerTableVC.xib in Resources */,
 				541479F61B533572009CE8A2 /* EQRItineraryCellContentReturning1.xib in Resources */,
 				5493CA8F1990942F008A9221 /* EQRStaffUserPickerViewController.xib in Resources */,
 				54457ED21935B7B900E9061A /* EQRCheckCellContentVCntrllr.xib in Resources */,
 				541390601B3BC1BD0041281D /* EQRCheckCellContentAltVC.xib in Resources */,
+				5436CD761BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt@2x.png in Resources */,
 				5431456C197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.xib in Resources */,
 				54263FF71AAF043D0095797E /* tab_day@2x.png in Resources */,
 				545547CC197F987C001AC986 /* GenericLeftArrow.png in Resources */,
 				01A5D7C418EBA85900EE99EF /* EQREditorTopVCntrllr.xib in Resources */,
 				541570181B4CFDCF00BEC26A /* circleButton.png in Resources */,
+				5436CD751BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt.png in Resources */,
 				01735F1E193FAC38007E85C1 /* EQRCheckPrintPage.xib in Resources */,
 				01A4755B18EB9BDF006F32EB /* EQREditorDateVCntrllr.xib in Resources */,
 				54A0DB8F1AB0123400EE4281 /* EQRGenericTextEditor.xib in Resources */,
