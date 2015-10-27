@@ -34,8 +34,8 @@
 		01B4830519AE8290009F15F6 /* EQRInboxLeftTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 01B4830419AE8290009F15F6 /* EQRInboxLeftTableVC.m */; };
 		01B4830919AE82B1009F15F6 /* EQRInboxRightVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 01B4830719AE82B1009F15F6 /* EQRInboxRightVC.m */; };
 		01B4830A19AE82B1009F15F6 /* EQRInboxRightVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01B4830819AE82B1009F15F6 /* EQRInboxRightVC.xib */; };
-		01C01B951BBB6978001B90F3 /* EQRGenericNumberEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C01B931BBB6978001B90F3 /* EQRGenericNumberEditor.m */; settings = {ASSET_TAGS = (); }; };
-		01C01B961BBB6978001B90F3 /* EQRGenericNumberEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01C01B941BBB6978001B90F3 /* EQRGenericNumberEditor.xib */; settings = {ASSET_TAGS = (); }; };
+		01C01B951BBB6978001B90F3 /* EQRGenericNumberEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C01B931BBB6978001B90F3 /* EQRGenericNumberEditor.m */; };
+		01C01B961BBB6978001B90F3 /* EQRGenericNumberEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01C01B941BBB6978001B90F3 /* EQRGenericNumberEditor.xib */; };
 		01C79939189C723300D29625 /* EQREquipSummaryVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C79938189C723300D29625 /* EQREquipSummaryVCntrllr.m */; };
 		01C83A7A199E792800CD5E9C /* EQRDayExtendedPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 01C83A78199E792800CD5E9C /* EQRDayExtendedPickerVC.m */; };
 		01C83A7B199E792800CD5E9C /* EQRDayExtendedPickerVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01C83A79199E792800CD5E9C /* EQRDayExtendedPickerVC.xib */; };
@@ -133,17 +133,17 @@
 		54331E011AB6B59B00AA0E1C /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54331E001AB6B59B00AA0E1C /* CloudKit.framework */; };
 		5433FCD21A8CB30500057B4F /* EQREnterPhoneVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5433FCD01A8CB30500057B4F /* EQREnterPhoneVC.m */; };
 		5433FCD31A8CB30500057B4F /* EQREnterPhoneVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5433FCD11A8CB30500057B4F /* EQREnterPhoneVC.xib */; };
-		5436CD751BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt.png in Resources */ = {isa = PBXBuildFile; fileRef = 5436CD731BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt.png */; settings = {ASSET_TAGS = (); }; };
-		5436CD761BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5436CD741BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt@2x.png */; settings = {ASSET_TAGS = (); }; };
-		543786351BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m in Sources */ = {isa = PBXBuildFile; fileRef = 543786341BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m */; settings = {ASSET_TAGS = (); }; };
+		5436CD751BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt.png in Resources */ = {isa = PBXBuildFile; fileRef = 5436CD731BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt.png */; };
+		5436CD761BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5436CD741BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt@2x.png */; };
+		543786351BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m in Sources */ = {isa = PBXBuildFile; fileRef = 543786341BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m */; };
 		5439B08D19AEC835007CC11C /* EQRInboxLeftTopVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439B08C19AEC835007CC11C /* EQRInboxLeftTopVC.m */; };
 		5439DCBD1A87363C006252E5 /* EQRScheduleNestedDateBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439DCBC1A87363C006252E5 /* EQRScheduleNestedDateBarCell.m */; };
 		5439DCC01A8739E9006252E5 /* EQRScheduleDateBarLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439DCBF1A8739E9006252E5 /* EQRScheduleDateBarLayout.m */; };
 		543CF39E198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 543CF39C198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.m */; };
 		543CF39F198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 543CF39D198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.xib */; };
-		5441BD191BCCC28F00B00F42 /* EQRRenterPricingTypeTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5441BD181BCCC28F00B00F42 /* EQRRenterPricingTypeTableVC.m */; settings = {ASSET_TAGS = (); }; };
-		544253151BC3837A0007331E /* EQRPricingWidgetVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 544253131BC3837A0007331E /* EQRPricingWidgetVC.m */; settings = {ASSET_TAGS = (); }; };
-		544253161BC3837A0007331E /* EQRPricingWidgetVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 544253141BC3837A0007331E /* EQRPricingWidgetVC.xib */; settings = {ASSET_TAGS = (); }; };
+		5441BD191BCCC28F00B00F42 /* EQRRenterPricingTypeTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5441BD181BCCC28F00B00F42 /* EQRRenterPricingTypeTableVC.m */; };
+		544253151BC3837A0007331E /* EQRPricingWidgetVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 544253131BC3837A0007331E /* EQRPricingWidgetVC.m */; };
+		544253161BC3837A0007331E /* EQRPricingWidgetVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 544253141BC3837A0007331E /* EQRPricingWidgetVC.xib */; };
 		54457ECD1935B78E00E9061A /* EQRCheckRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54457ECC1935B78E00E9061A /* EQRCheckRowCell.m */; };
 		54457ED11935B7B900E9061A /* EQRCheckCellContentVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54457ECF1935B7B900E9061A /* EQRCheckCellContentVCntrllr.m */; };
 		54457ED21935B7B900E9061A /* EQRCheckCellContentVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54457ED01935B7B900E9061A /* EQRCheckCellContentVCntrllr.xib */; };
@@ -159,7 +159,7 @@
 		545661DC183239520067B40D /* EQRWebData.m in Sources */ = {isa = PBXBuildFile; fileRef = 545661DB183239520067B40D /* EQRWebData.m */; };
 		545661DF18323ABC0067B40D /* EQREquipItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 545661DE18323ABC0067B40D /* EQREquipItem.m */; };
 		5460B69719EFA27700D3ED7B /* EQRNavBarDatesNarrowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5460B69619EFA27700D3ED7B /* EQRNavBarDatesNarrowView.m */; };
-		546436551BBBBF70002BF3FF /* EQRTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 546436541BBBBF70002BF3FF /* EQRTransaction.m */; settings = {ASSET_TAGS = (); }; };
+		546436551BBBBF70002BF3FF /* EQRTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 546436541BBBBF70002BF3FF /* EQRTransaction.m */; };
 		5464C0141A0A21A600469C45 /* EQREquipSelectionLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5464C0131A0A21A600469C45 /* EQREquipSelectionLayout.m */; };
 		546F28231A19529C00980221 /* EQRContactPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 546F28211A19529C00980221 /* EQRContactPickerVC.m */; };
 		546F28241A19529C00980221 /* EQRContactPickerVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 546F28221A19529C00980221 /* EQRContactPickerVC.xib */; };
@@ -184,9 +184,9 @@
 		54A0DB8F1AB0123400EE4281 /* EQRGenericTextEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54A0DB8D1AB0123400EE4281 /* EQRGenericTextEditor.xib */; };
 		54A375B41A40040C00FD8A7B /* EQRNotesVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A375B21A40040C00FD8A7B /* EQRNotesVC.m */; };
 		54A375B51A40040C00FD8A7B /* EQRNotesVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54A375B31A40040C00FD8A7B /* EQRNotesVC.xib */; };
-		54A5E7A21BB5363B0095DF10 /* EQRLineItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A5E7A11BB5363B0095DF10 /* EQRLineItem.m */; settings = {ASSET_TAGS = (); }; };
-		54A5E7A61BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A5E7A41BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m */; settings = {ASSET_TAGS = (); }; };
-		54A5E7A71BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54A5E7A51BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib */; settings = {ASSET_TAGS = (); }; };
+		54A5E7A21BB5363B0095DF10 /* EQRLineItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A5E7A11BB5363B0095DF10 /* EQRLineItem.m */; };
+		54A5E7A61BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A5E7A41BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m */; };
+		54A5E7A71BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54A5E7A51BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib */; };
 		54AB4DCC1BA2CE6300A0358C /* EQRSigConfirmationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AB4DCB1BA2CE6300A0358C /* EQRSigConfirmationVC.m */; };
 		54AB4DCF1BA2D53B00A0358C /* EQRSigRentalFee.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AB4DCE1BA2D53B00A0358C /* EQRSigRentalFee.m */; };
 		54AF8FAF1A5A9EEA004C4DDC /* EQRMultiColumnTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AF8FAE1A5A9EEA004C4DDC /* EQRMultiColumnTextView.m */; };
@@ -220,6 +220,9 @@
 		54ECF1E41998A7E100298996 /* EQRModeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 54ECF1E31998A7E100298996 /* EQRModeManager.m */; };
 		54ECF1E81998A9D900298996 /* EQRQuickViewPage3VCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54ECF1E61998A9D900298996 /* EQRQuickViewPage3VCntrllr.m */; };
 		54ECF1E91998A9D900298996 /* EQRQuickViewPage3VCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54ECF1E71998A9D900298996 /* EQRQuickViewPage3VCntrllr.xib */; };
+		54F1F7101BDF5B4100CF5E91 /* EQRPricingWidgetTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F1F70F1BDF5B4100CF5E91 /* EQRPricingWidgetTemplate.m */; };
+		54F1F7141BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F1F7121BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.m */; };
+		54F1F7151BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54F1F7131BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.xib */; };
 		54F73784196D360F005BE295 /* EQRTapRadioButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F73783196D360F005BE295 /* EQRTapRadioButtonView.m */; };
 /* End PBXBuildFile section */
 
@@ -569,6 +572,11 @@
 		54ECF1E51998A9D900298996 /* EQRQuickViewPage3VCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRQuickViewPage3VCntrllr.h; sourceTree = "<group>"; };
 		54ECF1E61998A9D900298996 /* EQRQuickViewPage3VCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EQRQuickViewPage3VCntrllr.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		54ECF1E71998A9D900298996 /* EQRQuickViewPage3VCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRQuickViewPage3VCntrllr.xib; sourceTree = "<group>"; };
+		54F1F70E1BDF5B4100CF5E91 /* EQRPricingWidgetTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRPricingWidgetTemplate.h; sourceTree = "<group>"; };
+		54F1F70F1BDF5B4100CF5E91 /* EQRPricingWidgetTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRPricingWidgetTemplate.m; sourceTree = "<group>"; };
+		54F1F7111BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRPricingWidgetCheckInVC.h; sourceTree = "<group>"; };
+		54F1F7121BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRPricingWidgetCheckInVC.m; sourceTree = "<group>"; };
+		54F1F7131BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRPricingWidgetCheckInVC.xib; sourceTree = "<group>"; };
 		54F73782196D360F005BE295 /* EQRTapRadioButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRTapRadioButtonView.h; sourceTree = "<group>"; };
 		54F73783196D360F005BE295 /* EQRTapRadioButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRTapRadioButtonView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -769,6 +777,7 @@
 				543CF39A198EF4E200A00E5E /* Quickview Nav Cntrllr */,
 				54ED1906199B403A00CF1A8F /* print renderers */,
 				542CC23A197CECA800BFD581 /* shared nibs */,
+				54F1F70C1BDF5A2600CF5E91 /* shared widgets */,
 				54E9DB151993531B0080FF1B /* shared singletons */,
 				549966931BA5467A00F6DCE6 /* ViewModels */,
 				54032FE31872D2EA00481D86 /* Schedule objects */,
@@ -970,9 +979,6 @@
 				01C01B921BBB6978001B90F3 /* EQRGenericNumberEditor.h */,
 				01C01B931BBB6978001B90F3 /* EQRGenericNumberEditor.m */,
 				01C01B941BBB6978001B90F3 /* EQRGenericNumberEditor.xib */,
-				544253121BC3837A0007331E /* EQRPricingWidgetVC.h */,
-				544253131BC3837A0007331E /* EQRPricingWidgetVC.m */,
-				544253141BC3837A0007331E /* EQRPricingWidgetVC.xib */,
 			);
 			name = "shared nibs";
 			sourceTree = "<group>";
@@ -1204,6 +1210,29 @@
 			name = "print renderers";
 			sourceTree = "<group>";
 		};
+		54F1F70C1BDF5A2600CF5E91 /* shared widgets */ = {
+			isa = PBXGroup;
+			children = (
+				54F1F70D1BDF5A4600CF5E91 /* pricing */,
+			);
+			name = "shared widgets";
+			sourceTree = "<group>";
+		};
+		54F1F70D1BDF5A4600CF5E91 /* pricing */ = {
+			isa = PBXGroup;
+			children = (
+				54F1F70E1BDF5B4100CF5E91 /* EQRPricingWidgetTemplate.h */,
+				54F1F70F1BDF5B4100CF5E91 /* EQRPricingWidgetTemplate.m */,
+				544253121BC3837A0007331E /* EQRPricingWidgetVC.h */,
+				544253131BC3837A0007331E /* EQRPricingWidgetVC.m */,
+				544253141BC3837A0007331E /* EQRPricingWidgetVC.xib */,
+				54F1F7111BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.h */,
+				54F1F7121BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.m */,
+				54F1F7131BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.xib */,
+			);
+			name = pricing;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1343,6 +1372,7 @@
 				541570181B4CFDCF00BEC26A /* circleButton.png in Resources */,
 				5436CD751BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt.png in Resources */,
 				01735F1E193FAC38007E85C1 /* EQRCheckPrintPage.xib in Resources */,
+				54F1F7151BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.xib in Resources */,
 				01A4755B18EB9BDF006F32EB /* EQREditorDateVCntrllr.xib in Resources */,
 				54A0DB8F1AB0123400EE4281 /* EQRGenericTextEditor.xib in Resources */,
 				5407292F1B3939F100D454F5 /* SigCapture.storyboard in Resources */,
@@ -1447,12 +1477,14 @@
 				54AB4DCC1BA2CE6300A0358C /* EQRSigConfirmationVC.m in Sources */,
 				5431456B197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m in Sources */,
 				5493CA8E1990942F008A9221 /* EQRStaffUserPickerViewController.m in Sources */,
+				54F1F7101BDF5B4100CF5E91 /* EQRPricingWidgetTemplate.m in Sources */,
 				5439DCBD1A87363C006252E5 /* EQRScheduleNestedDateBarCell.m in Sources */,
 				54CE45AC186AF4680023FDA4 /* EQREquipItemCell.m in Sources */,
 				54BD4FC01A8219F600BA72BA /* EQRCheckRowMiscItemCell.m in Sources */,
 				54C0E5491AB19DE20038CA86 /* EQRNavBarWeeksView.m in Sources */,
 				018EB75A18E5DCD500FBDEA0 /* EQREditorTopVCntrllr.m in Sources */,
 				015B7C6A18EA22B3002F5B6D /* EQREditorEquipListCell.m in Sources */,
+				54F1F7141BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.m in Sources */,
 				5439DCC01A8739E9006252E5 /* EQRScheduleDateBarLayout.m in Sources */,
 				5402D231186C01440091C080 /* EQRContactNameItem.m in Sources */,
 				54D6856B1B85B47F0062785F /* EQRClassCatalog.m in Sources */,

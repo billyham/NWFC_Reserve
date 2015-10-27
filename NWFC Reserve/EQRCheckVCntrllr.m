@@ -31,9 +31,13 @@
 #import "EQRContactNameItem.h"
 #import "EQRColors.h"
 #import "EQRSigEquipListVC.h"
+#import "EQRPricingWidgetCheckInVC.h"
+#import "EQRPriceMatrixVC.h"
+#import "EQRTransaction.h"
+#import "EQRAlternateWrappperPriceMatrix.h"
 
 
-@interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate, UISearchBarDelegate, UISearchResultsUpdating>
+@interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate, UISearchBarDelegate, UISearchResultsUpdating, EQRPriceMatrixDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem* myScheduleRequestItem;
 
@@ -74,6 +78,11 @@
 @property BOOL didLoadMiscJoinsFlag;
 @property double timeOfLastCallback;
 @property (strong, nonatomic) EQRContactNameItem *tempContact;
+
+//pricing widget
+@property (strong, nonatomic) EQRTransaction *myTransaction;
+@property (strong, nonatomic) IBOutlet UIView *priceMatrixSubView;
+@property (strong, nonatomic) EQRPricingWidgetCheckInVC *priceWidget;
 
 //searchController
 @property (strong, nonatomic) UISearchController *mySearchController;
@@ -347,6 +356,15 @@
     //important methods that initiate requestManager ivar arrays
 //    [self.privateRequestManager resetEquipListAndAvailableQuantites];
 //    [self.privateRequestManager retrieveAllEquipUniqueItems];
+    
+    //pricing info
+    if ([self.privateRequestManager.request.renter_type isEqualToString:EQRRenterPublic]){
+        self.priceMatrixSubView.hidden = NO;
+        [self getTransactionInfo];
+    }else{
+        self.priceMatrixSubView.hidden = YES;
+    }
+    
 }
 
 
@@ -491,7 +509,16 @@
     //what does this do?
     self.definesPresentationContext = YES;
     
-
+    
+    EQRPricingWidgetCheckInVC *priceWidget = [[EQRPricingWidgetCheckInVC alloc] initWithNibName:@"EQRPricingWidgetCheckInVC" bundle:nil];
+    self.priceWidget = priceWidget;
+    CGRect tempRect = CGRectMake(0, 0, self.priceMatrixSubView.frame.size.width, self.priceMatrixSubView.frame.size.height);
+    priceWidget.view.frame = tempRect;
+    
+    [self.priceMatrixSubView addSubview:self.priceWidget.view];
+    
+    //set button target
+    [self.priceWidget.editButton addTarget:self action:@selector(showPricingButton:) forControlEvents:UIControlEventTouchUpInside];
     
 }
 
@@ -557,6 +584,7 @@
     //reassign constraint ivars!!
     self.mainSubTopGuideConstraint = [constraint_POS_V objectAtIndex:0];
     self.mainSubBottomGuideConstraint = [constraint_POS_VB objectAtIndex:0];
+    
     
     
     [super viewWillAppear:animated];
@@ -1655,6 +1683,75 @@
         [(EQRSigEquipListVC*)[[newView viewControllers] objectAtIndex:0] loadTheData];
         
     }];
+    
+}
+
+
+#pragma mark - price matrix
+
+-(IBAction)showPricingButton:(id)sender{
+    
+    UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"Pricing" bundle:nil];
+    EQRAlternateWrappperPriceMatrix *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"price_alternate_wrapper"];
+    newView.delegate = self;
+    
+    newView.modalPresentationStyle = UIModalPresentationPageSheet;
+    [self presentViewController:newView animated:YES completion:^{
+        
+        //provide VC with request information
+        [newView provideScheduleRequest:self.privateRequestManager.request];
+        
+        
+    }];
+    
+    
+    //
+    //    newView.edgesForExtendedLayout = UIRectEdgeAll;
+    //    [self.navigationController pushViewController:newView animated:YES];
+}
+
+// EQRPriceMatrixVC delegate method
+
+-(void)aChangeWasMadeToPriceMatrix{
+    
+    [self getTransactionInfo];
+}
+
+-(void)getTransactionInfo{
+    
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    NSArray *firstArray = @[@"scheduleTracking_foreignKey", self.privateRequestManager.request.key_id];
+    NSArray *topArray = @[firstArray];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryForStringwithAsync:@"EQGetTransactionWithScheduleRequestKey.php" parameters:topArray completion:^(EQRTransaction *transaction) {
+            
+            if (transaction){
+                
+                self.myTransaction = transaction;
+                
+                //found a matching transaction for this schedule Request, go on...
+                [self populatePricingWidget];
+                
+            }else{
+                
+                //no matching transaction, create a fresh one.
+                NSLog(@"didn't find a matching Transaction");
+                [self.priceWidget deleteExistingData];
+            }
+        }];
+    });
+}
+
+-(void)populatePricingWidget{
+    
+    if (self.myTransaction){
+        [self.priceWidget initialSetupWithTransaction:self.myTransaction];
+    }else{
+        [self.priceWidget deleteExistingData];
+    }
     
 }
 

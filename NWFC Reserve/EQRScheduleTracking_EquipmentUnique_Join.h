@@ -53,6 +53,7 @@
 //@property BOOL markedForDeletion;
 
 @property BOOL hasAStoredCostValue;
+@property BOOL hasAStoredDepositValue;
 
 
 

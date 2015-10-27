@@ -436,6 +436,11 @@
                 join.hasAStoredCostValue = YES;
             }
         }
+        if (join.deposit){
+            if (![join.deposit isEqualToString:@""]){
+                join.hasAStoredDepositValue = YES;
+            }
+        }
     }
     
     
@@ -443,6 +448,11 @@
         if (miscJoin.cost){
             if (![miscJoin.cost isEqualToString:@""]){
                 miscJoin.hasAStoredCostValue = YES;
+            }
+        }
+        if (miscJoin.deposit){
+            if (![miscJoin.deposit isEqualToString:@""]){
+                miscJoin.hasAStoredDepositValue = YES;
             }
         }
     }
@@ -544,12 +554,16 @@
         //only continue if join.deposit has no value yet
         if (([join.deposit isEqualToString:@""]) || !join.deposit){
             
-            for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
+            //dont continue if the join has a stored value
+            if (join.hasAStoredDepositValue == NO){
                 
-                if ([join.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
-                    //found an equipTitle match
-                    join.deposit = titleItem.price_deposit;
-                    break;
+                for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
+                    
+                    if ([join.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
+                        //found an equipTitle match
+                        join.deposit = titleItem.price_deposit;
+                        break;
+                    }
                 }
             }
         }
@@ -589,12 +603,16 @@
             //only continue if join.cost has no value yet
             if (([join2.deposit isEqualToString:@""]) || !join2.deposit){
                 
-                for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
+                //don't continue if the join has a stored value
+                if (join2.hasAStoredDepositValue == NO){
                     
-                    if ([join2.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
-                        //found an equipTitle match
-                        join2.deposit = titleItem.price_deposit;
-                        break;
+                    for (EQREquipItem *titleItem in self.arrayOfPriceEquipTitles){
+                        
+                        if ([join2.equipTitleItem_foreignKey isEqualToString:titleItem.key_id]){
+                            //found an equipTitle match
+                            join2.deposit = titleItem.price_deposit;
+                            break;
+                        }
                     }
                 }
             }
@@ -1239,6 +1257,7 @@
         
         EQRScheduleTracking_EquipmentUnique_Join *join = [self.arrayOfLineItems objectAtIndex:self.tempIndexPath.row];
         join.deposit = returnText;
+        join.hasAStoredDepositValue = YES;
         
         NSLog(@"this is the Join.key_id: %@  this is returnText: %@", join.key_id, returnText);
         
@@ -1273,6 +1292,7 @@
         
         EQRMiscJoin *join = [self.arrayOfLineItems objectAtIndex:self.tempIndexPath.row];
         join.deposit = returnText;
+        join.hasAStoredDepositValue = YES;
         
         [self.lineItemsCollection reloadData];
         
@@ -1416,7 +1436,8 @@
                                      joinKeyID:join.key_id
                                      indexPath:indexPath
                                    isEquipJoin:YES
-                           hasAStoredCostValue:join.hasAStoredCostValue];
+                           hasAStoredCostValue:join.hasAStoredCostValue
+                        hasAStoredDepositValue:join.hasAStoredDepositValue];
         
         NSLog(@"name: %@  distID: %@  cost: %@  deposit: %@", join.name, join.distinquishing_id, join.cost, join.deposit);
         
@@ -1431,7 +1452,8 @@
                                      joinKeyID:join.key_id
                                      indexPath:indexPath
                                    isEquipJoin:NO
-                           hasAStoredCostValue:join.hasAStoredCostValue];
+                           hasAStoredCostValue:join.hasAStoredCostValue
+                        hasAStoredDepositValue:join.hasAStoredDepositValue];
     }
 
     [cell.contentView addSubview:cell.myContentVC.view];

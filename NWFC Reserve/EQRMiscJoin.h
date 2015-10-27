@@ -31,6 +31,7 @@
 @property (strong, nonatomic) NSString* renter_type;
 
 @property BOOL hasAStoredCostValue;
+@property BOOL hasAStoredDepositValue;
 
 
 @end

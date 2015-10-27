@@ -30,7 +30,8 @@
                   joinKeyID:(NSString *)keyID
                   indexPath:(NSIndexPath *)indexPath
                 isEquipJoin:(BOOL)isEquipJoin
-        hasAStoredCostValue:(BOOL)hasAStoredCostValue;
+        hasAStoredCostValue:(BOOL)hasAStoredCostValue
+     hasAStoredDepositValue:(BOOL)hasAStoredDepositValue;
 
 @end
 

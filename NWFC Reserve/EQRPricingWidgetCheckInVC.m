@@ -1,36 +1,23 @@
 //
-//  EQRPricingWidgetVC.m
+//  EQRPricingWidgetCheckInVC.m
 //  Gear
 //
-//  Created by Ray Smith on 10/5/15.
+//  Created by Ray Smith on 10/27/15.
 //  Copyright © 2015 Ham Again LLC. All rights reserved.
 //
 
-#import "EQRPricingWidgetVC.h"
-#import "EQRDataStructure.h"
+#import "EQRPricingWidgetCheckInVC.h"
 
-@interface EQRPricingWidgetVC ()
-
-
+@interface EQRPricingWidgetCheckInVC ()
 
 @end
 
-@implementation EQRPricingWidgetVC
+@implementation EQRPricingWidgetCheckInVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-   
+    // Do any additional setup after loading the view from its nib.
 }
-
--(void)viewWillAppear:(BOOL)animated{
-
-}
-
-
-
-
-
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
