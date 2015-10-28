@@ -96,8 +96,8 @@
                                 <constraint firstAttribute="width" constant="22" id="dHj-js-vPz"/>
                             </constraints>
                         </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nuk-Tu-Z91">
-                            <rect key="frame" x="28" y="71" width="0.0" height="21"/>
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="X" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nuk-Tu-Z91">
+                            <rect key="frame" x="28" y="71" width="11.5" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="21" id="YYd-Um-wgm"/>
                             </constraints>
