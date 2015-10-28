@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "EQRPasswordEntryVC.h"
 #import "EQRGenericTextEditor.h"
+#import "EQRGenericBlockOfTextEditor.h"
 
 @protocol EQRSettings1TableDelegate;
 
-@interface EQRSettings1TableVC : UITableViewController  <EQRPasswordEntryDelegate, UIPopoverControllerDelegate, EQRGenericTextEditorDelegate, UITableViewDelegate>{
+@interface EQRSettings1TableVC : UITableViewController  <EQRPasswordEntryDelegate, UIPopoverControllerDelegate, EQRGenericTextEditorDelegate, UITableViewDelegate, EQRGenericBlockOfTextTextEditorDelegate>{
     __weak id <EQRSettings1TableDelegate> delegate;
 }
 
@@ -25,7 +26,7 @@
 //passwordEntryVC delegate methods
 -(void)passwordEntered:(BOOL)passwordSuccessful;
 
-//EQRGenericTextEditorDelegate methods
+//EQRGenericTextEditorDelegate  and EQRGenericBlockOfTextEditorDelegate methods
 -(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod;
 
 @end

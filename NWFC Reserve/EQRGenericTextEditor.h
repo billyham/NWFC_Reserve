@@ -28,5 +28,6 @@ typedef void (^CompletionBlock) ();
 @protocol EQRGenericTextEditorDelegate <NSObject>
 
 -(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod;
+-(void)cancelByDismissingVC;
 
 @end

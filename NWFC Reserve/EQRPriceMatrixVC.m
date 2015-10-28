@@ -1069,9 +1069,13 @@
     numberEditor.delegate = self;
     numberEditor.modalPresentationStyle = UIModalPresentationFormSheet;
     
+    //current value
+    NSString *currentValueString = self.daysForPrice.text;
+    
+    
     [self presentViewController:numberEditor animated:YES completion:^{
        
-        [numberEditor initalSetupWithTitle:@"Enter Number of Days for Pricing" subTitle:[NSString stringWithFormat:@"For rental happening %@", self.daysForPrice.text] currentText:@"6" returnMethod:@"updateDaysForPrice:"];
+        [numberEditor initalSetupWithTitle:@"Enter Number of Days for Pricing" subTitle:[NSString stringWithFormat:@"For rental happening %@", self.daysForPrice.text] currentText:currentValueString returnMethod:@"updateDaysForPrice:"];
         
     }];
 }
@@ -1119,6 +1123,7 @@
 
 #pragma mark - Generic Number Editor delegate method
 
+//a delegeate method
 -(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod{
     
     SEL returnMethodForReal = NSSelectorFromString(returnMethod);
@@ -1126,6 +1131,16 @@
     [self performSelector:returnMethodForReal withObject:returnText afterDelay:0];
     
 }
+
+//a delegate method
+-(void)cancelByDismissingVC;{
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+}
+
+
 
 -(void)updateDaysForPrice:(NSString *)returnText{
     
@@ -1323,6 +1338,7 @@
         [self calculatePriceStage1];
     }];
 }
+
 
 
 

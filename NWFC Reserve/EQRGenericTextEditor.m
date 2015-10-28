@@ -73,6 +73,12 @@
     [self.delegate returnWithText:self.textViewText.text method:self.returnMethod];
 }
 
+-(IBAction)cancelButton:(id)sender{
+    
+    [self.delegate cancelByDismissingVC];
+    
+}
+
 
 
 

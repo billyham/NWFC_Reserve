@@ -12,8 +12,11 @@
 #import "EQRStaffUserManager.h"
 #import "EQRColors.h"
 #import "EQRSettingsLeftTableVC.h"
+#import "EQRTextElement.h"
+#import "EQRWebData.h"
 
-@interface EQRSettings1TableVC ()
+
+@interface EQRSettings1TableVC () <EQRWebDataDelegate>
 
 //@property (strong, nonatomic) IBOutlet UIView* lockableItemsView;
 @property (strong, nonatomic) IBOutlet UILabel* termString;
@@ -24,6 +27,8 @@
 @property (strong, nonatomic) UIPopoverController* passwordPopover;
 
 @property (strong, nonatomic) EQRGenericTextEditor* genericTextEditor;
+@property (strong, nonatomic) EQRGenericBlockOfTextEditor *myGenericBlockTextEditor;
+@property (strong, nonatomic) NSString *mySignature;
 
 @end
 
@@ -152,14 +157,96 @@
     }];
 }
 
+-(IBAction)tapInEmailSignatureField:(id)sender{
+    
+    EQRGenericBlockOfTextEditor *genericBlockEditor = [[EQRGenericBlockOfTextEditor alloc] initWithNibName:@"EQRGenericBlockOfTextEditor" bundle:nil];
+    genericBlockEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    genericBlockEditor.delegate = self;
+    self.myGenericBlockTextEditor = genericBlockEditor;
+    
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    NSArray *firstArray = @[@"context", @"emailSignature"];
+    NSArray *topArray = @[firstArray];
+    
+    SEL thisSelector = @selector(receiveTextElementForEmailSignature:);
+    
+    [webData queryWithAsync:@"EQGetTextElementsWithContext.php" parameters:topArray class:@"EQRTextElement" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+        
+        if (isLoadingFlagUp){
+            
+//            NSLog(@"%@", self.mySignature);
+            
+            [self tapInEmailSigStage2: self.mySignature];
+        }
+    }];
+    
+    [self presentViewController:self.myGenericBlockTextEditor animated:YES completion:^{
+        
+        
+    }];
+}
 
-#pragma mark - EQRGenericTextEditor delegate methods
+-(void)tapInEmailSigStage2:(NSString *)currentText{
+    
+    [self.myGenericBlockTextEditor initalSetupWithTitle:@"none" subTitle:@"none" currentText:currentText keyboard:nil returnMethod:@"emailSignatureTextDidChange:"];
+}
+
+
+#pragma mark - WebData delegate
+
+
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    
+    //abort if selector is unrecognized, otherwise crash
+    if (![self respondsToSelector:action]){
+        NSLog(@"inside EQRSettings1TableVC, cannot perform selector: %@", NSStringFromSelector(action));
+        return;
+    }
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+    
+}
+
+-(void)receiveTextElementForEmailSignature:(id)currentThing{
+    
+    //____!!!!!!!  manage if there is more than one  !!!!_____
+    
+    if (currentThing){
+        
+        self.mySignature = [(EQRTextElement *)currentThing text];
+    }
+    
+    //do nothing if currentThing is nil, it leaves property as nil
+}
+
+    
+
+
+
+#pragma mark - EQRGenericTextEditor and EQRGenericBlockOfTextEditor delegate methods
+
+//a delegate method
+-(void)cancelByDismissingVC;{
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        //de-select cell
+        NSArray *selectedIndexes = self.tableView.indexPathsForSelectedRows;
+        for (NSIndexPath *indexPath in selectedIndexes){
+            [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+        }
+    }];
+}
 
 -(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod{
     
     self.genericTextEditor.delegate = nil;
     
-    [self.genericTextEditor dismissViewControllerAnimated:YES completion:^{
+    [self dismissViewControllerAnimated:YES completion:^{
         
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -212,6 +299,33 @@
     
     //this reloads the information in the request view
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheDatabaseSource object:nil];
+    
+}
+
+-(void)emailSignatureTextDidChange:(NSString *)returnText{
+    
+    EQRWebData *webData2 = [EQRWebData sharedInstance];
+    webData2.delegateDataFeed = self;
+    NSArray *firstArray = @[@"text", returnText];
+    NSArray *secondArray = @[@"context", @"emailSignature"];
+    NSArray *thirdArray = @[@"distinguishing_id", @"1"];
+    NSArray *topArray = @[firstArray, secondArray, thirdArray];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData2 queryForStringwithAsync:@"EQSetNewTextElement.php" parameters:topArray completion:^(NSString *object) {
+            
+            //string of key_id
+            if (object){
+                
+                NSLog(@"this is the text element's key_id: %@", object);
+                
+            }else{
+                //error handling
+            }
+        }];
+    });
     
 }
 
@@ -402,8 +516,9 @@
         
         if (indexPath.row == 0){   //Email Signature
             
-            //de-select cell
-            [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+            [self tapInEmailSignatureField:nil];
+            
+            
         }
     }
 }

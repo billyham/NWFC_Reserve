@@ -468,7 +468,7 @@
     thirtySpace.width = 30;
     
     //wrap buttons in barbuttonitem
-    UIBarButtonItem* leftBarButton =[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction)];
+    UIBarButtonItem *leftBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(cancelAction)];
     
     //array that shit
     NSArray* arrayOfLeftButtons = [NSArray arrayWithObjects:leftBarButton, nil];
@@ -509,7 +509,7 @@
     //what does this do?
     self.definesPresentationContext = YES;
     
-    
+    // price widget
     EQRPricingWidgetCheckInVC *priceWidget = [[EQRPricingWidgetCheckInVC alloc] initWithNibName:@"EQRPricingWidgetCheckInVC" bundle:nil];
     self.priceWidget = priceWidget;
     CGRect tempRect = CGRectMake(0, 0, self.priceMatrixSubView.frame.size.width, self.priceMatrixSubView.frame.size.height);

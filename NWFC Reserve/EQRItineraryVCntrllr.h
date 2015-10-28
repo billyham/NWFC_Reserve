@@ -17,7 +17,7 @@ typedef NS_OPTIONS(NSUInteger, EQRItineraryFilter){
     EQRReturningOut = (1 << 3),  //00001000
     EQRReturningReturned = (1 << 4),  //00010000
     EQRReturningShelved = (1 << 5),  //00100000
-    EQRFilterAll = 63,
+    EQRFilterAll = 31,  // with shelved, should be 63
     EQRFilterNone = 0
     
 };

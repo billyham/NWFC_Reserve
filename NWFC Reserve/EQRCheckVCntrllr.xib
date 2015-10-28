@@ -189,7 +189,7 @@
                                         <action selector="captureSig:" destination="-1" eventType="touchUpInside" id="Y4n-B6-Kmo"/>
                                     </connections>
                                 </button>
-                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="anC-Zh-lsv" userLabel="pricing widget subview">
+                                <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="anC-Zh-lsv" userLabel="pricing widget subview">
                                     <rect key="frame" x="0.0" y="390" width="177" height="120"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>

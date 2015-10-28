@@ -106,6 +106,14 @@
 
 #pragma mark - EQRGenericTextEditor delegate methods
 
+//a delegate method
+-(void)cancelByDismissingVC;{
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+}
+
 -(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod{
     
     self.genericTextEditor.delegate = nil;

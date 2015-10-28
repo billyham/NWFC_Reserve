@@ -1,28 +1,29 @@
 //
-//  EQRGenericNumberEditor.m
+//  EQRGenericBlockOfTextEditor.m
 //  Gear
 //
-//  Created by Dave Hanagan on 9/29/15.
+//  Created by Ray Smith on 10/27/15.
 //  Copyright © 2015 Ham Again LLC. All rights reserved.
 //
 
-#import "EQRGenericNumberEditor.h"
+#import "EQRGenericBlockOfTextEditor.h"
 
-@interface EQRGenericNumberEditor ()
+@interface EQRGenericBlockOfTextEditor ()
 
 @property (strong, nonatomic) IBOutlet UILabel *titleLabel;
 @property (strong, nonatomic) IBOutlet UILabel *subTitleLabel;
-@property (strong, nonatomic) IBOutlet UITextField *textViewText;
+@property (strong, nonatomic) IBOutlet UITextView *textViewText;
 @property (strong, nonatomic) IBOutlet UIButton *enterButton;
 
 @property (strong, nonatomic) NSString* titleString;
 @property (strong, nonatomic) NSString* subTitleString;
-@property (strong, nonatomic) NSString* textFieldString;
+@property (strong, nonatomic) NSString* textViewString;
+@property (strong, nonatomic) NSString* keyboardPreference;
 @property (strong, nonatomic) NSString* returnMethod;
 
 @end
 
-@implementation EQRGenericNumberEditor
+@implementation EQRGenericBlockOfTextEditor
 
 @synthesize delegate;
 
@@ -30,7 +31,7 @@
     [super viewDidLoad];
     
     self.titleLabel.text = self.titleString;
-    self.textViewText.text = self.textFieldString;
+    self.textViewText.text = self.textViewString;
     
     if (self.subTitleString){
         self.subTitleLabel.text = self.subTitleString;
@@ -40,35 +41,44 @@
     
     [self.textViewText becomeFirstResponder];
     
+    if ([self.keyboardPreference isEqualToString:@"UIKeyboardTypeEmailAddress"]){
+        self.textViewText.keyboardType = UIKeyboardTypeEmailAddress;
+    }else if ([self.keyboardPreference isEqualToString:@"UIKeyboardTypeURL"]){
+        self.textViewText.keyboardType = UIKeyboardTypeURL;
+    }else if ([self.keyboardPreference isEqualToString:@"UIKeyboardTypeNumbersAndPunctuation"]){
+        self.textViewText.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    }else {
+        self.textViewText.keyboardType = UIKeyboardTypeDefault;
+    }
+    
 }
 
 
--(void)initalSetupWithTitle:(NSString *)title subTitle:(NSString *)subtitle currentText:(NSString *)currentText returnMethod:(NSString *)returnMethod{
+-(void)initalSetupWithTitle:(NSString *)title
+                   subTitle:(NSString *)subtitle
+                currentText:(NSString *)currentText
+                   keyboard:(NSString *)keyboard
+               returnMethod:(NSString *)returnMethod{
     
     self.titleString = title;
-    self.textFieldString = currentText;
+    self.textViewString = currentText;
     self.subTitleString = subtitle;
+    self.keyboardPreference = keyboard;
     self.returnMethod = returnMethod;
     
-    self.textViewText.text = self.textFieldString;
+    self.textViewText.text = self.textViewString;
 }
-
 
 -(IBAction)enterButton:(id)sender{
     
     [self.delegate returnWithText:self.textViewText.text method:self.returnMethod];
 }
 
-
 -(IBAction)cancelButton:(id)sender{
     
     [self.delegate cancelByDismissingVC];
     
 }
-
-
-
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

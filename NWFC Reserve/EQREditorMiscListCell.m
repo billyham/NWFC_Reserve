@@ -186,6 +186,16 @@
     
 }
 
+#pragma mark - generic text editor delegate methods
+
+//a delegate method
+-(void)cancelByDismissingVC;{
+    
+    [self.myGenericTextEditor dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+}
+
 -(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod{
     
     self.myGenericTextEditor.delegate = nil;

@@ -27,5 +27,6 @@
 @protocol EQRGenericNumberEditorDelegate <NSObject>
 
 -(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod;
+-(void)cancelByDismissingVC;
 
 @end

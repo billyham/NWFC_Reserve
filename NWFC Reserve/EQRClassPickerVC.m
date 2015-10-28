@@ -57,12 +57,13 @@
     self.mySearchController.hidesNavigationBarDuringPresentation = NO;
     
     //__1.__keep search bar attached to the top of the table view scroll view
-    //    self.mySearchController.searchBar.frame = CGRectMake(self.mySearchController.searchBar.frame.origin.x, self.mySearchController.searchBar.frame.origin.y, self.mySearchController.searchBar.frame.size.width, 44.0);
-    //    self.tableView.tableHeaderView = self.mySearchController.searchBar;
+        self.mySearchController.searchBar.frame = CGRectMake(self.mySearchController.searchBar.frame.origin.x, self.mySearchController.searchBar.frame.origin.y, self.mySearchController.searchBar.frame.size.width, 44.0);
+        self.tableView.tableHeaderView = self.mySearchController.searchBar;
     
     //__2.__keep search above above and outside of table view
-    self.mySearchController.searchBar.frame = CGRectMake(0,0, self.mySearchBarView.frame.size.width, 44.0);
-    [self.mySearchBarView addSubview:self.mySearchController.searchBar];
+//    self.mySearchController.searchBar.frame = CGRectMake(0,0, self.mySearchBarView.frame.size.width, 44.0);
+//    [self.mySearchBarView addSubview:self.mySearchController.searchBar];
+    //___!!! also add 44 points to the tableview's Top constraint constant in the Nib
     
 
     

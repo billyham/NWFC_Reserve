@@ -112,11 +112,24 @@
 
 #pragma mark - EQRGenericTextEditor delegate methods
 
+//a delegate method
+-(void)cancelByDismissingVC;{
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        //de-select cell
+        NSArray *selectedIndexes = self.tableView.indexPathsForSelectedRows;
+        for (NSIndexPath *indexPath in selectedIndexes){
+            [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+        }
+    }];
+}
+
 -(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod{
     
     self.genericTextEditor.delegate = nil;
     
-    [self.genericTextEditor dismissViewControllerAnimated:YES completion:^{
+    [self dismissViewControllerAnimated:YES completion:^{
         
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"

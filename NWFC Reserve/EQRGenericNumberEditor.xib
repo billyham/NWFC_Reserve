@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRGenericNumberEditor">
@@ -61,16 +61,33 @@
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5pf-m0-Dwt">
+                            <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="DKa-dk-TyL"/>
+                                <constraint firstAttribute="height" constant="30" id="nfk-PG-300"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" weight="black" pointSize="20"/>
+                            <state key="normal" title="X">
+                                <color key="titleColor" red="0.68359375" green="0.1107016856" blue="0.13759704240000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="cancelButton:" destination="-1" eventType="touchUpInside" id="syu-e2-cMo"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="E8s-WT-kTU" firstAttribute="centerX" secondItem="g5m-XS-yWc" secondAttribute="centerX" id="0iO-Y9-M3L"/>
                         <constraint firstItem="SHT-OF-wvf" firstAttribute="top" secondItem="UsZ-mW-AoF" secondAttribute="bottom" constant="8" id="DUM-Zj-6fo"/>
                         <constraint firstItem="UsZ-mW-AoF" firstAttribute="centerX" secondItem="g5m-XS-yWc" secondAttribute="centerX" id="E9c-Oc-tPy"/>
+                        <constraint firstItem="5pf-m0-Dwt" firstAttribute="leading" secondItem="g5m-XS-yWc" secondAttribute="leading" id="FfO-XH-CEN"/>
                         <constraint firstItem="3OJ-BI-CQm" firstAttribute="centerX" secondItem="g5m-XS-yWc" secondAttribute="centerX" id="Kaz-EP-njf"/>
                         <constraint firstItem="SHT-OF-wvf" firstAttribute="centerX" secondItem="g5m-XS-yWc" secondAttribute="centerX" id="L2K-TI-FFd"/>
                         <constraint firstItem="3OJ-BI-CQm" firstAttribute="top" secondItem="SHT-OF-wvf" secondAttribute="bottom" constant="23" id="QfM-l2-brz"/>
                         <constraint firstItem="E8s-WT-kTU" firstAttribute="top" secondItem="3OJ-BI-CQm" secondAttribute="bottom" constant="19" id="bxf-ZK-qeb"/>
+                        <constraint firstItem="5pf-m0-Dwt" firstAttribute="top" secondItem="g5m-XS-yWc" secondAttribute="top" id="g0g-2M-feZ"/>
                         <constraint firstItem="UsZ-mW-AoF" firstAttribute="top" secondItem="g5m-XS-yWc" secondAttribute="top" constant="23" id="vVi-P1-yAL"/>
                     </constraints>
                 </view>
