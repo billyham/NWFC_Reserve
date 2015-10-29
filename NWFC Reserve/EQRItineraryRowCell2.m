@@ -24,12 +24,6 @@
 
 -(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem{
     
-    //an existing contentVC may already exist
-    //______!!!!!!  THIS DOES NOTHING   !!!!!_____
-//    self.contentVC.bottomOfMainSubviewConstraint = nil;
-//    self.contentVC = nil;
-    //______
-    
     if (requestItem.markedForReturn == YES){
         
         EQRItineraryCellContent2VC *content = [[EQRItineraryCellContent2VC alloc] initWithNibName:@"EQRItineraryCellContentReturning1" bundle:nil];
@@ -107,10 +101,22 @@
     
     
     //______add the itinerary view to the cell's content view__________
+    // starting contentVC size needs to adhere to the current size of the cell (because it has a collapsed version)
+    // otherwise it defaults to the NIB size
+    self.contentVC.view.frame = CGRectMake(0, 0, self.contentView.frame.size.width, self.contentView.frame.size.height);
     [self.contentView addSubview:self.contentVC.view];
     
     //make bg clear
     self.backgroundColor = [UIColor clearColor];
+    
+    //assess if it is in the collapsed view or not
+    if (requestItem.shouldCollapseCell){
+        
+        self.contentVC.isCollapsed = YES;
+        
+        self.contentVC.topOfTextConstraint.constant = -8;
+        
+    }
     
     
     

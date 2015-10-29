@@ -16,7 +16,8 @@
 
 @property (strong, nonatomic) UIColor* myAssignedColor;
 @property (strong, nonatomic) IBOutlet UIButton *detailsButton;
-@property bool isCollapsed;
+
+
 
 
 //@property (strong, nonatomic) IBOutlet UIView *button1Background;
@@ -153,7 +154,8 @@
 
 -(void)animateCollapseOfCell{
     
-    self.bottomOfMainSubviewConstraint.constant = 60;
+    self.topOfTextConstraint.constant = -8;
+//    self.bottomOfMainSubviewConstraint.constant = 60;
     
     [UIView animateWithDuration:0.2 animations:^{
         
@@ -162,13 +164,17 @@
     } completion:^(BOOL finished) {
         
         [self.delegate collapseTapped:self.requestKeyId isReturning:self.markedForReturning];
+        
+//        self.bottomOfMainSubviewConstraint.constant = 0;
+
 
     }];
 }
 
 -(void)animateExpansionOfCell{
     
-    self.bottomOfMainSubviewConstraint.constant = 0;
+    self.topOfTextConstraint.constant = 0;
+//    self.bottomOfMainSubviewConstraint.constant = -60;
 
     [UIView animateWithDuration:0.2 animations:^{
         
@@ -177,6 +183,8 @@
     } completion:^(BOOL finished) {
         
         [self.delegate expandTapped:self.requestKeyId isReturning:self.markedForReturning];
+        
+//        self.bottomOfMainSubviewConstraint.constant = 0;
         
     }];
     

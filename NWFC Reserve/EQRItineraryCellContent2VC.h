@@ -21,6 +21,7 @@
 @property NSUInteger myStatus;
 @property (strong, nonatomic) NSString* requestKeyId;
 
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *topOfTextConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *bottomOfMainSubviewConstraint;
 
 @property (strong, nonatomic) IBOutlet UIView *subViewFullSize;
@@ -42,6 +43,8 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *button1Status;
 @property (strong, nonatomic) IBOutlet UILabel *button2Status;
+
+@property bool isCollapsed;
 
 
 //button methods

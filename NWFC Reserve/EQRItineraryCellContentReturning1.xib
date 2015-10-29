@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRItineraryCellContent2VC">
             <connections>
                 <outlet property="arrow" destination="AlE-dz-nAW" id="naI-Oc-VQg"/>
                 <outlet property="bigArrow1" destination="PCI-XI-Uj0" id="fEF-rf-RSe"/>
+                <outlet property="bottomOfMainSubviewConstraint" destination="txA-LH-Rzr" id="nx6-n0-kH9"/>
                 <outlet property="button1" destination="ci9-GK-rLG" id="LtO-pd-OyM"/>
                 <outlet property="button1Status" destination="6UY-6h-vBr" id="NKg-OE-u1e"/>
                 <outlet property="detailsButton" destination="xMu-dd-Ydz" id="iMY-Pb-SX6"/>
@@ -18,6 +19,7 @@
                 <outlet property="requestTime" destination="QkH-mM-nF2" id="0wO-oI-Pnv"/>
                 <outlet property="subViewFullSize" destination="fOb-BU-drW" id="rpq-6f-Pft"/>
                 <outlet property="textOverButton1" destination="hR9-yl-NU7" id="9eI-Yr-pDC"/>
+                <outlet property="topOfTextConstraint" destination="cr8-W4-03f" id="Atx-4u-hkM"/>
                 <outlet property="view" destination="iN0-l3-epB" id="1om-Jn-nEx"/>
             </connections>
         </placeholder>

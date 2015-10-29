@@ -1681,6 +1681,9 @@
         [view removeFromSuperview];
     }
     
+    //content view potentially has the wrong size
+    cell.contentView.frame = CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height);
+    
     //and reset the cell's background color...
     cell.backgroundColor = [UIColor whiteColor];
     
@@ -1735,6 +1738,7 @@
 //     NSLog(@"didEndDisplayCell for indexPathRow: %lu", (long)indexPath.row);
     
     self.freezeOnInsertionsFlag = NO;
+    
 }
 
 
