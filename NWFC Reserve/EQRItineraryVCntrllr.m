@@ -1598,16 +1598,30 @@
         
         if (([requestItem.key_id isEqualToString:requestKeyId]) && (requestItem.markedForReturn == markedForReturning)){
             
-            //mark property
-            requestItem.shouldCollapseCell = YES;
+            if (requestItem.markedForReturn){
+                
+                requestItem.shouldCollapseReturningCell = YES;
+                
+            }else{
+                
+                NSLog(@"is seeting to shouldCollapseGoingCell to yes");
+                requestItem.shouldCollapseGoingCell = YES;
+            }
             
-            //reload the cell
-//            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
-//            NSArray *tempArray = @[indexPath];
-//            [self.myMasterItineraryCollection reloadItemsAtIndexPaths:tempArray];
+            UICollectionViewFlowLayout *thisFlowLayout = [[UICollectionViewFlowLayout alloc] init];
+            //min spacing size for cells is 0, min spacing size for lines is 2
+            thisFlowLayout.minimumLineSpacing = 2.0;
+            //section inset at top is 10. All other insets are 0.
+            UIEdgeInsets thisInsets = UIEdgeInsetsMake(10.0, 0, 0, 0);
+            thisFlowLayout.sectionInset = thisInsets;
             
-            //reload layout?
-            [self.myMasterItineraryCollection.collectionViewLayout invalidateLayout];
+            //_____you could instead call performBatchUpdates on the collectionView here
+            //_____but this way you can specify the animation duration
+            [UIView animateWithDuration: 0.15 animations:^{
+                
+                [self.myMasterItineraryCollection setCollectionViewLayout:thisFlowLayout animated:YES];
+                
+            }];
             
             *stop = YES;
         }
@@ -1620,16 +1634,29 @@
         
         if (([requestItem.key_id isEqualToString:requestKeyId]) && (requestItem.markedForReturn == markedForReturning)){
             
-            //mark property
-            requestItem.shouldCollapseCell = NO;
+            if (requestItem.markedForReturn){
+                
+                requestItem.shouldCollapseReturningCell = NO;
+                
+            }else{
+                
+                requestItem.shouldCollapseGoingCell = NO;
+            }
             
-            //reload the cell
-//            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx inSection:0];
-//            NSArray *tempArray = @[indexPath];
-//            [self.myMasterItineraryCollection reloadItemsAtIndexPaths:tempArray];
+            UICollectionViewFlowLayout *thisFlowLayout = [[UICollectionViewFlowLayout alloc] init];
+            //min spacing size for cells is 0, min spacing size for lines is 2
+            thisFlowLayout.minimumLineSpacing = 2.0;
+            //section inset at top is 10. All other insets are 0.
+            UIEdgeInsets thisInsets = UIEdgeInsetsMake(10.0, 0, 0, 0);
+            thisFlowLayout.sectionInset = thisInsets;
             
-            //reload layout?
-            [self.myMasterItineraryCollection.collectionViewLayout invalidateLayout];
+            //_____you could instead call performBatchUpdates on the collectionView here
+            //_____but this way you can specify the animation duration
+            [UIView animateWithDuration: 0.15 animations:^{
+                
+                [self.myMasterItineraryCollection setCollectionViewLayout:thisFlowLayout animated:YES];
+                
+            }];
             
             *stop = YES;
         }
@@ -1750,12 +1777,15 @@
     
     //if cell button was tapped to collapse
     //or if cell requestObject has been completed
-    if ([(EQRScheduleRequestItem *)[self.arrayOfScheduleRequests objectAtIndex:indexPath.row] shouldCollapseCell] ){
-        
+    EQRScheduleRequestItem *tempRequestItem = (EQRScheduleRequestItem *)[self.arrayOfScheduleRequests objectAtIndex:indexPath.row];
+    
+    if (tempRequestItem.shouldCollapseReturningCell && tempRequestItem.markedForReturn){
         return  CGSizeMake(668.0, 40);
-        
+    }else if (tempRequestItem.shouldCollapseGoingCell && !tempRequestItem.markedForReturn){
+//        NSLog(@"is making size of going cell");
+        return  CGSizeMake(668.0, 40);
     }else{
-        
+//        NSLog(@"is making standard large size");
         return CGSizeMake(668.0, 100.0);
     }
 }

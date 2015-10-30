@@ -110,12 +110,16 @@
     self.backgroundColor = [UIColor clearColor];
     
     //assess if it is in the collapsed view or not
-    if (requestItem.shouldCollapseCell){
+    if (requestItem.markedForReturn && requestItem.shouldCollapseReturningCell){
         
         self.contentVC.isCollapsed = YES;
-        
         self.contentVC.topOfTextConstraint.constant = -8;
+    }
+    
+    if (!requestItem.markedForReturn && requestItem.shouldCollapseGoingCell){
         
+        self.contentVC.isCollapsed = YES;
+        self.contentVC.topOfTextConstraint.constant = -8;
     }
     
     

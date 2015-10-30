@@ -80,7 +80,7 @@
                                     </connections>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Check In" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hR9-yl-NU7">
-                                    <rect key="frame" x="60.5" y="29" width="49.5" height="34"/>
+                                    <rect key="frame" x="60" y="29" width="49.5" height="34"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="34" id="cFK-ve-hxO"/>
                                     </constraints>
@@ -117,32 +117,53 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ibO-uS-uPX" userLabel="text">
                             <rect key="frame" x="75" y="0.0" width="334" height="100"/>
                             <subviews>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Student" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tLG-3t-Lif">
-                                    <rect key="frame" x="0.0" y="43" width="221" height="21"/>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Student" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tLG-3t-Lif">
+                                    <rect key="frame" x="0.0" y="43" width="51" height="21"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="21" id="xMh-Ma-ebk"/>
+                                    </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Digital Movie Making for 6-8 Starting July 28, 2015 at 9:15 AM" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="17l-ND-zyU">
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Digital Movie Making for 6-8 Starting July 28, 2015 at 9:15 AM" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="17l-ND-zyU">
                                     <rect key="frame" x="0.0" y="61" width="210" height="35"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="210" id="HN0-Ku-ux7"/>
+                                        <constraint firstAttribute="height" constant="35" id="f1Y-SF-EZh"/>
+                                    </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="8:30 PM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QkH-mM-nF2">
-                                    <rect key="frame" x="0.0" y="8" width="122" height="21"/>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8:30 PM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QkH-mM-nF2">
+                                    <rect key="frame" x="0.0" y="8" width="76" height="21"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="21" id="TR7-vS-noG"/>
+                                    </constraints>
                                     <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="First and Last Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M92-fh-eDT">
-                                    <rect key="frame" x="0.0" y="28" width="221" height="21"/>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First and Last Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M92-fh-eDT">
+                                    <rect key="frame" x="0.0" y="28" width="137" height="21"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="21" id="0xq-1I-ZFZ"/>
+                                    </constraints>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
                             <constraints>
                                 <constraint firstAttribute="width" constant="334" id="H2b-Vh-5Qd"/>
+                                <constraint firstItem="M92-fh-eDT" firstAttribute="top" secondItem="ibO-uS-uPX" secondAttribute="top" constant="28" id="KXA-SS-64h"/>
+                                <constraint firstItem="M92-fh-eDT" firstAttribute="leading" secondItem="ibO-uS-uPX" secondAttribute="leading" id="Tq9-DX-qid"/>
+                                <constraint firstItem="17l-ND-zyU" firstAttribute="leading" secondItem="ibO-uS-uPX" secondAttribute="leading" id="UNF-7I-jXp"/>
+                                <constraint firstItem="tLG-3t-Lif" firstAttribute="leading" secondItem="ibO-uS-uPX" secondAttribute="leading" id="a0R-RZ-eNj"/>
+                                <constraint firstItem="17l-ND-zyU" firstAttribute="top" secondItem="M92-fh-eDT" secondAttribute="bottom" constant="12" id="ffH-j2-YGI"/>
+                                <constraint firstItem="tLG-3t-Lif" firstAttribute="top" secondItem="QkH-mM-nF2" secondAttribute="bottom" constant="14" id="hoj-QK-DcQ"/>
                                 <constraint firstAttribute="height" constant="100" id="kwf-r4-nHe"/>
+                                <constraint firstItem="QkH-mM-nF2" firstAttribute="leading" secondItem="ibO-uS-uPX" secondAttribute="leading" id="s85-Bc-zjO"/>
+                                <constraint firstItem="QkH-mM-nF2" firstAttribute="top" secondItem="ibO-uS-uPX" secondAttribute="top" constant="8" id="ydC-ug-3E8"/>
                             </constraints>
                         </view>
                     </subviews>

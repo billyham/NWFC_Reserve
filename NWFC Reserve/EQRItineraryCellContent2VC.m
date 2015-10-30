@@ -38,6 +38,10 @@
     //receive complete or incomplete for this rows individual items editor
     [nc addObserver:self selector:@selector(dismissedCheckInOut:) name:EQRMarkItineraryAsCompleteOrNot object:nil];
     
+    //add tap gesture to expand cell when it's collapsed
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandCellFromTapGesture)];
+    [self.view addGestureRecognizer:tapGesture];
+    
     
     
 
@@ -146,37 +150,41 @@
     
 }
 
-//-(IBAction)expandCell:(id)sender{
-//    
-//    self.isCollapsed = NO;
-//    
-//}
+-(void)expandCellFromTapGesture{
+    
+    if (self.isCollapsed){
+        
+        self.isCollapsed = NO;
+
+        [self animateExpansionOfCell];
+    }
+}
 
 -(void)animateCollapseOfCell{
     
     self.topOfTextConstraint.constant = -8;
 //    self.bottomOfMainSubviewConstraint.constant = 60;
     
-    [UIView animateWithDuration:0.2 animations:^{
+    [UIView animateWithDuration:0.15 animations:^{
         
         [self.view layoutIfNeeded];
         
     } completion:^(BOOL finished) {
-        
+    
         [self.delegate collapseTapped:self.requestKeyId isReturning:self.markedForReturning];
-        
+
 //        self.bottomOfMainSubviewConstraint.constant = 0;
-
-
     }];
+
+
 }
 
 -(void)animateExpansionOfCell{
     
     self.topOfTextConstraint.constant = 0;
-//    self.bottomOfMainSubviewConstraint.constant = -60;
+    self.bottomOfMainSubviewConstraint.constant = -60;
 
-    [UIView animateWithDuration:0.2 animations:^{
+    [UIView animateWithDuration:0.15 animations:^{
         
         [self.view layoutIfNeeded];
         
@@ -184,7 +192,7 @@
         
         [self.delegate expandTapped:self.requestKeyId isReturning:self.markedForReturning];
         
-//        self.bottomOfMainSubviewConstraint.constant = 0;
+        self.bottomOfMainSubviewConstraint.constant = 0;
         
     }];
     
