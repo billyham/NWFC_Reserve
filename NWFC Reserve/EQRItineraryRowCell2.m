@@ -32,6 +32,9 @@
     }else{
         
         EQRItineraryCellContent2VC *content = [[EQRItineraryCellContent2VC alloc] initWithNibName:@"EQRItineraryCellContentGoing2" bundle:nil];
+        
+//        EQRItineraryCellContent2VC *content = [[EQRItineraryCellContent2VC alloc] initWithNibName:@"EQRItineraryCellContentReturning1" bundle:nil];
+        
         self.contentVC = content;
     }
     

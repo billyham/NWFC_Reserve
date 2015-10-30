@@ -163,7 +163,7 @@
 -(void)animateCollapseOfCell{
     
     self.topOfTextConstraint.constant = -8;
-//    self.bottomOfMainSubviewConstraint.constant = 60;
+    self.bottomOfMainSubviewConstraint.constant = 60;
     
     [UIView animateWithDuration:0.15 animations:^{
         
@@ -173,7 +173,7 @@
     
         [self.delegate collapseTapped:self.requestKeyId isReturning:self.markedForReturning];
 
-//        self.bottomOfMainSubviewConstraint.constant = 0;
+        self.bottomOfMainSubviewConstraint.constant = 0;
     }];
 
 

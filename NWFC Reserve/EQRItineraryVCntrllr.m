@@ -1615,13 +1615,34 @@
             UIEdgeInsets thisInsets = UIEdgeInsetsMake(10.0, 0, 0, 0);
             thisFlowLayout.sectionInset = thisInsets;
             
+            EQRItineraryRowCell2 *cell = (EQRItineraryRowCell2 *)[self.myMasterItineraryCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]];
+            
             //_____you could instead call performBatchUpdates on the collectionView here
             //_____but this way you can specify the animation duration
-            [UIView animateWithDuration: 0.15 animations:^{
+            
+//            [self.myMasterItineraryCollection performBatchUpdates:^{
+            
                 
-                [self.myMasterItineraryCollection setCollectionViewLayout:thisFlowLayout animated:YES];
+                [UIView animateWithDuration: 0.15 animations:^{
                 
-            }];
+                    [self.myMasterItineraryCollection setCollectionViewLayout:thisFlowLayout animated:YES];
+                    
+
+                    
+                    
+                } completion:^(BOOL finished) {
+                    
+                    cell.contentVC.view.frame = CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height);
+
+                    
+                }];
+            
+//            } completion:^(BOOL finished) {
+//                
+//                
+//            }];
+            
+
             
             *stop = YES;
         }
@@ -1650,11 +1671,19 @@
             UIEdgeInsets thisInsets = UIEdgeInsetsMake(10.0, 0, 0, 0);
             thisFlowLayout.sectionInset = thisInsets;
             
+            EQRItineraryRowCell2 *cell = (EQRItineraryRowCell2 *)[self.myMasterItineraryCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]];
+            
+            
             //_____you could instead call performBatchUpdates on the collectionView here
             //_____but this way you can specify the animation duration
             [UIView animateWithDuration: 0.15 animations:^{
                 
                 [self.myMasterItineraryCollection setCollectionViewLayout:thisFlowLayout animated:YES];
+                
+            }completion:^(BOOL finished) {
+                
+                cell.contentVC.view.frame = CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height);
+                
                 
             }];
             

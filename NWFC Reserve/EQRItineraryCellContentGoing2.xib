@@ -93,7 +93,7 @@
                                     </connections>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Prep" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OSc-DU-y7Z">
-                                    <rect key="frame" x="72" y="32" width="26.5" height="21"/>
+                                    <rect key="frame" x="72" y="32" width="27" height="21"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="21" id="x6l-Sp-5rR"/>
                                     </constraints>
@@ -162,8 +162,11 @@
                                 <constraint firstAttribute="height" constant="100" id="goV-hB-f3u"/>
                             </constraints>
                         </view>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q79-gd-ZYH">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q79-gd-ZYH">
                             <rect key="frame" x="604" y="0.0" width="60" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="5Ra-MU-rXN"/>
+                            </constraints>
                             <state key="normal" title="Collapse"/>
                             <connections>
                                 <action selector="collapseCell:" destination="-1" eventType="touchUpInside" id="wFp-3H-kFV"/>
@@ -231,6 +234,7 @@
                         <constraint firstItem="hbW-pI-dMf" firstAttribute="centerY" secondItem="Xzt-J1-qq5" secondAttribute="centerY" id="Dlu-AK-kUd"/>
                         <constraint firstItem="m2f-gz-Haj" firstAttribute="leading" secondItem="vxs-YL-3e5" secondAttribute="trailing" constant="9" id="MP6-Sp-qdO"/>
                         <constraint firstItem="bF4-rv-orC" firstAttribute="top" secondItem="Xzt-J1-qq5" secondAttribute="top" id="OuA-VP-udh"/>
+                        <constraint firstAttribute="trailing" secondItem="Q79-gd-ZYH" secondAttribute="trailing" constant="4" id="R4l-5p-7NE"/>
                         <constraint firstItem="X3M-oS-88R" firstAttribute="centerY" secondItem="Xzt-J1-qq5" secondAttribute="centerY" id="SKj-iN-xAY"/>
                         <constraint firstItem="vxs-YL-3e5" firstAttribute="top" secondItem="Xzt-J1-qq5" secondAttribute="top" constant="69" id="Vxe-6r-rPA"/>
                         <constraint firstItem="bF4-rv-orC" firstAttribute="leading" secondItem="Xzt-J1-qq5" secondAttribute="leading" id="WFG-CW-0Yn"/>
@@ -240,6 +244,7 @@
                         <constraint firstItem="hbW-pI-dMf" firstAttribute="leading" secondItem="Prj-BL-fma" secondAttribute="trailing" constant="202" id="iX8-KN-FVh"/>
                         <constraint firstItem="Prj-BL-fma" firstAttribute="leading" secondItem="Xzt-J1-qq5" secondAttribute="leading" id="kxB-nA-QSO"/>
                         <constraint firstItem="GTc-B7-HuR" firstAttribute="leading" secondItem="Xzt-J1-qq5" secondAttribute="leading" id="qE9-WJ-yaD"/>
+                        <constraint firstItem="Q79-gd-ZYH" firstAttribute="top" secondItem="Xzt-J1-qq5" secondAttribute="top" id="uVS-py-gwy"/>
                         <constraint firstAttribute="bottom" secondItem="bF4-rv-orC" secondAttribute="bottom" id="wxe-vD-RF8"/>
                     </constraints>
                 </view>
