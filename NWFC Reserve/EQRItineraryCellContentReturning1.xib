@@ -12,6 +12,7 @@
                 <outlet property="bottomOfMainSubviewConstraint" destination="txA-LH-Rzr" id="nx6-n0-kH9"/>
                 <outlet property="button1" destination="ci9-GK-rLG" id="LtO-pd-OyM"/>
                 <outlet property="button1Status" destination="6UY-6h-vBr" id="NKg-OE-u1e"/>
+                <outlet property="collapseButton" destination="MOv-xQ-9zi" id="YP7-37-vVv"/>
                 <outlet property="detailsButton" destination="xMu-dd-Ydz" id="iMY-Pb-SX6"/>
                 <outlet property="requestClass" destination="17l-ND-zyU" id="gvF-bB-fn0"/>
                 <outlet property="requestName" destination="M92-fh-eDT" id="eKe-lu-aMj"/>
@@ -19,6 +20,7 @@
                 <outlet property="requestTime" destination="QkH-mM-nF2" id="0wO-oI-Pnv"/>
                 <outlet property="subViewFullSize" destination="fOb-BU-drW" id="rpq-6f-Pft"/>
                 <outlet property="textOverButton1" destination="hR9-yl-NU7" id="9eI-Yr-pDC"/>
+                <outlet property="topOfButton1Constraint" destination="EDQ-0d-HDF" id="GOr-Gf-03r"/>
                 <outlet property="topOfTextConstraint" destination="cr8-W4-03f" id="Atx-4u-hkM"/>
                 <outlet property="view" destination="iN0-l3-epB" id="1om-Jn-nEx"/>
             </connections>
@@ -44,12 +46,13 @@
                                 <constraint firstAttribute="height" constant="67" id="cpi-qf-dnN"/>
                             </constraints>
                         </imageView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MOv-xQ-9zi">
-                            <rect key="frame" x="589" y="0.0" width="60" height="30"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MOv-xQ-9zi">
+                            <rect key="frame" x="605" y="0.0" width="44" height="44"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="30" id="RZg-G8-WhX"/>
+                                <constraint firstAttribute="width" constant="44" id="NYO-VV-KgK"/>
+                                <constraint firstAttribute="height" constant="44" id="RZg-G8-WhX"/>
                             </constraints>
-                            <state key="normal" title="Collapse"/>
+                            <state key="normal" image="uparrow.png"/>
                             <connections>
                                 <action selector="collapseCell:" destination="-1" eventType="touchUpInside" id="DSP-tJ-VA8"/>
                             </connections>
@@ -58,7 +61,7 @@
                             <rect key="frame" x="386" y="0.0" width="170" height="100"/>
                             <subviews>
                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="105 of 109 items not Checked Out" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6UY-6h-vBr">
-                                    <rect key="frame" x="0.0" y="80" width="170" height="21"/>
+                                    <rect key="frame" x="0.0" y="79" width="170" height="21"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="21" id="1T4-qG-8zb"/>
                                     </constraints>
@@ -67,9 +70,9 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ci9-GK-rLG">
-                                    <rect key="frame" x="24" y="9" width="122" height="69"/>
+                                    <rect key="frame" x="48" y="8" width="74" height="69"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" constant="122" id="8Ly-bT-Rdk"/>
+                                        <constraint firstAttribute="width" constant="74" id="8Ly-bT-Rdk"/>
                                         <constraint firstAttribute="height" constant="69" id="LFf-Wi-T1x"/>
                                     </constraints>
                                     <state key="normal" image="dottedCircle.png">
@@ -80,7 +83,7 @@
                                     </connections>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Check In" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hR9-yl-NU7">
-                                    <rect key="frame" x="60" y="29" width="50" height="34"/>
+                                    <rect key="frame" x="60" y="29" width="49.5" height="34"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="34" id="cFK-ve-hxO"/>
                                     </constraints>
@@ -92,7 +95,7 @@
                             <constraints>
                                 <constraint firstItem="hR9-yl-NU7" firstAttribute="top" secondItem="Rpc-5Z-9bR" secondAttribute="top" constant="29" id="9WS-yg-b89"/>
                                 <constraint firstItem="hR9-yl-NU7" firstAttribute="centerX" secondItem="Rpc-5Z-9bR" secondAttribute="centerX" id="Bk2-Mz-cuK"/>
-                                <constraint firstItem="ci9-GK-rLG" firstAttribute="top" secondItem="Rpc-5Z-9bR" secondAttribute="top" constant="9" id="EDQ-0d-HDF"/>
+                                <constraint firstItem="ci9-GK-rLG" firstAttribute="top" secondItem="Rpc-5Z-9bR" secondAttribute="top" constant="8" id="EDQ-0d-HDF"/>
                                 <constraint firstAttribute="trailing" secondItem="6UY-6h-vBr" secondAttribute="trailing" id="EQX-kv-fbz"/>
                                 <constraint firstItem="6UY-6h-vBr" firstAttribute="top" secondItem="ci9-GK-rLG" secondAttribute="bottom" constant="2" id="po0-2f-kF0"/>
                                 <constraint firstAttribute="width" constant="170" id="sp6-Io-85i"/>
@@ -208,5 +211,6 @@
         <image name="arrowsPointLeft.png" width="71" height="38"/>
         <image name="bigArrowPointsLeftSoloAlt.png" width="392" height="98"/>
         <image name="dottedCircle.png" width="67" height="67"/>
+        <image name="uparrow.png" width="18" height="19"/>
     </resources>
 </document>

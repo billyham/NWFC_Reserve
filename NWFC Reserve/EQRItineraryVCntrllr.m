@@ -1476,6 +1476,19 @@
     [(EQRScheduleRequestItem *)currentThing setUnTickedJoinCountForButton1:0];
     [(EQRScheduleRequestItem *)currentThing setUnTickedJoinCountForButton2:0];
     
+    //evaluate if cell should be collapsed
+    if ([(EQRScheduleRequestItem *)currentThing markedForReturn] == YES){
+        
+        if ([(EQRScheduleRequestItem *)currentThing staff_checkin_date]){
+            [(EQRScheduleRequestItem *)currentThing setShouldCollapseReturningCell:YES];
+        }
+    }else{
+        
+        if ([(EQRScheduleRequestItem *)currentThing staff_checkout_date]){
+            [(EQRScheduleRequestItem *)currentThing setShouldCollapseGoingCell:YES];
+        }
+    }
+    
     [self.arrayOfScheduleRequests addObject:currentThing];
     
     //sort by request date begin (...and end)
@@ -1594,7 +1607,16 @@
 
 -(void)collapseTapped:(NSString *) requestKeyId isReturning:(BOOL)markedForReturning{
     
-    [self.arrayOfScheduleRequests enumerateObjectsUsingBlock:^(EQRScheduleRequestItem *requestItem, NSUInteger idx, BOOL * _Nonnull stop) {
+    //test if a filter has been applied
+    NSArray *variableArray;
+    
+    if (self.currentFilterBitmask == EQRFilterAll){
+        variableArray = self.arrayOfScheduleRequests;
+    } else {  //a filter has been applied
+        variableArray = self.filteredArrayOfScheduleRequests;
+    }
+    
+    [variableArray enumerateObjectsUsingBlock:^(EQRScheduleRequestItem *requestItem, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if (([requestItem.key_id isEqualToString:requestKeyId]) && (requestItem.markedForReturn == markedForReturning)){
             
@@ -1604,7 +1626,6 @@
                 
             }else{
                 
-                NSLog(@"is seeting to shouldCollapseGoingCell to yes");
                 requestItem.shouldCollapseGoingCell = YES;
             }
             
@@ -1615,43 +1636,32 @@
             UIEdgeInsets thisInsets = UIEdgeInsetsMake(10.0, 0, 0, 0);
             thisFlowLayout.sectionInset = thisInsets;
             
-            EQRItineraryRowCell2 *cell = (EQRItineraryRowCell2 *)[self.myMasterItineraryCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]];
-            
             //_____you could instead call performBatchUpdates on the collectionView here
             //_____but this way you can specify the animation duration
             
-//            [self.myMasterItineraryCollection performBatchUpdates:^{
-            
+            [UIView animateWithDuration: 0.15 animations:^{
                 
-                [UIView animateWithDuration: 0.15 animations:^{
-                
-                    [self.myMasterItineraryCollection setCollectionViewLayout:thisFlowLayout animated:YES];
-                    
-
-                    
-                    
-                } completion:^(BOOL finished) {
-                    
-                    cell.contentVC.view.frame = CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height);
-
-                    
-                }];
-            
-//            } completion:^(BOOL finished) {
-//                
-//                
-//            }];
-            
-
+                [self.myMasterItineraryCollection setCollectionViewLayout:thisFlowLayout animated:YES];
+            }];
             
             *stop = YES;
+            return;
         }
     }];
 }
 
 -(void)expandTapped:(NSString *) requestKeyId isReturning:(BOOL)markedForReturning{
     
-    [self.arrayOfScheduleRequests enumerateObjectsUsingBlock:^(EQRScheduleRequestItem *requestItem, NSUInteger idx, BOOL * _Nonnull stop) {
+    //test if a filter has been applied
+    NSArray *variableArray;
+    
+    if (self.currentFilterBitmask == EQRFilterAll){
+        variableArray = self.arrayOfScheduleRequests;
+    } else {  //a filter has been applied
+        variableArray = self.filteredArrayOfScheduleRequests;
+    }
+    
+    [variableArray enumerateObjectsUsingBlock:^(EQRScheduleRequestItem *requestItem, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if (([requestItem.key_id isEqualToString:requestKeyId]) && (requestItem.markedForReturn == markedForReturning)){
             
@@ -1670,27 +1680,160 @@
             //section inset at top is 10. All other insets are 0.
             UIEdgeInsets thisInsets = UIEdgeInsetsMake(10.0, 0, 0, 0);
             thisFlowLayout.sectionInset = thisInsets;
-            
-            EQRItineraryRowCell2 *cell = (EQRItineraryRowCell2 *)[self.myMasterItineraryCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]];
-            
-            
+
             //_____you could instead call performBatchUpdates on the collectionView here
             //_____but this way you can specify the animation duration
             [UIView animateWithDuration: 0.15 animations:^{
                 
                 [self.myMasterItineraryCollection setCollectionViewLayout:thisFlowLayout animated:YES];
-                
-            }completion:^(BOOL finished) {
-                
-                cell.contentVC.view.frame = CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height);
-                
-                
             }];
             
             *stop = YES;
+            return;
         }
     }];
 }
+
+
+-(IBAction)collapseAllCells:(id)sender{
+    
+    //test if a filter has been applied
+    NSArray *variableArray;
+    
+    if (self.currentFilterBitmask == EQRFilterAll){
+        variableArray = self.arrayOfScheduleRequests;
+    } else {  //a filter has been applied
+        variableArray = self.filteredArrayOfScheduleRequests;
+    }
+    
+    [variableArray enumerateObjectsUsingBlock:^(EQRScheduleRequestItem *requestItem, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        //skip this request item if the cell is already expanded...
+        if (requestItem.shouldCollapseReturningCell && (requestItem.markedForReturn == YES)){
+            return;
+        }
+        if (requestItem.shouldCollapseGoingCell && (requestItem.markedForReturn == NO)){
+            return;
+        }
+        
+        //get the cell
+        EQRItineraryCellContent2VC *cellContentVC = (EQRItineraryCellContent2VC *)[(EQRItineraryRowCell2 *)[self.myMasterItineraryCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]] contentVC];
+        cellContentVC.isCollapsed = YES;
+        cellContentVC.collapseButton.alpha = 0.0;
+        cellContentVC.collapseButton.hidden = YES;
+        cellContentVC.textOverButton1.alpha = 0.0;
+        cellContentVC.textOverButton2.alpha = 0.0;
+        [cellContentVC.button1 setTransform:CGAffineTransformMakeScale(.5, .5)];
+        [cellContentVC.button2 setTransform:CGAffineTransformMakeScale(.5, .5)];
+        cellContentVC.topOfButton1Constraint.constant = 16;
+        cellContentVC.topOfButton2Constraint.constant = 16;
+        cellContentVC.topOfTextConstraint.constant = -8;
+        //cellContentVC.bottomOfMainSubviewConstraint.constant = 60;
+
+
+        
+        if (requestItem.markedForReturn){
+            
+            requestItem.shouldCollapseReturningCell = YES;
+            
+        }else{
+            
+            requestItem.shouldCollapseGoingCell = YES;
+        }
+        
+
+    }];
+    
+    [self.myMasterItineraryCollection performBatchUpdates:^{
+        
+    } completion:^(BOOL finished) {
+        
+//        cellContentVC.bottomOfMainSubviewConstraint.constant = 0;
+        
+        UICollectionViewFlowLayout *thisFlowLayout = [[UICollectionViewFlowLayout alloc] init];
+        //min spacing size for cells is 0, min spacing size for lines is 2
+        thisFlowLayout.minimumLineSpacing = 2.0;
+        //section inset at top is 10. All other insets are 0.
+        UIEdgeInsets thisInsets = UIEdgeInsetsMake(10.0, 0, 0, 0);
+        thisFlowLayout.sectionInset = thisInsets;
+        
+        [UIView animateWithDuration: 0.15 animations:^{
+            
+            [self.myMasterItineraryCollection setCollectionViewLayout:thisFlowLayout animated:YES];
+        }];
+    }];
+}
+
+-(IBAction)expandAllCells:(id)sender{
+    
+    //test if a filter has been applied
+    NSArray *variableArray;
+    
+    if (self.currentFilterBitmask == EQRFilterAll){
+        variableArray = self.arrayOfScheduleRequests;
+    } else {  //a filter has been applied
+        variableArray = self.filteredArrayOfScheduleRequests;
+    }
+    
+    [variableArray enumerateObjectsUsingBlock:^(EQRScheduleRequestItem *requestItem, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        //skip this request item if the cell is already expanded...
+        if (!requestItem.shouldCollapseReturningCell && (requestItem.markedForReturn == YES)){
+            return;
+        }
+        if (!requestItem.shouldCollapseGoingCell && (requestItem.markedForReturn == NO)){
+            return;
+        }
+        
+        //get the cell
+        EQRItineraryCellContent2VC *cellContentVC = (EQRItineraryCellContent2VC *)[(EQRItineraryRowCell2 *)[self.myMasterItineraryCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]] contentVC];
+        cellContentVC.isCollapsed = NO;
+        cellContentVC.collapseButton.alpha = 1.0;
+        cellContentVC.collapseButton.hidden = NO;
+        cellContentVC.textOverButton1.alpha = 1.0;
+        cellContentVC.textOverButton2.alpha = 1.0;
+        [cellContentVC.button1 setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
+        [cellContentVC.button2 setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
+        cellContentVC.topOfButton1Constraint.constant = 8;
+        cellContentVC.topOfButton2Constraint.constant = 8;
+        cellContentVC.topOfTextConstraint.constant = 0;
+        //self.bottomOfMainSubviewConstraint.constant = -60;
+
+        
+        if (requestItem.markedForReturn){
+            
+            requestItem.shouldCollapseReturningCell = NO;
+            
+        }else{
+            
+            requestItem.shouldCollapseGoingCell = NO;
+        }
+        
+    
+        
+    }];
+    
+    [self.myMasterItineraryCollection performBatchUpdates:^{
+        
+    } completion:^(BOOL finished) {
+        
+        UICollectionViewFlowLayout *thisFlowLayout = [[UICollectionViewFlowLayout alloc] init];
+        //min spacing size for cells is 0, min spacing size for lines is 2
+        thisFlowLayout.minimumLineSpacing = 2.0;
+        //section inset at top is 10. All other insets are 0.
+        UIEdgeInsets thisInsets = UIEdgeInsetsMake(10.0, 0, 0, 0);
+        thisFlowLayout.sectionInset = thisInsets;
+        
+        //_____you could instead call performBatchUpdates on the collectionView here
+        //_____but this way you can specify the animation duration
+        [UIView animateWithDuration: 0.15 animations:^{
+            
+            [self.myMasterItineraryCollection setCollectionViewLayout:thisFlowLayout animated:YES];
+        }];
+    }];
+}
+
+
 
 
 #pragma mark - collection view data source methods
@@ -1803,10 +1946,19 @@
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     
+    //test if a filter has been applied
+    NSArray *variableArray;
+    
+    if (self.currentFilterBitmask == EQRFilterAll){
+        variableArray = self.arrayOfScheduleRequests;
+    } else {  //a filter has been applied
+        variableArray = self.filteredArrayOfScheduleRequests;
+    }
     
     //if cell button was tapped to collapse
     //or if cell requestObject has been completed
-    EQRScheduleRequestItem *tempRequestItem = (EQRScheduleRequestItem *)[self.arrayOfScheduleRequests objectAtIndex:indexPath.row];
+    
+    EQRScheduleRequestItem *tempRequestItem = (EQRScheduleRequestItem *)[variableArray objectAtIndex:indexPath.row];
     
     if (tempRequestItem.shouldCollapseReturningCell && tempRequestItem.markedForReturn){
         return  CGSizeMake(668.0, 40);

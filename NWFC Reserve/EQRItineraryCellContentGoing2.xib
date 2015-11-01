@@ -15,6 +15,7 @@
                 <outlet property="button1Status" destination="GDv-Ha-lS3" id="bVJ-ea-Xd1"/>
                 <outlet property="button2" destination="RZF-l9-XHf" id="Nok-9a-yG6"/>
                 <outlet property="button2Status" destination="Hdk-w8-cvV" id="tya-Ip-sNa"/>
+                <outlet property="collapseButton" destination="Q79-gd-ZYH" id="J5y-Tk-bHZ"/>
                 <outlet property="detailsButton" destination="vxs-YL-3e5" id="kqt-Hs-wu7"/>
                 <outlet property="requestClass" destination="pSk-Sh-tW0" id="l4Z-wG-R1f"/>
                 <outlet property="requestName" destination="SUZ-Z2-7lk" id="VYZ-rh-1Jg"/>
@@ -23,6 +24,8 @@
                 <outlet property="subViewFullSize" destination="Xzt-J1-qq5" id="d6p-kQ-WTA"/>
                 <outlet property="textOverButton1" destination="OSc-DU-y7Z" id="no0-OC-pc1"/>
                 <outlet property="textOverButton2" destination="5bp-RU-CAN" id="8Dt-Jt-6iK"/>
+                <outlet property="topOfButton1Constraint" destination="oLG-MC-xpe" id="wEZ-L1-Iut"/>
+                <outlet property="topOfButton2Constraint" destination="AU5-7B-qtU" id="6dv-HB-SAI"/>
                 <outlet property="topOfTextConstraint" destination="9EH-uE-wwA" id="0e7-WM-Tla"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -93,7 +96,7 @@
                                     </connections>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Prep" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OSc-DU-y7Z">
-                                    <rect key="frame" x="72" y="32" width="27" height="21"/>
+                                    <rect key="frame" x="72" y="32" width="26.5" height="21"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="21" id="x6l-Sp-5rR"/>
                                     </constraints>
@@ -162,12 +165,13 @@
                                 <constraint firstAttribute="height" constant="100" id="goV-hB-f3u"/>
                             </constraints>
                         </view>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q79-gd-ZYH">
-                            <rect key="frame" x="604" y="0.0" width="60" height="30"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q79-gd-ZYH">
+                            <rect key="frame" x="620" y="0.0" width="44" height="44"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="30" id="5Ra-MU-rXN"/>
+                                <constraint firstAttribute="height" constant="44" id="5Ra-MU-rXN"/>
+                                <constraint firstAttribute="width" constant="44" id="ArG-XG-q1V"/>
                             </constraints>
-                            <state key="normal" title="Collapse"/>
+                            <state key="normal" image="uparrow.png"/>
                             <connections>
                                 <action selector="collapseCell:" destination="-1" eventType="touchUpInside" id="wFp-3H-kFV"/>
                             </connections>
@@ -265,5 +269,6 @@
         <image name="bigArrowPointsRight1.png" width="307" height="98"/>
         <image name="bigArrowPointsRight2.png" width="486" height="98"/>
         <image name="dottedCircle.png" width="67" height="67"/>
+        <image name="uparrow.png" width="18" height="19"/>
     </resources>
 </document>

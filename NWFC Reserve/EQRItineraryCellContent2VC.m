@@ -144,6 +144,7 @@
         
         self.isCollapsed = YES;
         
+        
         [self animateCollapseOfCell];
         
     }
@@ -164,15 +165,26 @@
     
     self.topOfTextConstraint.constant = -8;
     self.bottomOfMainSubviewConstraint.constant = 60;
+    self.topOfButton1Constraint.constant = 16;
+    self.topOfButton2Constraint.constant = 16;
+    
     
     [UIView animateWithDuration:0.15 animations:^{
         
         [self.view layoutIfNeeded];
+        self.collapseButton.alpha = 0.0;
+        
+        [self.button1 setTransform:CGAffineTransformMakeScale(.5, .5)];
+        [self.button2 setTransform:CGAffineTransformMakeScale(.5, .5)];
+        self.textOverButton1.alpha = 0.0;
+        self.textOverButton2.alpha = 0.0;
+
+
         
     } completion:^(BOOL finished) {
     
+        self.collapseButton.hidden = YES;
         [self.delegate collapseTapped:self.requestKeyId isReturning:self.markedForReturning];
-
         self.bottomOfMainSubviewConstraint.constant = 0;
     }];
 
@@ -183,15 +195,29 @@
     
     self.topOfTextConstraint.constant = 0;
     self.bottomOfMainSubviewConstraint.constant = -60;
+    self.topOfButton1Constraint.constant = 8;
+    self.topOfButton2Constraint.constant = 8;
+    
+    self.collapseButton.hidden = NO;
 
+
+    
     [UIView animateWithDuration:0.15 animations:^{
         
         [self.view layoutIfNeeded];
+        self.collapseButton.alpha = 1.0;
+        
+        [self.button1 setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
+        [self.button2 setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
+        self.textOverButton1.alpha = 1.0;
+        self.textOverButton2.alpha = 1.0;
+        
+
+
         
     } completion:^(BOOL finished) {
         
         [self.delegate expandTapped:self.requestKeyId isReturning:self.markedForReturning];
-        
         self.bottomOfMainSubviewConstraint.constant = 0;
         
     }];

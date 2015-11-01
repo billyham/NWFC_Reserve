@@ -136,6 +136,8 @@
 		5436CD751BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt.png in Resources */ = {isa = PBXBuildFile; fileRef = 5436CD731BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt.png */; };
 		5436CD761BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5436CD741BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt@2x.png */; };
 		543786351BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m in Sources */ = {isa = PBXBuildFile; fileRef = 543786341BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m */; };
+		543902AA1BE5E7D4009BFF51 /* uparrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 543902A81BE5E7D4009BFF51 /* uparrow.png */; };
+		543902AB1BE5E7D4009BFF51 /* uparrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 543902A91BE5E7D4009BFF51 /* uparrow@2x.png */; };
 		5439B08D19AEC835007CC11C /* EQRInboxLeftTopVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439B08C19AEC835007CC11C /* EQRInboxLeftTopVC.m */; };
 		5439DCBD1A87363C006252E5 /* EQRScheduleNestedDateBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439DCBC1A87363C006252E5 /* EQRScheduleNestedDateBarCell.m */; };
 		5439DCC01A8739E9006252E5 /* EQRScheduleDateBarLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5439DCBF1A8739E9006252E5 /* EQRScheduleDateBarLayout.m */; };
@@ -435,6 +437,8 @@
 		5436CD741BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bigArrowPointsLeftSoloAlt@2x.png"; sourceTree = "<group>"; };
 		543786331BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRPriceMatrixCllctnVwCll.h; sourceTree = "<group>"; };
 		543786341BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRPriceMatrixCllctnVwCll.m; sourceTree = "<group>"; };
+		543902A81BE5E7D4009BFF51 /* uparrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = uparrow.png; sourceTree = "<group>"; };
+		543902A91BE5E7D4009BFF51 /* uparrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uparrow@2x.png"; sourceTree = "<group>"; };
 		5439B08B19AEC835007CC11C /* EQRInboxLeftTopVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRInboxLeftTopVC.h; sourceTree = "<group>"; };
 		5439B08C19AEC835007CC11C /* EQRInboxLeftTopVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRInboxLeftTopVC.m; sourceTree = "<group>"; };
 		5439DCBB1A87363C006252E5 /* EQRScheduleNestedDateBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleNestedDateBarCell.h; sourceTree = "<group>"; };
@@ -866,6 +870,8 @@
 		541167BA18E545630059BA3C /* Art */ = {
 			isa = PBXGroup;
 			children = (
+				543902A81BE5E7D4009BFF51 /* uparrow.png */,
+				543902A91BE5E7D4009BFF51 /* uparrow@2x.png */,
 				5436CD731BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt.png */,
 				5436CD741BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt@2x.png */,
 				541479F71B533867009CE8A2 /* arrowsPointLeft.png */,
@@ -1356,12 +1362,14 @@
 				542CC23F197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.xib in Resources */,
 				541479EF1B52515B009CE8A2 /* bigArrowPointsRight1.png in Resources */,
 				01C01B961BBB6978001B90F3 /* EQRGenericNumberEditor.xib in Resources */,
+				543902AA1BE5E7D4009BFF51 /* uparrow.png in Resources */,
 				5427C1FF1A135DB200C653B6 /* EQRCheckHeaderCell.xib in Resources */,
 				54A375B51A40040C00FD8A7B /* EQRNotesVC.xib in Resources */,
 				54263FFD1AAF043D0095797E /* tab_settings@2x.png in Resources */,
 				542F5FFE192357AF001C28CA /* EQRCheckVCntrllr.xib in Resources */,
 				0119D30018DBB25D009126CB /* EQRScheduleCellContentVCntrllr.xib in Resources */,
 				541479E61B524EEE009CE8A2 /* dottedCircle@2x.png in Resources */,
+				543902AB1BE5E7D4009BFF51 /* uparrow@2x.png in Resources */,
 				54263FF61AAF043D0095797E /* tab_day.png in Resources */,
 				54A5E7A71BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib in Resources */,
 				01C83A7B199E792800CD5E9C /* EQRDayExtendedPickerVC.xib in Resources */,

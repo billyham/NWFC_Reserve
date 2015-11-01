@@ -23,6 +23,9 @@
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *topOfTextConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *bottomOfMainSubviewConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *topOfButton1Constraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *topOfButton2Constraint;
+
 
 @property (strong, nonatomic) IBOutlet UIView *subViewFullSize;
 
@@ -44,6 +47,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *button1Status;
 @property (strong, nonatomic) IBOutlet UILabel *button2Status;
 
+@property (strong, nonatomic) IBOutlet UIButton *collapseButton;
 @property bool isCollapsed;
 
 
