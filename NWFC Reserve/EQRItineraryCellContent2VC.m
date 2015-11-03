@@ -66,6 +66,13 @@
     
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    
+    EQRColors *colors = [EQRColors sharedInstance];
+    self.collapseButton.tintColor = [colors.colorDic objectForKey:EQRColorSelectionBlue];
+    
+}
+
 -(void)viewDidAppear:(BOOL)animated{
         
 
