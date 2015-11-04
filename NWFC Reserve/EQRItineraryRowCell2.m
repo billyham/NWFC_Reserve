@@ -195,7 +195,9 @@
     
     self.contentVC.requestRenterType.textColor = darkColor;
     
-    
+    self.contentVC.collapseButton.tintColor = [colors.colorDic objectForKey:EQRColorButtonBlueOnGrayBG];
+    UIImage *backgroundImage = [[self.contentVC.collapseButton imageForState:UIControlStateNormal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [self.contentVC.collapseButton setImage:backgroundImage forState:UIControlStateNormal];
     
     
     //only if status is 0, disable the second switch
@@ -217,6 +219,9 @@
         if (requestItem.markedForReturn){
             self.contentVC.bigArrow2.alpha = 0.7;
             self.contentVC.subViewFullSize.backgroundColor = [fullColor colorWithAlphaComponent:0.9];
+            
+            [self makeCollapseButtonTinted:self.contentVC.collapseButton];
+
         }
         
     } else {           // status must be equal to 2
@@ -228,6 +233,8 @@
         self.contentVC.textOverButton2.textColor = [UIColor whiteColor];
         self.contentVC.bigArrow2.alpha = 0.7;
         self.contentVC.subViewFullSize.backgroundColor = [fullColor colorWithAlphaComponent:0.7];
+        
+        [self makeCollapseButtonTinted:self.contentVC.collapseButton];
     }
     
     if (!requestItem.markedForReturn){
@@ -312,9 +319,18 @@
     UIImage *tintedImage = [originalImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [button setImage:tintedImage forState:UIControlStateNormal];
     button.tintColor = [[colors colorDic] objectForKey:EQRColorButtonGreen];
-    
+
 }
 
+
+-(void)makeCollapseButtonTinted:(UIButton *)button{
+    
+    //also make collapse button tinted
+    EQRColors *colors = [EQRColors sharedInstance];
+    button.tintColor = [colors.colorDic objectForKey:EQRColorButtonBlue];
+    UIImage *backgroundImage = [[button imageForState:UIControlStateNormal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [button setImage:backgroundImage forState:UIControlStateNormal];
+}
 
 
 

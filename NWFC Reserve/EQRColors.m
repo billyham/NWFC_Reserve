@@ -10,6 +10,8 @@
 
 NSString *EQRColorSelectionYellow = @"EQRColorSelectionYellow";
 NSString* EQRColorSelectionBlue = @"EQRColorSelectionBlue";
+NSString *EQRColorButtonBlue = @"EQRColorButtonBlue";
+NSString *EQRColorButtonBlueOnGrayBG = @"EQRColorButtonBlueOnGrayBG";
 NSString* EQRColorEditModeBGBlue = @"EQRColorEditModeBGBlue";
 NSString* EQRColorVeryLightGrey = @"EQRColorVeryLightGrey";
 
@@ -97,6 +99,8 @@ NSString* EQRColorDemoMode = @"EQRColorDemoMode";
         self.colorDic = [NSDictionary dictionaryWithObjectsAndKeys:
                          [UIColor yellowColor], EQRColorSelectionYellow,
                          [UIColor colorWithRed:0.7 green:0.9 blue:0.9 alpha:1.0], EQRColorSelectionBlue,
+                         [UIColor colorWithRed:0.4 green:0.70 blue:0.70 alpha:1.0], EQRColorButtonBlue,
+                         [UIColor colorWithRed:0.65 green:0.85 blue:0.85 alpha:1.0], EQRColorButtonBlueOnGrayBG,
                          [UIColor colorWithRed:0.9 green:0.95 blue:0.98 alpha:1.0], EQRColorEditModeBGBlue,
                          [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1.0], EQRColorVeryLightGrey,
                          [UIColor colorWithRed:0.77 green:0.87 blue:0.97 alpha:0.5], EQRColorCalStudent,

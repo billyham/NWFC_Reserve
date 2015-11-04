@@ -10,6 +10,8 @@
 
 extern NSString *EQRColorSelectionYellow;
 extern NSString* EQRColorSelectionBlue;  //selected equipList cell bg, selected schedule nav bar cell bg
+extern NSString *EQRColorButtonBlue;
+extern NSString *EQRColorButtonBlueOnGrayBG;  // used for collapse button on itinerary cells
 extern NSString* EQRColorEditModeBGBlue;  //edit mode blue
 extern NSString* EQRColorVeryLightGrey;
 

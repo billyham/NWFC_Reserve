@@ -12,6 +12,8 @@
 #import "EQRWebData.h"
 #import "EQRStaffUserManager.h"
 
+
+
 @interface EQRItineraryCellContent2VC ()
 
 @property (strong, nonatomic) UIColor* myAssignedColor;
@@ -68,8 +70,7 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    EQRColors *colors = [EQRColors sharedInstance];
-    self.collapseButton.tintColor = [colors.colorDic objectForKey:EQRColorSelectionBlue];
+
     
 }
 
