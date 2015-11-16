@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="nE3-tf-75n">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <scenes>
+        <!--iPhoneInitial-->
+        <scene sceneID="uR3-8W-pyG">
+            <objects>
+                <navigationController title="iPhoneInitial" id="mQB-4R-cCr" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Itinerary" image="tab_day.png" id="sXW-7o-lOV"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="oHH-cb-mwT">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="i69-Nx-6hK" kind="relationship" relationship="rootViewController" id="HNy-aS-e0B"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xW6-sb-DIT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="482" y="-166"/>
+        </scene>
+        <!--Monday, July 1, 1975-->
+        <scene sceneID="sTL-Bu-XrP">
+            <objects>
+                <viewController id="i69-Nx-6hK" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="7Au-m3-Lb4"/>
+                        <viewControllerLayoutGuide type="bottom" id="9cr-HE-fci"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="dHx-nD-hhT">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Monday, July 1, 1975" id="ZS1-Kx-HBD"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MHc-AU-Q8f" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="895" y="-166"/>
+        </scene>
+        <!--Inbox-->
+        <scene sceneID="Nrh-pe-3uR">
+            <objects>
+                <viewController title="Inbox" id="rHC-J2-mVE" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="pLm-oC-5Br"/>
+                        <viewControllerLayoutGuide type="bottom" id="I7B-FO-NGS"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="lIO-Ko-tKX">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" tag="1" title="Inbox" image="tabInbox.png" id="wky-OF-g6t"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XdG-iS-GRj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="334" y="562"/>
+        </scene>
+        <!--iPhoneTabVC-->
+        <scene sceneID="JRT-ZQ-ARu">
+            <objects>
+                <tabBarController storyboardIdentifier="iphoneMain" title="iPhoneTabVC" id="nE3-tf-75n" sceneMemberID="viewController">
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="9B0-RA-cPY">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="mQB-4R-cCr" kind="relationship" relationship="viewControllers" id="p7c-5r-MV6"/>
+                        <segue destination="rHC-J2-mVE" kind="relationship" relationship="viewControllers" id="cn6-r3-Ivx"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="K0z-9B-mJP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-228" y="236"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="tabInbox.png" width="30" height="30"/>
+        <image name="tab_day.png" width="30" height="30"/>
+    </resources>
+</document>

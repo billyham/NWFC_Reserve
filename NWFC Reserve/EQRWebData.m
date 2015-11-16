@@ -2246,9 +2246,6 @@ const int intEQRTransaction = 11;
         return;
     }
     
-    
-    
-    
 }
 
 

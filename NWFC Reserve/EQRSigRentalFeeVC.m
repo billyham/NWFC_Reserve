@@ -6,13 +6,13 @@
 //  Copyright (c) 2015 Ham Again LLC. All rights reserved.
 //
 
-#import "EQRSigRentalFee.h"
+#import "EQRSigRentalFeeVC.h"
 
-@interface EQRSigRentalFee ()
+@interface EQRSigRentalFeeVC ()
 
 @end
 
-@implementation EQRSigRentalFee
+@implementation EQRSigRentalFeeVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];

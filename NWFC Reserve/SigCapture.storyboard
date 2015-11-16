@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="PU4-Pt-Tvm">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="PU4-Pt-Tvm">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -15,7 +15,7 @@
                         <viewControllerLayoutGuide type="bottom" id="z3P-qj-Yb9"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="afp-O6-U4s">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="901-Xv-hII" userLabel="mainSubview">
@@ -64,16 +64,16 @@
             </objects>
             <point key="canvasLocation" x="530" y="-3137"/>
         </scene>
-        <!--Sig Rental Fee-->
+        <!--Sig Rental FeeVC-->
         <scene sceneID="2GT-d6-2cU">
             <objects>
-                <viewController id="moY-8J-Iic" customClass="EQRSigRentalFee" sceneMemberID="viewController">
+                <viewController id="moY-8J-Iic" customClass="EQRSigRentalFeeVC" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jw7-tS-uwR"/>
                         <viewControllerLayoutGuide type="bottom" id="cPN-ce-0Rh"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="xlD-5B-ju6">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zr9-0S-KbJ">
@@ -130,16 +130,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="U5U-gN-IbX">
-                                <rect key="frame" x="36" y="625" width="697" height="2"/>
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uTG-vq-BPs">
-                                <rect key="frame" x="42" y="329" width="685" height="291"/>
+                                <rect key="frame" x="43" y="356" width="685" height="291"/>
                                 <connections>
                                     <segue destination="b6D-Yh-J1N" kind="embed" id="45h-LW-Bgn"/>
                                 </connections>
                             </containerView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="U5U-gN-IbX">
+                                <rect key="frame" x="36" y="625" width="697" height="2"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uMV-m5-8Hn">
                                 <rect key="frame" x="265" y="659" width="238" height="36"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
@@ -150,19 +150,6 @@
                                     <action selector="enterButton:" destination="Qry-53-oLo" eventType="touchUpInside" id="HEn-2v-vuw"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OcR-tQ-0FI">
-                                <rect key="frame" x="83" y="86" width="604" height="197"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="To be returned on Tuesday, Aug 5 at 5:30pm" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jg3-cB-yhj">
-                                <rect key="frame" x="227" y="296" width="317" height="21"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OOQ-wd-WWC">
                                 <rect key="frame" x="636" y="291" width="87" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
@@ -174,7 +161,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G1c-rK-MPS">
-                                <rect key="frame" x="681" y="629" width="46" height="30"/>
+                                <rect key="frame" x="681" y="646" width="46" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Clear">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -183,12 +170,6 @@
                                     <action selector="clearButton:" destination="Qry-53-oLo" eventType="touchUpInside" id="Jxe-Jf-MSr"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Agreement:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f8x-lY-GTf">
-                                <rect key="frame" x="338" y="70" width="92" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MjC-nM-PuG">
                                 <rect key="frame" x="307" y="275" width="155" height="30"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
@@ -208,13 +189,18 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="To be returned on Tuesday, Aug 5 at 5:30pm" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jg3-cB-yhj">
+                                <rect key="frame" x="214" y="327" width="340" height="21"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="Jbh-Zz-5g3"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
                     <connections>
-                        <outlet property="agreementTextView" destination="OcR-tQ-0FI" id="IPS-K3-5cQ"/>
                         <outlet property="nameLabel" destination="9t7-Wf-nWW" id="eV9-wh-Tdq"/>
                         <outlet property="returnDateLabel" destination="Jg3-cB-yhj" id="XQP-Xx-8dM"/>
                         <segue destination="DKT-sJ-f9J" kind="presentation" identifier="sigConfirmation" modalPresentationStyle="formSheet" id="nKc-sN-hSe"/>
@@ -313,7 +299,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="aye-bM-ccc" kind="relationship" relationship="rootViewController" id="E1y-hs-tzz"/>
+                        <segue destination="Qry-53-oLo" kind="relationship" relationship="rootViewController" id="X16-ti-xwQ"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zuR-j5-99W" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -346,6 +332,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="wQB-sJ-9zT"/>
+        <segue reference="X16-ti-xwQ"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQRSigRentalFee : UIViewController
+@interface EQRSigRentalFeeVC : UIViewController
 
 @end

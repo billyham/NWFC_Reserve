@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRScheduleRequestItem.h"
 
 @interface EQRSigCaptureMainVC : UIViewController
+
+-(void)loadTheDataWithRequestItem:(EQRScheduleRequestItem *)requestItem;
 
 @end

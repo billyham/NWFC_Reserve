@@ -163,6 +163,8 @@
 		5460B69719EFA27700D3ED7B /* EQRNavBarDatesNarrowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5460B69619EFA27700D3ED7B /* EQRNavBarDatesNarrowView.m */; };
 		546436551BBBBF70002BF3FF /* EQRTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 546436541BBBBF70002BF3FF /* EQRTransaction.m */; };
 		5464C0141A0A21A600469C45 /* EQREquipSelectionLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5464C0131A0A21A600469C45 /* EQREquipSelectionLayout.m */; };
+		5469E98A1BF701D300617E1C /* MainIPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5469E9891BF701D300617E1C /* MainIPhone.storyboard */; };
+		5469E98C1BF85BA400617E1C /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5469E98B1BF85BA400617E1C /* Launch Screen.storyboard */; };
 		546F28231A19529C00980221 /* EQRContactPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 546F28211A19529C00980221 /* EQRContactPickerVC.m */; };
 		546F28241A19529C00980221 /* EQRContactPickerVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 546F28221A19529C00980221 /* EQRContactPickerVC.xib */; };
 		54746DEB18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 54746DEA18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m */; };
@@ -190,7 +192,7 @@
 		54A5E7A61BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A5E7A41BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.m */; };
 		54A5E7A71BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54A5E7A51BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib */; };
 		54AB4DCC1BA2CE6300A0358C /* EQRSigConfirmationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AB4DCB1BA2CE6300A0358C /* EQRSigConfirmationVC.m */; };
-		54AB4DCF1BA2D53B00A0358C /* EQRSigRentalFee.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AB4DCE1BA2D53B00A0358C /* EQRSigRentalFee.m */; };
+		54AB4DCF1BA2D53B00A0358C /* EQRSigRentalFeeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AB4DCE1BA2D53B00A0358C /* EQRSigRentalFeeVC.m */; };
 		54AF8FAF1A5A9EEA004C4DDC /* EQRMultiColumnTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AF8FAE1A5A9EEA004C4DDC /* EQRMultiColumnTextView.m */; };
 		54BB2D1719F77AF900CF4AE8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54BB2D1619F77AF900CF4AE8 /* CoreData.framework */; };
 		54BB2D1A19F77BB200CF4AE8 /* Gear.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 54BB2D1819F77BB200CF4AE8 /* Gear.xcdatamodeld */; };
@@ -478,6 +480,8 @@
 		546436541BBBBF70002BF3FF /* EQRTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRTransaction.m; sourceTree = "<group>"; };
 		5464C0121A0A21A600469C45 /* EQREquipSelectionLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSelectionLayout.h; sourceTree = "<group>"; };
 		5464C0131A0A21A600469C45 /* EQREquipSelectionLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipSelectionLayout.m; sourceTree = "<group>"; };
+		5469E9891BF701D300617E1C /* MainIPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainIPhone.storyboard; sourceTree = "<group>"; };
+		5469E98B1BF85BA400617E1C /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		546F28201A19529C00980221 /* EQRContactPickerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRContactPickerVC.h; sourceTree = "<group>"; };
 		546F28211A19529C00980221 /* EQRContactPickerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRContactPickerVC.m; sourceTree = "<group>"; };
 		546F28221A19529C00980221 /* EQRContactPickerVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRContactPickerVC.xib; sourceTree = "<group>"; };
@@ -521,8 +525,8 @@
 		54A5E7A51BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRPriceMatrixCllctnViewContentVC.xib; sourceTree = "<group>"; };
 		54AB4DCA1BA2CE6300A0358C /* EQRSigConfirmationVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRSigConfirmationVC.h; sourceTree = "<group>"; };
 		54AB4DCB1BA2CE6300A0358C /* EQRSigConfirmationVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRSigConfirmationVC.m; sourceTree = "<group>"; };
-		54AB4DCD1BA2D53B00A0358C /* EQRSigRentalFee.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRSigRentalFee.h; sourceTree = "<group>"; };
-		54AB4DCE1BA2D53B00A0358C /* EQRSigRentalFee.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRSigRentalFee.m; sourceTree = "<group>"; };
+		54AB4DCD1BA2D53B00A0358C /* EQRSigRentalFeeVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRSigRentalFeeVC.h; sourceTree = "<group>"; };
+		54AB4DCE1BA2D53B00A0358C /* EQRSigRentalFeeVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRSigRentalFeeVC.m; sourceTree = "<group>"; };
 		54AF8FAD1A5A9EEA004C4DDC /* EQRMultiColumnTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRMultiColumnTextView.h; sourceTree = "<group>"; };
 		54AF8FAE1A5A9EEA004C4DDC /* EQRMultiColumnTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRMultiColumnTextView.m; sourceTree = "<group>"; };
 		54BB2D1619F77AF900CF4AE8 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -775,12 +779,15 @@
 		438EDCE5182B7ABE0090F882 /* NWFC Reserve */ = {
 			isa = PBXGroup;
 			children = (
+				438EDCFA182B7ABE0090F882 /* Images.xcassets */,
+				5469E98B1BF85BA400617E1C /* Launch Screen.storyboard */,
 				541167BA18E545630059BA3C /* Art */,
 				438EDCEE182B7ABE0090F882 /* EQRAppDelegate.h */,
 				438EDCEF182B7ABE0090F882 /* EQRAppDelegate.m */,
 				540B5518187687D60025FDEE /* EQRGlobals.h */,
 				540B5519187687D60025FDEE /* EQRGlobals.m */,
 				438EDCF1182B7ABE0090F882 /* Main.storyboard */,
+				5469E9891BF701D300617E1C /* MainIPhone.storyboard */,
 				54BB2D1819F77BB200CF4AE8 /* Gear.xcdatamodeld */,
 				0115506719956A9C009A459F /* Data Control */,
 				543CF39A198EF4E200A00E5E /* Quickview Nav Cntrllr */,
@@ -803,7 +810,6 @@
 				54CE45A9186AF3680023FDA4 /* collectionViewCells */,
 				542D59B71A00DD9100989617 /* Text Elements */,
 				54482499191CC8A300E285E2 /* deprecated */,
-				438EDCFA182B7ABE0090F882 /* Images.xcassets */,
 				438EDCE6182B7ABE0090F882 /* Supporting Files */,
 			);
 			path = "NWFC Reserve";
@@ -859,8 +865,8 @@
 				5407292C1B3939AA00D454F5 /* PPSSignatureView.m */,
 				549966901BA53D4300F6DCE6 /* EQRSigEquipListVC.h */,
 				549966911BA53D4300F6DCE6 /* EQRSigEquipListVC.m */,
-				54AB4DCD1BA2D53B00A0358C /* EQRSigRentalFee.h */,
-				54AB4DCE1BA2D53B00A0358C /* EQRSigRentalFee.m */,
+				54AB4DCD1BA2D53B00A0358C /* EQRSigRentalFeeVC.h */,
+				54AB4DCE1BA2D53B00A0358C /* EQRSigRentalFeeVC.m */,
 				54AB4DCA1BA2CE6300A0358C /* EQRSigConfirmationVC.h */,
 				54AB4DCB1BA2CE6300A0358C /* EQRSigConfirmationVC.m */,
 			);
@@ -1298,6 +1304,9 @@
 					438EDCDB182B7ABD0090F882 = {
 						DevelopmentTeam = C3YDZ7M5S2;
 						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
 							com.apple.iCloud = {
 								enabled = 1;
 							};
@@ -1340,6 +1349,7 @@
 				438EDCFB182B7ABE0090F882 /* Images.xcassets in Resources */,
 				541479ED1B52515B009CE8A2 /* arrowsPointRight.png in Resources */,
 				541479F21B52515B009CE8A2 /* bigArrowPointsRight2@2x.png in Resources */,
+				5469E98A1BF701D300617E1C /* MainIPhone.storyboard in Resources */,
 				54E2FDE81A88AF9B00B51D45 /* EQRPasswordEntryVC.xib in Resources */,
 				5433FCD31A8CB30500057B4F /* EQREnterPhoneVC.xib in Resources */,
 				018EF5531A8D61E6008B7A0C /* EQREnterEmail.xib in Resources */,
@@ -1394,6 +1404,7 @@
 				54A0DB8F1AB0123400EE4281 /* EQRGenericTextEditor.xib in Resources */,
 				5407292F1B3939F100D454F5 /* SigCapture.storyboard in Resources */,
 				5497F5041A1DCA79008A7E52 /* EQRClassPickerVC.xib in Resources */,
+				5469E98C1BF85BA400617E1C /* Launch Screen.storyboard in Resources */,
 				541479FB1B533867009CE8A2 /* arrowsPointLeft.png in Resources */,
 				54C8E21A1B843F25006CBB58 /* EQRAddNewClassVC.xib in Resources */,
 				54263FFC1AAF043D0095797E /* tab_settings.png in Resources */,
@@ -1446,7 +1457,7 @@
 				5402D22E186BFCF80091C080 /* EQRCellTemplate.m in Sources */,
 				438EDCEC182B7ABE0090F882 /* main.m in Sources */,
 				5402D22B186BFCDA0091C080 /* EQRContactNameCell.m in Sources */,
-				54AB4DCF1BA2D53B00A0358C /* EQRSigRentalFee.m in Sources */,
+				54AB4DCF1BA2D53B00A0358C /* EQRSigRentalFeeVC.m in Sources */,
 				54D3D8231A7DC53700562699 /* EQRMiscJoin.m in Sources */,
 				543786351BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m in Sources */,
 				549BF3BC191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m in Sources */,
@@ -1681,7 +1692,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = Gear.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1692,6 +1702,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "David-Vincent-Hanagan.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Gear;
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1700,7 +1711,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = Gear.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1711,6 +1721,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "David-Vincent-Hanagan.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Gear;
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

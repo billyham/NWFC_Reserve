@@ -30,7 +30,7 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRContactNameItem.h"
 #import "EQRColors.h"
-#import "EQRSigEquipListVC.h"
+#import "EQRSigCaptureMainVC.h"
 #import "EQRPricingWidgetCheckInVC.h"
 #import "EQRPriceMatrixVC.h"
 #import "EQRTransaction.h"
@@ -1677,11 +1677,8 @@
     newView.modalPresentationStyle = UIModalPresentationPageSheet;
     [self presentViewController:newView animated:YES completion:^{
         
-        //___________this is ugly, it assumes the subclass type of VC at the root of the nav controller 
-        [(EQRSigEquipListVC*)[[newView viewControllers] objectAtIndex:0] setRequestItem:self.myScheduleRequestItem];
-        
-        [(EQRSigEquipListVC*)[[newView viewControllers] objectAtIndex:0] loadTheData];
-        
+        //___________this is ugly, it assumes the subclass type of VC at the root of the nav controller
+        [(EQRSigCaptureMainVC*)[[newView viewControllers] objectAtIndex:0] loadTheDataWithRequestItem:self.myScheduleRequestItem];
     }];
     
 }
