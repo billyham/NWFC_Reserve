@@ -167,6 +167,8 @@
 		5469E98C1BF85BA400617E1C /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5469E98B1BF85BA400617E1C /* Launch Screen.storyboard */; };
 		546F28231A19529C00980221 /* EQRContactPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 546F28211A19529C00980221 /* EQRContactPickerVC.m */; };
 		546F28241A19529C00980221 /* EQRContactPickerVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 546F28221A19529C00980221 /* EQRContactPickerVC.xib */; };
+		5473B6E21BFC6D3C006BEA61 /* EQRPricingWidgetSigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5473B6E01BFC6D3C006BEA61 /* EQRPricingWidgetSigVC.m */; };
+		5473B6E31BFC6D3C006BEA61 /* EQRPricingWidgetSigVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5473B6E11BFC6D3C006BEA61 /* EQRPricingWidgetSigVC.xib */; };
 		54746DEB18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 54746DEA18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m */; };
 		547BE0071BB1284100F28A61 /* EQRCloudData.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C0E5451AB167030038CA86 /* EQRCloudData.m */; };
 		547D0B4B1A36E2890006EB92 /* EQREquipOptionsTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 547D0B491A36E2890006EB92 /* EQREquipOptionsTableVC.m */; };
@@ -485,6 +487,9 @@
 		546F28201A19529C00980221 /* EQRContactPickerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRContactPickerVC.h; sourceTree = "<group>"; };
 		546F28211A19529C00980221 /* EQRContactPickerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRContactPickerVC.m; sourceTree = "<group>"; };
 		546F28221A19529C00980221 /* EQRContactPickerVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRContactPickerVC.xib; sourceTree = "<group>"; };
+		5473B6DF1BFC6D3C006BEA61 /* EQRPricingWidgetSigVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRPricingWidgetSigVC.h; sourceTree = "<group>"; };
+		5473B6E01BFC6D3C006BEA61 /* EQRPricingWidgetSigVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRPricingWidgetSigVC.m; sourceTree = "<group>"; };
+		5473B6E11BFC6D3C006BEA61 /* EQRPricingWidgetSigVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRPricingWidgetSigVC.xib; sourceTree = "<group>"; };
 		54746DE918DFF8EA0016C596 /* EQRScheduleNestedDayLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRScheduleNestedDayLayout.h; sourceTree = "<group>"; };
 		54746DEA18DFF8EA0016C596 /* EQRScheduleNestedDayLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EQRScheduleNestedDayLayout.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		547D0B481A36E2890006EB92 /* EQREquipOptionsTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipOptionsTableVC.h; sourceTree = "<group>"; };
@@ -865,8 +870,6 @@
 				5407292C1B3939AA00D454F5 /* PPSSignatureView.m */,
 				549966901BA53D4300F6DCE6 /* EQRSigEquipListVC.h */,
 				549966911BA53D4300F6DCE6 /* EQRSigEquipListVC.m */,
-				54AB4DCD1BA2D53B00A0358C /* EQRSigRentalFeeVC.h */,
-				54AB4DCE1BA2D53B00A0358C /* EQRSigRentalFeeVC.m */,
 				54AB4DCA1BA2CE6300A0358C /* EQRSigConfirmationVC.h */,
 				54AB4DCB1BA2CE6300A0358C /* EQRSigConfirmationVC.m */,
 			);
@@ -1072,6 +1075,8 @@
 		54482499191CC8A300E285E2 /* deprecated */ = {
 			isa = PBXGroup;
 			children = (
+				54AB4DCD1BA2D53B00A0358C /* EQRSigRentalFeeVC.h */,
+				54AB4DCE1BA2D53B00A0358C /* EQRSigRentalFeeVC.m */,
 				438EDCF7182B7ABE0090F882 /* EQRSecondViewController.h */,
 				438EDCF8182B7ABE0090F882 /* EQRSecondViewController.m */,
 				540B551B18769CCE0025FDEE /* EQRStaffPage1VCntrllr.h */,
@@ -1249,6 +1254,9 @@
 				54F1F7111BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.h */,
 				54F1F7121BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.m */,
 				54F1F7131BDF5C6800CF5E91 /* EQRPricingWidgetCheckInVC.xib */,
+				5473B6DF1BFC6D3C006BEA61 /* EQRPricingWidgetSigVC.h */,
+				5473B6E01BFC6D3C006BEA61 /* EQRPricingWidgetSigVC.m */,
+				5473B6E11BFC6D3C006BEA61 /* EQRPricingWidgetSigVC.xib */,
 			);
 			name = pricing;
 			sourceTree = "<group>";
@@ -1343,6 +1351,7 @@
 			files = (
 				541570191B4CFDCF00BEC26A /* circleButton@2x.png in Resources */,
 				545547CD197F987C001AC986 /* GenericLeftArrow@2x.png in Resources */,
+				5473B6E31BFC6D3C006BEA61 /* EQRPricingWidgetSigVC.xib in Resources */,
 				541479FC1B533867009CE8A2 /* arrowsPointLeft@2x.png in Resources */,
 				543CF39F198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.xib in Resources */,
 				54E1D60B1A80C23C00B41121 /* EQREditorMiscListContentVC.xib in Resources */,
@@ -1447,6 +1456,7 @@
 				54457ED11935B7B900E9061A /* EQRCheckCellContentVCntrllr.m in Sources */,
 				5433FCD21A8CB30500057B4F /* EQREnterPhoneVC.m in Sources */,
 				5464C0141A0A21A600469C45 /* EQREquipSelectionLayout.m in Sources */,
+				5473B6E21BFC6D3C006BEA61 /* EQRPricingWidgetSigVC.m in Sources */,
 				01FDEA96188F58E500A62D18 /* EQRScheduleTracking_EquipmentUnique_Join.m in Sources */,
 				014F776D18E3B28F00C75D66 /* EQRScheduleNavBarCell.m in Sources */,
 				5402B7D5187586F400F0888B /* EQREquipContentViewVCntrllr.m in Sources */,

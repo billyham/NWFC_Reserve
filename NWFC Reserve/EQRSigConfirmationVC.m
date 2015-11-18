@@ -23,6 +23,25 @@
 }
 
 
+-(void)viewDidAppear:(BOOL)animated{
+    
+    //_____ Automatically dismisses self after 1 second
+    [self performSelector:@selector(automatedDismissal) withObject:nil afterDelay:1.0];
+}
+
+
+-(void)automatedDismissal{
+    
+    //_____!!!!! This is weird calling to dismissals but it works... so far...
+    [self dismissViewControllerAnimated:YES completion:^{
+
+    }];
+    
+    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+}
+
 
 -(IBAction)confirmButton:(id)sender{
     

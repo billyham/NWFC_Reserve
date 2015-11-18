@@ -49,6 +49,9 @@
         self.rentalFeeValue.text = self.myTransaction.total_due;
         self.depositValue.text = self.myTransaction.deposit_due;
         
+//        NSLog(@"EQRPricingWidgetTemplate > doAlltheLayout says transaction is valid, setting rental value");
+//        NSLog(@"setting rentalFeeValue as: %@", self.myTransaction.total_due);
+        
         if (self.myTransaction.payment_timestamp && self.myTransaction.payment_staff_foreignKey){
             if (![self.myTransaction.payment_staff_foreignKey isEqualToString:@""]){
                 

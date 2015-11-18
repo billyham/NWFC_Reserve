@@ -56,67 +56,11 @@
                     <navigationItem key="navigationItem" id="zWC-FZ-oux"/>
                     <connections>
                         <outlet property="summarTextView" destination="7Gv-N3-8cD" id="iKC-46-nTn"/>
-                        <segue destination="moY-8J-Iic" kind="show" identifier="sigRentalFee" id="1zt-FU-0Xe"/>
-                        <segue destination="Qry-53-oLo" kind="show" identifier="sigSignature" id="wQB-sJ-9zT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FQ7-70-Q59" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="530" y="-3137"/>
-        </scene>
-        <!--Sig Rental FeeVC-->
-        <scene sceneID="2GT-d6-2cU">
-            <objects>
-                <viewController id="moY-8J-Iic" customClass="EQRSigRentalFeeVC" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="jw7-tS-uwR"/>
-                        <viewControllerLayoutGuide type="bottom" id="cPN-ce-0Rh"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="xlD-5B-ju6">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zr9-0S-KbJ">
-                                <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xUD-2H-onh">
-                                        <rect key="frame" x="352" y="318" width="65" height="30"/>
-                                        <state key="normal" title="Confirm">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="continueButton:" destination="moY-8J-Iic" eventType="touchUpInside" id="Dtx-JB-H0z"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SbA-mL-gac">
-                                        <rect key="frame" x="347" y="408" width="75" height="30"/>
-                                        <state key="normal" title="Cancel">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="cancelButton:" destination="moY-8J-Iic" eventType="touchUpInside" id="dj2-mu-ggg"/>
-                                        </connections>
-                                    </button>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="This is total Rental Fee. And Deposit. $8 Million Billion Dollars!" translatesAutoresizingMaskIntoConstraints="NO" id="HmJ-Zf-krS">
-                                        <rect key="frame" x="264" y="129" width="240" height="128"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    </textView>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="Sny-sA-T1q"/>
-                    <connections>
-                        <segue destination="Qry-53-oLo" kind="show" identifier="sigSignature" id="JPD-0T-e1j"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ka4-ex-9Ey" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1112" y="-1930"/>
+            <point key="canvasLocation" x="550" y="-1751"/>
         </scene>
         <!--Sig Capture MainVC-->
         <scene sceneID="rMZ-fh-ArW">
@@ -195,6 +139,12 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fKc-Bn-NbY">
+                                <rect key="frame" x="135" y="217" width="500" height="50"/>
+                                <connections>
+                                    <segue destination="41e-aJ-Cuc" kind="embed" id="jJG-gJ-Ddy"/>
+                                </connections>
+                            </containerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -225,7 +175,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wce-8s-gBz" userLabel="main subview">
                                 <rect key="frame" x="16" y="0.0" width="268" height="300"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mOh-Uu-E5e">
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mOh-Uu-E5e">
                                         <rect key="frame" x="119" y="213" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="LU9-Ea-ETV"/>
@@ -246,15 +196,15 @@
                                             <action selector="cancelButton:" destination="DKT-sJ-f9J" eventType="touchUpInside" id="hE0-ba-VGe"/>
                                         </connections>
                                     </button>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="This is your confirmation. Don't lose it or you will be sorry. Like that board game from the 70s, called Sorry. " translatesAutoresizingMaskIntoConstraints="NO" id="nvR-r4-1Nf">
-                                        <rect key="frame" x="14" y="64" width="240" height="101"/>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Thank You" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="nvR-r4-1Nf">
+                                        <rect key="frame" x="14" y="99" width="240" height="101"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="101" id="2rh-xv-g2a"/>
                                             <constraint firstAttribute="height" constant="101" id="3d4-Hf-cH3"/>
                                             <constraint firstAttribute="width" constant="240" id="WX1-pt-4YZ"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="36"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                         <variation key="default">
                                             <mask key="constraints">
@@ -265,8 +215,8 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="nvR-r4-1Nf" firstAttribute="top" secondItem="Wce-8s-gBz" secondAttribute="top" constant="64" id="1FW-S1-4FO"/>
-                                    <constraint firstItem="mOh-Uu-E5e" firstAttribute="top" secondItem="nvR-r4-1Nf" secondAttribute="bottom" constant="48" id="cVc-1j-eU2"/>
+                                    <constraint firstItem="nvR-r4-1Nf" firstAttribute="top" secondItem="Wce-8s-gBz" secondAttribute="top" constant="99" id="1FW-S1-4FO"/>
+                                    <constraint firstItem="mOh-Uu-E5e" firstAttribute="top" secondItem="nvR-r4-1Nf" secondAttribute="bottom" constant="13" id="cVc-1j-eU2"/>
                                     <constraint firstAttribute="centerX" secondItem="mOh-Uu-E5e" secondAttribute="centerX" id="mFI-TQ-cDd"/>
                                     <constraint firstAttribute="centerX" secondItem="nvR-r4-1Nf" secondAttribute="centerX" id="oMC-eH-lqW"/>
                                 </constraints>
@@ -304,7 +254,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zuR-j5-99W" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-562" y="-1978"/>
+            <point key="canvasLocation" x="-436" y="-734"/>
         </scene>
         <!--GLKit View Controller-->
         <scene sceneID="Py0-tl-AjO">
@@ -328,10 +278,15 @@
                 </glkViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a95-7A-kvt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1424" y="-722"/>
+            <point key="canvasLocation" x="1458" y="-379"/>
+        </scene>
+        <!--Pricing Widget SigVC-->
+        <scene sceneID="QIn-F8-HAa">
+            <objects>
+                <viewController id="41e-aJ-Cuc" customClass="EQRPricingWidgetSigVC" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="igh-z0-zYC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1324" y="-1091"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="X16-ti-xwQ"/>
-    </inferredMetricsTieBreakers>
 </document>

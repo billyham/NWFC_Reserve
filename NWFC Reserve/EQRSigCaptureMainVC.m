@@ -12,6 +12,9 @@
 //#import "EQRSigConfirmationVC.h"
 #import "EQRWebData.h"
 #import "EQRDataStructure.h"
+#import "EQRPricingWidgetSigVC.h"
+#import "EQRGlobals.h"
+#import "EQRTransaction.h"
 
 @interface EQRSigCaptureMainVC ()<EQRWebDataDelegate>
 
@@ -20,11 +23,13 @@
 //@property (strong, nonatomic) IBOutlet UITextView *agreementTextView;
 @property (strong, nonatomic) IBOutlet PPSSignatureView *signatureView;
 @property (strong, nonatomic) EQRScheduleRequestItem *requestItem;
-
+@property (strong, nonatomic) EQRPricingWidgetSigVC *myPricingWidget;
+@property (strong, nonatomic) UIView *pricingWidgetView;
+@property (strong, nonatomic) EQRTransaction *myTransaction;
 
 @end
 
-@implementation EQRSigCaptureMainVC 
+@implementation EQRSigCaptureMainVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -32,11 +37,21 @@
     
     if ([self.childViewControllers count] > 0){
         
-        UIViewController *signatureViewController = [self.childViewControllers objectAtIndex:0];
-        
-        if ([signatureViewController class] == [GLKViewController class]){
+        for (UIViewController *childViewController in self.childViewControllers){
             
-            self.signatureView = (PPSSignatureView *)[signatureViewController view];
+            if ([childViewController class] == [GLKViewController class]){
+                self.signatureView = (PPSSignatureView *)childViewController.view;
+            }
+            
+            if ([childViewController class] == [EQRPricingWidgetSigVC class]){
+                
+//                NSLog(@"recognizes child view controller as pricing widget");
+                self.pricingWidgetView = childViewController.view;
+                self.pricingWidgetView.hidden = YES;
+                
+                self.myPricingWidget = (EQRPricingWidgetSigVC *)childViewController;
+            }
+            
         }
     }
     
@@ -86,6 +101,16 @@
         NSString *extendedText = [NSString stringWithFormat:@"%@%@", baseString, [dateFormatter stringFromDate:fullDate]];
         
         self.returnDateLabel.text = extendedText;
+        
+        //only show pricing information for public renters
+        if ([requestItem.renter_type isEqualToString:EQRRenterPublic]){
+            self.pricingWidgetView.hidden = NO;
+            
+            [self getTransactionInfo];
+            
+        }else{
+            self.pricingWidgetView.hidden = YES;
+        }
     }
     
     
@@ -109,7 +134,49 @@
 
 -(void)loadTheDataStage2{  // add misc items to the array of joins
     
+
     
+    
+}
+
+
+#pragma mark = get pricing info
+
+-(void)getTransactionInfo{
+    
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    NSArray *firstArray = @[@"scheduleTracking_foreignKey", self.requestItem.key_id];
+    NSArray *topArray = @[firstArray];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData queryForStringwithAsync:@"EQGetTransactionWithScheduleRequestKey.php" parameters:topArray completion:^(EQRTransaction *transaction) {
+            
+            if (transaction){
+                
+                self.myTransaction = transaction;
+                
+                //found a matching transaction for this schedule Request, go on...
+                [self populatePricingWidget];
+                
+            }else{
+                
+                //no matching transaction, create a fresh one.
+                NSLog(@"didn't find a matching Transaction");
+                [self.myPricingWidget deleteExistingData];
+            }
+        }];
+    });
+}
+
+-(void)populatePricingWidget{
+    
+    if (self.myTransaction){
+        [self.myPricingWidget initialSetupWithTransaction:self.myTransaction];
+    }else{
+        [self.myPricingWidget deleteExistingData];
+    }
     
 }
 
@@ -167,7 +234,6 @@
 //    [self.navigationController pushViewController:confirmVC animated:YES];
     
     [self performSegueWithIdentifier:@"sigConfirmation" sender:self];
-    
 }
 
 -(IBAction)otherOptionsButton:(id)sender{
