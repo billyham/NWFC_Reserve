@@ -15,6 +15,8 @@
 #import "EQRPricingWidgetSigVC.h"
 #import "EQRGlobals.h"
 #import "EQRTransaction.h"
+#import "EQRTextElement.h"
+#import "EQRSigAgreementVC.h"
 
 @interface EQRSigCaptureMainVC ()<EQRWebDataDelegate>
 
@@ -26,6 +28,9 @@
 @property (strong, nonatomic) EQRPricingWidgetSigVC *myPricingWidget;
 @property (strong, nonatomic) UIView *pricingWidgetView;
 @property (strong, nonatomic) EQRTransaction *myTransaction;
+
+@property (strong, nonatomic) NSMutableArray *arrayOfAgreementTextElements;
+@property (strong, nonatomic) EQRSigAgreementVC *agreementVC;
 
 @end
 
@@ -126,16 +131,112 @@
     webData.delegateDataFeed = self;
     SEL selector = @selector(addMiscItem:);
     
-    [webData queryWithAsync:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRScheduleRequestItem" selector:selector completion:^(BOOL isLoadingFlagUp) {
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
         
-        [self loadTheDataStage2];
-    }];
+        [webData queryWithAsync:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRScheduleRequestItem" selector:selector completion:^(BOOL isLoadingFlagUp) {
+            
+            [self loadTheDataStage2];
+        }];
+    });
+    
+    
 }
 
 -(void)loadTheDataStage2{  // add misc items to the array of joins
     
 
     
+    [self loadDataStage3];
+}
+
+-(void)loadDataStage3{  // get agreement items
+    
+    if (self.arrayOfAgreementTextElements){
+        [self.arrayOfAgreementTextElements removeAllObjects];
+    }
+    
+    NSArray *alphaArray = @[@"context", @"checkoutAgreement"];
+    NSArray *topArray = @[alphaArray];
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
+    SEL selector = @selector(addAgreementTextElement:);
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+       
+        [webData queryWithAsync:@"EQGetTextElementsWithContext" parameters:topArray class:@"EQRTextElement" selector:selector completion:^(BOOL isLoadingFlagUp) {
+            
+            [self loadDataStage4];
+        }];
+        
+    });
+}
+
+-(void)loadDataStage4{   // present agreement text
+    
+    //only continue if agreement text elements exist
+    if (self.arrayOfAgreementTextElements){
+        if ([self.arrayOfAgreementTextElements count] < 1){
+            return;
+        }
+    }
+    
+    //set of UITextFields
+    NSMutableSet *tempMuteSet = [NSMutableSet setWithCapacity:1];
+    
+    float savedYValue = 0;
+    float widthOfText = 300;
+
+    for (EQRTextElement *textElement in self.arrayOfAgreementTextElements){
+        
+        CGPoint newPoint = CGPointMake(0, savedYValue);
+        CGSize newSize = CGSizeMake(widthOfText, 10);
+        CGRect newRect = CGRectMake(newPoint.x, newPoint.y, newSize.width, newSize.height);
+        UITextView *newTextView = [[UITextView alloc] initWithFrame:newRect textContainer:nil];
+        newTextView.text = textElement.text;
+        
+        newTextView.font = [UIFont systemFontOfSize:15.0];
+        
+        //resize textView to size of text
+        CGSize evenNewerSize = [newTextView sizeThatFits:CGSizeMake(widthOfText, MAXFLOAT)];
+        CGRect newFrame = newTextView.frame;
+        newFrame.size = CGSizeMake(fmaxf(evenNewerSize.width, widthOfText), evenNewerSize.height);
+        newTextView.frame = newFrame;
+        
+        
+        newTextView.userInteractionEnabled = NO;
+        newTextView.allowsEditingTextAttributes = NO;
+        
+        [tempMuteSet addObject:newTextView];
+        
+        savedYValue = savedYValue + newTextView.frame.size.height;
+        //add a little extra space between clauses
+        savedYValue = savedYValue + 30;
+    }
+    
+    NSLog(@"this is the final height: %5.2f", savedYValue);
+    
+    CGRect totalRect = CGRectMake(20, 0, widthOfText + 40, 500);
+    UIScrollView *tryScroll = [[UIScrollView alloc] initWithFrame:totalRect];
+    tryScroll.contentSize = CGSizeMake(totalRect.size.width, savedYValue);
+
+    UIView *tryView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, widthOfText + 40, savedYValue)];
+    [tryScroll addSubview:tryView];
+
+    
+    for (UITextView *textView in tempMuteSet){
+        [tryView addSubview:textView];
+    }
+    
+    self.agreementVC = [[EQRSigAgreementVC alloc] initWithNibName:@"EQRSigAgreementVC" bundle:nil];
+    [self.agreementVC.view addSubview:tryScroll];
+    self.agreementVC.modalPresentationStyle = UIModalPresentationFormSheet;
+    
+    [self presentViewController:self.agreementVC animated:YES completion:^{
+        
+        
+    }];
     
 }
 
@@ -209,6 +310,20 @@
     
     
 }
+
+-(void)addAgreementTextElement:(id)currentThing{
+    
+    if (!currentThing){
+        return;
+    }
+    
+    if (!self.arrayOfAgreementTextElements){
+        self.arrayOfAgreementTextElements = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    [self.arrayOfAgreementTextElements addObject:currentThing];
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

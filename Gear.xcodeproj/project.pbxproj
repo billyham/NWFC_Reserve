@@ -196,6 +196,8 @@
 		54AB4DCC1BA2CE6300A0358C /* EQRSigConfirmationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AB4DCB1BA2CE6300A0358C /* EQRSigConfirmationVC.m */; };
 		54AB4DCF1BA2D53B00A0358C /* EQRSigRentalFeeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AB4DCE1BA2D53B00A0358C /* EQRSigRentalFeeVC.m */; };
 		54AF8FAF1A5A9EEA004C4DDC /* EQRMultiColumnTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AF8FAE1A5A9EEA004C4DDC /* EQRMultiColumnTextView.m */; };
+		54B5A2A41BFDD743003FE6DD /* EQRSigAgreementVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B5A2A21BFDD743003FE6DD /* EQRSigAgreementVC.m */; };
+		54B5A2A51BFDD743003FE6DD /* EQRSigAgreementVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54B5A2A31BFDD743003FE6DD /* EQRSigAgreementVC.xib */; };
 		54BB2D1719F77AF900CF4AE8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54BB2D1619F77AF900CF4AE8 /* CoreData.framework */; };
 		54BB2D1A19F77BB200CF4AE8 /* Gear.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 54BB2D1819F77BB200CF4AE8 /* Gear.xcdatamodeld */; };
 		54BBC193193D9DEA004D5DFE /* EQRCheckPageRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 54BBC192193D9DEA004D5DFE /* EQRCheckPageRenderer.m */; };
@@ -534,6 +536,9 @@
 		54AB4DCE1BA2D53B00A0358C /* EQRSigRentalFeeVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRSigRentalFeeVC.m; sourceTree = "<group>"; };
 		54AF8FAD1A5A9EEA004C4DDC /* EQRMultiColumnTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRMultiColumnTextView.h; sourceTree = "<group>"; };
 		54AF8FAE1A5A9EEA004C4DDC /* EQRMultiColumnTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRMultiColumnTextView.m; sourceTree = "<group>"; };
+		54B5A2A11BFDD743003FE6DD /* EQRSigAgreementVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRSigAgreementVC.h; sourceTree = "<group>"; };
+		54B5A2A21BFDD743003FE6DD /* EQRSigAgreementVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRSigAgreementVC.m; sourceTree = "<group>"; };
+		54B5A2A31BFDD743003FE6DD /* EQRSigAgreementVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRSigAgreementVC.xib; sourceTree = "<group>"; };
 		54BB2D1619F77AF900CF4AE8 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		54BB2D1919F77BB200CF4AE8 /* Gear.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Gear.xcdatamodel; sourceTree = "<group>"; };
 		54BBC191193D9DEA004D5DFE /* EQRCheckPageRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRCheckPageRenderer.h; sourceTree = "<group>"; };
@@ -868,6 +873,9 @@
 				540729331B39439100D454F5 /* EQRSigCaptureMainVC.m */,
 				5407292B1B3939AA00D454F5 /* PPSSignatureView.h */,
 				5407292C1B3939AA00D454F5 /* PPSSignatureView.m */,
+				54B5A2A11BFDD743003FE6DD /* EQRSigAgreementVC.h */,
+				54B5A2A21BFDD743003FE6DD /* EQRSigAgreementVC.m */,
+				54B5A2A31BFDD743003FE6DD /* EQRSigAgreementVC.xib */,
 				549966901BA53D4300F6DCE6 /* EQRSigEquipListVC.h */,
 				549966911BA53D4300F6DCE6 /* EQRSigEquipListVC.m */,
 				54AB4DCA1BA2CE6300A0358C /* EQRSigConfirmationVC.h */,
@@ -1359,6 +1367,7 @@
 				541479ED1B52515B009CE8A2 /* arrowsPointRight.png in Resources */,
 				541479F21B52515B009CE8A2 /* bigArrowPointsRight2@2x.png in Resources */,
 				5469E98A1BF701D300617E1C /* MainIPhone.storyboard in Resources */,
+				54B5A2A51BFDD743003FE6DD /* EQRSigAgreementVC.xib in Resources */,
 				54E2FDE81A88AF9B00B51D45 /* EQRPasswordEntryVC.xib in Resources */,
 				5433FCD31A8CB30500057B4F /* EQREnterPhoneVC.xib in Resources */,
 				018EF5531A8D61E6008B7A0C /* EQREnterEmail.xib in Resources */,
@@ -1509,6 +1518,7 @@
 				54156FFC1B4BC71400BEC26A /* EQRItineraryRowCell2.m in Sources */,
 				54D4548A1A3856F50099DFE4 /* EQRDistIDPickerTableVC.m in Sources */,
 				542F5FFD192357AF001C28CA /* EQRCheckVCntrllr.m in Sources */,
+				54B5A2A41BFDD743003FE6DD /* EQRSigAgreementVC.m in Sources */,
 				545661DF18323ABC0067B40D /* EQREquipItem.m in Sources */,
 				541E548D1ADB529600EE8909 /* EQRSettingsLeftTableVC.m in Sources */,
 				548549ED1A23193600475345 /* EQRContactAddNewVC.m in Sources */,
