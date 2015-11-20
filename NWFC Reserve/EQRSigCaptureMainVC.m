@@ -180,6 +180,8 @@
         if ([self.arrayOfAgreementTextElements count] < 1){
             return;
         }
+    }else{
+        return;
     }
     
     //set of UITextFields
