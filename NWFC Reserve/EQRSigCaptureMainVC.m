@@ -31,6 +31,8 @@
 
 @property (strong, nonatomic) NSMutableArray *arrayOfAgreementTextElements;
 @property (strong, nonatomic) EQRSigAgreementVC *agreementVC;
+@property (strong, nonatomic) UIScrollView *agreementScrollView;
+@property (strong, nonatomic) NSMutableArray *arrayOfYOrigins;
 
 @end
 
@@ -169,7 +171,6 @@
             
             [self loadDataStage4];
         }];
-        
     });
 }
 
@@ -185,10 +186,13 @@
     }
     
     //set of UITextFields
-    NSMutableSet *tempMuteSet = [NSMutableSet setWithCapacity:1];
+    NSMutableArray *tempMuteArray = [NSMutableArray arrayWithCapacity:1];
     
     float savedYValue = 0;
-    float widthOfText = 300;
+    float widthOfText = 440;
+    float heightOfLastTextView = 0;
+    
+    self.arrayOfYOrigins = [NSMutableArray arrayWithCapacity:1];
 
     for (EQRTextElement *textElement in self.arrayOfAgreementTextElements){
         
@@ -198,7 +202,8 @@
         UITextView *newTextView = [[UITextView alloc] initWithFrame:newRect textContainer:nil];
         newTextView.text = textElement.text;
         
-        newTextView.font = [UIFont systemFontOfSize:15.0];
+        newTextView.font = [UIFont systemFontOfSize:16.0];
+        newTextView.textAlignment = NSTextAlignmentJustified;
         
         //resize textView to size of text
         CGSize evenNewerSize = [newTextView sizeThatFits:CGSizeMake(widthOfText, MAXFLOAT)];
@@ -206,40 +211,66 @@
         newFrame.size = CGSizeMake(fmaxf(evenNewerSize.width, widthOfText), evenNewerSize.height);
         newTextView.frame = newFrame;
         
-        
         newTextView.userInteractionEnabled = NO;
         newTextView.allowsEditingTextAttributes = NO;
+
         
-        [tempMuteSet addObject:newTextView];
+        [tempMuteArray addObject:newTextView];
+        
+        //save origin.y for later
+        [self.arrayOfYOrigins addObject:[NSNumber numberWithFloat:savedYValue]];
         
         savedYValue = savedYValue + newTextView.frame.size.height;
         //add a little extra space between clauses
         savedYValue = savedYValue + 30;
+        
+        heightOfLastTextView = newTextView.frame.size.height;
     }
     
     NSLog(@"this is the final height: %5.2f", savedYValue);
     
-    CGRect totalRect = CGRectMake(20, 0, widthOfText + 40, 500);
+    float distanceBetweenTextAndButton = 20.0;
+    float widthOfButton = 44.0;
+    float heightOfButton = 44.0;
+    
+    CGRect totalRect = CGRectMake(20, 20, (widthOfText + distanceBetweenTextAndButton + widthOfButton), 500);
     UIScrollView *tryScroll = [[UIScrollView alloc] initWithFrame:totalRect];
-    tryScroll.contentSize = CGSizeMake(totalRect.size.width, savedYValue);
+    
+    //add some extra space to the bottom of the contentView so it doesn't jump weird when scrolling from the bottom up
+    float contentHeight = savedYValue + 500 - heightOfLastTextView;
+    tryScroll.contentSize = CGSizeMake(totalRect.size.width, contentHeight);
 
-    UIView *tryView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, widthOfText + 40, savedYValue)];
+    UIView *tryView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, totalRect.size.width, savedYValue)];
     [tryScroll addSubview:tryView];
 
+    NSInteger buttonTag = 0;
     
-    for (UITextView *textView in tempMuteSet){
+    for (UITextView *textView in tempMuteArray){
         [tryView addSubview:textView];
+        
+        //also add a button at the same origin.Y
+        
+        CGRect buttonRect = CGRectMake(textView.frame.size.width + distanceBetweenTextAndButton, textView.frame.origin.y, widthOfButton, heightOfButton);
+        UIButton *OKButton = [[UIButton alloc] initWithFrame:buttonRect];
+        [OKButton setBackgroundColor:[UIColor blueColor]];
+        OKButton.tag = buttonTag;
+        [OKButton addTarget:self action:@selector(OKButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        
+        //set state changes
+        [tryView addSubview:OKButton];
+        
+        buttonTag = buttonTag + 1;
     }
     
+    self.agreementScrollView = tryScroll;
+    
     self.agreementVC = [[EQRSigAgreementVC alloc] initWithNibName:@"EQRSigAgreementVC" bundle:nil];
-    [self.agreementVC.view addSubview:tryScroll];
+    [self.agreementVC.view addSubview:self.agreementScrollView];
     self.agreementVC.modalPresentationStyle = UIModalPresentationFormSheet;
     
     [self presentViewController:self.agreementVC animated:YES completion:^{
         
-        
     }];
-    
 }
 
 
@@ -327,11 +358,6 @@
 }
 
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 
 
 /*
@@ -344,6 +370,7 @@
 }
 */
 
+#pragma mark - buttons
 -(IBAction)enterButton:(id)sender{
     
 //    EQRSigConfirmationVC *confirmVC = [[EQRSigConfirmationVC alloc] initWithNibName:@"EQRSigConfirmationVC" bundle:nil];
@@ -362,8 +389,60 @@
     [self.signatureView erase];
 }
 
+#pragma mark - agreement view
+
+-(IBAction)OKButtonTapped:(id)sender{
+    
+    //look at the sender's tag...
+    //move the scroll view to show the next block of text
+    //or exit if all buttons are selected
+    
+    NSInteger tagNumber = [sender tag];
+    
+    //only move the scroll view if it isn't the last section
+    if ([self.arrayOfYOrigins count] > (tagNumber + 1)){
+        
+        float originY = [[self.arrayOfYOrigins objectAtIndex:(tagNumber + 1)] floatValue];
+        CGPoint myPoint = CGPointMake(0, originY);
+        [self.agreementScrollView setContentOffset:myPoint animated:YES];
+    }
+    
+    //if all buttons are selected, then dismiss the VC
+    if (![sender isSelected]){
+        [sender setSelected:YES];
+        [sender setBackgroundColor:[UIColor yellowColor]];
+    }else{
+        [sender setSelected:NO];
+        [sender setBackgroundColor:[UIColor blueColor]];
+    }
+    
+    
+    NSMutableArray *tempMuteArrayOfButtons = [NSMutableArray arrayWithCapacity:1];
+    for (UIView *thisView in [[self.agreementScrollView.subviews objectAtIndex:0] subviews]){
+        
+        if ([thisView class] == [UIButton class]){
+            [tempMuteArrayOfButtons addObject:thisView];
+        }
+    }
+    
+    BOOL dismissAgreementView = YES;
+    for (UIButton *buttonView in tempMuteArrayOfButtons){
+        if (!buttonView.selected){
+            dismissAgreementView = NO;
+        }
+    }
+    
+    if (dismissAgreementView){
+        [self.agreementVC dismissViewControllerAnimated:YES completion:^{
+            
+        }];
+    }
+    
+    
+}
+
 //-(IBAction)viewGearListButton:(id)sender{
-//    
+//
 //    
 //}
 
