@@ -1674,7 +1674,7 @@
     
     UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"SigCapture" bundle:nil];
     UINavigationController *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"main"];
-    newView.modalPresentationStyle = UIModalPresentationPageSheet;
+    newView.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:newView animated:YES completion:^{
         
         //___________this is ugly, it assumes the subclass type of VC at the root of the nav controller

@@ -233,7 +233,7 @@
     float widthOfButton = 44.0;
     float heightOfButton = 44.0;
     
-    CGRect totalRect = CGRectMake(20, 20, (widthOfText + distanceBetweenTextAndButton + widthOfButton), 500);
+    CGRect totalRect = CGRectMake(20, 45, (widthOfText + distanceBetweenTextAndButton + widthOfButton), 500);
     UIScrollView *tryScroll = [[UIScrollView alloc] initWithFrame:totalRect];
     
     //add some extra space to the bottom of the contentView so it doesn't jump weird when scrolling from the bottom up
@@ -253,6 +253,8 @@
         CGRect buttonRect = CGRectMake(textView.frame.size.width + distanceBetweenTextAndButton, textView.frame.origin.y, widthOfButton, heightOfButton);
         UIButton *OKButton = [[UIButton alloc] initWithFrame:buttonRect];
         [OKButton setBackgroundColor:[UIColor blueColor]];
+        [OKButton setTitle:@"Tap to Accept" forState:UIControlStateNormal];
+        [OKButton setTitle:@"Accepted" forState:UIControlStateSelected];
         OKButton.tag = buttonTag;
         [OKButton addTarget:self action:@selector(OKButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         
