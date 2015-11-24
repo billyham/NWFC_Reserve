@@ -17,12 +17,12 @@
 #import "EQRTransaction.h"
 #import "EQRTextElement.h"
 #import "EQRSigAgreementVC.h"
+#import "EQRColors.h"
 
 @interface EQRSigCaptureMainVC ()<EQRWebDataDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *returnDateLabel;
-//@property (strong, nonatomic) IBOutlet UITextView *agreementTextView;
 @property (strong, nonatomic) IBOutlet PPSSignatureView *signatureView;
 @property (strong, nonatomic) EQRScheduleRequestItem *requestItem;
 @property (strong, nonatomic) EQRPricingWidgetSigVC *myPricingWidget;
@@ -33,6 +33,9 @@
 @property (strong, nonatomic) EQRSigAgreementVC *agreementVC;
 @property (strong, nonatomic) UIScrollView *agreementScrollView;
 @property (strong, nonatomic) NSMutableArray *arrayOfYOrigins;
+@property (strong, nonatomic) NSMutableArray *arrayOfTextViews;
+
+@property (strong, nonatomic) IBOutlet UIImageView *roundedRect;
 
 @end
 
@@ -62,30 +65,15 @@
         }
     }
     
-//    NSString* text2Content = @"I hereby assume full responsibility for the above listed equipment provided by the Northwest Film Center. Financial responsibility includes payment for all repairs, up to the full replacement value of equipment, and the full replacement value for all stolen or lost equipment. Financial responsibility also includes the rental fee for the time period in which damaged equipment is out for repair, or until replacement payment is received. I have inspected the contents of rental equipment and acknowledge that all parts and pieces are present and in working order unless otherwise noted.";
-//    NSString* text3Content = @"Projects produced through School of Film classes must include www.nwfilm.org and the following phrase in the credits: Produced through the Northwest Film Center School of Film (spelling out \"Northwest Film Center\").";
-//    NSString* text4Content = @"Penalties will be given to students for the following reasons: Returns equipment after the assigned date and time, shows blatant disregard for equipments's well being, no-shows for equipment reservations.";
-//    NSString* text5Content = @"I confirm that the equipment is in working order upon check-out and have been made aware of any pre-existing conditions. If returned equipment requires more than 10 min. cleaning, a $25 cleaning fee will be assessed.";
-//    
-//    UIFont *bodyTypeFont = [UIFont systemFontOfSize:13];
-////    UIFont *boldFont = [UIFont systemFontOfSize:13 weight:2.0];
-//    
-//    NSDictionary *fontDictionary = @{bodyTypeFont:NSFontAttributeName};
-//    NSMutableAttributedString *attMuteString = [[NSMutableAttributedString alloc] initWithString:@"" attributes:fontDictionary];
-//    
-//    NSAttributedString *attString1 = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n\n", text2Content] attributes:fontDictionary];
-//    NSAttributedString *attString2 = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n\n", text3Content] attributes:fontDictionary];
-//    NSAttributedString *attString3 = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n\n", text4Content] attributes:fontDictionary];
-//    NSAttributedString *attString4 = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@", text5Content] attributes:fontDictionary];
-//    
-//    [attMuteString appendAttributedString:attString1];
-//    [attMuteString appendAttributedString:attString2];
-//    [attMuteString appendAttributedString:attString3];
-//    [attMuteString appendAttributedString:attString4];
-//    
-//    self.agreementTextView.attributedText = attMuteString;
+    // ____COLORS_____
     
+    EQRColors *colors = [EQRColors sharedInstance];
+    UIImage *originalImage = self.roundedRect.image;
+    UIImage *tintedImage = [originalImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [self.roundedRect setImage:tintedImage];
+    self.roundedRect.tintColor = [colors.colorDic objectForKey:EQRColorEditModeBGBlue];
     
+    self.view.backgroundColor = [colors.colorDic objectForKey:EQRColorVeryLightGrey];
     
 }
 
@@ -186,12 +174,12 @@
     }
     
     //set of UITextFields
-    NSMutableArray *tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-    
     float savedYValue = 0;
     float widthOfText = 440;
     float heightOfLastTextView = 0;
+    float alphaForText = 1.0;
     
+    self.arrayOfTextViews = [NSMutableArray arrayWithCapacity:1];
     self.arrayOfYOrigins = [NSMutableArray arrayWithCapacity:1];
 
     for (EQRTextElement *textElement in self.arrayOfAgreementTextElements){
@@ -204,6 +192,7 @@
         
         newTextView.font = [UIFont systemFontOfSize:16.0];
         newTextView.textAlignment = NSTextAlignmentJustified;
+        newTextView.alpha = alphaForText;
         
         //resize textView to size of text
         CGSize evenNewerSize = [newTextView sizeThatFits:CGSizeMake(widthOfText, MAXFLOAT)];
@@ -215,7 +204,7 @@
         newTextView.allowsEditingTextAttributes = NO;
 
         
-        [tempMuteArray addObject:newTextView];
+        [self.arrayOfTextViews addObject:newTextView];
         
         //save origin.y for later
         [self.arrayOfYOrigins addObject:[NSNumber numberWithFloat:savedYValue]];
@@ -225,6 +214,8 @@
         savedYValue = savedYValue + 30;
         
         heightOfLastTextView = newTextView.frame.size.height;
+        
+        alphaForText = alphaForText * .66;
     }
     
     NSLog(@"this is the final height: %5.2f", savedYValue);
@@ -245,16 +236,16 @@
 
     NSInteger buttonTag = 0;
     
-    for (UITextView *textView in tempMuteArray){
+    for (UITextView *textView in self.arrayOfTextViews){
         [tryView addSubview:textView];
         
         //also add a button at the same origin.Y
         
-        CGRect buttonRect = CGRectMake(textView.frame.size.width + distanceBetweenTextAndButton, textView.frame.origin.y, widthOfButton, heightOfButton);
+        CGRect buttonRect = CGRectMake(textView.frame.size.width + distanceBetweenTextAndButton, textView.frame.origin.y + 10, widthOfButton, heightOfButton);
         UIButton *OKButton = [[UIButton alloc] initWithFrame:buttonRect];
-        [OKButton setBackgroundColor:[UIColor blueColor]];
-        [OKButton setTitle:@"Tap to Accept" forState:UIControlStateNormal];
-        [OKButton setTitle:@"Accepted" forState:UIControlStateSelected];
+        [OKButton setBackgroundColor:[UIColor redColor]];
+        [OKButton setTitle:@"Tap" forState:UIControlStateNormal];
+        [OKButton setTitle:@"" forState:UIControlStateSelected];
         OKButton.tag = buttonTag;
         [OKButton addTarget:self action:@selector(OKButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -268,6 +259,8 @@
     
     self.agreementVC = [[EQRSigAgreementVC alloc] initWithNibName:@"EQRSigAgreementVC" bundle:nil];
     [self.agreementVC.view addSubview:self.agreementScrollView];
+    [self.agreementVC.cancelButton addTarget:self action:@selector(cancelButton:) forControlEvents:UIControlEventTouchUpInside];
+
     self.agreementVC.modalPresentationStyle = UIModalPresentationFormSheet;
     
     [self presentViewController:self.agreementVC animated:YES completion:^{
@@ -407,15 +400,33 @@
         float originY = [[self.arrayOfYOrigins objectAtIndex:(tagNumber + 1)] floatValue];
         CGPoint myPoint = CGPointMake(0, originY);
         [self.agreementScrollView setContentOffset:myPoint animated:YES];
+        
+        //update testView alpha values
+        __block float alphaForTextView = 1.0;
+        [self.arrayOfTextViews enumerateObjectsUsingBlock:^(UITextView *textView, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            NSInteger tagNumberPlusOne = tagNumber + 1;
+            
+            if (idx <= tagNumberPlusOne){
+                
+                 textView.alpha = 1.0;
+                
+            }else{
+                
+                alphaForTextView = alphaForTextView * 0.66;
+                textView.alpha = alphaForTextView;
+            }
+        }];
+        
     }
     
     //if all buttons are selected, then dismiss the VC
     if (![sender isSelected]){
         [sender setSelected:YES];
-        [sender setBackgroundColor:[UIColor yellowColor]];
+        [sender setBackgroundColor:[UIColor greenColor]];
     }else{
         [sender setSelected:NO];
-        [sender setBackgroundColor:[UIColor blueColor]];
+        [sender setBackgroundColor:[UIColor redColor]];
     }
     
     
@@ -439,8 +450,18 @@
             
         }];
     }
+}
+
+-(IBAction)cancelButton:(id)sender{
     
+    //_____!!!!! This is weird calling to dismissals but it works... so far...
+    [self.agreementVC dismissViewControllerAnimated:YES completion:^{
+        
+    }];
     
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
 }
 
 //-(IBAction)viewGearListButton:(id)sender{

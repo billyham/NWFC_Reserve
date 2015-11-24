@@ -74,8 +74,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="sigCaptureRoundedRec.png" translatesAutoresizingMaskIntoConstraints="NO" id="7fl-ts-dlA">
+                                <rect key="frame" x="43" y="356" width="685" height="291"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" red="0.87058830259999997" green="0.9215686917" blue="0.91764712329999998" alpha="1" colorSpace="deviceRGB"/>
+                            </imageView>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uTG-vq-BPs">
                                 <rect key="frame" x="43" y="356" width="685" height="291"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <segue destination="b6D-Yh-J1N" kind="embed" id="45h-LW-Bgn"/>
                                 </connections>
@@ -153,6 +159,7 @@
                     <connections>
                         <outlet property="nameLabel" destination="9t7-Wf-nWW" id="eV9-wh-Tdq"/>
                         <outlet property="returnDateLabel" destination="Jg3-cB-yhj" id="XQP-Xx-8dM"/>
+                        <outlet property="roundedRect" destination="7fl-ts-dlA" id="vwd-p9-gnf"/>
                         <segue destination="DKT-sJ-f9J" kind="presentation" identifier="sigConfirmation" modalPresentationStyle="formSheet" id="nKc-sN-hSe"/>
                     </connections>
                 </viewController>
@@ -289,4 +296,7 @@
             <point key="canvasLocation" x="1324" y="-1091"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="sigCaptureRoundedRec.png" width="685" height="291"/>
+    </resources>
 </document>

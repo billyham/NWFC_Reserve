@@ -10,4 +10,6 @@
 
 @interface EQRSigAgreementVC : UIViewController
 
+@property (strong, nonatomic) IBOutlet UIButton *cancelButton;
+
 @end

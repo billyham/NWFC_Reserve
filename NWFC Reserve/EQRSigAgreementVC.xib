@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRSigAgreementVC">
             <connections>
+                <outlet property="cancelButton" destination="OMT-S9-hWH" id="BC2-N9-f4b"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -15,6 +16,19 @@
             <rect key="frame" x="0.0" y="0.0" width="300" height="50"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OMT-S9-hWH">
+                    <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="HwB-jv-dl8"/>
+                        <constraint firstAttribute="width" constant="30" id="ShK-jL-6y2"/>
+                        <constraint firstAttribute="height" constant="30" id="URi-Qf-Aeb"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" weight="black" pointSize="20"/>
+                    <state key="normal" title="X">
+                        <color key="titleColor" red="0.68359375" green="0.1107016856" blue="0.13759704240000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Agreement" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OI4-MG-dDh">
                     <rect key="frame" x="108.5" y="14" width="84.5" height="21"/>
                     <constraints>
@@ -27,7 +41,9 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="OMT-S9-hWH" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="CpO-Ok-LNT"/>
                 <constraint firstItem="OI4-MG-dDh" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="F0U-kX-cLK"/>
+                <constraint firstItem="OMT-S9-hWH" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="sAq-0o-WNY"/>
                 <constraint firstItem="OI4-MG-dDh" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="14" id="yAn-c3-36y"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>

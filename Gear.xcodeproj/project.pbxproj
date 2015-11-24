@@ -177,6 +177,8 @@
 		548549EE1A23193600475345 /* EQRContactAddNewVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 548549EC1A23193600475345 /* EQRContactAddNewVC.xib */; };
 		54882BD21900D588005A4D5A /* EQREditorRenterVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 54882BD01900D588005A4D5A /* EQREditorRenterVCntrllr.m */; };
 		54882BD31900D588005A4D5A /* EQREditorRenterVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54882BD11900D588005A4D5A /* EQREditorRenterVCntrllr.xib */; };
+		548BC50D1C04473800A10CA1 /* sigCaptureRoundedRec.png in Resources */ = {isa = PBXBuildFile; fileRef = 548BC50B1C04473800A10CA1 /* sigCaptureRoundedRec.png */; };
+		548BC50E1C04473800A10CA1 /* sigCaptureRoundedRec@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 548BC50C1C04473800A10CA1 /* sigCaptureRoundedRec@2x.png */; };
 		5493CA8E1990942F008A9221 /* EQRStaffUserPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5493CA8C1990942F008A9221 /* EQRStaffUserPickerViewController.m */; };
 		5493CA8F1990942F008A9221 /* EQRStaffUserPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5493CA8D1990942F008A9221 /* EQRStaffUserPickerViewController.xib */; };
 		54974B8F19C17D88002C9DB1 /* EQRDataStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = 54974B8E19C17D88002C9DB1 /* EQRDataStructure.m */; };
@@ -503,6 +505,8 @@
 		54882BCF1900D588005A4D5A /* EQREditorRenterVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREditorRenterVCntrllr.h; sourceTree = "<group>"; };
 		54882BD01900D588005A4D5A /* EQREditorRenterVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREditorRenterVCntrllr.m; sourceTree = "<group>"; };
 		54882BD11900D588005A4D5A /* EQREditorRenterVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREditorRenterVCntrllr.xib; sourceTree = "<group>"; };
+		548BC50B1C04473800A10CA1 /* sigCaptureRoundedRec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sigCaptureRoundedRec.png; sourceTree = "<group>"; };
+		548BC50C1C04473800A10CA1 /* sigCaptureRoundedRec@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sigCaptureRoundedRec@2x.png"; sourceTree = "<group>"; };
 		5493CA8B1990942F008A9221 /* EQRStaffUserPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRStaffUserPickerViewController.h; sourceTree = "<group>"; };
 		5493CA8C1990942F008A9221 /* EQRStaffUserPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRStaffUserPickerViewController.m; sourceTree = "<group>"; };
 		5493CA8D1990942F008A9221 /* EQRStaffUserPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRStaffUserPickerViewController.xib; sourceTree = "<group>"; };
@@ -887,6 +891,8 @@
 		541167BA18E545630059BA3C /* Art */ = {
 			isa = PBXGroup;
 			children = (
+				548BC50B1C04473800A10CA1 /* sigCaptureRoundedRec.png */,
+				548BC50C1C04473800A10CA1 /* sigCaptureRoundedRec@2x.png */,
 				543902A81BE5E7D4009BFF51 /* uparrow.png */,
 				543902A91BE5E7D4009BFF51 /* uparrow@2x.png */,
 				5436CD731BD8A06700952CB3 /* bigArrowPointsLeftSoloAlt.png */,
@@ -1386,8 +1392,10 @@
 				54C22B0F1A52A86F00F6610E /* EQREditorEquipListContentVC.xib in Resources */,
 				5402B7D6187586F400F0888B /* EQREquipContentViewVCntrllr.xib in Resources */,
 				541479F01B52515B009CE8A2 /* bigArrowPointsRight1@2x.png in Resources */,
+				548BC50D1C04473800A10CA1 /* sigCaptureRoundedRec.png in Resources */,
 				54263FF91AAF043D0095797E /* tab_month@2x.png in Resources */,
 				542CC23F197CECDA00BFD581 /* EQRDayDatePickerVCntrllr.xib in Resources */,
+				548BC50E1C04473800A10CA1 /* sigCaptureRoundedRec@2x.png in Resources */,
 				541479EF1B52515B009CE8A2 /* bigArrowPointsRight1.png in Resources */,
 				01C01B961BBB6978001B90F3 /* EQRGenericNumberEditor.xib in Resources */,
 				543902AA1BE5E7D4009BFF51 /* uparrow.png in Resources */,
