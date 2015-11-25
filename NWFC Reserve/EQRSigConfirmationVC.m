@@ -7,8 +7,11 @@
 //
 
 #import "EQRSigConfirmationVC.h"
+#import "EQRColors.h"
 
 @interface EQRSigConfirmationVC ()
+
+@property (strong, nonatomic) IBOutlet UIImageView *dotImage;
 
 @end
 
@@ -17,9 +20,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSLog(@"EQRSigConfirmationVC > viewDidLoad");
+//    NSLog(@"EQRSigConfirmationVC > viewDidLoad");
     
-    // Do any additional setup after loading the view.
+    EQRColors *colors = [EQRColors sharedInstance];
+    UIImage *originalImage = self.dotImage.image;
+    UIImage *tintedImage = [originalImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [self.dotImage setImage:tintedImage];
+    self.dotImage.tintColor = [colors.colorDic objectForKey:EQRColorButtonGreen];
 }
 
 
@@ -27,6 +34,7 @@
     
     //_____ Automatically dismisses self after 1 second
     [self performSelector:@selector(automatedDismissal) withObject:nil afterDelay:1.0];
+    
 }
 
 

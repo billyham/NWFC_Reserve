@@ -204,10 +204,10 @@
                                         </connections>
                                     </button>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Thank You" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="nvR-r4-1Nf">
-                                        <rect key="frame" x="14" y="99" width="240" height="101"/>
+                                        <rect key="frame" x="14" y="217" width="240" height="75"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="101" id="2rh-xv-g2a"/>
+                                            <constraint firstAttribute="height" constant="75" id="2rh-xv-g2a"/>
                                             <constraint firstAttribute="height" constant="101" id="3d4-Hf-cH3"/>
                                             <constraint firstAttribute="width" constant="240" id="WX1-pt-4YZ"/>
                                         </constraints>
@@ -219,13 +219,34 @@
                                             </mask>
                                         </variation>
                                     </textView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="circleButton.png" translatesAutoresizingMaskIntoConstraints="NO" id="6tT-dS-2vl">
+                                        <rect key="frame" x="70" y="77" width="128" height="128"/>
+                                        <color key="tintColor" red="0.51036349960000005" green="0.65718410329999999" blue="0.4137584849" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="128" id="Cwb-Xo-Cdl"/>
+                                            <constraint firstAttribute="width" constant="128" id="qQy-nR-zh6"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Completed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bhc-c0-Nsm">
+                                        <rect key="frame" x="92" y="130" width="84.5" height="21"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="21" id="PRp-RC-OB1"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="nvR-r4-1Nf" firstAttribute="top" secondItem="Wce-8s-gBz" secondAttribute="top" constant="99" id="1FW-S1-4FO"/>
-                                    <constraint firstItem="mOh-Uu-E5e" firstAttribute="top" secondItem="nvR-r4-1Nf" secondAttribute="bottom" constant="13" id="cVc-1j-eU2"/>
+                                    <constraint firstItem="nvR-r4-1Nf" firstAttribute="top" secondItem="Wce-8s-gBz" secondAttribute="top" constant="217" id="1FW-S1-4FO"/>
+                                    <constraint firstItem="Bhc-c0-Nsm" firstAttribute="top" secondItem="Wce-8s-gBz" secondAttribute="top" constant="130" id="DZo-QN-WKI"/>
+                                    <constraint firstItem="Bhc-c0-Nsm" firstAttribute="centerX" secondItem="Wce-8s-gBz" secondAttribute="centerX" id="Tmg-Fp-H39"/>
+                                    <constraint firstItem="6tT-dS-2vl" firstAttribute="centerX" secondItem="Wce-8s-gBz" secondAttribute="centerX" id="UVK-ku-496"/>
+                                    <constraint firstItem="mOh-Uu-E5e" firstAttribute="top" secondItem="nvR-r4-1Nf" secondAttribute="bottom" constant="-79" id="cVc-1j-eU2"/>
                                     <constraint firstAttribute="centerX" secondItem="mOh-Uu-E5e" secondAttribute="centerX" id="mFI-TQ-cDd"/>
                                     <constraint firstAttribute="centerX" secondItem="nvR-r4-1Nf" secondAttribute="centerX" id="oMC-eH-lqW"/>
+                                    <constraint firstItem="6tT-dS-2vl" firstAttribute="top" secondItem="Wce-8s-gBz" secondAttribute="top" constant="77" id="uRC-xK-AJA"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -241,6 +262,9 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="300" height="300"/>
+                    <connections>
+                        <outlet property="dotImage" destination="6tT-dS-2vl" id="78c-IA-xyG"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="61q-iZ-QzH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -297,6 +321,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="circleButton.png" width="68" height="68"/>
         <image name="sigCaptureRoundedRec.png" width="685" height="291"/>
     </resources>
 </document>

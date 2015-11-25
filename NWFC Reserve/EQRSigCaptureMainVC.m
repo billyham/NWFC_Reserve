@@ -91,7 +91,7 @@
         
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-        [dateFormatter setDateFormat:@"EEEE, MMM d, hh:mm a"];
+        [dateFormatter setDateFormat:@"EEEE, MMM d, h:mm a"];
         
         NSString *extendedText = [NSString stringWithFormat:@"%@%@", baseString, [dateFormatter stringFromDate:fullDate]];
         
@@ -379,12 +379,29 @@
     
 }
 
+-(IBAction)showAgreementText:(id)sender{
+    
+}
+
+-(IBAction)showEquipList:(id)sender{
+    
+    
+}
+
 -(IBAction)clearButton:(id)sender{
     
     [self.signatureView erase];
 }
 
-#pragma mark - agreement view
+-(IBAction)cancelSigCapture:(id)sender{
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+}
+
+
+#pragma mark - agreement view actions
 
 -(IBAction)OKButtonTapped:(id)sender{
     
@@ -452,7 +469,7 @@
     }
 }
 
--(IBAction)cancelButton:(id)sender{
+-(IBAction)cancelButton:(id)sender{  //This is the cancdl button inside the Agreement Model View
     
     //_____!!!!! This is weird calling to dismissals but it works... so far...
     [self.agreementVC dismissViewControllerAnimated:YES completion:^{
