@@ -269,7 +269,7 @@
 }
 
 
-#pragma mark = get pricing info
+#pragma mark - get pricing info
 
 -(void)getTransactionInfo{
     

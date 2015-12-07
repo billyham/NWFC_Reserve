@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface EQRQuickViewPage3VCntrllr : UIViewController
+@interface EQRQuickViewPage3VCntrllr : UIViewController <UIDocumentInteractionControllerDelegate>
 
 @property BOOL fromItinerary;
 
@@ -18,5 +18,8 @@
 -(IBAction)duplicate:(id)sender;
 -(IBAction)split:(id)sender;
 -(IBAction)print:(id)sender;
+
+-(IBAction)pdf:(id)sender;
+-(IBAction)viewPdf:(id)sender;
 
 @end

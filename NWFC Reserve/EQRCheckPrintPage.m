@@ -15,6 +15,7 @@
 #import "EQRDataStructure.h"
 #import "EQRMultiColumnTextView.h"
 #import "EQRMiscJoin.h"
+#import "EQRPDFGenerator.h"
 
 @interface EQRCheckPrintPage ()
 
@@ -22,6 +23,7 @@
 @property (nonatomic, strong) IBOutlet EQRMultiColumnTextView* myTwoColumnView;
 @property NSInteger countOfColumns;
 @property float additionalXAdjustment;
+@property BOOL isPDF;
 
 @end
 
@@ -39,13 +41,14 @@
 
 #pragma mark - setup methods
 
--(void)initialSetupWithScheduleRequestItem:(EQRScheduleRequestItem*)request{
+-(void)initialSetupWithScheduleRequestItem:(EQRScheduleRequestItem*)request forPDF:(BOOL)isPDF{
     
     if (request){
         
         self.request = request;
     }
     
+    self.isPDF = isPDF;
     self.countOfColumns = 0;
     self.additionalXAdjustment = 0.f;
     
@@ -299,11 +302,20 @@
     
 
     
-    
-    
-    //__________   AUTOMATICALLY DO THE PRINTING  ___________
-    
-    [self performSelector:@selector(justPrint) withObject:nil afterDelay:1.0];
+    if (self.isPDF){
+        
+        //_________  AUTOMATICALLY DO THE PDF GENERATION  _____________
+        EQRPDFGenerator *pdfGenerator = [[EQRPDFGenerator alloc] init];
+        pdfGenerator.myTextView = self.summaryTextView;
+        [pdfGenerator launchPDFGenerator];
+        
+        
+    }else{
+        
+        //__________   OR... AUTOMATICALLY DO THE PRINTING  ___________
+        
+        [self performSelector:@selector(justPrint) withObject:nil afterDelay:1.0];
+    }
     
 }
 

@@ -1276,7 +1276,7 @@
     EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
     
     //add the request item to the view controller
-    [pageForPrint initialSetupWithScheduleRequestItem:chosenItem];
+    [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:NO];
     
     //assign ivar variables
     pageForPrint.rentorNameAtt = chosenItem.contact_name;

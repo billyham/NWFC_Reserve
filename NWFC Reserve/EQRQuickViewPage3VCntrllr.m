@@ -16,10 +16,12 @@
 #import "EQRCheckPrintPage.h"
 
 
-@interface EQRQuickViewPage3VCntrllr ()
+
+@interface EQRQuickViewPage3VCntrllr () 
 
 @property (strong, nonatomic) NSString* mykeyID;
 @property (strong, nonatomic) NSMutableDictionary* userInfo;
+@property (strong, nonatomic) UIDocumentInteractionController *documentController;
 
 
 @end
@@ -273,7 +275,7 @@
     EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
     
     //add the request item to the view controller
-    [pageForPrint initialSetupWithScheduleRequestItem:chosenItem];
+    [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:NO];
     
     //assign ivar variables
     pageForPrint.rentorNameAtt = chosenItem.contact_name;
@@ -285,6 +287,118 @@
     [self presentViewController:pageForPrint animated:YES completion:^{
         
     }];
+}
+
+-(IBAction)pdf:(id)sender{
+    
+    //get complete scheduleRequest item info
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", self.mykeyID, nil];
+    NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+    __block EQRScheduleRequestItem* chosenItem;
+    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        if ([muteArray count] > 0){
+            
+            chosenItem = [muteArray objectAtIndex:0];
+        } else {
+            
+            NSLog(@"no request found for key id: %@. Abort printing.", self.mykeyID);
+            return;
+        }
+    }];
+    
+    //also gather contact info
+    NSArray* alphaArray = [NSArray arrayWithObjects:@"key_id", chosenItem.contact_foreignKey, nil];
+    NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
+    [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:betaArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+        
+        if ([muteArray count] > 0){
+            
+            chosenItem.contactNameItem = [muteArray objectAtIndex:0];
+            
+        }else {
+            
+            //error handling if no contact object is returned
+            NSLog(@"QuickViewPage3VC > print  no contact returned with contact foreign key");
+        }
+    }];
+    
+    //also get notes (and other info)
+    NSArray* deltaArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:deltaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        if ([muteArray count] > 0){
+            
+            chosenItem.notes = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] notes];
+            
+        }else {
+            
+            //error handling if no contact object is returned
+            NSLog(@"QuickViewPage3VC > print  getScheduleRequestQuickViewData failed");
+        }
+    }];
+    
+    //create printable page view controller
+    EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
+    
+    //add the request item to the view controller
+    [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:YES];
+    
+    //assign ivar variables
+    pageForPrint.rentorNameAtt = chosenItem.contact_name;
+    pageForPrint.rentorEmailAtt = chosenItem.contactNameItem.email;
+    pageForPrint.rentorPhoneAtt = chosenItem.contactNameItem.phone;
+    
+    
+    //show the view controller
+    [self presentViewController:pageForPrint animated:YES completion:^{
+        
+    }];
+    
+}
+
+-(IBAction)viewPdf:(id)sender{
+    
+    NSLog(@"viewPDF fires");
+    
+    NSString *urlString = [[self applicationDocumentDirectory] stringByAppendingPathComponent:@"/testFile"];
+    NSURL *myUrl = [[NSURL alloc] initFileURLWithPath:urlString];
+    
+    NSError *error;
+    if ([myUrl checkResourceIsReachableAndReturnError:&error]){
+        NSLog(@"yes, url is good");
+    }else{
+        NSLog(@"no, url is BAD");
+    }
+    
+    
+    UIDocumentInteractionController *documentController = [UIDocumentInteractionController interactionControllerWithURL:myUrl];
+//    self.documentController = documentController;
+    documentController.delegate = self;
+    
+    BOOL presentBool = [documentController presentPreviewAnimated:YES];
+    NSLog(@"says this about presenting the documentController: %u", presentBool);
+    
+}
+
+- (NSString*)applicationDocumentDirectory {
+    
+    //Returns the path to the application's documents directory.
+    
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+    return basePath;
+}
+
+#pragma mark - UIDocumentationInteractionControllerDelegate method
+
+- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller{
+    
+    NSLog(@"documentInteractionControllerViewControllerForPreview fires");
+    
+    return  [[self navigationController] presentingViewController];
+    
 }
 
 

@@ -27,7 +27,7 @@
 
 
 
--(void)initialSetupWithScheduleRequestItem:(EQRScheduleRequestItem*)request;
+-(void)initialSetupWithScheduleRequestItem:(EQRScheduleRequestItem*)request forPDF:(BOOL)isPDF;
 
 -(IBAction)dismissMe:(id)sender;
 
