@@ -30,8 +30,9 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
         CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(currentText);
         if (framesetter) {
             
-            NSString *pdfFileName = [self getPDFFileName];
+            NSString *pdfFileName = [NSString stringWithFormat:@"%@", [self getPDFFileName]];
             // Create the PDF context using the default page size of 612 x 792.
+            NSLog(@"this is the value for pdfFileName: %@", pdfFileName);
             UIGraphicsBeginPDFContextToFile(pdfFileName, CGRectZero, nil);
             
             CFRange currentRange = CFRangeMake(0, 0);
@@ -145,7 +146,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
 
 - (NSString *)getPDFFileName{
     
-    NSString *entireString = [[self applicationDocumentDirectory] stringByAppendingPathComponent:@"testFile"];
+    NSString *entireString = [[self applicationDocumentDirectory] stringByAppendingPathComponent:@"testFile.pdf"];
     return entireString;
 }
 

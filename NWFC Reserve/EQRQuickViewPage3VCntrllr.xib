@@ -21,7 +21,7 @@
                         <constraint firstAttribute="height" constant="21" id="WR0-fj-0hm"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lju-II-yz6">
@@ -62,20 +62,6 @@
                         <action selector="pdf:" destination="-1" eventType="touchUpInside" id="mz2-N2-rUp"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yqR-1n-V9K">
-                    <rect key="frame" x="114.5" y="265" width="71" height="30"/>
-                    <constraints>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="UXc-fi-8UQ"/>
-                        <constraint firstAttribute="height" constant="30" id="oYE-Op-bzK"/>
-                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="30" id="r10-Vs-apP"/>
-                    </constraints>
-                    <state key="normal" title="Show PDF">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="viewPdf:" destination="-1" eventType="touchUpInside" id="D8a-bZ-HHT"/>
-                    </connections>
-                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zk1-z8-PVh">
                     <rect key="frame" x="75" y="113" width="150" height="30"/>
                     <constraints>
@@ -96,12 +82,10 @@
                 <constraint firstAttribute="centerX" secondItem="d9G-Ry-2gK" secondAttribute="centerX" id="GcI-0m-Ch6"/>
                 <constraint firstAttribute="centerX" secondItem="zk1-z8-PVh" secondAttribute="centerX" id="O78-vi-XIL"/>
                 <constraint firstAttribute="centerX" secondItem="Lju-II-yz6" secondAttribute="centerX" id="SA6-Z7-Qnh"/>
-                <constraint firstItem="yqR-1n-V9K" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="VCo-NU-8UW"/>
                 <constraint firstItem="zk1-z8-PVh" firstAttribute="top" secondItem="Plc-Wp-TbK" secondAttribute="bottom" constant="19" id="ce6-hC-nUv"/>
                 <constraint firstItem="d9G-Ry-2gK" firstAttribute="top" secondItem="Lju-II-yz6" secondAttribute="bottom" constant="8" id="gnE-Q8-7pT"/>
                 <constraint firstItem="zVX-mF-Wyg" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="pIX-ON-ier"/>
                 <constraint firstItem="zVX-mF-Wyg" firstAttribute="top" secondItem="d9G-Ry-2gK" secondAttribute="bottom" constant="8" id="r6y-6N-3mm"/>
-                <constraint firstItem="yqR-1n-V9K" firstAttribute="top" secondItem="zVX-mF-Wyg" secondAttribute="bottom" constant="8" id="tcd-1y-0Gg"/>
                 <constraint firstItem="Lju-II-yz6" firstAttribute="top" secondItem="zk1-z8-PVh" secondAttribute="bottom" constant="8" id="wJ8-jg-VBK"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>

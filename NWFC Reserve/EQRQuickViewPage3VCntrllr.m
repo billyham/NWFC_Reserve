@@ -358,49 +358,6 @@
     
 }
 
--(IBAction)viewPdf:(id)sender{
-    
-    NSLog(@"viewPDF fires");
-    
-    NSString *urlString = [[self applicationDocumentDirectory] stringByAppendingPathComponent:@"/testFile"];
-    NSURL *myUrl = [[NSURL alloc] initFileURLWithPath:urlString];
-    
-    NSError *error;
-    if ([myUrl checkResourceIsReachableAndReturnError:&error]){
-        NSLog(@"yes, url is good");
-    }else{
-        NSLog(@"no, url is BAD");
-    }
-    
-    
-    UIDocumentInteractionController *documentController = [UIDocumentInteractionController interactionControllerWithURL:myUrl];
-//    self.documentController = documentController;
-    documentController.delegate = self;
-    
-    BOOL presentBool = [documentController presentPreviewAnimated:YES];
-    NSLog(@"says this about presenting the documentController: %u", presentBool);
-    
-}
-
-- (NSString*)applicationDocumentDirectory {
-    
-    //Returns the path to the application's documents directory.
-    
-    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-    return basePath;
-}
-
-#pragma mark - UIDocumentationInteractionControllerDelegate method
-
-- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller{
-    
-    NSLog(@"documentInteractionControllerViewControllerForPreview fires");
-    
-    return  [[self navigationController] presentingViewController];
-    
-}
-
 
 - (void)didReceiveMemoryWarning
 {

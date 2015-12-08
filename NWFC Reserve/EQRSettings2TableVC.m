@@ -12,7 +12,7 @@
 #import "EQRColors.h"
 #import "EQRGlobals.h"
 
-@interface EQRSettings2TableVC ()
+@interface EQRSettings2TableVC () <UIDocumentInteractionControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel* urlString;
 @property (strong, nonatomic) IBOutlet UISwitch *useCloudKitSwitch;
@@ -110,6 +110,57 @@
     }];
 }
 
+-(IBAction)tapInShowPDF:(id)sender{
+    
+    NSLog(@"viewPDF fires");
+    
+//    NSString *urlString = [[self applicationDocumentDirectory] stringByAppendingPathComponent:@"/testFile"];
+//    NSURL *myUrl = [[NSURL alloc] initFileURLWithPath:urlString];
+    
+    
+    NSURL *baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"file:%@",[self applicationDocumentDirectory]]];
+    NSURL *url = [NSURL URLWithString:@"Caches/testFile.pdf" relativeToURL:baseUrl];
+    NSURL *absUrl = [url absoluteURL];
+    
+    
+    NSLog(@"this is the url: %@", absUrl);
+    
+    NSError *error;
+    if ([absUrl checkResourceIsReachableAndReturnError:&error]){
+        NSLog(@"yes, url is good");
+    }else{
+        NSLog(@"no, url is BAD");
+    }
+    
+    
+    UIDocumentInteractionController *documentController = [UIDocumentInteractionController interactionControllerWithURL:absUrl];
+    //    self.documentController = documentController;
+    documentController.delegate = self;
+    
+    BOOL presentBool = [documentController presentPreviewAnimated:YES];
+    NSLog(@"says this about presenting the documentController: %u", presentBool);
+    
+}
+
+- (NSString*)applicationDocumentDirectory {
+    
+    //Returns the path to the application's documents directory.
+    
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+    return basePath;
+}
+
+#pragma mark - UIDocumentationInteractionControllerDelegate method
+
+- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller{
+    
+    NSLog(@"documentInteractionControllerViewControllerForPreview fires");
+    
+    return  [self navigationController];
+    
+}
+
 #pragma mark - EQRGenericTextEditor delegate methods
 
 //a delegate method
@@ -202,6 +253,14 @@
         if (indexPath.row == 0){
             
             [self tapInDatabaseURL:nil];
+        }
+    }
+    
+    if (indexPath.section == 1){
+        
+        if (indexPath.row == 0){
+            
+            [self tapInShowPDF:nil];
         }
     }
 }
