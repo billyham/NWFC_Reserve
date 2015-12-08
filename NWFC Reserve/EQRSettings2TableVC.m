@@ -122,14 +122,13 @@
     NSURL *url = [NSURL URLWithString:@"Caches/testFile.pdf" relativeToURL:baseUrl];
     NSURL *absUrl = [url absoluteURL];
     
-    
-    NSLog(@"this is the url: %@", absUrl);
+//    NSLog(@"this is the url: %@", absUrl);
     
     NSError *error;
     if ([absUrl checkResourceIsReachableAndReturnError:&error]){
-        NSLog(@"yes, url is good");
+//        NSLog(@"yes, url is good");
     }else{
-        NSLog(@"no, url is BAD");
+//        NSLog(@"no, url is BAD");
     }
     
     
@@ -137,9 +136,11 @@
     //    self.documentController = documentController;
     documentController.delegate = self;
     
-    BOOL presentBool = [documentController presentPreviewAnimated:YES];
-    NSLog(@"says this about presenting the documentController: %u", presentBool);
+    [documentController presentPreviewAnimated:YES];
+//    NSLog(@"says this about presenting the documentController: %u", presentBool);
     
+    // ___ This presents an action sheet, which isn't really all the helpful ___
+    //    [controller presentOptionsMenuFromRect:[[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]] frame]     inView:self.view animated:YES];
 }
 
 - (NSString*)applicationDocumentDirectory {
@@ -155,10 +156,13 @@
 
 - (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller{
     
-    NSLog(@"documentInteractionControllerViewControllerForPreview fires");
+    //    NSLog(@"documentInteractionControllerViewControllerForPreview fires");
+    
+    // ___ This presents an action sheet, but it's unresponsive... ___
+//    [controller presentOptionsMenuFromRect:[[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]] frame]     inView:self.view animated:YES];
     
     return  [self navigationController];
-    
+
 }
 
 #pragma mark - EQRGenericTextEditor delegate methods

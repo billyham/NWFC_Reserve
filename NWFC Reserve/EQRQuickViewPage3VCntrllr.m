@@ -343,6 +343,7 @@
     EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
     
     //add the request item to the view controller
+    //___ Specify for PDF only ___
     [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:YES];
     
     //assign ivar variables

@@ -18,6 +18,7 @@
 #import "EQRTextElement.h"
 #import "EQRSigAgreementVC.h"
 #import "EQRColors.h"
+#import "EQRCheckPrintPage.h"
 
 @interface EQRSigCaptureMainVC ()<EQRWebDataDelegate>
 
@@ -398,6 +399,63 @@
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];
+}
+
+-(IBAction)generatePDF:(id)sender{
+    
+    
+    //get complete scheduleRequest item info
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", self.requestItem.key_id, nil];
+    NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+    __block EQRScheduleRequestItem* chosenItem;
+    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+        
+        if ([muteArray count] > 0){
+            
+            chosenItem = [muteArray objectAtIndex:0];
+        }
+    }];
+    
+    //add the notes
+    chosenItem.notes = self.requestItem.notes;
+    //    NSLog(@"these are the notes >>%@<<", chosenItem.notes);
+    
+    //add contact information
+    NSString* email;
+    NSString* phone;
+    if (self.requestItem.contactNameItem){
+        email = self.requestItem.contactNameItem.email;
+        phone = self.requestItem.contactNameItem.phone;
+        
+        chosenItem.contactNameItem = self.requestItem.contactNameItem;
+    }
+    
+    
+    //create printable page view controller
+    EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
+    
+    //add the request item to the view controller
+    [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:YES];
+    
+    //if a signatue exists, add it to the CheckPrintPage object
+    if (self.signatureView.hasSignature){
+        [pageForPrint addSignatureImage:self.signatureView.signatureImage];
+    }
+    
+    
+    //assign ivar variables
+    pageForPrint.rentorNameAtt = chosenItem.contact_name;
+    pageForPrint.rentorEmailAtt = email;
+    pageForPrint.rentorPhoneAtt = phone;
+    
+    
+    //show the view controller
+    [self presentViewController:pageForPrint animated:YES completion:^{
+        
+        
+    }];
+    
 }
 
 

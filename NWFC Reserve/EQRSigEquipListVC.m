@@ -73,6 +73,26 @@
     }];
 }
 
+-(IBAction)dismissGearView:(id)sender{
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        
+    }];
+}
+
+-(IBAction)generatePDF:(id)sender{
+    
+    
+    
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        
+    }];
+    
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

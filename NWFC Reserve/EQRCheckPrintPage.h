@@ -28,6 +28,8 @@
 
 
 -(void)initialSetupWithScheduleRequestItem:(EQRScheduleRequestItem*)request forPDF:(BOOL)isPDF;
+-(void)addSignatureImage:(UIImage *)sigImage;
+
 
 -(IBAction)dismissMe:(id)sender;
 

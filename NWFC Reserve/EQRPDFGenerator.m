@@ -32,12 +32,14 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
             
             NSString *pdfFileName = [NSString stringWithFormat:@"%@", [self getPDFFileName]];
             // Create the PDF context using the default page size of 612 x 792.
-            NSLog(@"this is the value for pdfFileName: %@", pdfFileName);
+//            NSLog(@"this is the value for pdfFileName: %@", pdfFileName);
+            
             UIGraphicsBeginPDFContextToFile(pdfFileName, CGRectZero, nil);
             
             CFRange currentRange = CFRangeMake(0, 0);
             NSInteger currentPage = 0;
             BOOL done = NO;
+            NSInteger hasDrawnMultiColumn = NO;
             
             do {
                 // Mark the beginning of a new page.
@@ -50,6 +52,18 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
                 // Render the current page and update the current range to
                 // point to the beginning of the next page.
                 currentRange = [self renderPage:currentPage withTextRange:currentRange andFramesetter:framesetter];
+                
+                
+                if (!hasDrawnMultiColumn){
+                    
+                    //___ Draw MultiColumnText ___
+                    [self drawMultiColumnText];
+                    hasDrawnMultiColumn = YES;
+                }
+                
+                if (self.hasSigImage){
+                    [self drawSignatureImage];
+                }
                 
                 // If we're at the end of the text, exit the loop.
                 if (currentRange.location == CFAttributedStringGetLength((CFAttributedStringRef)currentText))
@@ -111,6 +125,56 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
     CFRelease(frameRef);
     
     return currentRange;
+}
+
+-(void)drawMultiColumnText{
+    
+    // Get the graphics context.
+    CGContextRef  currentContext = UIGraphicsGetCurrentContext();
+    
+    // Put the text matrix into a known state. This ensures
+    // that no old scaling factors are left in place.
+    CGContextSetTextMatrix(currentContext, CGAffineTransformIdentity);
+    
+    // Core Text draws from the bottom-left corner up, so flip
+    // the current transform prior to drawing.
+    CGContextTranslateCTM(currentContext, 0, 792);
+    CGContextScaleCTM(currentContext, 1.0, -1.0);
+    
+    
+    //______ This is essentially EQRMultiColumnTextView's drawRect method... ___
+    //now the equipment list
+    for (NSUInteger i = 0; i < [self.myMultiColumnView.layoutManager.textContainers count]; i++) {
+        
+        NSTextContainer *container = self.myMultiColumnView.layoutManager.textContainers[i];
+        CGPoint origin = [self.myMultiColumnView.textOrigins[i] CGPointValue];
+        
+        //add 220 to the y value to place below header
+        CGPoint newOrigin = CGPointMake(origin.x + 30.f + self.additionalXAdjustment, origin.y + 250.f);
+        
+        NSRange glyphRange = [self.myMultiColumnView.layoutManager glyphRangeForTextContainer:container];
+        
+        [self.myMultiColumnView.layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:newOrigin];
+    }
+}
+
+-(void)drawSignatureImage{
+    
+    // Get the graphics context.
+    CGContextRef  currentContext = UIGraphicsGetCurrentContext();
+    
+    // Put the text matrix into a known state. This ensures
+    // that no old scaling factors are left in place.
+    CGContextSetTextMatrix(currentContext, CGAffineTransformIdentity);
+    
+    // Core Text draws from the bottom-left corner up, and so does the UIImage!!
+    // Scaled down to fit. 
+    CGContextTranslateCTM(currentContext, 0, 792);
+    CGContextScaleCTM(currentContext, 0.35, 0.35);
+    
+    
+    [self.sigImage drawAtPoint:CGPointMake(550.0, -600.0)];
+    
 }
 
 

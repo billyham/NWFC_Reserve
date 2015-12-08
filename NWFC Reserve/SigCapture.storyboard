@@ -15,38 +15,27 @@
                         <viewControllerLayoutGuide type="bottom" id="z3P-qj-Yb9"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="afp-O6-U4s">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="901-Xv-hII" userLabel="mainSubview">
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hF5-ct-F8k">
-                                        <rect key="frame" x="352" y="586" width="65" height="30"/>
-                                        <state key="normal" title="Confirm">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="confirmButton:" destination="DKT-sJ-f9J" eventType="touchUpInside" id="7jm-EC-u8H"/>
-                                            <action selector="continueButton:" destination="aye-bM-ccc" eventType="touchUpInside" id="Nhx-Af-PQk"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hxs-EL-aGq">
-                                        <rect key="frame" x="347" y="676" width="75" height="30"/>
-                                        <state key="normal" title="Cancel">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="cancelButton:" destination="aye-bM-ccc" eventType="touchUpInside" id="2v3-Nv-JTI"/>
-                                            <action selector="cancelButton:" destination="DKT-sJ-f9J" eventType="touchUpInside" id="ARx-HE-LOQ"/>
-                                        </connections>
-                                    </button>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="List of Gear" translatesAutoresizingMaskIntoConstraints="NO" id="7Gv-N3-8cD">
                                         <rect key="frame" x="119" y="109" width="530" height="433"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hxs-EL-aGq">
+                                        <rect key="frame" x="347" y="661" width="75" height="44"/>
+                                        <state key="normal" title="Dismiss">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="dismissGearView:" destination="aye-bM-ccc" eventType="touchUpInside" id="NLu-gC-SJS"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
@@ -60,7 +49,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FQ7-70-Q59" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="550" y="-1751"/>
+            <point key="canvasLocation" x="1428" y="-1887"/>
         </scene>
         <!--Sig Capture MainVC-->
         <scene sceneID="rMZ-fh-ArW">
@@ -111,7 +100,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G1c-rK-MPS">
-                                <rect key="frame" x="681" y="646" width="46" height="30"/>
+                                <rect key="frame" x="681" y="646" width="46" height="44"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Clear">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -151,6 +140,20 @@
                                     <segue destination="41e-aJ-Cuc" kind="embed" id="jJG-gJ-Ddy"/>
                                 </connections>
                             </containerView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zcU-JF-PVR">
+                                <rect key="frame" x="43" y="646" width="76" height="44"/>
+                                <state key="normal" title="View Gear"/>
+                                <connections>
+                                    <segue destination="aye-bM-ccc" kind="presentation" id="mfQ-uc-iJC"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aKO-c6-HMq">
+                                <rect key="frame" x="43" y="699" width="76" height="44"/>
+                                <state key="normal" title="Made PDF"/>
+                                <connections>
+                                    <action selector="generatePDF:" destination="Qry-53-oLo" eventType="touchUpInside" id="Wb6-Fd-JhO"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>

@@ -24,6 +24,8 @@
 @property NSInteger countOfColumns;
 @property float additionalXAdjustment;
 @property BOOL isPDF;
+@property (strong, nonatomic) UIImage *sigImage;
+@property BOOL hasSigImage;
 
 @end
 
@@ -72,7 +74,12 @@
     
     [self.request.arrayOfEquipmentJoins addObjectsFromArray:returnArrayOfJoins];
     
+}
+
+-(void)addSignatureImage:(UIImage *)sigImage{
     
+    self.hasSigImage = YES;
+    self.sigImage = sigImage;
     
 }
 
@@ -130,7 +137,7 @@
     paraStyle.headIndent = 50.f;
     
     NSMutableParagraphStyle* headerParaStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
-    headerParaStyle.firstLineHeadIndent = 40.f;
+    headerParaStyle.firstLineHeadIndent = 20.f;
     headerParaStyle.headIndent = 40.f;
     
     NSMutableParagraphStyle* notesHeaderParaStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
@@ -229,7 +236,7 @@
             NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName,
                                         paraStyle, NSParagraphStyleAttributeName,
                                         nil];
-            NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"   __|__   %@  #%@\r", equipUniqueObj.name, equipUniqueObj.distinquishing_id] attributes:arrayAtt11];
+            NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"      %@  #%@\r", equipUniqueObj.name, equipUniqueObj.distinquishing_id] attributes:arrayAtt11];
             
             [self.summaryTotalAtt appendAttributedString:thisHereAttString];
         }
@@ -261,7 +268,7 @@
             NSDictionary* arrayAtt14 = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName,
                                         paraStyle, NSParagraphStyleAttributeName,
                                         nil];
-            NSAttributedString* thisHereAttStringAgain = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"   __|__   %@\r", miscJoin.name] attributes:arrayAtt14];
+            NSAttributedString* thisHereAttStringAgain = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"      %@\r", miscJoin.name] attributes:arrayAtt14];
             
             [self.summaryTotalAtt appendAttributedString:thisHereAttStringAgain];
         }
@@ -306,7 +313,16 @@
         
         //_________  AUTOMATICALLY DO THE PDF GENERATION  _____________
         EQRPDFGenerator *pdfGenerator = [[EQRPDFGenerator alloc] init];
+        
         pdfGenerator.myTextView = self.summaryTextView;
+        pdfGenerator.myMultiColumnView = self.myTwoColumnView;
+        pdfGenerator.additionalXAdjustment = self.additionalXAdjustment;
+        
+        if (self.hasSigImage){
+            pdfGenerator.hasSigImage = YES;
+            pdfGenerator.sigImage = self.sigImage;
+        }
+        
         [pdfGenerator launchPDFGenerator];
         
         
