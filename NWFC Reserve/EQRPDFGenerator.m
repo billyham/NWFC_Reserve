@@ -168,7 +168,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
     CGContextSetTextMatrix(currentContext, CGAffineTransformIdentity);
     
     // Core Text draws from the bottom-left corner up, and so does the UIImage!!
-    // Scaled down to fit. 
+    // Scaled down to fit.
     CGContextTranslateCTM(currentContext, 0, 792);
     CGContextScaleCTM(currentContext, 0.35, 0.35);
     
@@ -180,7 +180,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
 
 - (void)drawPageNumber:(NSInteger)pageNum{
     
-    NSString *pageString = [NSString stringWithFormat:@"Page %d", pageNum];
+    NSString *pageString = [NSString stringWithFormat:@"Page %ld", (long)pageNum];
     UIFont *theFont = [UIFont systemFontOfSize:12];
     CGSize maxSize = CGSizeMake(612, 72);
     

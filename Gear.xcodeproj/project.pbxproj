@@ -185,6 +185,7 @@
 		54974B8F19C17D88002C9DB1 /* EQRDataStructure.m in Sources */ = {isa = PBXBuildFile; fileRef = 54974B8E19C17D88002C9DB1 /* EQRDataStructure.m */; };
 		5497F5031A1DCA79008A7E52 /* EQRClassPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5497F5011A1DCA79008A7E52 /* EQRClassPickerVC.m */; };
 		5497F5041A1DCA79008A7E52 /* EQRClassPickerVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5497F5021A1DCA79008A7E52 /* EQRClassPickerVC.xib */; };
+		5498C12B1C1821C0001D2E0F /* EQRCloudDocuments.m in Sources */ = {isa = PBXBuildFile; fileRef = 5498C12A1C1821C0001D2E0F /* EQRCloudDocuments.m */; };
 		549966921BA53D4300F6DCE6 /* EQRSigEquipListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 549966911BA53D4300F6DCE6 /* EQRSigEquipListVC.m */; };
 		549966961BA546EE00F6DCE6 /* EQRReqeustDatesAndEquipListVM.m in Sources */ = {isa = PBXBuildFile; fileRef = 549966951BA546EE00F6DCE6 /* EQRReqeustDatesAndEquipListVM.m */; };
 		549BF3BC191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 549BF3BA191B5C8600DCC44E /* EQREquipSummaryGenericVCntrllr.m */; };
@@ -518,6 +519,8 @@
 		5497F5001A1DCA79008A7E52 /* EQRClassPickerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRClassPickerVC.h; sourceTree = "<group>"; };
 		5497F5011A1DCA79008A7E52 /* EQRClassPickerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRClassPickerVC.m; sourceTree = "<group>"; };
 		5497F5021A1DCA79008A7E52 /* EQRClassPickerVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRClassPickerVC.xib; sourceTree = "<group>"; };
+		5498C1291C1821C0001D2E0F /* EQRCloudDocuments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRCloudDocuments.h; sourceTree = "<group>"; };
+		5498C12A1C1821C0001D2E0F /* EQRCloudDocuments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRCloudDocuments.m; sourceTree = "<group>"; };
 		549966901BA53D4300F6DCE6 /* EQRSigEquipListVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRSigEquipListVC.h; sourceTree = "<group>"; };
 		549966911BA53D4300F6DCE6 /* EQRSigEquipListVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRSigEquipListVC.m; sourceTree = "<group>"; };
 		549966941BA546EE00F6DCE6 /* EQRReqeustDatesAndEquipListVM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRReqeustDatesAndEquipListVM.h; sourceTree = "<group>"; };
@@ -667,6 +670,8 @@
 				545661DB183239520067B40D /* EQRWebData.m */,
 				54C0E5441AB167030038CA86 /* EQRCloudData.h */,
 				54C0E5451AB167030038CA86 /* EQRCloudData.m */,
+				5498C1291C1821C0001D2E0F /* EQRCloudDocuments.h */,
+				5498C12A1C1821C0001D2E0F /* EQRCloudDocuments.m */,
 			);
 			name = "Data Control";
 			sourceTree = "<group>";
@@ -1544,6 +1549,7 @@
 				545661DF18323ABC0067B40D /* EQREquipItem.m in Sources */,
 				541E548D1ADB529600EE8909 /* EQRSettingsLeftTableVC.m in Sources */,
 				548549ED1A23193600475345 /* EQRContactAddNewVC.m in Sources */,
+				5498C12B1C1821C0001D2E0F /* EQRCloudDocuments.m in Sources */,
 				54AB4DCC1BA2CE6300A0358C /* EQRSigConfirmationVC.m in Sources */,
 				5431456B197E3E75008ED609 /* EQRQuickViewPage1VCntrllr.m in Sources */,
 				5493CA8E1990942F008A9221 /* EQRStaffUserPickerViewController.m in Sources */,
