@@ -10,6 +10,14 @@
 #import <CoreText/CoreText.h>
 
 
+@interface EQRPDFGenerator () <UIDocumentPickerDelegate>
+
+//@property (strong, nonatomic) NSString *UTIForPDF;
+@property (strong, nonatomic) NSURL *URLForPDFFile;
+@property (strong, nonatomic) UIDocumentPickerViewController *myDocumentPickerVC;
+
+@end
+
 @implementation EQRPDFGenerator
 
 // Much of this is copied straight from Apple documentation:
@@ -20,7 +28,67 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
 -(void)launchPDFGenerator{
     
     [self savePDFFile:nil];
+    
+    [self exportPDFToICloudDrive];
 }
+
+-(void)exportPDFToICloudDrive{
+    
+    if (self.URLForPDFFile){
+        UIDocumentPickerViewController *documentPickerVC = [[UIDocumentPickerViewController alloc] initWithURL:self.URLForPDFFile inMode:UIDocumentPickerModeExportToService];
+        
+        if (documentPickerVC){
+            self.myDocumentPickerVC = documentPickerVC;
+        }
+    }else{
+        
+        NSLog(@"No valid file url: %@", self.URLForPDFFile);
+    }
+    
+    
+    
+    //______  USE this method when IMPORTING a file  ______
+    //need UTI representing the type of document
+    //    NSArray *arrayOfDocTypes = @[@"com.adobe.pdf"];
+    
+//    UIDocumentPickerViewController *documentPickerVC = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:arrayOfDocTypes inMode:];
+    
+
+}
+
+// Callback
+-(void)documentMenu:(UIDocumentMenuViewController *)documentMenu didPickDocumentPicker:(UIDocumentPickerViewController *)documentPicker{
+    
+    documentPicker.delegate = self;
+    //___!!!!!  Oh yeah, this needs to be called by a VC  !!!!____
+//    [self presentViewController:documentPicker animated:YES completion:nil];
+}
+
+#pragma mark - Document Picker Delegate Methods
+
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentAtURL:(NSURL *)url{
+    
+    if (url){
+        //pass in the url of the file
+        
+        
+    }else{
+        
+        NSLog(@"EQRPDFGenerator > documentPicker: didPickerDocumentAtURL failed to return url");
+    }
+
+}
+
+- (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller{
+    
+    
+}
+
+
+
+
+
+#pragma mark - Saving PDF File
 
 - (IBAction)savePDFFile:(id)sender{
     
@@ -31,6 +99,11 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
         if (framesetter) {
             
             NSString *pdfFileName = [NSString stringWithFormat:@"%@", [self getPDFFileName]];
+            
+            //___ Save the URL for Exporting ___
+            self.URLForPDFFile = [NSURL URLWithString:pdfFileName];
+            
+            
             // Create the PDF context using the default page size of 612 x 792.
 //            NSLog(@"this is the value for pdfFileName: %@", pdfFileName);
             
