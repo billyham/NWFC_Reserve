@@ -10,15 +10,15 @@
 #import <CoreText/CoreText.h>
 
 
-@interface EQRPDFGenerator () <UIDocumentPickerDelegate>
+@interface EQRPDFGenerator ()
 
-//@property (strong, nonatomic) NSString *UTIForPDF;
 @property (strong, nonatomic) NSURL *URLForPDFFile;
-@property (strong, nonatomic) UIDocumentPickerViewController *myDocumentPickerVC;
 
 @end
 
 @implementation EQRPDFGenerator
+
+#pragma mark - methods
 
 // Much of this is copied straight from Apple documentation:
 /*
@@ -28,62 +28,64 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
 -(void)launchPDFGenerator{
     
     [self savePDFFile:nil];
-    
-    [self exportPDFToICloudDrive];
 }
 
--(void)exportPDFToICloudDrive{
+-(void)exportPDFWithName:(NSString *)name{
     
-    if (self.URLForPDFFile){
-        UIDocumentPickerViewController *documentPickerVC = [[UIDocumentPickerViewController alloc] initWithURL:self.URLForPDFFile inMode:UIDocumentPickerModeExportToService];
-        
-        if (documentPickerVC){
-            self.myDocumentPickerVC = documentPickerVC;
+    // Get the root directory for storing the file on iCloud Drive
+    [self rootDirectoryForICloud:^(NSURL *ubiquityURL) {
+//        NSLog(@"1. ubiquityURL = %@", ubiquityURL);
+        if (ubiquityURL) {
+            
+            // We also need the 'local' URL to the file we want to store
+            NSURL *localURL = self.URLForPDFFile;
+//            NSLog(@"2. localURL = %@", localURL);
+            
+            // Now, append the local filename to the ubiquityURL
+            // Or use a timestamp as the last component
+            NSDate *date = [NSDate date];
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            dateFormatter.dateFormat = @"yyyy, MMM d";
+            NSString *dateString = [dateFormatter stringFromDate:date];
+            NSString *dateStringWithSuffix = [NSString stringWithFormat:@"%@ %@.pdf", dateString, name];
+            
+//            ubiquityURL = [ubiquityURL URLByAppendingPathComponent:localURL.lastPathComponent];
+            ubiquityURL = [ubiquityURL URLByAppendingPathComponent:dateStringWithSuffix];
+            NSLog(@"3. ubiquityURL = %@", ubiquityURL);
+            
+            // And finish up the 'store' action
+            NSError *error;
+            if (![[NSFileManager defaultManager] setUbiquitous:YES itemAtURL:localURL destinationURL:ubiquityURL error:&error]) {
+                NSLog(@"Error occurred: %@", error);
+            }
         }
-    }else{
-        
-        NSLog(@"No valid file url: %@", self.URLForPDFFile);
-    }
-    
-    
-    
-    //______  USE this method when IMPORTING a file  ______
-    //need UTI representing the type of document
-    //    NSArray *arrayOfDocTypes = @[@"com.adobe.pdf"];
-    
-//    UIDocumentPickerViewController *documentPickerVC = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:arrayOfDocTypes inMode:];
-    
-
+        else {
+            NSLog(@"Could not retrieve a ubiquityURL");
+        }
+    }];
 }
 
-// Callback
--(void)documentMenu:(UIDocumentMenuViewController *)documentMenu didPickDocumentPicker:(UIDocumentPickerViewController *)documentPicker{
+// This was really helpful...
+// http://stackoverflow.com/questions/27051437/save-ios-8-documents-to-icloud-drive
+//
+- (void)rootDirectoryForICloud:(void (^)(NSURL *))completionHandler {
     
-    documentPicker.delegate = self;
-    //___!!!!!  Oh yeah, this needs to be called by a VC  !!!!____
-//    [self presentViewController:documentPicker animated:YES completion:nil];
-}
-
-#pragma mark - Document Picker Delegate Methods
-
-- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentAtURL:(NSURL *)url{
-    
-    if (url){
-        //pass in the url of the file
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURL *rootDirectory = [[[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil]URLByAppendingPathComponent:@"Documents"];
         
+        if (rootDirectory) {
+            if (![[NSFileManager defaultManager] fileExistsAtPath:rootDirectory.path isDirectory:nil]) {
+                NSLog(@"Create directory");
+                [[NSFileManager defaultManager] createDirectoryAtURL:rootDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+            }
+        }
         
-    }else{
-        
-        NSLog(@"EQRPDFGenerator > documentPicker: didPickerDocumentAtURL failed to return url");
-    }
-
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionHandler(rootDirectory);
+        });
+    });
 }
-
-- (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller{
-    
-    
-}
-
 
 
 
@@ -101,7 +103,8 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
             NSString *pdfFileName = [NSString stringWithFormat:@"%@", [self getPDFFileName]];
             
             //___ Save the URL for Exporting ___
-            self.URLForPDFFile = [NSURL URLWithString:pdfFileName];
+            self.URLForPDFFile = [NSURL URLWithString:[NSString stringWithFormat:@"file:///%@", pdfFileName]];
+            NSLog(@"this is the URL: %@", [NSString stringWithFormat:@"file:///%@", pdfFileName]);
             
             
             // Create the PDF context using the default page size of 612 x 792.

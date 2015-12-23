@@ -1747,7 +1747,7 @@
 				GCC_PREFIX_HEADER = "NWFC Reserve/Gear-Prefix.pch";
 				INFOPLIST_FILE = "NWFC Reserve/Gear-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "David-Vincent-Hanagan.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "David-Vincent-Hanagan.Gear";
 				PRODUCT_NAME = Gear;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1766,7 +1766,7 @@
 				GCC_PREFIX_HEADER = "NWFC Reserve/Gear-Prefix.pch";
 				INFOPLIST_FILE = "NWFC Reserve/Gear-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "David-Vincent-Hanagan.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "David-Vincent-Hanagan.Gear";
 				PRODUCT_NAME = Gear;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";

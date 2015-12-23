@@ -18,5 +18,6 @@
 @property BOOL hasSigImage;
 
 -(void)launchPDFGenerator;
+-(void)exportPDFWithName:(NSString *)name;
 
 @end

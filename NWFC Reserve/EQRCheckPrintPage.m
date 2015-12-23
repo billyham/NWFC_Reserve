@@ -325,6 +325,9 @@
         
         [pdfGenerator launchPDFGenerator];
         
+        [pdfGenerator performSelector:@selector(exportPDFWithName:) withObject:self.request.contactNameItem.first_and_last afterDelay:0.0];
+//        [pdfGenerator exportPDFWithVC:self];
+        
         
     }else{
         
