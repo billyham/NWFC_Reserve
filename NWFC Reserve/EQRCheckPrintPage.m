@@ -131,7 +131,7 @@
     UIFont* boldFont = [UIFont boldSystemFontOfSize:9];
     UIFont* headerFont = [UIFont boldSystemFontOfSize:7];
     
-    //paragraph stylpes - indents paragraph except for after a \r
+    //paragraph styles - indents paragraph except for after a \r
     NSMutableParagraphStyle* paraStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
     paraStyle.firstLineHeadIndent = 0.f;
     paraStyle.headIndent = 50.f;
@@ -324,10 +324,7 @@
         }
         
         [pdfGenerator launchPDFGenerator];
-        
-        [pdfGenerator performSelector:@selector(exportPDFWithName:) withObject:self.request.contactNameItem.first_and_last afterDelay:0.0];
-//        [pdfGenerator exportPDFWithVC:self];
-        
+        [pdfGenerator exportPDFWithName:self.request.contactNameItem.first_and_last];
         
     }else{
         

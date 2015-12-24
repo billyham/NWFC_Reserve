@@ -21,13 +21,7 @@
 //@property (nonatomic, strong) NSAttributedString* rentorReturnDateAtt;
 //@property (nonatomic, strong) NSAttributedString* rentorEquipListAtt;
 
-@property (nonatomic, strong) NSString* rentorNameAtt;
-@property (nonatomic, strong) NSString* rentorPhoneAtt;
-@property (nonatomic, strong) NSString* rentorEmailAtt;
 
-@property (nonatomic, strong) IBOutlet UITextView* summaryTextView;
-@property (nonatomic, strong) NSTextStorage* summaryTextStorage;
-@property (nonatomic, strong) NSMutableAttributedString* summaryTotalAtt;
 
 //enterPhone delegate method
 -(void)phoneEntered:(NSString*)phoneNumber;

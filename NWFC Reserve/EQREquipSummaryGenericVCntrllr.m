@@ -24,6 +24,14 @@
 
 @interface EQREquipSummaryGenericVCntrllr ()
 
+@property (nonatomic, strong) NSString* rentorNameAtt;
+@property (nonatomic, strong) NSString* rentorPhoneAtt;
+@property (nonatomic, strong) NSString* rentorEmailAtt;
+
+@property (nonatomic, strong) IBOutlet UITextView* summaryTextView;
+//@property (nonatomic, strong) NSTextStorage* summaryTextStorage;  //I think this is unused
+@property (nonatomic, strong) NSMutableAttributedString* summaryTotalAtt;
+
 @property (strong, nonatomic) IBOutlet UIButton* printAndConfirmButton;
 @property (strong, nonatomic) IBOutlet UIButton* editPhoneButton;
 @property (strong, nonatomic) IBOutlet UIButton* editEmailButton;
@@ -539,24 +547,24 @@
 
 #pragma mark - confirm button
 
--(IBAction)confirmAndPrint:(id)sender{
-    
-    BOOL successOrNah = [self justPrint];
-    
-    if (successOrNah){
-        
-        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-        [requestManager justConfirm];
-        
-//        [self justConfirm];
-        
-        //go back to first page in nav
-        [self.navigationController popToRootViewControllerAnimated:YES];
-        
-        //reset eveything back to 0 (which in turn sends an nsnotification)
-        [requestManager dismissRequest:NO];
-    }
-}
+//-(IBAction)confirmAndPrint:(id)sender{
+//    
+//    BOOL successOrNah = [self justPrint];
+//    
+//    if (successOrNah){
+//        
+//        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+//        [requestManager justConfirm];
+//        
+////        [self justConfirm];
+//        
+//        //go back to first page in nav
+//        [self.navigationController popToRootViewControllerAnimated:YES];
+//        
+//        //reset eveything back to 0 (which in turn sends an nsnotification)
+//        [requestManager dismissRequest:NO];
+//    }
+//}
 
 
 -(IBAction)confirm:(id)sender{
@@ -578,76 +586,76 @@
 }
 
 
--(BOOL)justPrint{
-    
-    //_______PRINTING_________!
-    
-    UIPrintInteractionController* printIntCont = [UIPrintInteractionController sharedPrintController];
-    
-    UIViewPrintFormatter* viewPrintFormatter = [self.summaryTextView viewPrintFormatter];
-    //add contect insets to printFormatter
-    UIEdgeInsets myInsets = UIEdgeInsetsMake (0, 90, 0, 20);
-    viewPrintFormatter.contentInsets = myInsets;
-    
-    
-    UIPrintInfo* printInfo = [UIPrintInfo printInfo] ;
-    printInfo.jobName = @"NWFC Reserve App: confirmation";
-    printInfo.outputType = UIPrintInfoOutputGrayscale;
-    //assign printinfo to int cntrllr
-    printIntCont.printInfo = printInfo;
-    
-    
-    //assign formatter to int cntrllr
-//    printIntCont.printFormatter = viewPrintFormatter;
-    
-    //... or... create page renderer
-    EQRCheckPageRenderer* pageRenderer = [[EQRCheckPageRenderer alloc] init];
-    
-    //assign renderer properties
-    pageRenderer.headerHeight = 210.f;
-    pageRenderer.footerHeight = 300.f;
-    
-    //add info to renderer properties
-    pageRenderer.name_text_value = self.rentorNameAtt;
-    pageRenderer.phone_text_value = self.rentorPhoneAtt;
-    pageRenderer.email_text_value = self.rentorEmailAtt;
-    
-    
-    //add printer formatter object to the page renderer
-    [pageRenderer addPrintFormatter:viewPrintFormatter startingAtPageAtIndex:0];
-    
-    //assign page renderer to int cntrllr
-    printIntCont.printPageRenderer = pageRenderer;
-    
-    
-
-    
-    
-    
-    __block BOOL successOrNot;
-    
-    [printIntCont presentFromRect:self.printAndConfirmButton.frame inView:self.view animated:YES completionHandler:^(UIPrintInteractionController *printInteractionController,BOOL completed, NSError *error){
-        
-        //unless the printing in cancelled...
-        
-        if (completed){
-            
-            //            //go back to first page in nav
-            //            [self.navigationController popToRootViewControllerAnimated:YES];
-            //
-            //            //reset eveything back to 0 (which in turn sends an nsnotification)
-            //            [requestManager dismissRequest];
-            
-            successOrNot = YES;
-            
-        } else {
-            
-            successOrNot = NO;
-        }
-    }];
-    
-    return successOrNot;
-}
+//-(BOOL)justPrint{
+//    
+//    //_______PRINTING_________!
+//    
+//    UIPrintInteractionController* printIntCont = [UIPrintInteractionController sharedPrintController];
+//    
+//    UIViewPrintFormatter* viewPrintFormatter = [self.summaryTextView viewPrintFormatter];
+//    //add contect insets to printFormatter
+//    UIEdgeInsets myInsets = UIEdgeInsetsMake (0, 90, 0, 20);
+//    viewPrintFormatter.contentInsets = myInsets;
+//    
+//    
+//    UIPrintInfo* printInfo = [UIPrintInfo printInfo] ;
+//    printInfo.jobName = @"NWFC Reserve App: confirmation";
+//    printInfo.outputType = UIPrintInfoOutputGrayscale;
+//    //assign printinfo to int cntrllr
+//    printIntCont.printInfo = printInfo;
+//    
+//    
+//    //assign formatter to int cntrllr
+////    printIntCont.printFormatter = viewPrintFormatter;
+//    
+//    //... or... create page renderer
+//    EQRCheckPageRenderer* pageRenderer = [[EQRCheckPageRenderer alloc] init];
+//    
+//    //assign renderer properties
+//    pageRenderer.headerHeight = 210.f;
+//    pageRenderer.footerHeight = 300.f;
+//    
+//    //add info to renderer properties
+//    pageRenderer.name_text_value = self.rentorNameAtt;
+//    pageRenderer.phone_text_value = self.rentorPhoneAtt;
+//    pageRenderer.email_text_value = self.rentorEmailAtt;
+//    
+//    
+//    //add printer formatter object to the page renderer
+//    [pageRenderer addPrintFormatter:viewPrintFormatter startingAtPageAtIndex:0];
+//    
+//    //assign page renderer to int cntrllr
+//    printIntCont.printPageRenderer = pageRenderer;
+//    
+//    
+//
+//    
+//    
+//    
+//    __block BOOL successOrNot;
+//    
+//    [printIntCont presentFromRect:self.printAndConfirmButton.frame inView:self.view animated:YES completionHandler:^(UIPrintInteractionController *printInteractionController,BOOL completed, NSError *error){
+//        
+//        //unless the printing in cancelled...
+//        
+//        if (completed){
+//            
+//            //            //go back to first page in nav
+//            //            [self.navigationController popToRootViewControllerAnimated:YES];
+//            //
+//            //            //reset eveything back to 0 (which in turn sends an nsnotification)
+//            //            [requestManager dismissRequest];
+//            
+//            successOrNot = YES;
+//            
+//        } else {
+//            
+//            successOrNot = NO;
+//        }
+//    }];
+//    
+//    return successOrNot;
+//}
 
 
 #pragma mark - popover delegate methods

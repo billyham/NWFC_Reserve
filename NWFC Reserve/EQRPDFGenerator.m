@@ -18,7 +18,7 @@
 
 @implementation EQRPDFGenerator
 
-#pragma mark - methods
+#pragma mark - Public methods
 
 // Much of this is copied straight from Apple documentation:
 /*
@@ -27,7 +27,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
 
 -(void)launchPDFGenerator{
     
-    [self savePDFFile:nil];
+    [self savePDFFile];
 }
 
 -(void)exportPDFWithName:(NSString *)name{
@@ -48,7 +48,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
             dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
             dateFormatter.dateFormat = @"yyyy, MMM d";
             NSString *dateString = [dateFormatter stringFromDate:date];
-            NSString *dateStringWithSuffix = [NSString stringWithFormat:@"%@ %@.pdf", dateString, name];
+            NSString *dateStringWithSuffix = [NSString stringWithFormat:@"%@, %@.pdf", dateString, name];
             
 //            ubiquityURL = [ubiquityURL URLByAppendingPathComponent:localURL.lastPathComponent];
             ubiquityURL = [ubiquityURL URLByAppendingPathComponent:dateStringWithSuffix];
@@ -65,6 +65,8 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
         }
     }];
 }
+
+#pragma mark - Export PDF File
 
 // This was really helpful...
 // http://stackoverflow.com/questions/27051437/save-ios-8-documents-to-icloud-drive
@@ -92,7 +94,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
 
 #pragma mark - Saving PDF File
 
-- (IBAction)savePDFFile:(id)sender{
+- (void)savePDFFile{
     
     // Prepare the text using a Core Text Framesetter.
     CFAttributedStringRef currentText = CFAttributedStringCreate(NULL, (CFStringRef)self.myTextView.text, NULL);

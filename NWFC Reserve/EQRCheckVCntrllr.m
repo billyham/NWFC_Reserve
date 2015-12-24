@@ -16,7 +16,7 @@
 #import <AVFoundation/AVFoundation.h>
 //#import <CoreImage/CoreImage.h>
 #import "EQREquipUniqueItem.h"
-#import "EQRCheckPageRenderer.h"
+//#import "EQRCheckPageRenderer.h"
 #import "EQRCheckPrintPage.h"
 #import "EQRStaffUserManager.h"
 #import "EQRCheckHeaderCell.h"
