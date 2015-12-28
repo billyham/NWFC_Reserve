@@ -7,7 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "EQRScheduleRequestItem.h"
 
-@interface EQRPageConstructor : NSObject
+typedef void (^CompletionBlockPageConstructor) ();
+
+@interface EQRPageConstructor : NSObject 
+
+// sigImage and agreements can be nil
+-(void)generatePDFWithScheduleRequestItem:(EQRScheduleRequestItem*)request
+                       withSignatureImage:(UIImage *)sigImage
+                               agreements:(NSArray *)arrayOfAgreements
+                               completion:(CompletionBlockPageConstructor)completeBlock;
 
 @end

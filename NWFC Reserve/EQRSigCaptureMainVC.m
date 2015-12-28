@@ -19,6 +19,7 @@
 #import "EQRSigAgreementVC.h"
 #import "EQRColors.h"
 #import "EQRCheckPrintPage.h"
+#import "EQRPageConstructor.h"
 
 @interface EQRSigCaptureMainVC ()<EQRWebDataDelegate>
 
@@ -156,7 +157,7 @@
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
        
-        [webData queryWithAsync:@"EQGetTextElementsWithContext" parameters:topArray class:@"EQRTextElement" selector:selector completion:^(BOOL isLoadingFlagUp) {
+        [webData queryWithAsync:@"EQGetTextElementsWithContext.php" parameters:topArray class:@"EQRTextElement" selector:selector completion:^(BOOL isLoadingFlagUp) {
             
             [self loadDataStage4];
         }];
@@ -369,11 +370,8 @@
 #pragma mark - buttons
 -(IBAction)enterButton:(id)sender{
     
-//    EQRSigConfirmationVC *confirmVC = [[EQRSigConfirmationVC alloc] initWithNibName:@"EQRSigConfirmationVC" bundle:nil];
-//    
-//    [self.navigationController pushViewController:confirmVC animated:YES];
-    
-    [self performSegueWithIdentifier:@"sigConfirmation" sender:self];
+    // Automated PDF generation
+    [self generatePDF:nil];
 }
 
 -(IBAction)otherOptionsButton:(id)sender{
@@ -432,27 +430,16 @@
     }
     
     
-    //create printable page view controller
-    EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
-    
-    //add the request item to the view controller
-    [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:YES];
-    
-    //if a signatue exists, add it to the CheckPrintPage object
-    if (self.signatureView.hasSignature){
-        [pageForPrint addSignatureImage:self.signatureView.signatureImage];
-    }
-    
-    
-    //assign ivar variables
-    pageForPrint.rentorNameAtt = chosenItem.contact_name;
-    pageForPrint.rentorEmailAtt = email;
-    pageForPrint.rentorPhoneAtt = phone;
-    
-    
-    //show the view controller
-    [self presentViewController:pageForPrint animated:YES completion:^{
+    //create page constructor which in turn will create the PDFGenerator
+    EQRPageConstructor *pageConstructor = [[EQRPageConstructor alloc] init];
+    [pageConstructor generatePDFWithScheduleRequestItem:chosenItem
+                                     withSignatureImage:self.signatureView.signatureImage agreements:[NSArray arrayWithArray:self.arrayOfAgreementTextElements]
+                                             completion:^{
+     
+//        NSLog(@"complete block is successfully called");
         
+        // Display confirmation and dismiss view
+        [self performSegueWithIdentifier:@"sigConfirmation" sender:self];
         
     }];
     

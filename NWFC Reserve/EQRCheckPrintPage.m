@@ -323,8 +323,15 @@
             pdfGenerator.sigImage = self.sigImage;
         }
         
-        [pdfGenerator launchPDFGenerator];
-        [pdfGenerator exportPDFWithName:self.request.contactNameItem.first_and_last];
+        [pdfGenerator launchPDFGeneratorWithName:self.request.contactNameItem.first_and_last
+                                           phone:self.request.contactNameItem.phone
+                                           email:self.request.contactNameItem.email
+                                      agreements:nil
+                                      completion:^{
+                                               
+                                               
+                                           }];
+//        [pdfGenerator exportPDF];
         
     }else{
         

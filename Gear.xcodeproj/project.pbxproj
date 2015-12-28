@@ -101,6 +101,8 @@
 		54156FFC1B4BC71400BEC26A /* EQRItineraryRowCell2.m in Sources */ = {isa = PBXBuildFile; fileRef = 54156FFA1B4BC71400BEC26A /* EQRItineraryRowCell2.m */; };
 		541570181B4CFDCF00BEC26A /* circleButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 541570161B4CFDCF00BEC26A /* circleButton.png */; };
 		541570191B4CFDCF00BEC26A /* circleButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 541570171B4CFDCF00BEC26A /* circleButton@2x.png */; };
+		5416CDCE1C30C1C000587DD7 /* EQRPageHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 5416CDCD1C30C1C000587DD7 /* EQRPageHeader.m */; };
+		5416CDD11C30D72F00587DD7 /* EQRPageFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5416CDD01C30D72F00587DD7 /* EQRPageFooter.m */; };
 		5416F99F1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 5416F99D1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.m */; };
 		5416F9A01918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5416F99E1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.xib */; };
 		541E548A1ADA7E6B00EE8909 /* EQRSettings1TableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 541E54891ADA7E6B00EE8909 /* EQRSettings1TableVC.m */; };
@@ -398,6 +400,10 @@
 		54156FFA1B4BC71400BEC26A /* EQRItineraryRowCell2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRItineraryRowCell2.m; sourceTree = "<group>"; };
 		541570161B4CFDCF00BEC26A /* circleButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circleButton.png; sourceTree = "<group>"; };
 		541570171B4CFDCF00BEC26A /* circleButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "circleButton@2x.png"; sourceTree = "<group>"; };
+		5416CDCC1C30C1C000587DD7 /* EQRPageHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRPageHeader.h; sourceTree = "<group>"; };
+		5416CDCD1C30C1C000587DD7 /* EQRPageHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRPageHeader.m; sourceTree = "<group>"; };
+		5416CDCF1C30D72F00587DD7 /* EQRPageFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRPageFooter.h; sourceTree = "<group>"; };
+		5416CDD01C30D72F00587DD7 /* EQRPageFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRPageFooter.m; sourceTree = "<group>"; };
 		5416F99C1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipSelectionGenericVCntrllr.h; sourceTree = "<group>"; };
 		5416F99D1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipSelectionGenericVCntrllr.m; sourceTree = "<group>"; };
 		5416F99E1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQREquipSelectionGenericVCntrllr.xib; sourceTree = "<group>"; };
@@ -732,6 +738,10 @@
 			children = (
 				01946E7D1C2B4CEB00F82192 /* EQRPageConstructor.h */,
 				01946E7E1C2B4CEB00F82192 /* EQRPageConstructor.m */,
+				5416CDCC1C30C1C000587DD7 /* EQRPageHeader.h */,
+				5416CDCD1C30C1C000587DD7 /* EQRPageHeader.m */,
+				5416CDCF1C30D72F00587DD7 /* EQRPageFooter.h */,
+				5416CDD01C30D72F00587DD7 /* EQRPageFooter.m */,
 			);
 			name = "page constructor";
 			sourceTree = "<group>";
@@ -1515,6 +1525,7 @@
 				5402D22E186BFCF80091C080 /* EQRCellTemplate.m in Sources */,
 				438EDCEC182B7ABE0090F882 /* main.m in Sources */,
 				5402D22B186BFCDA0091C080 /* EQRContactNameCell.m in Sources */,
+				5416CDCE1C30C1C000587DD7 /* EQRPageHeader.m in Sources */,
 				54AB4DCF1BA2D53B00A0358C /* EQRSigRentalFeeVC.m in Sources */,
 				54D3D8231A7DC53700562699 /* EQRMiscJoin.m in Sources */,
 				543786351BBA7BDA00D3F2E0 /* EQRPriceMatrixCllctnVwCll.m in Sources */,
@@ -1624,6 +1635,7 @@
 				54E5E93A1BE095AC00C23F58 /* EQRGenericBlockOfTextEditor.m in Sources */,
 				0119D2FF18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m in Sources */,
 				546436551BBBBF70002BF3FF /* EQRTransaction.m in Sources */,
+				5416CDD11C30D72F00587DD7 /* EQRPageFooter.m in Sources */,
 				542D59B61A00DD8800989617 /* EQRTextEmailStudent.m in Sources */,
 				540B551D18769CCE0025FDEE /* EQRStaffPage1VCntrllr.m in Sources */,
 				438EDCF9182B7ABE0090F882 /* EQRSecondViewController.m in Sources */,

@@ -112,13 +112,13 @@
 
 -(IBAction)tapInShowPDF:(id)sender{
     
-    NSLog(@"viewPDF fires");
+//    NSLog(@"viewPDF fires");
     
 //    NSString *urlString = [[self applicationDocumentDirectory] stringByAppendingPathComponent:@"/testFile"];
 //    NSURL *myUrl = [[NSURL alloc] initFileURLWithPath:urlString];
     
     
-    NSURL *baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"file:%@",[self applicationDocumentDirectory]]];
+    NSURL *baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"file:%@",[self applicationCacheDirectory]]];
     NSURL *url = [NSURL URLWithString:@"Caches/testFile.pdf" relativeToURL:baseUrl];
     NSURL *absUrl = [url absoluteURL];
     
@@ -143,13 +143,52 @@
     //    [controller presentOptionsMenuFromRect:[[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]] frame]     inView:self.view animated:YES];
 }
 
-- (NSString*)applicationDocumentDirectory {
+-(IBAction)tapInShowDocumentsFolderContents:(id)sender{
+    
+    // For now, just list the contents of the folder
+    
+    NSString *docPath = [NSString stringWithFormat:@"file:%@",[self applicationDocumentDirectory]];
+    NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:docPath error:NULL];
+    
+    NSLog(@"count of directoryContent: %lu", [directoryContent count]);
+    NSLog(@"path: %@", docPath);
+    
+    [directoryContent enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        NSLog(@"File %lu: %@", (unsigned long)idx, [directoryContent objectAtIndex:idx]);
+    }];
+    
+    NSString *cachePath = [NSString stringWithFormat:@"file:%@", [self applicationCacheDirectory]];
+    NSArray *cacheContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:cachePath error:NULL];
+    
+    NSLog(@"count of cacheContent: %lu", [cacheContent count]);
+    [cacheContent enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        NSLog(@"Cache file: %lu: %@", (unsigned long)idx, [cacheContent objectAtIndex:idx]);
+    }];
+    
+}
+
+- (NSString*)applicationCacheDirectory {
     
     //Returns the path to the application's documents directory.
     
     NSArray* paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
     return basePath;
+}
+
+- (NSString*)applicationDocumentDirectory {
+    
+    //Returns the path to the application's documents directory.
+    
+//    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+//    return basePath;
+    
+    NSString *documentsDirectory = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    return documentsDirectory;
+
 }
 
 #pragma mark - UIDocumentationInteractionControllerDelegate method
@@ -265,6 +304,10 @@
         if (indexPath.row == 0){
             
             [self tapInShowPDF:nil];
+            
+        } else if(indexPath.row == 1){
+            
+            [self tapInShowDocumentsFolderContents:nil];
         }
     }
 }

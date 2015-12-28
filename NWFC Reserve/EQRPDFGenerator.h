@@ -9,7 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "EQRMultiColumnTextView.h"
 
-@interface EQRPDFGenerator : NSObject
+typedef void (^CompletionBlockPDFGenerator) ();
+
+@interface EQRPDFGenerator : NSObject 
 
 @property (strong, nonatomic) UITextView *myTextView;
 @property (strong, nonatomic) EQRMultiColumnTextView *myMultiColumnView;
@@ -17,7 +19,12 @@
 @property (strong, nonatomic) UIImage *sigImage;
 @property BOOL hasSigImage;
 
--(void)launchPDFGenerator;
--(void)exportPDFWithName:(NSString *)name;
+
+// agreements parameter can be nil
+-(void)launchPDFGeneratorWithName:(NSString *)name
+                            phone:(NSString *)phone
+                            email:(NSString *)email
+                       agreements:(NSArray *)arrayOfAgreements
+                       completion:(CompletionBlockPDFGenerator)completeBlock;
 
 @end
