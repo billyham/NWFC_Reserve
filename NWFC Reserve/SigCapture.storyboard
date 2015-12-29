@@ -144,7 +144,7 @@
                                 <rect key="frame" x="43" y="646" width="76" height="44"/>
                                 <state key="normal" title="View Gear"/>
                                 <connections>
-                                    <segue destination="aye-bM-ccc" kind="presentation" id="mfQ-uc-iJC"/>
+                                    <segue destination="aye-bM-ccc" kind="show" id="mfQ-uc-iJC"/>
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aKO-c6-HMq">
@@ -152,6 +152,16 @@
                                 <state key="normal" title="Made PDF"/>
                                 <connections>
                                     <action selector="generatePDF:" destination="Qry-53-oLo" eventType="touchUpInside" id="Wb6-Fd-JhO"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mia-co-jOb">
+                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="22"/>
+                                <state key="normal" title="X">
+                                    <color key="titleColor" red="0.68359375" green="0.1107016856" blue="0.13759704240000001" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="cancelSigCapture:" destination="Qry-53-oLo" eventType="touchUpInside" id="qCl-b5-bbS"/>
                                 </connections>
                             </button>
                         </subviews>

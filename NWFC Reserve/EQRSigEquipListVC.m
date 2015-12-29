@@ -75,10 +75,7 @@
 
 -(IBAction)dismissGearView:(id)sender{
     
-    [self dismissViewControllerAnimated:YES completion:^{
-        
-        
-    }];
+    [[self navigationController] popViewControllerAnimated:YES];
 }
 
 -(IBAction)generatePDF:(id)sender{

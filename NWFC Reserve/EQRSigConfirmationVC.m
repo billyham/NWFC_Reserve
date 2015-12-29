@@ -27,20 +27,23 @@
     UIImage *tintedImage = [originalImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [self.dotImage setImage:tintedImage];
     self.dotImage.tintColor = [colors.colorDic objectForKey:EQRColorButtonGreen];
+    
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(automatedDismissal)];
+    [self.view addGestureRecognizer:tapGesture];
 }
 
 
 -(void)viewDidAppear:(BOOL)animated{
     
     //_____ Automatically dismisses self after 1 second
-    [self performSelector:@selector(automatedDismissal) withObject:nil afterDelay:1.0];
+    [self performSelector:@selector(automatedDismissal) withObject:nil afterDelay:5.0];
     
 }
 
 
 -(void)automatedDismissal{
     
-    //_____!!!!! This is weird calling to dismissals but it works... so far...
+    //_____!!!!! This is weird calling two dismissals but it works... so far...
     [self dismissViewControllerAnimated:YES completion:^{
 
     }];
