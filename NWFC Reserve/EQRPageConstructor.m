@@ -443,6 +443,15 @@
             //filled all three columns with overflow
             //_____!!!!!!  need to re-format  !!!!!!________
             
+            // Here is NSLog output from overflows:
+            //Here is the unlaidIndex: 2379, length of textStorage: 2379, number of containers: 3
+            
+            // Show the text that hasn't been written
+            int firstUnlaidCharIndex = [aLayoutManager firstUnlaidCharacterIndex];
+            int lengthOfTotalText = aLayoutManager.textStorage.string.length;
+            int numberOfTextContainers = [aLayoutManager.textContainers count];
+            
+            NSLog(@"Here is the unlaidIndex: %d, length of textStorage: %d, number of containers: %d", firstUnlaidCharIndex, lengthOfTotalText, numberOfTextContainers);
         }
     }
     

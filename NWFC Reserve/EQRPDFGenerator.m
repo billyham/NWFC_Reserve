@@ -59,6 +59,8 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
     }];
 }
 
+#pragma mark - Export PDF File
+
 -(void)exportPDF:(CompletionBlockPDFExported)completeBlock{
     
     // Get the root directory for storing the file on iCloud Drive
@@ -87,8 +89,6 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
         completeBlock();
     }];
 }
-
-#pragma mark - Export PDF File
 
 // This was really helpful...
 // http://stackoverflow.com/questions/27051437/save-ios-8-documents-to-icloud-drive

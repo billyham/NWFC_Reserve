@@ -484,13 +484,10 @@
         
     }else{
         
-        if (self.countOfColumns == 3){
-            
-            //filled all three columns with overflow
-            //_____!!!!!!  need to re-format  !!!!!!________
-            
-            self.countOfColumns = 0;
-        }
+        //filled all three columns with overflow
+        //_____!!!!!!  need to re-format  !!!!!!________
+        
+//        self.countOfColumns = 0;
     }
     
     //if atEnd is never YES then the text does not fill the available space and we need more pages.
