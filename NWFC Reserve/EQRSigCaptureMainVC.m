@@ -401,48 +401,48 @@
 
 -(IBAction)generatePDF:(id)sender{
     
-    
     //get complete scheduleRequest item info
     EQRWebData* webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
     NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", self.requestItem.key_id, nil];
     NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
-    __block EQRScheduleRequestItem* chosenItem;
-    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
         
-        if ([muteArray count] > 0){
+        [webData queryForStringwithAsync:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray completion:^(EQRScheduleRequestItem *chosenItem) {
             
-            chosenItem = [muteArray objectAtIndex:0];
-        }
-    }];
-    
-    //add the notes
-    chosenItem.notes = self.requestItem.notes;
-    //    NSLog(@"these are the notes >>%@<<", chosenItem.notes);
-    
-    //add contact information
-    NSString* email;
-    NSString* phone;
-    if (self.requestItem.contactNameItem){
-        email = self.requestItem.contactNameItem.email;
-        phone = self.requestItem.contactNameItem.phone;
-        
-        chosenItem.contactNameItem = self.requestItem.contactNameItem;
-    }
-    
-    
-    //create page constructor which in turn will create the PDFGenerator
-    EQRPageConstructor *pageConstructor = [[EQRPageConstructor alloc] init];
-    [pageConstructor generatePDFWithScheduleRequestItem:chosenItem
-                                     withSignatureImage:self.signatureView.signatureImage agreements:[NSArray arrayWithArray:self.arrayOfAgreementTextElements]
-                                             completion:^{
-     
-//        NSLog(@"complete block is successfully called");
-        
-        // Display confirmation and dismiss view
-        [self performSegueWithIdentifier:@"sigConfirmation" sender:self];
-        
-    }];
-    
+            if (!chosenItem){
+                NSLog(@"EQRSigCaptureMainVC > generatePDF fails, no request returned");
+                return;
+            }
+            
+            //add the notes
+            chosenItem.notes = self.requestItem.notes;
+            //    NSLog(@"these are the notes >>%@<<", chosenItem.notes);
+            
+            //add contact information
+            NSString* email;
+            NSString* phone;
+            if (self.requestItem.contactNameItem){
+                email = self.requestItem.contactNameItem.email;
+                phone = self.requestItem.contactNameItem.phone;
+                
+                chosenItem.contactNameItem = self.requestItem.contactNameItem;
+            }
+            
+            //create page constructor which in turn will create the PDFGenerator
+            EQRPageConstructor *pageConstructor = [[EQRPageConstructor alloc] init];
+            [pageConstructor generatePDFWithScheduleRequestItem:chosenItem
+                                             withSignatureImage:self.signatureView.signatureImage
+                                                     agreements:[NSArray arrayWithArray:self.arrayOfAgreementTextElements]
+                                                     completion:^{
+                                                         
+                                                         // Display confirmation and dismiss view
+                                                         [self performSegueWithIdentifier:@"sigConfirmation" sender:self];
+                                                     }];
+        }];
+    });
 }
 
 

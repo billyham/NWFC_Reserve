@@ -20,8 +20,10 @@
 @property (strong, nonatomic) EQRPDFGenerator *pdfGenerator;
 
 @property (strong, nonatomic) EQRScheduleRequestItem* request;
-@property (nonatomic, strong) IBOutlet EQRMultiColumnTextView* myTwoColumnView;
-@property NSInteger countOfColumns;
+@property (nonatomic, strong) EQRMultiColumnTextView* myTwoColumnView;
+@property (strong, nonatomic) NSMutableArray *arrayOfMultiColumnTextViews;
+@property NSInteger relativeCountOfColumns;
+@property NSInteger absoluteCountOfColumns;
 @property float additionalXAdjustment;
 
 @property (strong, nonatomic) UIImage *sigImage;
@@ -56,7 +58,6 @@
     self.delayedCompletionBlock = completeBlock;
     
     if (request){
-        
         self.request = request;
     }
     
@@ -70,7 +71,8 @@
         self.arrayOfAgreements = arrayOfAgreements;
     }
     
-    self.countOfColumns = 0;
+    self.relativeCountOfColumns = 0;
+    self.absoluteCountOfColumns = 0;
     self.additionalXAdjustment = 0.f;
     
     if (self.request.arrayOfEquipmentJoins){
@@ -311,10 +313,16 @@
     self.myTwoColumnView.myAttString = self.summaryTotalAtt;
     [self.myTwoColumnView manuallySetTextWithColumnCount:3];
     
-    //_______set page renderer as delegate for layoutManager of MultiColumnTextView
+    //_______set as delegate for layoutManager of MultiColumnTextView
     //so it can reflow the text between multiple pages
     //or re-position the text view and number of columns
     self.myTwoColumnView.layoutManager.delegate = self;
+    
+    //_______ Add the multiColumn view to the array
+    if (!self.arrayOfMultiColumnTextViews){
+        self.arrayOfMultiColumnTextViews = [NSMutableArray arrayWithCapacity:1];
+    }
+    [self.arrayOfMultiColumnTextViews addObject:self.myTwoColumnView];
     
     //_________  AUTOMATICALLY DO THE PDF GENERATION  _____________
     EQRPDFGenerator *pdfGenerator = [[EQRPDFGenerator alloc] init];
@@ -323,7 +331,8 @@
     self.pdfGenerator = pdfGenerator;
     
     pdfGenerator.myTextView = self.summaryTextView;
-    pdfGenerator.myMultiColumnView = self.myTwoColumnView;
+//    pdfGenerator.myMultiColumnView = self.myTwoColumnView;
+    pdfGenerator.arrayOfMultiColumnTextViews = [self.arrayOfMultiColumnTextViews copy];
     pdfGenerator.additionalXAdjustment = self.additionalXAdjustment;
     
     if (self.hasSigImage){
@@ -394,13 +403,42 @@
 - (void)layoutManager:(NSLayoutManager *)aLayoutManager didCompleteLayoutForTextContainer:(NSTextContainer *)aTextContainer atEnd:(BOOL)flag{
     
 //    NSLog(@"This is the BOOL flag for layoutManager: %u  for text Container %@", flag, aTextContainer);
-    NSLog(@"EQRPageConstructor > layoutManager says countOfColumns: %lu  self.myTwoColumnView.myColumnCount: %lu", (long)self.countOfColumns, (long)self.myTwoColumnView.myColumnCount);
+//    NSLog(@"EQRPageConstructor > layoutManager says relativeCountOfColumns: %lu  self.myTwoColumnView.myColumnCount: %lu", (long)self.relativeCountOfColumns, (long)self.myTwoColumnView.myColumnCount);
     
-    self.countOfColumns = self.countOfColumns + 1;
+    self.relativeCountOfColumns = self.relativeCountOfColumns + 1;
+    self.absoluteCountOfColumns += 1;
+    NSInteger startIndex = 0;
+    
+    if (self.relativeCountOfColumns == 3){
+        NSRange thisRange = [aLayoutManager glyphRangeForTextContainer:aTextContainer];
+        NSInteger finalInt = thisRange.location + thisRange.length;
+        NSLog(@"Here is the last glyph index in the 3rd text container: %d", finalInt);
+        
+        startIndex = finalInt;
+        
+    }else if(self.relativeCountOfColumns > 3){
+        NSLog(@"PageConstructor > layoutManager... says were at column number: %u", self.relativeCountOfColumns);
+    }
+    
+    
+    if (self.relativeCountOfColumns == 3){
+        
+        if (flag == NO){
+            int firstUnlaidGlyphIndex = [aLayoutManager firstUnlaidGlyphIndex];
+            int lengthOfTotalText = aLayoutManager.textStorage.string.length;
+            int numberOfTextContainers = [aLayoutManager.textContainers count];
+            
+            NSLog(@"Here is the unlaidIndex: %d, length of textStorage: %d, number of containers: %d", firstUnlaidGlyphIndex, lengthOfTotalText, numberOfTextContainers);
+            
+            [self addANewMultiColumnViewStartingAtChar:startIndex forLength:lengthOfTotalText];
+        }
+    }
+    
+    NSLog(@"____This is the relativeCountOfColumns: %u  this is the atEnd flag: %u", self.relativeCountOfColumns, flag);
     
     if (flag == YES){
         
-        switch (self.countOfColumns) {
+        switch (self.absoluteCountOfColumns) {
             case 1:
                 
                 if (self.myTwoColumnView.myColumnCount == 3){
@@ -423,46 +461,51 @@
                 break;
                 
             case 3:
-                
                 //filled all three columns of text
+                //reset count of columns
+                self.relativeCountOfColumns = 0;
                 break;
                 
             default:
                 break;
         }
         
-        //reset count of columns
-        self.countOfColumns = 0;
-        
-    }else{
-        
-        if (self.countOfColumns >= 3){
-            
-            NSLog(@"indicates that there is overflow text");
-            
-            //filled all three columns with overflow
-            //_____!!!!!!  need to re-format  !!!!!!________
-            
-            // Here is NSLog output from overflows:
-            //Here is the unlaidIndex: 2379, length of textStorage: 2379, number of containers: 3
-            
-            // Show the text that hasn't been written
-            int firstUnlaidCharIndex = [aLayoutManager firstUnlaidCharacterIndex];
-            int lengthOfTotalText = aLayoutManager.textStorage.string.length;
-            int numberOfTextContainers = [aLayoutManager.textContainers count];
-            
-            NSLog(@"Here is the unlaidIndex: %d, length of textStorage: %d, number of containers: %d", firstUnlaidCharIndex, lengthOfTotalText, numberOfTextContainers);
-        }
     }
     
-    //if atEnd is never YES then the text does not fill the available space and we need more pages.
-    
-    //(NSUInteger) firstUnlaidCharacterIndex
+    if (self.relativeCountOfColumns >= 3){
+        //reset count of columns
+        self.relativeCountOfColumns = 0;
+    }
     
     //call this on layoutManager invalidateDisplayForCharacterRange:(NSRange)charRange
 }
 
+-(void)addANewMultiColumnViewStartingAtChar:(NSInteger)startIndex forLength:(NSInteger)length{
+    
+    // Create views programmatically
+//    CGRect rect = CGRectMake(100.f, 150.f, 560.f, 100.f);
+//    self.summaryTextView = [[UITextView alloc] initWithFrame:rect];
+    
+    CGRect rectForMultiColumn = CGRectMake(100.f, 270.f, 560.f, 240.f);
+    EQRMultiColumnTextView *newMultiColumn= [[EQRMultiColumnTextView alloc] initWithFrame:rectForMultiColumn];
+    
+    NSInteger newLength = length - startIndex;
+    NSLog(@"this is the startIndex: %u,  this is the new length: %u", startIndex, newLength);
+    NSRange range = NSMakeRange(startIndex, newLength);
+    newMultiColumn.myAttString = [self.summaryTotalAtt attributedSubstringFromRange:range];
+    [newMultiColumn manuallySetTextWithColumnCount:3];
+    
+    //_______set as delegate for layoutManager of MultiColumnTextView
+    //so it can reflow the text between multiple pages
+    //or re-position the text view and number of columns
+    newMultiColumn.layoutManager.delegate = self;
+    
+    //_______ Add the multiColumn view to the array
+    [self.arrayOfMultiColumnTextViews addObject:newMultiColumn];
+    
+    self.pdfGenerator.arrayOfMultiColumnTextViews = self.arrayOfMultiColumnTextViews;
 
+}
 
 
 

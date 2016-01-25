@@ -50,6 +50,12 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
     self.arrayOfAgreements = arrayOfAgreements;
     self.dateOfGeneration = [NSDate date];
     
+    if (self.arrayOfMultiColumnTextViews){
+        if ([self.arrayOfMultiColumnTextViews count] > 0){
+            self.myMultiColumnView = [self.arrayOfMultiColumnTextViews objectAtIndex:0];
+        }
+    }
+    
     [self savePDFFile:^(){
         
         [self exportPDF:^(){
@@ -167,10 +173,14 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
             
             CFRange currentRange = CFRangeMake(0, 0);
             NSInteger currentPage = 0;
+            BOOL atEndOfAgreeemntText = NO;
+            BOOL atEndOfGearText = NO;
             BOOL done = NO;
-            NSInteger hasDrawnMultiColumn = NO;
+            NSInteger hasDrawnAllMultiColumn = NO;
+            NSInteger indexOfMultiColumnArray = 0;
             
             do {
+                NSLog(@"PDFGenerator begin the do-while loop");
                 // Mark the beginning of a new page.
                 UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 612, 792), nil);
                 
@@ -187,11 +197,13 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
                 CGContextTranslateCTM(currentContext, 0, 792);
                 CGContextScaleCTM(currentContext, 1.0, -1.0);
                 
-                if (!hasDrawnMultiColumn){
+                if (!hasDrawnAllMultiColumn){
                     
                     //___ Draw MultiColumnText ___
-                    [self drawMultiColumnText];
-                    hasDrawnMultiColumn = YES;
+                    [self drawMultiColumnTextForIndex:indexOfMultiColumnArray];
+                    if (indexOfMultiColumnArray + 1 >= [self.arrayOfMultiColumnTextViews count]){
+                        hasDrawnAllMultiColumn = YES;
+                    }
                 }
                 
                 [self drawDateText];
@@ -217,11 +229,27 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
 
                 
                 // If we're at the end of the text, exit the loop.
+               
+                
                 if (currentRange.location == CFAttributedStringGetLength((CFAttributedStringRef)currentText)){
-                    done = YES;
+                    atEndOfAgreeemntText = YES;
+                    if (atEndOfGearText == YES){
+                        done = YES;
+                    }
+                }
+                                
+                if (indexOfMultiColumnArray + 1 >= [self.arrayOfMultiColumnTextViews count]){
+                    atEndOfGearText = YES;
+                    if (atEndOfAgreeemntText == YES){
+                        done = YES;
+                    }
+                }else{
+                    indexOfMultiColumnArray += 1;
                 }
                 
             } while (!done);
+            
+            NSLog(@"PDFGenerator has concluded the do-while loop in savePDF method");
             
             // Close the PDF context and write the contents out.
             UIGraphicsEndPDFContext();
@@ -295,7 +323,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
     [self.myTextView.layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:datesOrigin];
 }
 
--(void)drawMultiColumnText{
+-(void)drawMultiColumnTextForIndex:(NSInteger)index{
     
     // Get the graphics context.
 //    CGContextRef  currentContext = UIGraphicsGetCurrentContext();
@@ -309,6 +337,10 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
 //    CGContextTranslateCTM(currentContext, 0, 792);
 //    CGContextScaleCTM(currentContext, 1.0, -1.0);
     
+    
+    if ([self.arrayOfMultiColumnTextViews count] >= index + 1){
+        self.myMultiColumnView = [self.arrayOfMultiColumnTextViews objectAtIndex:index];
+    }
     
     //______ This is essentially EQRMultiColumnTextView's drawRect method... ___
     //now the equipment list

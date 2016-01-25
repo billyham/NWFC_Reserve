@@ -2246,6 +2246,30 @@ const int intEQRTransaction = 11;
         return;
     }
     
+    if ([link isEqualToString:@"EQGetScheduleRequestInComplete.php"]){
+        
+        //return the Request object
+        [self queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:para class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+            
+            if ([muteArray count] > 0){
+                
+                EQRScheduleRequestItem *request = [muteArray objectAtIndex:0];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completeBlock(request);
+                });
+                
+            }else{
+                
+                //no object got returned, pass this error downstream... with nil
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completeBlock(nil);
+                });
+            }
+        }];
+        return;
+    }
+    
 }
 
 

@@ -15,6 +15,7 @@ typedef void (^CompletionBlockPDFGenerator) ();
 
 @property (strong, nonatomic) UITextView *myTextView;
 @property (strong, nonatomic) EQRMultiColumnTextView *myMultiColumnView;
+@property (strong, nonatomic) NSMutableArray *arrayOfMultiColumnTextViews;
 @property float additionalXAdjustment;
 @property (strong, nonatomic) UIImage *sigImage;
 @property BOOL hasSigImage;
