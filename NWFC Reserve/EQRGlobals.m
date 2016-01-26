@@ -22,7 +22,7 @@ NSString* EQRRenterPublic = @"public";
 NSString* EQRRenterYouth = @"youth";
 NSString* EQRRenterInClass = @"in class";
 
-//renter pricing type strings
+//pricing type strings
 NSString *EQRPriceCommerial = @"Commercial";
 NSString *EQRPriceArtist = @"Artist / Non-Profit";
 NSString *EQRPriceStudent = @"Student";

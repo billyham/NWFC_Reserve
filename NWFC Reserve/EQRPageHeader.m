@@ -14,13 +14,14 @@
 
 @implementation EQRPageHeader
 
-+ (void)drawHeaderWithName:(NSString *)name Phone:(NSString *)phone Email:(NSString *)email{
++ (void)drawHeaderWithName:(NSString *)name Phone:(NSString *)phone Email:(NSString *)email RenterType:(NSString *)renterType{
         
     //__________KEEP BELOW
     
     NSString* name_textContent = name;
     NSString* phone_textContent = phone;
     NSString* email_textContent = email;
+    NSString* renter_type_textContent = renterType;
     
     //__________KEEP ABOVE
     
@@ -30,9 +31,8 @@
     UIColor* color2 = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 1];
     
     //// Abstracted Attributes
-    NSString* text4Content = @"RESERVE IN PERSON (24 HOURS NOTICE)\rOR BY EMAIL (48 HOURS NOTICE) AT reserve@nwfilm.org";
-    NSString* text5Content = @"EQUIPMENT REQUEST FORM";
-    NSString* text6Content = @"FOR CURRENT NWFC\rSTUDENT PROJECTS ONLY";
+    NSString* text4Content = @"RESERVE IN PERSON (24 HOURS NOTICE) OR BY EMAIL (48 HOURS NOTICE) AT reserve@nwfilm.org";
+    NSString* text6Content = @"FOR CURRENT NWFC STUDENT PROJECTS ONLY";
     NSString* text7Content = @"STAFF / INTERN ONLY";
     NSString* text8Content = @"Reservation Witness:__________ Date: _____ /_____";
     NSString* text9Content = @"TRACKED & CONFIRMED";
@@ -41,7 +41,7 @@
     NSString* text12Content = @"IN PERSON";
     NSString* text13Content = @"Will you be shooting any EXT. locations?";
     NSString* text14Content = @"YES   •   NO";
-    
+
     
     
     //// Text Drawing
@@ -558,16 +558,6 @@
     [text4Content drawInRect: text4Rect withAttributes: text4FontAttributes];
     
     
-    //// Text 5 Drawing
-    CGRect text5Rect = CGRectMake(246, 58, 215, 24);
-    NSMutableParagraphStyle* text5Style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
-    [text5Style setAlignment: NSTextAlignmentCenter];
-    
-    NSDictionary* text5FontAttributes = @{NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue" size: 11], NSForegroundColorAttributeName: [UIColor blackColor], NSParagraphStyleAttributeName: text5Style};
-    
-    [text5Content drawInRect: text5Rect withAttributes: text5FontAttributes];
-    
-    
     //// Text 6 Drawing
     CGRect text6Rect = CGRectMake(483, 46, 96, 28);
     NSMutableParagraphStyle* text6Style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
@@ -724,8 +714,17 @@
     [email_textContent drawInRect: email_textRect withAttributes: email_textFontAttributes];
     
     
+    //// renter_type_text Drawing
+    CGRect renter_type_textRect = CGRectMake(246, 58, 215, 24);
+    NSMutableParagraphStyle* renter_type_textStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    [renter_type_textStyle setAlignment: NSTextAlignmentCenter];
+    
+    NSDictionary* renter_type_textFontAttributes = @{NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue" size: 11], NSForegroundColorAttributeName: [UIColor blackColor], NSParagraphStyleAttributeName: renter_type_textStyle};
+    
+    [renter_type_textContent drawInRect: renter_type_textRect withAttributes: renter_type_textFontAttributes];
     
     
+
     
     
     

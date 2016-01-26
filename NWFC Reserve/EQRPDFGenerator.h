@@ -25,6 +25,7 @@ typedef void (^CompletionBlockPDFGenerator) ();
 -(void)launchPDFGeneratorWithName:(NSString *)name
                             phone:(NSString *)phone
                             email:(NSString *)email
+                       renterType:(NSString *)renterType
                        agreements:(NSArray *)arrayOfAgreements
                        completion:(CompletionBlockPDFGenerator)completeBlock;
 

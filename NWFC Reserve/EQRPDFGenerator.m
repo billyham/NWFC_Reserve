@@ -22,6 +22,7 @@ typedef void (^CompletionBlockPDFExported) ();
 @property (strong, nonatomic) NSString *myName;
 @property (strong, nonatomic) NSString *myPhone;
 @property (strong, nonatomic) NSString *myEmail;
+@property (strong, nonatomic) NSString *myRenterType;
 @property (strong, nonatomic) NSArray *arrayOfAgreements;
 @property (strong, nonatomic) NSDate *dateOfGeneration;
 
@@ -41,12 +42,14 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
 -(void)launchPDFGeneratorWithName:(NSString *)name
                             phone:(NSString *)phone
                             email:(NSString *)email
+                       renterType:(NSString *)renterType
                        agreements:(NSArray *)arrayOfAgreements
                        completion:(CompletionBlockPDFGenerator)completeBlock{
     
     self.myName = name;
     self.myPhone = phone;
     self.myEmail = email;
+    self.myRenterType = renterType;
     self.arrayOfAgreements = arrayOfAgreements;
     self.dateOfGeneration = [NSDate date];
     
@@ -386,7 +389,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
 //    CGContextTranslateCTM(currentContext, 100, -2200);
 //    CGContextScaleCTM(currentContext, 2.6, 2.6);
     
-    [EQRPageHeader drawHeaderWithName:self.myName Phone:self.myPhone Email:self.myEmail];
+    [EQRPageHeader drawHeaderWithName:self.myName Phone:self.myPhone Email:self.myEmail RenterType:self.myRenterType];
 }
 
 

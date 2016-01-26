@@ -10,6 +10,6 @@
 
 @interface EQRPageHeader : NSObject
 
-+ (void)drawHeaderWithName:(NSString *)name Phone:(NSString *)phone Email:(NSString *)email;
++ (void)drawHeaderWithName:(NSString *)name Phone:(NSString *)phone Email:(NSString *)email RenterType:(NSString *)renterType;
 
 @end

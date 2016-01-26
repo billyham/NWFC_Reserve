@@ -326,6 +326,7 @@
         [pdfGenerator launchPDFGeneratorWithName:self.request.contactNameItem.first_and_last
                                            phone:self.request.contactNameItem.phone
                                            email:self.request.contactNameItem.email
+                                      renterType:self.request.renter_type
                                       agreements:nil
                                       completion:^{
                                                
