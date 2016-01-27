@@ -1672,6 +1672,8 @@
 
 -(IBAction)captureSig:(id)sender{
     
+//    NSLog(@"this is the class title, so says CheckVController > captureSig: %@", self.myScheduleRequestItem.title);
+    
     UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"SigCapture" bundle:nil];
     UINavigationController *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"main"];
     newView.modalPresentationStyle = UIModalPresentationFullScreen;

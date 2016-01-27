@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "EQRMultiColumnTextView.h"
 
-typedef void (^CompletionBlockPDFGenerator) ();
+typedef void (^CompletionBlockPDFGenerator) (NSString *pdf_name, NSString *pdf_timestamp);
 
 @interface EQRPDFGenerator : NSObject 
 

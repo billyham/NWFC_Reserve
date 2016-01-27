@@ -44,6 +44,8 @@
 @property (strong, nonatomic) NSDate* staff_shelf_date;
 @property (strong, nonatomic) NSString* staff_shelf_id;
 @property (strong, nonatomic) NSString* notes;
+@property (strong, nonatomic) NSString* pdf_name;
+@property (strong, nonatomic) NSDate* pdf_timestamp;
 //@property (strong, nonatomic) NSString *renter_pricing_class;
 
 //non-database properties

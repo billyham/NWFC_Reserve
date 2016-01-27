@@ -45,6 +45,8 @@
     newRequest.contact_name = [self.contact_name copy];
     newRequest.station_id = [self.station_id copy];
     newRequest.notes = [self.notes copy];
+    newRequest.pdf_name = [self.pdf_name copy];
+    newRequest.pdf_timestamp = [self.pdf_timestamp copy];
 //    newRequest.renter_pricing_class = [self.renter_pricing_class copy];
     
     newRequest.title = [self.title copy];

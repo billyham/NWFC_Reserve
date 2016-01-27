@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "EQRScheduleRequestItem.h"
 
-typedef void (^CompletionBlockPageConstructor) ();
+typedef void (^CompletionBlockPageConstructor) (NSString *pdf_name, NSString *pdf_timestamp);
 
 @interface EQRPageConstructor : NSObject 
 

@@ -436,13 +436,23 @@
             [pageConstructor generatePDFWithScheduleRequestItem:chosenItem
                                              withSignatureImage:self.signatureView.signatureImage
                                                      agreements:[NSArray arrayWithArray:self.arrayOfAgreementTextElements]
-                                                     completion:^{
+                                                     completion:^(NSString *pdf_name, NSString *pdf_timestamp){
                                                          
                                                          // Display confirmation and dismiss view
                                                          [self performSegueWithIdentifier:@"sigConfirmation" sender:self];
+                                                         
+                                                         // Update local request with pdf timestamp and name
+                                                         
+                                                         // Update view with sig confirmation
+    
+                                                         // Update database with pdf timestamp and name
                                                      }];
         }];
     });
+}
+
+-(void)updatePDFInfo{
+    
 }
 
 

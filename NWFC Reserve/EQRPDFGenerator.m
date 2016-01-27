@@ -11,6 +11,7 @@
 #import "EQRPageHeader.h"
 #import "EQRTextElement.h"
 #import "EQRPageFooter.h"
+#import "EQRDataStructure.h"
 
 typedef void (^CompletionBlockPDFSaved) ();
 typedef void (^CompletionBlockPDFExported) ();
@@ -63,7 +64,10 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
         
         [self exportPDF:^(){
             
-            completeBlock();
+            NSString *pdf_name = [self strictlyTheFileName];
+            NSString *pdf_timestamp = [EQRDataStructure dateAsString:self.dateOfGeneration];
+            
+            completeBlock(pdf_name, pdf_timestamp);
         }];
     }];
 }
@@ -95,7 +99,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
             NSLog(@"Could not retrieve a ubiquityURL");
         }
         
-        completeBlock();
+        completeBlock(@"one", @"two");
     }];
 }
 
@@ -453,6 +457,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
         return nil;
     }
 };
+
 
 
 - (NSString*)applicationDocumentDirectory {

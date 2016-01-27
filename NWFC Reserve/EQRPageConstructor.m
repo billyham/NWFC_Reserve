@@ -340,15 +340,24 @@
         pdfGenerator.sigImage = self.sigImage;
     }
     
+//    NSLog(@"this is the class title: %@", self.request.title);
+    
+    NSString *valueForRenter;
+    if (self.request.title){
+        valueForRenter = self.request.title;
+    }else{
+        valueForRenter = [self.request.renter_type capitalizedString];
+    }
+    
     [pdfGenerator launchPDFGeneratorWithName:self.request.contactNameItem.first_and_last
                                        phone:self.request.contactNameItem.phone
                                        email:self.request.contactNameItem.email
-                                  renterType:[self.request.renter_type capitalizedString]
+                                  renterType:valueForRenter
                                   agreements:self.arrayOfAgreements
-                                  completion:^{
+                                  completion:^(NSString *pdf_name, NSString *pdf_timestamp){
                                       
                                       // Sends completion block after pdf generator finishes its business
-                                      self.delayedCompletionBlock();
+                                      self.delayedCompletionBlock(pdf_name, pdf_timestamp);
                                       
                                   }];
 }

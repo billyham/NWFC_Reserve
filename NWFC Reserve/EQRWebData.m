@@ -990,6 +990,18 @@ const int intEQRTransaction = 11;
         return;
     }
     
+    if ([elementName isEqualToString:@"pdf_name"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
+    if ([elementName isEqualToString:@"pdf_timestamp"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
     
     
 }
@@ -1964,6 +1976,33 @@ const int intEQRTransaction = 11;
             dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
             
             [(EQRTransaction *)self.currentThing setPayment_timestamp:[dateFormatter dateFromString:self.currentValue]];
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"pdf_name"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(pdf_name)]){
+            
+            [(EQRScheduleRequestItem *)self.currentThing setPdf_name:self.currentValue];;
+            
+            self.currentValue = nil;
+        }
+        return;
+    }
+    
+    if ([prop isEqualToString:@"pdf_timestamp"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(pdf_timestamp)]){
+            
+            //need to convert date string in dates
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+            dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            
+            [(EQRScheduleRequestItem *)self.currentThing setPdf_timestamp:[dateFormatter dateFromString:self.currentValue]];
             
             self.currentValue = nil;
         }

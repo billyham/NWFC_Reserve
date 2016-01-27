@@ -328,7 +328,7 @@
                                            email:self.request.contactNameItem.email
                                       renterType:self.request.renter_type
                                       agreements:nil
-                                      completion:^{
+                                      completion:^(NSString *pdf_name, NSString *pdf_timestamp){
                                                
                                                
                                            }];
