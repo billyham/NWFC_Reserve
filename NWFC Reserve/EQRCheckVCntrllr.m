@@ -37,7 +37,7 @@
 #import "EQRAlternateWrappperPriceMatrix.h"
 
 
-@interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate, UISearchBarDelegate, UISearchResultsUpdating, EQRPriceMatrixDelegate>
+@interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate, UISearchBarDelegate, UISearchResultsUpdating, EQRPriceMatrixDelegate, EQRSigCaptureDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem* myScheduleRequestItem;
 
@@ -53,8 +53,11 @@
 @property (strong, nonatomic) IBOutlet UITextView* updateLabel;
 
 @property (strong, nonatomic) IBOutlet UILabel* nameTextLabel;
+@property (strong, nonatomic) IBOutlet UILabel *renterTypeLabel;
+@property (strong, nonatomic) IBOutlet UILabel *classTitleLabel;
 @property (strong, nonatomic) NSString* notesText;
 @property (strong, nonatomic) IBOutlet UITextView* noteView;
+@property (strong, nonatomic) IBOutlet UILabel *xLabel;
 @property (strong, nonatomic) NSDictionary* myUserInfo;
 
 @property (strong, nonatomic) NSString* myProperty;
@@ -244,8 +247,39 @@
     self.noteView.text = self.notesText;
     
     //set name label
+    self.myScheduleRequestItem.contactNameItem = self.tempContact;
     if (self.myScheduleRequestItem.contactNameItem){
         self.nameTextLabel.text = self.myScheduleRequestItem.contactNameItem.first_and_last;
+    }
+    
+    // Set renter type and class
+    self.renterTypeLabel.text = [self.myScheduleRequestItem.renter_type capitalizedString];
+    if (self.myScheduleRequestItem.title){
+        self.classTitleLabel.text = self.myScheduleRequestItem.title;
+        self.classTitleLabel.hidden = NO;
+    }
+    
+    // Set name on nav bar?
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dateFormatter.dateFormat = @"MMM d";
+    NSString *pickupDateAsString = [dateFormatter stringFromDate:self.myScheduleRequestItem.request_date_begin];
+    NSString *returnDateAsString = [dateFormatter stringFromDate:self.myScheduleRequestItem.request_date_end];
+    NSString *typeLabel;
+    if (self.marked_for_returning){
+        typeLabel = [NSString stringWithFormat:@"%@ - Returning", returnDateAsString];
+    }else{
+        if (self.switch_num == 1){
+            typeLabel = [NSString stringWithFormat:@"%@ - Prep", pickupDateAsString];
+        }else{
+            typeLabel = [NSString stringWithFormat:@"%@ - Checking Out", pickupDateAsString];
+        }
+    }
+    self.navigationItem.title = [NSString stringWithFormat:@"%@, %@",self.myScheduleRequestItem.contactNameItem.first_and_last, typeLabel];
+    
+    // Set X Label on signed agreement
+    if (self.myScheduleRequestItem.pdf_timestamp){
+        self.xLabel.hidden = NO;
     }
     
     
@@ -261,8 +295,6 @@
     [self.arrayOfMiscJoins removeAllObjects];
     
 //    self.indexOfLastReturnedItem = -1;
-    
-    self.myScheduleRequestItem.contactNameItem = self.tempContact;
     
 //    [self renewTheArrayWithScheduleTracking_foreignKey:self.scheduleRequestKeyID];
 //    [self.myEquipCollection reloadData];
@@ -1680,9 +1712,43 @@
     [self presentViewController:newView animated:YES completion:^{
         
         //___________this is ugly, it assumes the subclass type of VC at the root of the nav controller
+        [(EQRSigCaptureMainVC*)[[newView viewControllers] objectAtIndex:0] setDelegate:self];
         [(EQRSigCaptureMainVC*)[[newView viewControllers] objectAtIndex:0] loadTheDataWithRequestItem:self.myScheduleRequestItem];
     }];
     
+}
+
+
+-(void)pdfHasCompletedWithName:(NSString *)pdfName timestamp:(NSDate *)pdfTimestamp{
+    
+    if (pdfTimestamp){
+        
+        // Update view with sig confirmation
+        self.xLabel.hidden = NO;
+        
+        // Update local request with pdf timestamp and name
+        self.myScheduleRequestItem.pdf_name = pdfName;
+        self.myScheduleRequestItem.pdf_timestamp = pdfTimestamp;
+        
+        // Update database with pdf timestamp and name
+        NSString *dateAsString = [EQRDataStructure dateAsString:self.myScheduleRequestItem.pdf_timestamp];
+        
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        webData.delegateDataFeed = self;
+        NSArray *firstArray = @[@"key_id", self.myScheduleRequestItem.key_id];
+        NSArray *secondArray = @[@"pdf_name", self.myScheduleRequestItem.pdf_name];
+        NSArray *thirdArray = @[@"pdf_timestamp", dateAsString];
+        NSArray *topArray = @[firstArray, secondArray, thirdArray];
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+           
+            [webData queryForStringwithAsync:@"EQAlterPDFInScheduleRequest.php" parameters:topArray completion:^(NSString *object) {
+                NSLog(@"CheckVCntrllr > pdfHasCompletedWithName says request key_id is: %@", object);
+            }];
+            
+        });
+    }
 }
 
 

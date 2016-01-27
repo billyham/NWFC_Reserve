@@ -46,8 +46,24 @@
     
     if (self.myTransaction){  //Transaction is valid
         self.pricingCategoryValue.text = self.myTransaction.renter_pricing_class;
-        self.rentalFeeValue.text = self.myTransaction.total_due;
-        self.depositValue.text = self.myTransaction.deposit_due;
+        
+        //font styles
+        UIFont* normalFont = [UIFont systemFontOfSize:13];
+        UIFont* boldFont = [UIFont boldSystemFontOfSize:15];
+        NSDictionary *dictionaryOfNormalAtts = @{NSFontAttributeName:normalFont, NSBaselineOffsetAttributeName:[NSNumber numberWithFloat:2.0]};
+        NSDictionary *dictionaryOfBoldAtts = @{NSFontAttributeName:boldFont};
+        
+        NSMutableAttributedString *feeAtt = [[NSMutableAttributedString alloc] initWithString:@"$" attributes:dictionaryOfNormalAtts];
+        NSMutableAttributedString *depositAtt = [[NSMutableAttributedString alloc] initWithString:@"$" attributes:dictionaryOfNormalAtts];
+        
+        NSAttributedString *feeValue = [[NSAttributedString alloc] initWithString:self.myTransaction.total_due attributes:dictionaryOfBoldAtts];
+        NSAttributedString *depositValue = [[NSAttributedString alloc] initWithString:self.myTransaction.deposit_due attributes:dictionaryOfBoldAtts];
+        
+        [feeAtt appendAttributedString:feeValue];
+        [depositAtt appendAttributedString:depositValue];
+        
+        self.rentalFeeValue.attributedText = feeAtt;
+        self.depositValue.attributedText = depositAtt;
         
 //        NSLog(@"EQRPricingWidgetTemplate > doAlltheLayout says transaction is valid, setting rental value");
 //        NSLog(@"setting rentalFeeValue as: %@", self.myTransaction.total_due);

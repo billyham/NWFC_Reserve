@@ -326,9 +326,10 @@
         [pdfGenerator launchPDFGeneratorWithName:self.request.contactNameItem.first_and_last
                                            phone:self.request.contactNameItem.phone
                                            email:self.request.contactNameItem.email
-                                      renterType:self.request.renter_type
+                                      renterType:[self.request.renter_type capitalizedString]
+                                           class:self.request.title
                                       agreements:nil
-                                      completion:^(NSString *pdf_name, NSString *pdf_timestamp){
+                                      completion:^(NSString *pdf_name, NSDate *pdf_timestamp){
                                                
                                                
                                            }];

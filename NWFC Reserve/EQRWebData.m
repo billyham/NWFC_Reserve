@@ -2309,6 +2309,15 @@ const int intEQRTransaction = 11;
         return;
     }
     
+    if ([link isEqualToString:@"EQAlterPDFInScheduleRequest.php"]){
+        
+        NSString *returnString = [self queryForStringWithLink:@"EQAlterPDFInScheduleRequest.php" parameters:para];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+    }
+    
 }
 
 

@@ -25,6 +25,7 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *returnDateLabel;
+@property (strong, nonatomic) IBOutlet UIButton *enterButton;
 @property (strong, nonatomic) IBOutlet PPSSignatureView *signatureView;
 @property (strong, nonatomic) EQRScheduleRequestItem *requestItem;
 @property (strong, nonatomic) EQRPricingWidgetSigVC *myPricingWidget;
@@ -39,9 +40,13 @@
 
 @property (strong, nonatomic) IBOutlet UIImageView *roundedRect;
 
+@property (strong, nonatomic) NSTimer *sigPoll;
+
 @end
 
 @implementation EQRSigCaptureMainVC
+
+@synthesize delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -136,6 +141,9 @@
 }
 
 -(void)loadTheDataStage2{  // add misc items to the array of joins
+    
+    // Start polling for a signature
+    self.sigPoll = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(testForSig:) userInfo:nil repeats:YES];
     
 
     
@@ -311,6 +319,20 @@
     
 }
 
+#pragma mark - Polling for Signature
+
+-(void)testForSig:(NSTimer *)timer{
+    
+    if (self.signatureView.hasSignature){
+        self.enterButton.userInteractionEnabled = YES;
+        self.enterButton.alpha = 1.0;
+        [self.sigPoll invalidate];
+    }else{
+        self.enterButton.userInteractionEnabled = NO;
+        self.enterButton.alpha = 0.3;
+    }
+}
+
 
 #pragma mark - webdata delegate methods
 
@@ -390,6 +412,12 @@
 -(IBAction)clearButton:(id)sender{
     
     [self.signatureView erase];
+    
+    // Start polling for a signature
+    self.sigPoll = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(testForSig:) userInfo:nil repeats:YES];
+    
+    self.enterButton.userInteractionEnabled = NO;
+    self.enterButton.alpha = 0.3;
 }
 
 -(IBAction)cancelSigCapture:(id)sender{
@@ -436,16 +464,12 @@
             [pageConstructor generatePDFWithScheduleRequestItem:chosenItem
                                              withSignatureImage:self.signatureView.signatureImage
                                                      agreements:[NSArray arrayWithArray:self.arrayOfAgreementTextElements]
-                                                     completion:^(NSString *pdf_name, NSString *pdf_timestamp){
+                                                     completion:^(NSString *pdf_name, NSDate *pdf_timestamp){
                                                          
                                                          // Display confirmation and dismiss view
                                                          [self performSegueWithIdentifier:@"sigConfirmation" sender:self];
                                                          
-                                                         // Update local request with pdf timestamp and name
-                                                         
-                                                         // Update view with sig confirmation
-    
-                                                         // Update database with pdf timestamp and name
+                                                         [self.delegate pdfHasCompletedWithName:pdf_name timestamp:pdf_timestamp];
                                                      }];
         }];
     });

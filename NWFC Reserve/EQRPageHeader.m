@@ -14,7 +14,11 @@
 
 @implementation EQRPageHeader
 
-+ (void)drawHeaderWithName:(NSString *)name Phone:(NSString *)phone Email:(NSString *)email RenterType:(NSString *)renterType{
++ (void)drawHeaderWithName:(NSString *)name
+                     Phone:(NSString *)phone
+                     Email:(NSString *)email
+                RenterType:(NSString *)renterType
+                     Class:(NSString *)classTitle{
         
     //__________KEEP BELOW
     
@@ -22,6 +26,7 @@
     NSString* phone_textContent = phone;
     NSString* email_textContent = email;
     NSString* renter_type_textContent = renterType;
+    NSString* class_textContent = classTitle;
     
     //__________KEEP ABOVE
     
@@ -42,6 +47,7 @@
     NSString* text13Content = @"Will you be shooting any EXT. locations?";
     NSString* text14Content = @"YES   •   NO";
 
+   
     
     
     //// Text Drawing
@@ -715,7 +721,7 @@
     
     
     //// renter_type_text Drawing
-    CGRect renter_type_textRect = CGRectMake(246, 58, 215, 24);
+    CGRect renter_type_textRect = CGRectMake(234, 58, 215, 24);
     NSMutableParagraphStyle* renter_type_textStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
     [renter_type_textStyle setAlignment: NSTextAlignmentCenter];
     
@@ -724,7 +730,16 @@
     [renter_type_textContent drawInRect: renter_type_textRect withAttributes: renter_type_textFontAttributes];
     
     
-
+    //// class_text Drawing
+    CGRect class_textRect = CGRectMake(236, 76, 215, 24);
+    NSMutableParagraphStyle* class_textStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    [class_textStyle setAlignment: NSTextAlignmentCenter];
+    
+    NSDictionary* class_textFontAttributes = @{NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue" size: 11], NSForegroundColorAttributeName: [UIColor blackColor], NSParagraphStyleAttributeName: class_textStyle};
+    
+    [class_textContent drawInRect: class_textRect withAttributes: class_textFontAttributes];
+    
+    
     
     
     

@@ -24,6 +24,7 @@ typedef void (^CompletionBlockPDFExported) ();
 @property (strong, nonatomic) NSString *myPhone;
 @property (strong, nonatomic) NSString *myEmail;
 @property (strong, nonatomic) NSString *myRenterType;
+@property (strong, nonatomic) NSString *myClassTitle;
 @property (strong, nonatomic) NSArray *arrayOfAgreements;
 @property (strong, nonatomic) NSDate *dateOfGeneration;
 
@@ -44,6 +45,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
                             phone:(NSString *)phone
                             email:(NSString *)email
                        renterType:(NSString *)renterType
+                            class:(NSString *)classTitle
                        agreements:(NSArray *)arrayOfAgreements
                        completion:(CompletionBlockPDFGenerator)completeBlock{
     
@@ -51,6 +53,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
     self.myPhone = phone;
     self.myEmail = email;
     self.myRenterType = renterType;
+    self.myClassTitle = classTitle;
     self.arrayOfAgreements = arrayOfAgreements;
     self.dateOfGeneration = [NSDate date];
     
@@ -65,7 +68,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
         [self exportPDF:^(){
             
             NSString *pdf_name = [self strictlyTheFileName];
-            NSString *pdf_timestamp = [EQRDataStructure dateAsString:self.dateOfGeneration];
+            NSDate *pdf_timestamp = self.dateOfGeneration;
             
             completeBlock(pdf_name, pdf_timestamp);
         }];
@@ -393,7 +396,11 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
 //    CGContextTranslateCTM(currentContext, 100, -2200);
 //    CGContextScaleCTM(currentContext, 2.6, 2.6);
     
-    [EQRPageHeader drawHeaderWithName:self.myName Phone:self.myPhone Email:self.myEmail RenterType:self.myRenterType];
+    [EQRPageHeader drawHeaderWithName:self.myName
+                                Phone:self.myPhone
+                                Email:self.myEmail
+                           RenterType:self.myRenterType
+                                Class:self.myClassTitle];
 }
 
 

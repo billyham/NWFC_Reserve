@@ -9,8 +9,20 @@
 #import <UIKit/UIKit.h>
 #import "EQRScheduleRequestItem.h"
 
-@interface EQRSigCaptureMainVC : UIViewController
+@protocol EQRSigCaptureDelegate;
+
+@interface EQRSigCaptureMainVC : UIViewController{
+    __weak id <EQRSigCaptureDelegate> delegate;
+}
+
+@property (weak, nonatomic) id <EQRSigCaptureDelegate> delegate;
 
 -(void)loadTheDataWithRequestItem:(EQRScheduleRequestItem *)requestItem;
+
+@end
+
+@protocol EQRSigCaptureDelegate <NSObject>
+
+-(void)pdfHasCompletedWithName:(NSString *)pdfName timestamp:(NSDate *)pdfTimestamp;
 
 @end
