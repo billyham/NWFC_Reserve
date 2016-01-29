@@ -253,7 +253,7 @@
         
         CGRect buttonRect = CGRectMake(textView.frame.size.width + distanceBetweenTextAndButton, textView.frame.origin.y + 10, widthOfButton, heightOfButton);
         UIButton *OKButton = [[UIButton alloc] initWithFrame:buttonRect];
-        [OKButton setBackgroundColor:[UIColor redColor]];
+        [OKButton setBackgroundColor:[UIColor blueColor]];
         [OKButton setTitle:@"Tap" forState:UIControlStateNormal];
         [OKButton setTitle:@"" forState:UIControlStateSelected];
         OKButton.tag = buttonTag;
@@ -522,7 +522,7 @@
         [sender setBackgroundColor:[UIColor greenColor]];
     }else{
         [sender setSelected:NO];
-        [sender setBackgroundColor:[UIColor redColor]];
+        [sender setBackgroundColor:[UIColor blueColor]];
     }
     
     
