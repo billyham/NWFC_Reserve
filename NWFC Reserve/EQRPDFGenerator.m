@@ -12,6 +12,7 @@
 #import "EQRTextElement.h"
 #import "EQRPageFooter.h"
 #import "EQRDataStructure.h"
+#import "EQRModeManager.h"
 
 typedef void (^CompletionBlockPDFSaved) ();
 typedef void (^CompletionBlockPDFExported) ();
@@ -457,8 +458,13 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
         dateFormatter.dateFormat = @"yyyy-MM-dd_HHmmss";
         NSString *dateString = [dateFormatter stringFromDate:self.dateOfGeneration];
         
-        return [NSString stringWithFormat:@"%@ %@", dateString, self.myName];
-        
+        // Add "Demo" prefix when in demo mode
+        EQRModeManager *modeManager = [EQRModeManager sharedInstance];
+        if (modeManager.isInDemoMode){
+            return [NSString stringWithFormat:@"Demo-%@ %@", dateString, self.myName];
+        }else{
+            return [NSString stringWithFormat:@"%@ %@", dateString, self.myName];
+        }
     }else{
         NSLog(@"PDFGenerator > stricltyTheFileName failed to find a valid dateOfGeneration");
         return nil;
