@@ -1,4 +1,54 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6244" systemVersion="13F34" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="14F1605" minimumToolsVersion="Xcode 4.3">
+    <entity name="ClassCatalog" representedClassName="ClassCatalog" syncable="YES">
+        <attribute name="allocated_gear" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="course_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="dates" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="decommissioned" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="description_long" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="instructor_foreign_key" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="instructor_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="key_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="max_attendance" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="prerequisite" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="price_psu_credit" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="price_psu_rec_fee" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="price_tuition" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="projects" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="textbooks" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ClassSection" representedClassName="ClassSection" syncable="YES">
+        <attribute name="catalog_foreign_key" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="key_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="section_date" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="section_identifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="section_name" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="term" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Contact" representedClassName="Contact" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="current_eq_intern" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="current_eq_staff" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="current_student" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="decommissioned" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="first_and_last" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="first_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="key_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="last_name" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rentor_type_faculty" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="rentor_type_staff" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="student_id" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="zip" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ClassCatalog" positionX="-63" positionY="-18" width="128" height="300"/>
+        <element name="ClassSection" positionX="-54" positionY="117" width="128" height="135"/>
+        <element name="Contact" positionX="-36" positionY="126" width="128" height="300"/>
+    </elements>
 </model>
