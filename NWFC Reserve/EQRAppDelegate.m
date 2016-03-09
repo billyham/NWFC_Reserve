@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Ham Again LLC. All rights reserved.
 //
 
+#import <CloudKit/CloudKit.h>
 #import "EQRAppDelegate.h"
 #import "EQRColors.h"
 #import "EQRGlobals.h"
@@ -72,6 +73,31 @@
                                  nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
+    
+    // Register for Remote Notifications
+    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert categories:nil];
+    [application registerUserNotificationSettings:notificationSettings];
+    [application registerForRemoteNotifications];
+    
+    // Test Remote Notification
+    NSPredicate *predicate = nil;
+    predicate = [NSPredicate predicateWithFormat:@"TRUEPREDICATE"];
+    
+    CKSubscription *subscription = [[CKSubscription alloc]
+                                   initWithRecordType:@"Contact" predicate:predicate options:CKSubscriptionOptionsFiresOnRecordCreation];
+    
+    CKNotificationInfo *notificationInfo = [CKNotificationInfo new];
+    notificationInfo.alertLocalizationKey = @"New Contact Record";
+    notificationInfo.shouldBadge = YES;
+    
+    subscription.notificationInfo = notificationInfo;
+    
+    CKDatabase *privateDatabase = [[CKContainer containerWithIdentifier:EQRCloudKitContainer] privateCloudDatabase];
+    [privateDatabase saveSubscription:subscription completionHandler:^(CKSubscription * _Nullable subscription, NSError * _Nullable error) {
+        if (error){
+            NSLog(@"AppDelegate > didFinishLaunching  failed to save CloudKit subscription");
+        }
+    }];
     
     
     //instantiate system colors
@@ -284,6 +310,22 @@
     [self saveContext];
 }
 
+
+#pragma mark - Handle remote notifications
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo {
+    
+    CKNotification *cloudKitNotification = [CKNotification notificationFromRemoteNotificationDictionary:userInfo];
+    
+//    NSString *alertBody = cloudKitNotification.alertBody;
+    
+    if (cloudKitNotification.notificationType == CKNotificationTypeQuery) {
+        
+        CKRecordID *recordID = [(CKQueryNotification *)cloudKitNotification recordID];
+        
+        NSLog(@"cloud kit recordID: %@", recordID);
+    }
+}
 
 #pragma mark - Core Data stack
 

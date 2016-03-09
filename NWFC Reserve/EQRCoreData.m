@@ -10,4 +10,10 @@
 
 @implementation EQRCoreData
 
++(EQRCoreData*)sharedInstance{
+    
+    EQRCoreData *myInstance = [[EQRCoreData alloc] init];
+    return myInstance;
+}
+
 @end

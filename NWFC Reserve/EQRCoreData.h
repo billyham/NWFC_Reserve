@@ -17,24 +17,15 @@ typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
 @protocol EQRCoreDataDelegate;
 
 @interface EQRCoreData : EQRWebData{
-    //    __weak id <EQRCoreDataDelegate> delegateDataFeed;
+    
 }
 
-//@property (weak, nonatomic) id <EQRCoreDataDelegate> delegateDataFeed;
-
 +(EQRCoreData*)sharedInstance;
-
-//-(void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock;
-//-(NSString*)queryForStringWithLink:(NSString*)link parameters:(NSArray*)para;
-//-(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString selector:(SEL)action completion:(CompletionBlockWithBool)completeBlock;
-
 
 @end
 
 
 
 @protocol EQRCoreDataDelegate <NSObject>
-
-//-(void)addASyncDataItem:(id)currentThing;
 
 @end
