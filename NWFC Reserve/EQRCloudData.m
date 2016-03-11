@@ -199,7 +199,7 @@
     if (isInDemoMode){
         recordZone = [[CKRecordZoneID alloc] initWithZoneName:EQRRecordZoneDemo  ownerName:CKOwnerDefaultName];
     }else{
-        recordZone = [[CKRecordZoneID alloc] initWithZoneName:CKRecordZoneDefaultName  ownerName:CKOwnerDefaultName];
+        recordZone = [[CKRecordZoneID alloc] initWithZoneName:EQRRecordZoneStandard  ownerName:CKOwnerDefaultName];
     }
     
     
@@ -435,7 +435,7 @@
     if (isInDemoMode){
         recordZone = [[CKRecordZoneID alloc] initWithZoneName:EQRRecordZoneDemo  ownerName:CKOwnerDefaultName];
     }else{
-        recordZone = [[CKRecordZoneID alloc] initWithZoneName:CKRecordZoneDefaultName  ownerName:CKOwnerDefaultName];
+        recordZone = [[CKRecordZoneID alloc] initWithZoneName:EQRRecordZoneStandard  ownerName:CKOwnerDefaultName];
     }
     
     if ([link isEqualToString:@"EQGetAllContactNames.php"]){

@@ -80,15 +80,21 @@
     [application registerForRemoteNotifications];
     
     // Test Remote Notification
-    NSPredicate *predicate = nil;
-    predicate = [NSPredicate predicateWithFormat:@"TRUEPREDICATE"];
     
-    CKSubscription *subscription = [[CKSubscription alloc]
-                                   initWithRecordType:@"Contact" predicate:predicate options:CKSubscriptionOptionsFiresOnRecordCreation];
+    //____!!!!!!  This is a Query Based subscription   !!!!______
+//    NSPredicate *predicate = nil;
+//    predicate = [NSPredicate predicateWithFormat:@"TRUEPREDICATE"];
+//    
+//    CKSubscription *subscription = [[CKSubscription alloc]
+//                                   initWithRecordType:@"Contact" predicate:predicate options:CKSubscriptionOptionsFiresOnRecordCreation];
+    
+    //____!!!!!!  This is a Zone Based subscription   !!!!______
+    CKSubscription *subscription = [[CKSubscription alloc] initWithZoneID:[[CKRecordZoneID alloc] initWithZoneName:EQRRecordZoneStandard ownerName:CKOwnerDefaultName] options:0];
     
     CKNotificationInfo *notificationInfo = [CKNotificationInfo new];
-    notificationInfo.alertLocalizationKey = @"New Contact Record";
-    notificationInfo.shouldBadge = YES;
+//    notificationInfo.alertLocalizationKey = @"Change in standard zone";
+//    notificationInfo.shouldBadge = YES;
+    notificationInfo.shouldSendContentAvailable = YES;
     
     subscription.notificationInfo = notificationInfo;
     
@@ -317,12 +323,12 @@
     
     CKNotification *cloudKitNotification = [CKNotification notificationFromRemoteNotificationDictionary:userInfo];
     
-//    NSString *alertBody = cloudKitNotification.alertBody;
+    NSLog(@"did receive cloud kit remote notification with userInfo: %@", cloudKitNotification);
     
+    //___!!!!!!  This doesn't happen   !!!!____
     if (cloudKitNotification.notificationType == CKNotificationTypeQuery) {
         
         CKRecordID *recordID = [(CKQueryNotification *)cloudKitNotification recordID];
-        
         NSLog(@"cloud kit recordID: %@", recordID);
     }
 }

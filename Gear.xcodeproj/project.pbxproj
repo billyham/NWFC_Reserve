@@ -1405,6 +1405,9 @@
 					438EDCDB182B7ABD0090F882 = {
 						DevelopmentTeam = C3YDZ7M5S2;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.Push = {
 								enabled = 1;
 							};
