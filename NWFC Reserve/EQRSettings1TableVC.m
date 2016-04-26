@@ -14,6 +14,7 @@
 #import "EQRSettingsLeftTableVC.h"
 #import "EQRTextElement.h"
 #import "EQRWebData.h"
+#import "EQRQRCodeVC.h"
 
 
 @interface EQRSettings1TableVC () <EQRWebDataDelegate>
@@ -23,12 +24,21 @@
 @property (strong, nonatomic) IBOutlet UILabel* campTermString;
 @property (strong, nonatomic) IBOutlet UISwitch* demoModeSwitch;
 @property (strong, nonatomic) IBOutlet UISwitch* kioskModeSwitch;
+@property (strong, nonatomic) IBOutlet UILabel *qrCodeLabel;
+@property (strong, nonatomic) IBOutlet UILabel *qrItemNameLabel;
+@property (strong, nonatomic) IBOutlet UILabel *qrItemNumberLabel;
 
 @property (strong, nonatomic) UIPopoverController* passwordPopover;
 
 @property (strong, nonatomic) EQRGenericTextEditor* genericTextEditor;
 @property (strong, nonatomic) EQRGenericBlockOfTextEditor *myGenericBlockTextEditor;
+
 @property (strong, nonatomic) NSString *mySignature;
+@property (strong, nonatomic) NSString *myQRCode;
+@property (strong, nonatomic) NSString *myQRItemName;
+@property (strong, nonatomic) NSString *myQRItemNumber;
+
+@property (strong, nonatomic) EQRQRCodeVC *myQRVC;
 
 @end
 
@@ -193,6 +203,47 @@
 }
 
 
+-(void)tapInQRCode{
+    
+    EQRGenericTextEditor *genericTextEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
+    genericTextEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    genericTextEditor.delegate = self;
+    self.genericTextEditor = genericTextEditor;
+    
+    [self presentViewController:self.genericTextEditor animated:YES completion:^{
+        
+        [self.genericTextEditor initalSetupWithTitle:@"none" subTitle:@"none" currentText:@"" keyboard:nil returnMethod:@"qrCodeTextDidChange:"];
+    }];
+}
+
+-(void)tapInQRItemName{
+    
+    EQRGenericTextEditor *genericTextEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
+    genericTextEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    genericTextEditor.delegate = self;
+    self.genericTextEditor = genericTextEditor;
+    
+    [self presentViewController:self.genericTextEditor animated:YES completion:^{
+        
+        [self.genericTextEditor initalSetupWithTitle:@"none" subTitle:@"none" currentText:@"" keyboard:nil returnMethod:@"qrItemNameDidChange:"];
+    }];
+}
+
+-(void)tapInQRItemNumber{
+    
+    EQRGenericTextEditor *genericTextEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
+    genericTextEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    genericTextEditor.delegate = self;
+    self.genericTextEditor = genericTextEditor;
+    
+    [self presentViewController:self.genericTextEditor animated:YES completion:^{
+        
+        [self.genericTextEditor initalSetupWithTitle:@"none" subTitle:@"none" currentText:@"" keyboard:nil returnMethod:@"qrItemNumberDidChange:"];
+    }];
+}
+
+
+
 #pragma mark - WebData delegate
 
 
@@ -222,7 +273,6 @@
     
     //do nothing if currentThing is nil, it leaves property as nil
 }
-
     
 
 
@@ -326,7 +376,24 @@
             }
         }];
     });
+}
+
+-(void)qrCodeTextDidChange:(NSString *)returnText{
     
+    self.myQRCode = [returnText uppercaseString];
+    self.qrCodeLabel.text = self.myQRCode;
+}
+
+-(void)qrItemNameDidChange:(NSString *)returnText{
+    
+    self.myQRItemName = returnText;
+    self.qrItemNameLabel.text = self.myQRItemName;
+}
+
+-(void)qrItemNumberDidChange:(NSString *)returnText{
+    
+    self.myQRItemNumber = returnText;
+    self.qrItemNumberLabel.text = self.myQRItemNumber;
 }
 
 
@@ -518,6 +585,36 @@
             
             [self tapInEmailSignatureField:nil];
             
+            
+        }
+    }
+    
+    if (indexPath.section == 3){  // Print QR Code
+        
+        if (indexPath.row == 0){ // Enter code
+            
+            [self tapInQRCode];
+            
+        }else if (indexPath.row == 1){  // Enter Name
+            
+            [self tapInQRItemName];
+            
+        }else if (indexPath.row == 2){ // Enter Number
+            
+            [self tapInQRItemNumber];
+            
+        }else if (indexPath.row == 3){  // Print Code
+            
+            self.myQRVC = [[EQRQRCodeVC alloc] initWithNibName:@"EQRQRCodeVC" bundle:nil];
+            self.myQRVC.modalPresentationStyle = UIModalPresentationFormSheet;
+            
+            [self presentViewController:self.myQRVC animated:YES completion:^{
+               
+                [self.myQRVC initialSetupWithCode:self.myQRCode Name:self.myQRItemName Number:self.myQRItemNumber];
+                
+            }];
+            
+            [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
             
         }
     }

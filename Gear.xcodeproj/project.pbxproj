@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0109F95E18E11A8B0069BE6A /* EQRHeaderCellForSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 0109F95D18E11A8B0069BE6A /* EQRHeaderCellForSchedule.m */; };
 		010E2CFB18E6293B000B7711 /* EQRColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 010E2CFA18E6293B000B7711 /* EQRColors.m */; };
+		0112C1E71CCFF28700143D07 /* EQRQRCodeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0112C1E51CCFF28600143D07 /* EQRQRCodeVC.m */; };
+		0112C1E81CCFF28700143D07 /* EQRQRCodeVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0112C1E61CCFF28600143D07 /* EQRQRCodeVC.xib */; };
 		011353F419B9200300E7BF02 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 011353F319B9200300E7BF02 /* MessageUI.framework */; };
 		0115506B19956B9A009A459F /* EQRQuickViewPage2VCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 0115506919956B9A009A459F /* EQRQuickViewPage2VCntrllr.m */; };
 		0115506C19956B9A009A459F /* EQRQuickViewPage2VCntrllr.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0115506A19956B9A009A459F /* EQRQuickViewPage2VCntrllr.xib */; };
@@ -264,6 +266,9 @@
 		0109F95D18E11A8B0069BE6A /* EQRHeaderCellForSchedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRHeaderCellForSchedule.m; sourceTree = "<group>"; };
 		010E2CF918E6293B000B7711 /* EQRColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRColors.h; sourceTree = "<group>"; };
 		010E2CFA18E6293B000B7711 /* EQRColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRColors.m; sourceTree = "<group>"; };
+		0112C1E41CCFF28600143D07 /* EQRQRCodeVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRQRCodeVC.h; sourceTree = "<group>"; };
+		0112C1E51CCFF28600143D07 /* EQRQRCodeVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRQRCodeVC.m; sourceTree = "<group>"; };
+		0112C1E61CCFF28600143D07 /* EQRQRCodeVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRQRCodeVC.xib; sourceTree = "<group>"; };
 		011353F319B9200300E7BF02 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		0115506819956B9A009A459F /* EQRQuickViewPage2VCntrllr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRQuickViewPage2VCntrllr.h; sourceTree = "<group>"; };
 		0115506919956B9A009A459F /* EQRQuickViewPage2VCntrllr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRQuickViewPage2VCntrllr.m; sourceTree = "<group>"; };
@@ -1199,6 +1204,9 @@
 				541E54891ADA7E6B00EE8909 /* EQRSettings1TableVC.m */,
 				541E54951ADB562B00EE8909 /* EQRSettings2TableVC.h */,
 				541E54961ADB562B00EE8909 /* EQRSettings2TableVC.m */,
+				0112C1E41CCFF28600143D07 /* EQRQRCodeVC.h */,
+				0112C1E51CCFF28600143D07 /* EQRQRCodeVC.m */,
+				0112C1E61CCFF28600143D07 /* EQRQRCodeVC.xib */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -1492,6 +1500,7 @@
 				54A5E7A71BB544800095DF10 /* EQRPriceMatrixCllctnViewContentVC.xib in Resources */,
 				01C83A7B199E792800CD5E9C /* EQRDayExtendedPickerVC.xib in Resources */,
 				54263FEC1AAF03490095797E /* tabInbox.png in Resources */,
+				0112C1E81CCFF28700143D07 /* EQRQRCodeVC.xib in Resources */,
 				541479FE1B533867009CE8A2 /* bigArrowPointsLeftSolo@2x.png in Resources */,
 				54D4548B1A3856F50099DFE4 /* EQRDistIDPickerTableVC.xib in Resources */,
 				541479F61B533572009CE8A2 /* EQRItineraryCellContentReturning1.xib in Resources */,
@@ -1655,6 +1664,7 @@
 				54F4ED8A1C8D84660031A9BB /* ClassSection+CoreDataProperties.m in Sources */,
 				54C22B0E1A52A86F00F6610E /* EQREditorEquipListContentVC.m in Sources */,
 				54F4ED8E1C8D84C20031A9BB /* EQRCoreData.m in Sources */,
+				0112C1E71CCFF28700143D07 /* EQRQRCodeVC.m in Sources */,
 				5427C1FE1A135DB200C653B6 /* EQRCheckHeaderCell.m in Sources */,
 				54E1D6061A80C01400B41121 /* EQREditorMiscListCell.m in Sources */,
 				54CFE7991BA7DFFC00E643FC /* EQRRequestWrapperPriceMatrixVC.m in Sources */,

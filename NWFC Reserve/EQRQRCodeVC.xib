@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRQRCodeVC">
+            <connections>
+                <outlet property="itemName" destination="SCV-AL-fUo" id="Zs1-pW-wHm"/>
+                <outlet property="itemNumber" destination="qDm-SB-heW" id="Nxy-p4-VVT"/>
+                <outlet property="qrCodeImageView" destination="AHP-Kz-TX9" id="10E-ow-mna"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="360" height="319"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AHP-Kz-TX9">
+                    <rect key="frame" x="80" y="8" width="200" height="200"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="200" id="Yl7-JG-b08"/>
+                        <constraint firstAttribute="height" constant="200" id="xZO-iW-WB0"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Item Name Here" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SCV-AL-fUo">
+                    <rect key="frame" x="80" y="216" width="200" height="57"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="57" id="2h4-Di-wGS"/>
+                        <constraint firstAttribute="width" constant="200" id="HKR-pL-BY5"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="19" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qDm-SB-heW">
+                    <rect key="frame" x="170" y="278" width="20" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="eNB-Xn-b6E"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="SCV-AL-fUo" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="7s2-sZ-jZz"/>
+                <constraint firstItem="SCV-AL-fUo" firstAttribute="top" secondItem="AHP-Kz-TX9" secondAttribute="bottom" constant="8" id="C6s-7w-UIF"/>
+                <constraint firstItem="AHP-Kz-TX9" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="QP7-EW-S1n"/>
+                <constraint firstItem="qDm-SB-heW" firstAttribute="top" secondItem="SCV-AL-fUo" secondAttribute="bottom" constant="5" id="WNd-gA-UcM"/>
+                <constraint firstItem="qDm-SB-heW" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="dbA-2Q-Q1i"/>
+                <constraint firstItem="AHP-Kz-TX9" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="8" id="qVb-Nu-YlW"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="276" y="233.5"/>
+        </view>
+    </objects>
+</document>
