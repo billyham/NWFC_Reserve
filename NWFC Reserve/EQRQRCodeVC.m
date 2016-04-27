@@ -38,8 +38,8 @@
 -(void)initialSetupWithCode:(NSString *)code Name:(NSString *)name Number:(NSString *)number{
     
     self.myQRCode = code;
-    self.itemName.text = name;
-    self.itemNumber.text = number;
+    self.itemName.text = name ? name:  @"";
+    self.itemNumber.text = number ? number: @"";
     
     NSData *textData = [self.myQRCode dataUsingEncoding:NSISOLatin1StringEncoding];
     CIFilter *filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
@@ -94,7 +94,11 @@
     printInfo.duplex = UIPrintInfoDuplexLongEdge;
     pic.printInfo = printInfo;
     pic.showsPageRange = YES;
-    pic.printingItem = self.qrCodeImageView.image;
+    
+    NSData *nameData = [self.itemName.text dataUsingEncoding:NSISOLatin1StringEncoding];
+    NSData *numberData = [self.itemNumber.text dataUsingEncoding:NSISOLatin1StringEncoding];
+    
+    pic.printingItems =  @[self.qrCodeImageView.image, nameData, numberData];
     
     void (^completionHandler)(UIPrintInteractionController *, BOOL, NSError *) =
     ^(UIPrintInteractionController *pic, BOOL completed, NSError *error) {

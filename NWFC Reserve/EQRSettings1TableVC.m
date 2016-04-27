@@ -605,6 +605,16 @@
             
         }else if (indexPath.row == 3){  // Print Code
             
+            [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+            
+            // Exit and show alert if the QR code property is nil
+            if (self.myQRCode == nil){
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Incomplete" message:@"Please enter an alphanumeric code before printing" delegate:self cancelButtonTitle:@"Continue" otherButtonTitles:nil];
+                [alert show];
+                return;
+            }
+            
             self.myQRVC = [[EQRQRCodeVC alloc] initWithNibName:@"EQRQRCodeVC" bundle:nil];
             self.myQRVC.modalPresentationStyle = UIModalPresentationFormSheet;
             
@@ -613,8 +623,6 @@
                 [self.myQRVC initialSetupWithCode:self.myQRCode Name:self.myQRItemName Number:self.myQRItemNumber];
                 
             }];
-            
-            [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
             
         }
     }
