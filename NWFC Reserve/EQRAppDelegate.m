@@ -35,12 +35,12 @@
 //                                   @"http://dhanagan02262.local/nwfc/", @"url",
 //                                   nil];
     
-//    NSDictionary* EQRWebDataUrl = [NSDictionary dictionaryWithObjectsAndKeys:
-//                                   @"http://EducationAssistant-5.local/nwfc/", @"url",
-//                                   nil];
-    
     NSDictionary* EQRWebDataUrl = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   @"http://www.kitschplayer.com/nwfc/", @"url",
+                                   @"http://EducationAssistant-5.local/nwfc/", @"url",
+                                   nil];
+    
+    NSDictionary* EQRWebDataUrlBackup = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   @"http://www.kitschplayer.com/nwfc/", @"backupUrl",
                                    nil];
     
     NSDictionary* EQRCurrentTermCode = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -59,16 +59,20 @@
     
     NSDictionary *EQRDemoModeIsOn = @{@"demoModeIsOn":@"no"};
     
+    NSDictionary *EQRUseBackup = @{@"useBackup":@"no"};
+    
     NSDictionary *EQRUseCloudKit = @{@"useCloudKit":@"no"};
     
     
     NSDictionary* appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
                                  EQRWebDataUrl, @"url",
+                                 EQRWebDataUrlBackup, @"backupUrl",
                                  EQRCurrentTermCode, @"term",
                                  EQRCurrentCampTermCode, @"campTerm",
                                  EQRDefaultStaffUserKeyID, @"staffUserKey",
                                  EQRKioskModeIsOn, @"kioskModeIsOn",
                                  EQRDemoModeIsOn, @"demoModeIsOn",
+                                 EQRUseBackup, @"useBackup",
                                  EQRUseCloudKit, @"useCloudKit",
                                  nil];
     

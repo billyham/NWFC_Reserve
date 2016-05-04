@@ -15,6 +15,8 @@
 @interface EQRSettings2TableVC () <UIDocumentInteractionControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel* urlString;
+@property (strong, nonatomic) IBOutlet UILabel *backupUrlString;
+@property (strong, nonatomic) IBOutlet UISwitch *useBackupSwitch;
 @property (strong, nonatomic) IBOutlet UISwitch *useCloudKitSwitch;
 @property (strong, nonatomic) EQRGenericTextEditor* genericTextEditor;
 
@@ -27,7 +29,9 @@
     
     //populate text field with information from user settings
     NSString* currentUrl = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
+    NSString *currentBackupUrl = [[[NSUserDefaults standardUserDefaults] objectForKey:@"backupUrl"] objectForKey:@"backupUrl"];
     self.urlString.text = currentUrl;
+    self.backupUrlString.text = currentBackupUrl;
     
     //hide the back button
     self.navigationItem.hidesBackButton = YES;
@@ -58,6 +62,14 @@
     
     //update navigation bar
     [self updateNavItemPromptWithDemoModeState];
+    
+    //set useBackup switch
+    NSString *useBackup = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useBackup"] objectForKey:@"useBackup"];
+    if ([useBackup isEqualToString:@"yes"]){
+        [self.useBackupSwitch setOn:YES];
+    }else{
+        [self.useBackupSwitch setOn:NO];
+    }
     
     //set useCloudKit switch
     NSString* useCloudKit = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useCloudKit"] objectForKey:@"useCloudKit"];
@@ -110,6 +122,19 @@
     }];
 }
 
+-(IBAction)tapInBackupURL:(id)sender{
+    
+    self.genericTextEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
+    self.genericTextEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    self.genericTextEditor.delegate = self;
+    [self.genericTextEditor initalSetupWithTitle:@"Enter the backup database URL" subTitle:nil currentText:self.backupUrlString.text keyboard:@"UIKeyboardTypeURL" returnMethod:@"backupUrlTextFieldDidChange:"];
+    
+    [self presentViewController:self.genericTextEditor animated:YES completion:^{
+    }];
+    
+    
+}
+
 -(IBAction)tapInShowPDF:(id)sender{
     
 //    NSLog(@"viewPDF fires");
@@ -150,7 +175,7 @@
     NSString *docPath = [NSString stringWithFormat:@"file:%@",[self applicationDocumentDirectory]];
     NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:docPath error:NULL];
     
-    NSLog(@"count of directoryContent: %lu", [directoryContent count]);
+    NSLog(@"count of directoryContent: %lu", (unsigned long)[directoryContent count]);
     NSLog(@"path: %@", docPath);
     
     [directoryContent enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -161,7 +186,7 @@
     NSString *cachePath = [NSString stringWithFormat:@"file:%@", [self applicationCacheDirectory]];
     NSArray *cacheContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:cachePath error:NULL];
     
-    NSLog(@"count of cacheContent: %lu", [cacheContent count]);
+    NSLog(@"count of cacheContent: %lu", (unsigned long)[cacheContent count]);
     [cacheContent enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         NSLog(@"Cache file: %lu: %@", (unsigned long)idx, [cacheContent objectAtIndex:idx]);
@@ -254,10 +279,49 @@
     
     [defaults setObject:newDic forKey:@"url"];
     [defaults synchronize];
-    
-    
 }
 
+-(void)backupUrlTextFieldDidChange:(NSString *)returnText{
+    
+    self.backupUrlString.text = returnText;
+    
+    //change user defaults with new string text
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                            self.backupUrlString.text, @"backupUrl"
+                            , nil];
+    
+    [defaults setObject:newDic forKey:@"backupUrl"];
+    [defaults synchronize];
+}
+
+
+-(IBAction)useBackupDidChange:(id)sender{
+    
+    NSString* setStringForDefaults;
+    
+    if (self.useBackupSwitch.on){
+        setStringForDefaults = @"yes";
+    }else{
+        setStringForDefaults = @"no";
+    }
+    
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    
+    //change user defaults with new string text
+    NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                            setStringForDefaults, @"useBackup"
+                            , nil];
+    
+    [defaults setObject:newDic forKey:@"useBackup"];
+    [defaults synchronize];
+    
+    //inform other VCs that they need to reload their data
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
+    //this informs reqeust view to reload classes and contacts (among other things???)
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheDatabaseSource object:nil];
+    
+}
 
 -(IBAction)cloudKitDidChange:(id)sender{
     
@@ -296,6 +360,10 @@
         if (indexPath.row == 0){
             
             [self tapInDatabaseURL:nil];
+            
+        }else if (indexPath.row == 1){
+            
+            [self tapInBackupURL:nil];
         }
     }
     

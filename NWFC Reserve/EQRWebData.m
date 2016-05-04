@@ -301,8 +301,14 @@ const int intEQRTransaction = 11;
 //    NSString* urlRootString = @"http://10.0.0.2/nwfc/";
     
     //get url string from user defaults
-    NSString* urlRootString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
-    
+    NSString* urlRootString;
+    NSString *useBackup = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useBackup"] objectForKey:@"useBackup"];
+    if ([useBackup isEqualToString:@"yes"]){
+        urlRootString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"backupUrl"] objectForKey:@"backupUrl"];
+    }else{
+        urlRootString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
+    }
+   
     //set variableClassString
     self.variableClassString = classString;
     
@@ -419,7 +425,13 @@ const int intEQRTransaction = 11;
     self.abortXMLParsingFlag = NO;
     
     //get url string from user defaults
-    NSString* urlRootString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
+    NSString* urlRootString;
+    NSString *useBackup = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useBackup"] objectForKey:@"useBackup"];
+    if ([useBackup isEqualToString:@"yes"]){
+        urlRootString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"backupUrl"] objectForKey:@"backupUrl"];
+    }else{
+        urlRootString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
+    }
 
     //declare the input string
     NSString* inputString;
@@ -2350,7 +2362,13 @@ const int intEQRTransaction = 11;
     //    NSString* urlRootString = @"http://10.0.0.2/nwfc/";
     
     //get url string from user defaults
-    NSString* urlRootString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
+    NSString* urlRootString;
+    NSString *useBackup = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useBackup"] objectForKey:@"useBackup"];
+    if ([useBackup isEqualToString:@"yes"]){
+        urlRootString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"backupUrl"] objectForKey:@"backupUrl"];
+    }else{
+        urlRootString = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
+    }
     
     //set variableClassString
     self.variableClassString = classString;
