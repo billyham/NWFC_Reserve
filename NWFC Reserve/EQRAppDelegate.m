@@ -29,7 +29,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
+     
     //set system user defaults
 //    NSDictionary* EQRWebDataUrl = [NSDictionary dictionaryWithObjectsAndKeys:
 //                                   @"http://dhanagan02262.local/nwfc/", @"url",
@@ -226,7 +226,6 @@
     
     
     self.isInitialLaunch = YES;
-    
     return YES;
 }
 

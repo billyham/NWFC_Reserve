@@ -259,8 +259,8 @@
 -(IBAction)addNewContactButton:(id)sender{
     
     //button serves two purposes
-    //test is it should be a "show all contacts" button
-    if ((self.shouldUseShowAllContactsButton == YES) && (!self.showAllContactsButtonHasBeenTapped == YES)){
+    //test if it should be a "show all contacts" button
+    if ((self.shouldUseShowAllContactsButton == YES) && (self.showAllContactsButtonHasBeenTapped != YES)){
         
         self.useSubstituteArrayFlag = NO;
         self.showAllContactsButtonHasBeenTapped = YES;
