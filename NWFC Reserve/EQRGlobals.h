@@ -9,6 +9,9 @@
 
 #import <Foundation/Foundation.h>
 
+// Build spec, defaults to NWFC
+extern BOOL EQRBuildNWDoc;
+
 extern NSString* EQRApplicationKey;
 //extern BOOL EQRUseICloud;
 extern BOOL EQRUseCoreData;

@@ -9,10 +9,12 @@
 #import "EQRPDFGenerator.h"
 #import <CoreText/CoreText.h>
 #import "EQRPageHeader.h"
+#import "EQRPageHeaderNWDoc.h"
 #import "EQRTextElement.h"
 #import "EQRPageFooter.h"
 #import "EQRDataStructure.h"
 #import "EQRModeManager.h"
+#import "EQRGlobals.h"
 
 typedef void (^CompletionBlockPDFSaved) ();
 typedef void (^CompletionBlockPDFExported) ();
@@ -397,11 +399,22 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
 //    CGContextTranslateCTM(currentContext, 100, -2200);
 //    CGContextScaleCTM(currentContext, 2.6, 2.6);
     
-    [EQRPageHeader drawHeaderWithName:self.myName
-                                Phone:self.myPhone
-                                Email:self.myEmail
-                           RenterType:self.myRenterType
-                                Class:self.myClassTitle];
+    if (EQRBuildNWDoc == YES){
+        [EQRPageHeaderNWDoc drawHeaderWithName:self.myName
+                                    Phone:self.myPhone
+                                    Email:self.myEmail
+                               RenterType:self.myRenterType
+                                    Class:self.myClassTitle];
+        
+    }else{
+        
+        [EQRPageHeader drawHeaderWithName:self.myName
+                                    Phone:self.myPhone
+                                    Email:self.myEmail
+                               RenterType:self.myRenterType
+                                    Class:self.myClassTitle];
+    }
+    
 }
 
 

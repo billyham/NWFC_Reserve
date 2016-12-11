@@ -8,6 +8,9 @@
 
 #import "EQRGlobals.h"
 
+// Build spec, defaults to NWFC
+BOOL EQRBuildNWDoc = YES;
+
 NSString* EQRApplicationKey = @"3j654FP00o91wer";
 //BOOL EQRUseICloud = YES;
 //BOOL EQRUseICloud = NO;
