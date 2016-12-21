@@ -735,7 +735,7 @@
     NSArray* firstArray = @[@"scheduleTracking_foreignKey", requestManager.request.key_id];
     NSArray* secondArray = @[@"name", miscItemText];
     NSArray *topArray = @[firstArray, secondArray];
-    NSString *miscKeyID = [webData queryForStringWithLink:@"EQSetNewMiscJoin" parameters:topArray];
+    NSString *miscKeyID = [webData queryForStringWithLink:@"EQSetNewMiscJoin.php" parameters:topArray];
 
     
     //update misc array in request
