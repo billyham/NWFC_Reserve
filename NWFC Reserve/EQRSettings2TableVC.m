@@ -19,6 +19,8 @@
 @property (strong, nonatomic) IBOutlet UISwitch *useBackupSwitch;
 @property (strong, nonatomic) IBOutlet UISwitch *useCloudKitSwitch;
 @property (strong, nonatomic) EQRGenericTextEditor* genericTextEditor;
+@property (strong, nonatomic) IBOutlet UILabel *versionNumber;
+@property (strong, nonatomic) IBOutlet UILabel *bundleNumber;
 
 @end
 
@@ -32,6 +34,10 @@
     NSString *currentBackupUrl = [[[NSUserDefaults standardUserDefaults] objectForKey:@"backupUrl"] objectForKey:@"backupUrl"];
     self.urlString.text = currentUrl;
     self.backupUrlString.text = currentBackupUrl;
+    
+    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+    self.bundleNumber.text = [infoDictionary objectForKey:@"CFBundleVersion"];
+    self.versionNumber.text = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
     
     //hide the back button
     self.navigationItem.hidesBackButton = YES;
@@ -355,7 +361,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     
-    if (indexPath.section == 0){
+    if (indexPath.section == 1){
         
         if (indexPath.row == 0){
             
@@ -367,7 +373,7 @@
         }
     }
     
-    if (indexPath.section == 1){
+    if (indexPath.section == 2){
         
         if (indexPath.row == 0){
             
