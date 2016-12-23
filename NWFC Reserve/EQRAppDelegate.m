@@ -246,7 +246,7 @@
         [self completeUserInterface];
     }]];
     
-    //  ____!!!! I don't think this get's used  !!!!!___
+    //  ____!!!! I don't think this is used  !!!!!___
     // Flag as initial launch
     self.isInitialLaunch = YES;
 
