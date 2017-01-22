@@ -61,7 +61,7 @@
         NSURL *documentsURL = [[fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
         NSURL * storeURL = [documentsURL URLByAppendingPathComponent:@"DataModel.sqlite"];
         
-        NSError *error = nil;
+//        NSError *error = nil;
 //        ZAssert([psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error], @"Error initializing PSC: %@\n%@", [error localizedDescription], [error userInfo]);
         
         if (![self initCallback]) return;

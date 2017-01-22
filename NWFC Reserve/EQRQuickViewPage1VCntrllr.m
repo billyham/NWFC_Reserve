@@ -115,8 +115,6 @@
 //    }
     
     
-    
-    
     //also get class title if a titleKey exists
     if (self.myScheduleRequestItem.classTitle_foreignKey){
         
@@ -125,13 +123,28 @@
             EQRWebData* webData = [EQRWebData sharedInstance];
             NSArray* ayaArray = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequestItem.classTitle_foreignKey, nil];
             NSArray* beeArray = [NSArray arrayWithObjects:ayaArray, nil];
-            NSString* classTitleString = [webData queryForStringWithLink:@"EQGetClassCatalogTitleWithKey.php" parameters:beeArray];
-            self.classCatalogTitle = classTitleString;
+
+            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+            dispatch_async(queue, ^{
+                [webData queryForStringwithAsync:@"EQGetClassCatalogTitleWithKey.php" parameters:beeArray completion:^(NSString *catalogTitle) {
+                    
+                    self.classCatalogTitle = catalogTitle;
+                    [self renderClassTitle];
+                }];
+            });
         }
     }
     //_______asynchronously???
 }
 
+-(void)renderClassTitle{
+    if ((![self.classCatalogTitle isEqualToString:@""]) && (![self.classCatalogTitle isEqualToString:EQRErrorCode88888888])){
+        
+        self.classTitle.hidden = NO;
+        
+        self.classTitle.text = self.classCatalogTitle;
+    }
+}
 
 -(NSString*)convertDateToString:(NSDate*)date withTime:(NSDate*)time{
     
@@ -233,17 +246,8 @@
         self.staff_shelf_name = @"";
     }
     
-    
     //set class title if it exists
-    if (self.classCatalogTitle){
-        
-        if ((![self.classCatalogTitle isEqualToString:@""]) && (![self.classCatalogTitle isEqualToString:EQRErrorCode88888888])){
-            
-            self.classTitle.hidden = NO;
-            
-            self.classTitle.text = self.classCatalogTitle;
-        }
-    }
+    [self renderClassTitle];
     
     //change alpha of label when the value exists, and add a value with a name
     if (self.myScheduleRequestItem.staff_confirmation_date){

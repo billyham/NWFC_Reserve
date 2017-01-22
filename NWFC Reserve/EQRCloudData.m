@@ -703,7 +703,7 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        //___Very importand that this if statement is INSIDE the dispatch
+        //___Very important that this if statement is INSIDE the dispatch
         if (self.delayedCompletionBlock != nil){
             
             NSLog(@"CloudData > is sending a completion block" );
