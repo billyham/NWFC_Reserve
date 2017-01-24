@@ -9,11 +9,10 @@
 #import "EQRGlobals.h"
 
 // Build spec, defaults to NWFC
-BOOL EQRBuildNWDoc = YES;
+BOOL EQRBuildNWDoc = NO;
+BOOL EQRBuildPSU = YES;
 
 NSString* EQRApplicationKey = @"3j654FP00o91wer";
-//BOOL EQRUseICloud = YES;
-//BOOL EQRUseICloud = NO;
 BOOL EQRUseCoreData = YES;
 NSString *EQRCloudKitContainer = @"iCloud.com.David-Vincent-Hanagan.GlobalGear";
 NSString *EQRRecordZoneStandard = @"standardPrimary";

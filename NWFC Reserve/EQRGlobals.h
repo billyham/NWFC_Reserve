@@ -11,9 +11,9 @@
 
 // Build spec, defaults to NWFC
 extern BOOL EQRBuildNWDoc;
+extern BOOL EQRBuildPSU;
 
 extern NSString* EQRApplicationKey;
-//extern BOOL EQRUseICloud;
 extern BOOL EQRUseCoreData;
 extern NSString *EQRCloudKitContainer;
 extern NSString *EQRRecordZoneStandard;

@@ -40,48 +40,31 @@
     NSDictionary *EQRWebDataUrlBackup;
     
     if (EQRBuildNWDoc == YES){
-        EQRWebDataUrl = [NSDictionary dictionaryWithObjectsAndKeys:
-                                       @"http://www.kitschplayer.com/nwdocumentary/", @"url",
-                                       nil];
         
-        EQRWebDataUrlBackup = [NSDictionary dictionaryWithObjectsAndKeys:
-                                             @"http://www.kitschplayer.com/nwdocumentary/", @"backupUrl",
-                                             nil];
+        EQRWebDataUrl = @{@"url": @"http://www.kitschplayer.com/nwdocumentary/"};
+        EQRWebDataUrlBackup = @{@"backupUrl": @"http://www.kitschplayer.com/nwdocumentary/"};
+        
+    }else if(EQRBuildPSU == YES){
+        
+        EQRWebDataUrl = @{@"url": @"http://www.kitschplayer.com/psu/"};
+        EQRWebDataUrlBackup = @{@"backupUrl": @"http://www.kitschplayer.com/psu/"};
+        
     }else{
-//      EQRWebDataUrl = [NSDictionary dictionaryWithObjectsAndKeys:
-//                                       @"http://EducationAssistant-5.local/nwfc/", @"url",
-//                                       nil];
-//        
-        EQRWebDataUrl = [NSDictionary dictionaryWithObjectsAndKeys:
-                                       @"http://www.kitschplayer.com/nwfc/", @"url",
-                                       nil];
         
+        EQRWebDataUrl = @{@"url": @"http://www.kitschplayer.com/nwfc/"};
+        EQRWebDataUrlBackup = @{@"backupUrl": @"http://www.kitschplayer.com/nwfc/"};
         
-        EQRWebDataUrlBackup = [NSDictionary dictionaryWithObjectsAndKeys:
-                                             @"http://www.kitschplayer.com/nwfc/", @"backupUrl",
-                                             nil];
+        // NWFC EQ Room Machine
+//        EQRWebDataUrl = @{@"url": @"http://EducationAssistant-5.local/nwfc/"};
     }
     
-    NSDictionary* EQRCurrentTermCode = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        @"F13", @"term",
-                                        nil];
-    
-    NSDictionary* EQRCurrentCampTermCode = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            @"SC14", @"campTerm",
-                                            nil];
-    
-    NSDictionary* EQRDefaultStaffUserKeyID = [NSDictionary dictionaryWithObjectsAndKeys:
-                                              @"", @"staffUserKey"
-                                              , nil];
-    
+    NSDictionary *EQRCurrentTermCode = @{@"term": @"F13"};
+    NSDictionary *EQRCurrentCampTermCode = @{@"campTerm": @"SC14"};
+    NSDictionary *EQRDefaultStaffUserKeyID = @{@"staffUserKey": @""};
     NSDictionary* EQRKioskModeIsOn = @{@"kioskModeIsOn":@"no"};
-    
     NSDictionary *EQRDemoModeIsOn = @{@"demoModeIsOn":@"no"};
-    
     NSDictionary *EQRUseBackup = @{@"useBackup":@"no"};
-    
     NSDictionary *EQRUseCloudKit = @{@"useCloudKit":@"no"};
-    
     
     NSDictionary* appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
                                  EQRWebDataUrl, @"url",

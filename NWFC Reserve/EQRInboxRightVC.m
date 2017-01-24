@@ -419,6 +419,7 @@
         
         NSArray* first2Array = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequest.classTitle_foreignKey, nil];
         NSArray* top2Array = [NSArray arrayWithObjects:first2Array, nil];
+        
         self.classValue.text = [webData queryForStringWithLink:@"EQGetClassCatalogTitleWithKey.php" parameters:top2Array];
         
 //        [self.classValue setHidden:NO];
