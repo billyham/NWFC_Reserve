@@ -12,6 +12,8 @@
 #import "EQRContactNameItem.h"
 #import "EQRGlobals.h"
 
+typedef void (^CompletionWithString)(NSString *name);
+
 @interface EQRQuickViewPage1VCntrllr ()
 
 @property (strong, nonatomic) NSDictionary* myUserData;
@@ -195,7 +197,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
 }
 
 
@@ -213,43 +214,68 @@
     //set notes view text
     self.notesView.text = self.myScheduleRequestItem.notes;
     
-    
-    
     //retrieve the contact names from their ids
+    self.staff_confirmation_name = @"";
     if ((![self.myScheduleRequestItem.staff_confirmation_id isEqualToString:@""]) && (self.myScheduleRequestItem.staff_confirmation_id != nil)) {
-        self.staff_confirmation_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_confirmation_id];
-    } else {
-        self.staff_confirmation_name = @"";
+        
+        [self retrieveNameWithID:self.myScheduleRequestItem.staff_confirmation_id completion:^(NSString *name) {
+            self.staff_confirmation_name = name;
+            [self renderConfirmation];
+        }];
     }
     
+    self.staff_prep_name = @"";
     if ((![self.myScheduleRequestItem.staff_prep_id isEqualToString:@""]) && (self.myScheduleRequestItem.staff_prep_id != nil)) {
-        self.staff_prep_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_prep_id];
-    } else {
-        self.staff_prep_name = @"";
+        
+        [self retrieveNameWithID:self.myScheduleRequestItem.staff_prep_id completion:^(NSString *name) {
+            self.staff_prep_name = name;
+            [self renderPrep];
+        }];
     }
     
+    self.staff_checkout_name = @"";
     if ((![self.myScheduleRequestItem.staff_checkout_id isEqualToString:@""]) && (self.myScheduleRequestItem.staff_checkout_id != nil)) {
-        self.staff_checkout_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_checkout_id];
-    } else {
-        self.staff_checkout_name = @"";
+        
+        [self retrieveNameWithID:self.myScheduleRequestItem.staff_checkout_id completion:^(NSString *name) {
+            self.staff_checkout_name = name;
+            [self renderCheckout];
+        }];
     }
     
+    self.staff_checkin_name = @"";
     if ((![self.myScheduleRequestItem.staff_checkin_id isEqualToString:@""])&& (self.myScheduleRequestItem.staff_checkin_id != nil)) {
-        self.staff_checkin_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_checkin_id];
-    } else {
-        self.staff_checkin_name = @"";
+        
+        [self retrieveNameWithID:self.myScheduleRequestItem.staff_checkin_id completion:^(NSString *name) {
+            self.staff_checkin_name = name;
+            [self renderCheckin];
+        }];
     }
     
+    self.staff_shelf_name = @"";
     if ((![self.myScheduleRequestItem.staff_shelf_id isEqualToString:@""]) && (self.myScheduleRequestItem.staff_shelf_date != nil)) {
-        self.staff_shelf_name = [self retrieveNameWithID:self.myScheduleRequestItem.staff_shelf_id];
-    } else {
-        self.staff_shelf_name = @"";
+        
+        [self retrieveNameWithID:self.myScheduleRequestItem.staff_shelf_id completion:^(NSString *name) {
+            self.staff_shelf_name = name;
+            [self renderShelf];
+        }];
     }
     
     //set class title if it exists
     [self renderClassTitle];
     
-    //change alpha of label when the value exists, and add a value with a name
+    // Render staff timestamps and names if they exist
+    [self renderConfirmation];
+    [self renderPrep];
+    [self renderCheckout];
+    [self renderCheckin];
+    [self renderShelf];
+    
+    //put notes field on top
+    [self.view bringSubviewToFront:self.notesView];
+    
+}
+
+-(void)renderConfirmation{
     if (self.myScheduleRequestItem.staff_confirmation_date){
         self.confirmedLabel.alpha = 1.0;
         
@@ -257,7 +283,9 @@
                                     [self convertDateToString:self.myScheduleRequestItem.staff_confirmation_date],
                                     self.staff_confirmation_name];
     }
-    
+}
+
+-(void)renderPrep{
     if (self.myScheduleRequestItem.staff_prep_date){
         self.preppedLabel.alpha = 1.0;
         
@@ -265,7 +293,9 @@
                                   [self convertDateToString:self.myScheduleRequestItem.staff_prep_date],
                                   self.staff_prep_name];
     }
-    
+}
+
+-(void)renderCheckout{
     if (self.myScheduleRequestItem.staff_checkout_date){
         self.pickedUpLabel.alpha = 1.0;
         
@@ -273,7 +303,9 @@
                                    [self convertDateToString:self.myScheduleRequestItem.staff_checkout_date],
                                    self.staff_checkout_name];
     }
-    
+}
+
+-(void)renderCheckin{
     if (self.myScheduleRequestItem.staff_checkin_date){
         self.returnedLabel.alpha = 1.0;
         
@@ -281,7 +313,9 @@
                                    [self convertDateToString:self.myScheduleRequestItem.staff_checkin_date],
                                    self.staff_checkin_name];
     }
-    
+}
+
+-(void)renderShelf{
     if (self.myScheduleRequestItem.staff_shelf_date){
         self.shelvedLabel.alpha = 1.0;
         
@@ -289,42 +323,30 @@
                                   [self convertDateToString:self.myScheduleRequestItem.staff_shelf_date],
                                   self.staff_shelf_name];
     }
-    
-    //put notes field on top
-    [self.view bringSubviewToFront:self.notesView];
-    
 }
 
 
--(NSString*)retrieveNameWithID:(NSString*)key_id{
+-(void)retrieveNameWithID:(NSString*)key_id completion:(CompletionWithString)cb{
     
     EQRWebData* webData = [EQRWebData sharedInstance];
-    
     NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", key_id, nil];
     NSArray* topArray = [NSArray arrayWithObject:firstArray];
-    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-    [webData queryWithLink:@"EQGetContactNameWithKey.php" parameters:topArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-       
-        //return the first item
-        if ([muteArray count] > 0){
-            
-            [tempMuteArray addObject:[muteArray objectAtIndex:0]];
-        }
-    }];
     
-    if ([tempMuteArray count] > 0){
-        
-        //derive first name and last initial
-        NSString* firstName = [(EQRContactNameItem*)[tempMuteArray objectAtIndex:0] first_name];
-        NSString* lastName = [(EQRContactNameItem*)[tempMuteArray objectAtIndex:0] last_name];
-        
-        return [NSString stringWithFormat:@" – %@ %@", firstName, [lastName substringToIndex:1]];
-        
-    } else {
-        
-        //error handling when no contact is returned
-        return @"";
-    }
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        [webData queryForStringwithAsync:@"EQGetContactNameWithKey.php" parameters:topArray completion:^(EQRContactNameItem *contactNameItem) {
+            NSLog(@"name object: %@", contactNameItem);
+            if (contactNameItem){
+                // Derive first name and last initial
+                NSString* firstName = contactNameItem.first_name;
+                NSString* lastName = contactNameItem.last_name;
+                
+                cb([NSString stringWithFormat:@" – %@ %@", firstName, [lastName substringToIndex:1]]);
+            } else {
+                cb(@"");
+            }
+        }];
+    });
 }
 
 
