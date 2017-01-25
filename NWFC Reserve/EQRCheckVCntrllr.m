@@ -502,7 +502,6 @@
     //wrap buttons in barbuttonitem
     UIBarButtonItem *leftBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(cancelAction)];
     
-    //array that shit
     NSArray* arrayOfLeftButtons = [NSArray arrayWithObjects:leftBarButton, nil];
     
     //set leftBarButton item on SELF
@@ -511,7 +510,6 @@
     //right button
     UIBarButtonItem* staffUserBarButton = [[UIBarButtonItem alloc] initWithTitle:logText style:UIBarButtonItemStylePlain target:self action:@selector(showStaffUserPicker)];
     
-    //array that shit
     NSArray* arrayOfRightButtons = [NSArray arrayWithObjects:staffUserBarButton, nil];
     
     //set rightBarButton item in SELF

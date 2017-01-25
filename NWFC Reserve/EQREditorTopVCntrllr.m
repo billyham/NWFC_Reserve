@@ -351,17 +351,17 @@
         ([self.privateRequestManager.request.classTitle_foreignKey isEqualToString:@""]) ||
         (!self.privateRequestManager.request.classTitle_foreignKey)) {
         
-//        [self.classField setHidden:YES];
-        
     }else{
         
         NSArray* first2Array = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.classTitle_foreignKey, nil];
         NSArray* top2Array = [NSArray arrayWithObjects:first2Array, nil];
-        NSString* classValueString = [webData queryForStringWithLink:@"EQGetClassCatalogTitleWithKey.php" parameters:top2Array];
         
-        [self.classField setTitle:classValueString forState:UIControlStateHighlighted & UIControlStateNormal & UIControlStateSelected];
-        
-//        [self.classField setHidden:NO];
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+            [webData queryForStringwithAsync:@"EQGetClassCatalogTitleWithKey.php" parameters:top2Array completion:^(NSString *catalogTitle) {
+                [self.classField setTitle:catalogTitle forState:UIControlStateHighlighted & UIControlStateNormal & UIControlStateSelected];
+            }];
+        });
     }
     
     //set labels with provided dictionary

@@ -169,7 +169,6 @@
     
     UIBarButtonItem* printBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Print" style:UIBarButtonItemStylePlain target:self action:@selector(printMeForReal:)];
     
-    //array that shit
     NSArray* arrayOfRightButtons = [NSArray arrayWithObjects:staffUserBarButton, thirtySpace, editModeBarButton, twentySpace, composeEmailBarButton, twentySpace, confirmBarButton, twentySpace, printBarButton, nil];
     
     //set rightBarButton item in SELF
@@ -413,24 +412,26 @@
         (!self.myScheduleRequest.classTitle_foreignKey)) {
         
         self.classValue.text = @"(No Class Selected)";
-//        [self.classValue setHidden:YES];
-        
     }else{
-        
         NSArray* first2Array = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequest.classTitle_foreignKey, nil];
         NSArray* top2Array = [NSArray arrayWithObjects:first2Array, nil];
         
-        self.classValue.text = [webData queryForStringWithLink:@"EQGetClassCatalogTitleWithKey.php" parameters:top2Array];
-        
-//        [self.classValue setHidden:NO];
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+            [webData queryForStringwithAsync:@"EQGetClassCatalogTitleWithKey.php" parameters:top2Array completion:^(NSString *catalogTitle) {
+                self.classValue.text = catalogTitle;
+                [self.classValueField setTitle:self.classValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+            }];
+        });
     }
     
     //copy values to edit field values
     [self.nameValueField setTitle:self.firstLastNameValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     [self.typeValueField setTitle:self.typeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
-    [self.classValueField setTitle:self.classValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     [self.pickUpTimeValueField setTitle:self.pickUpTimeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     [self.returnTimeValueField setTitle:self.returnTimeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+//    [self.classValueField setTitle:self.classValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+
     
     //set text in notes
     NSArray* justKeyArray = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequest.key_id, nil];

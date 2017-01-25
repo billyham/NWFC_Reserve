@@ -156,7 +156,6 @@
     UIBarButtonItem* rightBarButtonArrow = [[UIBarButtonItem alloc] initWithImage:rightArrow style:UIBarButtonItemStylePlain target:self action:@selector(moveToNextDay:)];
     UIBarButtonItem* searchBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(showDatePicker)];
     
-    //array that shit
     NSArray* arrayOfLeftButtons = [NSArray arrayWithObjects:twentySpace, searchBarButton, thirtySpace, leftBarButtonArrow, thirtySpace, todayBarButton, thirtySpace, rightBarButtonArrow, nil];
     
     //set leftBarButton item on SELF
@@ -165,7 +164,6 @@
     //right button
     UIBarButtonItem* staffUserBarButton = [[UIBarButtonItem alloc] initWithTitle:logText style:UIBarButtonItemStylePlain target:self action:@selector(showStaffUserPicker)];
     
-    //array that shit
     NSArray* arrayOfRightButtons = [NSArray arrayWithObjects:staffUserBarButton, nil];
     
     //set rightBarButton item in SELF

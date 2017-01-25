@@ -137,7 +137,7 @@
         
     }
     
-    //____ shit this is important... add constraints to the custom view that gets added to the cell's contentView, otherwise, the animation movement
+    //____ this is important... add constraints to the custom view that gets added to the cell's contentView, otherwise, the animation movement
     //_____of the cell gets glitchy
     self.contentVC.view.translatesAutoresizingMaskIntoConstraints = NO;
     NSDictionary *viewsDictionary = @{@"contentVC":self.contentVC.view};
