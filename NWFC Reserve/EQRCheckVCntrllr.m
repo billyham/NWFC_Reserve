@@ -387,7 +387,7 @@
     
     //important methods that initiate requestManager ivar arrays
 //    [self.privateRequestManager resetEquipListAndAvailableQuantites];
-//    [self.privateRequestManager retrieveAllEquipUniqueItems];
+//    [self.privateRequestManager retrieveAllEquipUniqueItems];  !! THIS IS NOT HOW THE METHODS WORKS ANYMORE
     
     //pricing info
     if ([self.privateRequestManager.request.renter_type isEqualToString:EQRRenterPublic]){

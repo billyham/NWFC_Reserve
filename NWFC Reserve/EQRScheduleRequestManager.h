@@ -49,7 +49,8 @@
 -(void)resetEquipListAndAvailableQuantites;
 -(BOOL)confirmAvailabilityOfTitleItem:(NSString*)equipTitleItem_foreignKey;
 -(NSString*)retrieveAnAvailableUniqueKeyFromTitleKey:(NSString*)equipTitleItem_foreignKey;
--(NSArray*)retrieveAllEquipUniqueItems;
+//-(NSArray*)retrieveAllEquipUniqueItems;
+-(void)retrieveAllEquipUniqueItems:(CompletionBlockWithArray)cb;
 -(void)collapseOrExpandSectionInSchedule:(NSString*)chosenSection;
 -(void)allocateGearListWithDates:(NSDictionary*)datesDic;
 -(void)justConfirm;

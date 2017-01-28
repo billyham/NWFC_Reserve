@@ -13,8 +13,9 @@
 #import "EQREquipUniqueItem.h"
 #import "EQRWebData.h"
 
+typedef void (^CompletionBlockWithArray)(NSMutableArray *muteArray);
 
-@interface EQRScheduleRequestManager ()
+@interface EQRScheduleRequestManager () <EQRWebDataDelegate>
 
 @property (strong, nonatomic) NSArray* arrayOfEquipUniquesAfterCollisionSubraction;
 
@@ -346,26 +347,35 @@
     return [(EQREquipUniqueItem*)[tempMuteArray objectAtIndex:0] key_id];
 }
 
-
--(NSArray*)retrieveAllEquipUniqueItems{
+//-(NSArray*)retrieveAllEquipUniqueItems{
+-(void)retrieveAllEquipUniqueItems:(CompletionBlockWithArray)cb{
     
     EQRWebData* webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
     
-    __block NSArray* arrayToReturn;
+    SEL thisSelector = @selector(addToArrayOfEquipUniqueItems:);
     
-    [webData queryWithLink:@"EQGetEquipUniqueItemsAll.php" parameters:nil class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
-        
-        arrayToReturn = [NSArray arrayWithArray:muteArray];
-        
-    }];
+//    __block NSArray* arrayToReturn;
+    
+//    [webData queryWithLink:@"EQGetEquipUniqueItemsAll.php" parameters:nil class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
+//        
+//        arrayToReturn = [NSArray arrayWithArray:muteArray];
+//        
+//    }];
     
     [self.arrayOfEquipUniqueItemsAll removeAllObjects];
     
-    //set ivar
-    self.arrayOfEquipUniqueItemsAll = [NSMutableArray arrayWithArray:arrayToReturn];
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        [webData queryWithAsync:@"EQGetEquipUniqueItemsAll.php" parameters:nil class:@"EQREquipUniqueItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
+            [self retrieveAllEquipUniqueItemsStage2:cb];
+        }];
+    });
+}
+
+-(void)retrieveAllEquipUniqueItemsStage2:(CompletionBlockWithArray)cb{
     
-    
-    //______****** add structure the array? nested array's in equipTitleItem id's?
+    //______****** add structure the array? nested arrays in equipTitleItem ids?
     NSMutableArray* arrayWithSubArrays = [NSMutableArray arrayWithCapacity:1];
     
     for (EQREquipUniqueItem* uItem in self.arrayOfEquipUniqueItemsAll){
@@ -379,7 +389,6 @@
             if ([[(EQREquipUniqueItem*)[dutifullyNestedarray objectAtIndex:0] equipTitleItem_foreignKey] isEqualToString:uItem.equipTitleItem_foreignKey] ){
                 
                 //a match is found with an existing object, add it to the array...
-                
                 [dutifullyNestedarray addObject:uItem];
                 
                 gladflag = YES;
@@ -390,7 +399,6 @@
             
             //... or else, create a new array and add it to the arrayWithSubArrays
             [nestedArray addObject:uItem];
-            
             [arrayWithSubArrays addObject:nestedArray];
         }
     }
@@ -398,8 +406,11 @@
     //assign to ivar
     self.arrayOfEquipUniqueItemsWithSubArrays = arrayWithSubArrays;
     
-    //... this is redundant....
-    return arrayToReturn;
+    //... this is redundant....?
+//    return arrayToReturn;
+    NSMutableArray *arrayToReturn = [NSMutableArray arrayWithArray:self.arrayOfEquipUniqueItemsAll];
+    cb(arrayToReturn);
+    
 }
 
 
@@ -1197,8 +1208,36 @@
 }
 
 
+#pragma mark - webData delegate
 
-#pragma mark - repsond to supplementary cell actions
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    
+    if (![self respondsToSelector:action]){
+        return;
+    }
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+}
+
+-(void)addToArrayOfEquipUniqueItems:(id)currentThing{
+    if (!currentThing){
+        return;
+    }
+    
+    if (!self.arrayOfEquipUniqueItemsAll){
+        self.arrayOfEquipUniqueItemsAll = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    //set ivar
+    [self.arrayOfEquipUniqueItemsAll addObject:currentThing];
+    
+}
+
+
+#pragma mark - respond to supplementary cell actions
 
 //from request equip selection list
 -(void)collapseOrExpandSection:(NSString*)chosenSection WithAll:(BOOL)withAllFlag{
