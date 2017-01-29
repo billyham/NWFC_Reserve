@@ -13,8 +13,6 @@
 #import "EQREquipUniqueItem.h"
 #import "EQRWebData.h"
 
-typedef void (^CompletionBlockWithArray)(NSMutableArray *muteArray);
-
 @interface EQRScheduleRequestManager () <EQRWebDataDelegate>
 
 @property (strong, nonatomic) NSArray* arrayOfEquipUniquesAfterCollisionSubraction;
@@ -347,21 +345,12 @@ typedef void (^CompletionBlockWithArray)(NSMutableArray *muteArray);
     return [(EQREquipUniqueItem*)[tempMuteArray objectAtIndex:0] key_id];
 }
 
-//-(NSArray*)retrieveAllEquipUniqueItems{
--(void)retrieveAllEquipUniqueItems:(CompletionBlockWithArray)cb{
+-(void)retrieveAllEquipUniqueItems:(BlockWithArray)cb{
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     webData.delegateDataFeed = self;
     
     SEL thisSelector = @selector(addToArrayOfEquipUniqueItems:);
-    
-//    __block NSArray* arrayToReturn;
-    
-//    [webData queryWithLink:@"EQGetEquipUniqueItemsAll.php" parameters:nil class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
-//        
-//        arrayToReturn = [NSArray arrayWithArray:muteArray];
-//        
-//    }];
     
     [self.arrayOfEquipUniqueItemsAll removeAllObjects];
     
@@ -373,7 +362,7 @@ typedef void (^CompletionBlockWithArray)(NSMutableArray *muteArray);
     });
 }
 
--(void)retrieveAllEquipUniqueItemsStage2:(CompletionBlockWithArray)cb{
+-(void)retrieveAllEquipUniqueItemsStage2:(BlockWithArray)cb{
     
     //______****** add structure the array? nested arrays in equipTitleItem ids?
     NSMutableArray* arrayWithSubArrays = [NSMutableArray arrayWithCapacity:1];
@@ -406,11 +395,8 @@ typedef void (^CompletionBlockWithArray)(NSMutableArray *muteArray);
     //assign to ivar
     self.arrayOfEquipUniqueItemsWithSubArrays = arrayWithSubArrays;
     
-    //... this is redundant....?
-//    return arrayToReturn;
     NSMutableArray *arrayToReturn = [NSMutableArray arrayWithArray:self.arrayOfEquipUniqueItemsAll];
     cb(arrayToReturn);
-    
 }
 
 
@@ -932,7 +918,7 @@ typedef void (^CompletionBlockWithArray)(NSMutableArray *muteArray);
                                 
                                 if ([returnKey isEqualToString:join.key_id]){
                                     
-                                    //everthign is cool
+                                    //everthing is cool
                                     
                                 }else{
                                     
@@ -1017,17 +1003,7 @@ typedef void (^CompletionBlockWithArray)(NSMutableArray *muteArray);
         dateEndString = [datesDic objectForKey:@"request_date_end"];
     }
     
-    
-    //_____REPLACED BY THE FOLLOWING SINGLE PHP CALL____ FOR PERFORMANCE IMPROVEMENT_____
-    //get data two php calls...
-//    NSArray* arrayOfScheduleTrackingKeyIDs = [self getArrayOfScheduleTrackingIDsWithBeginDate:dateBeginString endDate:dateEndString];
-//    
-//    //assign to requestManager ivar (this is used in EQEquipSummaryVCntrllr > justConfirm method
-//    self.arrayOfEquipUniqueItemsByDateCollision = [self getArrayOfEquipUniquesWithArrayOfScheduleTrackingIDs:arrayOfScheduleTrackingKeyIDs];
-    
-    //the PHP call
     self.arrayOfEquipUniqueItemsByDateCollision = [self getArrayOfEquipUniquesWithBeginDate:dateBeginString EndDate:dateEndString];
-    
     
     //remove duplicate equipUniqueItems so they don't get double counted in the next step
     NSMutableArray *arrayOfEquipUniqueItemsByDataCollisionDeDuped = [NSMutableArray arrayWithCapacity:1];
@@ -1233,7 +1209,6 @@ typedef void (^CompletionBlockWithArray)(NSMutableArray *muteArray);
     
     //set ivar
     [self.arrayOfEquipUniqueItemsAll addObject:currentThing];
-    
 }
 
 

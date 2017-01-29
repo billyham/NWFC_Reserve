@@ -934,7 +934,9 @@
             
             //allocate method MUST be called only ONCE after the other two methods. or the count gets screwed up.  
             [self.privateRequestManager resetEquipListAndAvailableQuantites];
-            [self.privateRequestManager retrieveAllEquipUniqueItems];
+            [self.privateRequestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
+                //TODO: retrieveAllEquipUniqueItems async
+            }];
             [self.privateRequestManager allocateGearListWithDates:nil];
             
             BOOL isAvailable = [self.privateRequestManager confirmAvailabilityOfTitleItem:titleItemSubString];

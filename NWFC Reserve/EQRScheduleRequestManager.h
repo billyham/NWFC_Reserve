@@ -15,6 +15,8 @@
 
 @protocol EQREquipSelectionDelegate;
 
+typedef void (^BlockWithArray)(NSMutableArray *muteArray);
+
 
 @interface EQRScheduleRequestManager : NSObject <EQREquipItemCellDelegate, EQRHeaderCellTemplateDelegate>{
     __weak id <EQREquipSelectionDelegate> equipSelectionDelegate;
@@ -50,7 +52,7 @@
 -(BOOL)confirmAvailabilityOfTitleItem:(NSString*)equipTitleItem_foreignKey;
 -(NSString*)retrieveAnAvailableUniqueKeyFromTitleKey:(NSString*)equipTitleItem_foreignKey;
 //-(NSArray*)retrieveAllEquipUniqueItems;
--(void)retrieveAllEquipUniqueItems:(CompletionBlockWithArray)cb;
+-(void)retrieveAllEquipUniqueItems:(BlockWithArray)cb;
 -(void)collapseOrExpandSectionInSchedule:(NSString*)chosenSection;
 -(void)allocateGearListWithDates:(NSDictionary*)datesDic;
 -(void)justConfirm;

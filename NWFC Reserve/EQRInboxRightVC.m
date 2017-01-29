@@ -517,7 +517,9 @@
     
     //two important methods that initiate requestManager ivar arrays
     [self.privateRequestManager resetEquipListAndAvailableQuantites];
-    [self.privateRequestManager retrieveAllEquipUniqueItems];
+    [self.privateRequestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
+//        TODO: retrieveAllEquipUniqueItems async
+    }];
     
     //pricing info
     if ([self.myScheduleRequest.renter_type isEqualToString:EQRRenterPublic]){

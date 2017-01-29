@@ -293,7 +293,9 @@
 
     //______!!!!!!  where should this go?   !!!!!!_______
     //first, renew the list of uniqueItems
-    [requestManager retrieveAllEquipUniqueItems];
+    [requestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray){
+//        TODO: retrieveAllEquipUniqueItems async
+    }];
     
     
     //_______********  try allocating the gear list here... *****______

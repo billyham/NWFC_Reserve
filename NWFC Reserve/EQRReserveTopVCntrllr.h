@@ -17,6 +17,7 @@
 //@property (nonatomic, strong) IBOutlet UITableView* nameListTable;
 
 -(void)retrieveSelectedNameItem;
+-(void)retreiveSelectedNameItemStage2:(NSMutableArray *)returnArray;
 
 //EQRClassPickerVC delegate method
 -(void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem;

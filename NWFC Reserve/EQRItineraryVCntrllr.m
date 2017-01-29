@@ -185,7 +185,7 @@
 //    
 //    //two important methods that initiate requestManager ivar arrays
 //    [self.privateRequestManager resetEquipListAndAvailableQuantites];
-//    [self.privateRequestManager retrieveAllEquipUniqueItems];
+//    [self.privateRequestManager retrieveAllEquipUniqueItems];  !! NOT HOW THIS METHOD WORKS ANYMORE
     
     
     //this will load the ivar array of scheduleReqeust items based on the dateForShow ivar

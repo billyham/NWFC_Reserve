@@ -199,23 +199,30 @@
     requestManager.request.renter_type = self.chosenRenterType;
     
     
-    //confirm that requestManager has successfully loaded allEquipUniqueItems and warn if not
+    // requestManager maybe needs to load allEquipUniqueItems
     if (self.needsToRetrieveAllUniqueEquipItemsFlag){
-        NSArray *returnArray = [requestManager retrieveAllEquipUniqueItems];
-        if (returnArray == nil){
-            
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Connection Error" message:@"Cannot connect to equipment inventory. Ensure that wifi is on \"Private\" and database URL (in settings) is correct" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles: nil];
-            
-            [alertView show];
-            
-            //DON'T segue, cause you won't be able to complete the request succesfully
-            return;
-        }
+        [requestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
+            [self retreiveSelectedNameItemStage2:muteArray];
+        }];
+    }else{
+        [self performSegueWithIdentifier:@"lookAtDates" sender:self];
+    }
+}
+
+-(void)retreiveSelectedNameItemStage2:(NSMutableArray *)returnArray{
+    
+    if (returnArray == nil){
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Connection Error" message:@"Cannot connect to equipment inventory. Ensure that wifi is on \"Private\" and database URL (in settings) is correct" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles: nil];
+        
+        [alertView show];
+        
+        //DON'T segue, cause you won't be able to complete the request succesfully
+        return;
     }
     
     //perform segue to show date picker
     [self performSegueWithIdentifier:@"lookAtDates" sender:self];
-    
 }
 
 

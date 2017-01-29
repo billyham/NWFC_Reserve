@@ -292,7 +292,9 @@
     
     //two important methods that initiate requestManager ivar arrays
     [self.privateRequestManager resetEquipListAndAvailableQuantites];
-    [self.privateRequestManager retrieveAllEquipUniqueItems];
+    [self.privateRequestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
+//        TODO: retrieveAllEquipUniqueItems async
+    }];
     
     
     //and populate its ivars
