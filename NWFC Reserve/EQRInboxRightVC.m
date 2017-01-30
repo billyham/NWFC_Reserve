@@ -178,10 +178,6 @@
     [self.myTable registerClass:[EQREditorEquipListCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.myTable registerClass:[EQREditorMiscListCell class] forCellWithReuseIdentifier:@"CellForMiscJoin"];
     [self.myTable registerClass:[EQREditorHeaderCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SuppCell"];
-
-    //remnants when collectionView was a table
-//    [self.myTable registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
-//    [self.myTable registerClass:[UITableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:@"SuppCell"];
     
     //initialize array of to be deleted joins
     if (!self.arrayOfToBeDeletedEquipIDs){
@@ -215,15 +211,12 @@
     
     //set button target
     [self.priceWidget.editButton addTarget:self action:@selector(showPricingButton:) forControlEvents:UIControlEventTouchUpInside];
-
-    
 }
 
 -(void)awakeFromNib{
     
     [super awakeFromNib];
     [self.splitViewController setDelegate:self];
-    
 }
 
 
@@ -234,17 +227,9 @@
         self.aChangeWasMade = NO;
         
         if (self.myScheduleRequest == nil){
-            
             //do nothing when no item is currently loaded into the rightView
-            
         }else{
-            
-            EQRScheduleRequestItem* thisItem = [self retrieveRequestItemWithRequestKeyID:self.myScheduleRequest.key_id];
-            
-            if (thisItem){
-                
-                [self renewTheViewWithRequest:thisItem];
-            }
+            [self retrieveRequestItemWithRequestKeyID:self.myScheduleRequest.key_id];
         }
     }
     
@@ -329,45 +314,33 @@
 //    NSLog(@"this is bottomLayoutGuide length: %5.2f", self.bottomLayoutGuide.length);
 //    
 //    NSLog(@"this is the CONTAINER view's bottomLayoutGuide length: %5.2f", self.splitViewController.navigationController.bottomLayoutGuide.length);
-    
-
 }
 
 
--(EQRScheduleRequestItem*)retrieveRequestItemWithRequestKeyID:(NSString*)keyID{
+-(void)retrieveRequestItemWithRequestKeyID:(NSString*)keyID{
     
     if (keyID == nil){
         //error handling if no keyID is sent
-        return nil;
+        return;
     }
     
     //use this when a change to dates may have occured in the scheduleRequest
-    
     NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", keyID, nil];
     NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-    __block EQRScheduleRequestItem* thisItem = nil;
     
     EQRWebData* webData = [EQRWebData sharedInstance];
-    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
     
-        if ([muteArray count] == 0){
-            
-            //error handling when no item are returned
-            NSLog(@"InboxRightVC > retrieveRequestItemWith... no request items returned");
-            
-        }else if ([muteArray count] == 1){
-            
-            thisItem = [muteArray objectAtIndex:0];
-            
-        }else if ([muteArray count] > 1){
-            
-            //error handling when more than one request item is returned for the same keyid
-            NSLog(@"InboxRightVC > retrieveRequestItemWith... got two requests for one key id");
-        }
-        
-    }];
-
-    return thisItem;
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+       [webData queryForStringwithAsync:@"EQGetScheduleRequestInComplete.php" parameters:topArray completion:^(EQRScheduleRequestItem *thisItem) {
+           
+           if (!thisItem){
+               NSLog(@"InboxRightVC > retrieveRequestItemWith... no request items returned");
+               return;
+           }
+           [self renewTheViewWithRequest:thisItem];
+       }];
+    });
 }
 
 
@@ -543,7 +516,7 @@
             
             if (transaction){
                 
-                NSLog(@"this is the transaction's key_id: %@", transaction.key_id);
+//                NSLog(@"this is the transaction's key_id: %@", transaction.key_id);
                 
                 self.myTransaction = transaction;
                 
@@ -553,7 +526,7 @@
             }else{
                 
                 //no matching transaction, create a fresh one.
-                NSLog(@"didn't find a matching Transaction");
+//                NSLog(@"didn't find a matching Transaction");
                 [self.priceWidget deleteExistingData];
             }
         }];
@@ -635,8 +608,8 @@
                          twelfthArray,
                          nil];
     
-    NSString* returnID = [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
-    NSLog(@"this is the returnID: %@", returnID);
+    [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
+//    NSLog(@"this is the returnID: %@", returnID);
     
     //send note to schedule that a change has been saved
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
@@ -882,54 +855,48 @@
 
 -(void)printPageWithScheduleRequestItemKey:(NSString*)scheduleKey{
     
-    
     //get complete scheduleRequest item info
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", scheduleKey, nil];
     NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
-    __block EQRScheduleRequestItem* chosenItem;
-    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-        
-        if ([muteArray count] > 0){
-            
-            chosenItem = [muteArray objectAtIndex:0];
-        }
-    }];
     
-    //add the notes
-    chosenItem.notes = self.myScheduleRequest.notes;
-    //    NSLog(@"these are the notes >>%@<<", chosenItem.notes);
-    
-    //add contact information
-    NSString* email;
-    NSString* phone;
-    if (self.myScheduleRequest.contactNameItem){
-        email = self.myScheduleRequest.contactNameItem.email;
-        phone = self.myScheduleRequest.contactNameItem.phone;
-        
-        chosenItem.contactNameItem = self.myScheduleRequest.contactNameItem;
-    }
-    
-    
-    //create printable page view controller
-    EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
-    
-    //add the request item to the view controller
-    [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:NO];
-    
-    //assign ivar variables
-    pageForPrint.rentorNameAtt = chosenItem.contact_name;
-    pageForPrint.rentorEmailAtt = email;
-    pageForPrint.rentorPhoneAtt = phone;
-    
-    
-    //show the view controller
-    [self presentViewController:pageForPrint animated:YES completion:^{
-        
-        
-    }];
-    
-    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+       [webData queryForStringwithAsync:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray completion:^(EQRScheduleRequestItem *chosenItem) {
+           
+           if (!chosenItem){
+               NSLog(@"EQRInboxRightVC > printPageWithScheduleRequestItemKey fails to load scheduleRequestItem");
+               return;
+           }
+           
+           //add the notes
+           chosenItem.notes = self.myScheduleRequest.notes;
+           
+           //add contact information
+           NSString* email;
+           NSString* phone;
+           if (self.myScheduleRequest.contactNameItem){
+               email = self.myScheduleRequest.contactNameItem.email;
+               phone = self.myScheduleRequest.contactNameItem.phone;
+               chosenItem.contactNameItem = self.myScheduleRequest.contactNameItem;
+           }
+           
+           //create printable page view controller
+           EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
+           
+           //add the request item to the view controller
+           [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:NO];
+           
+           //assign ivar variables
+           pageForPrint.rentorNameAtt = chosenItem.contact_name;
+           pageForPrint.rentorEmailAtt = email;
+           pageForPrint.rentorPhoneAtt = phone;
+           
+           //show the view controller
+           [self presentViewController:pageForPrint animated:YES completion:^{
+           }];
+       }];
+    });
 }
 
 
@@ -948,11 +915,9 @@
     SEL thisSelector = @selector(receiveTextElementForEmailSignature:);
     
     [webData queryWithAsync:@"EQGetTextElementsWithContext.php" parameters:topArray class:@"EQRTextElement" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
-        
-        if (isLoadingFlagUp){
-            
-            NSLog(@"%@", self.myEmailSignature);
-        }
+//        if (isLoadingFlagUp){
+//            NSLog(@"%@", self.myEmailSignature);
+//        }
     }];
 }
 

@@ -329,7 +329,7 @@
     };
     
     //set webData request for equiplist
-    NSLog(@"this is the class title key: %@", classTitleKey);
+//    NSLog(@"this is the class title key: %@", classTitleKey);
     NSArray* firstParamArray = [NSArray arrayWithObjects:@"ClassCatalog_foreignKey", classTitleKey, nil];
     NSArray* secondParamArray = [NSArray arrayWithObjects:firstParamArray, nil];
     
@@ -345,7 +345,7 @@
         
         [webData queryWithLink:@"EQGetEquipTitlesWithClassCatalogKey.php" parameters:secondParamArray class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
             
-            NSLog(@"this is the array count: %u", (int)[muteArray count]);
+//            NSLog(@"this is the array count: %u", (int)[muteArray count]);
             
             if ([muteArray count] > 0){
                 

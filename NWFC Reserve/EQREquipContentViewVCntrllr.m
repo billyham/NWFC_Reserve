@@ -37,7 +37,7 @@
 
 -(IBAction)addOneEquipItem:(id)sender{
     
-    NSLog(@"add one in EquipContentVCntrllr");
+//    NSLog(@"add one in EquipContentVCntrllr");
 }
 
 

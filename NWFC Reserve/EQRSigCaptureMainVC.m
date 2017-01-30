@@ -228,7 +228,7 @@
         alphaForText = alphaForText * .66;
     }
     
-    NSLog(@"this is the final height: %5.2f", savedYValue);
+//    NSLog(@"this is the final height: %5.2f", savedYValue);
     
     float distanceBetweenTextAndButton = 20.0;
     float widthOfButton = 44.0;
@@ -302,7 +302,7 @@
             }else{
                 
                 //no matching transaction, create a fresh one.
-                NSLog(@"didn't find a matching Transaction");
+//                NSLog(@"didn't find a matching Transaction");
                 [self.myPricingWidget deleteExistingData];
             }
         }];

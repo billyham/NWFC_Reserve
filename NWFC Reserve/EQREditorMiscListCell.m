@@ -224,7 +224,7 @@
     NSArray *topArray = @[oneArray, twoArray];
     
     NSString *returnKey = [webData queryForStringWithLink:@"EQAlterMiscJoinName.php" parameters:topArray];
-    NSLog(@"this is the return key: %@", returnKey);
+//    NSLog(@"this is the return key: %@", returnKey);
 }
 
 

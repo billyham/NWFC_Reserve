@@ -177,12 +177,12 @@
     //get array of available discounts
     //get array of available items for purchase (add-ons)
     
-    NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %lu  and of misc items: %lu", request.key_id, (unsigned long)[request.arrayOfEquipmentJoins count], (unsigned long)[request.arrayOfMiscJoins count]);
+//    NSLog(@"this is the scheduleRequest key_id: %@  this is the count of equips: %lu  and of misc items: %lu", request.key_id, (unsigned long)[request.arrayOfEquipmentJoins count], (unsigned long)[request.arrayOfMiscJoins count]);
 
-    if ([request.arrayOfEquipmentJoins count] > 0){
-        EQRScheduleTracking_EquipmentUnique_Join *join = [request.arrayOfEquipmentJoins objectAtIndex:0];
-        NSLog(@"this is join.key_id: %@  join.titleKey: %@  join.name: %@  join.dist_id: %@", join.key_id, join.equipTitleItem_foreignKey, join.name, join.distinquishing_id);
-    }
+//    if ([request.arrayOfEquipmentJoins count] > 0){
+//        EQRScheduleTracking_EquipmentUnique_Join *join = [request.arrayOfEquipmentJoins objectAtIndex:0];
+//        NSLog(@"this is join.key_id: %@  join.titleKey: %@  join.name: %@  join.dist_id: %@", join.key_id, join.equipTitleItem_foreignKey, join.name, join.distinquishing_id);
+//    }
     //yes, array is good
     
     self.myRequestItem = request;
@@ -273,7 +273,7 @@
 
 -(void)startNewStage4{  //get ALL equipTitles
     
-    NSLog(@"this is the count of equipJoins: %lu", (long)[self.arrayOfEquipJoins count]);
+//    NSLog(@"this is the count of equipJoins: %lu", (long)[self.arrayOfEquipJoins count]);
     
     if (!self.arrayOfLineItems){
         self.arrayOfLineItems = [NSMutableArray arrayWithCapacity:1];
@@ -290,7 +290,7 @@
     
     [self.lineItemsCollection reloadData];
     
-    NSLog(@"this is the count of the collection view: %lu", (long)[self.lineItemsCollection numberOfItemsInSection:0]);
+//    NSLog(@"this is the count of the collection view: %lu", (long)[self.lineItemsCollection numberOfItemsInSection:0]);
     
     
     //get list of all equip prices
@@ -352,7 +352,7 @@
             
             if (transaction){
                 
-                NSLog(@"this is the transaction's key_id: %@", transaction.key_id);
+//                NSLog(@"this is the transaction's key_id: %@", transaction.key_id);
                 
                 self.myTransaction = transaction;
                 
@@ -363,7 +363,7 @@
                 
                 //no matching transaction, create a fresh one.
                 [self createANewTransaction:self.myRequestItem];
-                NSLog(@"creating a new transaction because it didn't find an existing one");
+//                NSLog(@"creating a new transaction because it didn't find an existing one");
             }
         }];
     });
@@ -386,7 +386,7 @@
         }
     }
     
-    NSLog(@"EQRPriceMatrix > editExistingStage2");
+//    NSLog(@"EQRPriceMatrix > editExistingStage2");
     
     //________!!!!!!!! The arrays already attached to the Reqeust are meaningless  !!!!!______
     
@@ -428,7 +428,7 @@
 
 -(void)editExistingStage3{  //get prices for equip titles
     
-    NSLog(@"this is the count of equipJoins: %lu", (long)[self.arrayOfEquipJoins count]);
+//    NSLog(@"this is the count of equipJoins: %lu", (long)[self.arrayOfEquipJoins count]);
     
     for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfEquipJoins){
         if (join.cost){
@@ -472,7 +472,7 @@
     
     [self.lineItemsCollection reloadData];
     
-    NSLog(@"this is the count of the collection view: %lu", (long)[self.lineItemsCollection numberOfItemsInSection:0]);
+//    NSLog(@"this is the count of the collection view: %lu", (long)[self.lineItemsCollection numberOfItemsInSection:0]);
     
     
     //get list of all equip prices
@@ -498,7 +498,7 @@
 //this is implemented by both
 -(void)editExistingStage4{ //populate collection view objects with available prices
     
-    NSLog(@"inside editExistingStage 4, count of arrayOfPriceEquipTitles: %lu", (unsigned long)[self.arrayOfPriceEquipTitles count]);
+//    NSLog(@"inside editExistingStage 4, count of arrayOfPriceEquipTitles: %lu", (unsigned long)[self.arrayOfPriceEquipTitles count]);
     
     SEL priceSelector;
     
@@ -529,7 +529,7 @@
     
     for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfEquipJoins){
         
-        NSLog(@"this is the join's cost value: %@", join.cost);
+//        NSLog(@"this is the join's cost value: %@", join.cost);
         
         //only continue if join.cost has no value yet or if rental pricing type has changed
         if (([join.cost isEqualToString:@""]) || !join.cost || self.needsNewPriceCalculation){
@@ -1085,7 +1085,7 @@
 //Price Matrix Content VC delegate method
 -(void)launchCostEditorWithJoinKeyID:(NSString *)joinKeyID isEquipJoin:(BOOL)isEquipJoin cost:(NSString *)cost indexPath:(NSIndexPath *)indexPath{
     
-    NSLog(@"PriceMatrix > launchCostEditorWithJoinKeyID this is the joinKeyID: %@", joinKeyID);
+//    NSLog(@"PriceMatrix > launchCostEditorWithJoinKeyID this is the joinKeyID: %@", joinKeyID);
     
     self.tempIndexPath = indexPath;
     self.tempIndexPathIsEquipJoin = isEquipJoin;
@@ -1146,7 +1146,7 @@
     
     self.daysForPrice.text = returnText;
     
-    NSLog(@"this is the transaction key_id: %@", self.myTransaction.key_id);
+//    NSLog(@"this is the transaction key_id: %@", self.myTransaction.key_id);
     
     //udpate database
     EQRWebData *webData = [EQRWebData sharedInstance];
@@ -1184,7 +1184,7 @@
 
 -(void)updateJoinRowWithNewCost:(NSString *)returnText{
     
-    NSLog(@"inside updateJoinRowWithNewCost");
+//    NSLog(@"inside updateJoinRowWithNewCost");
     
     EQRWebData *webData = [EQRWebData sharedInstance];
     webData.delegateDataFeed = self;
@@ -1261,7 +1261,7 @@
 
 -(void)updateJoinRowWithNewDeposit:(NSString *)returnText{
     
-    NSLog(@"inside updateJoinRowWithNewDeposit");
+//    NSLog(@"inside updateJoinRowWithNewDeposit");
 
     
     EQRWebData *webData = [EQRWebData sharedInstance];
@@ -1274,7 +1274,7 @@
         join.deposit = returnText;
         join.hasAStoredDepositValue = YES;
         
-        NSLog(@"this is the Join.key_id: %@  this is returnText: %@", join.key_id, returnText);
+//        NSLog(@"this is the Join.key_id: %@  this is returnText: %@", join.key_id, returnText);
         
         [self.lineItemsCollection reloadData];
         
@@ -1384,7 +1384,7 @@
         self.arrayOfEquipJoins = [NSMutableArray arrayWithCapacity:1];
     }
     
-    NSLog(@"adding equipJoin to array");
+//    NSLog(@"adding equipJoin to array");
     [self.arrayOfEquipJoins addObject:currentThing];
 }
 
@@ -1455,7 +1455,7 @@
                            hasAStoredCostValue:join.hasAStoredCostValue
                         hasAStoredDepositValue:join.hasAStoredDepositValue];
         
-        NSLog(@"name: %@  distID: %@  cost: %@  deposit: %@", join.name, join.distinquishing_id, join.cost, join.deposit);
+//        NSLog(@"name: %@  distID: %@  cost: %@  deposit: %@", join.name, join.distinquishing_id, join.cost, join.deposit);
         
     }else{
         //must be miscJoin

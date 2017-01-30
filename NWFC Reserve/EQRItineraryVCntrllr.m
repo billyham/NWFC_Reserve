@@ -312,7 +312,7 @@
 
 -(void)partialRefreshToUpdateTheArrayOfRequests:(NSNotification*)note{
 
-    NSLog(@"Itinerary > partialRefreshToUpdate fires");
+//    NSLog(@"Itinerary > partialRefreshToUpdate fires");
     
     self.filteredArrayOfScheduleRequests = nil;
     self.readyToCheckForScheduleWarningsFlag = NO;

@@ -64,7 +64,7 @@
         [view removeFromSuperview];
     }
     
-    NSLog(@"inside collection view methods for inbox");
+//    NSLog(@"inside collection view methods for inbox");
     
     [cell initialSetupWithTitle:@"puddin"];
     

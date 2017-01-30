@@ -81,7 +81,7 @@
         
         [webData queryForStringwithAsync:@"EQSetNewContact.php" parameters:topArray completion:^(EQRContactNameItem *contactObject) {
             
-            NSLog(@"this is the return contact key: %@", contactObject.key_id);
+//            NSLog(@"this is the return contact key: %@", contactObject.key_id);
             //    NSLog(@"key for new contact: %@", returnString);
             
             //continue...

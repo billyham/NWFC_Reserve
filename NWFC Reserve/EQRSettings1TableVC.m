@@ -368,9 +368,7 @@
             
             //string of key_id
             if (object){
-                
-                NSLog(@"this is the text element's key_id: %@", object);
-                
+//                NSLog(@"this is the text element's key_id: %@", object);
             }else{
                 //error handling
             }

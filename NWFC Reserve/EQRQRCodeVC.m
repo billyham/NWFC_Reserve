@@ -109,8 +109,8 @@
         }];
         
         if (!completed && error)
-            NSLog(@"FAILED! due to error in domain %@ with error code %u",
-                  error.domain, error.code);
+            NSLog(@"FAILED! due to error in domain %@ with error code %ld",
+                  error.domain, (long)error.code);
     };
 
     [pic presentAnimated:YES completionHandler:completionHandler];

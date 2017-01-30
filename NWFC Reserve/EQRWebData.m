@@ -359,7 +359,7 @@ const int intEQRTransaction = 11;
     //remove new line commands
     NSString* newUrlString = [urlString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     
-    NSLog(@"this is the inputstring: %@", newUrlString);
+    if (EQRLogInputStrings) NSLog(@"this is the inputstring: %@", newUrlString);
 
     
     //send the url request
@@ -403,7 +403,7 @@ const int intEQRTransaction = 11;
     
     if (!success){
         
-        NSLog(@"self xml parser failure. uh huh.");
+        NSLog(@"xml parser failure.");
         
         return;
     }else{
@@ -472,7 +472,7 @@ const int intEQRTransaction = 11;
     NSString* newUrlString = [urlString stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
     
     
-    NSLog(@"this is the inputstring: %@", newUrlString);
+    if (EQRLogInputStrings) NSLog(@"this is the inputstring: %@", newUrlString);
     
     
     //send the url request
@@ -2051,7 +2051,7 @@ const int intEQRTransaction = 11;
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser{
     
-    NSLog(@"Webdata > XML Parser did end Document" );
+//    NSLog(@"Webdata > XML Parser did end Document" );
 
     //only if completion block is up, then send block
     self.XMLParsingIsCompleteFlag = YES;
@@ -2421,7 +2421,7 @@ const int intEQRTransaction = 11;
     NSString* newUrlString = [urlString stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
     
     
-    NSLog(@"this is the inputstring: %@", newUrlString);
+    if (EQRLogInputStrings) NSLog(@"this is the inputstring: %@", newUrlString);
     
     
     //send the url request
@@ -2466,7 +2466,7 @@ const int intEQRTransaction = 11;
     
     if (!success){
         
-        NSLog(@"self xml parser failure");
+        NSLog(@"xml parser failure");
         
         return;
     }else{
@@ -2531,7 +2531,7 @@ const int intEQRTransaction = 11;
         //___Very importand that this if statement is INSIDE the dispatch
         if (self.delayedCompletionBlock != nil){
             
-            NSLog(@"Webdata > says it is sending a completion block" );
+//            NSLog(@"Webdata > says it is sending a completion block" );
             
             self.delayedCompletionBlock(YES);
             self.delayedCompletionBlock = nil;

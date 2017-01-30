@@ -69,149 +69,136 @@
     NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.mykeyID, nil];
     NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
     
-    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-    
-    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:topArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-        
-        for (EQRScheduleRequestItem* item in muteArray){
-            
-            [tempMuteArray addObject:item];
-        }
-    }];
-    
-    if ([tempMuteArray count] < 1){
-        
-        NSLog(@"error, no items returned for schedule request key id: %@", self.mykeyID);
-        return;
-    }
-    
-    //a complete schedule request object, the one to be copied
-    EQRScheduleRequestItem* currentRequestItem = [tempMuteArray objectAtIndex:0];
-    
-    NSArray* alphaArray = @[@"key_id", self.mykeyID];
-    NSArray* omegaArray = @[alphaArray];
-    __block NSMutableString* notesReturned = [NSMutableString stringWithString:EQRErrorCode88888888];
-    [webData queryWithLink:@"EQGetScheduleRequestNotes.php" parameters:omegaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray2) {
-        
-        if ([muteArray2 count] > 0){
-            [notesReturned setString:[(EQRScheduleRequestItem*)[muteArray2 objectAtIndex:0] notes]];
-        }
-    }];
-    
-    currentRequestItem.notes = notesReturned;
-    
-    //need to save note to userInfo dic
-    [self.userInfo setObject:notesReturned forKey:@"notes"];
-    
-    //get a new schedule request key_id, the proper way...
-    NSString* myDeviceName = [[UIDevice currentDevice] name];
-    
-    NSArray* firstArray2  = [NSArray arrayWithObjects:@"myDeviceName", myDeviceName, nil];
-    NSArray* topArray2 = [NSArray arrayWithObjects:firstArray2, nil];
-    
-    NSString* newKeyID = [webData queryForStringWithLink:@"EQRegisterScheduleRequest.php" parameters:topArray2];
-    NSLog(@"this is the newKeyId: %@", newKeyID);
-    
-    //time of request
-    NSDateFormatter* timeStampFormatter = [[NSDateFormatter alloc] init];
-    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [timeStampFormatter setLocale:usLocale];
-    [timeStampFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    NSString* timeRequestString = [timeStampFormatter stringFromDate:[NSDate date]];
-    
-    NSString* date_begin_string = [timeStampFormatter stringFromDate:currentRequestItem.request_date_begin];
-    NSString* date_end_string = [timeStampFormatter stringFromDate:currentRequestItem.request_date_end];
-    NSString* time_begin_string = [timeStampFormatter stringFromDate:currentRequestItem.request_time_begin];
-    NSString* time_end_string = [timeStampFormatter stringFromDate:currentRequestItem.request_time_end];
-    
-    //_____!!!  need to add notes  !!!_____
-    //set the properties of the newly registered schedule request
-    NSArray* oneArray = [NSArray arrayWithObjects:@"key_id", newKeyID, nil];
-    NSArray* twoArray = [NSArray arrayWithObjects:@"contact_foreignKey", currentRequestItem.contact_foreignKey, nil];
-    NSArray* threeArray = [NSArray arrayWithObjects:@"classSection_foreignKey", currentRequestItem.classSection_foreignKey, nil];
-    NSArray* fourArray = [NSArray arrayWithObjects:@"classTitle_foreignKey", currentRequestItem.classTitle_foreignKey, nil];
-    NSArray* fiveArray = [NSArray arrayWithObjects:@"contact_name", currentRequestItem.contact_name, nil];
-    NSArray* sixArray = [NSArray arrayWithObjects:@"renter_type", currentRequestItem.renter_type, nil];
-    NSArray* sevenArray = [NSArray arrayWithObjects:@"time_of_request", timeRequestString, nil];
-    NSArray* eightArray = [NSArray arrayWithObjects:@"request_date_begin", date_begin_string, nil];
-    NSArray* nineArray = [NSArray arrayWithObjects:@"request_date_end", date_end_string, nil];
-    NSArray* tenArray = [NSArray arrayWithObjects:@"request_time_begin", time_begin_string, nil];
-    NSArray* elevenArray = [NSArray arrayWithObjects:@"request_time_end", time_end_string, nil];
-    NSArray* twelveArray = [NSArray arrayWithObjects:@"notes", currentRequestItem.notes, nil];
-    
-    NSArray* topMostArray = [NSArray arrayWithObjects:
-                             oneArray,
-                             twoArray,
-                             threeArray,
-                             fourArray,
-                             fiveArray,
-                             sixArray,
-                             sevenArray,
-                             eightArray,
-                             nineArray,
-                             tenArray,
-                             elevenArray,
-                             twelveArray,
-                             nil];
-    
-    [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:topMostArray];
-    
-//    NSLog(@"this is the returnString: %@", returnString);
-    
-    //Get all of the equipment joins
-    NSArray* aArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.mykeyID, nil];
-    NSArray* zArray = [NSArray arrayWithObjects:aArray, nil];
-    NSMutableArray* tempMuteArray3 = [NSMutableArray arrayWithCapacity:1];
-    
-    [webData queryWithLink:@"EQGetScheduleEquipJoins.php" parameters:zArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
-        
-        for (EQRScheduleTracking_EquipmentUnique_Join* join in muteArray){
-            
-            [tempMuteArray3 addObject:join];
-        }
-    }];
-    
-    for (EQRScheduleTracking_EquipmentUnique_Join* join in tempMuteArray3){
-        
-        NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", newKeyID, nil];
-        NSArray* beeArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", join.equipUniqueItem_foreignKey, nil];
-        NSArray* ceeArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", join.equipTitleItem_foreignKey, nil];
-        NSArray* zeeArray = [NSArray arrayWithObjects:ayeArray, beeArray, ceeArray, nil];
-        
-        [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:zeeArray];
-//        NSLog(@"resut from nested joins: %@", resultFromNestedJoins);
-    }
-    
-    
-    //_____!!!!!!   need to copy miscellaneous items  !!!!______
-    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:zArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray) {
-        
-        for (EQRMiscJoin* join in muteArray){
-            
-            NSArray* ayeArray = @[@"scheduleTracking_foreignKey", newKeyID];
-            NSArray* beeArray = @[@"name", join.name];
-            NSArray* zeeArray = @[ayeArray, beeArray];
-            
-            [webData queryForStringWithLink:@"EQSetNewMiscJoin.php" parameters:zeeArray];
-//            NSLog(@"result from Misc Joins: %@", resultFromMiscJoins);
-        }
-    }];
-    
-    
-    
-    //replace the key_id in the userInfo
-    [self.userInfo setValue:newKeyID forKey:@"key_ID"];
-    
-    //the date should change... bring up request editor to have the user enter new info...
-    //show request editor
-    if (self.fromItinerary == YES){
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditorFromItinerary object:nil userInfo:self.userInfo];
-        
-    }else{
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditorFromSchedule object:nil userInfo:self.userInfo];
-    }
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+       [webData queryForStringwithAsync:@"EQGetScheduleRequestInComplete.php" parameters:topArray completion:^(EQRScheduleRequestItem *currentRequestItem) {
+           
+           if(!currentRequestItem){
+               NSLog(@"EQRQuickViewPage3VC > duplicate, failed to retrieve request item: %@", self.mykeyID);
+               return;
+           }
+           
+           NSArray* alphaArray = @[@"key_id", self.mykeyID];
+           NSArray* omegaArray = @[alphaArray];
+           __block NSMutableString* notesReturned = [NSMutableString stringWithString:EQRErrorCode88888888];
+           [webData queryWithLink:@"EQGetScheduleRequestNotes.php" parameters:omegaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray2) {
+               
+               if ([muteArray2 count] > 0){
+                   [notesReturned setString:[(EQRScheduleRequestItem*)[muteArray2 objectAtIndex:0] notes]];
+               }
+           }];
+           
+           currentRequestItem.notes = notesReturned;
+           
+           //need to save note to userInfo dic
+           [self.userInfo setObject:notesReturned forKey:@"notes"];
+           
+           //get a new schedule request key_id, the proper way...
+           NSString* myDeviceName = [[UIDevice currentDevice] name];
+           
+           NSArray* firstArray2  = [NSArray arrayWithObjects:@"myDeviceName", myDeviceName, nil];
+           NSArray* topArray2 = [NSArray arrayWithObjects:firstArray2, nil];
+           
+           NSString* newKeyID = [webData queryForStringWithLink:@"EQRegisterScheduleRequest.php" parameters:topArray2];
+//           NSLog(@"this is the newKeyId: %@", newKeyID);
+           
+           //time of request
+           NSDateFormatter* timeStampFormatter = [[NSDateFormatter alloc] init];
+           NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+           [timeStampFormatter setLocale:usLocale];
+           [timeStampFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+           NSString* timeRequestString = [timeStampFormatter stringFromDate:[NSDate date]];
+           
+           NSString* date_begin_string = [timeStampFormatter stringFromDate:currentRequestItem.request_date_begin];
+           NSString* date_end_string = [timeStampFormatter stringFromDate:currentRequestItem.request_date_end];
+           NSString* time_begin_string = [timeStampFormatter stringFromDate:currentRequestItem.request_time_begin];
+           NSString* time_end_string = [timeStampFormatter stringFromDate:currentRequestItem.request_time_end];
+           
+           //_____!!!  need to add notes  !!!_____
+           //set the properties of the newly registered schedule request
+           NSArray* oneArray = [NSArray arrayWithObjects:@"key_id", newKeyID, nil];
+           NSArray* twoArray = [NSArray arrayWithObjects:@"contact_foreignKey", currentRequestItem.contact_foreignKey, nil];
+           NSArray* threeArray = [NSArray arrayWithObjects:@"classSection_foreignKey", currentRequestItem.classSection_foreignKey, nil];
+           NSArray* fourArray = [NSArray arrayWithObjects:@"classTitle_foreignKey", currentRequestItem.classTitle_foreignKey, nil];
+           NSArray* fiveArray = [NSArray arrayWithObjects:@"contact_name", currentRequestItem.contact_name, nil];
+           NSArray* sixArray = [NSArray arrayWithObjects:@"renter_type", currentRequestItem.renter_type, nil];
+           NSArray* sevenArray = [NSArray arrayWithObjects:@"time_of_request", timeRequestString, nil];
+           NSArray* eightArray = [NSArray arrayWithObjects:@"request_date_begin", date_begin_string, nil];
+           NSArray* nineArray = [NSArray arrayWithObjects:@"request_date_end", date_end_string, nil];
+           NSArray* tenArray = [NSArray arrayWithObjects:@"request_time_begin", time_begin_string, nil];
+           NSArray* elevenArray = [NSArray arrayWithObjects:@"request_time_end", time_end_string, nil];
+           NSArray* twelveArray = [NSArray arrayWithObjects:@"notes", currentRequestItem.notes, nil];
+           
+           NSArray* topMostArray = [NSArray arrayWithObjects:
+                                    oneArray,
+                                    twoArray,
+                                    threeArray,
+                                    fourArray,
+                                    fiveArray,
+                                    sixArray,
+                                    sevenArray,
+                                    eightArray,
+                                    nineArray,
+                                    tenArray,
+                                    elevenArray,
+                                    twelveArray,
+                                    nil];
+           
+           [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:topMostArray];
+           
+           //Get all of the equipment joins
+           NSArray* aArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.mykeyID, nil];
+           NSArray* zArray = [NSArray arrayWithObjects:aArray, nil];
+           NSMutableArray* tempMuteArray3 = [NSMutableArray arrayWithCapacity:1];
+           
+           [webData queryWithLink:@"EQGetScheduleEquipJoins.php" parameters:zArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+               
+               for (EQRScheduleTracking_EquipmentUnique_Join* join in muteArray){
+                   
+                   [tempMuteArray3 addObject:join];
+               }
+           }];
+           
+           for (EQRScheduleTracking_EquipmentUnique_Join* join in tempMuteArray3){
+               
+               NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", newKeyID, nil];
+               NSArray* beeArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", join.equipUniqueItem_foreignKey, nil];
+               NSArray* ceeArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", join.equipTitleItem_foreignKey, nil];
+               NSArray* zeeArray = [NSArray arrayWithObjects:ayeArray, beeArray, ceeArray, nil];
+               
+               [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:zeeArray];
+               //        NSLog(@"resut from nested joins: %@", resultFromNestedJoins);
+           }
+           
+           //_____!!!!!!   need to copy miscellaneous items  !!!!______
+           [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:zArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray) {
+               
+               for (EQRMiscJoin* join in muteArray){
+                   
+                   NSArray* ayeArray = @[@"scheduleTracking_foreignKey", newKeyID];
+                   NSArray* beeArray = @[@"name", join.name];
+                   NSArray* zeeArray = @[ayeArray, beeArray];
+                   
+                   [webData queryForStringWithLink:@"EQSetNewMiscJoin.php" parameters:zeeArray];
+                   //            NSLog(@"result from Misc Joins: %@", resultFromMiscJoins);
+               }
+           }];
+           
+           //replace the key_id in the userInfo
+           [self.userInfo setValue:newKeyID forKey:@"key_ID"];
+           
+           //the date should change... bring up request editor to have the user enter new info...
+           //show request editor
+           if (self.fromItinerary == YES){
+               
+               [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditorFromItinerary object:nil userInfo:self.userInfo];
+               
+           }else{
+               
+               [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditorFromSchedule object:nil userInfo:self.userInfo];
+           }
+       }];
+    });
 }
 
 
@@ -227,66 +214,63 @@
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", self.mykeyID, nil];
     NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
-    __block EQRScheduleRequestItem* chosenItem;
-    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-        
-        if ([muteArray count] > 0){
-            
-            chosenItem = [muteArray objectAtIndex:0];
-        } else {
-            
-            NSLog(@"no request found for key id: %@. Abort printing.", self.mykeyID);
-            return;
-        }
-    }];
     
-    //also gather contact info
-    NSArray* alphaArray = [NSArray arrayWithObjects:@"key_id", chosenItem.contact_foreignKey, nil];
-    NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
-    [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:betaArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-       
-        if ([muteArray count] > 0){
-            
-            chosenItem.contactNameItem = [muteArray objectAtIndex:0];
-            
-        }else {
-            
-            //error handling if no contact object is returned
-            NSLog(@"QuickViewPage3VC > print  no contact returned with contact foreign key");
-        }
-    }];
-    
-    //also get notes (and other info)
-    NSArray* deltaArray = [NSArray arrayWithObjects:firstRequestArray, nil];
-    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:deltaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-        
-        if ([muteArray count] > 0){
-            
-            chosenItem.notes = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] notes];
-            
-        }else {
-            
-            //error handling if no contact object is returned
-            NSLog(@"QuickViewPage3VC > print  getScheduleRequestQuickViewData failed");
-        }
-    }];
-    
-    //create printable page view controller
-    EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
-    
-    //add the request item to the view controller
-    [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:NO];
-    
-    //assign ivar variables
-    pageForPrint.rentorNameAtt = chosenItem.contact_name;
-    pageForPrint.rentorEmailAtt = chosenItem.contactNameItem.email;
-    pageForPrint.rentorPhoneAtt = chosenItem.contactNameItem.phone;
-    
-    
-    //show the view controller
-    [self presentViewController:pageForPrint animated:YES completion:^{
-        
-    }];
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+       [webData queryForStringwithAsync:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray completion:^(EQRScheduleRequestItem *chosenItem) {
+           
+           if (!chosenItem){
+               NSLog(@"EQRQuickViewPage3VC > print, failed to retrieve requestItem");
+               return;
+           }
+           
+           //also gather contact info
+           NSArray* alphaArray = [NSArray arrayWithObjects:@"key_id", chosenItem.contact_foreignKey, nil];
+           NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
+           [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:betaArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+               
+               if ([muteArray count] > 0){
+                   
+                   chosenItem.contactNameItem = [muteArray objectAtIndex:0];
+                   
+               }else {
+                   
+                   //error handling if no contact object is returned
+                   NSLog(@"QuickViewPage3VC > print  no contact returned with contact foreign key");
+               }
+           }];
+           
+           //also get notes (and other info)
+           NSArray* deltaArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+           [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:deltaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+               
+               if ([muteArray count] > 0){
+                   
+                   chosenItem.notes = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] notes];
+                   
+               }else {
+                   
+                   //error handling if no contact object is returned
+                   NSLog(@"QuickViewPage3VC > print  getScheduleRequestQuickViewData failed");
+               }
+           }];
+           
+           //create printable page view controller
+           EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
+           
+           //add the request item to the view controller
+           [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:NO];
+           
+           //assign ivar variables
+           pageForPrint.rentorNameAtt = chosenItem.contact_name;
+           pageForPrint.rentorEmailAtt = chosenItem.contactNameItem.email;
+           pageForPrint.rentorPhoneAtt = chosenItem.contactNameItem.phone;
+           
+           //show the view controller
+           [self presentViewController:pageForPrint animated:YES completion:^{
+           }];
+       }];
+    });
 }
 
 -(IBAction)pdf:(id)sender{
@@ -295,68 +279,66 @@
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", self.mykeyID, nil];
     NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
-    __block EQRScheduleRequestItem* chosenItem;
-    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-        
-        if ([muteArray count] > 0){
-            
-            chosenItem = [muteArray objectAtIndex:0];
-        } else {
-            
-            NSLog(@"no request found for key id: %@. Abort printing.", self.mykeyID);
-            return;
-        }
-    }];
     
-    //also gather contact info
-    NSArray* alphaArray = [NSArray arrayWithObjects:@"key_id", chosenItem.contact_foreignKey, nil];
-    NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
-    [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:betaArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-        
-        if ([muteArray count] > 0){
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        [webData queryForStringwithAsync:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray completion:^(EQRScheduleRequestItem *chosenItem) {
             
-            chosenItem.contactNameItem = [muteArray objectAtIndex:0];
+            if (!chosenItem){
+                NSLog(@"EQRQuickViewPage3VC > pdf, failed to retrieve request item");
+                return;
+            }
             
-        }else {
+            //also gather contact info
+            NSArray* alphaArray = [NSArray arrayWithObjects:@"key_id", chosenItem.contact_foreignKey, nil];
+            NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
             
-            //error handling if no contact object is returned
-            NSLog(@"QuickViewPage3VC > print  no contact returned with contact foreign key");
-        }
-    }];
-    
-    //also get notes (and other info)
-    NSArray* deltaArray = [NSArray arrayWithObjects:firstRequestArray, nil];
-    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:deltaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-        
-        if ([muteArray count] > 0){
+            [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:betaArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+                
+                if ([muteArray count] > 0){
+                    
+                    chosenItem.contactNameItem = [muteArray objectAtIndex:0];
+                    
+                }else {
+                    
+                    //error handling if no contact object is returned
+                    NSLog(@"QuickViewPage3VC > print  no contact returned with contact foreign key");
+                }
+            }];
             
-            chosenItem.notes = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] notes];
+            //also get notes (and other info)
+            NSArray* deltaArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+            [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:deltaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+                
+                if ([muteArray count] > 0){
+                    
+                    chosenItem.notes = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] notes];
+                    
+                }else {
+                    
+                    //error handling if no contact object is returned
+                    NSLog(@"QuickViewPage3VC > print  getScheduleRequestQuickViewData failed");
+                }
+            }];
             
-        }else {
+            //create printable page view controller
+            EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
             
-            //error handling if no contact object is returned
-            NSLog(@"QuickViewPage3VC > print  getScheduleRequestQuickViewData failed");
-        }
-    }];
-    
-    //create printable page view controller
-    EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
-    
-    //add the request item to the view controller
-    //___ Specify for PDF only ___
-    [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:YES];
-    
-    //assign ivar variables
-    pageForPrint.rentorNameAtt = chosenItem.contact_name;
-    pageForPrint.rentorEmailAtt = chosenItem.contactNameItem.email;
-    pageForPrint.rentorPhoneAtt = chosenItem.contactNameItem.phone;
-    
-    
-    //show the view controller
-    [self presentViewController:pageForPrint animated:YES completion:^{
-        
-    }];
-    
+            //add the request item to the view controller
+            //___ Specify for PDF only ___
+            [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:YES];
+            
+            //assign ivar variables
+            pageForPrint.rentorNameAtt = chosenItem.contact_name;
+            pageForPrint.rentorEmailAtt = chosenItem.contactNameItem.email;
+            pageForPrint.rentorPhoneAtt = chosenItem.contactNameItem.phone;
+            
+            //show the view controller
+            [self presentViewController:pageForPrint animated:YES completion:^{
+            }];
+
+        }];
+    });
 }
 
 

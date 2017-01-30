@@ -12,6 +12,8 @@
 BOOL EQRBuildNWDoc = NO;
 BOOL EQRBuildPSU = YES;
 
+BOOL EQRLogInputStrings = NO;
+
 NSString* EQRApplicationKey = @"3j654FP00o91wer";
 BOOL EQRUseCoreData = YES;
 NSString *EQRCloudKitContainer = @"iCloud.com.David-Vincent-Hanagan.GlobalGear";

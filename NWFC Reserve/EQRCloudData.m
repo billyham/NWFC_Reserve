@@ -96,7 +96,7 @@
 
 -(void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock{
     
-    NSLog(@"queryWithLink with: %@", link);
+    if (EQRLogInputStrings) NSLog(@"queryWithLink with: %@", link);
     
     [self authenticateICloud];
     
@@ -130,7 +130,7 @@
             }
             else {
                 // Display the fetched records
-                NSLog(@"Display the fetched records with count: %ld", (unsigned long)[results count]);
+//                NSLog(@"Display the fetched records with count: %ld", (unsigned long)[results count]);
                 
                 NSMutableArray *muteArray = [NSMutableArray arrayWithCapacity:1];
                 for (CKRecord *recordObject in results){
@@ -155,7 +155,7 @@
     
     //___________When does this get called??? ever??
     
-    NSLog(@"queryForStringWithLink with: %@", link);
+    if (EQRLogInputStrings) NSLog(@"queryForStringWithLink with: %@", link);
     
     if ([link isEqualToString:@"EQSetNewContact.php"]){
         
@@ -174,7 +174,7 @@
             
             if (!error){
                 //successfully saved record
-                NSLog(@"successfully saved record");
+//                NSLog(@"successfully saved record");
                 
             }else{
                 
@@ -189,7 +189,7 @@
 
 -(void)queryForStringwithAsync:(NSString *)link parameters:(NSArray *)para completion:(CompletionBlockWithUnknownObject)completeBlock{
     
-    NSLog(@"queryForStringWithAsync with: %@", link);
+    if (EQRLogInputStrings) NSLog(@"queryForStringWithAsync with: %@", link);
     
     EQRModeManager *modeManager = [EQRModeManager sharedInstance];
     BOOL isInDemoMode = [modeManager isInDemoMode];
@@ -224,7 +224,7 @@
                 if (!error){
                     //successfully saved record
                     //__________!!!!!!!!!!!!    THIS IS UGLY    !!!!!!!!!!!!_______________
-                    NSLog(@"successfully saved record");
+//                    NSLog(@"successfully saved record");
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
@@ -266,7 +266,7 @@
                 if (!error){
                     //successfully saved record
                     //__________!!!!!!!!!!!!    THIS IS UGLY    !!!!!!!!!!!!_______________
-                    NSLog(@"successfully pulled record");
+//                    NSLog(@"successfully pulled record");
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
@@ -419,7 +419,7 @@
 
 -(void)queryWithAsync:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString selector:(SEL)action completion:(CompletionBlockWithBool)completeBlock{
     
-    NSLog(@"queryWithAsync with: %@", link);
+    if (EQRLogInputStrings) NSLog(@"queryWithAsync with: %@", link);
     
 //    self.completionBlockSignalFlag = NO;
 
@@ -629,7 +629,7 @@
                                     
                                     if (!instructorReference.recordID){
                                         
-                                        NSLog(@"EQRCloudKit > EQGetClassAll, no recoredID for the instructor refernece, tally is %ld", (long)tallySoFar);
+                                        NSLog(@"EQRCloudKit > EQGetClassAll, no recoredID for the instructor reference, tally is %ld", (long)tallySoFar);
                                         
                                         [self asyncDispatchWithObject:newRecord];
                                         
@@ -706,7 +706,7 @@
         //___Very important that this if statement is INSIDE the dispatch
         if (self.delayedCompletionBlock != nil){
             
-            NSLog(@"CloudData > is sending a completion block" );
+//            NSLog(@"CloudData > is sending a completion block" );
             
             self.delayedCompletionBlock(YES);
 //            self.delayedCompletionBlock = nil;

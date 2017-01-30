@@ -13,6 +13,8 @@
 extern BOOL EQRBuildNWDoc;
 extern BOOL EQRBuildPSU;
 
+extern BOOL EQRLogInputStrings;
+
 extern NSString* EQRApplicationKey;
 extern BOOL EQRUseCoreData;
 extern NSString *EQRCloudKitContainer;

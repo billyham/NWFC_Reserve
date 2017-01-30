@@ -320,51 +320,31 @@
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSArray* arrayWithKey = [NSArray arrayWithObjects:@"key_id",[userInfo objectForKey:@"key_ID"], nil];
     NSArray* topArrayWithKey = [NSArray arrayWithObject:arrayWithKey];
-    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:topArrayWithKey class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-        
-        //____ERROR HANDLING WHEN NOTHING IS RETURNED_______
-        if ([muteArray count] > 0){
-            self.privateRequestManager.request.key_id = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] key_id];
-            self.privateRequestManager.request.contact_foreignKey =  [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] contact_foreignKey];
-            self.privateRequestManager.request.classSection_foreignKey = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] classSection_foreignKey];
-            self.privateRequestManager.request.classTitle_foreignKey = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] classTitle_foreignKey];
-            self.privateRequestManager.request.time_of_request = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] time_of_request];
-        }
-    }];
     
-//    NSLog(@"this is the contact foreign key: %@", self.privateRequestManager.request.contact_foreignKey);
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        [webData queryForStringwithAsync:@"EQGetScheduleRequestInComplete.php" parameters:topArrayWithKey completion:^(EQRScheduleRequestItem *chosenItem) {
+            
+            if (!chosenItem) return;
+            
+            self.privateRequestManager.request.key_id = [chosenItem key_id];
+            self.privateRequestManager.request.contact_foreignKey =  [chosenItem  contact_foreignKey];
+            self.privateRequestManager.request.classSection_foreignKey = [chosenItem  classSection_foreignKey];
+            self.privateRequestManager.request.classTitle_foreignKey = [chosenItem  classTitle_foreignKey];
+            self.privateRequestManager.request.time_of_request = [chosenItem  time_of_request];
+            
+            [self renderClass];
+        }];
+    });
     
-    
-
     //_________**********  LOAD REQUEST EDITOR COLLECTION VIEW WITH EquipUniqueItem_Joins  *******_____________
-    
-    
     //populate...
     //arrayOfSchedule_Unique_Joins
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    
-    //get class name using key
-    if (([self.privateRequestManager.request.classTitle_foreignKey isEqualToString:EQRErrorCode88888888]) ||
-        ([self.privateRequestManager.request.classTitle_foreignKey isEqualToString:@""]) ||
-        (!self.privateRequestManager.request.classTitle_foreignKey)) {
-        
-    }else{
-        
-        NSArray* first2Array = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.classTitle_foreignKey, nil];
-        NSArray* top2Array = [NSArray arrayWithObjects:first2Array, nil];
-        
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-        dispatch_async(queue, ^{
-            [webData queryForStringwithAsync:@"EQGetClassCatalogTitleWithKey.php" parameters:top2Array completion:^(NSString *catalogTitle) {
-                [self.classField setTitle:catalogTitle forState:UIControlStateHighlighted & UIControlStateNormal & UIControlStateSelected];
-            }];
-        });
-    }
+    [self renderClass];
     
     //set labels with provided dictionary
     //must do this AFTER loading the view
@@ -417,6 +397,30 @@
     [super viewWillAppear:animated];
 }
 
+-(void)renderClass{
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    
+    //get class name using key
+    if (([self.privateRequestManager.request.classTitle_foreignKey isEqualToString:EQRErrorCode88888888]) ||
+        ([self.privateRequestManager.request.classTitle_foreignKey isEqualToString:@""]) ||
+        (!self.privateRequestManager.request.classTitle_foreignKey)) {
+        
+    }else{
+        
+        NSArray* first2Array = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.classTitle_foreignKey, nil];
+        NSArray* top2Array = [NSArray arrayWithObjects:first2Array, nil];
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+            [webData queryForStringwithAsync:@"EQGetClassCatalogTitleWithKey.php" parameters:top2Array completion:^(NSString *catalogTitle) {
+                [self.classField setTitle:catalogTitle forState:UIControlStateHighlighted & UIControlStateNormal & UIControlStateSelected];
+            }];
+        });
+    }
+}
+
+
+#pragma mark - button actions
 
 
 -(void)cancelAction{
@@ -505,13 +509,13 @@
                          nil];
     
     
-    for (NSArray* arraySample in bigArray){
-    NSLog(@"%@", arraySample);
-    }
+//    for (NSArray* arraySample in bigArray){
+//        NSLog(@"%@", arraySample);
+//    }
     
     
-    NSString* returnID = [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
-    NSLog(@"this is the returnID: %@", returnID);
+    [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
+//    NSLog(@"this is the returnID: %@", returnID);
     
     
     //_______*********  delete the delted scheduleTracking_equip_joins
@@ -686,14 +690,14 @@
         //delete the scheduleTracking item
         NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.key_id, nil];
         NSArray* secondArray = [NSArray arrayWithObjects:firstArray, nil];
-        NSString* scheduleReturn = [webData queryForStringWithLink:@"EQDeleteScheduleItem.php" parameters:secondArray];
-        NSLog(@"this is the schedule return: %@", scheduleReturn);
+        [webData queryForStringWithLink:@"EQDeleteScheduleItem.php" parameters:secondArray];
+//        NSLog(@"this is the schedule return: %@", scheduleReturn);
         
         //delete all scheduleTracking_equipUnique_joins
         NSArray* alphaArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey",self.privateRequestManager.request.key_id, nil];
         NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
-        NSString* joinReturn = [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoinWithScheduleKey.php" parameters:betaArray];
-        NSLog(@"this is the join return: %@", joinReturn);
+        [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoinWithScheduleKey.php" parameters:betaArray];
+//        NSLog(@"this is the join return: %@", joinReturn);
         
         //delete all miscJoins
         NSArray *unoArray = @[alphaArray];
@@ -1039,9 +1043,7 @@
         [webData queryForStringwithAsync:@"EQGetTransactionWithScheduleRequestKey.php" parameters:topArray completion:^(EQRTransaction *transaction) {
             
             if (transaction){
-                
-                NSLog(@"this is the transaction's key_id: %@", transaction.key_id);
-                
+//                NSLog(@"this is the transaction's key_id: %@", transaction.key_id);
                 self.myTransaction = transaction;
                 
                 //found a matching transaction for this schedule Request, go on...
@@ -1050,7 +1052,7 @@
             }else{
                 
                 //no matching transaction, create a fresh one.
-                NSLog(@"didn't find a matching Transaction");
+//                NSLog(@"didn't find a matching Transaction");
                 [self.priceWidget deleteExistingData];
             }
         }];

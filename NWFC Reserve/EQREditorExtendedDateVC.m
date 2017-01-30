@@ -32,7 +32,7 @@
 
 -(NSDate*)retrievePickUpDate{
     
-    NSLog(@"inside extended date retrievePickUpDate method");
+//    NSLog(@"inside extended date retrievePickUpDate method");
     
     //combine day and time pickers
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];

@@ -127,9 +127,9 @@
         
         [self.webData queryWithAsync:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
             
-            if (isLoadingFlagUp){
-                NSLog(@"isLoadingFlagUP is YES");
-            }
+//            if (isLoadingFlagUp){
+//                NSLog(@"isLoadingFlagUP is YES");
+//            }
             
             //_____this is for moving the table to newly created contact
             completeBlock();

@@ -421,7 +421,7 @@
         requestManager.request.contact_name = self.thisClassItem.first_and_last;
         requestManager.request.renter_type = self.chosenRenterType;
         
-        NSLog(@"this is the instructor name: %@ and key: %@", self.thisClassItem.first_and_last, self.thisClassItem.instructor_foreign_key);
+//        NSLog(@"this is the instructor name: %@ and key: %@", self.thisClassItem.first_and_last, self.thisClassItem.instructor_foreign_key);
         
         //____error handling when no intructor_foreign_key exists_______
         if (([self.thisClassItem.instructor_foreign_key isEqualToString:@""]) || (self.thisClassItem.instructor_foreign_key == NULL)){
@@ -653,7 +653,7 @@
             [cell initialSetupWithTitle:[self.renterTypeArray objectAtIndex:indexPath.row]];
         } else {
             
-            NSLog(@"No count in the rentor type array");
+            NSLog(@"No count in the renter type array");
         }
         
         cell.backgroundColor = [UIColor clearColor];

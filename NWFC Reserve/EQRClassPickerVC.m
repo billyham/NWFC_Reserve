@@ -95,9 +95,9 @@
         
         [webData queryWithAsync:@"EQGetClassesAll.php" parameters:nil class:@"EQRClassItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
             
-            if (isLoadingFlagUp){
-                NSLog(@"isLoadingFlagUP is YES");
-            }
+//            if (isLoadingFlagUp){
+//                NSLog(@"isLoadingFlagUP is YES");
+//            }
             
             [self loadTheViewStage2];
         }];
@@ -107,8 +107,8 @@
 
 -(void)loadTheViewStage2{
     
-    NSLog(@"loadTheViewStage2 says arrayOfClasses count is: %ld", (unsigned long)[self.arrayOfClasses count]);
-    [self performSelector:@selector(delayedLog) withObject:nil afterDelay:1.0];
+//    NSLog(@"loadTheViewStage2 says arrayOfClasses count is: %ld", (unsigned long)[self.arrayOfClasses count]);
+//    [self performSelector:@selector(delayedLog) withObject:nil afterDelay:1.0];
     
     if (!self.arrayOfClasses){
         self.arrayOfClasses = [NSMutableArray arrayWithCapacity:1];
@@ -124,7 +124,7 @@
 
 -(void)delayedLog{
     
-    NSLog(@"delayedLog says arrayOfClasses count is: %ld", (unsigned long)[self.arrayOfClasses count]);
+//    NSLog(@"delayedLog says arrayOfClasses count is: %ld", (unsigned long)[self.arrayOfClasses count]);
 
 }
 
@@ -143,7 +143,7 @@
 
 -(void)reloadTheData{
     
-    NSLog(@"EQRClassPickerVC > reloadTheData fires");
+//    NSLog(@"EQRClassPickerVC > reloadTheData fires");
     
     if (!self.arrayOfClasses){
         self.arrayOfClasses = [NSMutableArray arrayWithCapacity:1];
@@ -163,9 +163,9 @@
         
         [webData queryWithAsync:@"EQGetClassesAll.php" parameters:nil class:@"EQRClassItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
             
-            if (isLoadingFlagUp){
-                NSLog(@"isLoadingFlagUP is YES");
-            }
+//            if (isLoadingFlagUp){
+//                NSLog(@"isLoadingFlagUP is YES");
+//            }
             
             [self loadTheViewStage2];
         }];

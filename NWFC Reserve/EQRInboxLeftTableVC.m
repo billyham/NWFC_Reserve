@@ -215,7 +215,7 @@
                 //identify when loading is complete
                 self.finishedAsyncDBCall = isLoadingFlagUp;
                 
-                NSLog(@"loading is DONE!!");
+//                NSLog(@"loading is DONE!!");
             }];
         });
         
@@ -273,7 +273,7 @@
                 //identify when loading is complete
                 self.finishedAsyncDBCall = isLoadingFlagUp;
                 
-                NSLog(@"loading is DONE!!");
+//                NSLog(@"loading is DONE!!");
             }];
         });
         
@@ -629,7 +629,7 @@
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
     
-    NSLog(@"this is the segue: %@", segue.identifier);
+//    NSLog(@"this is the segue: %@", segue.identifier);
     
 
 }

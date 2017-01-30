@@ -89,11 +89,11 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
             
             // We also need the 'local' URL to the file we want to store
             NSURL *localURL = self.URLForPDFFile;
-            NSLog(@"2. localURL = %@", localURL);
+//            NSLog(@"2. localURL = %@", localURL);
             
             // Now, append the local filename to the ubiquityURL
             ubiquityURL = [ubiquityURL URLByAppendingPathComponent:localURL.lastPathComponent];
-            NSLog(@"3. ubiquityURL = %@", ubiquityURL);
+//            NSLog(@"3. ubiquityURL = %@", ubiquityURL);
             
             // And finish up the 'store' action
             NSError *error;
@@ -119,7 +119,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
         
         if (rootDirectory) {
             if (![[NSFileManager defaultManager] fileExistsAtPath:rootDirectory.path isDirectory:nil]) {
-                NSLog(@"Create directory");
+//                NSLog(@"Create directory");
                 [[NSFileManager defaultManager] createDirectoryAtURL:rootDirectory withIntermediateDirectories:YES attributes:nil error:nil];
             }
         }
@@ -193,7 +193,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
             NSInteger indexOfMultiColumnArray = 0;
             
             do {
-                NSLog(@"PDFGenerator begin the do-while loop");
+//                NSLog(@"PDFGenerator begin the do-while loop");
                 // Mark the beginning of a new page.
                 UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 612, 792), nil);
                 
@@ -262,7 +262,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
                 
             } while (!done);
             
-            NSLog(@"PDFGenerator has concluded the do-while loop in savePDF method");
+//            NSLog(@"PDFGenerator has concluded the do-while loop in savePDF method");
             
             // Close the PDF context and write the contents out.
             UIGraphicsEndPDFContext();
@@ -365,7 +365,7 @@ https://developer.apple.com/library/ios/documentation/2DDrawing/Conceptual/Drawi
         //add 220 to the y value to place below header
         NSRange glyphRange = [self.myMultiColumnView.layoutManager glyphRangeForTextContainer:container];
 
-        NSLog(@"EQRPDFGenerator > drawMultiColumn says additionalXAdjustment: %5.2f", self.additionalXAdjustment);
+//        NSLog(@"EQRPDFGenerator > drawMultiColumn says additionalXAdjustment: %5.2f", self.additionalXAdjustment);
         CGPoint newOrigin = CGPointMake(origin.x + 30.f + self.additionalXAdjustment, origin.y + 250.f);
         
         

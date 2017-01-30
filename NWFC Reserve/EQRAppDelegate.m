@@ -211,16 +211,13 @@
                         
                         //string of key_id
                         if (object){
-                            
-                            NSLog(@"this is the text element's key_id: %@", object);
-                            
+//                            NSLog(@"this is the text element's key_id: %@", object);
                         }else{
                             //error handling
                         }
                     }];
                 });
             }
-            
         }
     }];
     
@@ -302,9 +299,9 @@
             //need to discern inbox from settings
             if ([VC.title isEqualToString:@"Inbox"]){   //must be inbox
                 [(UISplitViewController *)VC setPreferredDisplayMode:UISplitViewControllerDisplayModeAutomatic];
-                NSLog(@"Identifed as Inbox");
+//                NSLog(@"Identifed as Inbox");
             } else if ([VC.title isEqualToString:@"Settings"]){  //must be settings
-                NSLog(@"identified as Settings, this is the title: %@", VC.title);
+//                NSLog(@"identified as Settings, this is the title: %@", VC.title);
                 [(UISplitViewController *)VC setPreferredDisplayMode:UISplitViewControllerDisplayModeAllVisible];
             }
         }

@@ -263,7 +263,7 @@
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     EQRScheduleRequestItem* request = requestManager.request;
     
-    NSLog(@"this is the contact_foreignKey: %@", [NSString stringWithFormat:@"%@", request.contact_foreignKey]);
+//    NSLog(@"this is the contact_foreignKey: %@", [NSString stringWithFormat:@"%@", request.contact_foreignKey]);
     
     //must not include nil objects in array
     //cycle though all inputs and ensure some object is included. use @"88888888" as an error code
@@ -330,8 +330,8 @@
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     
-    NSString* returnID = [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
-    NSLog(@"this is the returnID: %@", returnID);
+    [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
+//    NSLog(@"this is the returnID: %@", returnID);
     
     
     //___________************  Use this moment to allocate a uniqueItem object (key_id and/or dist ID) *****_______
@@ -486,8 +486,8 @@
                                     thirdArrayForJoin,
                                     nil];
         
-        NSString* returnID2 = [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:bigArrayForJoin];
-        NSLog(@"this is the schedule_equip_join return key_id: %@", returnID2);
+        [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:bigArrayForJoin];
+//        NSLog(@"this is the schedule_equip_join return key_id: %@", returnID2);
     }
 }
 

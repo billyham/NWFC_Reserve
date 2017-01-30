@@ -335,7 +335,7 @@ typedef void (^CompletionWithString)(NSString *name);
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
         [webData queryForStringwithAsync:@"EQGetContactNameWithKey.php" parameters:topArray completion:^(EQRContactNameItem *contactNameItem) {
-            NSLog(@"name object: %@", contactNameItem);
+//            NSLog(@"name object: %@", contactNameItem);
             if (contactNameItem){
                 // Derive first name and last initial
                 NSString* firstName = contactNameItem.first_name;

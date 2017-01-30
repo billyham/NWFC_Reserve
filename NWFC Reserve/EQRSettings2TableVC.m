@@ -181,21 +181,21 @@
     NSString *docPath = [NSString stringWithFormat:@"file:%@",[self applicationDocumentDirectory]];
     NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:docPath error:NULL];
     
-    NSLog(@"count of directoryContent: %lu", (unsigned long)[directoryContent count]);
-    NSLog(@"path: %@", docPath);
+//    NSLog(@"count of directoryContent: %lu", (unsigned long)[directoryContent count]);
+//    NSLog(@"path: %@", docPath);
     
     [directoryContent enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        NSLog(@"File %lu: %@", (unsigned long)idx, [directoryContent objectAtIndex:idx]);
+//        NSLog(@"File %lu: %@", (unsigned long)idx, [directoryContent objectAtIndex:idx]);
     }];
     
     NSString *cachePath = [NSString stringWithFormat:@"file:%@", [self applicationCacheDirectory]];
     NSArray *cacheContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:cachePath error:NULL];
     
-    NSLog(@"count of cacheContent: %lu", (unsigned long)[cacheContent count]);
+//    NSLog(@"count of cacheContent: %lu", (unsigned long)[cacheContent count]);
     [cacheContent enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        NSLog(@"Cache file: %lu: %@", (unsigned long)idx, [cacheContent objectAtIndex:idx]);
+//        NSLog(@"Cache file: %lu: %@", (unsigned long)idx, [cacheContent objectAtIndex:idx]);
     }];
     
 }

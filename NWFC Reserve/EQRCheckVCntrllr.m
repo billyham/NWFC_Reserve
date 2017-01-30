@@ -1264,67 +1264,57 @@
 #pragma clang diagnostic pop
 
 
-
-
 -(IBAction)printMeForReal:(id)sender{
     
     [self printPageWithScheduleRequestItemKey:self.scheduleRequestKeyID];
 }
 
 
-
 -(void)printPageWithScheduleRequestItemKey:(NSString*)scheduleKey{
     
-
     //get complete scheduleRequest item info
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", scheduleKey, nil];
     NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
-    __block EQRScheduleRequestItem* chosenItem;
-    [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-        
-        if ([muteArray count] > 0){
-            
-        chosenItem = [muteArray objectAtIndex:0];
-        }
-    }];
     
-    //add the notes
-    chosenItem.notes = self.notesText;
-//    NSLog(@"these are the notes >>%@<<", chosenItem.notes);
-    
-    //add contact information
-    NSString* email;
-    NSString* phone;
-    if (self.myScheduleRequestItem.contactNameItem){
-        email = self.myScheduleRequestItem.contactNameItem.email;
-        phone = self.myScheduleRequestItem.contactNameItem.phone;
-        
-        chosenItem.contactNameItem = self.myScheduleRequestItem.contactNameItem;
-    }
-
-    
-    //create printable page view controller
-    EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
-    
-    //add the request item to the view controller
-    [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:NO];
-    
-    //assign ivar variables
-    pageForPrint.rentorNameAtt = chosenItem.contact_name;
-    pageForPrint.rentorEmailAtt = email;
-    pageForPrint.rentorPhoneAtt = phone;
-    
-    
-    //show the view controller
-    [self presentViewController:pageForPrint animated:YES completion:^{
-        
-        
-    }];
-    
-    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+       [webData queryForStringwithAsync:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray completion:^(EQRScheduleRequestItem *chosenItem) {
+           
+           if (!chosenItem){
+               NSLog(@"EQRCheckVCntrllr > printPageWithScheduleRequestItemKey fails, no request");
+               return;
+           }
+           
+           //add the notes
+           chosenItem.notes = self.notesText;
+           
+           //add contact information
+           NSString* email;
+           NSString* phone;
+           if (self.myScheduleRequestItem.contactNameItem){
+               email = self.myScheduleRequestItem.contactNameItem.email;
+               phone = self.myScheduleRequestItem.contactNameItem.phone;
+               
+               chosenItem.contactNameItem = self.myScheduleRequestItem.contactNameItem;
+           }
+           
+           //create printable page view controller
+           EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
+           
+           //add the request item to the view controller
+           [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:NO];
+           
+           //assign ivar variables
+           pageForPrint.rentorNameAtt = chosenItem.contact_name;
+           pageForPrint.rentorEmailAtt = email;
+           pageForPrint.rentorPhoneAtt = phone;
+           
+           //show the view controller
+           [self presentViewController:pageForPrint animated:YES completion:^{ }];
+       }];
+    });
 }
-
 
 
 -(IBAction)markAsIncomplete:(id)sender{
@@ -1515,7 +1505,7 @@
     //extract the unique's key as a string
     NSString* thisIsTheKey = [(EQREquipUniqueItem*)distEquipUniqueItem key_id];
     NSString* thisIsTheDistID = [(EQREquipUniqueItem*)distEquipUniqueItem distinquishing_id];
-    NSLog(@"this is the issue_service_name text: %@", [(EQREquipUniqueItem*)distEquipUniqueItem issue_short_name]);
+//    NSLog(@"this is the issue_service_name text: %@", [(EQREquipUniqueItem*)distEquipUniqueItem issue_short_name]);
     NSString* thisIsTheIssueShortName = [(EQREquipUniqueItem*)distEquipUniqueItem issue_short_name];
     NSString* thisIsTheStatusLevel = [(EQREquipUniqueItem*)distEquipUniqueItem status_level];
     
@@ -1551,8 +1541,8 @@
     NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
     
     EQRWebData* webData = [EQRWebData sharedInstance];
-    NSString* returnString = [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
-    NSLog(@"this is the return string: %@", returnString);
+    [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
+//    NSLog(@"this is the return string: %@", returnString);
     
     
     //remove the popover
@@ -1744,7 +1734,7 @@
         dispatch_async(queue, ^{
            
             [webData queryForStringwithAsync:@"EQAlterPDFInScheduleRequest.php" parameters:topArray completion:^(NSString *object) {
-                NSLog(@"CheckVCntrllr > pdfHasCompletedWithName says request key_id is: %@", object);
+//                NSLog(@"CheckVCntrllr > pdfHasCompletedWithName says request key_id is: %@", object);
             }];
             
         });
@@ -1803,7 +1793,7 @@
             }else{
                 
                 //no matching transaction, create a fresh one.
-                NSLog(@"didn't find a matching Transaction");
+//                NSLog(@"didn't find a matching Transaction");
                 [self.priceWidget deleteExistingData];
             }
         }];

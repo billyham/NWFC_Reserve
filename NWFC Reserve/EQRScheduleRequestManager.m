@@ -61,7 +61,7 @@
     
     //get device name
     NSString* myDeviceName = [[UIDevice currentDevice] name];
-    NSLog(@"this is my device name: %@", myDeviceName);
+//    NSLog(@"this is my device name: %@", myDeviceName);
     
     NSArray* bigPoppa = [NSArray arrayWithObjects:@"myDeviceName", myDeviceName, nil];
     NSArray* lilPoppa = [NSArray arrayWithObject:bigPoppa];
@@ -74,7 +74,7 @@
     
     //set the request's key_id ivar
     self.request.key_id = assignedKeyId;
-    NSLog(@"this is the nextKeyIdString %@", assignedKeyId);
+//    NSLog(@"this is the nextKeyIdString %@", assignedKeyId);
     //---
     
     
@@ -861,7 +861,7 @@
         join.key_id = [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:bigArrayForJoin];
 //        NSLog(@"this is the schedule_equip_join return key_id: %@", returnID2);
         
-        NSLog(@"this is the join.cost: %@",join.cost);
+//        NSLog(@"this is the join.cost: %@",join.cost);
         
         //update cost of the join item
         if (join.cost)
@@ -870,7 +870,7 @@
                 //only save value if it was manually altered. 
                 if (join.hasAStoredCostValue){
                     
-                    NSLog(@"SchedulerequestManager > justConfirm is altering cost of a join with Key_id: %@  and cost: %@", join.key_id, join.cost);
+//                    NSLog(@"SchedulerequestManager > justConfirm is altering cost of a join with Key_id: %@  and cost: %@", join.key_id, join.cost);
                     
                     if (join.key_id){
                         NSArray *firstArray = @[@"key_id", join.key_id];
@@ -904,7 +904,7 @@
                 //only save value if it was manually altered.
                 if (join.hasAStoredDepositValue){
                     
-                    NSLog(@"SchedulerequestManager > justConfirm is altering deposit of a join with Key_id: %@  and deposit: %@", join.key_id, join.deposit);
+//                    NSLog(@"SchedulerequestManager > justConfirm is altering deposit of a join with Key_id: %@  and deposit: %@", join.key_id, join.deposit);
                     
                     if (join.key_id){
                         NSArray *firstArray = @[@"key_id", join.key_id];

@@ -382,7 +382,7 @@
         self.request.arrayOfEquipmentJoins = [NSMutableArray arrayWithCapacity:1];
     }
     
-    NSLog(@"is adding an item to the array of equipJoins");
+//    NSLog(@"is adding an item to the array of equipJoins");
     [self.request.arrayOfEquipmentJoins addObject:currentThing];
 }
 
@@ -414,29 +414,29 @@
     if (self.relativeCountOfColumns == 3){
         NSRange thisRange = [aLayoutManager glyphRangeForTextContainer:aTextContainer];
         NSInteger finalInt = thisRange.location + thisRange.length;
-        NSLog(@"Here is the last glyph index in the 3rd text container: %d", finalInt);
+//        NSLog(@"Here is the last glyph index in the 3rd text container: %d", finalInt);
         
         startIndex = finalInt;
         
     }else if(self.relativeCountOfColumns > 3){
-        NSLog(@"PageConstructor > layoutManager... says were at column number: %u", self.relativeCountOfColumns);
+//        NSLog(@"PageConstructor > layoutManager... says were at column number: %u", self.relativeCountOfColumns);
     }
     
     
     if (self.relativeCountOfColumns == 3){
         
         if (flag == NO){
-            int firstUnlaidGlyphIndex = [aLayoutManager firstUnlaidGlyphIndex];
-            int lengthOfTotalText = aLayoutManager.textStorage.string.length;
-            int numberOfTextContainers = [aLayoutManager.textContainers count];
-            
-            NSLog(@"Here is the unlaidIndex: %d, length of textStorage: %d, number of containers: %d", firstUnlaidGlyphIndex, lengthOfTotalText, numberOfTextContainers);
+            int lengthOfTotalText = (int)aLayoutManager.textStorage.string.length;
+
+//            int firstUnlaidGlyphIndex = (int)[aLayoutManager firstUnlaidGlyphIndex];
+//            int numberOfTextContainers = (int)[aLayoutManager.textContainers count];
+//            NSLog(@"Here is the unlaidIndex: %d, length of textStorage: %d, number of containers: %d", firstUnlaidGlyphIndex, lengthOfTotalText, numberOfTextContainers);
             
             [self addANewMultiColumnViewStartingAtChar:startIndex forLength:lengthOfTotalText];
         }
     }
     
-    NSLog(@"____This is the relativeCountOfColumns: %u  this is the atEnd flag: %u", self.relativeCountOfColumns, flag);
+//    NSLog(@"____This is the relativeCountOfColumns: %u  this is the atEnd flag: %u", self.relativeCountOfColumns, flag);
     
     if (flag == YES){
         
@@ -492,7 +492,7 @@
     EQRMultiColumnTextView *newMultiColumn= [[EQRMultiColumnTextView alloc] initWithFrame:rectForMultiColumn];
     
     NSInteger newLength = length - startIndex;
-    NSLog(@"this is the startIndex: %u,  this is the new length: %u", startIndex, newLength);
+//    NSLog(@"this is the startIndex: %u,  this is the new length: %u", startIndex, newLength);
     NSRange range = NSMakeRange(startIndex, newLength);
     newMultiColumn.myAttString = [self.summaryTotalAtt attributedSubstringFromRange:range];
     [newMultiColumn manuallySetTextWithColumnCount:3];
