@@ -15,12 +15,13 @@
 #import "EQRDataStructure.h"
 #import "EQRColors.h"
 
-@interface EQRDistIDPickerTableVC ()
+@interface EQRDistIDPickerTableVC () <EQRWebDataDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
 @property (strong, nonatomic) NSArray* arrayOfEquipUniques;
 @property (strong, nonatomic) NSIndexPath* thisIndexPath;
 @property (strong, nonatomic) NSString* originalKeyID;
+@property (strong, nonatomic) NSMutableArray *joinsWithDateRange;
 
 @end
 
@@ -40,29 +41,21 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
--(void)initialSetupWithOriginalUniqueKeyID:(NSString*)originalK equipTitleKey:(NSString*)equipTitleKey scheduleItem:(EQRScheduleRequestItem*)scheduleItem{
+-(void)initialSetupWithOriginalUniqueKeyID:(NSString*)originalK
+                             equipTitleKey:(NSString*)equipTitleKey
+                              scheduleItem:(EQRScheduleRequestItem*)scheduleItem{
     
-    //  1  use php call to get equipUniqueItems for a specified equipTitleItem_foreignKey
-    //  2  use php call to get schedule_equip_joins in specfied date range
-    // 2.1 keep only those with a matching titleItem_key
-    //  3  mark as unavailable the equipUniques that are found in the filtered array of schedule_equip_joins to produce...
-    //  4  a list of available equipUniqueItems and assign to ivar arrayOfEquipUniques
+    //  1  use datastore call to get equipUniqueItems for a specified equipTitleItem_foreignKey
+    //  2  use datastore call to get schedule_equip_joins in specfied date range
+    //  3  keep only those with a matching titleItem_key
+    //  4  mark as unavailable the equipUniques that are found in the filtered array of schedule_equip_joins to produce...
+    //  5  a list of available equipUniqueItems and assign to ivar arrayOfEquipUniques
     
     //save indexpath to local ivar
     self.originalKeyID = originalK;
     
     EQRWebData* webData = [EQRWebData sharedInstance];
-
-    //get count of equipUniques
-    NSArray* firstArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", equipTitleKey, nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-    NSMutableArray* arrayOfEquipUniquesWithSpecificTitle = [NSMutableArray arrayWithCapacity:1];
-    [webData queryWithLink:@"EQGetEquipUniquesWithEquipTitleKey.php" parameters:topArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
-        
-        for (id object in muteArray){
-            [arrayOfEquipUniquesWithSpecificTitle addObject:object];
-        }
-    }];
+    webData.delegateDataFeed = self;
 
     //get all joins for this date range
     NSString* beginDateString = [EQRDataStructure dateAsStringSansTime:scheduleItem.request_date_begin];
@@ -71,27 +64,35 @@
     NSArray* firstFirstArray = [NSArray arrayWithObjects:@"request_date_begin", beginDateString, nil];
     NSArray* secondArray = [NSArray arrayWithObjects:@"request_date_end", endDateString, nil];
     NSArray* topTopArray = [NSArray arrayWithObjects:firstFirstArray, secondArray, nil];
-    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-    [webData queryWithLink:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topTopArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
-       
-        for (EQRScheduleTracking_EquipmentUnique_Join* joinItem in muteArray){
-            
-//            NSLog(@"this is the equipUniqueItem titleKey %@", joinItem.equipTitleItem_foreignKey);
-
-            //ONLY add the items with the matching titleItem key
-            if ([joinItem.equipTitleItem_foreignKey isEqualToString:equipTitleKey]){
-                
-//                NSLog(@"here is the title key inside the inner loop: %@", joinItem.equipTitleItem_foreignKey);
-                
-                [tempMuteArray addObject:joinItem];
-            }
-        }
-    }];
     
-    if ([tempMuteArray count] < 1){
-        //error handling when no items are returned
-        NSLog(@"error, no items returned");
+    SEL thisSelector = @selector(addJoin:);
+    
+    if (!self.joinsWithDateRange){
+        self.joinsWithDateRange = [NSMutableArray arrayWithCapacity:1];
     }
+    [self.joinsWithDateRange removeAllObjects];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        
+        [webData    queryWithAsync:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php"
+                        parameters:topTopArray
+                             class:@"EQRScheduleTracking_EquipmentUnique_Join"
+                          selector:thisSelector
+                        completion:^(BOOL isLoadingFlagUp) {
+                            
+                            if ([self.joinsWithDateRange count] < 1){
+                                //error handling when no items are returned
+                                NSLog(@"error, no items returned");
+                            }
+            
+                            [self initialSetupStage2WithJoins:self.joinsWithDateRange equipTitleKey:equipTitleKey];
+        }];
+    });
+}
+
+-(void)initialSetupStage2WithJoins:(NSMutableArray *)tempMuteArray
+                     equipTitleKey:(NSString*)equipTitleKey{
     
     //as an array of joins, tempMuteArray could have duplicate instances of an equipUniqueItem_keyID.
     //need to loop through and subtract out extras
@@ -111,14 +112,27 @@
         }
     }
     
-    //now we have a clean array with a list of the equipUniques that NOT available...
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    
+    //get count of equipUniques
+    NSArray* firstArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", equipTitleKey, nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
+    NSMutableArray* arrayOfEquipUniquesWithSpecificTitle = [NSMutableArray arrayWithCapacity:1];
+    [webData queryWithLink:@"EQGetEquipUniquesWithEquipTitleKey.php" parameters:topArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
+        
+        for (id object in muteArray){
+            [arrayOfEquipUniquesWithSpecificTitle addObject:object];
+        }
+    }];
+    
+    //now we have a clean array with a list of the equipUniques that are NOT available...
     for (EQREquipUniqueItem* thisEquipUniqueItem in arrayOfEquipUniquesWithSpecificTitle){
         
         for (EQRScheduleTracking_EquipmentUnique_Join* thisHereJoin in keepTheseJoinsWithNoDupes){
             
             if ([thisEquipUniqueItem.key_id isEqualToString:thisHereJoin.equipUniqueItem_foreignKey]){
                 
-//                NSLog(@"marking flag is GO");
+                //                NSLog(@"marking flag is GO");
                 //mark as unavailable using ivar BOOL
                 thisEquipUniqueItem.unavailableFlag = YES;
             }
@@ -135,7 +149,7 @@
         //_____need to accommodate dist ids in the hundreds.
         
         //______first change the single digits...
-
+        
         //if dist id is only one character in length, add a 0 to the start.
         if ([string1 length] < 2){
             string1 = [NSString stringWithFormat:@"00%@", string1];
@@ -165,6 +179,7 @@
     //reload the table view
     [self.tableView reloadData];
 }
+
 
 #pragma mark - Table view data source
 
@@ -298,6 +313,28 @@
     
 }
 
+#pragma mark - EQRWebData delegate methods
+
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    if(![self respondsToSelector:action]){
+        NSLog(@"EQRDistIDPickerTableVC > cannot perform selector: %@", NSStringFromSelector(action));
+        return;
+    }
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+}
+
+-(void)addJoin:(id)currentThing{
+    if (!currentThing){
+        return;
+    }
+    
+    [self.joinsWithDateRange addObject:currentThing];
+}
+
 
 /*
 #pragma mark - Navigation
@@ -309,8 +346,9 @@
 }
 */
 
+#pragma mark - Dealloc
 
--(void)killThisThing{
+-(void)resetDistIdPicker{
     
     self.delegate = nil;
     self.privateRequestManager = nil;

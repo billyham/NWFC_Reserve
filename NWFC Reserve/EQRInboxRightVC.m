@@ -1657,7 +1657,7 @@
     [self.distIDPopover dismissPopoverAnimated:YES];
     
     //gracefully dealloc all the objects in the content VC
-    [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController killThisThing];
+    [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController resetDistIdPicker];
     
     self.distIDPopover = nil;
     
