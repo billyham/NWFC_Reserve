@@ -13,15 +13,16 @@
 extern BOOL EQRBuildNWDoc;
 extern BOOL EQRBuildPSU;
 
+// Logs
 extern BOOL EQRLogInputStrings;
 
-extern NSString* EQRApplicationKey;
+// Datastore Settings
 extern BOOL EQRUseCoreData;
 extern NSString *EQRCloudKitContainer;
 extern NSString *EQRRecordZoneStandard;
 extern NSString *EQRRecordZoneDemo;
 
-//renter type Strings
+// Renter type Strings
 extern NSString* EQRRenterStudent;
 extern NSString* EQRRenterFaculty;
 extern NSString* EQRRenterStaff;
@@ -29,17 +30,17 @@ extern NSString* EQRRenterPublic;
 extern NSString* EQRRenterYouth;
 extern NSString* EQRRenterInClass;
 
-//renter pricing type strings
+// Renter pricing type strings
 extern NSString *EQRPriceCommerial;
 extern NSString *EQRPriceArtist;
 extern NSString *EQRPriceStudent;
 extern NSString *EQRPriceFaculty;
 extern NSString *EQRPriceStaff;
 
-//exception codes
+// Exception codes
 extern NSString* EQRErrorCode88888888;
 
-//Notification selectors
+// Notification selectors
 extern NSString* EQRVoidScheduleItemObjects;
 //extern NSString* EQRRefreshEquipTable;
 extern NSString* EQRRefreshScheduleTable;
@@ -65,30 +66,31 @@ extern NSString* EQRRefreshViewWhenOrientationRotates;
 extern NSString* EQRDistIDPickerTapped;
 extern NSString *EQRUpdateHeaderCellsInEquipSelection;
 
-//Timing
+// Timing
 extern float EQRHighlightTappingTime;
 extern float EQRResizingCollectionViewTime;
 
-//Top View column size
+// Top View column size
 extern float EQRRentorTypeLeadingSpace;
 
-//Schedule collection view cell size
+// Schedule collection view cell size
 extern float EQRScheduleItemWidthForDay;
 extern float EQRScheduleItemWidthForDayNarrow;
 extern float EQRScheduleItemHeightForDay;
 extern float EQRScheduleLengthOfEquipUniqueLabel;
 
-//Schedule view by category or subcategory
+// Schedule view by category or subcategory
 extern NSString* EQRScheduleGrouping;
 
-//application options
+// Application options
+extern NSString* EQRApplicationKey;
 extern BOOL EQRDisableTimeLimitForRequest;
 extern BOOL EQRIncludeQRCodeReader;
 extern BOOL EQRAllowHardcodedPassword;
 extern NSString* EQRHardcodedPassword;
 extern BOOL EQRRandomizeEquipSelection;
 
-//service issue thresholds
+// Service issue thresholds
 extern NSInteger EQRThresholdForDescriptiveNote;
 extern NSInteger EQRThresholdForMinorIssue;
 extern NSInteger EQRThresholdForSeriousIssue;

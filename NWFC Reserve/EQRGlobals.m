@@ -12,15 +12,16 @@
 BOOL EQRBuildNWDoc = NO;
 BOOL EQRBuildPSU = YES;
 
+// Logs
 BOOL EQRLogInputStrings = NO;
 
-NSString* EQRApplicationKey = @"3j654FP00o91wer";
+// Datastore Settings
 BOOL EQRUseCoreData = YES;
 NSString *EQRCloudKitContainer = @"iCloud.com.David-Vincent-Hanagan.GlobalGear";
 NSString *EQRRecordZoneStandard = @"standardPrimary";
 NSString *EQRRecordZoneDemo = @"demoPrimary";
 
-//renter type strings
+// Renter type strings
 NSString* EQRRenterStudent = @"student";
 NSString* EQRRenterFaculty = @"faculty";
 NSString* EQRRenterStaff = @"staff";
@@ -28,21 +29,19 @@ NSString* EQRRenterPublic = @"public";
 NSString* EQRRenterYouth = @"youth";
 NSString* EQRRenterInClass = @"in class";
 
-//pricing type strings
+// Pricing type strings
+//______******* if any change is made to these, be sure to update existing renter_type rows in BOTH
+//______******* scheduleTracking AND scheduleTracking_uniqueItem_join tables
 NSString *EQRPriceCommerial = @"Commercial";
 NSString *EQRPriceArtist = @"Artist / Non-Profit";
 NSString *EQRPriceStudent = @"Student";
 NSString *EQRPriceFaculty = @"Faculty";
 NSString *EQRPriceStaff = @"Staff";
 
-//______******* if any change is made to these, be sure to update existing renter_type rows in BOTH
-//______******* scheduleTracking AND scheduleTracking_uniqueItem_join tables
-
-//exception codes
+// Exception codes
 NSString* EQRErrorCode88888888 = @"88888888";
 
-
-//Notification selectors
+// Notification selectors
 NSString* EQRVoidScheduleItemObjects = @"EQRVoidScheduleItemObjects";
 //NSString* EQRRefreshEquipTable = @"EQRRefreshEquipTable";
 NSString* EQRRefreshScheduleTable = @"EQRRefreshScheduleTable";
@@ -68,30 +67,31 @@ NSString* EQRRefreshViewWhenOrientationRotates = @"EQRRefreshViewWhenOrientation
 NSString* EQRDistIDPickerTapped = @"EQRDistIDPickerTapped";
 NSString *EQRUpdateHeaderCellsInEquipSelection = @"EQRUpdateHeaderCellsInEquipSelection";
 
-//Timing
+// Timing
 float EQRHighlightTappingTime = 0.125;
 float EQRResizingCollectionViewTime = 0.3;
 
-//Top View column size
+// Top View column size
 float EQRRentorTypeLeadingSpace = 80;
 
-//Schedule sizes
+// Schedule sizes
 float EQRScheduleItemWidthForDay = 26;
 float EQRScheduleItemWidthForDayNarrow = 18;
 float EQRScheduleItemHeightForDay = 30;
 float EQRScheduleLengthOfEquipUniqueLabel = 200;
 
-//Schedule view by category or subcategory or something else...
+// Schedule view by category or subcategory or something else...
 NSString* EQRScheduleGrouping = @"schedule_grouping";  //choose category or subcategory or schedule_grouping
 
-//application options
+// Application options
+NSString* EQRApplicationKey = @"3j654FP00o91wer";
 BOOL EQRDisableTimeLimitForRequest = YES;
 BOOL EQRIncludeQRCodeReader = YES;
 BOOL EQRAllowHardcodedPassword = NO;
 NSString* EQRHardcodedPassword = @"super8";
 BOOL EQRRandomizeEquipSelection = YES;
 
-//service issue thresholds
+// service issue thresholds
 NSInteger EQRThresholdForDescriptiveNote = 2;
 NSInteger EQRThresholdForMinorIssue = 3;
 NSInteger EQRThresholdForSeriousIssue = 5;

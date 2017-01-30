@@ -17,7 +17,7 @@
 #import "EQRMiscJoin.h"
 #import "EQRPDFGenerator.h"
 
-@interface EQRCheckPrintPage ()
+@interface EQRCheckPrintPage () <EQRWebDataDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem* request;
 @property (nonatomic, strong) IBOutlet EQRMultiColumnTextView* myTwoColumnView;
@@ -26,6 +26,8 @@
 @property BOOL isPDF;
 @property (strong, nonatomic) UIImage *sigImage;
 @property BOOL hasSigImage;
+@property (strong, nonatomic) NSMutableArray *miscJoins;
+@property (strong, nonatomic) NSDictionary *styles;
 
 @end
 
@@ -35,7 +37,31 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+
+        //font styles
+        UIFont* normalFont = [UIFont systemFontOfSize:9];
+        UIFont* boldFont = [UIFont boldSystemFontOfSize:9];
+        UIFont* headerFont = [UIFont boldSystemFontOfSize:7];
+        
+        //paragraph styles - indents paragraph except for after a \r
+        NSMutableParagraphStyle* paraStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+        paraStyle.firstLineHeadIndent = 0.f;
+        paraStyle.headIndent = 50.f;
+        
+        NSMutableParagraphStyle* headerParaStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+        headerParaStyle.firstLineHeadIndent = 20.f;
+        headerParaStyle.headIndent = 40.f;
+        
+        NSMutableParagraphStyle* notesHeaderParaStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+        notesHeaderParaStyle.firstLineHeadIndent = 20.f;
+        
+        _styles = @{@"normalFont": normalFont,
+                    @"boldFont":boldFont,
+                    @"headerFont":headerFont,
+                    @"paraStyle": paraStyle,
+                    @"headerParaStyle": headerParaStyle,
+                    @"notesHeaderParaStyle": notesHeaderParaStyle
+                    };
     }
     return self;
 }
@@ -87,10 +113,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
 
-    //    NSString* contactKeyID = requestManager.request.contact_foreignKey;
     NSString* contactCondensedName = self.request.contact_name;
     EQRContactNameItem* contactItem = self.request.contactNameItem;
     
@@ -104,8 +127,6 @@
     [pickUpFormatter setLocale:usLocale];
 
     [pickUpFormatter setDateFormat:@"EEE, MMM d, yyyy"];  // 'at' h:mm aaa
-//    [pickUpFormatter setDateStyle:NSDateFormatterFullStyle];
-//    [pickUpFormatter setTimeStyle:NSDateFormatterShortStyle];
     
     NSDateFormatter* pickUpTimeFormatter = [[NSDateFormatter alloc] init];
     [pickUpTimeFormatter setLocale:usLocale];
@@ -119,72 +140,39 @@
     NSString* combinedDateAndTimeBegin = [NSString stringWithFormat:@"%@ at %@", [pickUpFormatter stringFromDate:self.request.request_date_begin], [pickUpTimeFormatter stringFromDate:newTimeBegin]];
     NSString* combinedDateAndTimeEnd = [NSString stringWithFormat:@"%@ at %@", [pickUpFormatter stringFromDate:self.request.request_date_end], [pickUpTimeFormatter stringFromDate:newTimeEnd]];
     
-    
     //save values to ivar
     self.rentorNameAtt = self.request.contact_name;
     self.rentorPhoneAtt = contactItem.phone;
     self.rentorEmailAtt = contactItem.email;
-    
-    //nsattributedstrings
-    //font styles
-    UIFont* normalFont = [UIFont systemFontOfSize:9];
-    UIFont* boldFont = [UIFont boldSystemFontOfSize:9];
-    UIFont* headerFont = [UIFont boldSystemFontOfSize:7];
-    
-    //paragraph styles - indents paragraph except for after a \r
-    NSMutableParagraphStyle* paraStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
-    paraStyle.firstLineHeadIndent = 0.f;
-    paraStyle.headIndent = 50.f;
-    
-    NSMutableParagraphStyle* headerParaStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
-    headerParaStyle.firstLineHeadIndent = 20.f;
-    headerParaStyle.headIndent = 40.f;
-    
-    NSMutableParagraphStyle* notesHeaderParaStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
-    notesHeaderParaStyle.firstLineHeadIndent = 20.f;
-    
     
     //begin the total attribute string
     self.datesAtt = [[NSMutableAttributedString alloc] initWithString:@""];
     self.summaryTotalAtt = [[NSMutableAttributedString alloc] initWithString:@""];
     
     
-    
-
-    
     //_______PICKUP DATE_____
-    NSDictionary* arrayAtt6 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+    NSDictionary* arrayAtt6 = [NSDictionary dictionaryWithObject:self.styles[@"normalFont"] forKey:NSFontAttributeName];
     NSAttributedString* pickupHead = [[NSAttributedString alloc] initWithString:@"Pick Up: " attributes:arrayAtt6];
     [self.datesAtt appendAttributedString:pickupHead];
     
-    NSDictionary* arrayAtt7 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
+    NSDictionary* arrayAtt7 = [NSDictionary dictionaryWithObject:self.styles[@"boldFont"] forKey:NSFontAttributeName];
     NSAttributedString* pickupAtt = [[NSAttributedString alloc] initWithString:combinedDateAndTimeBegin  attributes:arrayAtt7];
     [self.datesAtt appendAttributedString:pickupAtt];
     
     //______RETURN DATE________
-    NSDictionary* arrayAtt8 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+    NSDictionary* arrayAtt8 = [NSDictionary dictionaryWithObject:self.styles[@"normalFont"] forKey:NSFontAttributeName];
     NSAttributedString* returnHead = [[NSAttributedString alloc] initWithString:@"            Return: " attributes:arrayAtt8];
     [self.datesAtt appendAttributedString:returnHead];
     
-    NSDictionary* arrayAtt9 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
+    NSDictionary* arrayAtt9 = [NSDictionary dictionaryWithObject:self.styles[@"boldFont"] forKey:NSFontAttributeName];
     NSAttributedString* returnAtt = [[NSAttributedString alloc] initWithString:combinedDateAndTimeEnd  attributes:arrayAtt9];
     [self.datesAtt appendAttributedString:returnAtt];
     
     
-    
-    
     //________EQUIP LIST________
-    
-//    NSDictionary* arrayAtt10 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-//    NSAttributedString* equipHead = [[NSAttributedString alloc] initWithString:@"Pick Up | Return   Equipment Items:\r\r" attributes:arrayAtt10];
-//    [self.summaryTotalAtt appendAttributedString:equipHead];
-    
     //cycle through array of equipItems and build a string
     
     EQRWebData* webData = [EQRWebData sharedInstance];
-    
-    
-    
     
     // 2. first, cycle through scheduleTracking_equip_joins and get equipUniques
     NSMutableArray* arrayOfUniques = [NSMutableArray arrayWithCapacity:1];
@@ -210,12 +198,8 @@
     for (NSArray* subArray in arrayOfUniquesWithStructure){
         
         // ____And printer headers with category titles
-        
-//        NSLog(@"this is my category: %@", [(EQREquipUniqueItem*)[subArray objectAtIndex:0] category]);
-
-        
-        NSDictionary* arrayAttForHeaderText = [NSDictionary dictionaryWithObjectsAndKeys:headerFont, NSFontAttributeName,
-                                               headerParaStyle, NSParagraphStyleAttributeName,
+        NSDictionary* arrayAttForHeaderText = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"headerFont"], NSFontAttributeName,
+                                               self.styles[@"headerParaStyle"], NSParagraphStyleAttributeName,
                                                nil];
         
         //text for the header
@@ -233,8 +217,8 @@
         for (EQREquipUniqueItem* equipUniqueObj in subArray){
             
             //add the text of the equip item names to the textField's attributed string
-            NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName,
-                                        paraStyle, NSParagraphStyleAttributeName,
+            NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"normalFont"], NSFontAttributeName,
+                                        self.styles[@"paraStyle"], NSParagraphStyleAttributeName,
                                         nil];
             NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"      %@  #%@\r", equipUniqueObj.name, equipUniqueObj.distinquishing_id] attributes:arrayAtt11];
             
@@ -242,31 +226,48 @@
         }
     }
     
+    EQRWebData *webData2 = [EQRWebData sharedInstance];
+    webData2.delegateDataFeed = self;
     
     //____ADD MISC JOINS IF THEY EXIST____
-    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
+    if (!self.miscJoins){
+        self.miscJoins = [NSMutableArray arrayWithCapacity:1];
+    }
+    [self.miscJoins removeAllObjects];
+    
     NSArray* alphaArray = @[@"scheduleTracking_foreignKey", self.request.key_id];
     NSArray* omegaArray = @[alphaArray];
-    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
-        for (id object in muteArray2){
-            [tempMiscMuteArray addObject:object];
-        }
-    }];
+    SEL selector = @selector(addMiscJoinToArray:);
+
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+       [webData2 queryWithAsync:@"EQGetMiscJoinsWithScheduleTrackingKey.php"
+                     parameters:omegaArray
+                          class:@"EQRMiscJoin"
+                       selector:selector
+                     completion:^(BOOL isLoadingFlagUp) {
+          
+           [self loadStage2];
+       }];
+    });
+}
+
+
+-(void)loadStage2{
     
-    //if miscJoins exist...
-    if ([tempMiscMuteArray count] > 0){
+    if ([self.miscJoins count] > 0){
         
         //print miscellaneous section
-        NSDictionary* arrayAtt13 = [NSDictionary dictionaryWithObjectsAndKeys:headerFont, NSFontAttributeName,
-                                    headerParaStyle, NSParagraphStyleAttributeName,
+        NSDictionary* arrayAtt13 = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"headerFont"], NSFontAttributeName,
+                                    self.styles[@"headerParaStyle"], NSParagraphStyleAttributeName,
                                     nil];
         NSAttributedString *thisHereString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r%@\r",@"Miscellaneous"] attributes:arrayAtt13];
         [self.summaryTotalAtt appendAttributedString:thisHereString];
         
-        for (EQRMiscJoin* miscJoin in tempMiscMuteArray){
+        for (EQRMiscJoin* miscJoin in self.miscJoins){
             
-            NSDictionary* arrayAtt14 = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName,
-                                        paraStyle, NSParagraphStyleAttributeName,
+            NSDictionary* arrayAtt14 = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"normalFont"], NSFontAttributeName,
+                                        self.styles[@"paraStyle"], NSParagraphStyleAttributeName,
                                         nil];
             NSAttributedString* thisHereAttStringAgain = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"      %@\r", miscJoin.name] attributes:arrayAtt14];
             
@@ -274,24 +275,22 @@
         }
     }
     
-    
     //____ NOW ADD THE NOTES (if they exist)______
     if (self.request.notes){
         if (![self.request.notes isEqualToString:@""]){
             
             //if notes exist, add them
-            NSDictionary* arrayAtt12 = [NSDictionary dictionaryWithObjectsAndKeys:headerFont, NSFontAttributeName,
-                                        notesHeaderParaStyle, NSParagraphStyleAttributeName,
+            NSDictionary* arrayAtt12 = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"headerFont"], NSFontAttributeName,
+                                        self.styles[@"notesHeaderParaStyle"], NSParagraphStyleAttributeName,
                                         nil];
             NSAttributedString* notesHeaderAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r\rNotes:\r"] attributes:arrayAtt12];
             [self.summaryTotalAtt appendAttributedString:notesHeaderAttString];
             
-            NSDictionary* arrayAtt13 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+            NSDictionary* arrayAtt13 = [NSDictionary dictionaryWithObject:self.styles[@"normalFont"] forKey:NSFontAttributeName];
             NSAttributedString* notesAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", self.request.notes] attributes:arrayAtt13];
             [self.summaryTotalAtt appendAttributedString:notesAttString];
         }
     }
-    
     
     //__1__ use a text view
     self.summaryTextView.attributedText = self.datesAtt;
@@ -306,8 +305,6 @@
     //so it can reflow the text between multiple pages
     //or re-position the text view and number of columns
     self.myTwoColumnView.layoutManager.delegate = self;
-    
-
     
     if (self.isPDF){
         
@@ -330,18 +327,14 @@
                                            class:self.request.title
                                       agreements:nil
                                       completion:^(NSString *pdf_name, NSDate *pdf_timestamp){
-                                               
-                                               
-                                           }];
-//        [pdfGenerator exportPDF];
-        
+                                          
+                                          
+                                      }];
     }else{
-        
         //__________   OR... AUTOMATICALLY DO THE PRINTING  ___________
-        
         [self performSelector:@selector(justPrint) withObject:nil afterDelay:1.0];
     }
-    
+
 }
 
 
@@ -434,9 +427,29 @@
 -(IBAction)dismissMe:(id)sender{
     
     [self dismissViewControllerAnimated:YES completion:^{
-        
-        
     }];
+}
+
+#pragma mark - EQRWebData Delegate
+
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    if (![self respondsToSelector:action]){
+        NSLog(@"EQRCheckPrintPage, cannot perform selector");
+        return;
+    }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+}
+
+-(void)addMiscJoinToArray:(id)currentThing{
+    
+    if (!currentThing){
+        return;
+    }
+    
+    [self.miscJoins addObject:currentThing];
 }
 
 
