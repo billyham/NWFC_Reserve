@@ -11,7 +11,7 @@
 #import "EQRWebData.h"
 #import "EQRMiscJoin.h"
 
-@interface EQRTextEmailStudent()
+@interface EQRTextEmailStudent()<EQRWebDataDelegate>
 
 @property (strong, nonatomic) NSString* dateRange;
 @property (strong, nonatomic) NSString* pickupDate;
@@ -20,6 +20,8 @@
 @property (strong, nonatomic) NSString* returnTime;
 
 @property (strong, nonatomic) NSMutableAttributedString* finalText;
+
+@property (strong, nonatomic) NSMutableArray *miscJoins;
 
 @end
 
@@ -45,7 +47,7 @@
 }
 
 
--(NSMutableAttributedString*)composeEmailText{
+-(void)composeEmailText:(CompletionBlockWithMutableAttributedString)cb{
     
     //set attributed string properties
     //_______  The bold font doesn't appear in the email  (sad face) _______
@@ -89,71 +91,98 @@
     
     for (NSDictionary* myDic in self.arrayOfEquipTitlesAndQtys){
         
-        [self.finalText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ x %@\n",
-                                                                                           [myDic objectForKey:@"quantity"],
-                                                                                           [(EQREquipItem*)[myDic objectForKey:@"equipTitleObject"] name]
-                                                                                           ] attributes:normalDic]];
+        [self.finalText appendAttributedString:
+         [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ x %@\n", [myDic objectForKey:@"quantity"], [(EQREquipItem*)[myDic objectForKey:@"equipTitleObject"] name]] attributes:normalDic]];
     }
     
     //______Misc Join List_______
     //gather any misc joins
-    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
     NSArray* alphaArray = @[@"scheduleTracking_foreignKey", self.request_keyID];
     NSArray* omegaArray = @[alphaArray];
     
+    if (!self.miscJoins){
+        self.miscJoins = [NSMutableArray arrayWithCapacity:1];
+    }
+    [self.miscJoins removeAllObjects];
+    
     EQRWebData* webData = [EQRWebData sharedInstance];
-    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
-        for (id object in muteArray2){
-            [tempMiscMuteArray addObject:object];
-        }
-    }];
+    webData.delegateDataFeed = self;
     
-    //if miscJoins exist...
-    if ([tempMiscMuteArray count] > 0){
-        
-        //print miscellaneous section
-        NSAttributedString *thisHereString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@\n",@"Additional items:"] attributes:normalDic];
-        [self.finalText appendAttributedString:thisHereString];
-        
-        for (EQRMiscJoin* miscJoin in tempMiscMuteArray){
+    SEL selector = @selector(addMiscItemJoin:);
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+       [webData queryWithAsync:@"EQGetMiscJoinsWithScheduleTrackingKey.php"
+                    parameters:omegaArray class:@"EQRMiscJoin"
+                      selector:selector
+                    completion:^(BOOL isLoadingFlagUp) {
+           
+            //if miscJoins exist...
+            if ([self.miscJoins count] > 0){
+                
+                //print miscellaneous section
+                NSAttributedString *thisHereString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@\n",@"Additional items:"] attributes:normalDic];
+                [self.finalText appendAttributedString:thisHereString];
+                
+                for (EQRMiscJoin* miscJoin in self.miscJoins){
+                    
+                    NSAttributedString* thisHereAttStringAgain = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", miscJoin.name] attributes:normalDic];
+                    
+                    [self.finalText appendAttributedString:thisHereAttStringAgain];
+                }
+            }
             
-            NSAttributedString* thisHereAttStringAgain = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", miscJoin.name] attributes:normalDic];
+            //_______Notes___________
+            if (self.notes){
+                if (![self.notes isEqualToString:@""]){
+                    
+                    NSAttributedString* thisHereString = [[NSAttributedString alloc] initWithString:@"\nNotes:\n" attributes:normalDic];
+                    [self.finalText appendAttributedString:thisHereString];
+                    
+                    NSAttributedString* thisHereString2 = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", self.notes] attributes:normalDic];
+                    [self.finalText appendAttributedString:thisHereString2];
+                }
+            }
             
-            [self.finalText appendAttributedString:thisHereAttStringAgain];
-        }
-    }
-    
-    //_______Notes___________
-    if (self.notes){
-        if (![self.notes isEqualToString:@""]){
+            [self.finalText appendAttributedString:[[NSAttributedString alloc] initWithString:@"\nPlease feel free to call or email if you need to make any changes or have any questions or concerns.\n\n" attributes:normalDic]];
             
-            NSAttributedString* thisHereString = [[NSAttributedString alloc] initWithString:@"\nNotes:\n" attributes:normalDic];
-            [self.finalText appendAttributedString:thisHereString];
+            [self.finalText appendAttributedString:[[NSAttributedString alloc] initWithString:@"Thanks,\n" attributes:normalDic]];
             
-            NSAttributedString* thisHereString2 = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", self.notes] attributes:normalDic];
-            [self.finalText appendAttributedString:thisHereString2];
-        }
-    }
-    
-    [self.finalText appendAttributedString:[[NSAttributedString alloc] initWithString:@"\nPlease feel free to call or email if you need to make any changes or have any questions or concerns.\n\n" attributes:normalDic]];
-    
-    [self.finalText appendAttributedString:[[NSAttributedString alloc] initWithString:@"Thanks,\n" attributes:normalDic]];
-    
-    [self.finalText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n\n", self.staffFirstName] attributes:normalDic]];
+            [self.finalText appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n\n", self.staffFirstName] attributes:normalDic]];
+            
+            //_______Email Signature_________
+            if (self.emailSignature){
+                if (![self.emailSignature isEqualToString:@""]){
+                    
+                    NSAttributedString *thisHereString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", self.emailSignature] attributes:normalDic];
+                    [self.finalText appendAttributedString:thisHereString];
+                }
+            }
+            
+            cb(self.finalText);
+       }];
+    });
+}
 
-    //_______Email Signature_________
-    if (self.emailSignature){
-        if (![self.emailSignature isEqualToString:@""]){
-            
-            NSAttributedString *thisHereString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", self.emailSignature] attributes:normalDic];
-            [self.finalText appendAttributedString:thisHereString];
-        }
-    }
-    
-//    [self.finalText appendString:[NSString stringWithFormat:@"%@", self.emailSignature]];
+#pragma mark - EQRWebData Delegate methods
 
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
     
-    return self.finalText;
+    if (![self respondsToSelector:action]){
+        NSLog(@"EQRTextEmailStudent > cannot perform selector");
+        return;
+    }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+}
+
+-(void)addMiscItemJoin:(id)currentThing{
+    if(!currentThing){
+        return;
+    }
+    [self.miscJoins addObject:currentThing];
 }
 
 

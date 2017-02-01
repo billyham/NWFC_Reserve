@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void(^CompletionBlockWithMutableAttributedString)(NSMutableAttributedString *muteAttString);
+
 @interface EQRTextEmailStudent : NSObject
 
 @property (strong, nonatomic) NSString *request_keyID;
@@ -27,6 +29,6 @@
 
 
 -(NSString*)composeEmailSubjectLine;
--(NSMutableAttributedString*)composeEmailText;
+-(void)composeEmailText:(CompletionBlockWithMutableAttributedString)cb;
 
 @end

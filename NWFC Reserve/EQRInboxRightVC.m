@@ -456,11 +456,19 @@
     NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
     NSArray* alphaArray = @[@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id];
     NSArray* omegaArray = @[alphaArray];
+    
+    
     [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
         for (id object in muteArray2){
             [tempMiscMuteArray addObject:object];
         }
+        
+//        [self renewTheViewStage2:tempMiscMuteArray];
     }];
+    [self renewTheViewStage2:tempMiscMuteArray];
+}
+
+-(void)renewTheViewStage2:(NSMutableArray *)tempMiscMuteArray{
     self.arrayOfMiscJoins = [NSArray arrayWithArray:tempMiscMuteArray];
     self.myScheduleRequest.arrayOfMiscJoins = [NSMutableArray arrayWithArray:tempMiscMuteArray];
     
@@ -475,10 +483,7 @@
     [self.rightView setHidden:NO];
     [self.leftView setHidden:NO];
     
-    
-    
     //____set up private request manager______
-    
     //create private request manager as ivar
     if (!self.privateRequestManager){
         
@@ -491,7 +496,7 @@
     //two important methods that initiate requestManager ivar arrays
     [self.privateRequestManager resetEquipListAndAvailableQuantites];
     [self.privateRequestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
-//        TODO: retrieveAllEquipUniqueItems async
+        //        TODO: retrieveAllEquipUniqueItems async
     }];
     
     //pricing info
@@ -501,6 +506,7 @@
     }else{
         self.priceMatrixSubView.hidden = YES;
     }
+
 }
 
 -(void)getTransactionInfo{
@@ -824,13 +830,24 @@
     
     NSString* finalSubjectLine = [emailBody composeEmailSubjectLine];
     //_______!!!!!!  Nuts, have to convert the attributed string to a regular string   !!!!_______
-    NSString* finalBodyText = [[emailBody composeEmailText] string];
-    
+    [emailBody composeEmailText:^(NSMutableAttributedString *muteAttString) {
+       
+        if(!muteAttString){
+            NSLog(@"EQRInboxRightVC > confirmWithEmail failed to composeEmailText");
+        }
+        
+        NSString* messageBody = [muteAttString string];
+        NSString* messageTitle = finalSubjectLine;
+        NSArray* messageRecipients = [NSArray arrayWithObjects: contactEmail, nil];
+        
+        [self launchEmailClientWithBody:messageBody Title:messageTitle Recipients:messageRecipients];
+    }];
+}
 
-    NSString* messageTitle = finalSubjectLine;
-    NSString* messageBody = finalBodyText;
-    NSArray* messageRecipients = [NSArray arrayWithObjects: contactEmail, nil];
-    
+
+-(void)launchEmailClientWithBody:(NSString *)messageBody
+                           Title:(NSString *)messageTitle
+                      Recipients:(NSArray *)messageRecipients{
     MFMailComposeViewController* mfVC = [[MFMailComposeViewController alloc] init];
     mfVC.mailComposeDelegate = self;
     
@@ -841,7 +858,6 @@
     [self presentViewController:mfVC animated:YES completion:^{
         
     }];
-    
     
 }
 
