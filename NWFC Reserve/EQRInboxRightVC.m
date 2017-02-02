@@ -72,7 +72,7 @@
 @property (strong, nonatomic) IBOutlet UIView* doneButtonView;
 
 @property (strong, nonatomic) NSArray* arrayOfJoins;
-@property (strong, nonatomic) NSArray* arrayOfMiscJoins;
+@property (strong, nonatomic) NSMutableArray *arrayOfMiscJoins;
 @property (strong, nonatomic) NSArray* arrayOfJoinsWithStructure;
 @property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedEquipIDs;
 @property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedMiscJoins;
@@ -453,25 +453,30 @@
     self.myScheduleRequest.arrayOfEquipmentJoins = [NSMutableArray arrayWithArray:tempMuteArray];
     
     //gather any misc joins
-    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
     NSArray* alphaArray = @[@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id];
     NSArray* omegaArray = @[alphaArray];
+
+    if (!self.arrayOfMiscJoins){
+        self.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
+    }
+    [self.arrayOfMiscJoins removeAllObjects];
     
+    EQRWebData *webData2 = [EQRWebData sharedInstance];
+    webData2.delegateDataFeed = self;
     
-    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
-        for (id object in muteArray2){
-            [tempMiscMuteArray addObject:object];
-        }
-        
-//        [self renewTheViewStage2:tempMiscMuteArray];
-    }];
-    [self renewTheViewStage2:tempMiscMuteArray];
+    SEL selector = @selector(addMiscJoin:);
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+       [webData2 queryWithAsync:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" selector:selector completion:^(BOOL isLoadingFlagUp) {
+           
+           [self renewTheViewStage2];
+       }];
+    });
 }
 
--(void)renewTheViewStage2:(NSMutableArray *)tempMiscMuteArray{
-    self.arrayOfMiscJoins = [NSArray arrayWithArray:tempMiscMuteArray];
-    self.myScheduleRequest.arrayOfMiscJoins = [NSMutableArray arrayWithArray:tempMiscMuteArray];
-    
+-(void)renewTheViewStage2{
+    self.myScheduleRequest.arrayOfMiscJoins = [NSMutableArray arrayWithArray:self.arrayOfMiscJoins];
     
     //add structure to that array
     self.arrayOfJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfJoins withMiscJoins:self.arrayOfMiscJoins];
@@ -486,7 +491,6 @@
     //____set up private request manager______
     //create private request manager as ivar
     if (!self.privateRequestManager){
-        
         self.privateRequestManager = [[EQRScheduleRequestManager alloc] init];
     }
     
@@ -968,6 +972,12 @@
     //do nothing if currentThing is nil, it leaves property as nil
 }
 
+-(void)addMiscJoin:(id)currentThing{
+    if (!currentThing){
+        return;
+    }
+    [self.arrayOfMiscJoins addObject:currentThing];
+}
 
 -(void)toggleEditMode{
     
@@ -979,7 +989,6 @@
         
         [self enterEditMode];
     }
-    
 }
 
 
