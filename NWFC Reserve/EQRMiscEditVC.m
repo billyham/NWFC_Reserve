@@ -11,11 +11,11 @@
 #import "EQRWebData.h"
 
 
-@interface EQRMiscEditVC ()
+@interface EQRMiscEditVC () <EQRWebDataDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextView *textViewField;
 @property (strong, nonatomic) IBOutlet UITableView *itemsTable;
-@property (strong, nonatomic) NSArray* arrayOfMiscJoins;
+@property (strong, nonatomic) NSMutableArray* arrayOfMiscJoins;
 @property (strong, nonatomic) NSString* miscItemString;
 
 @end
@@ -29,7 +29,6 @@
     // Do any additional setup after loading the view from its nib.
     
     self.itemsTable.rowHeight = UITableViewAutomaticDimension;
-
 }
 
 
@@ -40,8 +39,6 @@
     [self.itemsTable registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
     
     [self renewTheViewWithScheduleKey:scheduleTracking_foreignKey];
-    
-
 }
 
 
@@ -51,33 +48,60 @@
     self.textViewField.text = @"";
     
     EQRWebData* webData = [EQRWebData sharedInstance];
+    webData.delegateDataFeed = self;
     
     //gather any misc joins
-    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
     NSArray* alphaArray = @[@"scheduleTracking_foreignKey", scheduleTracking_foreignKey];
     NSArray* omegaArray = @[alphaArray];
-    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
-        for (id object in muteArray2){
-            [tempMiscMuteArray insertObject:object atIndex:0];
-        }
-    }];
-    self.arrayOfMiscJoins = [NSArray arrayWithArray:tempMiscMuteArray];
     
-    [self.itemsTable reloadData];
+    if (!self.arrayOfMiscJoins){
+        self.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
+    }
+    [self.arrayOfMiscJoins removeAllObjects];
+    
+    SEL selector = @selector(addMiscJoin:);
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+       [webData queryWithAsync:@"EQGetMiscJoinsWithScheduleTrackingKey.php"
+                    parameters:omegaArray
+                         class:@"EQRMiscJoin"
+                      selector:selector
+                    completion:^(BOOL isLoadingFlagUp) {
+          
+           [self.itemsTable reloadData];
+       }];
+    });
 }
-
-
 
 #pragma mark - buttons
 
 -(IBAction)addItemButtonTapped:(id)sender{
     
 //    self.miscItemString = self.textViewField.text;
-    
     //tell delegate to complete the deed.
     [delegate receiveMiscData:self.textViewField.text];
 }
 
+
+#pragma mark - EQRWebData delegate methods
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    if (![self respondsToSelector:action]){
+        NSLog(@"EQRMiscEditVC > cannot perform selector");
+        return;
+    }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+}
+
+-(void)addMiscJoin:(id)currentThing{
+    if (!currentThing){
+        return;
+    }
+    [self.arrayOfMiscJoins addObject:currentThing];
+}
 
 
 #pragma mark - table data methods
@@ -109,9 +133,6 @@
     
     return cell;
 }
-
-
-
 
 
 - (void)didReceiveMemoryWarning {
