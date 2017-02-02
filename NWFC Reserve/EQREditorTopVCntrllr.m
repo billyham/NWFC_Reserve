@@ -334,6 +334,7 @@
             self.privateRequestManager.request.time_of_request = [chosenItem  time_of_request];
             
             [self renderClass];
+            [self renderPricMatrix];
         }];
     });
     
@@ -345,6 +346,7 @@
 -(void)viewWillAppear:(BOOL)animated{
     
     [self renderClass];
+    [self renderPricMatrix];
     
     //set labels with provided dictionary
     //must do this AFTER loading the view
@@ -386,6 +388,16 @@
         [UIView setAnimationsEnabled:YES];
     }
     
+    [super viewWillAppear:animated];
+}
+
+-(void)renderPricMatrix{
+    if (([self.privateRequestManager.request.key_id isEqualToString:EQRErrorCode88888888]) ||
+        ([self.privateRequestManager.request.key_id isEqualToString:@""]) ||
+        (!self.privateRequestManager.request.key_id)){
+        return;
+    }
+    
     //pricing info
     if ([self.privateRequestManager.request.renter_type isEqualToString:EQRRenterPublic]){
         self.priceMatrixSubView.hidden = NO;
@@ -393,30 +405,26 @@
     }else{
         self.priceMatrixSubView.hidden = YES;
     }
-    
-    [super viewWillAppear:animated];
 }
 
 -(void)renderClass{
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    
-    //get class name using key
     if (([self.privateRequestManager.request.classTitle_foreignKey isEqualToString:EQRErrorCode88888888]) ||
         ([self.privateRequestManager.request.classTitle_foreignKey isEqualToString:@""]) ||
         (!self.privateRequestManager.request.classTitle_foreignKey)) {
-        
-    }else{
-        
-        NSArray* first2Array = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.classTitle_foreignKey, nil];
-        NSArray* top2Array = [NSArray arrayWithObjects:first2Array, nil];
-        
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-        dispatch_async(queue, ^{
-            [webData queryForStringwithAsync:@"EQGetClassCatalogTitleWithKey.php" parameters:top2Array completion:^(NSString *catalogTitle) {
-                [self.classField setTitle:catalogTitle forState:UIControlStateHighlighted & UIControlStateNormal & UIControlStateSelected];
-            }];
-        });
+        return;
     }
+
+    EQRWebData* webData = [EQRWebData sharedInstance];
+
+    NSArray* first2Array = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.classTitle_foreignKey, nil];
+    NSArray* top2Array = [NSArray arrayWithObjects:first2Array, nil];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        [webData queryForStringwithAsync:@"EQGetClassCatalogTitleWithKey.php" parameters:top2Array completion:^(NSString *catalogTitle) {
+            [self.classField setTitle:catalogTitle forState:UIControlStateHighlighted & UIControlStateNormal & UIControlStateSelected];
+        }];
+    });
 }
 
 
@@ -1034,6 +1042,7 @@
 -(void)getTransactionInfo{
     
     EQRWebData *webData = [EQRWebData sharedInstance];
+    NSLog(@"this is the self.privateRequestManager.request.key_id: %@", self.privateRequestManager.request.key_id);
     NSArray *firstArray = @[@"scheduleTracking_foreignKey", self.privateRequestManager.request.key_id];
     NSArray *topArray = @[firstArray];
     
