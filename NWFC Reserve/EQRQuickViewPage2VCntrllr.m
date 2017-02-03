@@ -14,11 +14,12 @@
 #import "EQRDataStructure.h"
 #import "EQRMiscJoin.h"
 
-@interface EQRQuickViewPage2VCntrllr ()
+@interface EQRQuickViewPage2VCntrllr () <EQRWebDataDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView* myTable;
 @property (strong, nonatomic) NSArray* myArray;
 @property (strong, nonatomic) NSArray* myArrayWithStructure;
+@property (strong, nonatomic) NSMutableArray *miscJoins;
 
 @end
 
@@ -57,34 +58,64 @@
     self.myArray = [NSArray arrayWithArray:tempMuteArray];
     
     //gather any misc joins
-    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
+    EQRWebData *webData2 = [EQRWebData sharedInstance];
+    webData2.delegateDataFeed = self;
+    
     NSArray* alphaArray = @[@"scheduleTracking_foreignKey", keyID];
     NSArray* omegaArray = @[alphaArray];
-    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
-        
-        for (id object in muteArray2){
-            [tempMiscMuteArray addObject:object];
-        }
-    }];
-        
+    
+    if (!self.miscJoins){
+        self.miscJoins = [NSMutableArray arrayWithCapacity:1];
+    }
+    [self.miscJoins removeAllObjects];
+    
+    SEL joinSelector = @selector(addMiscJoin:);
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+       [webData2 queryWithAsync:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" selector:joinSelector completion:^(BOOL isLoadingFlagUp) {
+           [self initialSetupStage2];
+       }];
+    });
+}
+
+-(void)initialSetupStage2{
+    
     //create structured array for headings
-//    self.myArrayWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.myArray];
-    self.myArrayWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.myArray withMiscJoins:tempMiscMuteArray];
+    self.myArrayWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.myArray withMiscJoins:self.miscJoins];
     
     [self.myTable reloadData];
-    
 }
 
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
     [self.myTable registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
     [self.myTable registerClass:[UITableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:@"SuppCell"];
-    
+}
+
+
+#pragma mark - EQRWebData delegate methods
+
+-(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    if (![self respondsToSelector:action]){
+        NSLog(@"EQRQuickViewPage2VC > cannot perform selector");
+        return;
+    }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:action withObject:currentThing];
+#pragma clang diagnostic pop
+}
+
+-(void)addMiscJoin:(id)currentThing{
+    if (!currentThing){
+        return;
+    }
+    [self.miscJoins addObject:currentThing];
 }
 
 

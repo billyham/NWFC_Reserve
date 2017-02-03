@@ -433,13 +433,9 @@
 
 -(void)cancelAction{
     
-//    [self.navigationController popViewControllerAnimated:YES];
-    
     [self dismissViewControllerAnimated:YES completion:^{
         
-        
     }];
-    
 }
 
 
@@ -516,15 +512,7 @@
                          twelfthArray,
                          nil];
     
-    
-//    for (NSArray* arraySample in bigArray){
-//        NSLog(@"%@", arraySample);
-//    }
-    
-    
     [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
-//    NSLog(@"this is the returnID: %@", returnID);
-    
     
     //_______*********  delete the delted scheduleTracking_equip_joins
     for (NSString* thisKeyID in self.arrayOfToBeDeletedEquipIDs){
@@ -535,7 +523,7 @@
                 
                 //found a matching equipUnique item
                 
-                //send php message to detele with the join key_id
+                //send php message to delete with the join key_id
                 NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", thisJoin.key_id, nil];
                 NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
                 [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoin.php" parameters:beeArray];
@@ -570,12 +558,9 @@
     //send note to schedule that a change has been saved
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
     
-//    [self.navigationController popViewControllerAnimated:YES];
     [self dismissViewControllerAnimated:YES completion:^{
         
-        
     }];
-    
 }
 
 
