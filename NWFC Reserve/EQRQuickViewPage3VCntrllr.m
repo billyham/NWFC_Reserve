@@ -15,27 +15,11 @@
 #import "EQRMiscJoin.h"
 #import "EQRCheckPrintPage.h"
 
-@interface EQROperation1:NSOperation
-@property (strong, nonatomic) NSString *result;
-@end
-
-@implementation EQROperation1
--(void)main{
-    self.result = @"yawr";
-    if ([self.dependencies count] > 0){
-        NSLog(@"this is dependencies: %@", [(EQROperation1 *)[self.dependencies objectAtIndex:0] result]);
-    }
-}
-@end
-
-
 @interface EQRQuickViewPage3VCntrllr () 
 
 @property (strong, nonatomic) NSString* mykeyID;
 @property (strong, nonatomic) NSMutableDictionary* userInfo;
 @property (strong, nonatomic) UIDocumentInteractionController *documentController;
-
-@property (strong, nonatomic) NSString *notes;
 
 @end
 
@@ -59,7 +43,7 @@
 
 
 -(void)initialSetupWithKeyID:(NSString*)keyID andUserInfoDic:(NSDictionary*)userInfo{
-    
+
     self.mykeyID = keyID;
     
     if (!self.userInfo){
@@ -194,57 +178,88 @@
     [setNewScheduleRequest addDependency:registerScheduleRequest];
     
     
+    __block NSMutableArray* equipJoins = [NSMutableArray arrayWithCapacity:1];
     NSBlockOperation *getScheduleEquipJoins = [NSBlockOperation blockOperationWithBlock:^{
-       //Get all of the equipment joins
+       // Get all of the equipment joins
        NSArray* aArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.mykeyID, nil];
        NSArray* zArray = [NSArray arrayWithObjects:aArray, nil];
-       NSMutableArray* tempMuteArray3 = [NSMutableArray arrayWithCapacity:1];
        
         EQRWebData *webData = [EQRWebData sharedInstance];
        [webData queryWithLink:@"EQGetScheduleEquipJoins.php" parameters:zArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
            
            for (EQRScheduleTracking_EquipmentUnique_Join* join in muteArray){
-               
-               [tempMuteArray3 addObject:join];
+               [equipJoins addObject:join];
            }
        }];
-       
-       for (EQRScheduleTracking_EquipmentUnique_Join* join in tempMuteArray3){
-           
-           NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", newKeyID, nil];
-           NSArray* beeArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", join.equipUniqueItem_foreignKey, nil];
-           NSArray* ceeArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", join.equipTitleItem_foreignKey, nil];
-           NSArray* zeeArray = [NSArray arrayWithObjects:ayeArray, beeArray, ceeArray, nil];
-           
-           [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:zeeArray];
-       }
     }];
     [getScheduleEquipJoins addDependency:setNewScheduleRequest];
+
+    
+    // Observe the nested NSOperationQueue, it holds the current thread until it completes
+    NSBlockOperation *setNewScheduleEquipJoin = [NSBlockOperation blockOperationWithBlock:^{
+        
+        NSOperationQueue *equipJoinsQueue = [[NSOperationQueue alloc] init];
+        equipJoinsQueue.name = @"equipJoinsQueue";
+        equipJoinsQueue.maxConcurrentOperationCount = 5;
+        
+        NSMutableArray *arrayOfEquipJoinsCalls = [NSMutableArray arrayWithCapacity:1];
+       for (EQRScheduleTracking_EquipmentUnique_Join* join in equipJoins){
+           [arrayOfEquipJoinsCalls addObject:[NSBlockOperation blockOperationWithBlock:^{
+               NSArray* ayeArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", newKeyID, nil];
+               NSArray* beeArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", join.equipUniqueItem_foreignKey, nil];
+               NSArray* ceeArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", join.equipTitleItem_foreignKey, nil];
+               NSArray* zeeArray = [NSArray arrayWithObjects:ayeArray, beeArray, ceeArray, nil];
+               
+               EQRWebData *webData = [EQRWebData sharedInstance];
+               [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:zeeArray];
+           }]];
+       }
+        [equipJoinsQueue addOperations:arrayOfEquipJoinsCalls waitUntilFinished:YES];
+    }];
+    [setNewScheduleEquipJoin addDependency:getScheduleEquipJoins];
     
     
+    __block NSMutableArray *miscJoins = [NSMutableArray arrayWithCapacity:1];
     NSBlockOperation *getMiscJoinsWithScheduleTrackingKey = [NSBlockOperation blockOperationWithBlock:^{
+        // Get all the Misc Joins
         NSArray* aArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.mykeyID, nil];
         NSArray* zArray = [NSArray arrayWithObjects:aArray, nil];
-       //_____!!!!!!   need to copy miscellaneous items  !!!!______
+        
         EQRWebData *webData = [EQRWebData sharedInstance];
        [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:zArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray) {
            
            for (EQRMiscJoin* join in muteArray){
-               
-               NSArray* ayeArray = @[@"scheduleTracking_foreignKey", newKeyID];
-               NSArray* beeArray = @[@"name", join.name];
-               NSArray* zeeArray = @[ayeArray, beeArray];
-               
-               [webData queryForStringWithLink:@"EQSetNewMiscJoin.php" parameters:zeeArray];
-               //            NSLog(@"result from Misc Joins: %@", resultFromMiscJoins);
+               [miscJoins addObject:join];
            }
        }];
     }];
     [getMiscJoinsWithScheduleTrackingKey addDependency:setNewScheduleRequest];
     
     
+    NSBlockOperation *setNewMiscJoin = [NSBlockOperation blockOperationWithBlock:^{
+        
+        NSOperationQueue *miscJoinsQueue = [[NSOperationQueue alloc] init];
+        miscJoinsQueue.name = @"miscJoinsQueue";
+        miscJoinsQueue.maxConcurrentOperationCount = 5;
+        
+        NSMutableArray *arrayOfMiscJoinCalls = [NSMutableArray arrayWithCapacity:1];
+        for (EQRMiscJoin* join in miscJoins){
+            [arrayOfMiscJoinCalls addObject:[NSBlockOperation blockOperationWithBlock:^{
+                NSArray* ayeArray = @[@"scheduleTracking_foreignKey", newKeyID];
+                NSArray* beeArray = @[@"name", join.name];
+                NSArray* zeeArray = @[ayeArray, beeArray];
+                
+                EQRWebData *webData = [EQRWebData sharedInstance];
+                [webData queryForStringWithLink:@"EQSetNewMiscJoin.php" parameters:zeeArray];
+            }]];
+        }
+        [miscJoinsQueue addOperations:arrayOfMiscJoinCalls waitUntilFinished:YES];
+    }];
+    [setNewMiscJoin addDependency:getMiscJoinsWithScheduleTrackingKey];
+    
+    
     NSBlockOperation *showRequestEditor = [NSBlockOperation blockOperationWithBlock:^{
-        //replace the key_id in the userInfo
+        // Replace the key_id in the userInfo
         [self.userInfo setValue:newKeyID forKey:@"key_ID"];
         
         // Show the request editor to have the user enter new dates and times
@@ -257,8 +272,8 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditorFromSchedule object:nil userInfo:self.userInfo];
         }
     }];
-    [showRequestEditor addDependency:getScheduleEquipJoins];
-    [showRequestEditor addDependency:getMiscJoinsWithScheduleTrackingKey];
+    [showRequestEditor addDependency:setNewScheduleEquipJoin];
+    [showRequestEditor addDependency:setNewMiscJoin];
     
        
     [queue addOperation:getScheduleRequestInComplete];
@@ -266,7 +281,9 @@
     [queue addOperation:registerScheduleRequest];
     [queue addOperation:setNewScheduleRequest];
     [queue addOperation:getScheduleEquipJoins];
+    [queue addOperation:setNewScheduleEquipJoin];
     [queue addOperation:getMiscJoinsWithScheduleTrackingKey];
+    [queue addOperation:setNewMiscJoin];
     [queue addOperation:showRequestEditor];
 }
 

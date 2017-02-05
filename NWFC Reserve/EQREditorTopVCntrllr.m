@@ -1027,7 +1027,6 @@
 -(void)getTransactionInfo{
     
     EQRWebData *webData = [EQRWebData sharedInstance];
-    NSLog(@"this is the self.privateRequestManager.request.key_id: %@", self.privateRequestManager.request.key_id);
     NSArray *firstArray = @[@"scheduleTracking_foreignKey", self.privateRequestManager.request.key_id];
     NSArray *topArray = @[firstArray];
     
