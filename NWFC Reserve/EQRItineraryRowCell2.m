@@ -20,6 +20,7 @@
 
 - (void)awakeFromNib {
     // Initialization code
+    [super awakeFromNib];
 }
 
 -(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem{

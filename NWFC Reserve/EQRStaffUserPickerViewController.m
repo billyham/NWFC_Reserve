@@ -38,38 +38,13 @@
                 [self.myPicker reloadAllComponents];
             }];
         });
-        
-        
-        
-//        NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-//        
-//        //get array of staff and interns
-//        [webData queryWithLink:@"EQGetEQRoomStaffAndInterns.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-//            
-//            for (id object in muteArray){
-//                
-//                [tempMuteArray addObject:object];
-//            }
-//        }];
-//        
-//        _arrayOfContactObjects = [NSArray arrayWithArray:tempMuteArray];
-        
-        
     }
-    
     return self;
 }
 
 
 - (void)viewDidLoad{
-    
     [super viewDidLoad];
-}
-
-
--(void)initStage2{
-    
-    
 }
 
 

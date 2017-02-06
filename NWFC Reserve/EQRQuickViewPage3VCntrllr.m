@@ -334,19 +334,22 @@
  
     NSBlockOperation *renderPageForPrint = [NSBlockOperation blockOperationWithBlock:^{
         //create printable page view controller
-        EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
+            
+            //add the request item to the view controller
+            [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:NO];
+            
+            //assign ivar variables
+            pageForPrint.rentorNameAtt = chosenItem.contact_name;
+            pageForPrint.rentorEmailAtt = chosenItem.contactNameItem.email;
+            pageForPrint.rentorPhoneAtt = chosenItem.contactNameItem.phone;
+            
+            //show the view controller
+            [self presentViewController:pageForPrint animated:YES completion:^{
+            }];
+        });
         
-        //add the request item to the view controller
-        [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:NO];
-        
-        //assign ivar variables
-        pageForPrint.rentorNameAtt = chosenItem.contact_name;
-        pageForPrint.rentorEmailAtt = chosenItem.contactNameItem.email;
-        pageForPrint.rentorPhoneAtt = chosenItem.contactNameItem.phone;
-        
-        //show the view controller
-        [self presentViewController:pageForPrint animated:YES completion:^{
-        }];
     }];
     [renderPageForPrint addDependency:getContactCompleteWithKey];
     [renderPageForPrint addDependency:getScheduleRequestQuickViewData];
@@ -414,21 +417,23 @@
     
     
     NSBlockOperation *renderPDF = [NSBlockOperation blockOperationWithBlock:^{
-        // Create printable page view controller
-        EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
-        
-        //add the request item to the view controller
-        //___ Specify for PDF only ___
-        [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:YES];
-        
-        //assign ivar variables
-        pageForPrint.rentorNameAtt = chosenItem.contact_name;
-        pageForPrint.rentorEmailAtt = chosenItem.contactNameItem.email;
-        pageForPrint.rentorPhoneAtt = chosenItem.contactNameItem.phone;
-        
-        //show the view controller
-        [self presentViewController:pageForPrint animated:YES completion:^{
-        }];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Create printable page view controller
+            EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
+            
+            //add the request item to the view controller
+            //___ Specify for PDF only ___
+            [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:YES];
+            
+            //assign ivar variables
+            pageForPrint.rentorNameAtt = chosenItem.contact_name;
+            pageForPrint.rentorEmailAtt = chosenItem.contactNameItem.email;
+            pageForPrint.rentorPhoneAtt = chosenItem.contactNameItem.phone;
+            
+            //show the view controller
+            [self presentViewController:pageForPrint animated:YES completion:^{
+            }];
+        });
     }];
     [renderPDF addDependency:getContactCompleteWitKey];
     [renderPDF addDependency:getScheduleRequestQuickViewData];

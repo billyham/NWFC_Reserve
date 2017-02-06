@@ -14,10 +14,10 @@
 #import "EQRDataStructure.h"
 #import "EQRMiscJoin.h"
 
-@interface EQRQuickViewPage2VCntrllr () <EQRWebDataDelegate>
+@interface EQRQuickViewPage2VCntrllr ()
 
 @property (strong, nonatomic) IBOutlet UITableView* myTable;
-@property (strong, nonatomic) NSArray* myArray;
+@property (strong, nonatomic) NSMutableArray* myArray;
 @property (strong, nonatomic) NSArray* myArrayWithStructure;
 @property (strong, nonatomic) NSMutableArray *miscJoins;
 
@@ -29,10 +29,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        
-        _myArray = [NSArray arrayWithObjects:@"one", @"two", @"three", @"four", @"five", nil];
-        
-        
     }
     return self;
 }
@@ -40,51 +36,63 @@
 
 -(void)initialSetupWithKeyID:(NSString*)keyID{
     
-    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"initialSetup";
+    queue.maxConcurrentOperationCount = 3;
     
-    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", keyID, nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-    
-    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-    
-    [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+    NSBlockOperation *getScheduleEquipJoinsForCheckWithScheduleTrackingKey = [NSBlockOperation blockOperationWithBlock:^{
+        NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", keyID, nil];
+        NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
         
-        for (EQRScheduleTracking_EquipmentUnique_Join* join in muteArray){
-            
-            [tempMuteArray addObject:join];
+        if (!self.myArray){
+            self.myArray = [NSMutableArray arrayWithCapacity:1];
         }
+        [self.myArray removeAllObjects];
+        
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+            for (EQRScheduleTracking_EquipmentUnique_Join *join in muteArray){
+                [self.myArray addObject:join];
+            }
+        }];
     }];
     
-    self.myArray = [NSArray arrayWithArray:tempMuteArray];
     
-    //gather any misc joins
-    EQRWebData *webData2 = [EQRWebData sharedInstance];
-    webData2.delegateDataFeed = self;
+    NSBlockOperation *getMiscJoinsWithScheduleTrackingKey = [NSBlockOperation blockOperationWithBlock:^{
+        // Gather any misc joins
+        NSArray* alphaArray = @[@"scheduleTracking_foreignKey", keyID];
+        NSArray* omegaArray = @[alphaArray];
+        
+        if (!self.miscJoins){
+            self.miscJoins = [NSMutableArray arrayWithCapacity:1];
+        }
+        [self.miscJoins removeAllObjects];
+        
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray) {
+            for (EQRMiscJoin *join in muteArray){
+                [self.miscJoins addObject:join];
+            }
+        }];
+    }];
     
-    NSArray* alphaArray = @[@"scheduleTracking_foreignKey", keyID];
-    NSArray* omegaArray = @[alphaArray];
     
-    if (!self.miscJoins){
-        self.miscJoins = [NSMutableArray arrayWithCapacity:1];
-    }
-    [self.miscJoins removeAllObjects];
-    
-    SEL joinSelector = @selector(addMiscJoin:);
-    
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-    dispatch_async(queue, ^{
-       [webData2 queryWithAsync:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" selector:joinSelector completion:^(BOOL isLoadingFlagUp) {
-           [self initialSetupStage2];
-       }];
-    });
-}
+    NSBlockOperation *createStructuredArray = [NSBlockOperation blockOperationWithBlock:^{
+        // Create structured array for headings
+        self.myArrayWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.myArray withMiscJoins:self.miscJoins];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.myTable reloadData];
+        });
+        
+    }];
+    [createStructuredArray addDependency:getScheduleEquipJoinsForCheckWithScheduleTrackingKey];
+    [createStructuredArray addDependency:getMiscJoinsWithScheduleTrackingKey];
 
--(void)initialSetupStage2{
     
-    //create structured array for headings
-    self.myArrayWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.myArray withMiscJoins:self.miscJoins];
-    
-    [self.myTable reloadData];
+    [queue addOperation:getScheduleEquipJoinsForCheckWithScheduleTrackingKey];
+    [queue addOperation:getMiscJoinsWithScheduleTrackingKey];
+    [queue addOperation:createStructuredArray];
 }
 
 
@@ -98,29 +106,7 @@
 }
 
 
-#pragma mark - EQRWebData delegate methods
-
--(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
-    if (![self respondsToSelector:action]){
-        NSLog(@"EQRQuickViewPage2VC > cannot perform selector");
-        return;
-    }
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [self performSelector:action withObject:currentThing];
-#pragma clang diagnostic pop
-}
-
--(void)addMiscJoin:(id)currentThing{
-    if (!currentThing){
-        return;
-    }
-    [self.miscJoins addObject:currentThing];
-}
-
-
 #pragma mark - table view data source
-
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     
@@ -151,18 +137,16 @@
     //__2__ is miscJoin object
     
     if ([[self.myArrayWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]){
-    
-    if ([[[self.myArrayWithStructure objectAtIndex:indexPath.section] objectAtIndex:0] respondsToSelector:@selector(schedule_grouping)]){
-        NSString* stringWithDistID = [NSString stringWithFormat:@"%@  # %@",[(EQRScheduleTracking_EquipmentUnique_Join*)[[self.myArrayWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name], [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.myArrayWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id ]];
-        cell.textLabel.text = stringWithDistID;
-    }else{
-        NSString* stringForMisc = [NSString stringWithFormat:@"%@",[(EQRScheduleTracking_EquipmentUnique_Join*)[[self.myArrayWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name]];
-        cell.textLabel.text = stringForMisc;
-    }
-    
-    
-    }else{
         
+        if ([[[self.myArrayWithStructure objectAtIndex:indexPath.section] objectAtIndex:0] respondsToSelector:@selector(schedule_grouping)]){
+            NSString* stringWithDistID = [NSString stringWithFormat:@"%@  # %@",[(EQRScheduleTracking_EquipmentUnique_Join*)[[self.myArrayWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name], [(EQRScheduleTracking_EquipmentUnique_Join*)[[self.myArrayWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id ]];
+            cell.textLabel.text = stringWithDistID;
+        }else{
+            NSString* stringForMisc = [NSString stringWithFormat:@"%@",[(EQRScheduleTracking_EquipmentUnique_Join*)[[self.myArrayWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] name]];
+            cell.textLabel.text = stringForMisc;
+        }
+        
+    }else{
         cell.textLabel.text = @"ERROR: COUNT OF OBJECTS IS INCORRECT";
     }
     
