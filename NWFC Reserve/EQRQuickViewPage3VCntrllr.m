@@ -58,27 +58,15 @@
     
 }
 
-/**
- * EQGetScheduleRequestInComplete
- * EQGetScheduleRequestNotes
- * EQRegisterScheduleRequest
- * EQSetNewScheduleRequest
- * EQGetScheduleEquipJoins
- * EQSetNewScheduleEquipJoin
- * EQGetMiscJoinsWithScheduleTrackingKey
- * EQSetNewMiscJoin
- *
- * replace the key_id in the userInfo
- * bring up request editor to have the user enter new info
- */
+
 -(IBAction)duplicate:(id)sender{
     
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     queue.name = @"duplicate";
     queue.maxConcurrentOperationCount = 5;
     
+    
     __block EQRScheduleRequestItem *currentRequestItem;
-
     NSBlockOperation *getScheduleRequestInComplete = [NSBlockOperation blockOperationWithBlock:^{
         NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.mykeyID, nil];
         NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
@@ -109,7 +97,7 @@
         
         currentRequestItem.notes = notesReturned;
         
-        //need to save note to userInfo dic
+        // Need to save note to userInfo dic
         [self.userInfo setObject:notesReturned forKey:@"notes"];
     }];
     [getScheduleRequestNotes addDependency:getScheduleRequestInComplete];
@@ -117,10 +105,8 @@
     
     __block NSString *newKeyID;
     NSBlockOperation *registerScheduleRequest = [NSBlockOperation blockOperationWithBlock:^{
-       
-       //get a new schedule request key_id, the proper way...
+       // Get a new schedule request key_id
        NSString* myDeviceName = [[UIDevice currentDevice] name];
-       
        NSArray* firstArray2  = [NSArray arrayWithObjects:@"myDeviceName", myDeviceName, nil];
        NSArray* topArray2 = [NSArray arrayWithObjects:firstArray2, nil];
         
@@ -197,7 +183,6 @@
     
     // Observe the nested NSOperationQueue, it holds the current thread until it completes
     NSBlockOperation *setNewScheduleEquipJoin = [NSBlockOperation blockOperationWithBlock:^{
-        
         NSOperationQueue *equipJoinsQueue = [[NSOperationQueue alloc] init];
         equipJoinsQueue.name = @"equipJoinsQueue";
         equipJoinsQueue.maxConcurrentOperationCount = 5;
@@ -237,7 +222,6 @@
     
     
     NSBlockOperation *setNewMiscJoin = [NSBlockOperation blockOperationWithBlock:^{
-        
         NSOperationQueue *miscJoinsQueue = [[NSOperationQueue alloc] init];
         miscJoinsQueue.name = @"miscJoinsQueue";
         miscJoinsQueue.maxConcurrentOperationCount = 5;
@@ -296,135 +280,164 @@
 
 -(IBAction)print:(id)sender{
     
-    //get complete scheduleRequest item info
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", self.mykeyID, nil];
-    NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"print";
+    queue.maxConcurrentOperationCount = 5;
     
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-    dispatch_async(queue, ^{
-       [webData queryForStringwithAsync:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray completion:^(EQRScheduleRequestItem *chosenItem) {
-           
-           if (!chosenItem){
-               NSLog(@"EQRQuickViewPage3VC > print, failed to retrieve requestItem");
-               return;
-           }
-           
-           //also gather contact info
-           NSArray* alphaArray = [NSArray arrayWithObjects:@"key_id", chosenItem.contact_foreignKey, nil];
-           NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
-           [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:betaArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-               
-               if ([muteArray count] > 0){
-                   
-                   chosenItem.contactNameItem = [muteArray objectAtIndex:0];
-                   
-               }else {
-                   
-                   //error handling if no contact object is returned
-                   NSLog(@"QuickViewPage3VC > print  no contact returned with contact foreign key");
-               }
-           }];
-           
-           //also get notes (and other info)
-           NSArray* deltaArray = [NSArray arrayWithObjects:firstRequestArray, nil];
-           [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:deltaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-               
-               if ([muteArray count] > 0){
-                   
-                   chosenItem.notes = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] notes];
-                   
-               }else {
-                   
-                   //error handling if no contact object is returned
-                   NSLog(@"QuickViewPage3VC > print  getScheduleRequestQuickViewData failed");
-               }
-           }];
-           
-           //create printable page view controller
-           EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
-           
-           //add the request item to the view controller
-           [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:NO];
-           
-           //assign ivar variables
-           pageForPrint.rentorNameAtt = chosenItem.contact_name;
-           pageForPrint.rentorEmailAtt = chosenItem.contactNameItem.email;
-           pageForPrint.rentorPhoneAtt = chosenItem.contactNameItem.phone;
-           
-           //show the view controller
-           [self presentViewController:pageForPrint animated:YES completion:^{
-           }];
-       }];
-    });
+    __block EQRScheduleRequestItem *chosenItem;
+    NSBlockOperation *getScheduleRequestInComplete = [NSBlockOperation blockOperationWithBlock:^{
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", self.mykeyID, nil];
+        NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+        
+        [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+            if ([muteArray count] < 1) {
+                NSLog(@"EQRQuickViewPage3 > print, fails to get request inComplete");
+                return;
+            }
+            chosenItem = [muteArray objectAtIndex:0];
+        }];
+    }];
+    
+    
+    NSBlockOperation *getContactCompleteWithKey = [NSBlockOperation blockOperationWithBlock:^{
+        //also gather contact info
+        NSArray* alphaArray = [NSArray arrayWithObjects:@"key_id", chosenItem.contact_foreignKey, nil];
+        NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:betaArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+            if ([muteArray count] < 1){
+                NSLog(@"QuickViewPage3VC > print  no contact returned with contact foreign key");
+                return;
+            }
+            chosenItem.contactNameItem = [muteArray objectAtIndex:0];
+        }];
+    }];
+    [getContactCompleteWithKey addDependency:getScheduleRequestInComplete];
+    
+    
+    NSBlockOperation *getScheduleRequestQuickViewData = [NSBlockOperation blockOperationWithBlock:^{
+        //also get notes (and other info)
+        NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", self.mykeyID, nil];
+        NSArray* deltaArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:deltaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+            if ([muteArray count] < 1){
+                NSLog(@"QuickViewPage3VC > print  getScheduleRequestQuickViewData failed");
+                return;
+            }
+            chosenItem.notes = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] notes];
+        }];
+    }];
+    [getScheduleRequestQuickViewData addDependency:getScheduleRequestInComplete];
+    
+ 
+    NSBlockOperation *renderPageForPrint = [NSBlockOperation blockOperationWithBlock:^{
+        //create printable page view controller
+        EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
+        
+        //add the request item to the view controller
+        [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:NO];
+        
+        //assign ivar variables
+        pageForPrint.rentorNameAtt = chosenItem.contact_name;
+        pageForPrint.rentorEmailAtt = chosenItem.contactNameItem.email;
+        pageForPrint.rentorPhoneAtt = chosenItem.contactNameItem.phone;
+        
+        //show the view controller
+        [self presentViewController:pageForPrint animated:YES completion:^{
+        }];
+    }];
+    [renderPageForPrint addDependency:getContactCompleteWithKey];
+    [renderPageForPrint addDependency:getScheduleRequestQuickViewData];
+    
+
+    [queue addOperation:getScheduleRequestInComplete];
+    [queue addOperation:getContactCompleteWithKey];
+    [queue addOperation:getScheduleRequestQuickViewData];
+    [queue addOperation:renderPageForPrint];
 }
 
 -(IBAction)pdf:(id)sender{
     
-    //get complete scheduleRequest item info
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", self.mykeyID, nil];
-    NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"pdf";
+    queue.maxConcurrentOperationCount = 3;
     
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-    dispatch_async(queue, ^{
-        [webData queryForStringwithAsync:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray completion:^(EQRScheduleRequestItem *chosenItem) {
-            
-            if (!chosenItem){
+    
+    __block EQRScheduleRequestItem *chosenItem;
+    NSBlockOperation *getScheduleRequestInComplete = [NSBlockOperation blockOperationWithBlock:^{
+        // Get complete scheduleRequest item info
+        NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", self.mykeyID, nil];
+        NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetScheduleRequestInComplete.php" parameters:secondRequestArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+            if ([muteArray count] < 1){
                 NSLog(@"EQRQuickViewPage3VC > pdf, failed to retrieve request item");
                 return;
             }
-            
-            //also gather contact info
-            NSArray* alphaArray = [NSArray arrayWithObjects:@"key_id", chosenItem.contact_foreignKey, nil];
-            NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
-            
-            [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:betaArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-                
-                if ([muteArray count] > 0){
-                    
-                    chosenItem.contactNameItem = [muteArray objectAtIndex:0];
-                    
-                }else {
-                    
-                    //error handling if no contact object is returned
-                    NSLog(@"QuickViewPage3VC > print  no contact returned with contact foreign key");
-                }
-            }];
-            
-            //also get notes (and other info)
-            NSArray* deltaArray = [NSArray arrayWithObjects:firstRequestArray, nil];
-            [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:deltaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-                
-                if ([muteArray count] > 0){
-                    
-                    chosenItem.notes = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] notes];
-                    
-                }else {
-                    
-                    //error handling if no contact object is returned
-                    NSLog(@"QuickViewPage3VC > print  getScheduleRequestQuickViewData failed");
-                }
-            }];
-            
-            //create printable page view controller
-            EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
-            
-            //add the request item to the view controller
-            //___ Specify for PDF only ___
-            [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:YES];
-            
-            //assign ivar variables
-            pageForPrint.rentorNameAtt = chosenItem.contact_name;
-            pageForPrint.rentorEmailAtt = chosenItem.contactNameItem.email;
-            pageForPrint.rentorPhoneAtt = chosenItem.contactNameItem.phone;
-            
-            //show the view controller
-            [self presentViewController:pageForPrint animated:YES completion:^{
-            }];
-
+            chosenItem = [muteArray objectAtIndex:0];
         }];
-    });
+    }];
+    
+    
+    NSBlockOperation *getContactCompleteWitKey = [NSBlockOperation blockOperationWithBlock:^{
+        // Get contact info
+        NSArray* alphaArray = [NSArray arrayWithObjects:@"key_id", chosenItem.contact_foreignKey, nil];
+        NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:betaArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+            if ([muteArray count] < 1){
+                NSLog(@"QuickViewPage3VC > print  no contact returned with contact foreign key");
+                return;
+            }
+            chosenItem.contactNameItem = [muteArray objectAtIndex:0];
+        }];
+    }];
+    [getContactCompleteWitKey addDependency:getScheduleRequestInComplete];
+    
+    
+    NSBlockOperation *getScheduleRequestQuickViewData = [NSBlockOperation blockOperationWithBlock:^{
+        // Get notes (and other info)
+        NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", self.mykeyID, nil];
+        NSArray* deltaArray = [NSArray arrayWithObjects:firstRequestArray, nil];
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:deltaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+            if ([muteArray count] < 1){
+                NSLog(@"QuickViewPage3VC > print  getScheduleRequestQuickViewData failed");
+                return;
+            }
+            chosenItem.notes = [(EQRScheduleRequestItem*)[muteArray objectAtIndex:0] notes];
+        }];
+    }];
+    [getScheduleRequestQuickViewData addDependency:getScheduleRequestInComplete];
+    
+    
+    NSBlockOperation *renderPDF = [NSBlockOperation blockOperationWithBlock:^{
+        // Create printable page view controller
+        EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
+        
+        //add the request item to the view controller
+        //___ Specify for PDF only ___
+        [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:YES];
+        
+        //assign ivar variables
+        pageForPrint.rentorNameAtt = chosenItem.contact_name;
+        pageForPrint.rentorEmailAtt = chosenItem.contactNameItem.email;
+        pageForPrint.rentorPhoneAtt = chosenItem.contactNameItem.phone;
+        
+        //show the view controller
+        [self presentViewController:pageForPrint animated:YES completion:^{
+        }];
+    }];
+    [renderPDF addDependency:getContactCompleteWitKey];
+    [renderPDF addDependency:getScheduleRequestQuickViewData];
+
+    
+    [queue addOperation:getScheduleRequestInComplete];
+    [queue addOperation:getContactCompleteWitKey];
+    [queue addOperation:getScheduleRequestQuickViewData];
+    [queue addOperation:renderPDF];
 }
 
 
