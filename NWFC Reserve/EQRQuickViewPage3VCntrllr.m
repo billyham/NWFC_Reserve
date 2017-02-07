@@ -221,6 +221,7 @@
     [getMiscJoinsWithScheduleTrackingKey addDependency:setNewScheduleRequest];
     
     
+    // Observe the nested NSOperationQueue, it holds the current thread until it completes
     NSBlockOperation *setNewMiscJoin = [NSBlockOperation blockOperationWithBlock:^{
         NSOperationQueue *miscJoinsQueue = [[NSOperationQueue alloc] init];
         miscJoinsQueue.name = @"miscJoinsQueue";
@@ -255,6 +256,7 @@
             
             [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditorFromSchedule object:nil userInfo:self.userInfo];
         }
+        
     }];
     [showRequestEditor addDependency:setNewScheduleEquipJoin];
     [showRequestEditor addDependency:setNewMiscJoin];

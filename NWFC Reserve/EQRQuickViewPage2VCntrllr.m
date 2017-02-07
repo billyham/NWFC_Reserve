@@ -29,6 +29,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        
     }
     return self;
 }
@@ -41,12 +42,10 @@
     queue.maxConcurrentOperationCount = 3;
     
     NSBlockOperation *getScheduleEquipJoinsForCheckWithScheduleTrackingKey = [NSBlockOperation blockOperationWithBlock:^{
-        NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", keyID, nil];
-        NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
+        NSArray* firstArray = @[@"scheduleTracking_foreignKey", keyID];
+        NSArray* topArray = @[firstArray];
         
-        if (!self.myArray){
-            self.myArray = [NSMutableArray arrayWithCapacity:1];
-        }
+        if (!self.myArray) self.myArray = [NSMutableArray arrayWithCapacity:1];
         [self.myArray removeAllObjects];
         
         EQRWebData* webData = [EQRWebData sharedInstance];
@@ -63,9 +62,7 @@
         NSArray* alphaArray = @[@"scheduleTracking_foreignKey", keyID];
         NSArray* omegaArray = @[alphaArray];
         
-        if (!self.miscJoins){
-            self.miscJoins = [NSMutableArray arrayWithCapacity:1];
-        }
+        if (!self.miscJoins) self.miscJoins = [NSMutableArray arrayWithCapacity:1];
         [self.miscJoins removeAllObjects];
         
         EQRWebData *webData = [EQRWebData sharedInstance];
@@ -109,17 +106,11 @@
 #pragma mark - table view data source
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    
-//    return 1;
-    
     return [self.myArrayWithStructure count];
 }
 
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
-//    return [self.myArray count];
-    
     return [[self.myArrayWithStructure objectAtIndex:section] count];
 }
 
@@ -129,7 +120,6 @@
     UITableViewCell* cell =[tableView dequeueReusableCellWithIdentifier:@"Cell"];
     
     for (UIView* view in cell.contentView.subviews){
-        
         [view removeFromSuperview];
     }
     
@@ -147,7 +137,7 @@
         }
         
     }else{
-        cell.textLabel.text = @"ERROR: COUNT OF OBJECTS IS INCORRECT";
+        cell.textLabel.text = @"EQRQuickViewPage2VC > ERROR: COUNT OF OBJECTS IS INCORRECT";
     }
     
     //set size

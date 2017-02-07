@@ -62,7 +62,7 @@ typedef void (^CompletionWithString)(NSString *name);
     self.combinedDateAndTimeEnd = [self convertDateToString:returnDateAsDate withTime:returnTimeAsDate];
 
     
-    //________acquire more information with a webData call usin the scheduleRequest Key_id
+    //________acquire more information with a webData call using the scheduleRequest Key_id
     //confirmation date and contact_name
     //prep date and name
     //check out date and name
@@ -92,30 +92,6 @@ typedef void (^CompletionWithString)(NSString *name);
     if ([self.myUserData objectForKey:@"staff_shelf_date"]) newRequestItem.staff_shelf_date = [self.myUserData objectForKey:@"staff_shelf_date"];
     
     self.myScheduleRequestItem = newRequestItem;
-
-    
-//    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", key_id, nil];
-//    NSArray* secondArray = [NSArray arrayWithObject:firstArray];
-//    EQRWebData* webData = [EQRWebData sharedInstance];
-//    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-//    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:secondArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-//        
-//        //should just be one object...
-//        for (EQRScheduleRequestItem* object in muteArray){
-//            
-//            [tempMuteArray addObject:object];
-//        }
-//    }];
-//    
-//    if ([tempMuteArray count] > 0){
-//        
-//        self.myScheduleRequestItem = [tempMuteArray objectAtIndex:0];
-//        
-//    } else {
-//        
-//        //______error handling when no item is returned
-//    }
-    
     
     //also get class title if a titleKey exists
     if (self.myScheduleRequestItem.classTitle_foreignKey){
@@ -123,8 +99,8 @@ typedef void (^CompletionWithString)(NSString *name);
         if ((![self.myScheduleRequestItem.classTitle_foreignKey isEqualToString:@""]) && (![self.myScheduleRequestItem.classTitle_foreignKey isEqualToString:EQRErrorCode88888888])){
             
             EQRWebData* webData = [EQRWebData sharedInstance];
-            NSArray* ayaArray = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequestItem.classTitle_foreignKey, nil];
-            NSArray* beeArray = [NSArray arrayWithObjects:ayaArray, nil];
+            NSArray* ayaArray = @[@"key_id", self.myScheduleRequestItem.classTitle_foreignKey];
+            NSArray* beeArray = @[ayaArray];
 
             dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
             dispatch_async(queue, ^{
@@ -136,7 +112,6 @@ typedef void (^CompletionWithString)(NSString *name);
             });
         }
     }
-    //_______asynchronously???
 }
 
 -(void)renderClassTitle{
@@ -328,15 +303,15 @@ typedef void (^CompletionWithString)(NSString *name);
 
 -(void)retrieveNameWithID:(NSString*)key_id completion:(CompletionWithString)cb{
     
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", key_id, nil];
-    NSArray* topArray = [NSArray arrayWithObject:firstArray];
+    NSArray* firstArray = @[@"key_id", key_id];
+    NSArray* topArray = @[firstArray];
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
+        EQRWebData* webData = [EQRWebData sharedInstance];
         [webData queryForStringwithAsync:@"EQGetContactNameWithKey.php" parameters:topArray completion:^(EQRContactNameItem *contactNameItem) {
-//            NSLog(@"name object: %@", contactNameItem);
             if (contactNameItem){
+                
                 // Derive first name and last initial
                 NSString* firstName = contactNameItem.first_name;
                 NSString* lastName = contactNameItem.last_name;
@@ -350,31 +325,21 @@ typedef void (^CompletionWithString)(NSString *name);
 }
 
 
-//-(IBAction)editRequest:(id)sender{
-//    
-//    
-//    
-//    
-//}
-
-
 #pragma mark - uiscrollview delegate methods
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView{
-    
     return YES;
 }
 
 
 - (void)textViewDidEndEditing:(UITextView *)textView{
-    
-    //make change to data model, save notes to db
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    NSArray* firstArray = [NSArray arrayWithObjects:@"notes", self.notesView.text, nil];
-    NSArray* secondArray = [NSArray arrayWithObjects:@"key_id", [self.myUserData objectForKey:@"key_ID"], nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
-    [webData queryForStringWithLink:@"EQAlterNotesInScheduleRequest.php" parameters:topArray];
-    
+    NSArray* topArray = @[ @[@"notes", self.notesView.text],
+                           @[@"key_id", [self.myUserData objectForKey:@"key_ID"]] ];
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        [webData queryForStringWithLink:@"EQAlterNotesInScheduleRequest.php" parameters:topArray];
+    });
 }
 
 
