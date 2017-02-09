@@ -2344,6 +2344,20 @@ const int intEQRTransaction = 11;
         });
     }
     
+    if ([link isEqualToString:@"EQAlterPhoneInContact.php"]){
+        NSString *returnString = [self queryForStringWithLink:@"EQAlterPhoneInContact.php" parameters:para];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+    }
+    
+    if ([link isEqualToString:@"EQAlterEmailInContact.php"]){
+        NSString *returnString = [self queryForStringWithLink:@"EQAlterEmailInContact.php" parameters:para];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+    }
+    
 }
 
 

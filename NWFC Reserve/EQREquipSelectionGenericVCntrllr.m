@@ -214,8 +214,6 @@
 
     [self renewTheViewWithRequestManager:requestManager];
     
-    self.dataIsLoadingView.hidden = YES;
-    
     self.dontReloadTheViewBecauseItWillEraseSelections = YES;
 }
 
@@ -402,6 +400,8 @@
     
     NSBlockOperation *renderTable = [NSBlockOperation blockOperationWithBlock:^{
        dispatch_async(dispatch_get_main_queue(), ^{
+           self.dataIsLoadingView.hidden = YES;
+           
            //is this necessary_____???
            [self.equipCollectionView reloadData];
        });

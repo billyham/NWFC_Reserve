@@ -77,11 +77,10 @@
     //load the request to populate the ivars
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
-    //    NSString* contactKeyID = requestManager.request.contact_foreignKey;
     NSString* contactCondensedName = requestManager.request.contact_name;
     EQRContactNameItem* contactItem = requestManager.request.contactNameItem;
     
-    //error handling if contact_name is nil
+    // Error handling if contact_name is nil
     if (contactCondensedName == nil){
         contactCondensedName = @"NA";
     }
@@ -89,16 +88,14 @@
     NSDateFormatter* pickUpFormatter = [[NSDateFormatter alloc] init];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     [pickUpFormatter setLocale:usLocale];
-//    [pickUpFormatter setDateStyle:NSDateFormatterLongStyle];
-//    [pickUpFormatter setTimeStyle:NSDateFormatterShortStyle];
     [pickUpFormatter setDateFormat:@"EEE, MMM d, yyyy, h:mm aaa"];
     
-    //save values to ivar
+    // Save values to properties
     self.rentorNameAtt = requestManager.request.contact_name;
     self.rentorPhoneAtt = contactItem.phone;
     self.rentorEmailAtt = contactItem.email;
 
-    //validate and email address and disguise it for secure display
+    // Validate and email address and disguise it for secure display
     NSString* emailForDisplay = [EQRDataStructure emailValidationAndSecureForDisplay:self.rentorEmailAtt];
     if (emailForDisplay == nil){
         self.contactEmail.font = [UIFont boldSystemFontOfSize:14];
@@ -110,7 +107,7 @@
         self.contactEmail.textColor = [UIColor blackColor];
     }
     
-    //validate and phone and disguise it for secure display
+    // Validate and phone and disguise it for secure display
     NSString* phoneForDisplay = [EQRDataStructure phoneValidationAndSecureForDisplay:self.rentorPhoneAtt];
     if (phoneForDisplay == nil){
         self.contactPhone.font = [UIFont boldSystemFontOfSize:14];
@@ -122,191 +119,164 @@
         self.contactPhone.textColor = [UIColor blackColor];
     }
     
-    //name
+    // Name
     self.contactName.text = self.rentorNameAtt;
 
-    //nsattributedstrings
+    
+    // Body text
+    
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"viewDidLoad";
+    queue.maxConcurrentOperationCount = 5;
+    
     UIFont* smallFont = [UIFont boldSystemFontOfSize:10];
     UIFont* normalFont = [UIFont systemFontOfSize:12];
     UIFont* boldFont = [UIFont boldSystemFontOfSize:14];
     
-    //begin the total attribute string
+    // Begin an attributed string
     self.summaryTotalAtt = [[NSMutableAttributedString alloc] initWithString:@""];
-
     
     
-    
-//    //________NAME_________
-//    NSDictionary* arrayAttA = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-//    NSAttributedString* nameHead = [[NSAttributedString alloc] initWithString:@"Name\r" attributes:arrayAttA];
-//    
-//    //initiate the total attributed string
-//    [self.summaryTotalAtt appendAttributedString:nameHead];
-//    
-//    //assign the name
-//    NSDictionary* arrayAtt = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-//    
-//    //________contactNameItem maybe nil. error handling when that's the case
-//    NSAttributedString* nameAtt;
-//    if (contactItem != nil){
-//        nameAtt = [[NSAttributedString alloc] initWithString:contactItem.first_and_last attributes:arrayAtt];
-//    }else{
-//        nameAtt = [[NSAttributedString alloc] initWithString:contactCondensedName attributes:arrayAtt];
-//    }
-//    [self.summaryTotalAtt appendAttributedString:nameAtt];
-
-
-    //____EMAIL____
-    //add to the attributed string
-//    NSDictionary* arrayAtt2 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-//    NSAttributedString* emailHead = [[NSAttributedString alloc] initWithString:@"\r\rContact Email:\r" attributes:arrayAtt2];
-//    
-//    //concatentate to the att string
-//    [self.summaryTotalAtt appendAttributedString:emailHead];
-//    
-////    NSDictionary* arrayAtt3 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-//    NSDictionary* arrayAtt3 = @{NSFontAttributeName:boldFont, NSLinkAttributeName:@"http://www.hamagain.com"};
-//    NSAttributedString* emailAtt;
-//    if (contactItem != nil){
-//        emailAtt = [[NSAttributedString alloc] initWithString:contactItem.email attributes:arrayAtt3];
-//    }else{
-//        emailAtt = [[NSAttributedString alloc] initWithString:@"NA" attributes:arrayAtt3];
-//    }
-//    [self.summaryTotalAtt appendAttributedString:emailAtt];
-    
-    //____PHONE______
-//    NSDictionary* arrayAtt4 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-//    NSAttributedString* phoneHead = [[NSAttributedString alloc] initWithString:@"\r\rContact Phone:\r" attributes:arrayAtt4];
-//    [self.summaryTotalAtt appendAttributedString:phoneHead];
-//    
-//    NSDictionary* arrayAtt5 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-//    NSAttributedString* phoneAtt;
-//    if (contactItem != nil){
-//        phoneAtt = [[NSAttributedString alloc] initWithString:contactItem.phone attributes:arrayAtt5];
-//    }else {
-//        phoneAtt = [[NSAttributedString alloc] initWithString:@"NA" attributes:arrayAtt5];
-//        
-//    }
-//    [self.summaryTotalAtt appendAttributedString:phoneAtt];
-    
-    //_______PICKUP DATE_____
-    NSDictionary* arrayAtt6 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-    NSAttributedString* pickupHead = [[NSAttributedString alloc] initWithString:@"\rPick Up: " attributes:arrayAtt6];
-    [self.summaryTotalAtt appendAttributedString:pickupHead];
-    
-    NSDictionary* arrayAtt7 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* pickupAtt = [[NSAttributedString alloc] initWithString:[pickUpFormatter stringFromDate:requestManager.request.request_date_begin]  attributes:arrayAtt7];
-    [self.summaryTotalAtt appendAttributedString:pickupAtt];
-    
-    //______RETURN DATE________
-    NSDictionary* arrayAtt8 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-    NSAttributedString* returnHead = [[NSAttributedString alloc] initWithString:@"            Return: " attributes:arrayAtt8];
-    [self.summaryTotalAtt appendAttributedString:returnHead];
-    
-    NSDictionary* arrayAtt9 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* returnAtt = [[NSAttributedString alloc] initWithString:[pickUpFormatter stringFromDate:requestManager.request.request_date_end]  attributes:arrayAtt9];
-    [self.summaryTotalAtt appendAttributedString:returnAtt];
-    
-    //________EQUIP LIST________
-    
-    NSDictionary* arrayAtt10 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
-    NSAttributedString* equipHead = [[NSAttributedString alloc] initWithString:@"\r\r\rEquipment Items:\r" attributes:arrayAtt10];
-    [self.summaryTotalAtt appendAttributedString:equipHead];
-    
-    
-//    NSLog(@"this is the class in arrayOfEquipJoins: %@", [[requestManager.request.arrayOfEquipmentJoins objectAtIndex:0] class]);
-//    EQRScheduleTracking_EquipmentUnique_Join *thisJoinForTesting = [requestManager.request.arrayOfEquipmentJoins objectAtIndex:0];
-//    NSLog(@"this is the titleForeignKey: %@  this is the schedule_grouping: %@  this is the dist_id: %@",
-//          thisJoinForTesting.equipTitleItem_foreignKey,
-//          thisJoinForTesting.schedule_grouping,
-//          thisJoinForTesting.distinquishing_id);
-    
-    // 2. first, cycle through scheduleTracking_equip_joins
-    //add structure to the array
-    //________!!!!!!!!!!!  THIS WILL CAUSE A CRASH WHEN USING THE DESIRABLE VERSION OF THE METHOD   !!!!!!!!!!____________
-    //________!!!!!!!!!!!  BECAUSE THERE IS NO VALUE FOR scheduleGrouping or distinguishing_ID in the join objects  !!!!!!!!!____________
-    NSArray* arrayOfEquipmentJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArrayTheOldWay:requestManager.request.arrayOfEquipmentJoins];
-    
-    //  3. cycle through subarrays and decompose scheduleTracking_EquipmentUniue_Joins to dictionaries with EquipTitleItems and quantities
-    NSMutableArray* topArrayOfDecomposedEquipTitlesAndJoins = [NSMutableArray arrayWithCapacity:1];
-    for (NSArray* arrayFun in arrayOfEquipmentJoinsWithStructure){
+    NSMutableAttributedString *datesAttr = [[NSMutableAttributedString alloc] initWithString:@""];
+    NSBlockOperation *dates = [NSBlockOperation blockOperationWithBlock:^{
+        //_______PICKUP DATE_____
+        NSDictionary* arrayAtt6 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+        NSAttributedString* pickupHead = [[NSAttributedString alloc] initWithString:@"\rPick Up: " attributes:arrayAtt6];
+        [datesAttr appendAttributedString:pickupHead];
         
-        NSArray* subArrayOfDecomposedEquipTitlesAndJoins = [EQRDataStructure decomposeJoinsToEquipTitlesWithQuantities:arrayFun];
+        NSDictionary* arrayAtt7 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
+        NSAttributedString* pickupAtt = [[NSAttributedString alloc] initWithString:[pickUpFormatter stringFromDate:requestManager.request.request_date_begin]  attributes:arrayAtt7];
+        [datesAttr appendAttributedString:pickupAtt];
         
-        [topArrayOfDecomposedEquipTitlesAndJoins addObject:subArrayOfDecomposedEquipTitlesAndJoins];
-    }
+        //______RETURN DATE________
+        NSDictionary* arrayAtt8 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+        NSAttributedString* returnHead = [[NSAttributedString alloc] initWithString:@"            Return: " attributes:arrayAtt8];
+        [datesAttr appendAttributedString:returnHead];
+        
+        NSDictionary* arrayAtt9 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
+        NSAttributedString* returnAtt = [[NSAttributedString alloc] initWithString:[pickUpFormatter stringFromDate:requestManager.request.request_date_end]  attributes:arrayAtt9];
+        [datesAttr appendAttributedString:returnAtt];
+    }];
     
     
-    for (NSArray* innerArray in topArrayOfDecomposedEquipTitlesAndJoins){
+    NSMutableAttributedString *equipmentAttr = [[NSMutableAttributedString alloc] initWithString:@""];
+    NSBlockOperation *equipment = [NSBlockOperation blockOperationWithBlock:^{
+        //________EQUIP LIST________
         
-        //print equipment category
-        NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:smallFont forKey:NSFontAttributeName];
-        NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r   %@\r", [(EQREquipItem*) [(NSDictionary*)[innerArray objectAtIndex:0] objectForKey:@"equipTitleObject" ] schedule_grouping]] attributes:arrayAtt11];
+        NSDictionary* arrayAtt10 = [NSDictionary dictionaryWithObject:boldFont forKey:NSFontAttributeName];
+        NSAttributedString* equipHead = [[NSAttributedString alloc] initWithString:@"\r\r\rEquipment Items:\r" attributes:arrayAtt10];
+        [equipmentAttr appendAttributedString:equipHead];
         
-        [self.summaryTotalAtt appendAttributedString:thisHereAttString];
+        // Cycle through scheduleTracking_equip_joins
+        // Add structure to the array
+        //________!!!!!!!!!!!  THIS WILL CAUSE A CRASH WHEN USING THE DESIRABLE VERSION OF THE METHOD   !!!!!!!!!!____________
+        //________!!!!!!!!!!!  BECAUSE THERE IS NO VALUE FOR scheduleGrouping or distinguishing_ID in the join objects  !!!!!!!!!____________
+        NSArray* arrayOfEquipmentJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArrayTheOldWay:requestManager.request.arrayOfEquipmentJoins];
         
-        for (NSDictionary* innerSubDictionary in innerArray){
+        //  Cycle through subarrays and decompose scheduleTracking_EquipmentUniue_Joins to dictionaries with EquipTitleItems and quantities
+        NSMutableArray* topArrayOfDecomposedEquipTitlesAndJoins = [NSMutableArray arrayWithCapacity:1];
+        for (NSArray* arrayFun in arrayOfEquipmentJoinsWithStructure){
             
-            NSString* quantityFollowedByShortname = [NSString stringWithFormat:@"%@ x %@",
-                                                     [innerSubDictionary objectForKey:@"quantity"],
-                                                     [(EQREquipItem*)[innerSubDictionary objectForKey:@"equipTitleObject"] shortname]
-                                                     ];
+            NSArray* subArrayOfDecomposedEquipTitlesAndJoins = [EQRDataStructure decomposeJoinsToEquipTitlesWithQuantities:arrayFun];
             
-            NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-            NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", quantityFollowedByShortname] attributes:arrayAtt11];
-                    
-            [self.summaryTotalAtt appendAttributedString:thisHereAttString];
+            [topArrayOfDecomposedEquipTitlesAndJoins addObject:subArrayOfDecomposedEquipTitlesAndJoins];
         }
-    }
-    
-    
-    
-    //______Misc Join List_______
-    //gather any misc joins
-    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
-    NSArray* alphaArray = @[@"scheduleTracking_foreignKey", requestManager.request.key_id];
-    NSArray* omegaArray = @[alphaArray];
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
-        for (id object in muteArray2){
-            [tempMiscMuteArray addObject:object];
+        
+        
+        for (NSArray* innerArray in topArrayOfDecomposedEquipTitlesAndJoins){
+            
+            // Print equipment category
+            NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:smallFont forKey:NSFontAttributeName];
+            NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r   %@\r", [(EQREquipItem*) [(NSDictionary*)[innerArray objectAtIndex:0] objectForKey:@"equipTitleObject" ] schedule_grouping]] attributes:arrayAtt11];
+            
+            [equipmentAttr appendAttributedString:thisHereAttString];
+            
+            for (NSDictionary* innerSubDictionary in innerArray){
+                
+                NSString* quantityFollowedByShortname = [NSString stringWithFormat:@"%@ x %@",
+                                                         [innerSubDictionary objectForKey:@"quantity"],
+                                                         [(EQREquipItem*)[innerSubDictionary objectForKey:@"equipTitleObject"] shortname]
+                                                         ];
+                
+                NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+                NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", quantityFollowedByShortname] attributes:arrayAtt11];
+                
+                [equipmentAttr appendAttributedString:thisHereAttString];
+            }
         }
     }];
+    
+    
+    NSMutableAttributedString *miscAttr = [[NSMutableAttributedString alloc] initWithString:@""];
+    NSBlockOperation *misc = [NSBlockOperation blockOperationWithBlock:^{
 
-    //if miscJoins exist...
-    if ([tempMiscMuteArray count] > 0){
+        // Gather any misc joins
+        NSArray* omegaArray = @[ @[@"scheduleTracking_foreignKey", requestManager.request.key_id] ];
         
-        //print miscellaneous section
-        NSDictionary* arrayAtt13 = @{NSFontAttributeName:smallFont};
-        NSAttributedString *thisHereString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r   %@\r",@"Miscellaneous"] attributes:arrayAtt13];
-        [self.summaryTotalAtt appendAttributedString:thisHereString];
-        
-        for (EQRMiscJoin* miscJoin in tempMiscMuteArray){
-            
-            NSDictionary* arrayAtt14 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-            NSAttributedString* thisHereAttStringAgain = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", miscJoin.name] attributes:arrayAtt14];
-            
-            [self.summaryTotalAtt appendAttributedString:thisHereAttStringAgain];
-        }
-    }
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *tempMiscMuteArray) {
+          
+            // If miscJoins exist...
+            if ([tempMiscMuteArray count] > 0){
+                
+                // Print miscellaneous section
+                NSDictionary* arrayAtt13 = @{NSFontAttributeName:smallFont};
+                NSAttributedString *thisHereString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r   %@\r",@"Miscellaneous"] attributes:arrayAtt13];
+                [miscAttr appendAttributedString:thisHereString];
+                
+                for (EQRMiscJoin* miscJoin in tempMiscMuteArray){
+                    
+                    NSDictionary* arrayAtt14 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
+                    NSAttributedString* thisHereAttStringAgain = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", miscJoin.name] attributes:arrayAtt14];
+                    
+                    [miscAttr appendAttributedString:thisHereAttStringAgain];
+                }
+            }
+        }];
+    }];
     
-    //_______Notes___________
-    if (requestManager.request.notes){
-        if (![requestManager.request.notes isEqualToString:@""]){
-            
-            NSDictionary* arrayAtt15 = @{NSFontAttributeName:smallFont};
-            NSAttributedString* thisHereString = [[NSAttributedString alloc] initWithString:@"\r   Notes\r" attributes:arrayAtt15];
-            [self.summaryTotalAtt appendAttributedString:thisHereString];
-            
-            NSDictionary* arrayAtt16 = @{NSFontAttributeName:normalFont};
-            NSAttributedString* thisHereString2 = [[NSAttributedString alloc] initWithString:requestManager.request.notes attributes:arrayAtt16];
-            [self.summaryTotalAtt appendAttributedString:thisHereString2];
-        }
-    }
+    
+    NSMutableAttributedString *notesAttr = [[NSMutableAttributedString alloc] initWithString:@""];
+    NSBlockOperation *notes = [NSBlockOperation blockOperationWithBlock:^{
+       //_______Notes___________
+       if (requestManager.request.notes){
+           if (![requestManager.request.notes isEqualToString:@""]){
+               
+               NSDictionary* arrayAtt15 = @{NSFontAttributeName:smallFont};
+               NSAttributedString* thisHereString = [[NSAttributedString alloc] initWithString:@"\r   Notes\r" attributes:arrayAtt15];
+               [notesAttr appendAttributedString:thisHereString];
+               
+               NSDictionary* arrayAtt16 = @{NSFontAttributeName:normalFont};
+               NSAttributedString* thisHereString2 = [[NSAttributedString alloc] initWithString:requestManager.request.notes attributes:arrayAtt16];
+               [notesAttr appendAttributedString:thisHereString2];
+           }
+       }
+    }];
+    
+    
+    NSBlockOperation *render = [NSBlockOperation blockOperationWithBlock:^{
+        
+        [self.summaryTotalAtt appendAttributedString:datesAttr];
+        [self.summaryTotalAtt appendAttributedString:equipmentAttr];
+        [self.summaryTotalAtt appendAttributedString:miscAttr];
+        [self.summaryTotalAtt appendAttributedString:notesAttr];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.summaryTextView.attributedText = self.summaryTotalAtt;
+        });
+        
+    }];
+    [render addDependency:dates];
+    [render addDependency:equipment];
+    [render addDependency:misc];
+    [render addDependency:notes];
     
 
-    
-    self.summaryTextView.attributedText = self.summaryTotalAtt;
+    [queue addOperation:dates];
+    [queue addOperation:equipment];
+    [queue addOperation:misc];
+    [queue addOperation:notes];
+    [queue addOperation:render];
 }
 
 
@@ -409,7 +379,7 @@
 
 -(void)phoneEntered:(NSString*)phoneNumber{
     
-    //update local objects
+    // Update local objects
     self.contactPhone.text = phoneNumber;
     self.contactPhone.textColor = [UIColor blackColor];
     self.contactPhone.font = [UIFont systemFontOfSize:14];
@@ -418,15 +388,18 @@
     //____yikes!
     requestManager.request.contactNameItem.phone = phoneNumber;
     
-    //make change to contact db
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    NSArray* firstArray = @[@"key_id", requestManager.request.contact_foreignKey];
-    NSArray* secondArray = @[@"phone", phoneNumber];
-    NSArray* topArray = @[firstArray, secondArray];
-    [webData queryForStringWithLink:@"EQAlterPhoneInContact.php" parameters:topArray];
-    
-    [self.phonePopover dismissPopoverAnimated:YES];
-    self.phonePopover = nil;
+    // Make change to contact db
+    NSArray* topArray = @[ @[@"key_id", requestManager.request.contact_foreignKey],
+                           @[@"phone", phoneNumber] ];
+
+    dispatch_queue_t  queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        [webData queryForStringwithAsync:@"EQAlterPhoneInContact.php" parameters:topArray completion:^(id object) {
+            [self.phonePopover dismissPopoverAnimated:YES];
+            self.phonePopover = nil;
+        }];
+    });
 }
 
 
@@ -446,7 +419,7 @@
 
 -(void)emailEntered:(NSString *)email{
     
-    //update local objects
+    // Update local objects
     self.contactEmail.text = email;
     self.contactEmail.textColor = [UIColor blackColor];
     self.contactEmail.font = [UIFont systemFontOfSize:14];
@@ -454,15 +427,18 @@
     EQRScheduleRequestManager *requestManager = [EQRScheduleRequestManager sharedInstance];
     requestManager.request.contactNameItem.email = email;
     
-    //make change to db
-    EQRWebData *webData = [EQRWebData sharedInstance];
-    NSArray* firstArray = @[@"key_id", requestManager.request.contact_foreignKey];
-    NSArray* secondArray = @[@"email", email];
-    NSArray* topArray = @[firstArray, secondArray];
-    [webData queryForStringWithLink:@"EQAlterEmailInContact.php" parameters:topArray];
+    // Update database
+    NSArray* topArray = @[ @[@"key_id", requestManager.request.contact_foreignKey],
+                           @[@"email", email] ];
     
-    [self.emailPopover dismissPopoverAnimated:YES];
-    self.emailPopover = nil;
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryForStringwithAsync:@"EQAlterEmailInContact.php" parameters:topArray completion:^(id object) {
+            [self.emailPopover dismissPopoverAnimated:YES];
+            self.emailPopover = nil;
+        }];
+    });
 }
 
 
