@@ -86,27 +86,9 @@
     
     self.dontReloadTheViewBecauseItWillEraseSelections = NO;
     
-    //add longpress gesture recognizer, need to circumvent existing longpress gesture first
-    //    UILongPressGestureRecognizer* pressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-    //
-    //    NSArray* recognizers = [self.equipCollectionView gestureRecognizers];
-    //
-    //    //make the default gesture recognizer wait until the custom fails
-    //    for (UIGestureRecognizer* aRecognizer in recognizers) {
-    //
-    //        if ([aRecognizer isKindOfClass:[UITapGestureRecognizer class]]) {
-    //
-    //            [aRecognizer requireGestureRecognizerToFail:pressGesture];
-    //        }
-    //    }
-    
     //________this prevents the collection view from responding to touch events
     //________but is unnecessary, the plus and minus buttons will work with or without this disabled.
     //    self.equipCollectionView.allowsSelection = NO;
-    
-    
-    //set default ivars
-//    self.isInPopover = NO;
     
     //add the cancel button
     UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelTheThing:)];
@@ -116,19 +98,10 @@
     
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
-        
         requestManager = self.privateRequestManager;
-        
         //____****   create the manager's request ivar, and outfit with a classTitleKey???   ******____
-        
     }else{
-        
         requestManager = [EQRScheduleRequestManager sharedInstance];
-        
-        //correct the scroll view's scroll indicator position
-        //_________these two work, but man, this seems janky!!!
-//        self.equipCollectionView.scrollIndicatorInsets = UIEdgeInsetsMake(-60, 0, 0, 0);
-//        self.equipCollectionView.contentInset = UIEdgeInsetsMake(-60, 0, 0, 0);
     }
     requestManager.equipSelectionDelegate = self;
     
@@ -147,10 +120,7 @@
     self.mySearchController.searchBar.delegate = self;
     self.mySearchController.searchBar.searchBarStyle = UISearchBarStyleMinimal;
     
-    //what does this do?
     self.definesPresentationContext = YES;
-    
-
 }
 
 
@@ -184,12 +154,12 @@
     
     if (self.privateRequestManagerFlag){
         
-        //hide the notes button when in a popover
+        // Hide the notes button when in a popover
         [self.editNotesButton setHidden:YES];
     }
     
-    //add constraints
-    //______this MUST be added programmatically because you CANNOT specify the topLayoutGuide of a VC in a nib______
+    // Add constraints
+    // This MUST be added programmatically because you CANNOT specify the topLayoutGuide of a VC in a nib
     
     self.mainSubView.translatesAutoresizingMaskIntoConstraints = NO;
     id topGuide = self.topLayoutGuide;
@@ -209,9 +179,9 @@
                                                                          metrics:nil
                                                                            views:viewsDictionary];
     
-    //drop exisiting constraints
-    //_____THIS IS NECESSARY BECAUSE NIBS REALLY HATE IT IF YOU LEAVE OUT ANY CONSTRAINTS __
-    //_____THESE WERE ONLY TEMPORARY TO SATISIFY THE NIB FROM SCREAMING ERROR MESSAGES____
+    // Drop exisiting constraints
+    // THIS IS NECESSARY BECAUSE NIBS REALLY HATE IT IF YOU LEAVE OUT ANY CONSTRAINTS
+    // THESE WERE ONLY TEMPORARY TO SATISIFY THE NIB FROM SCREAMING ERROR MESSAGES
     [[self.mainSubView superview] removeConstraints:[NSArray arrayWithObjects:self.topGuideLayoutThingy, self.bottomGuideLayoutThingy, nil]];
 
     //add replacement constraints
@@ -219,41 +189,9 @@
     [[self.mainSubView superview] addConstraints:constraint_POS_VB];
     
     
-    //_______these following constraints appear to have no effect_______
-    //add constraints for search box...
+    // These following constraints appear to have no effect
+    // Add constraints for search box...
     self.mySearchController.searchBar.translatesAutoresizingMaskIntoConstraints = YES;
-    
-    //dismiss existing constraints
-//    if (self.verticalConstraintsForSearchBar){
-//        [self.mainSubView removeConstraints:self.verticalConstraintsForSearchBar];
-//    }
-//    if (self.horizontalConstraintsForSearchBar){
-//        [self.mainSubView removeConstraints:self.horizontalConstraintsForSearchBar];
-//    }
-//    
-//    NSDictionary *viewsDictionary2 = @{@"searchSubView":self.mySearchController.searchBar};
-//    
-//    NSArray *constraint2_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[searchSubView]-0-|"
-//                                                                         options:0
-//                                                                         metrics:nil
-//                                                                           views:viewsDictionary2];
-//    self.verticalConstraintsForSearchBar = constraint2_POS_V;
-//    
-//    
-//    
-//    NSArray *constraint2_POS_H = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[searchSubView]-0-|"
-//                                                                         options:0
-//                                                                         metrics:nil
-//                                                                           views:viewsDictionary2];
-//    self.horizontalConstraintsForSearchBar = constraint2_POS_H;
-//    
-//    
-//    //add constraints
-//    [self.mainSubView addConstraints:constraint2_POS_V];
-//    [self.mainSubView addConstraints:constraint2_POS_H];
-    
-    
-    
     
     [super viewWillAppear:animated];
 }
@@ -266,20 +204,14 @@
         return;
     }
     
-//    self.dataIsLoadingView.hidden = NO;
-    
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
-        
         requestManager = self.privateRequestManager;
-        
     }else{
-        
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
     requestManager.equipSelectionDelegate = self;
 
-    //do everything else
     [self renewTheViewWithRequestManager:requestManager];
     
     self.dataIsLoadingView.hidden = YES;
@@ -289,38 +221,28 @@
 
 
 -(void)renewTheViewWithRequestManager:(EQRScheduleRequestManager*)requestManager{
-    
 
-    //______!!!!!!  where should this go?   !!!!!!_______
-    //first, renew the list of uniqueItems
+    // Renew the list of uniqueItems
     [requestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray){
 //        TODO: retrieveAllEquipUniqueItems async
     }];
     
-    
     //_______********  try allocating the gear list here... *****______
     
-    //must entirely build or rebuild list available equipment as the user could go back and change the dates at anytime
+    // Must entirely build or rebuild list available equipment as the user could go back and change the dates at anytime
     [requestManager resetEquipListAndAvailableQuantites];
     
-    //...now factor in the gear already scheduled for the chosen dates in the available quantities.
+    // Factor in the gear already scheduled for the chosen dates in the available quantities.
     [self allocateGearList];
     
-    //if request manager already has a request object, remove any recently added join
+    // If request manager already has a request object, remove any recently added joins
     [requestManager emptyTheArrayOfEquipJoins];
-    
-    //-------*******___________
-    
     
     //register collection view cell
     [self.equipCollectionView registerClass:[EQREquipItemCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.equipCollectionView registerClass:[EQRHeaderCellTemplate class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
     
-    //______*********  this should only apply to students  ******_______
-    //get class data from scheduleRequest object
-    
-    //______IF NO VALUE EXISTS FOR REQUEST.CLASSTITLE_FOREIGNKEY, THEN IT WILL PASS AS NULL WHICH WILL CRASH IN THE WEBDATA QUERY______
-    //______*****  USE BETTER ERROR HANDLING IN THE WEBDATA METHOD  *******__________
+    // Get class data from scheduleRequest object
     NSString* classTitleKey;
     if (requestManager.request.classTitle_foreignKey){
         classTitleKey = requestManager.request.classTitle_foreignKey;
@@ -328,211 +250,168 @@
         classTitleKey = @"";
     };
     
-    //set webData request for equiplist
-//    NSLog(@"this is the class title key: %@", classTitleKey);
-    NSArray* firstParamArray = [NSArray arrayWithObjects:@"ClassCatalog_foreignKey", classTitleKey, nil];
-    NSArray* secondParamArray = [NSArray arrayWithObjects:firstParamArray, nil];
     
-    //1. get list of ClassCatalog_EquipTitleItem_Join
-    //declare a mutable array
-    __block NSMutableArray* tempEquipMuteArray = [NSMutableArray arrayWithCapacity:1];
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"renewTheViewWithRequestManager";
+    queue.maxConcurrentOperationCount = 5;
     
-    EQRWebData* webData = [EQRWebData sharedInstance];
     
-    if (([requestManager.request.renter_type isEqualToString:EQRRenterStudent]) && (requestManager.request.showAllEquipmentFlag == NO)){
+    NSBlockOperation *getEquipTitlesWithClassCatalogKey = [NSBlockOperation blockOperationWithBlock:^{
+        //set webData request for equiplist
+        NSArray* secondParamArray = @[ @[@"ClassCatalog_foreignKey", classTitleKey] ];
         
-        //get a list of allocated gear using SQL with INNER JOIN
+        // Get list of ClassCatalog_EquipTitleItem_Join
+        __block NSMutableArray* tempEquipMuteArray = [NSMutableArray arrayWithCapacity:1];
         
-        [webData queryWithLink:@"EQGetEquipTitlesWithClassCatalogKey.php" parameters:secondParamArray class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        
+        if (([requestManager.request.renter_type isEqualToString:EQRRenterStudent]) && (requestManager.request.showAllEquipmentFlag == NO)){
             
-//            NSLog(@"this is the array count: %u", (int)[muteArray count]);
-            
-            if ([muteArray count] > 0){
+            // Get a list of allocated gear using SQL with INNER JOIN
+            [webData queryWithLink:@"EQGetEquipTitlesWithClassCatalogKey.php" parameters:secondParamArray class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
                 
-                for (id something in muteArray){
+                if ([muteArray count] > 0){
+                    for (id something in muteArray){
+                        [tempEquipMuteArray addObject:something];
+                    }
+                }
+            }];
+        } else{
+            //_____*****  the ScheduleTopVCntrllr does the same thing, with it's own ivars... **_____
+            // Get the ENTIRE list of equipment titles... for staff and faculty
+            [webData queryWithLink:@"EQGetEquipmentTitlesAll.php" parameters:nil class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
+                
+                for (EQREquipItem* equipItemThingy in muteArray){
+                    [tempEquipMuteArray addObject:equipItemThingy];
+                }
+            }];
+        }
+        
+        //... and save to ivar
+        self.equipTitleArray = [NSArray arrayWithArray:tempEquipMuteArray];
+    }];
+    
+    
+    NSBlockOperation *everythingElse = [NSBlockOperation blockOperationWithBlock:^{
+        // Go through this single array and build a nested array to accommodate sections based on category
+        if (!self.equipTitleCategoriesList){
+            self.equipTitleCategoriesList = [NSMutableArray arrayWithCapacity:1];
+        }
+        [self.equipTitleCategoriesList removeAllObjects];
+        
+        //A. first test if array of categories is valid
+        if ([self.equipTitleCategoriesList count] < 1){
+            
+            NSMutableSet* tempSet = [NSMutableSet set];
+            
+            //create a list of unique categories names by looping through the array of equipTitles
+            for (EQREquipItem* obj in self.equipTitleArray){
+                
+                if ([tempSet containsObject:obj.category] == NO){
                     
-                    [tempEquipMuteArray addObject:something];
+                    [tempSet addObject:obj.category];
+                    [self.equipTitleCategoriesList addObject:[NSString stringWithString:obj.category]];
                 }
             }
-        }];
-        
-        
-        
-        //get a list of allocated gear...
-        //        [webData queryWithLink:@"EQGetClassCatalogEquipTitleItemJoins.php" parameters:secondParamArray class:@"EQRClassCatalog_EquipTitleItem_Join" completion:^(NSMutableArray* muteArrayFirst){
-        //
-        //
-        //
-        //            //do something with the returned array...
-        //            [muteArrayFirst enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        //
-        //                NSArray* equipParamArrayfirst = [NSArray arrayWithObjects:@"key_id",
-        //                                                 [(EQRClassCatalog_EquipTitleItem_Join*)obj equipTitleItem_foreignKey], nil];
-        //                NSArray* equipParamArraySecond = [NSArray arrayWithObject:equipParamArrayfirst];
-        //
-        //                EQRWebData* webDataNew = [EQRWebData sharedInstance];
-        //
-        //                [webDataNew queryWithLink:@"EQGetEquipmentTitles.php" parameters:equipParamArraySecond class:@"EQREquipItem"
-        //                               completion:^(NSMutableArray* muteArrayAlt){
-        //
-        //                                   //do something with the returned array...
-        //                                   if ([muteArrayAlt count] > 0){
-        //
-        //                                       [tempEquipMuteArray addObject:[muteArrayAlt objectAtIndex:0]];
-        //                                   }
-        //                               }];
-        //            }];
-        //        }];
-        
-        
-        
-        
-    } else{
-        
-        //_____*****  the ScheduleTopVCntrllr does the same thing, with it's own ivars... **_____
-        //get the ENTIRE list of equiopment titles... for staff and faculty
-        [webData queryWithLink:@"EQGetEquipmentTitlesAll.php" parameters:nil class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
             
-            //do something with the returned array...
-            for (EQREquipItem* equipItemThingy in muteArray){
-                
-                [tempEquipMuteArray addObject:equipItemThingy];
-            }
-        }];
-    }
-    
-    
-    //... and save to ivar
-    self.equipTitleArray = [NSArray arrayWithArray:tempEquipMuteArray];
-    
-    //2. Go through this sinlge array and build a nested array to accommodate sections based on category
-    
-    if (!self.equipTitleCategoriesList){
-        
-        self.equipTitleCategoriesList = [NSMutableArray arrayWithCapacity:1];
-        
-    } else {
-        
-        //MUST empty out an existing equipTitlesCategoriesList
-        [self.equipTitleCategoriesList removeAllObjects];
-    }
-    
-    //A. first test if array of categories is valid
-    if ([self.equipTitleCategoriesList count] < 1){
-        
-        NSMutableSet* tempSet = [NSMutableSet set];
-        
-        //create a list of unique categories names by looping through the array of equipTitles
-        for (EQREquipItem* obj in self.equipTitleArray){
-            
-            if ([tempSet containsObject:obj.category] == NO){
-                
-                [tempSet addObject:obj.category];
-                [self.equipTitleCategoriesList addObject:[NSString stringWithString:obj.category]];
-            }
+            [tempSet removeAllObjects];
+            tempSet = nil;
         }
         
-        [tempSet removeAllObjects];
-        tempSet = nil;
-    }
-    
-    //save equipTitleCategoriesList to scheduleRequestManager
-    if (!requestManager.arrayOfEquipTitleCategories){
+        // Save equipTitleCategoriesList to scheduleRequestManager
+        if (!requestManager.arrayOfEquipTitleCategories){
+            requestManager.arrayOfEquipTitleCategories = [NSMutableArray arrayWithCapacity:1];
+        }
+        [requestManager.arrayOfEquipTitleCategories removeAllObjects];
+ 
+        [requestManager.arrayOfEquipTitleCategories addObjectsFromArray:self.equipTitleCategoriesList];
         
-        requestManager.arrayOfEquipTitleCategories = [NSMutableArray arrayWithCapacity:1];
-    }
-    
-    [requestManager.arrayOfEquipTitleCategories removeAllObjects];
-    [requestManager.arrayOfEquipTitleCategories addObjectsFromArray:self.equipTitleCategoriesList];
-    
-    
-    //sort the equipCatagoriesList
-    NSSortDescriptor* sortDescAlpha = [NSSortDescriptor sortDescriptorWithKey:nil ascending:YES];
-    NSArray* sortArray = [NSArray arrayWithObject:sortDescAlpha];
-    NSArray* tempSortArrayCat = [self.equipTitleCategoriesList sortedArrayUsingDescriptors:sortArray];
-    self.equipTitleCategoriesList = [NSMutableArray arrayWithArray:tempSortArrayCat];
-    
-    //B.1 empty out the current ivar of arrayWithSections
-    //create it if it doesn't exist yet
-    if (!self.equipTitleArrayWithSections){
         
-        self.equipTitleArrayWithSections = [NSMutableArray arrayWithCapacity:1];
+        // Sort the equipCatagoriesList
+        NSSortDescriptor* sortDescAlpha = [NSSortDescriptor sortDescriptorWithKey:nil ascending:YES];
+        NSArray* sortArray = [NSArray arrayWithObject:sortDescAlpha];
+        NSArray* tempSortArrayCat = [self.equipTitleCategoriesList sortedArrayUsingDescriptors:sortArray];
+        self.equipTitleCategoriesList = [NSMutableArray arrayWithArray:tempSortArrayCat];
         
-    }else{
-        
+        // Empty out the current ivar of arrayWithSections
+        if (!self.equipTitleArrayWithSections){
+            self.equipTitleArrayWithSections = [NSMutableArray arrayWithCapacity:1];
+        }
         [self.equipTitleArrayWithSections removeAllObjects];
-    }
-    
-    //B. with a valid list of categories....
-    //create a new array by populating each nested array with equiptitle that match each category
-    for (NSString* categoryItem in self.equipTitleCategoriesList){
         
-        NSMutableArray* subNestArray = [NSMutableArray arrayWithCapacity:1];
-        
-        for (EQREquipItem* equipItem in self.equipTitleArray){
+        // With a valid list of categories create a new array by populating each nested array with equiptitle that match each category
+        for (NSString* categoryItem in self.equipTitleCategoriesList){
             
-            if ([equipItem.category isEqualToString:categoryItem]){
-                
-                [subNestArray addObject: equipItem];
+            NSMutableArray* subNestArray = [NSMutableArray arrayWithCapacity:1];
+            
+            for (EQREquipItem* equipItem in self.equipTitleArray){
+                if ([equipItem.category isEqualToString:categoryItem]){
+                    [subNestArray addObject: equipItem];
+                }
             }
+            [self.equipTitleArrayWithSections addObject:subNestArray];
         }
         
-        //add subNested array to the master array
-        [self.equipTitleArrayWithSections addObject:subNestArray];
-        
-    }
-    
-    //we now have a master cateogry array with subnested equipTitle arrays
-    
-    //sort the subnested arrays alphabetically
-    NSMutableArray* tempSortedArrayWithSections = [NSMutableArray arrayWithCapacity:1];
-    for (NSArray* obj in self.equipTitleArrayWithSections)  {
-        
-        NSArray* tempSubNestArray = [obj sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
+        // Sort the subnested arrays alphabetically
+        NSMutableArray* tempSortedArrayWithSections = [NSMutableArray arrayWithCapacity:1];
+        for (NSArray* obj in self.equipTitleArrayWithSections)  {
             
-            NSString* string1 = [(EQREquipItem*)obj1 shortname];
-            NSString* string2 = [(EQREquipItem*)obj2 shortname];
+            NSArray* tempSubNestArray = [obj sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
+                
+                NSString* string1 = [(EQREquipItem*)obj1 shortname];
+                NSString* string2 = [(EQREquipItem*)obj2 shortname];
+                
+                return [string1 compare:string2];
+            }];
             
-            return [string1 compare:string2];
-        }];
-
-        //resort the nested array to have alphabetizing going down the columns instead across the rows
-        NSMutableArray *tempSubNestUsingColumns = [NSMutableArray arrayWithCapacity:1];
-        NSInteger countOfItems = [tempSubNestArray count];
-        NSInteger countOfItemsDividedByTwo = countOfItems / 2; //will round down
-        NSInteger countOfItemsDividedByTwoRoundingUp = countOfItemsDividedByTwo;
-        
-        //add one to half count if count is an odd number
-        float moduloOfCount = countOfItems % 2;
-        if (moduloOfCount > 0){
-            countOfItemsDividedByTwoRoundingUp++;
-        }
-        
-        
-        NSArray *firstHalfOfItems = [tempSubNestArray subarrayWithRange:NSMakeRange(0, countOfItemsDividedByTwoRoundingUp)];
-        NSIndexSet *thisSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, countOfItemsDividedByTwoRoundingUp)];
-        [tempSubNestUsingColumns insertObjects:firstHalfOfItems atIndexes:thisSet];
-        
-        NSArray *secondHalfOfItems = [tempSubNestArray subarrayWithRange:NSMakeRange(countOfItemsDividedByTwoRoundingUp, countOfItemsDividedByTwo)];
-        NSInteger countOfItemsInSecondHalf = [secondHalfOfItems count];
-        
-        int i;
-        for (i = 0 ; i < countOfItemsInSecondHalf ; i++){
+            // Re-sort the nested array to have alphabetizing going down the columns instead across the rows
+            NSMutableArray *tempSubNestUsingColumns = [NSMutableArray arrayWithCapacity:1];
+            NSInteger countOfItems = [tempSubNestArray count];
+            NSInteger countOfItemsDividedByTwo = countOfItems / 2; //will round down
+            NSInteger countOfItemsDividedByTwoRoundingUp = countOfItemsDividedByTwo;
             
-            NSInteger indexOfItemInSecondHalf = countOfItemsDividedByTwoRoundingUp + i;
-            id object = [tempSubNestArray objectAtIndex:indexOfItemInSecondHalf];
-            [tempSubNestUsingColumns insertObject:object atIndex:(i * 2) + 1];
-        }
-        
-        [tempSortedArrayWithSections addObject:tempSubNestUsingColumns];
-        
-    };
-    self.equipTitleArrayWithSections = tempSortedArrayWithSections;
+            // Add one to half count if count is an odd number
+            float moduloOfCount = countOfItems % 2;
+            if (moduloOfCount > 0){
+                countOfItemsDividedByTwoRoundingUp++;
+            }
+            
+            
+            NSArray *firstHalfOfItems = [tempSubNestArray subarrayWithRange:NSMakeRange(0, countOfItemsDividedByTwoRoundingUp)];
+            NSIndexSet *thisSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, countOfItemsDividedByTwoRoundingUp)];
+            [tempSubNestUsingColumns insertObjects:firstHalfOfItems atIndexes:thisSet];
+            
+            NSArray *secondHalfOfItems = [tempSubNestArray subarrayWithRange:NSMakeRange(countOfItemsDividedByTwoRoundingUp, countOfItemsDividedByTwo)];
+            NSInteger countOfItemsInSecondHalf = [secondHalfOfItems count];
+            
+            int i;
+            for (i = 0 ; i < countOfItemsInSecondHalf ; i++){
+                
+                NSInteger indexOfItemInSecondHalf = countOfItemsDividedByTwoRoundingUp + i;
+                id object = [tempSubNestArray objectAtIndex:indexOfItemInSecondHalf];
+                [tempSubNestUsingColumns insertObject:object atIndex:(i * 2) + 1];
+            }
+            
+            [tempSortedArrayWithSections addObject:tempSubNestUsingColumns];
+            
+        };
+        self.equipTitleArrayWithSections = tempSortedArrayWithSections;
+    }];
+    [everythingElse addDependency:getEquipTitlesWithClassCatalogKey];
     
     
-    //is this necessary_____???
-    [self.equipCollectionView reloadData];
+    NSBlockOperation *renderTable = [NSBlockOperation blockOperationWithBlock:^{
+       dispatch_async(dispatch_get_main_queue(), ^{
+           //is this necessary_____???
+           [self.equipCollectionView reloadData];
+       });
+    }];
+    [renderTable addDependency:everythingElse];
     
+    
+    [queue addOperation:getEquipTitlesWithClassCatalogKey];
+    [queue addOperation:everythingElse];
+    [queue addOperation:renderTable];
 }
 
 
@@ -721,10 +600,8 @@
 
 
 -(void)receiveMiscData:(NSString*)miscItemText{
-    
 
-    
-    //update data layer new entry in db with item text
+    // Update data layer new entry in db with item text
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
         requestManager = self.privateRequestManager;
@@ -733,48 +610,31 @@
     }
     requestManager.equipSelectionDelegate = self;
     
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    NSArray* firstArray = @[@"scheduleTracking_foreignKey", requestManager.request.key_id];
-    NSArray* secondArray = @[@"name", miscItemText];
-    NSArray *topArray = @[firstArray, secondArray];
-    NSString *miscKeyID = [webData queryForStringWithLink:@"EQSetNewMiscJoin.php" parameters:topArray];
-
+    NSArray *topArray = @[ @[@"scheduleTracking_foreignKey", requestManager.request.key_id],
+                           @[@"name", miscItemText] ];
     
-    //update misc array in request
-    EQRMiscJoin *miscJoin = [[EQRMiscJoin alloc] init];
-    miscJoin.name = miscItemText;
-    miscJoin.key_id = miscKeyID;
-    miscJoin.scheduleTracking_foreignKey = requestManager.request.key_id;
-    if (!requestManager.request.arrayOfMiscJoins){
-        requestManager.request.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
-    }
-    [requestManager.request.arrayOfMiscJoins addObject:miscJoin];
-    
-    
-    //refresh the popover's view
-    [(EQRMiscEditVC*)[self.miscPopover contentViewController] renewTheViewWithScheduleKey:requestManager.request.key_id];
-    
-    
-    //dismiss and dealloc popover
-//    [self.miscPopover dismissPopoverAnimated:YES];
-//    
-//    //release delegate status
-//    [(EQRMiscEditVC*)[self.miscPopover contentViewController] setDelegate:nil];
-//    
-//    self.miscPopover = nil;
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        EQRWebData* webData = [EQRWebData sharedInstance];
+       [webData queryForStringwithAsync:@"EQSetNewMiscJoin.php" parameters:topArray completion:^(NSString *miscKeyID) {
+           
+           if (!miscKeyID) return NSLog(@"EQREquipSelectionGenericVC > failed to retreive miscKeyID");
+           
+           // Update misc array in request
+           EQRMiscJoin *miscJoin = [[EQRMiscJoin alloc] init];
+           miscJoin.name = miscItemText;
+           miscJoin.key_id = miscKeyID;
+           miscJoin.scheduleTracking_foreignKey = requestManager.request.key_id;
+           if (!requestManager.request.arrayOfMiscJoins){
+               requestManager.request.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
+           }
+           [requestManager.request.arrayOfMiscJoins addObject:miscJoin];
+           
+           //refresh the popover's view
+           [(EQRMiscEditVC*)[self.miscPopover contentViewController] renewTheViewWithScheduleKey:requestManager.request.key_id];
+       }];
+    });
 }
-
-
-#pragma mark - equipment cell buttons
-//
-//-(IBAction)plusButtonActivated:(id)sender{
-//    
-//}
-//
-//
-//-(IBAction)minusButtonActivated:(id)sender{
-//    
-//}
 
 
 #pragma mark - allocation of gear items
@@ -965,15 +825,11 @@
     if (self.privateRequestManagerFlag){
         requestManager = self.privateRequestManager;
     }else{
-//        NSLog(@"INSIDE THE ALLOCATE GEAR LIST AND IS USING SHARED REQUEST MANAGER");
         requestManager = [EQRScheduleRequestManager sharedInstance];
     }
     requestManager.equipSelectionDelegate = self;
     
-    
-    //_______*********  MOVED METHOD TO REQUESTMANAGER  **********___________
     [requestManager allocateGearListWithDates:nil];
-    
 }
 
 
@@ -1303,15 +1159,9 @@
 #pragma mark - popover delegate methods
 
 -(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
- 
-    // there are 3 popovers
-    //notesPopover
-    //optionsPopover
-    //miscPopover
     
     if (popoverController == self.notesPopover){
         
-        //dealloc popover
         self.notesPopover = nil;
         
     }else if( popoverController == self.optionsPopover){
@@ -1322,7 +1172,6 @@
         
         //release delegate status
         [(EQRMiscEditVC*)[self.miscPopover contentViewController] setDelegate:nil];
-        
         self.miscPopover = nil;
     }
 }

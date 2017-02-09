@@ -2330,6 +2330,20 @@ const int intEQRTransaction = 11;
         });
     }
     
+    if ([link isEqualToString:@"EQAlterNotesInScheduleRequest.php"]){
+        NSString *returnString = [self queryForStringWithLink:@"EQAlterNotesInScheduleRequest.php" parameters:para];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+    }
+    
+    if ([link isEqualToString:@"EQSetNewMiscJoin.php"]){
+        NSString *returnString = [self queryForStringWithLink:@"EQSetNewMiscJoin.php" parameters:para];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+    }
+    
 }
 
 

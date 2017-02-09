@@ -338,7 +338,9 @@ typedef void (^CompletionWithString)(NSString *name);
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
         EQRWebData* webData = [EQRWebData sharedInstance];
-        [webData queryForStringWithLink:@"EQAlterNotesInScheduleRequest.php" parameters:topArray];
+        [webData queryForStringwithAsync:@"EQAlterNotesInScheduleRequest.php" parameters:topArray completion:^(id object) {
+            
+        }];
     });
 }
 
