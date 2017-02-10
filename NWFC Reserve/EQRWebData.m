@@ -2020,27 +2020,21 @@ const int intEQRTransaction = 11;
         }
         return;
     }
-    
-    
-    
-    //_________************ END
+
 }
 
 
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError{
-    
     NSLog(@"parse error occured: %@", parseError);
 }
 
 
-//_________*********  i have no idea what this is or if it's doing anything...
 -(void)connection:(NSURLConnection *)connection didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
     if([challenge previousFailureCount] == 0) {
         
         NSURLCredential *newCredential =[NSURLCredential credentialWithUser:@"username" password:@"password" persistence:NSURLCredentialPersistenceForSession];
         
         [[challenge sender] useCredential:newCredential forAuthenticationChallenge:challenge];
-        
     }
     else {
         NSLog(@"previous authentication failure");
@@ -2048,12 +2042,8 @@ const int intEQRTransaction = 11;
 }
 
 
-
 - (void)parserDidEndDocument:(NSXMLParser *)parser{
-    
-//    NSLog(@"Webdata > XML Parser did end Document" );
-
-    //only if completion block is up, then send block
+    // Only if completion block is up, then send block
     self.XMLParsingIsCompleteFlag = YES;
     if (self.completionBlockSignalFlag){
         [self sendAsyncCompletionBlock];
@@ -2078,16 +2068,6 @@ const int intEQRTransaction = 11;
 
 
 #pragma mark - Asynchronous methods
-
-//-(void)queryForStringwithAsync:(NSString *)link parameters:(NSArray *)para completion:(CompletionBlockWithString)completeBlock{
-//
-//    NSString *returnString = [self queryForStringWithLink:link parameters:para];
-//    
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        completeBlock(returnString);
-//    });
-//
-//}
 
 -(void)queryForStringwithAsync:(NSString *)link parameters:(NSArray *)para completion:(CompletionBlockWithUnknownObject)completeBlock{
     
@@ -2117,7 +2097,7 @@ const int intEQRTransaction = 11;
     
     if ([link isEqualToString:@"EQGetContactNameWithKey.php"]){
         
-        //return the Contact object
+        // Return the Contact object
         [self queryWithLink:@"EQGetContactNameWithKey.php" parameters:para class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
             
             if ([muteArray count] > 0){
@@ -2368,6 +2348,26 @@ const int intEQRTransaction = 11;
         dispatch_async(dispatch_get_main_queue(), ^{
             completeBlock(returnString);
         });
+        return;
+    }
+    
+    if ([link isEqualToString:@"EQGetContactCompleteWithKey.php"]){
+        // Return the Contact object
+        [self queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:para class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+            
+            if ([muteArray count] > 0){
+                EQRContactNameItem *nameItem = [muteArray objectAtIndex:0];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completeBlock(nameItem);
+                });
+            }else{
+                // No object got returned, pass this error downstream... with nil
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completeBlock(nil);
+                });
+            }
+        }];
         return;
     }
     

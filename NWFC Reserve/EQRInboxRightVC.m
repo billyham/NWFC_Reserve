@@ -641,70 +641,44 @@
 
 
 -(void)sendEmail{
+    // Check that an email address exists for the contact
+    NSArray* topArray = @[ @[@"key_id", self.myScheduleRequest.contact_foreignKey] ];
     
-    //check that an email address exists for the contact
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    
-    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequest.contact_foreignKey, nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-    
-    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-    [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:topArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-        
-        for (id contact in muteArray){
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        [webData queryForStringwithAsync:@"EQGetContactCompleteWithKey.php" parameters:topArray completion:^(EQRContactNameItem *contactItem) {
             
-            [tempMuteArray addObject:contact];
-        }
-        
-    }];
-    
-    if ([tempMuteArray count] < 1){
-        
-        //_____******* error handling when no contact object is returned
-    }
-    
-    EQRContactNameItem* contactItem = [tempMuteArray objectAtIndex:0];
-    
-    NSString* contactEmail = contactItem.email;
-    
-    //_______******* error handling when no email exists for the contact
-    if ([contactEmail isEqualToString:@""]){
-        
-        NSLog(@"email is empty string");
-    }
-    if (contactEmail == nil){
-        
-        NSLog(@"email is nil");
-    }
-    if (!contactEmail){
-        
-        NSLog(@"email is non existent");
-    }
-    
-    
-    NSString* messageTitle = @"";
-    NSString* messageBody = @"";
-    
-    if (self.myEmailSignature){
-        messageBody = self.myEmailSignature;
-    }
-    
-    NSArray* messageRecipients = [NSArray arrayWithObjects: contactEmail, nil];
-    
-    MFMailComposeViewController* mfVC = [[MFMailComposeViewController alloc] init];
-    mfVC.mailComposeDelegate = self;
-    
-    [mfVC setSubject:messageTitle];
-    [mfVC setMessageBody:messageBody isHTML:NO];
-    [mfVC setToRecipients:messageRecipients];
-    
-    [self presentViewController:mfVC animated:YES completion:^{
-        
-        
-    }];
-    
-    
-    
+            if (!contactItem) return NSLog(@"EQRInboxRightVC > sendEmail fails to return contactItem");
+            
+            NSString* contactEmail = contactItem.email;
+            
+            if ([contactEmail isEqualToString:@""]) NSLog(@"email is empty string");
+            if (contactEmail == nil) NSLog(@"email is nil");
+            if (!contactEmail)   NSLog(@"email is non existent");
+            
+            NSString* messageTitle = @"";
+            NSString* messageBody = @"";
+            
+            if (self.myEmailSignature){
+                messageBody = self.myEmailSignature;
+            }
+            
+            NSArray* messageRecipients = [NSArray arrayWithObjects: contactEmail, nil];
+            
+            MFMailComposeViewController* mfVC = [[MFMailComposeViewController alloc] init];
+            mfVC.mailComposeDelegate = self;
+            
+            [mfVC setSubject:messageTitle];
+            [mfVC setMessageBody:messageBody isHTML:NO];
+            [mfVC setToRecipients:messageRecipients];
+            
+            [self presentViewController:mfVC animated:YES completion:^{
+                
+            }];
+
+        }];
+    });
 }
 
 
@@ -754,7 +728,6 @@
     NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
     
     [webData queryForStringWithLink:@"EQSetConfirmation.php" parameters:topArray];
-//    NSLog(@"this is the return key id: %@", returnKey);
     
     [self composeEmail];
     
@@ -767,85 +740,56 @@
 
 -(IBAction)confirmWithEmail:(id)sender{
     
+    NSArray* topArray = @[ @[@"key_id", self.myScheduleRequest.contact_foreignKey] ];
     
-    //check that an email address exists for the contact
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    
-    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequest.contact_foreignKey, nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-    
-    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-    [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:topArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
-       
-        for (id contact in muteArray){
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        [webData queryForStringwithAsync:@"EQGetContactCompleteWithKey.php" parameters:topArray completion:^(EQRContactNameItem *contactItem) {
+            if (!contactItem) return NSLog(@"EQRInboxRightVC > confirmWithEmail, failure to retrieve contactItem");
             
-            [tempMuteArray addObject:contact];
-        }
-        
-    }];
-    
-    if ([tempMuteArray count] < 1){
-        
-        //_____******* error handling when no contact object is returned
-    }
-    
-    EQRContactNameItem* contactItem = [tempMuteArray objectAtIndex:0];
-    
-    NSString* contactEmail = contactItem.email;
-
-    //_______******* error handling when no email exists for the contact
-    if ([contactEmail isEqualToString:@""]){
-        
-        NSLog(@"email is empty string");
-    }
-    if (contactEmail == nil){
-        
-        NSLog(@"email is nil");
-    }
-    if (!contactEmail){
-        
-        NSLog(@"email is non existent");
-    }
-    
-    
-    
-    
-    //_______compose message body________
-    EQRTextEmailStudent* emailBody = [[EQRTextEmailStudent alloc] init];
-    
-    emailBody.request_keyID = self.myScheduleRequest.key_id;
-    emailBody.renterEmail = contactItem.email;
-    emailBody.renterFirstName = contactItem.first_name;
-    emailBody.pickupDateAsDate = self.myScheduleRequest.request_date_begin;
-    emailBody.pickupTimeAsDate = self.myScheduleRequest.request_time_begin;
-    emailBody.returnDateAsDate = self.myScheduleRequest.request_date_end;
-    emailBody.returnTimeAsDate = self.myScheduleRequest.request_time_end;
-    emailBody.notes = self.myScheduleRequest.notes;
-    emailBody.emailSignature = self.myEmailSignature;
-    
-    //get staff name
-    EQRStaffUserManager* staffUser = [EQRStaffUserManager sharedInstance];
-    emailBody.staffFirstName = staffUser.currentStaffUser.first_name;
-    
-    //decompose array of joins to title items with quantities
-    emailBody.arrayOfEquipTitlesAndQtys = [EQRDataStructure decomposeJoinsToEquipTitlesWithQuantities:self.arrayOfJoins];
-    
-//    NSLog(@"this is the count of equipTitle objects: %lu", (unsigned long)[emailBody.arrayOfEquipTitlesAndQtys count]);
-    
-    NSString* finalSubjectLine = [emailBody composeEmailSubjectLine];
-    //_______!!!!!!  Nuts, have to convert the attributed string to a regular string   !!!!_______
-    [emailBody composeEmailText:^(NSMutableAttributedString *muteAttString) {
-       
-        if(!muteAttString){
-            NSLog(@"EQRInboxRightVC > confirmWithEmail failed to composeEmailText");
-        }
-        
-        NSString* messageBody = [muteAttString string];
-        NSString* messageTitle = finalSubjectLine;
-        NSArray* messageRecipients = [NSArray arrayWithObjects: contactEmail, nil];
-        
-        [self launchEmailClientWithBody:messageBody Title:messageTitle Recipients:messageRecipients];
-    }];
+            NSString* contactEmail = contactItem.email;
+            
+            if ([contactEmail isEqualToString:@""]) NSLog(@"email is empty string");
+            if (contactEmail == nil) NSLog(@"email is nil");
+            if (!contactEmail) NSLog(@"email is non existent");
+            
+            // Compose message body
+            EQRTextEmailStudent* emailBody = [[EQRTextEmailStudent alloc] init];
+            
+            emailBody.request_keyID = self.myScheduleRequest.key_id;
+            emailBody.renterEmail = contactItem.email;
+            emailBody.renterFirstName = contactItem.first_name;
+            emailBody.pickupDateAsDate = self.myScheduleRequest.request_date_begin;
+            emailBody.pickupTimeAsDate = self.myScheduleRequest.request_time_begin;
+            emailBody.returnDateAsDate = self.myScheduleRequest.request_date_end;
+            emailBody.returnTimeAsDate = self.myScheduleRequest.request_time_end;
+            emailBody.notes = self.myScheduleRequest.notes;
+            emailBody.emailSignature = self.myEmailSignature;
+            
+            // Get staff name
+            EQRStaffUserManager* staffUser = [EQRStaffUserManager sharedInstance];
+            emailBody.staffFirstName = staffUser.currentStaffUser.first_name;
+            
+            // Decompose array of joins to title items with quantities
+            emailBody.arrayOfEquipTitlesAndQtys = [EQRDataStructure decomposeJoinsToEquipTitlesWithQuantities:self.arrayOfJoins];
+            
+            NSString* finalSubjectLine = [emailBody composeEmailSubjectLine];
+            // Nuts, have to convert the attributed string to a regular string
+            [emailBody composeEmailText:^(NSMutableAttributedString *muteAttString) {
+                
+                if(!muteAttString){
+                    NSLog(@"EQRInboxRightVC > confirmWithEmail failed to composeEmailText");
+                }
+                
+                NSString* messageBody = [muteAttString string];
+                NSString* messageTitle = finalSubjectLine;
+                NSArray* messageRecipients = [NSArray arrayWithObjects: contactEmail, nil];
+                
+                [self launchEmailClientWithBody:messageBody Title:messageTitle Recipients:messageRecipients];
+            }];
+        }];
+    });
 }
 
 
