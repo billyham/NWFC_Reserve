@@ -93,22 +93,18 @@
 {
     [super viewDidLoad];
     
-    //register for notes
+    // Register for notes
 //    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
-//    
-//    //register to receive delete instructions from equipList cells
-//    [nc addObserver:self selector:@selector(addEquipUniqueToBeDeletedArray:) name:EQREquipUniqueToBeDeleted object:nil];
-//    [nc addObserver:self selector:@selector(removeEquipUniqueToBeDeletedArray:) name:EQREquipUniqueToBeDeletedCancel object:nil];
     
-    //set ivar flag
+    // Set ivar flag
     self.saveButtonTappedFlag = NO;
     
-    //register collection view cell
+    // Register collection view cell
     [self.equipList registerClass:[EQREditorEquipListCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.equipList registerClass:[EQREditorMiscListCell class] forCellWithReuseIdentifier:@"CellForMiscJoin"];
     [self.equipList registerClass:[EQREditorHeaderCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SuppCell"];
     
-    //initialze ivar arrays
+    // Initialze ivar arrays
     if (!self.arrayOfSchedule_Unique_Joins){
         self.arrayOfSchedule_Unique_Joins = [NSMutableArray arrayWithCapacity:1];
     }else {
@@ -133,51 +129,29 @@
         [self.arrayOfToBeDeletedMiscJoinIDs removeAllObjects];
     }
     
-    //set color of collection view
+    // Set color of collection view
     EQRColors* eqrColors = [EQRColors sharedInstance];
     self.equipList.backgroundColor = [eqrColors.colorDic objectForKey:EQRColorVeryLightGrey];
     
-    //save bar button
+    // Save bar button
 //    UIBarButtonItem* rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveAction)];
     
-    //cancel bar button
+    // Cancel bar button
     UIBarButtonItem* rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction)];
-    
     [self.navigationItem setRightBarButtonItem:rightButton];
     
-
-    
-    //set title
+    // Set title
     self.navigationItem.title = @"Editor Request";
     
-    //get scheduleTrackingRequest info and...
-    //get array of schedule_equipUnique_joins
-    //user self.scheduleRequestKeyID
     
     
-    
-    
-//    NSLog(@"this is the scheduleRequest key id: %@", [self.myUserInfo objectForKey:@"key_ID"]);
-    
-    //have the requestManager establish the list of available equipment?????
-//    NSDictionary* datesDic = [NSDictionary dictionaryWithObjectsAndKeys:
-//                              self.pickUpDateDate, @"request_date_begin",
-//                              self.returnDateDate, @"request_date_end",
-//                              nil];
-    
-//    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-    
-    //_______*******  THIS IS CRASHING BECAUSE THE DATE INFO IS NOT PRESENT_________**********
-//    [requestManager allocateGearListWithDates:datesDic];
-    
-//    NSMutableArray* arrayToReturn = [NSMutableArray arrayWithCapacity:1];
     NSMutableArray* arrayToReturnJoins = [NSMutableArray arrayWithCapacity:1];
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", [self.myUserInfo objectForKey:@"key_ID"],  nil];
     NSArray* secondArray = [NSArray arrayWithObjects:firstArray, nil];
     
-    //get Scheduletracking_equipUnique_joins   formerly used EQGetScheduleEquipJoins.php
+    // Get Scheduletracking_equipUnique_joins 
     [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php"
                 parameters:secondArray class:@"EQRScheduleTracking_EquipmentUnique_Join"
                 completion:^(NSMutableArray *muteArray) {
@@ -187,7 +161,7 @@
     
     [self.arrayOfSchedule_Unique_Joins addObjectsFromArray:arrayToReturnJoins];
     
-    //gather any misc joins
+    // Gather any misc joins
     NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
     NSArray* alphaArray = @[@"scheduleTracking_foreignKey", [self.myUserInfo objectForKey:@"key_ID"]];
     NSArray* omegaArray = @[alphaArray];
@@ -198,44 +172,21 @@
     }];
     [self.arrayOfMiscJoins addObjectsFromArray:tempMiscMuteArray];
     
-    //add structure to array
+    // Add structure to array
     self.arrayOfSchedule_Unique_JoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfSchedule_Unique_Joins withMiscJoins:self.arrayOfMiscJoins];
     
-    //reload collection view
+    // Reload collection view
     [self.equipList reloadData];
     
     
-    //set text in notes
-//    NSArray* justKeyArray = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.key_id, nil];
-//    NSArray* justTopArray = [NSArray arrayWithObjects:justKeyArray, nil];
-//    NSMutableArray* tempMuteArrayJustKey = [NSMutableArray arrayWithCapacity:1];
-//    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:justTopArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-//        
-//        for (EQRScheduleRequestItem* requestItem in muteArray){
-//            
-//            [tempMuteArrayJustKey addObject:requestItem];
-//        }
-//    }];
-//    
-//    //error handling if no items are returned
-//    if ([tempMuteArrayJustKey count] > 0){
-//        self.privateRequestManager.request.notes = [[tempMuteArrayJustKey objectAtIndex:0] notes];
-//    }else{
-//        NSLog(@"InboxRightVC > renewTheViewWithRequest failed to find a matching request key id");
-//    }
-//    
-//    //_____set notes text
-//    self.notesView.text = self.privateRequestManager.request.notes;
-    
-    //.... or.....
+    // Set text in notes
     self.notesView.text = [self.myUserInfo objectForKey:@"notes"];
     
-    
-    //make notes view hot to touch
+    // Make notes view hot to touch
     UITapGestureRecognizer* tapGest = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openNotesEditor)];
     [self.notesView addGestureRecognizer:tapGest];
     
-    //background color for notes
+    // Background color for notes
     EQRColors* colors = [EQRColors sharedInstance];
     self.notesView.backgroundColor = [colors.colorDic objectForKey:EQRColorEditModeBGBlue];
     
@@ -246,7 +197,7 @@
     
     [self.priceMatrixSubView addSubview:self.priceWidget.view];
     
-    //set button target
+    // Set button target
     [self.priceWidget.editButton addTarget:self action:@selector(showPricingButton:) forControlEvents:UIControlEventTouchUpInside];
 
 }
@@ -256,48 +207,41 @@
     
     self.myUserInfo = userInfo;
     
-    //create private request manager as ivar
+    // Create private request manager as ivar
     if (!self.privateRequestManager){
-        
         self.privateRequestManager = [[EQRScheduleRequestManager alloc] init];
     }
     
-//    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-//    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-//    dateFormatter.dateFormat = @"yyyy-MM-dd";
-    // HH:mm:ss
-    
-    //set dates
+    // Set dates
     self.pickUpDateDate = [self.myUserInfo objectForKey:@"request_date_begin"];
     self.returnDateDate = [self.myUserInfo objectForKey:@"request_date_end"];
     self.pickUpTime = [self.myUserInfo objectForKey:@"request_time_begin"];
     self.returnTime = [self.myUserInfo objectForKey:@"request_time_end"];
     
-    //set notes
+    // Set notes
     self.notesView.text = [self.myUserInfo objectForKey:@"notes"];
     
-    //add times to dates
+    // Add times to dates
     self.pickUpDateDate = [self.pickUpDateDate dateByAddingTimeInterval: [self.pickUpTime timeIntervalSinceReferenceDate]];
     self.returnDateDate = [self.returnDateDate dateByAddingTimeInterval:[self.returnTime timeIntervalSinceReferenceDate]];
     
-    //______adjust by subtracting 8 hours
+    // Adjust by subtracting 8 hours
     float secondsForOffset = -28800;    //this is 9 hours = 32400, this is 8 hours = 28800;
     self.pickUpDateDate = [self.pickUpDateDate dateByAddingTimeInterval:secondsForOffset];
     self.returnDateDate = [self.returnDateDate dateByAddingTimeInterval:secondsForOffset];
     
     
-    
-    //instantiate the request item in ivar requestManager
+    // Instantiate the request item in ivar requestManager
     self.privateRequestManager.request = [[EQRScheduleRequestItem alloc] init];
     
-    //two important methods that initiate requestManager ivar arrays
+    // Two important methods that initiate requestManager ivar arrays
     [self.privateRequestManager resetEquipListAndAvailableQuantites];
     [self.privateRequestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
 //        TODO: retrieveAllEquipUniqueItems async
     }];
     
     
-    //and populate its ivars
+    // Populate its ivars
 //    self.privateRequestManager.request.key_id = [self.myUserInfo objectForKey:@"key_ID"];
     self.privateRequestManager.request.renter_type = [self.myUserInfo objectForKey:@"renter_type"];
     self.privateRequestManager.request.contact_name = [self.myUserInfo objectForKey:@"contact_name"];
@@ -318,8 +262,7 @@
     
     
     EQRWebData* webData = [EQRWebData sharedInstance];
-    NSArray* arrayWithKey = [NSArray arrayWithObjects:@"key_id",[userInfo objectForKey:@"key_ID"], nil];
-    NSArray* topArrayWithKey = [NSArray arrayWithObject:arrayWithKey];
+    NSArray* topArrayWithKey = @[ @[@"key_id", [userInfo objectForKey:@"key_ID"]] ];
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
@@ -414,13 +357,11 @@
         return;
     }
 
-    EQRWebData* webData = [EQRWebData sharedInstance];
-
-    NSArray* first2Array = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.classTitle_foreignKey, nil];
-    NSArray* top2Array = [NSArray arrayWithObjects:first2Array, nil];
+    NSArray* top2Array = @[ @[@"key_id", self.privateRequestManager.request.classTitle_foreignKey] ];
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
+        EQRWebData* webData = [EQRWebData sharedInstance];
         [webData queryForStringwithAsync:@"EQGetClassCatalogTitleWithKey.php" parameters:top2Array completion:^(NSString *catalogTitle) {
             [self.classField setTitle:catalogTitle forState:UIControlStateHighlighted & UIControlStateNormal & UIControlStateSelected];
         }];
@@ -445,8 +386,6 @@
     
     //update SQL with new request information
     EQRWebData* webData = [EQRWebData sharedInstance];
-    
-//    NSLog(@"this is the classSection_foreignKey: %@", self.privateRequestManager.request.classSection_foreignKey);
     
     //must not include nil objects in array
     //cycle though all inputs and ensure some object is included. use @"88888888" as an error code
@@ -568,105 +507,7 @@
     
     UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Delete Confirmation" message:@"Are you sure want to delete this reservation?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
     [alertView show];
-    
-    
-    
 }
-
-
-//_______this is repeated in EQRQuickViewPage2VCntrllr.m________
-//_______works with an array of ScheduleTracking_EquipUnique_Joins, should also work with array of EquipUniqueItems_____
-//#pragma mark - create structured array of equipment
-//
-//#pragma clang diagnostic push
-//#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-//
-//-(NSArray*)turnFlatArrayToStructuredArray:(NSArray*)flatArray{
-//    
-//    //first get array of grouping objects
-//    //get title items EQGetEquipmentTitlesAll (except items with hide_from_public set to YES)
-//    EQRWebData* webData = [EQRWebData sharedInstance];
-//    __block NSMutableSet* tempMuteSetOfGroupingStrings = [NSMutableSet setWithCapacity:1];
-//    __block NSMutableDictionary* tempMuteDicOfTitleKeysToGrouping = [NSMutableDictionary dictionaryWithCapacity:1];
-//    
-//    
-//    [webData queryWithLink:@"EQGetEquipmentTitlesAll.php" parameters:nil class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
-//        
-//        //loop through entire title item array
-//        for (EQREquipItem* item in muteArray){
-//            
-//            //add item's schedule_grouping to the dictionary
-//            [tempMuteDicOfTitleKeysToGrouping setValue:[item performSelector:NSSelectorFromString(EQRScheduleGrouping)]forKey:item.key_id];
-//            
-//            BOOL foundTitleDontAdd = NO;
-//            
-//            for (NSString* titleString in tempMuteSetOfGroupingStrings){
-//                
-//                //identify items with schedule _grouping already in our muteable array
-//                if ([[item performSelector:NSSelectorFromString(EQRScheduleGrouping)] isEqualToString:titleString]){
-//                    
-//                    foundTitleDontAdd = YES;
-//                }
-//            }
-//            
-//            //advance to next title item
-//            if (foundTitleDontAdd == NO){
-//                
-//                //otherwise add grouping in set
-//                [tempMuteSetOfGroupingStrings addObject:[item performSelector:NSSelectorFromString(EQRScheduleGrouping)]];
-//            }
-//        }
-//    }];
-//    
-//    NSMutableArray* tempTopArray = [NSMutableArray arrayWithCapacity:1];
-//    
-//    //loop through ivar array of joins
-//    for (EQRScheduleTracking_EquipmentUnique_Join* join in flatArray){
-//        
-//        //find a matching key_id
-//        NSString* groupingString = [tempMuteDicOfTitleKeysToGrouping objectForKey:join.equipTitleItem_foreignKey];
-//        
-//        //assign to join object
-//        join.schedule_grouping = groupingString;
-//        
-//        BOOL createNewSubArray = YES;
-//        
-//        for (NSMutableArray* subArray in tempTopArray){
-//            
-//            if ([join.schedule_grouping isEqualToString:[(EQRScheduleTracking_EquipmentUnique_Join*)[subArray objectAtIndex:0] schedule_grouping]]){
-//                
-//                createNewSubArray = NO;
-//                
-//                //add join to this subArray
-//                [subArray addObject:join];
-//            }
-//        }
-//        
-//        if (createNewSubArray == YES){
-//            
-//            //create a new array
-//            NSMutableArray* newArray = [NSMutableArray arrayWithObject:join];
-//            
-//            //add the subarray to the top array
-//            [tempTopArray addObject:newArray];
-//        }
-//        
-//    }
-//    
-//    NSArray* arrayToReturn = [NSArray arrayWithArray:tempTopArray];
-//    
-//    //sort the array alphabetically
-//    NSArray* sortedTopArray = [arrayToReturn sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-//        
-//        return [[(EQRScheduleTracking_EquipmentUnique_Join*)[obj1 objectAtIndex:0] schedule_grouping]
-//                compare:[(EQRScheduleTracking_EquipmentUnique_Join*)[obj2 objectAtIndex:0] schedule_grouping]];
-//    }];
-//    
-//    return sortedTopArray;
-//}
-//
-//#pragma clang diagnostic pop
-
 
 
 #pragma mark - alert view delegate methods
@@ -794,7 +635,6 @@
 -(IBAction)removeClassButton:(id)sender{
     
     [self initiateRetrieveClassItem:nil];
-    
 }
 
 
@@ -874,9 +714,6 @@
 
 -(IBAction)showExtendedDate:(id)sender{
     
-//    NSLog(@"showOrHide action fires with class: %@", [[self.theDatePopOver contentViewController] class]);
-    
-    
     //change to Extended view
     EQREditorExtendedDateVC* myDateViewController = [[EQREditorExtendedDateVC alloc] initWithNibName:@"EQREditorExtendedDateVC" bundle:nil];
     CGSize thisSize = CGSizeMake(600.f, 570.f);
@@ -893,7 +730,6 @@
     myDateViewController.pickupTimeField.date = [self.myDateVC retrievePickUpDate];
     myDateViewController.returnDateField.date = [self.myDateVC retrieveReturnDate];
     myDateViewController.returnTimeField.date = [self.myDateVC retrieveReturnDate];
-    
     
     //assign content VC as ivar (necessary, because VCs always need to be retained)
     self.myDateVC = myDateViewController;
@@ -941,7 +777,6 @@
     //remove popover
     [self.theDatePopOver dismissPopoverAnimated:YES];
     self.theDatePopOver = nil;
-    
 }
 
 
@@ -967,14 +802,10 @@
     
     //set self as delegate
     self.myRenterViewController.delegate = self;
-    
-    
 }
 
 
 -(void)initiateRetrieveRenterItem{
-    
-//    NSLog(@"this is the chosen renter type: %@", [self.myRenterViewController retrieveRenterType]);
     
     //set new renter type value
     [self.renterTypeField setTitle:[self.myRenterViewController retrieveRenterType] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
@@ -1011,18 +842,17 @@
         
     }];
     
-    
-    //
     //    newView.edgesForExtendedLayout = UIRectEdgeAll;
     //    [self.navigationController pushViewController:newView animated:YES];
 }
 
-// EQRPriceMatrixVC delegate method
 
+// EQRPriceMatrixVC delegate method
 -(void)aChangeWasMadeToPriceMatrix{
     
     [self getTransactionInfo];
 }
+
 
 -(void)getTransactionInfo{
     
@@ -1448,12 +1278,6 @@
 
 -(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
     
-    //___There are 7 different popovers____
-    //try a universal approach...
-    //____this didn't work____
-//    popoverController = nil;
-    
-    //this works... need to dealloc properties
     if (popoverController == self.theDatePopOver){
         
         self.theDatePopOver = nil;

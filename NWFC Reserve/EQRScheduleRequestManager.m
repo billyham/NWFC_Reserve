@@ -37,47 +37,59 @@
 }
 
 
--(void)createNewRequest{
+-(void)createNewRequest:(void (^)(NSString *returnValue))cb{
     
     EQRScheduleRequestItem* requestItem = [[EQRScheduleRequestItem alloc] init];
     
-    //assign to ivar
+    // Assign to ivar
     self.request = requestItem;
     
-    //set flags
+    // Set flags
     self.request.showAllEquipmentFlag = NO;
     
-    //set timestamp
+    // Set timestamp
     self.request.time_of_request = [NSDate date];
     
-    //ensure the array of hidden sections exists
+    // Ensure the array of hidden sections exists
     if (!self.arrayOfEquipSectionsThatShouldBeHidden){
-        
         self.arrayOfEquipSectionsThatShouldBeHidden = [NSMutableArray arrayWithCapacity:1];
     }
-    
-    //empty out array of hidden sections
     [self.arrayOfEquipSectionsThatShouldBeHidden removeAllObjects];
     
-    //get device name
+    
     NSString* myDeviceName = [[UIDevice currentDevice] name];
-//    NSLog(@"this is my device name: %@", myDeviceName);
+    NSArray* lilPoppa = @[ @[@"myDeviceName", myDeviceName] ];
     
-    NSArray* bigPoppa = [NSArray arrayWithObjects:@"myDeviceName", myDeviceName, nil];
-    NSArray* lilPoppa = [NSArray arrayWithObject:bigPoppa];
-    
-    //--
-    //need to set the key_id right away
-    //get the next key_id value for a scheduleTracking object
+    // Need to set the key_id right away
+    // Get the next key_id value for a scheduleTracking object
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSString* assignedKeyId = [webData queryForStringWithLink:@"EQRegisterScheduleRequest.php" parameters:lilPoppa];
     
-    //set the request's key_id ivar
+    // Set the request's key_id property
     self.request.key_id = assignedKeyId;
-//    NSLog(@"this is the nextKeyIdString %@", assignedKeyId);
-    //---
+    
+    cb(@"success");
     
     
+    
+    
+//    NSString* myDeviceName = [[UIDevice currentDevice] name];
+//    NSArray* lilPoppa = @[ @[@"myDeviceName", myDeviceName] ];
+//    
+//    // Need to set the key_id right away, get the next key_id value for a scheduleTracking object
+//    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+//    dispatch_async(queue, ^{
+//        EQRWebData* webData = [EQRWebData sharedInstance];
+//        [webData queryForStringwithAsync:@"EQRegisterScheduleRequest.php" parameters:lilPoppa completion:^(NSString *assignedKeyId) {
+//            // Set the request's key_id property
+//            if (!assignedKeyId){
+//                cb(@"error");
+//                return;
+//            }
+//            self.request.key_id = assignedKeyId;
+//            cb(@"success");
+//        }];
+//    });
 }
 
 

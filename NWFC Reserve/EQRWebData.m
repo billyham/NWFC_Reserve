@@ -2328,6 +2328,7 @@ const int intEQRTransaction = 11;
         dispatch_async(dispatch_get_main_queue(), ^{
             completeBlock(returnString);
         });
+        return;
     }
     
     if ([link isEqualToString:@"EQAlterNotesInScheduleRequest.php"]){
@@ -2335,6 +2336,7 @@ const int intEQRTransaction = 11;
         dispatch_async(dispatch_get_main_queue(), ^{
             completeBlock(returnString);
         });
+        return;
     }
     
     if ([link isEqualToString:@"EQSetNewMiscJoin.php"]){
@@ -2342,6 +2344,7 @@ const int intEQRTransaction = 11;
         dispatch_async(dispatch_get_main_queue(), ^{
             completeBlock(returnString);
         });
+        return;
     }
     
     if ([link isEqualToString:@"EQAlterPhoneInContact.php"]){
@@ -2349,6 +2352,7 @@ const int intEQRTransaction = 11;
         dispatch_async(dispatch_get_main_queue(), ^{
             completeBlock(returnString);
         });
+        return;
     }
     
     if ([link isEqualToString:@"EQAlterEmailInContact.php"]){
@@ -2356,6 +2360,15 @@ const int intEQRTransaction = 11;
         dispatch_async(dispatch_get_main_queue(), ^{
             completeBlock(returnString);
         });
+        return;
+    }
+    
+    if ([link isEqualToString:@"EQAlterMiscJoinName.php"]){
+        NSString *returnString = [self queryForStringWithLink:@"EQAlterMiscJoinName.php" parameters:para];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        return;
     }
     
 }

@@ -17,7 +17,7 @@
 #import "EQRMiscJoin.h"
 #import "EQRPDFGenerator.h"
 
-@interface EQRCheckPrintPage () <EQRWebDataDelegate>
+@interface EQRCheckPrintPage ()
 
 @property (strong, nonatomic) EQRScheduleRequestItem* request;
 @property (nonatomic, strong) IBOutlet EQRMultiColumnTextView* myTwoColumnView;
@@ -72,41 +72,18 @@
 -(void)initialSetupWithScheduleRequestItem:(EQRScheduleRequestItem*)request forPDF:(BOOL)isPDF{
     
     if (request){
-        
         self.request = request;
     }
     
     self.isPDF = isPDF;
     self.countOfColumns = 0;
     self.additionalXAdjustment = 0.f;
-    
-    //build the request's array of equip joins
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", request.key_id, nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-    NSMutableArray* returnArrayOfJoins = [NSMutableArray arrayWithCapacity:1];
-    [webData queryWithLink:@"EQGetScheduleEquipJoins.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
-        
-        for (id object in muteArray){
-            
-            [returnArrayOfJoins addObject:object];
-        }
-    }];
-    
-    if (!self.request.arrayOfEquipmentJoins){
-        
-        self.request.arrayOfEquipmentJoins = [NSMutableArray arrayWithCapacity:1];
-    }
-    
-    [self.request.arrayOfEquipmentJoins addObjectsFromArray:returnArrayOfJoins];
-    
 }
 
 -(void)addSignatureImage:(UIImage *)sigImage{
     
     self.hasSigImage = YES;
     self.sigImage = sigImage;
-    
 }
 
 
@@ -114,227 +91,270 @@
 {
     [super viewDidLoad];
 
-    NSString* contactCondensedName = self.request.contact_name;
-    EQRContactNameItem* contactItem = self.request.contactNameItem;
     
-    //error handling if contact_name is nil
-    if (contactCondensedName == nil){
-        contactCondensedName = @"NA";
-    }
-    
-    NSDateFormatter* pickUpFormatter = [[NSDateFormatter alloc] init];
-    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [pickUpFormatter setLocale:usLocale];
-
-    [pickUpFormatter setDateFormat:@"EEE, MMM d, yyyy"];  // 'at' h:mm aaa
-    
-    NSDateFormatter* pickUpTimeFormatter = [[NSDateFormatter alloc] init];
-    [pickUpTimeFormatter setLocale:usLocale];
-    [pickUpTimeFormatter setTimeStyle:NSDateFormatterShortStyle];
-    
-    //adjust the time by adding 9 hours... or 8 hours
-    float secondsForOffset = 0;    //this is 9 hours = 32400, this is 8 hours = 28800;
-    NSDate* newTimeBegin = [self.request.request_time_begin dateByAddingTimeInterval:secondsForOffset];
-    NSDate* newTimeEnd = [self.request.request_time_end dateByAddingTimeInterval:secondsForOffset];
-
-    NSString* combinedDateAndTimeBegin = [NSString stringWithFormat:@"%@ at %@", [pickUpFormatter stringFromDate:self.request.request_date_begin], [pickUpTimeFormatter stringFromDate:newTimeBegin]];
-    NSString* combinedDateAndTimeEnd = [NSString stringWithFormat:@"%@ at %@", [pickUpFormatter stringFromDate:self.request.request_date_end], [pickUpTimeFormatter stringFromDate:newTimeEnd]];
-    
-    //save values to ivar
-    self.rentorNameAtt = self.request.contact_name;
-    self.rentorPhoneAtt = contactItem.phone;
-    self.rentorEmailAtt = contactItem.email;
-    
-    //begin the total attribute string
-    self.datesAtt = [[NSMutableAttributedString alloc] initWithString:@""];
-    self.summaryTotalAtt = [[NSMutableAttributedString alloc] initWithString:@""];
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"viewDidLoad";
+    queue.maxConcurrentOperationCount = 5;
     
     
-    //_______PICKUP DATE_____
-    NSDictionary* arrayAtt6 = [NSDictionary dictionaryWithObject:self.styles[@"normalFont"] forKey:NSFontAttributeName];
-    NSAttributedString* pickupHead = [[NSAttributedString alloc] initWithString:@"Pick Up: " attributes:arrayAtt6];
-    [self.datesAtt appendAttributedString:pickupHead];
-    
-    NSDictionary* arrayAtt7 = [NSDictionary dictionaryWithObject:self.styles[@"boldFont"] forKey:NSFontAttributeName];
-    NSAttributedString* pickupAtt = [[NSAttributedString alloc] initWithString:combinedDateAndTimeBegin  attributes:arrayAtt7];
-    [self.datesAtt appendAttributedString:pickupAtt];
-    
-    //______RETURN DATE________
-    NSDictionary* arrayAtt8 = [NSDictionary dictionaryWithObject:self.styles[@"normalFont"] forKey:NSFontAttributeName];
-    NSAttributedString* returnHead = [[NSAttributedString alloc] initWithString:@"            Return: " attributes:arrayAtt8];
-    [self.datesAtt appendAttributedString:returnHead];
-    
-    NSDictionary* arrayAtt9 = [NSDictionary dictionaryWithObject:self.styles[@"boldFont"] forKey:NSFontAttributeName];
-    NSAttributedString* returnAtt = [[NSAttributedString alloc] initWithString:combinedDateAndTimeEnd  attributes:arrayAtt9];
-    [self.datesAtt appendAttributedString:returnAtt];
-    
-    
-    //________EQUIP LIST________
-    //cycle through array of equipItems and build a string
-    
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    
-    // 2. first, cycle through scheduleTracking_equip_joins and get equipUniques
-    NSMutableArray* arrayOfUniques = [NSMutableArray arrayWithCapacity:1];
-    for (EQRScheduleTracking_EquipmentUnique_Join* joinItem in self.request.arrayOfEquipmentJoins){
+    NSBlockOperation *getScheduleEquipJoins = [NSBlockOperation blockOperationWithBlock:^{
+        // Build the request's array of equip joins
+        NSArray* topArray = @[ @[@"scheduleTracking_foreignKey", self.request.key_id] ];
+        NSMutableArray* returnArrayOfJoins = [NSMutableArray arrayWithCapacity:1];
         
-        NSArray* thisArray1 = [NSArray arrayWithObjects:@"key_id", joinItem.equipUniqueItem_foreignKey, Nil];
-        NSArray* thisArray2 = [NSArray arrayWithObject:thisArray1];
-        [webData queryWithLink:@"EQGetEquipmentUnique.php" parameters:thisArray2 class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
-            
-            for (EQREquipUniqueItem* equipItemObj in muteArray){
-                
-                [arrayOfUniques addObject:equipItemObj];
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetScheduleEquipJoins.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+            for (id object in muteArray){
+                [returnArrayOfJoins addObject:object];
             }
         }];
-    }
-    
-    
-    // ____!!!!  Sort and add structure to the array (with category, not schedule_grouping)
-    NSArray* arrayOfUniquesWithStructure = [EQRDataStructure convertFlatArrayofUniqueItemsToStructureWithCategory:arrayOfUniques];
-    
-    
-    //cyle through structured equipUniques and print line to summaryMutableString
-    for (NSArray* subArray in arrayOfUniquesWithStructure){
         
-        // ____And printer headers with category titles
-        NSDictionary* arrayAttForHeaderText = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"headerFont"], NSFontAttributeName,
-                                               self.styles[@"headerParaStyle"], NSParagraphStyleAttributeName,
-                                               nil];
+        if (!self.request.arrayOfEquipmentJoins){
+            self.request.arrayOfEquipmentJoins = [NSMutableArray arrayWithCapacity:1];
+        }
+        [self.request.arrayOfEquipmentJoins removeAllObjects];
         
-        //text for the header
-        NSAttributedString* headerAttString;
+        [self.request.arrayOfEquipmentJoins addObjectsFromArray:returnArrayOfJoins];
+    }];
+    
+    
+    NSBlockOperation *headerProperties = [NSBlockOperation blockOperationWithBlock:^{
+        NSString* contactCondensedName = self.request.contact_name;
+        EQRContactNameItem* contactItem = self.request.contactNameItem;
         
-        //if item is first, eliminate the first carriage return
-        if ([arrayOfUniquesWithStructure objectAtIndex:0] == subArray){
-            headerAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r",[(EQREquipUniqueItem*)[subArray objectAtIndex:0] category]] attributes:arrayAttForHeaderText];
-        }else{
-            headerAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r%@\r",[(EQREquipUniqueItem*)[subArray objectAtIndex:0] category]] attributes:arrayAttForHeaderText];
+        //error handling if contact_name is nil
+        if (contactCondensedName == nil){
+            contactCondensedName = @"NA";
         }
         
-        [self.summaryTotalAtt appendAttributedString:headerAttString];
+        NSDateFormatter* pickUpFormatter = [[NSDateFormatter alloc] init];
+        NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        [pickUpFormatter setLocale:usLocale];
         
-        for (EQREquipUniqueItem* equipUniqueObj in subArray){
-            
-            //add the text of the equip item names to the textField's attributed string
-            NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"normalFont"], NSFontAttributeName,
-                                        self.styles[@"paraStyle"], NSParagraphStyleAttributeName,
-                                        nil];
-            NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"      %@  #%@\r", equipUniqueObj.name, equipUniqueObj.distinquishing_id] attributes:arrayAtt11];
-            
-            [self.summaryTotalAtt appendAttributedString:thisHereAttString];
-        }
-    }
-    
-    EQRWebData *webData2 = [EQRWebData sharedInstance];
-    webData2.delegateDataFeed = self;
-    
-    //____ADD MISC JOINS IF THEY EXIST____
-    if (!self.miscJoins){
-        self.miscJoins = [NSMutableArray arrayWithCapacity:1];
-    }
-    [self.miscJoins removeAllObjects];
-    
-    NSArray* alphaArray = @[@"scheduleTracking_foreignKey", self.request.key_id];
-    NSArray* omegaArray = @[alphaArray];
-    SEL selector = @selector(addMiscJoinToArray:);
-
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-    dispatch_async(queue, ^{
-       [webData2 queryWithAsync:@"EQGetMiscJoinsWithScheduleTrackingKey.php"
-                     parameters:omegaArray
-                          class:@"EQRMiscJoin"
-                       selector:selector
-                     completion:^(BOOL isLoadingFlagUp) {
-          
-           [self loadStage2];
-       }];
-    });
-}
-
-
--(void)loadStage2{
-    
-    if ([self.miscJoins count] > 0){
+        [pickUpFormatter setDateFormat:@"EEE, MMM d, yyyy"];  // 'at' h:mm aaa
         
-        //print miscellaneous section
-        NSDictionary* arrayAtt13 = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"headerFont"], NSFontAttributeName,
-                                    self.styles[@"headerParaStyle"], NSParagraphStyleAttributeName,
-                                    nil];
-        NSAttributedString *thisHereString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r%@\r",@"Miscellaneous"] attributes:arrayAtt13];
-        [self.summaryTotalAtt appendAttributedString:thisHereString];
+        NSDateFormatter* pickUpTimeFormatter = [[NSDateFormatter alloc] init];
+        [pickUpTimeFormatter setLocale:usLocale];
+        [pickUpTimeFormatter setTimeStyle:NSDateFormatterShortStyle];
         
-        for (EQRMiscJoin* miscJoin in self.miscJoins){
-            
-            NSDictionary* arrayAtt14 = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"normalFont"], NSFontAttributeName,
-                                        self.styles[@"paraStyle"], NSParagraphStyleAttributeName,
-                                        nil];
-            NSAttributedString* thisHereAttStringAgain = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"      %@\r", miscJoin.name] attributes:arrayAtt14];
-            
-            [self.summaryTotalAtt appendAttributedString:thisHereAttStringAgain];
-        }
-    }
-    
-    //____ NOW ADD THE NOTES (if they exist)______
-    if (self.request.notes){
-        if (![self.request.notes isEqualToString:@""]){
-            
-            //if notes exist, add them
-            NSDictionary* arrayAtt12 = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"headerFont"], NSFontAttributeName,
-                                        self.styles[@"notesHeaderParaStyle"], NSParagraphStyleAttributeName,
-                                        nil];
-            NSAttributedString* notesHeaderAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r\rNotes:\r"] attributes:arrayAtt12];
-            [self.summaryTotalAtt appendAttributedString:notesHeaderAttString];
-            
-            NSDictionary* arrayAtt13 = [NSDictionary dictionaryWithObject:self.styles[@"normalFont"] forKey:NSFontAttributeName];
-            NSAttributedString* notesAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", self.request.notes] attributes:arrayAtt13];
-            [self.summaryTotalAtt appendAttributedString:notesAttString];
-        }
-    }
-    
-    //__1__ use a text view
-    self.summaryTextView.attributedText = self.datesAtt;
-    
-    //.... and
-    
-    //__2__ use a custom view with two columns
-    self.myTwoColumnView.myAttString = self.summaryTotalAtt;
-    [self.myTwoColumnView manuallySetTextWithColumnCount:3];
-    
-    //_______set page renderer as delegate for layoutManager of MultiColumnTextView
-    //so it can reflow the text between multiple pages
-    //or re-position the text view and number of columns
-    self.myTwoColumnView.layoutManager.delegate = self;
-    
-    if (self.isPDF){
+        //adjust the time by adding 9 hours... or 8 hours
+        float secondsForOffset = 0;    //this is 9 hours = 32400, this is 8 hours = 28800;
+        NSDate* newTimeBegin = [self.request.request_time_begin dateByAddingTimeInterval:secondsForOffset];
+        NSDate* newTimeEnd = [self.request.request_time_end dateByAddingTimeInterval:secondsForOffset];
         
-        //_________  AUTOMATICALLY DO THE PDF GENERATION  _____________
-        EQRPDFGenerator *pdfGenerator = [[EQRPDFGenerator alloc] init];
+        NSString* combinedDateAndTimeBegin = [NSString stringWithFormat:@"%@ at %@", [pickUpFormatter stringFromDate:self.request.request_date_begin], [pickUpTimeFormatter stringFromDate:newTimeBegin]];
+        NSString* combinedDateAndTimeEnd = [NSString stringWithFormat:@"%@ at %@", [pickUpFormatter stringFromDate:self.request.request_date_end], [pickUpTimeFormatter stringFromDate:newTimeEnd]];
         
-        pdfGenerator.myTextView = self.summaryTextView;
-        pdfGenerator.myMultiColumnView = self.myTwoColumnView;
-        pdfGenerator.additionalXAdjustment = self.additionalXAdjustment;
+        //save values to ivar
+        self.rentorNameAtt = self.request.contact_name;
+        self.rentorPhoneAtt = contactItem.phone;
+        self.rentorEmailAtt = contactItem.email;
         
-        if (self.hasSigImage){
-            pdfGenerator.hasSigImage = YES;
-            pdfGenerator.sigImage = self.sigImage;
+        //begin the total attribute string
+        self.datesAtt = [[NSMutableAttributedString alloc] initWithString:@""];
+        
+        //_______PICKUP DATE_____
+        NSDictionary* arrayAtt6 = [NSDictionary dictionaryWithObject:self.styles[@"normalFont"] forKey:NSFontAttributeName];
+        NSAttributedString* pickupHead = [[NSAttributedString alloc] initWithString:@"Pick Up: " attributes:arrayAtt6];
+        [self.datesAtt appendAttributedString:pickupHead];
+        
+        NSDictionary* arrayAtt7 = [NSDictionary dictionaryWithObject:self.styles[@"boldFont"] forKey:NSFontAttributeName];
+        NSAttributedString* pickupAtt = [[NSAttributedString alloc] initWithString:combinedDateAndTimeBegin  attributes:arrayAtt7];
+        [self.datesAtt appendAttributedString:pickupAtt];
+        
+        //______RETURN DATE________
+        NSDictionary* arrayAtt8 = [NSDictionary dictionaryWithObject:self.styles[@"normalFont"] forKey:NSFontAttributeName];
+        NSAttributedString* returnHead = [[NSAttributedString alloc] initWithString:@"            Return: " attributes:arrayAtt8];
+        [self.datesAtt appendAttributedString:returnHead];
+        
+        NSDictionary* arrayAtt9 = [NSDictionary dictionaryWithObject:self.styles[@"boldFont"] forKey:NSFontAttributeName];
+        NSAttributedString* returnAtt = [[NSAttributedString alloc] initWithString:combinedDateAndTimeEnd  attributes:arrayAtt9];
+        [self.datesAtt appendAttributedString:returnAtt];
+    }];
+    
+    
+    __block NSMutableAttributedString *equipmentAttr = [[NSMutableAttributedString alloc] initWithString:@""];
+    NSBlockOperation *equipment = [NSBlockOperation blockOperationWithBlock:^{
+        
+        //________EQUIP LIST________
+        //cycle through array of equipItems and build a string
+        
+        // 2. first, cycle through scheduleTracking_equip_joins and get equipUniques
+        NSMutableArray* arrayOfUniques = [NSMutableArray arrayWithCapacity:1];
+        for (EQRScheduleTracking_EquipmentUnique_Join* joinItem in self.request.arrayOfEquipmentJoins){
+            
+            NSArray* thisArray2 = @[ @[@"key_id", joinItem.equipUniqueItem_foreignKey] ];
+            EQRWebData *webData = [EQRWebData sharedInstance];
+            [webData queryWithLink:@"EQGetEquipmentUnique.php" parameters:thisArray2 class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
+                
+                for (EQREquipUniqueItem* equipItemObj in muteArray){
+                    [arrayOfUniques addObject:equipItemObj];
+                }
+            }];
         }
         
-        [pdfGenerator launchPDFGeneratorWithName:self.request.contactNameItem.first_and_last
-                                           phone:self.request.contactNameItem.phone
-                                           email:self.request.contactNameItem.email
-                                      renterType:[self.request.renter_type capitalizedString]
-                                           class:self.request.title
-                                      agreements:nil
-                                      completion:^(NSString *pdf_name, NSDate *pdf_timestamp){
-                                          
-                                          
-                                      }];
-    }else{
-        //__________   OR... AUTOMATICALLY DO THE PRINTING  ___________
-        [self performSelector:@selector(justPrint) withObject:nil afterDelay:1.0];
-    }
-
+        // Sort and add structure to the array (with category, not schedule_grouping)
+        NSArray* arrayOfUniquesWithStructure = [EQRDataStructure convertFlatArrayofUniqueItemsToStructureWithCategory:arrayOfUniques];
+        
+        //cyle through structured equipUniques and print line to summaryMutableString
+        for (NSArray* subArray in arrayOfUniquesWithStructure){
+            
+            // And printer headers with category titles
+            NSDictionary* arrayAttForHeaderText = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"headerFont"], NSFontAttributeName,
+                                                   self.styles[@"headerParaStyle"], NSParagraphStyleAttributeName,
+                                                   nil];
+            
+            // Text for the header
+            NSAttributedString* headerAttString;
+            
+            //if item is first, eliminate the first carriage return
+            if ([arrayOfUniquesWithStructure objectAtIndex:0] == subArray){
+                headerAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r",[(EQREquipUniqueItem*)[subArray objectAtIndex:0] category]] attributes:arrayAttForHeaderText];
+            }else{
+                headerAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r%@\r",[(EQREquipUniqueItem*)[subArray objectAtIndex:0] category]] attributes:arrayAttForHeaderText];
+            }
+            
+            [equipmentAttr appendAttributedString:headerAttString];
+            
+            for (EQREquipUniqueItem* equipUniqueObj in subArray){
+                
+                //add the text of the equip item names to the textField's attributed string
+                NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"normalFont"], NSFontAttributeName,
+                                            self.styles[@"paraStyle"], NSParagraphStyleAttributeName,
+                                            nil];
+                NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"      %@  #%@\r", equipUniqueObj.name, equipUniqueObj.distinquishing_id] attributes:arrayAtt11];
+                
+                [equipmentAttr appendAttributedString:thisHereAttString];
+            }
+        }
+    }];
+    [equipment addDependency:getScheduleEquipJoins];
+    
+    
+    __block NSMutableAttributedString *miscAttr = [[NSMutableAttributedString alloc] initWithString:@""];
+    NSBlockOperation *misc = [NSBlockOperation blockOperationWithBlock:^{
+        // Add misc joins if any exist
+        if (!self.miscJoins){
+            self.miscJoins = [NSMutableArray arrayWithCapacity:1];
+        }
+        [self.miscJoins removeAllObjects];
+        
+        NSArray* omegaArray = @[ @[@"scheduleTracking_foreignKey", self.request.key_id] ];
+        
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray) {
+            for (id miscJoin in muteArray){
+                [self.miscJoins addObject:miscJoin];
+            }
+            
+            if ([self.miscJoins count] > 0){
+                
+                //print miscellaneous section
+                NSDictionary* arrayAtt13 = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"headerFont"], NSFontAttributeName,
+                                            self.styles[@"headerParaStyle"], NSParagraphStyleAttributeName,
+                                            nil];
+                NSAttributedString *thisHereString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r%@\r",@"Miscellaneous"] attributes:arrayAtt13];
+                [miscAttr appendAttributedString:thisHereString];
+                
+                for (EQRMiscJoin* miscJoin in self.miscJoins){
+                    
+                    NSDictionary* arrayAtt14 = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"normalFont"], NSFontAttributeName,
+                                                self.styles[@"paraStyle"], NSParagraphStyleAttributeName,
+                                                nil];
+                    NSAttributedString* thisHereAttStringAgain = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"      %@\r", miscJoin.name] attributes:arrayAtt14];
+                    
+                    [miscAttr appendAttributedString:thisHereAttStringAgain];
+                }
+            }
+        }];
+    }];
+    
+    
+    __block NSMutableAttributedString *notesAttr = [[NSMutableAttributedString alloc] initWithString:@""];
+    NSBlockOperation *notes = [NSBlockOperation blockOperationWithBlock:^{
+        //____ NOW ADD THE NOTES (if they exist)______
+        if (self.request.notes){
+            if (![self.request.notes isEqualToString:@""]){
+                
+                //if notes exist, add them
+                NSDictionary* arrayAtt12 = [NSDictionary dictionaryWithObjectsAndKeys:self.styles[@"headerFont"], NSFontAttributeName,
+                                            self.styles[@"notesHeaderParaStyle"], NSParagraphStyleAttributeName,
+                                            nil];
+                NSAttributedString* notesHeaderAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\r\rNotes:\r"] attributes:arrayAtt12];
+                [notesAttr appendAttributedString:notesHeaderAttString];
+                
+                NSDictionary* arrayAtt13 = [NSDictionary dictionaryWithObject:self.styles[@"normalFont"] forKey:NSFontAttributeName];
+                NSAttributedString* notesAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", self.request.notes] attributes:arrayAtt13];
+                [notesAttr appendAttributedString:notesAttString];
+            }
+        }
+    }];
+    
+    
+    NSBlockOperation *printOrRenderPDF = [NSBlockOperation blockOperationWithBlock:^{
+        
+        self.summaryTotalAtt = [[NSMutableAttributedString alloc] initWithString:@""];
+        [self.summaryTotalAtt appendAttributedString:equipmentAttr];
+        [self.summaryTotalAtt appendAttributedString:miscAttr];
+        [self.summaryTotalAtt appendAttributedString:notesAttr];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //__1__ use a text view
+            self.summaryTextView.attributedText = self.datesAtt;
+            
+            //.... and
+            
+            //__2__ use a custom view with two columns
+            self.myTwoColumnView.myAttString = self.summaryTotalAtt;
+            [self.myTwoColumnView manuallySetTextWithColumnCount:3];
+            
+            //_______set page renderer as delegate for layoutManager of MultiColumnTextView
+            //so it can reflow the text between multiple pages
+            //or re-position the text view and number of columns
+            self.myTwoColumnView.layoutManager.delegate = self;
+            
+            if (self.isPDF){
+                
+                //_________  AUTOMATICALLY DO THE PDF GENERATION  _____________
+                EQRPDFGenerator *pdfGenerator = [[EQRPDFGenerator alloc] init];
+                
+                pdfGenerator.myTextView = self.summaryTextView;
+                pdfGenerator.myMultiColumnView = self.myTwoColumnView;
+                pdfGenerator.additionalXAdjustment = self.additionalXAdjustment;
+                
+                if (self.hasSigImage){
+                    pdfGenerator.hasSigImage = YES;
+                    pdfGenerator.sigImage = self.sigImage;
+                }
+                
+                [pdfGenerator launchPDFGeneratorWithName:self.request.contactNameItem.first_and_last
+                                                   phone:self.request.contactNameItem.phone
+                                                   email:self.request.contactNameItem.email
+                                              renterType:[self.request.renter_type capitalizedString]
+                                                   class:self.request.title
+                                              agreements:nil
+                                              completion:^(NSString *pdf_name, NSDate *pdf_timestamp){
+                                                  
+                                                  
+                                              }];
+            }else{
+                //__________   OR... AUTOMATICALLY DO THE PRINTING  ___________
+                [self performSelector:@selector(justPrint) withObject:nil afterDelay:1.0];
+            }
+        });
+    }];
+    [printOrRenderPDF addDependency:headerProperties];
+    [printOrRenderPDF addDependency:equipment];
+    [printOrRenderPDF addDependency:misc];
+    [printOrRenderPDF addDependency:notes];
+   
+    
+    [queue addOperation:getScheduleEquipJoins];
+    [queue addOperation:headerProperties];
+    [queue addOperation:equipment];
+    [queue addOperation:misc];
+    [queue addOperation:notes];
+    [queue addOperation:printOrRenderPDF];
 }
 
 
@@ -385,11 +405,7 @@
     
     //assign page renderer to int cntrllr
     printIntCont.printPageRenderer = pageRenderer;
-    
-    
-    
-    
-    
+
     
     __block BOOL successOrNot;
     
@@ -428,28 +444,6 @@
     
     [self dismissViewControllerAnimated:YES completion:^{
     }];
-}
-
-#pragma mark - EQRWebData Delegate
-
--(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
-    if (![self respondsToSelector:action]){
-        NSLog(@"EQRCheckPrintPage, cannot perform selector");
-        return;
-    }
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [self performSelector:action withObject:currentThing];
-#pragma clang diagnostic pop
-}
-
--(void)addMiscJoinToArray:(id)currentThing{
-    
-    if (!currentThing){
-        return;
-    }
-    
-    [self.miscJoins addObject:currentThing];
 }
 
 
@@ -512,12 +506,7 @@
     
     //call this on layoutManager invalidateDisplayForCharacterRange:(NSRange)charRange
     
-    
-    
 }
-
-
-
 
 
 #pragma mark - memory warning

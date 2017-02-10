@@ -177,37 +177,57 @@
     //retrieve name item from shared nib
     EQRContactNameItem* myNameItem = [self.myContactPickerVC retrieveContactItem];
     
-    
-    
     //______****** cancel any existing scheduleRequestItems first???  ******___________
     
     //create a scheduleRequestItem instance
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
-    [requestManager createNewRequest];
     
-    //assign contact and class to the request
-    //first to the object properties
-    requestManager.request.contactNameItem = myNameItem;
-    requestManager.request.classItem = self.thisClassItem;
-    
-    //second to the data model properties
-    requestManager.request.contact_foreignKey = requestManager.request.contactNameItem.key_id;
-    requestManager.request.classSection_foreignKey = self.thisClassItem.key_id;
-    requestManager.request.classTitle_foreignKey = self.thisClassItem.catalog_foreign_key;
-    requestManager.request.contact_name = requestManager.request.contactNameItem.first_and_last;
-    requestManager.request.renter_type = self.chosenRenterType;
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"retrieveSelectedNameItem";
+    queue.maxConcurrentOperationCount = 5;
     
     
-    // requestManager maybe needs to load allEquipUniqueItems
-    if (self.needsToRetrieveAllUniqueEquipItemsFlag){
-        [requestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
-            [self retreiveSelectedNameItemStage2:muteArray];
+    NSBlockOperation *createNewRequest = [NSBlockOperation blockOperationWithBlock:^{
+        
+        // Despite the callback, this method is SYNCHRONOUS
+        [requestManager createNewRequest:^(NSString *returnValue) {
+            
         }];
-    }else{
-        [self performSegueWithIdentifier:@"lookAtDates" sender:self];
-    }
+        
+        // Assign contact and class to the request
+        // First to the object properties
+        requestManager.request.contactNameItem = myNameItem;
+        requestManager.request.classItem = self.thisClassItem;
+        
+        // Second to the data model properties
+        requestManager.request.contact_foreignKey = requestManager.request.contactNameItem.key_id;
+        requestManager.request.classSection_foreignKey = self.thisClassItem.key_id;
+        requestManager.request.classTitle_foreignKey = self.thisClassItem.catalog_foreign_key;
+        requestManager.request.contact_name = requestManager.request.contactNameItem.first_and_last;
+        requestManager.request.renter_type = self.chosenRenterType;
+    }];
+    
+    
+    NSBlockOperation *performSegue = [NSBlockOperation blockOperationWithBlock:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // requestManager maybe needs to load allEquipUniqueItems
+            if (self.needsToRetrieveAllUniqueEquipItemsFlag){
+                [requestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
+                    [self retreiveSelectedNameItemStage2:muteArray];
+                }];
+            }else{
+                [self performSegueWithIdentifier:@"lookAtDates" sender:self];
+            }
+        });
+    }];
+    [performSegue addDependency:createNewRequest];
+    
+    
+    [queue addOperation:createNewRequest];
+    [queue addOperation:performSegue];
 }
+
 
 -(void)retreiveSelectedNameItemStage2:(NSMutableArray *)returnArray{
     
@@ -242,7 +262,8 @@
         //create a scheduleRequestItem instance
         EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
         
-        [requestManager createNewRequest];
+        [requestManager createNewRequest:^(NSString *returnValue){
+        }];
         
         //1. the selected class Section
         self.thisClassItem = selectedClassItem;
@@ -404,7 +425,8 @@
         //create a scheduleRequestItem instance
         EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
         
-        [requestManager createNewRequest];
+        [requestManager createNewRequest:^(NSString *returnValue){
+        }];
         
         //1. the selected class Section
         self.thisClassItem = selectedClassItem;

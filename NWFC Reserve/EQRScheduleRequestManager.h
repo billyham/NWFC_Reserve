@@ -46,7 +46,7 @@ typedef void (^BlockWithArray)(NSMutableArray *muteArray);
 
 
 +(EQRScheduleRequestManager*)sharedInstance;
--(void)createNewRequest;
+-(void)createNewRequest:(void (^)(NSString *returnValue))cb;
 -(void)dismissRequest:(BOOL)isCanceled;
 -(void)resetEquipListAndAvailableQuantites;
 -(BOOL)confirmAvailabilityOfTitleItem:(NSString*)equipTitleItem_foreignKey;

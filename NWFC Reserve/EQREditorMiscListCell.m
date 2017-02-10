@@ -217,14 +217,20 @@
     self.myMiscJoin.name = returnText;
     self.myContentVC.myLabel.text = returnText;
     
-    //_____!!!!!  send to data layer  !!!_______
-    EQRWebData *webData = [EQRWebData sharedInstance];
-    NSArray *oneArray = @[@"name", returnText];
-    NSArray *twoArray = @[@"key_id", self.myMiscJoin.key_id];
-    NSArray *topArray = @[oneArray, twoArray];
+    // Update database
+
+    NSArray *topArray = @[ @[@"name", returnText],
+                           @[@"key_id", self.myMiscJoin.key_id]];
     
-    NSString *returnKey = [webData queryForStringWithLink:@"EQAlterMiscJoinName.php" parameters:topArray];
-//    NSLog(@"this is the return key: %@", returnKey);
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryForStringwithAsync:@"EQAlterMiscJoinName.php" parameters:topArray completion:^(id object) {
+            
+        }];
+    });
+    
+    
 }
 
 
