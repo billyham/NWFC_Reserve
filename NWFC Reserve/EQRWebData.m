@@ -2371,6 +2371,14 @@ const int intEQRTransaction = 11;
         return;
     }
     
+    if ([link isEqualToString:@"EQSetConfirmation.php"]){
+        NSString *returnString = [self queryForStringWithLink:@"EQSetConfirmation.php" parameters:para];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        return;
+    }
+    
 }
 
 

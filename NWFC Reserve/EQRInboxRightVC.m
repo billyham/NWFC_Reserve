@@ -320,19 +320,16 @@
 -(void)retrieveRequestItemWithRequestKeyID:(NSString*)keyID{
     
     if (keyID == nil){
-        //error handling if no keyID is sent
         return;
     }
     
     //use this when a change to dates may have occured in the scheduleRequest
-    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", keyID, nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-    
-    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSArray* topArray = @[ @[@"key_id", keyID] ];
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
-       [webData queryForStringwithAsync:@"EQGetScheduleRequestInComplete.php" parameters:topArray completion:^(EQRScheduleRequestItem *thisItem) {
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        [webData queryForStringwithAsync:@"EQGetScheduleRequestInComplete.php" parameters:topArray completion:^(EQRScheduleRequestItem *thisItem) {
            
            if (!thisItem){
                NSLog(@"InboxRightVC > retrieveRequestItemWith... no request items returned");
@@ -346,182 +343,241 @@
 
 -(void)renewTheViewWithRequest:(EQRScheduleRequestItem*)request{
     
-    //set reqeustItem (error handling if nil)
+    if (!request) return NSLog(@"EQRInboxRightVC > renewTheViewWithRequest, request is nil");
     self.myScheduleRequest = request;
-
-    //set label values
-    self.firstLastNameValue.text = self.myScheduleRequest.contact_name;
-    self.typeValue.text = self.myScheduleRequest.renter_type;
-//    self.classValue.text = self.myScheduleRequest.classTitle_foreignKey;
     
-    //date formats
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    dateFormatter.dateFormat = @"EEE, MMM d, yyyy";
-    
-    NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
-    timeFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    timeFormatter.dateFormat = @"h:mm aaa";
-    
-    NSDateFormatter* submitFormatter = [[NSDateFormatter alloc] init];
-    submitFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    submitFormatter.dateFormat = @"EEEE, MMM d, yyyy, h:mm aaa";
-    
-    NSString* pickUpDateString = [dateFormatter stringFromDate:self.myScheduleRequest.request_date_begin];
-    NSString* pickUpTimeString = [timeFormatter stringFromDate:self.myScheduleRequest.request_time_begin];
-    NSString* returnDateString = [dateFormatter stringFromDate:self.myScheduleRequest.request_date_end];
-    NSString* returnTimeString = [timeFormatter stringFromDate:self.myScheduleRequest.request_time_end];
-    NSString* timeOfRequest = [submitFormatter stringFromDate:self.myScheduleRequest.time_of_request];
-    
-    self.timeOfRequestValue.text = timeOfRequest;
-    self.pickUpTimeValue.text = [NSString stringWithFormat:@"%@ - %@", pickUpDateString, pickUpTimeString];
-    self.returnTimeValue.text = [NSString stringWithFormat:@"%@ - %@", returnDateString, returnTimeString];
-    
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    
-    //get class name using key
-    if (([self.myScheduleRequest.classTitle_foreignKey isEqualToString:EQRErrorCode88888888]) ||
-        ([self.myScheduleRequest.classTitle_foreignKey isEqualToString:@""]) ||
-        (!self.myScheduleRequest.classTitle_foreignKey)) {
-        
-        self.classValue.text = @"(No Class Selected)";
-    }else{
-        NSArray* first2Array = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequest.classTitle_foreignKey, nil];
-        NSArray* top2Array = [NSArray arrayWithObjects:first2Array, nil];
-        
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-        dispatch_async(queue, ^{
-            [webData queryForStringwithAsync:@"EQGetClassCatalogTitleWithKey.php" parameters:top2Array completion:^(NSString *catalogTitle) {
-                self.classValue.text = catalogTitle;
-                [self.classValueField setTitle:self.classValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
-            }];
-        });
-    }
-    
-    //copy values to edit field values
+    // Empty out fields
+    self.firstLastNameValue.text = @"";
+    self.typeValue.text = @"";
+    self.timeOfRequestValue.text = @"";
+    self.pickUpTimeValue.text = @"";
+    self.returnTimeValue.text = @"";
     [self.nameValueField setTitle:self.firstLastNameValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     [self.typeValueField setTitle:self.typeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     [self.pickUpTimeValueField setTitle:self.pickUpTimeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
     [self.returnTimeValueField setTitle:self.returnTimeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
-//    [self.classValueField setTitle:self.classValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
-
-    
-    //set text in notes
-    NSArray* justKeyArray = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequest.key_id, nil];
-    NSArray* justTopArray = [NSArray arrayWithObjects:justKeyArray, nil];
-    NSMutableArray* tempMuteArrayJustKey = [NSMutableArray arrayWithCapacity:1];
-    [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:justTopArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-       
-        for (EQRScheduleRequestItem* requestItem in muteArray){
-            
-            [tempMuteArrayJustKey addObject:requestItem];
-        }
-    }];
-    
-    //error handling if no items are returned
-    if ([tempMuteArrayJustKey count] > 0){
-        
-        self.myScheduleRequest.notes = [[tempMuteArrayJustKey objectAtIndex:0] notes];
-    }else{
-        NSLog(@"InboxRightVC > renewTheViewWithRequest failed to find a matching request key id");
-    }
-    
-    //set notes text
-    self.notesView.text = self.myScheduleRequest.notes;
-    
-    //turn off editable
-    self.notesView.editable = NO;
-    
-    //get table of joins
-    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-    
-    NSArray* firstArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id, nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
-    
-    [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
-        
-        for (id join in muteArray){
-            
-            [tempMuteArray addObject:join];
-        }
-    }];
-    
-    
-    //_____******   error checking when no joins exist   *******____
-    
-    self.arrayOfJoins = [NSArray arrayWithArray:tempMuteArray];
-    self.myScheduleRequest.arrayOfEquipmentJoins = [NSMutableArray arrayWithArray:tempMuteArray];
-    
-    //gather any misc joins
-    NSArray* alphaArray = @[@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id];
-    NSArray* omegaArray = @[alphaArray];
-
-    if (!self.arrayOfMiscJoins){
-        self.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
-    }
-    [self.arrayOfMiscJoins removeAllObjects];
-    
-    EQRWebData *webData2 = [EQRWebData sharedInstance];
-    webData2.delegateDataFeed = self;
-    
-    SEL selector = @selector(addMiscJoin:);
-    
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-    dispatch_async(queue, ^{
-       [webData2 queryWithAsync:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" selector:selector completion:^(BOOL isLoadingFlagUp) {
-           
-           [self renewTheViewStage2];
-       }];
-    });
-}
-
--(void)renewTheViewStage2{
-    self.myScheduleRequest.arrayOfMiscJoins = [NSMutableArray arrayWithArray:self.arrayOfMiscJoins];
-    
-    //add structure to that array
-    self.arrayOfJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfJoins withMiscJoins:self.arrayOfMiscJoins];
-    
-    //refresh the data in table
+    self.classValue.text = @"";
+    [self.classValueField setTitle:self.classValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+    self.notesView.text = @"";
+    self.arrayOfJoinsWithStructure = @[];
     [self.myTable reloadData];
+    self.priceMatrixSubView.hidden = YES;
     
-    //make subview visible
+    
+    // Make subviews visible if not otherwise
     [self.rightView setHidden:NO];
     [self.leftView setHidden:NO];
     
-    //____set up private request manager______
-    //create private request manager as ivar
-    if (!self.privateRequestManager){
-        self.privateRequestManager = [[EQRScheduleRequestManager alloc] init];
-    }
     
-    //set the request as ivar in requestManager
-    self.privateRequestManager.request = self.myScheduleRequest;
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"renewTheViewWithRequest";
+    queue.maxConcurrentOperationCount = 5;
     
-    //two important methods that initiate requestManager ivar arrays
-    [self.privateRequestManager resetEquipListAndAvailableQuantites];
-    [self.privateRequestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
-        //        TODO: retrieveAllEquipUniqueItems async
+    
+    NSBlockOperation *nameAndDates = [NSBlockOperation blockOperationWithBlock:^{
+        // Date formats
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        dateFormatter.dateFormat = @"EEE, MMM d, yyyy";
+        
+        NSDateFormatter* timeFormatter = [[NSDateFormatter alloc] init];
+        timeFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        timeFormatter.dateFormat = @"h:mm aaa";
+        
+        NSDateFormatter* submitFormatter = [[NSDateFormatter alloc] init];
+        submitFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        submitFormatter.dateFormat = @"EEEE, MMM d, yyyy, h:mm aaa";
+        
+        NSString* pickUpDateString = [dateFormatter stringFromDate:self.myScheduleRequest.request_date_begin];
+        NSString* pickUpTimeString = [timeFormatter stringFromDate:self.myScheduleRequest.request_time_begin];
+        NSString* returnDateString = [dateFormatter stringFromDate:self.myScheduleRequest.request_date_end];
+        NSString* returnTimeString = [timeFormatter stringFromDate:self.myScheduleRequest.request_time_end];
+        NSString* timeOfRequest = [submitFormatter stringFromDate:self.myScheduleRequest.time_of_request];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Set label values
+            self.firstLastNameValue.text = self.myScheduleRequest.contact_name;
+            self.typeValue.text = self.myScheduleRequest.renter_type;
+            
+            self.timeOfRequestValue.text = timeOfRequest;
+            self.pickUpTimeValue.text = [NSString stringWithFormat:@"%@ - %@", pickUpDateString, pickUpTimeString];
+            self.returnTimeValue.text = [NSString stringWithFormat:@"%@ - %@", returnDateString, returnTimeString];
+            
+            //copy values to edit field values
+            [self.nameValueField setTitle:self.firstLastNameValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+            [self.typeValueField setTitle:self.typeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+            [self.pickUpTimeValueField setTitle:self.pickUpTimeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+            [self.returnTimeValueField setTitle:self.returnTimeValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+        });
+        
     }];
     
-    //pricing info
-    if ([self.myScheduleRequest.renter_type isEqualToString:EQRRenterPublic]){
-        self.priceMatrixSubView.hidden = NO;
-        [self getTransactionInfo];
-    }else{
-        self.priceMatrixSubView.hidden = YES;
-    }
-
+    
+    NSBlockOperation *class = [NSBlockOperation blockOperationWithBlock:^{
+        // Get class name using key
+        if (([self.myScheduleRequest.classTitle_foreignKey isEqualToString:EQRErrorCode88888888]) ||
+            ([self.myScheduleRequest.classTitle_foreignKey isEqualToString:@""]) ||
+            (!self.myScheduleRequest.classTitle_foreignKey)) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.classValue.text = @"(No Class Selected)";
+                [self.classValueField setTitle:self.classValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+            });
+            
+        }else{
+            NSArray* topArray = @[ @[@"key_id", self.myScheduleRequest.classTitle_foreignKey] ];
+            
+            EQRWebData* webData = [EQRWebData sharedInstance];
+            NSString *catalogTitle = [webData queryForStringWithLink:@"EQGetClassCatalogTitleWithKey.php" parameters:topArray];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.classValue.text = catalogTitle;
+                [self.classValueField setTitle:self.classValue.text forState:(UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted)];
+            });
+        }
+    }];
+    
+    
+    NSBlockOperation *notes = [NSBlockOperation blockOperationWithBlock:^{
+        // Set text in notes
+        NSArray* justTopArray = @[ @[@"key_id", self.myScheduleRequest.key_id] ];
+        NSMutableArray* tempMuteArrayJustKey = [NSMutableArray arrayWithCapacity:1];
+        
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetScheduleRequestQuickViewData.php" parameters:justTopArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+            
+            for (EQRScheduleRequestItem* requestItem in muteArray){
+                [tempMuteArrayJustKey addObject:requestItem];
+            }
+        }];
+        
+        if ([tempMuteArrayJustKey count] > 0){
+            self.myScheduleRequest.notes = [[tempMuteArrayJustKey objectAtIndex:0] notes];
+        }else{
+            NSLog(@"InboxRightVC > renewTheViewWithRequest failed to find a matching request key id");
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.notesView.text = self.myScheduleRequest.notes;
+            
+            // Turn off editable
+            self.notesView.editable = NO;
+        });
+    }];
+    
+    
+    NSBlockOperation *equipment = [NSBlockOperation blockOperationWithBlock:^{
+        // Table of joins
+        NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
+        
+        NSArray* topArray = @[ @[@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id] ];
+        
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetScheduleEquipJoinsForCheckWithScheduleTrackingKey.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+            for (id join in muteArray){
+                [tempMuteArray addObject:join];
+            }
+        }];
+        
+        //_____******   error checking when no joins exist   *******____
+        
+        self.arrayOfJoins = [NSArray arrayWithArray:tempMuteArray];
+        self.myScheduleRequest.arrayOfEquipmentJoins = [NSMutableArray arrayWithArray:tempMuteArray];
+    }];
+    
+    
+    NSBlockOperation *misc = [NSBlockOperation blockOperationWithBlock:^{
+        // Misc joins
+        NSArray* omegaArray = @[ @[@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id] ];
+        
+        if (!self.arrayOfMiscJoins){
+            self.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
+        }
+        [self.arrayOfMiscJoins removeAllObjects];
+        
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray) {
+            if (!muteArray) return NSLog(@"EQRInboxRightVC > renewTheViewWithRequest, array of misc items is nil");
+            
+            if ([muteArray count] > 0){
+                [self.arrayOfMiscJoins addObjectsFromArray:muteArray];
+            }
+            self.myScheduleRequest.arrayOfMiscJoins = [NSMutableArray arrayWithArray:self.arrayOfMiscJoins];
+        }];
+    }];
+    
+    
+    NSBlockOperation *renderTable = [NSBlockOperation blockOperationWithBlock:^{
+        self.arrayOfJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfJoins withMiscJoins:self.arrayOfMiscJoins];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Refresh the data in table
+            [self.myTable reloadData];
+        });
+        
+    }];
+    [renderTable addDependency:equipment];
+    [renderTable addDependency:misc];
+    
+    
+    NSBlockOperation *updatePrivateRequestManager = [NSBlockOperation blockOperationWithBlock:^{
+        //____set up private request manager______
+        //create private request manager as ivar
+        if (!self.privateRequestManager){
+            self.privateRequestManager = [[EQRScheduleRequestManager alloc] init];
+        }
+        
+        //set the request as ivar in requestManager
+        self.privateRequestManager.request = self.myScheduleRequest;
+        
+        //two important methods that initiate requestManager ivar arrays
+        [self.privateRequestManager resetEquipListAndAvailableQuantites];
+        [self.privateRequestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
+            //        TODO: retrieveAllEquipUniqueItems async
+        }];
+        NSLog(@"PRIVATE REQUEST MANAGER UPDATED");
+    }];
+    [updatePrivateRequestManager addDependency:nameAndDates];
+    [updatePrivateRequestManager addDependency:class];
+    [updatePrivateRequestManager addDependency:notes];
+    [updatePrivateRequestManager addDependency:renderTable];
+    
+    
+    NSBlockOperation *price = [NSBlockOperation blockOperationWithBlock:^{
+        // Pricing info
+        if ([self.myScheduleRequest.renter_type isEqualToString:EQRRenterPublic]){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.priceMatrixSubView.hidden = NO;
+                [self getTransactionInfo];
+            });
+            
+        }else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.priceMatrixSubView.hidden = YES;
+            });
+        }
+    }];
+    
+    
+    [queue addOperation:nameAndDates];
+    [queue addOperation:class];
+    [queue addOperation:notes];
+    [queue addOperation:equipment];
+    [queue addOperation:misc];
+    [queue addOperation:renderTable];
+    [queue addOperation:updatePrivateRequestManager];
+    [queue addOperation:price];
 }
+
+
 
 -(void)getTransactionInfo{
     
-    EQRWebData *webData = [EQRWebData sharedInstance];
-    NSArray *firstArray = @[@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id];
-    NSArray *topArray = @[firstArray];
+    NSArray *topArray = @[ @[@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id] ];
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
         
+        EQRWebData *webData = [EQRWebData sharedInstance];
         [webData queryForStringwithAsync:@"EQGetTransactionWithScheduleRequestKey.php" parameters:topArray completion:^(EQRTransaction *transaction) {
             
             if (transaction){
@@ -710,31 +766,32 @@
 
 -(void)confirmedTheConfirm{
     
-    //get staff user id
+    // Staff user id
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     NSString* staffUserKeyID = staffUserManager.currentStaffUser.key_id;
-    
-    //assign date and key_id to webdata
-    EQRWebData* webData = [EQRWebData sharedInstance];
     
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
     NSString* dateString = [dateFormatter stringFromDate:[NSDate date]];
     
-    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.myScheduleRequest.key_id, nil];
-    NSArray* secondArray = [NSArray arrayWithObjects:@"staff_id", staffUserKeyID, nil];
-    NSArray* thirdArray = [NSArray arrayWithObjects:@"staff_confirmation_date", dateString, nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
+    NSArray* topArray = @[ @[@"key_id", self.myScheduleRequest.key_id],
+                           @[@"staff_id", staffUserKeyID],
+                           @[@"staff_confirmation_date", dateString]];
     
-    [webData queryForStringWithLink:@"EQSetConfirmation.php" parameters:topArray];
-    
-    [self composeEmail];
-    
-    //hide right side to indicate completion
-    [self.rightView setHidden:YES];
-    [self.leftView setHidden:YES];
-    [self exitEditMode];
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        [webData queryForStringwithAsync:@"EQSetConfirmation.php" parameters:topArray completion:^(NSString *returnValue) {
+            
+            [self composeEmail];
+            
+            // Hide right side to indicate completion
+            [self.rightView setHidden:YES];
+            [self.leftView setHidden:YES];
+            [self exitEditMode];
+        }];
+    });
 }
 
 
