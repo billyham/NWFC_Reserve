@@ -107,6 +107,10 @@
 @property BOOL inEditModeFlag;
 @property BOOL aChangeWasMade;
 
+//queues
+//@property (strong, nonatomic) NSOperationQueue *reloadTableQueue;
+@property (strong, nonatomic) NSOperationQueue *renewTheViewQueue;
+
 
 @end
 
@@ -369,9 +373,12 @@
     [self.leftView setHidden:NO];
     
     
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    queue.name = @"renewTheViewWithRequest";
-    queue.maxConcurrentOperationCount = 5;
+    if (!self.renewTheViewQueue){
+        self.renewTheViewQueue = [[NSOperationQueue alloc] init];
+        self.renewTheViewQueue.name = @"renewTheViewQueue";
+        self.renewTheViewQueue.maxConcurrentOperationCount = 2;
+    }
+    [self.renewTheViewQueue cancelAllOperations];
     
     
     NSBlockOperation *nameAndDates = [NSBlockOperation blockOperationWithBlock:^{
@@ -467,7 +474,7 @@
     
     
     NSBlockOperation *equipment = [NSBlockOperation blockOperationWithBlock:^{
-        // Table of joins
+        // Equipment joins
         NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
         
         NSArray* topArray = @[ @[@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id] ];
@@ -478,9 +485,6 @@
                 [tempMuteArray addObject:join];
             }
         }];
-        
-        //_____******   error checking when no joins exist   *******____
-        
         self.arrayOfJoins = [NSArray arrayWithArray:tempMuteArray];
         self.myScheduleRequest.arrayOfEquipmentJoins = [NSMutableArray arrayWithArray:tempMuteArray];
     }];
@@ -509,10 +513,15 @@
     
     NSBlockOperation *renderTable = [NSBlockOperation blockOperationWithBlock:^{
         self.arrayOfJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfJoins withMiscJoins:self.arrayOfMiscJoins];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             // Refresh the data in table
             [self.myTable reloadData];
         });
+        
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self reloadTable];
+//        });
         
     }];
     [renderTable addDependency:equipment];
@@ -520,8 +529,7 @@
     
     
     NSBlockOperation *updatePrivateRequestManager = [NSBlockOperation blockOperationWithBlock:^{
-        //____set up private request manager______
-        //create private request manager as ivar
+        // Private request manager as ivar
         if (!self.privateRequestManager){
             self.privateRequestManager = [[EQRScheduleRequestManager alloc] init];
         }
@@ -530,11 +538,11 @@
         self.privateRequestManager.request = self.myScheduleRequest;
         
         //two important methods that initiate requestManager ivar arrays
-        [self.privateRequestManager resetEquipListAndAvailableQuantites];
-        [self.privateRequestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
-            //        TODO: retrieveAllEquipUniqueItems async
-        }];
-        NSLog(@"PRIVATE REQUEST MANAGER UPDATED");
+//        [self.privateRequestManager resetEquipListAndAvailableQuantites];
+//        [self.privateRequestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
+//            //        TODO: retrieveAllEquipUniqueItems async
+//        }];
+//        NSLog(@"PRIVATE REQUEST MANAGER UPDATED");
     }];
     [updatePrivateRequestManager addDependency:nameAndDates];
     [updatePrivateRequestManager addDependency:class];
@@ -557,16 +565,34 @@
         }
     }];
     
-    
-    [queue addOperation:nameAndDates];
-    [queue addOperation:class];
-    [queue addOperation:notes];
-    [queue addOperation:equipment];
-    [queue addOperation:misc];
-    [queue addOperation:renderTable];
-    [queue addOperation:updatePrivateRequestManager];
-    [queue addOperation:price];
+
+    [self.renewTheViewQueue addOperation:nameAndDates];
+    [self.renewTheViewQueue addOperation:class];
+    [self.renewTheViewQueue addOperation:notes];
+    [self.renewTheViewQueue addOperation:equipment];
+    [self.renewTheViewQueue addOperation:misc];
+    [self.renewTheViewQueue addOperation:renderTable];
+    [self.renewTheViewQueue addOperation:updatePrivateRequestManager];
+    [self.renewTheViewQueue addOperation:price];
 }
+
+
+//-(void)reloadTable{
+//    if (!self.reloadTableQueue){
+//        self.reloadTableQueue = [[NSOperationQueue alloc] init];
+//        self.reloadTableQueue.name = @"reloadTableQueue";
+//        self.reloadTableQueue.maxConcurrentOperationCount = 1;
+//    }
+//    
+//    NSBlockOperation *updateTable = [NSBlockOperation blockOperationWithBlock:^{
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            // Refresh the data in table
+//            [self.myTable reloadData];
+//        });
+//    }];
+//    
+//    [self.reloadTableQueue addOperation:updateTable];
+//}
 
 
 
