@@ -60,6 +60,9 @@
 @property (strong, nonatomic) NSArray *verticalConstraintsForSearchBar;
 @property (strong, nonatomic) NSArray *horizontalConstraintsForSearchBar;
 
+// Operation Queues
+@property (strong, nonatomic) NSOperationQueue *renewTheViewQueue;
+
 @end
 
 
@@ -249,13 +252,16 @@
     };
     
     
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    queue.name = @"renewTheViewWithRequestManager";
-    queue.maxConcurrentOperationCount = 5;
+    if (!self.renewTheViewQueue){
+        self.renewTheViewQueue = [[NSOperationQueue alloc] init];
+        self.renewTheViewQueue.name = @"renewTheViewWithRequestManager";
+        self.renewTheViewQueue.maxConcurrentOperationCount = 3;
+    }
+    [self.renewTheViewQueue cancelAllOperations];
     
     
     NSBlockOperation *getEquipTitlesWithClassCatalogKey = [NSBlockOperation blockOperationWithBlock:^{
-        //set webData request for equiplist
+        // Set webData request for equiplist
         NSArray* secondParamArray = @[ @[@"ClassCatalog_foreignKey", classTitleKey] ];
         
         // Get list of ClassCatalog_EquipTitleItem_Join
@@ -285,7 +291,7 @@
             }];
         }
         
-        //... and save to ivar
+        // Save as property
         self.equipTitleArray = [NSArray arrayWithArray:tempEquipMuteArray];
     }];
     
@@ -297,12 +303,12 @@
         }
         [self.equipTitleCategoriesList removeAllObjects];
         
-        //A. first test if array of categories is valid
+        // Test if array of categories is valid
         if ([self.equipTitleCategoriesList count] < 1){
             
             NSMutableSet* tempSet = [NSMutableSet set];
             
-            //create a list of unique categories names by looping through the array of equipTitles
+            // Create a list of unique categories names by looping through the array of equipTitles
             for (EQREquipItem* obj in self.equipTitleArray){
                 
                 if ([tempSet containsObject:obj.category] == NO){
@@ -409,9 +415,9 @@
     [renderTable addDependency:everythingElse];
     
     
-    [queue addOperation:getEquipTitlesWithClassCatalogKey];
-    [queue addOperation:everythingElse];
-    [queue addOperation:renderTable];
+    [self.renewTheViewQueue addOperation:getEquipTitlesWithClassCatalogKey];
+    [self.renewTheViewQueue addOperation:everythingElse];
+    [self.renewTheViewQueue addOperation:renderTable];
 }
 
 

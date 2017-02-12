@@ -108,7 +108,6 @@
 @property BOOL aChangeWasMade;
 
 //queues
-//@property (strong, nonatomic) NSOperationQueue *reloadTableQueue;
 @property (strong, nonatomic) NSOperationQueue *renewTheViewQueue;
 
 
@@ -518,11 +517,6 @@
             // Refresh the data in table
             [self.myTable reloadData];
         });
-        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [self reloadTable];
-//        });
-        
     }];
     [renderTable addDependency:equipment];
     [renderTable addDependency:misc];
@@ -538,11 +532,11 @@
         self.privateRequestManager.request = self.myScheduleRequest;
         
         //two important methods that initiate requestManager ivar arrays
-//        [self.privateRequestManager resetEquipListAndAvailableQuantites];
-//        [self.privateRequestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
-//            //        TODO: retrieveAllEquipUniqueItems async
-//        }];
-//        NSLog(@"PRIVATE REQUEST MANAGER UPDATED");
+        [self.privateRequestManager resetEquipListAndAvailableQuantites];
+        [self.privateRequestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
+            //        TODO: retrieveAllEquipUniqueItems async
+        }];
+        NSLog(@"PRIVATE REQUEST MANAGER UPDATED");
     }];
     [updatePrivateRequestManager addDependency:nameAndDates];
     [updatePrivateRequestManager addDependency:class];
@@ -577,25 +571,6 @@
 }
 
 
-//-(void)reloadTable{
-//    if (!self.reloadTableQueue){
-//        self.reloadTableQueue = [[NSOperationQueue alloc] init];
-//        self.reloadTableQueue.name = @"reloadTableQueue";
-//        self.reloadTableQueue.maxConcurrentOperationCount = 1;
-//    }
-//    
-//    NSBlockOperation *updateTable = [NSBlockOperation blockOperationWithBlock:^{
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            // Refresh the data in table
-//            [self.myTable reloadData];
-//        });
-//    }];
-//    
-//    [self.reloadTableQueue addOperation:updateTable];
-//}
-
-
-
 -(void)getTransactionInfo{
     
     NSArray *topArray = @[ @[@"scheduleTracking_foreignKey", self.myScheduleRequest.key_id] ];
@@ -607,9 +582,6 @@
         [webData queryForStringwithAsync:@"EQGetTransactionWithScheduleRequestKey.php" parameters:topArray completion:^(EQRTransaction *transaction) {
             
             if (transaction){
-                
-//                NSLog(@"this is the transaction's key_id: %@", transaction.key_id);
-                
                 self.myTransaction = transaction;
                 
                 //found a matching transaction for this schedule Request, go on...
@@ -618,7 +590,6 @@
             }else{
                 
                 //no matching transaction, create a fresh one.
-//                NSLog(@"didn't find a matching Transaction");
                 [self.priceWidget deleteExistingData];
             }
         }];
