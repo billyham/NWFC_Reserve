@@ -2379,6 +2379,22 @@ const int intEQRTransaction = 11;
         return;
     }
     
+    if ([link isEqualToString:@"EQSetCheckOutInPrepScheduleEquipJoin.php"]){
+        NSString *returnString = [self queryForStringWithLink:@"EQSetCheckOutInPrepScheduleEquipJoin.php" parameters:para];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        return;
+    }
+    
+    if ([link isEqualToString:@"EQSetCheckOutInPrepScheduleMiscJoin.php"]){
+        NSString *returnString = [self queryForStringWithLink:@"EQSetCheckOutInPrepScheduleMiscJoin.php" parameters:para];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        return;
+    }
+    
 }
 
 

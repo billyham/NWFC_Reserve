@@ -96,14 +96,13 @@
 
 -(IBAction)distIDButton:(id)sender{
     
-    NSDictionary* dic = [NSDictionary dictionaryWithObjectsAndKeys:self.myJoinKeyID, @"joinKey_id",
-                         self.equipTitleItem_foreignKey, @"equipTitleItem_foreignKey",
-                         self.equipUniqueItem_foreignKey, @"equipUniqueItem_foreignKey",
-                         self.myIndexPath, @"indexPath",
-                         self.distIDLabel, @"distButton",
-                         nil];
+    NSDictionary* dic = @{ @"joinKey_id": self.myJoinKeyID,
+                           @"equipTitleItem_foreignKey": self.equipTitleItem_foreignKey,
+                           @"equipUniqueItem_foreignKey": self.equipUniqueItem_foreignKey,
+                           @"indexPath": self.myIndexPath,
+                           @"distButton": self.distIDLabel };
     
-    //send note to EQRCheckVCntrllr
+    // Send note to EQRCheckVCntrllr
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRDistIDPickerTapped object:nil userInfo:dic];
     
 }
@@ -119,8 +118,6 @@
     
     NSString* equipKeyID = [[note userInfo] objectForKey:@"keyID"];
     
-//    NSLog(@"this is a row's equipUnique key: %@", self.equipUniqueItem_foreignKey);
-    
     if ([equipKeyID isEqualToString:self.equipUniqueItem_foreignKey]){
         
         [self.statusSwitch setOn:YES];
@@ -134,50 +131,66 @@
 
 -(IBAction)receiveSwitchChange:(id)sender{
     
-    //send update to data join object
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    
+    NSString *verdict;
+    NSString *dbValue;
     if ([sender isOn]){
-        
-        NSArray* firstArray = [NSArray arrayWithObjects:self.joinPropertyToBeUpdated, @"yes", nil];
-        NSArray* secondArray = [NSArray arrayWithObjects:@"key_id", self.myJoinKeyID, nil];
-        NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
-        
-        //update model
+        verdict = @"yes";
+        dbValue = @"yes";
+    }else{
+        verdict = @"";
+        dbValue = @"nix";
+    }
+    
+    NSArray* topArray = @[ @[self.joinPropertyToBeUpdated, dbValue],
+                           @[@"key_id", self.myJoinKeyID]];
+    
+    // Update model
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        EQRWebData* webData = [EQRWebData sharedInstance];
         if (self.isContentForMiscJoin == NO){
-            [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleEquipJoin.php" parameters:topArray];
+            [webData queryForStringwithAsync:@"EQSetCheckOutInPrepScheduleEquipJoin.php" parameters:topArray completion:^(NSString *returnString) {
+                if (returnString) NSLog(@"EQRCheckCellContentVCtrllr > receiveSwitchData, failed to set db");
+            }];
         }else{
-            [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleMiscJoin.php" parameters:topArray];
+            [webData queryForStringwithAsync:@"EQSetCheckOutInPrepScheduleMiscJoin.php" parameters:topArray completion:^(NSString *returnString) {
+               if (returnString) NSLog(@"EQRCheckCellContentVCtrllr > receiveSwitchData, failed to set db");
+            }];
         }
+    });
+    
+    // Update array
+    NSDictionary* newDic = @{ @"joinKeyID": self.myJoinKeyID,
+                              @"joinProperty": self.joinPropertyToBeUpdated,
+                              @"markedAsYes": verdict,
+                              @"isContentForMiscJoin": [NSNumber numberWithBool:self.isContentForMiscJoin] };
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRUpdateCheckInOutArrayOfJoins object:nil userInfo:newDic];
+    
+    // Render view
+    [self renderSwitchWithProperty:self.joinPropertyToBeUpdated isOn:[sender isOn]];
+}
+
+-(void)renderSwitchWithProperty:(NSString *)property isOn:(BOOL)isOn{
+    
+    if (isOn){
         
-        //____need to update ivar array
-        NSString* verdict = @"yes";
-        NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                self.myJoinKeyID, @"joinKeyID",
-                                self.joinPropertyToBeUpdated, @"joinProperty",
-                                verdict, @"markedAsYes",
-                                [NSNumber numberWithBool:self.isContentForMiscJoin], @"isContentForMiscJoin",
-                                nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQRUpdateCheckInOutArrayOfJoins object:nil userInfo:newDic];
-        
-        
-        //update status label
-        if ([self.joinPropertyToBeUpdated isEqualToString:@"prep_flag"]){
+        if ([property isEqualToString:@"prep_flag"]){
             
             self.status1Label.text = @"";
             self.status2Label.text = @"Prepped";
             
-        }else if ([self.joinPropertyToBeUpdated isEqualToString:@"checkout_flag"]){
+        }else if ([property isEqualToString:@"checkout_flag"]){
             
             self.status1Label.text = @"";
             self.status2Label.text = @"Out";
             
-        }else if([self.joinPropertyToBeUpdated isEqualToString:@"checkin_flag"]){
+        }else if([property isEqualToString:@"checkin_flag"]){
             
             self.status1Label.text = @"";
             self.status2Label.text = @"In";
             
-        }else if([self.joinPropertyToBeUpdated isEqualToString:@"shelf_flag"]){
+        }else if([property isEqualToString:@"shelf_flag"]){
             
             self.status1Label.text = @"";
             self.status2Label.text = @"Shelved";
@@ -186,49 +199,24 @@
             
             NSLog(@"error in checkCellContent > receiveSwitchChange didn't recognize the joingPropertyToBeUpdated ivar");
         }
-        
-        
     }else{
         
-        NSArray* firstArray = [NSArray arrayWithObjects:self.joinPropertyToBeUpdated, @"nix", nil];
-        NSArray* secondArray = [NSArray arrayWithObjects:@"key_id", self.myJoinKeyID, nil];
-        NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
-        
-        //update model
-        if (self.isContentForMiscJoin == NO){
-            [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleEquipJoin.php" parameters:topArray];
-        }else{
-            [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleMiscJoin.php" parameters:topArray];
-        }
-        
-        
-        //____need to update ivar array
-        NSString* verdict = @"";
-        NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                self.myJoinKeyID, @"joinKeyID",
-                                self.joinPropertyToBeUpdated, @"joinProperty",
-                                verdict, @"markedAsYes",
-                                [NSNumber numberWithBool:self.isContentForMiscJoin], @"isContentForMiscJoin",
-                                nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:EQRUpdateCheckInOutArrayOfJoins object:nil userInfo:newDic];
-        
-        //update status label
-        if ([self.joinPropertyToBeUpdated isEqualToString:@"prep_flag"]){
+        if ([property isEqualToString:@"prep_flag"]){
             
             self.status1Label.text = @"Not Prepped";
             self.status2Label.text = @"";
             
-        }else if ([self.joinPropertyToBeUpdated isEqualToString:@"checkout_flag"]){
+        }else if ([property isEqualToString:@"checkout_flag"]){
             
             self.status1Label.text = @"In";
             self.status2Label.text = @"";
             
-        }else if([self.joinPropertyToBeUpdated isEqualToString:@"checkin_flag"]){
+        }else if([property isEqualToString:@"checkin_flag"]){
             
             self.status1Label.text = @"Out";
             self.status2Label.text = @"";
             
-        }else if([self.joinPropertyToBeUpdated isEqualToString:@"shelf_flag"]){
+        }else if([property isEqualToString:@"shelf_flag"]){
             
             self.status1Label.text = @"Not Shelved";
             self.status2Label.text = @"";
@@ -238,13 +226,7 @@
             NSLog(@"error in checkCellContent > receiveSwitchChange didn't recognize the joingPropertyToBeUpdated ivar");
         }
     }
-    
 }
-
-
-
-
-
 
 
 - (void)didReceiveMemoryWarning

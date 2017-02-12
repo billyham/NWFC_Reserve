@@ -375,7 +375,7 @@
     if (!self.renewTheViewQueue){
         self.renewTheViewQueue = [[NSOperationQueue alloc] init];
         self.renewTheViewQueue.name = @"renewTheViewQueue";
-        self.renewTheViewQueue.maxConcurrentOperationCount = 2;
+        self.renewTheViewQueue.maxConcurrentOperationCount = 1;
     }
     [self.renewTheViewQueue cancelAllOperations];
     
@@ -536,7 +536,7 @@
         [self.privateRequestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
             //        TODO: retrieveAllEquipUniqueItems async
         }];
-        NSLog(@"PRIVATE REQUEST MANAGER UPDATED");
+//        NSLog(@"PRIVATE REQUEST MANAGER UPDATED");
     }];
     [updatePrivateRequestManager addDependency:nameAndDates];
     [updatePrivateRequestManager addDependency:class];
