@@ -201,12 +201,6 @@
 
 -(void)dismissedCheckInOut:(NSNotification*)note{
     
-    //_______********  still need to update the data model and local ivar   *******_______
-    
-    //[NSNumber numberWithBool:self.marked_for_returning], @"marked_for_returning",
-    //self.myProperty, @"propertyToUpdate",
-
-    
     NSString* scheduleKey = [[note userInfo] objectForKey:@"scheduleKey"];
     NSString* completeOrIncomplete = [[note userInfo] objectForKey:@"comleteOrIncomplete"];
     BOOL markedForReturning = [(NSNumber*)[[note userInfo] objectForKey:@"marked_for_returning"] boolValue];
@@ -219,22 +213,21 @@
             
             if (switch_num == 1){
                 
-                //don't change status if it's at 2
+                // Don't change status if it's at 2
                 if (self.myStatus == 0){
-                
                     self.myStatus = 1;
                 }
                 
-                //change color of inside of tap button
+                // Change color of inside of tap button
                 self.switchTap1.innerCircleColor = [UIColor colorWithRed: 0 green: 0.657 blue: 0 alpha: 1];
                 [self.switchTap1 setNeedsDisplay];
                 
-                //enable switch2
+                // Enable switch2
                 self.switchTap2.alpha = 1.0;
                 self.switchLabel2.alpha = 1.0;
                 self.switchTap2.userInteractionEnabled = YES;
                 
-                //change status color
+                // Change status color
                 self.secondStatusBar.myColor = self.myAssignedColor;
                 
                 if (self.myStatus < 2){
@@ -246,13 +239,12 @@
                    self.thirdStatusBar.myColor = self.myAssignedColor;
                 }
                 
-                //change color of second status bar
+                // Change color of second status bar
                 [self.secondStatusBar setNeedsDisplay];
                 [self.thirdStatusBar setNeedsDisplay];
                 
-                //turn on caution label
+                // Turn on caution label
                 if (foundOutstandingItem){
-//                    NSLog(@"EQRItineraryCellContentVC > dimissedCheckInOut inside turn on caution label");
                     self.cautionLabel1.hidden = NO;
                     
                 }else{
@@ -260,55 +252,40 @@
                     self.cautionLabel1.hidden = YES;
                 }
                 
-                
-                //update the model
-                EQRWebData* webData = [EQRWebData sharedInstance];
-                EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
-                
-                NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-                dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-                dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-                
-                NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.requestKeyId, nil];
-                NSArray* secondArray;
+                NSString* tag;
                 if (!self.markedForReturning){
-                    secondArray = [NSArray arrayWithObjects:@"staff_prep_date",  [dateFormatter stringFromDate:[NSDate date]], nil];
+                    tag = @"staff_prep_date";
                 }else {
-                    secondArray = [NSArray arrayWithObjects:@"staff_checkin_date",  [dateFormatter stringFromDate:[NSDate date]], nil];
+                    tag = @"staff_checkin_date";
                 }
-                NSArray* thirdArray = [NSArray arrayWithObjects:@"staff_id", staffUserManager.currentStaffUser.key_id, nil];
-                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
                 
-                [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
-//                NSLog(@"%@", resultString);
-                
-                //________*********  also update the value in the itinarary object's ivar arrayOfScheduleRequests
-                //include the new status
-                NSDictionary* infoDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                         [NSNumber numberWithInteger:self.myStatus], @"status",
-                                         [NSNumber numberWithBool:self.markedForReturning], @"markedForReturning",
-                                         nil];
-                [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
-                
+                [self updateData:tag nix:NO callback:^{
+
+                    NSDictionary* infoDic = @{ @"status": [NSNumber numberWithInteger:self.myStatus],
+                                               @"markedForReturning": [NSNumber numberWithBool:self.markedForReturning] };
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
+                }];
+
             }else{
                 
-                //swtichNum == 2
+                // SwtichNum == 2
                 
                 self.myStatus = 2;
                 
-                //change color of inside of tap button
+                // Change color of inside of tap button
                 self.switchTap2.innerCircleColor = [UIColor colorWithRed: 0 green: 0.657 blue: 0 alpha: 1];
                 [self.switchTap2 setNeedsDisplay];
                 
-                //change status color
+                // Change status color
                 self.secondStatusBar.myColor = self.myAssignedColor;
                 self.thirdStatusBar.myColor = self.myAssignedColor;
                 
-                //change color of second status bar
+                // Change color of second status bar
                 [self.secondStatusBar setNeedsDisplay];
                 [self.thirdStatusBar setNeedsDisplay];
                 
-                //turn on caution label
+                // Turn on caution label
                 if (foundOutstandingItem){
                     
                     self.cautionLabel2.hidden = NO;
@@ -318,174 +295,154 @@
                     self.cautionLabel2.hidden = YES;
                 }
                 
-                
-                //update the model
-                EQRWebData* webData = [EQRWebData sharedInstance];
-                EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
-
-                
-                NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-                dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-                dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-                
-                NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.requestKeyId, nil];
-                NSArray* secondArray;
+                NSString* tag;
                 if (!self.markedForReturning){
-                    secondArray = [NSArray arrayWithObjects:@"staff_checkout_date",  [dateFormatter stringFromDate:[NSDate date]], nil];
-                }else{
-                    secondArray = [NSArray arrayWithObjects:@"staff_shelf_date",  [dateFormatter stringFromDate:[NSDate date]], nil];
+                    tag = @"staff_checkout_date";
+                }else {
+                    tag = @"staff_shelf_date";
                 }
-                NSArray* thirdArray = [NSArray arrayWithObjects:@"staff_id", staffUserManager.currentStaffUser.key_id, nil];
-                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
                 
-                [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
-//                NSLog(@"%@", resultString);
-                
-                //________*********  also update the value in the itinarary object's ivar arrayOfScheduleRequests
-                NSDictionary* infoDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                         [NSNumber numberWithInteger:self.myStatus], @"status",
-                                         [NSNumber numberWithBool:self.markedForReturning], @"markedForReturning",
-                                         nil];
-                [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
-                
-                
+                [self updateData:tag nix:NO callback:^{
+
+                    NSDictionary* infoDic = @{ @"status": [NSNumber numberWithInteger:self.myStatus],
+                                               @"markedForReturning": [NSNumber numberWithBool:self.markedForReturning] };
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
+                }];
             }
             
         }else{
-            //marked as incomplete
+            // Marked as incomplete
             
             if (switch_num == 1){
                 
                 self.myStatus = 0;
                 
-                //change color of inside of tap button
+                // Change color of inside of tap button
                 self.switchTap1.innerCircleColor = [UIColor whiteColor];
                 [self.switchTap1 setNeedsDisplay];
                 
-                //disable switch2
+                // Disable switch2
                 self.switchTap2.alpha = 0.3;
                 self.switchLabel2.alpha = 0.3;
                 self.switchTap2.userInteractionEnabled = NO;
                 
-                //also change color of inside of switch2 tap button
+                // Also change color of inside of switch2 tap button
                 self.switchTap2.innerCircleColor = [UIColor whiteColor];
                 [self.switchTap2 setNeedsDisplay];
                 
-                //change status color
+                // Change status color
                 self.secondStatusBar.myColor = [[[EQRColors sharedInstance] colorDic] objectForKey:EQRColorVeryLightGrey];
                 self.thirdStatusBar.myColor = [[[EQRColors sharedInstance] colorDic] objectForKey:EQRColorVeryLightGrey];
                 
-                //change color of second status bar
+                // Change color of second status bar
                 [self.secondStatusBar setNeedsDisplay];
                 [self.thirdStatusBar setNeedsDisplay];
                 
                 self.cautionLabel1.hidden = YES;
                 self.cautionLabel2.hidden = YES;
                 
-                
-                //update the model
-                EQRWebData* webData = [EQRWebData sharedInstance];
-                EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
-
-                
-                NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.requestKeyId, nil];
-                NSArray* secondArray;
+                NSString* tag;
                 if (!self.markedForReturning){
-                    secondArray = [NSArray arrayWithObjects:@"staff_prep_date",  @"nix", nil];
+                    tag = @"staff_prep_date";
                 }else {
-                    secondArray = [NSArray arrayWithObjects:@"staff_checkin_date",  @"nix", nil];
+                    tag = @"staff_checkin_date";
                 }
                 
-                NSArray* thirdArray = [NSArray arrayWithObjects:@"staff_id", staffUserManager.currentStaffUser.key_id, nil];
-                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
-                
-//                NSLog(@"this is the array 1: %@, 2: %@, 3: %@", firstArray, secondArray, thirdArray);
-                
-                [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
-//                NSLog(@"%@", resultString);
-                
-                //________*********  also update the value in the itinarary object's ivar arrayOfScheduleRequests
-                NSDictionary* infoDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                         [NSNumber numberWithInteger:self.myStatus], @"status",
-                                         [NSNumber numberWithBool:self.markedForReturning], @"markedForReturning",
-                                         nil];
-                [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
+                [self updateData:tag nix:YES callback:^{
 
+                    NSDictionary* infoDic = @{ @"status": [NSNumber numberWithInteger:self.myStatus],
+                                               @"markedForReturning": [NSNumber numberWithBool:self.markedForReturning] };
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
+                }];
                 
-                
-                //_______ need to accommodate when switch 2 is ON and remove that from model as well
+                // Need to accommodate when switch 2 is ON and remove that from model as well
                 if (self.myStatus == 2){
                     
-                    EQRWebData* webData = [EQRWebData sharedInstance];
-                    
-                    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.requestKeyId, nil];
-                    NSArray* secondArray;
+                    NSString* secondTag;
                     if (!self.markedForReturning){
-                        secondArray = [NSArray arrayWithObjects:@"staff_checkout_date",  @"nix", nil];
-                    }else{
-                        secondArray = [NSArray arrayWithObjects:@"staff_shelf_date",  @"nix", nil];
+                        secondTag = @"staff_checkout_date";
+                    }else {
+                        secondTag = @"staff_shelf_date";
                     }
-                    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
                     
-                    [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
+                    [self updateData:secondTag nix:YES callback:^{
+                        
+                    }];
                 }
-                
                 
             }else{
                 
-                //swtichNum == 2
+                // SwtichNum == 2
                 
                 self.myStatus = 1;
                 
-                //change color of inside of tap button
+                // Change color of inside of tap button
                 self.switchTap2.innerCircleColor = [UIColor whiteColor];
                 [self.switchTap2 setNeedsDisplay];
                 
-                //change status color
+                // Change status color
                 self.secondStatusBar.myColor = self.myAssignedColor;
                 self.thirdStatusBar.myColor = [[[EQRColors sharedInstance] colorDic] objectForKey:EQRColorVeryLightGrey];
                 
-                //change color of second status bar
+                // Change color of second status bar
                 [self.secondStatusBar setNeedsDisplay];
                 [self.thirdStatusBar setNeedsDisplay];
                 
                 self.cautionLabel2.hidden = YES;
                 
-                
-                //update the model
-                EQRWebData* webData = [EQRWebData sharedInstance];
-                EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
-
-                
-                NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.requestKeyId, nil];
-                NSArray* secondArray;
+                NSString* tag;
                 if (!self.markedForReturning){
-                    secondArray = [NSArray arrayWithObjects:@"staff_checkout_date",  @"nix", nil];
-                }else{
-                    secondArray = [NSArray arrayWithObjects:@"staff_shelf_date",  @"nix", nil];
+                    tag = @"staff_checkout_date";
+                }else {
+                    tag = @"staff_shelf_date";
                 }
-                NSArray* thirdArray = [NSArray arrayWithObjects:@"staff_id", staffUserManager.currentStaffUser.key_id, nil];
-                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
                 
-                [webData queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray];
-                
-                //________*********  also update the value in the itinarary object's ivar arrayOfScheduleRequests
-                NSDictionary* infoDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                         [NSNumber numberWithInteger:self.myStatus], @"status",
-                                         [NSNumber numberWithBool:self.markedForReturning], @"markedForReturning",
-                                         nil];
-                [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
+                [self updateData:tag nix:YES callback:^{
 
+                    NSDictionary* infoDic = @{ @"status": [NSNumber numberWithInteger:self.myStatus],
+                                               @"markedForReturning": [NSNumber numberWithBool:self.markedForReturning] };
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
+                }];
             }
         }
     }
+}
+
+-(void)updateData:(NSString*)tag nix:(BOOL)nix callback:(void (^)(void))cb{
+
+    // Update the model
+    EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
+
+    NSString *tagValue;
+
+    if (nix){
+        tagValue = @"nix";
+    }else{
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+        
+        tagValue = [dateFormatter stringFromDate:[NSDate date]];
+    }
+    
+    NSArray* topArray = @[ @[@"key_id", self.requestKeyId],
+                           @[tag, tagValue],
+                           @[@"staff_id", staffUserManager.currentStaffUser.key_id] ];
+    
+    EQRWebData* webData = [EQRWebData sharedInstance];
+    [webData queryForStringwithAsync:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:topArray completion:^(NSString *returnString) {
+        cb();
+    }];
 }
 
 #pragma mark - popover delegate methods
 
 //never uses the popover actually
 //-(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
-//    
+//
 //    //there is 1 popover
 //    if (popoverController == self.myPopOver){
 //        

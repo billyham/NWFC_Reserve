@@ -2403,6 +2403,14 @@ const int intEQRTransaction = 11;
         return;
     }
     
+    if ([link isEqualToString:@"EQSetCheckOutInPrepScheduleRequest.php"]){
+        NSString *returnString = [self queryForStringWithLink:@"EQSetCheckOutInPrepScheduleRequest.php" parameters:para];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        return;
+    }
+    
 }
 
 
