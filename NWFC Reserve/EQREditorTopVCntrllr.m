@@ -384,9 +384,6 @@
     
     self.saveButtonTappedFlag = YES;
     
-    //update SQL with new request information
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    
     //must not include nil objects in array
     //cycle though all inputs and ensure some object is included. use @"88888888" as an error code
     if (!self.privateRequestManager.request.contact_foreignKey) self.privateRequestManager.request.contact_foreignKey = EQRErrorCode88888888;
@@ -400,143 +397,88 @@
     if (!self.privateRequestManager.request.notes) self.privateRequestManager.request.notes = @"";
 
     
-    //format the nsdates to a mysql compatible string
-    NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];
-    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [dateFormatForDate setLocale:usLocale];
-    [dateFormatForDate setDateFormat:@"yyyy-MM-dd"];
-    NSString* dateBeginString = [dateFormatForDate stringFromDate:self.privateRequestManager.request.request_date_begin];
-    NSString* dateEndString = [dateFormatForDate stringFromDate:self.privateRequestManager.request.request_date_end];
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"saveAction";
+    queue.maxConcurrentOperationCount = 3;
     
-    //format the time
-    NSDateFormatter* dateFormatForTime = [[NSDateFormatter alloc] init];
-    [dateFormatForTime setLocale:usLocale];
-    [dateFormatForTime setDateFormat:@"HH:mm"];
-    NSString* timeBeginStringPartOne = [dateFormatForTime stringFromDate:self.privateRequestManager.request.request_date_begin];
-    NSString* timeEndStringPartOne = [dateFormatForTime stringFromDate:self.privateRequestManager.request.request_date_end];
-    NSString* timeBeginString = [NSString stringWithFormat:@"%@:00", timeBeginStringPartOne];
-    NSString* timeEndString = [NSString stringWithFormat:@"%@:00", timeEndStringPartOne];
     
-    //time of request
-    NSDateFormatter* timeStampFormatter = [[NSDateFormatter alloc] init];
-    [timeStampFormatter setLocale:usLocale];
-    [timeStampFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    NSString* timeRequestString = [timeStampFormatter stringFromDate:self.privateRequestManager.request.time_of_request];
-    
-    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.key_id, nil];
-    NSArray* secondArray = [NSArray arrayWithObjects:@"contact_foreignKey", self.privateRequestManager.request.contact_foreignKey, nil];
-    NSArray* thirdArray = [NSArray arrayWithObjects:@"classSection_foreignKey", self.privateRequestManager.request.classSection_foreignKey,nil];
-    NSArray* fourthArray = [NSArray arrayWithObjects:@"classTitle_foreignKey", self.privateRequestManager.request.classTitle_foreignKey,nil];
-    NSArray* fifthArray = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
-    NSArray* sixthArray = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
-    NSArray* seventhArray = [NSArray arrayWithObjects:@"request_time_begin", timeBeginString, nil];
-    NSArray* eighthArray = [NSArray arrayWithObjects:@"request_time_end", timeEndString, nil];
-    NSArray* ninthArray =[NSArray arrayWithObjects:@"contact_name", self.privateRequestManager.request.contact_name, nil];
-    NSArray* tenthArray = [NSArray arrayWithObjects:@"renter_type", self.privateRequestManager.request.renter_type, nil];
-    NSArray* eleventhArray = [NSArray arrayWithObjects:@"time_of_request", timeRequestString, nil];
-    NSArray* twelfthArray = [NSArray arrayWithObjects:@"notes", self.privateRequestManager.request.notes, nil];
-    
-    NSArray* bigArray = [NSArray arrayWithObjects:
-                         firstArray,
-                         secondArray,
-                         thirdArray,
-                         fourthArray,
-                         fifthArray,
-                         sixthArray,
-                         seventhArray,
-                         eighthArray,
-                         ninthArray,
-                         tenthArray,
-                         eleventhArray,
-                         twelfthArray,
-                         nil];
-    
-    [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
-    
-    //_______*********  delete the delted scheduleTracking_equip_joins
-    for (NSString* thisKeyID in self.arrayOfToBeDeletedEquipIDs){
+    NSBlockOperation *setNewScheduleRequest = [NSBlockOperation blockOperationWithBlock:^{
+        // Format the nsdates to a mysql compatible string
+        NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];
+        NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        [dateFormatForDate setLocale:usLocale];
+        [dateFormatForDate setDateFormat:@"yyyy-MM-dd"];
+        NSString* dateBeginString = [dateFormatForDate stringFromDate:self.privateRequestManager.request.request_date_begin];
+        NSString* dateEndString = [dateFormatForDate stringFromDate:self.privateRequestManager.request.request_date_end];
         
-        for (EQRScheduleTracking_EquipmentUnique_Join* thisJoin in self.arrayOfSchedule_Unique_Joins){
-         
-            if ([thisKeyID isEqualToString:thisJoin.equipUniqueItem_foreignKey]){
-                
-                //found a matching equipUnique item
-                
-                //send php message to delete with the join key_id
-                NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", thisJoin.key_id, nil];
-                NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
-                [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoin.php" parameters:beeArray];
-            }
-        }
-    }
-    
-    //_______*********  delete the marked MiscJoin
-    for (NSString* thisKeyID in self.arrayOfToBeDeletedMiscJoinIDs){
+        // Format the time
+        NSDateFormatter* dateFormatForTime = [[NSDateFormatter alloc] init];
+        [dateFormatForTime setLocale:usLocale];
+        [dateFormatForTime setDateFormat:@"HH:mm"];
+        NSString* timeBeginStringPartOne = [dateFormatForTime stringFromDate:self.privateRequestManager.request.request_date_begin];
+        NSString* timeEndStringPartOne = [dateFormatForTime stringFromDate:self.privateRequestManager.request.request_date_end];
+        NSString* timeBeginString = [NSString stringWithFormat:@"%@:00", timeBeginStringPartOne];
+        NSString* timeEndString = [NSString stringWithFormat:@"%@:00", timeEndStringPartOne];
         
-        for (EQRMiscJoin* miscJoin in self.arrayOfMiscJoins){
-            
-            if ([thisKeyID isEqualToString:miscJoin.key_id]){
-                
-                //found a matching equipUnique item
-                
-                //send php message to detele with the miscjoin key_id
-                NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", miscJoin.key_id, nil];
-                NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
-                [webData queryForStringWithLink:@"EQDeleteMiscJoin.php" parameters:beeArray];
-            }
-        }
-    }
-    
-    //empty the arrays
-    [self.arrayOfSchedule_Unique_Joins removeAllObjects];
-    [self.arrayOfMiscJoins removeAllObjects];
-    [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
-    [self.arrayOfToBeDeletedMiscJoinIDs removeAllObjects];
-    self.arrayOfSchedule_Unique_JoinsWithStructure = nil;
-
-    //send note to schedule that a change has been saved
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
-    
-    [self dismissViewControllerAnimated:YES completion:^{
+        // Time of request
+        NSDateFormatter* timeStampFormatter = [[NSDateFormatter alloc] init];
+        [timeStampFormatter setLocale:usLocale];
+        [timeStampFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        NSString* timeRequestString = [timeStampFormatter stringFromDate:self.privateRequestManager.request.time_of_request];
         
-    }];
-}
-
-
--(IBAction)deleteRequest:(id)sender{
-    
-    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Delete Confirmation" message:@"Are you sure want to delete this reservation?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
-    [alertView show];
-}
-
-
-#pragma mark - alert view delegate methods
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    
-    //buttonIndex at 0 is cancel
-
-    //handle delete action when delete in confirmed
-    if (buttonIndex == 1){
+        NSArray* bigArray = @[ @[@"key_id", self.privateRequestManager.request.key_id],
+                               @[@"contact_foreignKey", self.privateRequestManager.request.contact_foreignKey],
+                               @[@"classSection_foreignKey", self.privateRequestManager.request.classSection_foreignKey],
+                               @[@"classTitle_foreignKey", self.privateRequestManager.request.classTitle_foreignKey],
+                               @[@"request_date_begin", dateBeginString],
+                               @[@"request_date_end", dateEndString],
+                               @[@"request_time_begin", timeBeginString],
+                               @[@"request_time_end", timeEndString],
+                               @[@"contact_name", self.privateRequestManager.request.contact_name],
+                               @[@"renter_type", self.privateRequestManager.request.renter_type],
+                               @[@"time_of_request", timeRequestString],
+                               @[@"notes", self.privateRequestManager.request.notes] ];
         
         EQRWebData* webData = [EQRWebData sharedInstance];
-        
-        //delete the scheduleTracking item
-        NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", self.privateRequestManager.request.key_id, nil];
-        NSArray* secondArray = [NSArray arrayWithObjects:firstArray, nil];
-        [webData queryForStringWithLink:@"EQDeleteScheduleItem.php" parameters:secondArray];
-//        NSLog(@"this is the schedule return: %@", scheduleReturn);
-        
-        //delete all scheduleTracking_equipUnique_joins
-        NSArray* alphaArray = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey",self.privateRequestManager.request.key_id, nil];
-        NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
-        [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoinWithScheduleKey.php" parameters:betaArray];
-//        NSLog(@"this is the join return: %@", joinReturn);
-        
-        //delete all miscJoins
-        NSArray *unoArray = @[alphaArray];
-        [webData queryForStringWithLink:@"EQDeleteAllMiscJoinsWithScheduleKey.php" parameters:unoArray];
-        
+        [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
+    }];
+    
+    
+    NSBlockOperation *deleteScheduleEquipJoin = [NSBlockOperation blockOperationWithBlock:^{
+        // Delete scheduleTracking_equip_joins
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        for (NSString* thisKeyID in self.arrayOfToBeDeletedEquipIDs){
+            for (EQRScheduleTracking_EquipmentUnique_Join* thisJoin in self.arrayOfSchedule_Unique_Joins){
+                
+                if ([thisKeyID isEqualToString:thisJoin.equipUniqueItem_foreignKey]){
+                    
+                    // Delete Equip Joing with the join key_id
+                    NSArray* beeArray = @[ @[@"key_id", thisJoin.key_id] ];
+                    [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoin.php" parameters:beeArray];
+                }
+            }
+        }
+    }];
+    
+    
+    NSBlockOperation *deleteMiscJoin = [NSBlockOperation blockOperationWithBlock:^{
+        // Delete the marked MiscJoins
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        for (NSString* thisKeyID in self.arrayOfToBeDeletedMiscJoinIDs){
+            for (EQRMiscJoin* miscJoin in self.arrayOfMiscJoins){
+                
+                if ([thisKeyID isEqualToString:miscJoin.key_id]){
+                    
+                    // Delete Misc Join the join key_id
+                    NSArray* beeArray = @[ @[@"key_id", miscJoin.key_id] ];
+                    [webData queryForStringWithLink:@"EQDeleteMiscJoin.php" parameters:beeArray];
+                }
+            }
+        }
+    }];
+    
+    
+    NSBlockOperation *updateArraysAndRender = [NSBlockOperation blockOperationWithBlock:^{
         //empty the arrays
         [self.arrayOfSchedule_Unique_Joins removeAllObjects];
         [self.arrayOfMiscJoins removeAllObjects];
@@ -547,10 +489,98 @@
         //send note to schedule that a change has been saved
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
         
-        [self dismissViewControllerAnimated:YES completion:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self dismissViewControllerAnimated:YES completion:^{
+                
+            }];
+        });
+    }];
+    [updateArraysAndRender addDependency:setNewScheduleRequest];
+    [updateArraysAndRender addDependency:deleteScheduleEquipJoin];
+    [updateArraysAndRender addDependency:deleteMiscJoin];
+    
+    
+    [queue addOperation:setNewScheduleRequest];
+    [queue addOperation:deleteScheduleEquipJoin];
+    [queue addOperation:deleteMiscJoin];
+    [queue addOperation:updateArraysAndRender];
+}
+
+
+-(IBAction)deleteRequest:(id)sender{
+    
+    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Delete Confirmation"
+                                                        message:@"Are you sure want to delete this reservation?"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Continue", nil];
+    [alertView show];
+}
+
+
+#pragma mark - alert view delegate methods
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    // ButtonIndex at 0 is cancel
+    if (buttonIndex != 1) return;
+
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"deleteButtonAlert";
+    queue.maxConcurrentOperationCount = 1;
+    
+    
+    NSBlockOperation *deleteScheduleItem = [NSBlockOperation blockOperationWithBlock:^{
+        // Delete the scheduleTracking item
+        NSArray* secondArray = @[ @[@"key_id", self.privateRequestManager.request.key_id] ];
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        NSString *result = [webData queryForStringWithLink:@"EQDeleteScheduleItem.php" parameters:secondArray];
+        if (!result) NSLog(@"EQREditorTopVC > alertView, failed to delete schedule item");
+    }];
+    
+    
+    NSBlockOperation *deleteScheduleEquipJoinWithScheduleKey = [NSBlockOperation blockOperationWithBlock:^{
+        // Delete all scheduleTracking_equipUnique_joins
+        NSArray* betaArray = @[ @[@"scheduleTracking_foreignKey",self.privateRequestManager.request.key_id] ];
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        NSString *result = [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoinWithScheduleKey.php" parameters:betaArray];
+        if (!result) NSLog(@"EQREditorTopVC > alertView, failed to delete schedule equip joins");
+    }];
+    
+    
+    NSBlockOperation *deleteAllMiscJoinsWithScheduleKey = [NSBlockOperation blockOperationWithBlock:^{
+        // Delete all miscJoins
+        NSArray *unoArray = @[ @[@"scheduleTracking_foreignKey",self.privateRequestManager.request.key_id] ];
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        NSString *result = [webData queryForStringWithLink:@"EQDeleteAllMiscJoinsWithScheduleKey.php" parameters:unoArray];
+        if (!result) NSLog(@"EQREditorTopVC > alertView, failed to delete schedule misc joins");
+    }];
+    
+    
+    NSBlockOperation *updateArraysAndRender = [NSBlockOperation blockOperationWithBlock:^{
+        
+        // Empty the arrays
+        [self.arrayOfSchedule_Unique_Joins removeAllObjects];
+        [self.arrayOfMiscJoins removeAllObjects];
+        [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+        [self.arrayOfToBeDeletedMiscJoinIDs removeAllObjects];
+        self.arrayOfSchedule_Unique_JoinsWithStructure = nil;
+        
+        // Send note to schedule that a change has been saved
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self dismissViewControllerAnimated:YES completion:^{
             
-        }];
-    }
+            }];
+        });
+    }];
+    
+    
+    [queue addOperation:deleteScheduleItem];
+    [queue addOperation:deleteScheduleEquipJoinWithScheduleKey];
+    [queue addOperation:deleteAllMiscJoinsWithScheduleKey];
+    [queue addOperation:updateArraysAndRender];
 }
 
 

@@ -272,8 +272,6 @@
                 
                 //identify when loading is complete
                 self.finishedAsyncDBCall = isLoadingFlagUp;
-                
-//                NSLog(@"loading is DONE!!");
             }];
         });
         

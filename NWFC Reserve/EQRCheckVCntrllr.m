@@ -738,8 +738,6 @@
             if ([stringObject isEqualToString:recognizedObject.stringValue]){
                 
                 alreadyInArray = YES;
-//                NSLog(@"found OBJECT IN ALREADYCAPTURED QRS");
-                
                 break;
             }
         }
@@ -783,8 +781,6 @@
 //        NSLog(@"this is the substring: %@", uniqueItemSubString);
 //        NSLog(@"this is the title key, perhaps: %@", titleItemSubString);
 
-
-        
         //_____!!!!  a modal view that asks for a quantity for the generic title scananed?...
         
         //__1__ Matching uniqueKey, just flip switch
@@ -1101,43 +1097,60 @@
     //save the current content offset
     self.myEquipCollectionContentOffset = self.myEquipCollection.contentOffset;
     
-    EQRWebData* webData = [EQRWebData sharedInstance];
     
-    //delete the marked scheduleTracking_equip_joins
-    for (NSString* thisKeyID in self.arrayOfToBeDeletedEquipIDs){
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"deleteMarkedItemsButton";
+    queue.maxConcurrentOperationCount = 2;
+    
+    
+    NSBlockOperation *deleteScheduleEquipJoin = [NSBlockOperation blockOperationWithBlock:^{
+        // Delete the marked scheduleTracking_equip_joins
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        for (NSString* thisKeyID in self.arrayOfToBeDeletedEquipIDs){
+            // Delete Equip Join with the join key_id
+            NSArray* beeArray = @[ @[@"key_id", thisKeyID] ];
+            [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoin.php" parameters:beeArray];
+        }
+    }];
+    
+    
+    NSBlockOperation *deleteMiscJoin = [NSBlockOperation blockOperationWithBlock:^{
+        // Delete the marked miscJoin
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        for (NSString* thisKeyID in self.arrayOfToBeDeletedMiscJoins){
+            // Delete Misc Join with the join key_id
+            NSArray* beeArray = @[ @[@"key_id", thisKeyID] ];
+            [webData queryForStringWithLink:@"EQDeleteMiscJoin.php" parameters:beeArray];
+        }
+    }];
+    
+    
+    NSBlockOperation *updateArraysAndRender = [NSBlockOperation blockOperationWithBlock:^{
+        //empty the arrays
+        [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+        [self.arrayOfToBeDeletedMiscJoins removeAllObjects];
         
-        //send php message to delete with the join key_id
-        NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", thisKeyID, nil];
-        NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
-        [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoin.php" parameters:beeArray];
-    }
-    
-    //delete the marked miscJoin
-    for (NSString* thisKeyID in self.arrayOfToBeDeletedMiscJoins){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //renew the array of equipment
+            [self initialSetupStage2];
+            
+            //if the collection view is emptied of all items, the structured array is never updated and the collection view never gets reloaded.
+            if ([self.arrayOfEquipJoins count] < 1){
+                self.arrayOfEquipJoinsWithStructure = nil;
+                [self.myEquipCollection reloadData];
+            }
+        });
         
-        //send php message to delete with the join key_id
-        NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", thisKeyID, nil];
-        NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
-        [webData queryForStringWithLink:@"EQDeleteMiscJoin.php" parameters:beeArray];
-    }
+        //send note to schedule that a change has been saved
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
+    }];
+    [updateArraysAndRender addDependency:deleteScheduleEquipJoin];
+    [updateArraysAndRender addDependency:deleteMiscJoin];
     
     
-    //empty the arrays
-    [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
-    [self.arrayOfToBeDeletedMiscJoins removeAllObjects];
-    
-    //renew the array of equipment
-//    [self renewTheArrayWithScheduleTracking_foreignKey:self.scheduleRequestKeyID];
-    [self initialSetupStage2];
-    
-    //if the collection view is emptied of all items, the structured array is never updated and the collection view never gets reloaded.
-    if ([self.arrayOfEquipJoins count] < 1){
-        self.arrayOfEquipJoinsWithStructure = nil;
-        [self.myEquipCollection reloadData];
-    }
-    
-    //send note to schedule that a change has been saved
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
+    [queue addOperation:deleteScheduleEquipJoin];
+    [queue addOperation:deleteMiscJoin];
+    [queue addOperation:updateArraysAndRender];
 }
 
 

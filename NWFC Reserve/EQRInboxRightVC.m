@@ -1097,50 +1097,67 @@
 
 -(IBAction)doneButton:(id)sender{
     
-    EQRWebData* webData = [EQRWebData sharedInstance];
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"doneButton";
+    queue.maxConcurrentOperationCount = 2;
     
-    //_______*********  delete the deleted scheduleTracking_equip_joins
-    for (NSString* thisKeyID in self.arrayOfToBeDeletedEquipIDs){
-        
-        for (EQRScheduleTracking_EquipmentUnique_Join* thisJoin in self.arrayOfJoins){
+    
+    NSBlockOperation *deleteScheduleEquipJoin = [NSBlockOperation blockOperationWithBlock:^{
+        // Delete scheduleTracking_equip_joins
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        for (NSString* thisKeyID in self.arrayOfToBeDeletedEquipIDs){
             
-            if ([thisKeyID isEqualToString:thisJoin.equipUniqueItem_foreignKey]){
+            for (EQRScheduleTracking_EquipmentUnique_Join* thisJoin in self.arrayOfJoins){
                 
-                //found a matching equipUnique item
-                //send php message to delete with the join key_id
-                NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", thisJoin.key_id, nil];
-                NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
-                [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoin.php" parameters:beeArray];
+                if ([thisKeyID isEqualToString:thisJoin.equipUniqueItem_foreignKey]){
+                    
+                    // Delete Equip Joins with join key_id
+                    NSArray* beeArray = @[ @[@"key_id", thisJoin.key_id] ];
+                    [webData queryForStringWithLink:@"EQDeleteScheduleEquipJoin.php" parameters:beeArray];
+                }
             }
         }
-    }
+    }];
     
-    //___And delete miscJoin items...
-    for (NSString* thisKeyID in self.arrayOfToBeDeletedMiscJoins){
-        
-        for (EQRMiscJoin* thisJoin in self.arrayOfMiscJoins){
+    
+    NSBlockOperation *deleteMiscJoin = [NSBlockOperation blockOperationWithBlock:^{
+        // Delete miscJoin items
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        for (NSString* thisKeyID in self.arrayOfToBeDeletedMiscJoins){
             
-            if ([thisKeyID isEqualToString:thisJoin.key_id]){
+            for (EQRMiscJoin* thisJoin in self.arrayOfMiscJoins){
                 
-                //found a matching MiscJoin item
-                //send php message to delete with the join key_id
-                NSArray* ayeArray = [NSArray arrayWithObjects:@"key_id", thisJoin.key_id, nil];
-                NSArray* beeArray = [NSArray arrayWithObject:ayeArray];
-                [webData queryForStringWithLink:@"EQDeleteMiscJoin.php" parameters:beeArray];
+                if ([thisKeyID isEqualToString:thisJoin.key_id]){
+                    
+                    // Delete Misc Join with join key_id
+                    NSArray* beeArray = @[ @[@"key_id", thisJoin.key_id] ];
+                    [webData queryForStringWithLink:@"EQDeleteMiscJoin.php" parameters:beeArray];
+                }
             }
         }
-    }
+    }];
     
     
-    //empty the arrays
-    [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
-    [self.arrayOfToBeDeletedMiscJoins removeAllObjects];
+    NSBlockOperation *updateArraysAndRender = [NSBlockOperation blockOperationWithBlock:^{
+        // Empty the arrays
+        [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
+        [self.arrayOfToBeDeletedMiscJoins removeAllObjects];
+        
+        //send note to schedule that a change has been saved
+        [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //need to update ivar arrays
+            [self renewTheViewWithRequest:self.myScheduleRequest];
+        });
+    }];
+    [updateArraysAndRender addDependency:deleteScheduleEquipJoin];
+    [updateArraysAndRender addDependency:deleteMiscJoin];
     
-    //send note to schedule that a change has been saved
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
     
-    //need to update ivar arrays
-    [self renewTheViewWithRequest:self.myScheduleRequest];
+    [queue addOperation:deleteScheduleEquipJoin];
+    [queue addOperation:deleteMiscJoin];
+    [queue addOperation:updateArraysAndRender];
 }
 
 

@@ -37,14 +37,12 @@
     // Do any additional setup after loading the view from its nib.
     
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
-    //receive a qrcode match
+    // Receive a qrcode match
     [nc addObserver:self selector:@selector(receiveQRCodeMessage:) name:EQRQRCodeFlipsSwitchInRowCellContent object:nil];
     
 }
 
 -(void)initialSetupWithDeleteFlag:(BOOL)deleteFlag{
-    
-//    NSLog(@"checkCellContentVC > initialSetup is called with deleteFlag: %ul", deleteFlag);
     
     self.toBeDeletedFlag = deleteFlag;
     
@@ -64,7 +62,7 @@
     
     if (!self.toBeDeletedFlag){
         
-        //send view controller a note with join key_id (or indexpath) to indicate it needs to be removed from the database
+        // Send view controller a note with join key_id (or indexpath) to indicate it needs to be removed from the database
         
         NSDictionary* thisDic = @{@"key_id":self.myJoinKeyID, @"isContentForMiscJoin":[NSNumber numberWithBool:self.isContentForMiscJoin]};
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRJoinToBeDeletedInCheckInOut object:nil userInfo:thisDic];
@@ -150,11 +148,18 @@
         EQRWebData* webData = [EQRWebData sharedInstance];
         if (self.isContentForMiscJoin == NO){
             [webData queryForStringwithAsync:@"EQSetCheckOutInPrepScheduleEquipJoin.php" parameters:topArray completion:^(NSString *returnString) {
-                if (returnString) NSLog(@"EQRCheckCellContentVCtrllr > receiveSwitchData, failed to set db");
+                if (!returnString){
+                    NSLog(@"EQRCheckCellContentVCtrllr > receiveSwitchData, failed to set db");
+                    
+                }
+                
             }];
         }else{
             [webData queryForStringwithAsync:@"EQSetCheckOutInPrepScheduleMiscJoin.php" parameters:topArray completion:^(NSString *returnString) {
-               if (returnString) NSLog(@"EQRCheckCellContentVCtrllr > receiveSwitchData, failed to set db");
+                if (!returnString){
+                    NSLog(@"EQRCheckCellContentVCtrllr > receiveSwitchData, failed to set db");
+                    
+                }
             }];
         }
     });
@@ -168,10 +173,10 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRUpdateCheckInOutArrayOfJoins object:nil userInfo:newDic];
     
     // Render view
-    [self renderSwitchWithProperty:self.joinPropertyToBeUpdated isOn:[sender isOn]];
+    [self renderLabelWithProperty:self.joinPropertyToBeUpdated isOn:[sender isOn]];
 }
 
--(void)renderSwitchWithProperty:(NSString *)property isOn:(BOOL)isOn{
+-(void)renderLabelWithProperty:(NSString *)property isOn:(BOOL)isOn{
     
     if (isOn){
         
