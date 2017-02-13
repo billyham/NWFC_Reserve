@@ -1087,24 +1087,22 @@
     [self.distIDPopover presentPopoverFromRect:fixedRect5 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
-//dist id picker delegate method
+// dist id picker delegate method
 -(void)distIDSelectionMadeWithOriginalEquipUniqueKey:(NSString*)originalKeyID equipUniqueItem:(id)distEquipUniqueItem{
     
     //retrieve key id of selected equipUniqueItem AND indexPath of the collection cell that initiated the distID picker
     //tell content of the cell to use replace the dist ID
     //update the data model > schedule_equip_join has new unique_foreignKey
     
-    //extract the unique's key as a string
+    // Extract the unique's key as a string
     NSString* thisIsTheKey = [(EQREquipUniqueItem*)distEquipUniqueItem key_id];
     NSString* thisIsTheDistID = [(EQREquipUniqueItem*)distEquipUniqueItem distinquishing_id];
-//    NSLog(@"this is the issue_service_name text: %@", [(EQREquipUniqueItem*)distEquipUniqueItem issue_short_name]);
     NSString* thisIsTheIssueShortName = [(EQREquipUniqueItem*)distEquipUniqueItem issue_short_name];
     NSString* thisIsTheStatusLevel = [(EQREquipUniqueItem*)distEquipUniqueItem status_level];
     
-    
     EQRScheduleTracking_EquipmentUnique_Join* saveThisJoin;
     
-    //update local ivar arrays
+    // Update local ivar arrays
     for (EQRScheduleTracking_EquipmentUnique_Join* joinObj in self.arrayOfSchedule_Unique_Joins){
         
         if ([joinObj.equipUniqueItem_foreignKey isEqualToString:originalKeyID]){
@@ -1112,7 +1110,7 @@
             [joinObj setEquipUniqueItem_foreignKey:thisIsTheKey];
             [joinObj setDistinquishing_id:thisIsTheDistID];
             
-            //_____need to know what service issues are a part of this new equipUnique and assign to local var in array______
+            // Need to know what service issues are a part of this new equipUnique and assign to local var in array
             [joinObj setIssue_short_name:thisIsTheIssueShortName];
             [joinObj setStatus_level:thisIsTheStatusLevel];
             
@@ -1123,33 +1121,34 @@
     
     self.arrayOfSchedule_Unique_JoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfSchedule_Unique_Joins withMiscJoins:self.arrayOfMiscJoins];
     
-    //renew the collection view
+    // Renew the collection view
     [self.equipList reloadData];
     
-    
-    //update the data layer
-    NSArray* firstArray = [NSArray arrayWithObjects:@"key_id", [saveThisJoin key_id], nil];
-    NSArray* secondArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", [saveThisJoin equipUniqueItem_foreignKey], nil];
-    NSArray* thirdArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", [saveThisJoin equipTitleItem_foreignKey], nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
-    
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
-//    NSLog(@"this is the return string: %@", returnString);
-    
-    
-    //remove the popover
+    // Remove the popover
     [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController setDelegate:nil];
     
     [self.distIDPopover dismissPopoverAnimated:YES];
     
-    //gracefully dealloc all the objects in the content VC
+    // Gracefully dealloc all the objects in the content VC
     [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController resetDistIdPicker];
     
     self.distIDPopover = nil;
     
-    //send note to schedule that a change has been saved
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
+    // Update the data layer
+    NSArray* topArray = @[ @[@"key_id", [saveThisJoin key_id]],
+                           @[@"equipUniqueItem_foreignKey", [saveThisJoin equipUniqueItem_foreignKey]],
+                           @[@"equipTitleItem_foreignKey", [saveThisJoin equipTitleItem_foreignKey]] ];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        [webData queryForStringwithAsync:@"EQAlterScheduleEquipJoin.php" parameters:topArray completion:^(NSString *returnString) {
+            if (!returnString) NSLog(@"EQREditorTupVC > distIDSelectionMad..., failed to alter schedule equip join");
+            
+            // Send note to schedule that a change has been saved
+            [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
+        }];
+    });
 }
 
 

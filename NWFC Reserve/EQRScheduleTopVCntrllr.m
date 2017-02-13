@@ -1345,26 +1345,29 @@
                         
                     }else{  //continue as planned
                         
-                        //now update the equipUnique and equipTitle values
+                        // Now update the equipUnique and equipTitle values
                         equipUniqueItem_foreignKey = [(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] key_id];
                         
                         thisJoin.equipUniqueItem_foreignKey = equipUniqueItem_foreignKey;
-                        
                         thisJoin.equipTitleItem_foreignKey = equipTitleItem_foreignKey;
                         
-                        //then reload the collection views in the former and new rowCells
+                        //Then reload the collection views in the former and new rowCells
                         [self.myMasterScheduleCollectionView reloadData];
                         
+                        // WebData query to change equipKeyID on schedule_equip_join (or delete previous and create a new one)
+                        NSArray* topArray = @[ @[@"equipUniqueItem_foreignKey", equipUniqueItem_foreignKey],
+                                               @[@"equipTitleItem_foreignKey", equipTitleItem_foreignKey],
+                                               @[@"key_id", joinKey_id] ];
                         
-                        //webData query to change equipKeyID on schedule_equip_join (or delete previous and create a new one)
-                        EQRWebData* webData = [EQRWebData sharedInstance];
-                        NSArray* firstArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", equipUniqueItem_foreignKey, nil];
-                        NSArray* secondArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", equipTitleItem_foreignKey, nil];
-                        NSArray* thirdArray = [NSArray arrayWithObjects:@"key_id", joinKey_id, nil];
-                        NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
-                        
-                        [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
-                        
+                        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0u);
+                        dispatch_async(queue, ^{
+                            EQRWebData* webData = [EQRWebData sharedInstance];
+                            [webData queryForStringwithAsync:@"EQAlterScheduleEquipJoin.php" parameters:topArray completion:^(NSString *returnString) {
+                                if (!returnString){
+                                    NSLog(@"EQRScheduleTopVC > longPressMoveNestedDayCell, faile to alter schedule equip join");
+                                }
+                            }];
+                        });
                         
                         [self.movingNestedCellView removeFromSuperview];
                     }
@@ -1384,10 +1387,7 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
 
-    
-//    NSLog(@"this is the alert button index: %u", buttonIndex);
-    
-    //continue button tapped, continue with change
+    // Continue button tapped, continue with change
     if (buttonIndex == 1){
         
         NSString* joinKey_id = self.thisTempJoinKey;
@@ -1413,15 +1413,20 @@
                 //then reload the collection views in the former and new rowCells
                 [self.myMasterScheduleCollectionView reloadData];
                 
+                // WebData query to change equipKeyID on schedule_equip_join (or delete previous and create a new one)
+                NSArray* topArray = @[ @[@"equipUniqueItem_foreignKey", equipUniqueItem_foreignKey],
+                                       @[@"equipTitleItem_foreignKey", equipTitleItem_foreignKey],
+                                       @[@"key_id", joinKey_id] ];
                 
-                //webData query to change equipKeyID on schedule_equip_join (or delete previous and create a new one)
-                EQRWebData* webData = [EQRWebData sharedInstance];
-                NSArray* firstArray = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", equipUniqueItem_foreignKey, nil];
-                NSArray* secondArray = [NSArray arrayWithObjects:@"equipTitleItem_foreignKey", equipTitleItem_foreignKey, nil];
-                NSArray* thirdArray = [NSArray arrayWithObjects:@"key_id", joinKey_id, nil];
-                NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, thirdArray, nil];
-                
-                [webData queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:topArray];
+                dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0u);
+                dispatch_async(queue, ^{
+                    EQRWebData* webData = [EQRWebData sharedInstance];
+                    [webData queryForStringwithAsync:@"EQAlterScheduleEquipJoin.php" parameters:topArray completion:^(NSString *returnString) {
+                        if (!returnString){
+                            NSLog(@"EQRScheduleTopVC > longPressMoveNestedDayCell, faile to alter schedule equip join");
+                        }
+                    }];
+                });
                 
                 [self.movingNestedCellView removeFromSuperview];
             }

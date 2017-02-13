@@ -2395,6 +2395,14 @@ const int intEQRTransaction = 11;
         return;
     }
     
+    if ([link isEqualToString:@"EQAlterScheduleEquipJoin.php"]){
+        NSString *returnString = [self queryForStringWithLink:@"EQAlterScheduleEquipJoin.php" parameters:para];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completeBlock(returnString);
+        });
+        return;
+    }
+    
 }
 
 
