@@ -388,8 +388,7 @@
     
     NSBlockOperation *getContactCompleteWitKey = [NSBlockOperation blockOperationWithBlock:^{
         // Get contact info
-        NSArray* alphaArray = [NSArray arrayWithObjects:@"key_id", chosenItem.contact_foreignKey, nil];
-        NSArray* betaArray = [NSArray arrayWithObjects:alphaArray, nil];
+        NSArray* betaArray = @[ @[@"key_id", chosenItem.contact_foreignKey] ];
         EQRWebData* webData = [EQRWebData sharedInstance];
         [webData queryWithLink:@"EQGetContactCompleteWithKey.php" parameters:betaArray class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
             if ([muteArray count] < 1){

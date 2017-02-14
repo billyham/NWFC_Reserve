@@ -13,11 +13,8 @@
 @interface EQRReserveTopVCntrllr : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource, EQRContactPickerDelegate, EQRClassPickerDelegate>
 
 @property (nonatomic, strong) IBOutlet UICollectionView* rentorTypeListTable;
-//@property (nonatomic, strong) IBOutlet UICollectionView* classListTable;
-//@property (nonatomic, strong) IBOutlet UITableView* nameListTable;
 
 -(void)retrieveSelectedNameItem;
--(void)retreiveSelectedNameItemStage2:(NSMutableArray *)returnArray;
 
 //EQRClassPickerVC delegate method
 -(void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem;
