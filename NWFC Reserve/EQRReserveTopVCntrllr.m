@@ -295,7 +295,7 @@
         // When no intructor_foreign_key exists
         if (([self.thisClassItem.instructor_foreign_key isEqualToString:@""]) || (self.thisClassItem.instructor_foreign_key == NULL)){
 
-            [self populateNamesWithRequest:@"EQGetFacultyNames.php"];
+            [self populateNamesWithRequest:@"EQGetFacultyNames.php" params:nil];
             
         } else {
             
@@ -331,46 +331,8 @@
         
     }else if ([self.chosenRenterType isEqualToString:EQRRenterStudent]) {
         
-        // Reveal name list
-        [self.myContactPickerVC.view setHidden:NO];
-        
-        // Get list of key_id contacts from class_registrations table
-        NSArray* regArray2= @[ @[@"classSection_foreignKey", self.thisClassItem.key_id] ];
-        
-        EQRWebData* webData = [EQRWebData sharedInstance];
-        [webData queryWithLink:@"EQGetClassRegistrationsForSectionKey.php" parameters:regArray2 class:@"EQRClassRegistrationItem" completion:^(NSMutableArray* arrayOfClassRegistrationItems){
-            
-            // Get list of student names
-            NSMutableArray* contactNameMuteArray = [NSMutableArray arrayWithCapacity:1];
-            
-            // Repeat this step... to add additional objects to the array
-            [arrayOfClassRegistrationItems enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                
-                NSArray* classParamTotal = @[ @[@"key_id", [(EQRClassRegistrationItem*)obj contact_foreignKey]] ];
-                
-                // Get student names with query
-                EQRWebData* webDataNew = [EQRWebData sharedInstance];
-                [webDataNew queryWithLink:@"EQGetStudentNamesCurrent.php" parameters:classParamTotal class:@"EQRContactNameItem" completion:^(NSMutableArray* muteArray2){
-                    
-                    if ([muteArray2 count] > 0){
-                        [contactNameMuteArray addObject:[muteArray2 objectAtIndex:0]];
-                    }
-                    [muteArray2 removeAllObjects];
-                }];
-            }];
-            
-            // Alphabatize the class list
-            NSArray* tempMuteArrayAlpha = [contactNameMuteArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-                
-                NSString* string1 = [(EQRContactNameItem*)obj1 first_and_last];
-                NSString* string2 = [(EQRContactNameItem*)obj2 first_and_last];
-                return [string1 compare:string2];
-            }];
-            self.contactNameArray = tempMuteArrayAlpha;
-            
-            // Hand array to contactPickerVC
-            [self.myContactPickerVC replaceDefaultContactArrayWith:self.contactNameArray];
-        }];
+        NSArray* params = @[ @[@"classSection_foreignKey", self.thisClassItem.key_id] ];
+        [self populateNamesWithRequest:@"EQGetStudentNamesWithSectionKey.php" params:params];
         
     } else {
         
@@ -382,7 +344,7 @@
 
 #pragma mark - helper functions for populating name list
 
--(void)populateNamesWithRequest:(NSString *)request{
+-(void)populateNamesWithRequest:(NSString *)request params:(NSArray *)params{
     
     // Show name list
     [self.myContactPickerVC.view setHidden:NO];
@@ -395,7 +357,7 @@
     NSBlockOperation *getFacultyNames = [NSBlockOperation blockOperationWithBlock:^{
         
         EQRWebData* webData2 = [EQRWebData sharedInstance];
-        [webData2 queryWithLink:request parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
+        [webData2 queryWithLink:request parameters:params class:@"EQRContactNameItem" completion:^(NSMutableArray *muteArray) {
             if (!muteArray){
                 NSLog(@"EQRReserveTopVC > initiate..., failed to get faculty names");
                 return;
@@ -599,7 +561,7 @@
                 self.contactNameArray = nil;
 
                 // Populate nameList table with names of faculty
-                [self populateNamesWithRequest:@"EQGetFacultyNames.php"];
+                [self populateNamesWithRequest:@"EQGetFacultyNames.php" params:nil];
                 
                 break;
                 
@@ -624,7 +586,7 @@
                 self.contactNameArray = nil;
                 
                 //_____populate nameList table with names of staff
-                [self populateNamesWithRequest:@"EQGetStaffNames.php"];
+                [self populateNamesWithRequest:@"EQGetStaffNames.php" params:nil];
                 
                 break;
                 
