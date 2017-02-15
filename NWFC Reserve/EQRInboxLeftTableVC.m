@@ -390,7 +390,7 @@
             }
         }
         
-    } else {                                                                           
+    } else {
         
         // Determine if data has been loaded
         if ([self.arrayOfRequests count] > indexPath.row){  //yes, indexed indicate is has arrived
@@ -484,7 +484,7 @@
         self.chosenRequest = [self.arrayOfRequests objectAtIndex:indexPath.row];
     }
     
-    //send message to InboxRightVC to renew the view
+    // Send message to InboxRightVC to renew the view
     [(EQRInboxRightVC*) [[(UINavigationController*) [self.splitViewController.viewControllers objectAtIndex:1] viewControllers] objectAtIndex:0] renewTheViewWithRequest:self.chosenRequest];
 }
 

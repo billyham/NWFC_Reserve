@@ -346,7 +346,6 @@
 
 -(void)renewTheViewWithRequest:(EQRScheduleRequestItem*)request{
     
-    if (!request) return NSLog(@"EQRInboxRightVC > renewTheViewWithRequest, request is nil");
     self.myScheduleRequest = request;
     
     // Empty out fields
@@ -366,6 +365,13 @@
     [self.myTable reloadData];
     self.priceMatrixSubView.hidden = YES;
     
+    if (!request) {
+        // Make subviews invisible
+        [self exitEditMode];
+        [self.rightView setHidden:YES];
+        [self.leftView setHidden:YES];
+        return;
+    }
     
     // Make subviews visible if not otherwise
     [self.rightView setHidden:NO];
@@ -685,6 +691,8 @@
 
 -(void)composeEmail{
     
+    if (!self.myScheduleRequest) return;
+    
     UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Send Email" message:@"Message options:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Student Confirmation", @"Send Blank Email", nil];
     
     self.sendEmailAlert = alertView;
@@ -737,6 +745,8 @@
 
 -(IBAction)confirm:(id)sender{
     
+    if (!self.myScheduleRequest) return;
+    
     //MUST CHECK THAT THE USER HAS LOGGED IN FIRST:
     EQRStaffUserManager* staffManager = [EQRStaffUserManager sharedInstance];
     if (!staffManager.currentStaffUser){
@@ -784,8 +794,8 @@
             [self composeEmail];
             
             // Hide right side to indicate completion
-            [self.rightView setHidden:YES];
-            [self.leftView setHidden:YES];
+//            [self.rightView setHidden:YES];
+//            [self.leftView setHidden:YES];
             [self exitEditMode];
         }];
     });
@@ -793,6 +803,8 @@
 
 
 -(IBAction)confirmWithEmail:(id)sender{
+    
+    if (!self.myScheduleRequest) return;
     
     NSArray* topArray = @[ @[@"key_id", self.myScheduleRequest.contact_foreignKey] ];
     
@@ -866,6 +878,8 @@
 
 -(IBAction)printMeForReal:(id)sender{
     
+    if (!self.myScheduleRequest) return;
+    
     [self printPageWithScheduleRequestItemKey:self.myScheduleRequest.key_id];
 }
 
@@ -920,6 +934,7 @@
 
 -(IBAction)emailNoConfirmation:(id)sender{
 
+    if (!self.myScheduleRequest) return;
     
 }
 
@@ -993,6 +1008,8 @@
 #pragma mark - edit mode methods
 
 -(void)enterEditMode{
+    
+    if (!self.myScheduleRequest) return;
     
     //if called but already in edit more, ignore
     if (self.inEditModeFlag == YES){
@@ -1096,6 +1113,8 @@
 
 
 -(IBAction)doneButton:(id)sender{
+    
+    if (!self.myScheduleRequest) return;
     
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     queue.name = @"doneButton";
@@ -1302,9 +1321,6 @@
 
 -(IBAction)showExtendedDate:(id)sender{
     
-    //    NSLog(@"showOrHide action fires with class: %@", [[self.theDatePopOver contentViewController] class]);
-    
-    
     //change to Extended view
     EQREditorExtendedDateVC* myDateViewController = [[EQREditorExtendedDateVC alloc] initWithNibName:@"EQREditorExtendedDateVC" bundle:nil];
     CGSize thisSize = CGSizeMake(600.f, 570.f);
@@ -1384,6 +1400,8 @@
 
 
 -(IBAction)addEquipItem:(id)sender{
+    
+    if (!self.myScheduleRequest) return;
 
     EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
     
@@ -1866,8 +1884,8 @@
     [self dismissViewControllerAnimated:YES completion:^{
         
         //hide right side to indicate completion
-        [self.rightView setHidden:YES];
-        [self.leftView setHidden:YES];
+//        [self.rightView setHidden:YES];
+//        [self.leftView setHidden:YES];
         [self exitEditMode];
     }];
 }

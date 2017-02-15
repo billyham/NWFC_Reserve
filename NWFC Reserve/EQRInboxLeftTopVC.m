@@ -14,6 +14,8 @@
 @interface EQRInboxLeftTopVC ()
 
 @property (strong, nonatomic) NSString* segueSelectionType;
+@property NSInteger indexPathSection;
+@property NSInteger indexPathRow;
 
 @end
 
@@ -22,7 +24,9 @@
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
-        // Custom initialization
+        
+        _indexPathSection = 0;
+        _indexPathRow = 0;
     }
     return self;
 }
@@ -41,6 +45,8 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
+    // Initial selection
+    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionTop];
 }
 
 
@@ -93,12 +99,16 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
+    if (self.indexPathSection == indexPath.section && self.indexPathRow == indexPath.row){
+        // Didn't change selection
+        return;
+    }
     
-//    NSLog(@"this is the did select method with section: %u  and row: %u",(int)indexPath.section, (int)indexPath.row);
+    self.indexPathSection = indexPath.section;
+    self.indexPathRow = indexPath.row;
     
-    
-    
-    
+    // Send message to InboxRightVC to remove an existing request detail view
+    [(EQRInboxRightVC*) [[(UINavigationController*) [self.splitViewController.viewControllers objectAtIndex:1] viewControllers] objectAtIndex:0] renewTheViewWithRequest:nil];
 }
 
 
