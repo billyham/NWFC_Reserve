@@ -29,7 +29,6 @@
     static EQRScheduleRequestManager* myInstance = nil;
     
     if (!myInstance){
-        
         myInstance = [[EQRScheduleRequestManager alloc] init];
     }
     
@@ -72,7 +71,8 @@
     
     
     
-    
+//    AN ASYNCHRONOUS VERSION OF THE SAME FUNCTION. COMPLICATIONS ARISE WITH THIS APPROACH
+//
 //    NSString* myDeviceName = [[UIDevice currentDevice] name];
 //    NSArray* lilPoppa = @[ @[@"myDeviceName", myDeviceName] ];
 //    
@@ -95,14 +95,6 @@
 
 -(void)dismissRequest:(BOOL)isCanceled{
     
-    //set request item's properties to nil
-//    if(self.request){
-//        
-//        self.request.classSection_foreignKey = nil;
-//        self.request.classTitle_foreignKey = nil;
-//        
-//    }
-
     if (isCanceled == YES){
         
         //notes will have been saved immediately to the data layer
@@ -133,15 +125,10 @@
     //void any local ivars that view controllers have established for keeping track of selections and flags
     //send by notification!!
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:self userInfo:nil];
-    
-
-    
 }
 
 
 #pragma mark -  Equipment lists and available quantities
-
-//------------------------
 
 //load list of equipment and total count of related unqiue items
 //_______****** note that this is returing EquipUniqueItem objects but then discarding them. maybe keep more info...
@@ -220,11 +207,8 @@
         self.arrayOfEquipTitlesWithCountOfUniqueItems = topArray;
     }];
     
-    
-    
     //______A function to add in any items from the list of title equipment where no uniques existed
     //loop through list of existing titleItems. subloop against all uniqueItems and add in where no match is found
-    
     
     //_______get the ENTIRE list of equipment titles
     
@@ -246,8 +230,6 @@
     }];
     
     self.arrayOfEquipTitleItems = weirdNewArray;
-    
-//    NSLog(@"count of equipTitleItems array: %u", (int)[self.arrayOfEquipTitleItems count]);
     
     //compare the two arrays with title info...
     NSMutableArray* additionalTitles = [NSMutableArray arrayWithCapacity:1];
@@ -272,8 +254,6 @@
             [additionalTitles addObject:newArrayItem];
         }
     }
-    
-//    NSLog(@"count of new title items to add: %u", (int)[additionalTitles count]);
     
     //append the requestManager array ivar with the new items
     [self.arrayOfEquipTitlesWithCountOfUniqueItems addObjectsFromArray:additionalTitles];
@@ -318,7 +298,6 @@
         }
     }];
     
-//    NSLog(@"count of tempMuteArray: %u", [tempMuteArray count]);
     if ([tempMuteArray count] < 1){
         //error handling when no items are returned
         return nil;
@@ -332,7 +311,6 @@
             [arrayOfJustMatchingTitles addObject:item];
         }
     }
-//        NSLog(@"count of arrayOfJustMatchingTitle: %u", [arrayOfJustMatchingTitles count]);
     
     NSMutableArray* arrayOfUniqueObjectsToBeRemoved = [NSMutableArray arrayWithCapacity:1];
     for (EQREquipUniqueItem* equipUniqueItemObject in tempMuteArray){
@@ -346,7 +324,7 @@
             }
         }
     }
-//    NSLog(@"count of arrayOfUniqueObjectsToBeRemoved: %u", [arrayOfUniqueObjectsToBeRemoved count]);
+
     //remove them objects (if there are any)
     if ([arrayOfUniqueObjectsToBeRemoved count] > 0){
         [tempMuteArray removeObjectsInArray:arrayOfUniqueObjectsToBeRemoved];
@@ -515,16 +493,11 @@
 
 #pragma mark - equipment update fulfillment
 
-
 -(void)justConfirm{
-    
-    //    NSLog(@"this is the contact_foreignKey: %@", [NSString stringWithFormat:@"%@", request.contact_foreignKey]);
-    
     
     //________A PROVISION THAT PUTS ITEMS SCHEDULED ONLY A DAY AWAY AT THE BOTTOM OF THE STACK
     //set ivar array of equipUniques to avoid scheduling equipment that is one day away from this request
     [self allocateGearListWithExpandedDatesForBufferZoneWithBeginDate:self.request.request_date_begin EndDate:self.request.request_date_end];
-    
     
     //must not include nil objects in array
     //cycle though all inputs and ensure some object is included. use @"88888888" as an error code
@@ -592,8 +565,6 @@
     EQRWebData* webData = [EQRWebData sharedInstance];
     
     [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
-//    NSLog(@"this is the returnID: %@", returnID);
-    
     
     //___________************  Use this moment to allocate a uniqueItem object (key_id and/or dist ID) *****_______
     
@@ -651,16 +622,6 @@
         }
     }
     //______the result is a nested array of just the titleItems requested, with sub_arrays of ALL uniqueItems
-    
-    
-    //if not items are in the tempListOfUniqueItemsJustRequests, then fail gracefully....
-    //not true!!!!!  it could just be a misc item!!!!!!
-//    if ([tempListOfUniqueItemsJustRequested count] < 1){
-////        NSLog(@"failing gracefully in requestManager > justConfirm");
-//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to identify part of the gear list, please modify the request in Inbox with the correct gear" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
-//        [alertView show];
-//        return;
-//    }
     
     
     //____now remove the unique items that have date collisions
@@ -816,8 +777,7 @@
     }];
     
 
-    
-    //geez.... now for each title item, find the matching array of uniques, and assign the key_id from the top of the stack and then pop the stack
+    // Now for each title item, find the matching array of uniques, and assign the key_id from the top of the stack and then pop the stack
     
     for (EQRScheduleTracking_EquipmentUnique_Join* joinMe in self.request.arrayOfEquipmentJoins){
         
@@ -840,26 +800,20 @@
                     
                     //remove the EQREquipUniqueItem at index 0
                     [kickMeOffTheTeam addObject:[uniqueArrayMe objectAtIndex:0]];
-                    
                 }
                 
                 if (foundAMatchFlag){
-                    
                     //remove the uniqueItem From the array
                     [uniqueArrayMe removeObjectsInArray:kickMeOffTheTeam];
-                    
                     break;
                 }
             }
-            
         }
     }
     
     
     //input array of scheduleTracking_equipUniqueItem_joins
     for (EQRScheduleTracking_EquipmentUnique_Join* join in self.request.arrayOfEquipmentJoins){
-        
-//        NSLog(@"this is the equipUniqueItem key: %@", join.equipUniqueItem_foreignKey, nil);
         
         NSArray* firstArrayForJoin = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", join.scheduleTracking_foreignKey, nil];
         NSArray* secondArrayForJoin = [NSArray arrayWithObjects:@"equipUniqueItem_foreignKey", join.equipUniqueItem_foreignKey, nil];
@@ -871,9 +825,6 @@
                                     nil];
         
         join.key_id = [webData queryForStringWithLink:@"EQSetNewScheduleEquipJoin.php" parameters:bigArrayForJoin];
-//        NSLog(@"this is the schedule_equip_join return key_id: %@", returnID2);
-        
-//        NSLog(@"this is the join.cost: %@",join.cost);
         
         //update cost of the join item
         if (join.cost)
@@ -881,8 +832,6 @@
                 
                 //only save value if it was manually altered. 
                 if (join.hasAStoredCostValue){
-                    
-//                    NSLog(@"SchedulerequestManager > justConfirm is altering cost of a join with Key_id: %@  and cost: %@", join.key_id, join.cost);
                     
                     if (join.key_id){
                         NSArray *firstArray = @[@"key_id", join.key_id];
@@ -895,12 +844,8 @@
                             [webData queryForStringwithAsync:@"EQAlterCostOfScheduleEquipJoin.php" parameters:topArray completion:^(NSString *returnKey) {
                                 
                                 if ([returnKey isEqualToString:join.key_id]){
-                                    
-                                    //everthign is cool
-                                    
+                                    //everthing is cool
                                 }else{
-                                    
-                                    //error handling
                                     NSLog(@"failed to successfully alter transaction equipJoin price");
                                 }
                             }];
@@ -915,8 +860,6 @@
                 
                 //only save value if it was manually altered.
                 if (join.hasAStoredDepositValue){
-                    
-//                    NSLog(@"SchedulerequestManager > justConfirm is altering deposit of a join with Key_id: %@  and deposit: %@", join.key_id, join.deposit);
                     
                     if (join.key_id){
                         NSArray *firstArray = @[@"key_id", join.key_id];
@@ -942,13 +885,23 @@
                     }
                 }
             }
-        
     }
 }
 
 
 
 #pragma mark - gear allocation
+
+// get a list of uniqueItems that fall within the rental dates.
+// 1. get scheduleTracking objects within the dates (sql script?)
+// 2. gather matching scheduleTracking_equip_joins (using scheduleTracking_foreignKey in schedule_equipUnique_joins)
+// 3. gather key_ids for equipUniqueItems (using equipUniqueItem_foreignKey in scheduleTracking_equipUnique_joins)
+
+// subtract out the quantity of uniqueItems available per titleItems
+// compare with the quantitys requested, then pause and alert user if quantities are exceeded. Identified where excesses are.
+// 1. create a subnested array of titleItems with quantities (similar to the requestManager's ivar
+// 2. cycle through and add quantities from this request
+// 3. cycle through, comparing with titleItem key_ids in requestManager's ivar,
 
 -(void)allocateGearListWithDates:(NSDictionary*)datesDic{
     
@@ -958,19 +911,6 @@
     //request ivars that determine how to handle collisions and how precisely
     BOOL allowSameDayFlag = self.request.allowSameDayFlag;
     BOOL allowConflictFlag = self.request.allowConflictFlag;
-    
-    
-    //get a list of uniqueItems that fall within the rental dates.
-    //1. get scheduleTracking objects within the dates (sql script?)
-    //2. gather matching scheduleTracking_equip_joins (using scheduleTracking_foreignKey in schedule_equipUnique_joins)
-    //3. gather key_ids for equipUniqueItems (using equipUniqueItem_foreignKey in scheduleTracking_equipUnique_joins)
-    
-    //subtract out the quantity of uniqueItems available per titleItems
-    //compare with the quantitys requested, then pause and alert user if quantities are exceeded. Identified where excesses are.
-    //1. create a subnested array of titleItems with quantities (similar to the requestManager's ivar
-    //2. cycle through and add quantities from this request
-    //3. cycle through, comparing with titleItem key_ids in requestManager's ivar,
-    
     
     //begin and end dates in sql format
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
@@ -1058,102 +998,32 @@
             }
         }
     }
-    
     //____!!!!!!  further reduce the available list of items by removing the damaged equipment from play   !!!!!______
-
 }
 
 
 -(void)allocateGearListWithExpandedDatesForBufferZoneWithBeginDate:(NSDate*)begindate EndDate:(NSDate*)endDate{
     
-    
-    //begin and end dates in sql format
+    // Begin and end dates in sql format
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     [dateFormatter setDateFormat:@"yyyy-MM-dd"];
     
-    //expand dates
+    // Expand dates
     NSDate* newBeginDate = [begindate dateByAddingTimeInterval:-86400];
     NSDate* newEndDate = [endDate dateByAddingTimeInterval:86400];
     
     NSString* dateBeginString = [dateFormatter stringFromDate:newBeginDate];
     NSString* dateEndString = [dateFormatter stringFromDate:newEndDate];
     
-    
-//    NSArray* trackingKeysArray = [self getArrayOfScheduleTrackingIDsWithBeginDate:dateBeginString endDate:dateEndString];
-//
-//    self.arrayOfEquipUniqueItemsByExpandedBuffer = [self getArrayOfEquipUniquesWithArrayOfScheduleTrackingIDs:trackingKeysArray];
-    
     self.arrayOfEquipUniqueItemsByExpandedBuffer = [self getArrayOfEquipUniquesWithBeginDate:dateBeginString EndDate:dateEndString];
 }
 
-
-//_______THESE TWO METHODS REPLACED WITH ONE THAT HAS A MORE SOPHISTICATED MYSQL CALL, BETTER PERFORMANCE______
-//-(NSArray*)getArrayOfScheduleTrackingIDsWithBeginDate:(NSString*)beginDate endDate:(NSString*)endDate{
-//    
-//    EQRWebData* webData = [EQRWebData sharedInstance];
-//    
-//    //declare arrays
-//    NSArray* arrayWithBeginDate;
-//    NSArray* arrayWithEndDate;
-//    
-//    arrayWithBeginDate = [NSArray arrayWithObjects:@"request_date_begin", beginDate, nil];
-//    arrayWithEndDate = [NSArray arrayWithObjects:@"request_date_end", endDate, nil];
-//    NSArray* arrayTopDate = [NSArray arrayWithObjects:arrayWithBeginDate, arrayWithEndDate, nil];
-//    
-//    NSMutableArray* arrayOfScheduleTrackingKeyIDs = [NSMutableArray arrayWithCapacity:1];
-//    
-//    [webData queryWithLink:@"EQGetScheduleItemsInDateRange.php" parameters:arrayTopDate class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
-//        
-//        //        NSLog(@"result from schedule request Date range: %@", muteArray);
-//        
-//        //populate array with key_ids
-//        for (EQRScheduleRequestItem* objKey in muteArray){
-//            
-//            [arrayOfScheduleTrackingKeyIDs addObject:objKey];
-//            
-//            //cycle through and get equipUniqueItem key IDs
-//        }
-//    }];
-//    
-//    return arrayOfScheduleTrackingKeyIDs;
-//}
-//
-//
-//-(NSMutableArray*)getArrayOfEquipUniquesWithArrayOfScheduleTrackingIDs:(NSArray*)arrayOfScheduleTrackingKeyIDs{
-//    
-//    EQRWebData* webData = [EQRWebData sharedInstance];
-//
-//    NSMutableArray* arrayOfEquipUniqueItems = [NSMutableArray arrayWithCapacity:1];
-//
-//    //Use sql with inner join...
-//    //  get reserved EquipUniqueItem objects With ScheduleTrackingKeys
-//    
-//    for (EQRScheduleTracking_EquipmentUnique_Join* objThingy in arrayOfScheduleTrackingKeyIDs){
-//        
-//        NSArray* arrayWithTrackingKey = [NSArray arrayWithObjects:@"scheduleTracking_foreignKey", objThingy.key_id, nil];
-//        NSArray* topArrayWithTrackingKey = [NSArray arrayWithObject:arrayWithTrackingKey];
-//        
-//        [webData queryWithLink:@"EQGetUniqueItemKeysWithScheduleTrackingKeys.php" parameters:topArrayWithTrackingKey class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray2) {
-//            
-//            for (EQREquipUniqueItem* objUniqueItem in muteArray2){
-//                
-//                //                NSLog(@"this is EquipUniqueItem key_id: %@  and titleItem key_id: %@ and name: %@",
-//                //                      objUniqueItem.key_id, objUniqueItem.equipTitleItem_foreignKey, objUniqueItem.name);
-//                
-//                [arrayOfEquipUniqueItems addObject:objUniqueItem];
-//            }
-//        }];
-//    }
-//    
-//    return arrayOfEquipUniqueItems;
-//}
 
 -(NSMutableArray*)getArrayOfEquipUniquesWithBeginDate:(NSString*)beginDate EndDate:(NSString*)endDate{
     
     EQRWebData* webData = [EQRWebData sharedInstance];
     
-    //declare arrays
     NSArray* arrayWithBeginDate;
     NSArray* arrayWithEndDate;
     
@@ -1166,32 +1036,23 @@
     [webData queryWithLink:@"EQGetEquipUniqueItemsWithScheduleDateRange.php" parameters:arrayTopDate class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray2) {
         
         for (EQREquipUniqueItem* objUniqueItem in muteArray2){
-                        
             [arrayOfEquipUniqueItems addObject:objUniqueItem];
         }
     }];
-    
     return arrayOfEquipUniqueItems;
 }
 
 
 -(NSArray*)retrieveAvailableEquipUniquesForTitleKey:(NSString*)equipTitleItem_foreignKey{
     
-//    NSLog(@"this is the titleItem foreign key: %@", equipTitleItem_foreignKey);
-    
     NSMutableArray* muteArray = [NSMutableArray arrayWithCapacity:1];
     
     for (EQREquipUniqueItem* eqritem in self.arrayOfEquipUniqueItemsByDateCollision){
         
         if ([eqritem.equipTitleItem_foreignKey isEqualToString:equipTitleItem_foreignKey]){
-            
-            //add to our new array
             [muteArray addObject:eqritem];
         }
     }
-    
-//    NSLog(@"this is the count of the array: %u", [muteArray count]);
-    
     return [NSArray arrayWithArray:muteArray];
 }
 
@@ -1344,11 +1205,9 @@
     
     //ensure the array of visible sections exists
     if (!self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule){
-        
         self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule = [NSMutableArray arrayWithCapacity:1];
     }
 
-    
     bool hideMeFlag = NO;
     NSString* objectToRemove;
     
@@ -1358,94 +1217,74 @@
             
             hideMeFlag = YES;
             objectToRemove = myObject;
-            
             break;
         }
     }
     
-    //_____********  must close any currently open sections first, then open the selected one  ********____
+    // Must close any currently open sections first, then open the selected one
     if (!hideMeFlag){
         
+        // Rmove any existing object to hide them, so only section is visible at a time
         
-        //first, remove any existing object to hide them, so only section is visible at a time
-        
-        //populate a new array with existing object in array
+        // Populate a new array with existing object in array
         NSMutableArray* newMuteArray = [NSMutableArray arrayWithArray:self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule];
         
-        //remove existing objects from array
+        // Remove existing objects from array
         [self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule removeAllObjects];
         
         for (NSString* categoryItem in newMuteArray){
             
-            NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     @"delete", @"type",
-                                     categoryItem, @"sectionString",
-                                     nil];
+            NSDictionary* thisDic = @{ @"type": @"delete",
+                                       @"sectionString": categoryItem };
             
-            //send note to collapse the section
+            // Send note to collapse the section
             [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshScheduleTable object:nil userInfo:thisDic];
             
-            //send note to unhighlight the button
+            // Send note to unhighlight the button
             NSDictionary* dic = [NSDictionary dictionaryWithObject:categoryItem forKey:@"sectionString"];
             [[NSNotificationCenter defaultCenter] postNotificationName:EQRButtonUnHighlight object:nil userInfo:dic];
         }
-
     }
-    
     
     if (hideMeFlag){
         
-        //remove object from array
+        // Remove object from array
         [self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule removeObject:objectToRemove];
         
+        NSDictionary* thisDic = @{ @"type": @"delete",
+                                   @"sectionString": chosenSection };
         
-        NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 @"delete", @"type",
-                                 chosenSection, @"sectionString",
-                                 nil];
-        
-        
-        //send note
+        // Send note
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshScheduleTable object:nil userInfo:thisDic];
         
-        //send note to unhighlight the button
+        // Send note to unhighlight the button
         NSDictionary* dic = [NSDictionary dictionaryWithObject:chosenSection forKey:@"sectionString"];
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRButtonUnHighlight object:nil userInfo:dic];
         
         
     }else{
         
-        //show me!
-        
-        //must add delay to allow time to close the exsiting sections first...
+        // Must add delay to allow time to close the exsiting sections first...
         [self performSelector:@selector(delayedExpandAction:) withObject:chosenSection afterDelay:0.01];
         
-        //send note to highlight the button
+        // Send note to highlight the button
         NSDictionary* dic = [NSDictionary dictionaryWithObject:chosenSection forKey:@"sectionString"];
         [[NSNotificationCenter defaultCenter] postNotificationName:EQRButtonHighlight object:nil userInfo:dic];
     }
 }
 
 
--(void) delayedExpandAction:(NSString*)chosenSection{
+-(void)delayedExpandAction:(NSString*)chosenSection{
   
     //add object to array
     [self.arrayOfEquipSectionsThatShouldBeVisibleInSchedule addObject:chosenSection];
     
-    
-    NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                             @"insert", @"type",
-                             chosenSection, @"sectionString",
-                             nil];;
+    NSDictionary* thisDic = @{ @"type": @"insert",
+                               @"sectionString": chosenSection };
     
     //send note
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshScheduleTable object:nil userInfo:thisDic];
-    
 };
-
-
-
-
 
 
 

@@ -137,11 +137,7 @@
     //register for header cell
     [self.myMasterScheduleCollectionView registerClass:[EQRHeaderCellForSchedule class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
     
-    //____________*******  THIS DOESN'T WORK BECUASE IT'S TOO EARLY, IT NEEDS TO HAPPEN AFTER THE VIEW APPEARS  ****_____
-    //____________adjust content and scroll insets if edges are extended
-    //______this is janky!!!!
-//    self.myMasterScheduleCollectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-//    self.myMasterScheduleCollectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+
     self.myMasterScheduleCollectionView.contentOffset = CGPointMake(0, 0);
     
     //initial month is the current month
@@ -223,14 +219,8 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-//    NSLog(@"view will appear is called");
-    
-    //_____******  initialize how sections are hidden or not hidden  *****_______
-    
-    
-    //load the scheduleTracking information BUT ONLY if a change has been made
+    // Load the scheduleTracking information BUT ONLY if a change has been made
     if (self.aChangeWasMade){
-        
         [self renewTheView];
     }
     
@@ -240,155 +230,165 @@
     [[self.navigationItem.rightBarButtonItems objectAtIndex:0] setTitle:newUserString];
     
     
-    
     //______BUILD CURRENT LIST OF EQUIP UNIQUE ITEMS______
     //_____*****  this a repeat of what the EquipSelectionVCntrllr *****______
-    NSMutableArray* tempEquipMuteArray = [NSMutableArray arrayWithCapacity:1];
     
-    //get the ENTIRE list of equiopment titles... for staff and faculty
-    EQRWebData* webData = [EQRWebData sharedInstance];
-    [webData queryWithLink:@"EQGetEquipUniqueItemsAndCategories.php" parameters:nil class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
-                
-        //do something with the returned array...
-        for (EQREquipUniqueItem* equipItemThingy in muteArray){
-            
-            [tempEquipMuteArray addObject:equipItemThingy];
-        }
-    }];
-    
-    //... and save to ivar
-    self.equipUniqueArray = [NSArray arrayWithArray:tempEquipMuteArray];
-    
-    //2. Go through this sinlge array and build a nested array to accommodate sections based on grouping
-    
-    if (!self.equipUniqueCategoriesList){
+    // Get the ENTIRE list of equipment titles
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
         
-        self.equipUniqueCategoriesList = [NSMutableArray arrayWithCapacity:1];
-    }
-    
-    //A. first test if array of categories is valid
-    if ([self.equipUniqueCategoriesList count] < 1){
+        NSMutableArray* tempEquipMuteArray = [NSMutableArray arrayWithCapacity:1];
         
-        NSMutableSet* tempSet = [NSMutableSet set];
-        
-        
-        //create a list of unique categories names by looping through the array of equipUniques
-        for (EQREquipUniqueItem* obj in self.equipUniqueArray){
+        EQRWebData* webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetEquipUniqueItemsAndCategories.php" parameters:nil class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
             
-            
-            
-            if ([tempSet containsObject:[obj performSelector:NSSelectorFromString(EQRScheduleGrouping)]] == NO){
-                
-                [tempSet addObject:[obj performSelector:NSSelectorFromString(EQRScheduleGrouping)]];
-                [self.equipUniqueCategoriesList addObject:[NSString stringWithString:[obj performSelector:NSSelectorFromString(EQRScheduleGrouping)]]];
+            //do something with the returned array...
+            for (EQREquipUniqueItem* equipItemThingy in muteArray){
+                [tempEquipMuteArray addObject:equipItemThingy];
             }
-            
-            
+        }];
+        self.equipUniqueArray = [NSArray arrayWithArray:tempEquipMuteArray];
+        
+        // Go through this single array and build a nested array to accommodate sections based on grouping
+        
+        if (!self.equipUniqueCategoriesList){
+            self.equipUniqueCategoriesList = [NSMutableArray arrayWithCapacity:1];
         }
         
-        [tempSet removeAllObjects];
-        tempSet = nil;
-    }
-    
-    
-    //sort the equipCatagoriesList
-    NSSortDescriptor* sortDescAlpha = [NSSortDescriptor sortDescriptorWithKey:nil ascending:YES];
-    NSArray* sortArray = [NSArray arrayWithObject:sortDescAlpha];
-    NSArray* tempSortArrayCat = [self.equipUniqueCategoriesList sortedArrayUsingDescriptors:sortArray];
-    self.equipUniqueCategoriesList = [NSMutableArray arrayWithArray:tempSortArrayCat];
-    
-    
-    //B.1 empty out the current ivar of arrayWithSections
-    //create it if it doesn't exist yet
-    if (!self.equipUniqueArrayWithSections){
+        // Test if array of categories is valid
+        if ([self.equipUniqueCategoriesList count] < 1){
+            
+            NSMutableSet* tempSet = [NSMutableSet set];
+            
+            //create a list of unique categories names by looping through the array of equipUniques
+            for (EQREquipUniqueItem* obj in self.equipUniqueArray){
+                
+                if ([tempSet containsObject:[obj performSelector:NSSelectorFromString(EQRScheduleGrouping)]] == NO){
+                    
+                    [tempSet addObject:[obj performSelector:NSSelectorFromString(EQRScheduleGrouping)]];
+                    [self.equipUniqueCategoriesList addObject:[NSString stringWithString:[obj performSelector:NSSelectorFromString(EQRScheduleGrouping)]]];
+                }
+            }
+            [tempSet removeAllObjects];
+            tempSet = nil;
+        }
         
-        self.equipUniqueArrayWithSections = [NSMutableArray arrayWithCapacity:1];
+        // Sort the equipCatagoriesList
+        NSSortDescriptor* sortDescAlpha = [NSSortDescriptor sortDescriptorWithKey:nil ascending:YES];
+        NSArray* sortArray = [NSArray arrayWithObject:sortDescAlpha];
+        NSArray* tempSortArrayCat = [self.equipUniqueCategoriesList sortedArrayUsingDescriptors:sortArray];
+        self.equipUniqueCategoriesList = [NSMutableArray arrayWithArray:tempSortArrayCat];
+        
+        NSMutableArray *tempUniqueArrayWithSections = [NSMutableArray arrayWithCapacity:1];
+        
+        // Valid list of categories....
+        // Create a new array by populating each nested array with equiptitle that match each category or subcategory
+        for (NSString* groupingItem in self.equipUniqueCategoriesList){
+            
+            NSMutableArray* subNestArray = [NSMutableArray arrayWithCapacity:1];
+            
+            for (EQREquipUniqueItem* equipItem in self.equipUniqueArray){
+                
+                if ([[equipItem performSelector:NSSelectorFromString(EQRScheduleGrouping)] isEqualToString:groupingItem]){
+                    [subNestArray addObject: equipItem];
+                }
+            }
+            // Add subNested array to the master array
+            [tempUniqueArrayWithSections addObject:subNestArray];
+        }
+        
+        // We now have a master cateogry array with subnested equipTitle arrays
+        
+        // Sort the subnested arrays
+        NSMutableArray* tempSortedArrayWithSections = [NSMutableArray arrayWithCapacity:1];
+        for (NSArray* obj in tempUniqueArrayWithSections)  {
+            
+            NSArray* tempSubNestArray = [obj sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
+                
+                //______first change the single digits...
+                NSString* newDist1;
+                if ([(NSString*)[(EQREquipUniqueItem*)obj1 distinquishing_id] length] < 2){
+                    newDist1 = [NSString stringWithFormat:@"00%@", (NSString*)[(EQREquipUniqueItem*)obj1 distinquishing_id]];
+                }else{
+                    newDist1 =(NSString*)[(EQREquipUniqueItem*)obj1 distinquishing_id];
+                }
+                
+                NSString* newDist2;
+                if ([(NSString*)[(EQREquipUniqueItem*)obj2 distinquishing_id] length] < 2){
+                    newDist2 = [NSString stringWithFormat:@"00%@", (NSString*)[(EQREquipUniqueItem*)obj2 distinquishing_id]];
+                }else{
+                    newDist2 =(NSString*)[(EQREquipUniqueItem*)obj2 distinquishing_id];
+                }
+                
+                //______next change the double digits...
+                //if dist id is only one character in length, add a 0 to the start.
+                if ([newDist1 length] < 3){
+                    newDist1 = [NSString stringWithFormat:@"0%@", newDist1];
+                }
+                
+                if ([newDist2 length] < 3){
+                    newDist2 = [NSString stringWithFormat:@"0%@", newDist2];
+                }
+                
+                NSString* string1 = [NSString stringWithFormat:@"%@%@",
+                                     [(EQREquipUniqueItem*)obj1 shortname], newDist1];
+                NSString* string2 = [NSString stringWithFormat:@"%@%@",
+                                     [(EQREquipUniqueItem*)obj2 shortname], newDist2];
+                
+                return [string1 compare:string2];
+            }];
+            
+            [tempSortedArrayWithSections addObject:tempSubNestArray];
+        };
+        
+        tempUniqueArrayWithSections = tempSortedArrayWithSections;
+        
+        // Pick an initial tracking sheet item
+        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+        if (([self.equipUniqueCategoriesList count] > 0) && ([requestManager.arrayOfEquipSectionsThatShouldBeVisibleInSchedule count] < 1)){
+            [requestManager collapseOrExpandSectionInSchedule:[self.equipUniqueCategoriesList objectAtIndex:0]];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            self.equipUniqueArrayWithSections = [NSMutableArray arrayWithArray:tempUniqueArrayWithSections];
+            
+            // Yes, this is necesary
+            [self.myMasterScheduleCollectionView reloadData];
+            [self.myNavBarCollectionView reloadData];
+            
+            [self.myNavBarCollectionView selectItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+        });
+    
+    });
+    
+    
+    
+    // Update opacity and width of navBarDates if in change orientation
+    UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
+    if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
+        
+        self.navBarDates.isNarrowFlag = YES;
+        self.navBarWeeks.isNarrowFlag = YES;
+        self.navBarDates.alpha = 0.5;
+        self.navBarWeeks.alpha = 0.5;
+        [self.navBarDates setNeedsDisplay];
+        [self.navBarWeeks setNeedsDisplay];
         
     }else{
         
-        [self.equipUniqueArrayWithSections removeAllObjects];
+        self.navBarDates.isNarrowFlag = NO;
+        self.navBarWeeks.isNarrowFlag = NO;
+        self.navBarDates.alpha = 1.0;
+        self.navBarWeeks.alpha = 1.0;
+        [self.navBarDates setNeedsDisplay];
+        [self.navBarWeeks setNeedsDisplay];
     }
+
+    //this updates placement of day and dates if orientation changed while in a different tab
+    [self.myDateBarCollection.collectionViewLayout invalidateLayout];
     
-    
-    //B. with a valid list of categories....
-    //create a new array by populating each nested array with equiptitle that match each category or subcategory
-    for (NSString* groupingItem in self.equipUniqueCategoriesList){
-        
-        NSMutableArray* subNestArray = [NSMutableArray arrayWithCapacity:1];
-        
-        for (EQREquipUniqueItem* equipItem in self.equipUniqueArray){
-            
-            if ([[equipItem performSelector:NSSelectorFromString(EQRScheduleGrouping)] isEqualToString:groupingItem]){
-                
-                [subNestArray addObject: equipItem];
-            }
-        }
-        
-        //add subNested array to the master array
-        [self.equipUniqueArrayWithSections addObject:subNestArray];
-        
-    }
-    
-    //we now have a master cateogry array with subnested equipTitle arrays
-    
-    //sort the subnested arrays
-    NSMutableArray* tempSortedArrayWithSections = [NSMutableArray arrayWithCapacity:1];
-    for (NSArray* obj in self.equipUniqueArrayWithSections)  {
-        
-        NSArray* tempSubNestArray = [obj sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
-            
-            //_____need to accommodate dist ids in the hundreds.
-            
-            //______first change the single digits...
-            NSString* newDist1;
-            if ([(NSString*)[(EQREquipUniqueItem*)obj1 distinquishing_id] length] < 2){
-                newDist1 = [NSString stringWithFormat:@"00%@", (NSString*)[(EQREquipUniqueItem*)obj1 distinquishing_id]];
-            }else{
-                newDist1 =(NSString*)[(EQREquipUniqueItem*)obj1 distinquishing_id];
-            }
-            
-            NSString* newDist2;
-            if ([(NSString*)[(EQREquipUniqueItem*)obj2 distinquishing_id] length] < 2){
-                newDist2 = [NSString stringWithFormat:@"00%@", (NSString*)[(EQREquipUniqueItem*)obj2 distinquishing_id]];
-            }else{
-                newDist2 =(NSString*)[(EQREquipUniqueItem*)obj2 distinquishing_id];
-            }
-            
-            //______next change the double digits...
-            //if dist id is only one character in length, add a 0 to the start.
-            if ([newDist1 length] < 3){
-                newDist1 = [NSString stringWithFormat:@"0%@", newDist1];
-            }
-            
-            if ([newDist2 length] < 3){
-                newDist2 = [NSString stringWithFormat:@"0%@", newDist2];
-            }
-            
-            
-            
-            NSString* string1 = [NSString stringWithFormat:@"%@%@",
-                                 [(EQREquipUniqueItem*)obj1 shortname], newDist1];
-            NSString* string2 = [NSString stringWithFormat:@"%@%@",
-                                 [(EQREquipUniqueItem*)obj2 shortname], newDist2];
-            
-            return [string1 compare:string2];
-        }];
-        
-        [tempSortedArrayWithSections addObject:tempSubNestArray];
-    };
-    
-    self.equipUniqueArrayWithSections = tempSortedArrayWithSections;
-    
-    //pick an initial tracking sheet item
-    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-    if (([self.equipUniqueCategoriesList count] > 0) && ([requestManager.arrayOfEquipSectionsThatShouldBeVisibleInSchedule count] < 1)){
-        
-        [requestManager collapseOrExpandSectionInSchedule:[self.equipUniqueCategoriesList objectAtIndex:0]];
-        
-    }
-    
-    
-    //update navigation bar
+    // Update navigation bar
     EQRModeManager* modeManager = [EQRModeManager sharedInstance];
     if (modeManager.isInDemoMode){
         
@@ -411,58 +411,25 @@
         self.navigationController.navigationBar.barTintColor = nil;
         [UIView setAnimationsEnabled:YES];
     }
-    
-    //yes, this is necesary
-    [self.myMasterScheduleCollectionView reloadData];
-    [self.myNavBarCollectionView reloadData];
-    
-    //update opacity and width of navBarDates if in change orientation
-    UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
-    if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
-        
-        self.navBarDates.isNarrowFlag = YES;
-        self.navBarWeeks.isNarrowFlag = YES;
-        self.navBarDates.alpha = 0.5;
-        self.navBarWeeks.alpha = 0.5;
-        [self.navBarDates setNeedsDisplay];
-        [self.navBarWeeks setNeedsDisplay];
-    }else{
-        
-        self.navBarDates.isNarrowFlag = NO;
-        self.navBarWeeks.isNarrowFlag = NO;
-        self.navBarDates.alpha = 1.0;
-        self.navBarWeeks.alpha = 1.0;
-        [self.navBarDates setNeedsDisplay];
-        [self.navBarWeeks setNeedsDisplay];
-    }
-
-    //this updates placement of day and dates if orientation changed in a different tab
-    [self.myDateBarCollection.collectionViewLayout invalidateLayout];
-
-    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
     
     [super viewDidAppear:animated];
     
-//    self.myMasterScheduleCollectionView.contentOffset = CGPointMake(0, 0);
-    
-    //__________   THIS WORKS!!!   _______
     self.myMasterScheduleCollectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     self.myMasterScheduleCollectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 0);
-
 }
 
 
 -(void)renewTheView{
     
-    //cancel any existing web data parsing
+    // Cancel any existing web data parsing
     if (self.myWebData){
         [self.myWebData stopXMLParsing];
     }
     
-    //reset the ivar flag
+    // Reset the ivar flag
     self.aChangeWasMade = NO;
     
     //____offset the week indicators
@@ -506,27 +473,6 @@
     NSArray* request_date_end = [NSArray arrayWithObjects:@"request_date_end", endDateString, nil];
     NSArray* topArray = [NSArray arrayWithObjects:request_date_begin, request_date_end, nil];
     
-    
-    
-    
-    
-//    NSMutableArray* tempMuteArray = [NSMutableArray arrayWithCapacity:1];
-//    
-//    [webData queryWithLink:@"EQGetScheduleEquipUniqueJoinsWithDateRange.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
-//        
-//        [tempMuteArray addObjectsFromArray:muteArray];
-//    }];
-//    
-//    //save array to requestManager (for rowCell to access it as needed)
-//    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-//    requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins = tempMuteArray;
-    
-
-    
-    
-    
-    //_____test webdata delegation_____
-    
     //delete the existing objects in the data source array
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins = nil;
@@ -563,10 +509,8 @@
         
     } else{
         
-        
         NSArray* classFilter = @[@"classSection_foreignKey", self.filter_classSectionKey];
         NSArray* topArray1 = [NSArray arrayWithObjects:request_date_begin, request_date_end, classFilter,  nil];
-        
         
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
         dispatch_async(queue, ^{
@@ -582,17 +526,7 @@
             }];
             
         });
-        
     }
-    
-
-    
-    
-    //_________________________________
-
-    
-    
-
 }
 
 
@@ -960,11 +894,6 @@
     //assign month to nav bar title
     self.navigationItem.title = [NSString stringWithFormat:@"%@ - Filtered Results",
                                  [monthNameFormatter stringFromDate:self.dateForShow]];
-    
-//    EQRClassPickerVC* classPickerVC = (EQRClassPickerVC*)[self.myClassPicker contentViewController];
-//    
-//    //can be nil... no class assigned to request
-//    EQRClassItem* thisClassItem = [classPickerVC retrieveClassItem];
     
     self.filter_classSectionKey = selectedClassItem.key_id;
     
@@ -1473,7 +1402,6 @@
         
     } else if (collectionView == self.myNavBarCollectionView){
         
-//        NSLog(@"equiopUniqueCategoriesList count is: %u", (int)[self.equipUniqueCategoriesList count]);
         return [self.equipUniqueCategoriesList count];
         
     } else {  //must be self.myDateBarCollection
@@ -1630,7 +1558,6 @@
         EQRScheduleNavBarCell* cell2 = [self.myNavBarCollectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
         
         for (UIView* view in cell2.contentView.subviews){
-            
             [view removeFromSuperview];
         }
         
@@ -1638,7 +1565,6 @@
         cell2.backgroundColor = [UIColor whiteColor];
         
         [cell2 initialSetupWithTitle:(NSString*)[self.equipUniqueCategoriesList objectAtIndex:indexPath.row]];
-//        [cell2 initialSetupWithTitle:@"Whee!"];
 
         //modify the background color to have alternate colors in rows
         if (indexPath.row % 2){
@@ -1711,10 +1637,8 @@
     
     //remove subviews
     for (UIView* thisSubview in cell.contentView.subviews){
-        
         [thisSubview removeFromSuperview];
     }
-    
     
     //DECIDE WHICH COLLECTION VIEW SHOULD BE AFFECTED
     
@@ -1811,16 +1735,6 @@
        
         [[[(EQRScheduleRowCell*)obj myUniqueItemCollectionView] collectionViewLayout] invalidateLayout];
     }];
-    
-    
-    
-//    [self.myMasterScheduleCollectionView reloadData];
-//    [self.myDateBarCollection reloadData];
-//    [self.myNavBarCollectionView reloadData];
-    
-
-    
-    
 
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
@@ -1911,18 +1825,14 @@
 
 -(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
     
-    //abort if selector is unrecognized, otherwise crash
+    //abort if selector is unrecognized
     if (![self respondsToSelector:action]){
         NSLog(@"cannot perform selector: %@", NSStringFromSelector(action));
         return;
     }
     
     //test if filter is on, act accordingly???
-    
-    
-    
-//    NSLog(@"WEBDATA SUCCESSFULLY CALLED DELEGATE'S METHOD: %@", [currentThing class]);
-    
+
     //save array to requestManager (for rowCell to access it as needed)
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
@@ -1952,11 +1862,6 @@
 #pragma mark - popover delegate methods
 
 -(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
-    
-    //there are 3 popovers
-    //myDayDatePicker;
-    //myStaffUserPicker;
-    //myScheduleRowQuickView;
     
     if (popoverController == self.myDayDatePicker){
         
