@@ -13,6 +13,8 @@
 extern BOOL EQRBuildNWDoc;
 extern BOOL EQRBuildPSU;
 
+extern BOOL EQRSuppressDemoColor;
+
 // Logs
 extern BOOL EQRLogInputStrings;
 

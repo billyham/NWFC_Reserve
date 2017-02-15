@@ -21,5 +21,6 @@
 -(void)enableManagerMode;
 
 -(void)enableDemoMode:(BOOL)demoModeIsOn;
+-(void)alterNavigationBar:(UINavigationBar *)navBar navigationItem:(UINavigationItem *)navItem isInDemo:(BOOL)isInDemo;
 
 @end

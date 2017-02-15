@@ -53,6 +53,7 @@ extern NSString* EQRColorIssueSerious;
 extern NSString *EQRColorFilterBarAndSearchBarBackground;
 
 extern NSString* EQRColorDemoMode;
+extern NSString *EQRColorDemoNavItems;
 
 
 @interface EQRColors : NSObject

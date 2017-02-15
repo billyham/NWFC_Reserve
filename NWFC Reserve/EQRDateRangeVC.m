@@ -32,27 +32,28 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    //update navigation bar
+    // Update navigation bar
     EQRModeManager* modeManager = [EQRModeManager sharedInstance];
     if (modeManager.isInDemoMode){
         
-        //set prompt
+        // Set prompt
         [UIView setAnimationsEnabled:NO];
-        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        self.navigationItem.prompt = @"DEMO MODE";
         
-        //set color of navigation bar
-        EQRColors* colors = [EQRColors sharedInstance];
-        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
+        // Set colors of navigation bar and item
+        [modeManager alterNavigationBar:self.navigationController.navigationBar navigationItem:self.navigationItem isInDemo:YES];
+        
         [UIView setAnimationsEnabled:YES];
         
     }else{
         
-        //set prompt
+        // Set prompt
         [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = nil;
         
-        //set color of navigation bar
-        self.navigationController.navigationBar.barTintColor = nil;
+        // Set colors of navigation bar and item
+        [modeManager alterNavigationBar:self.navigationController.navigationBar navigationItem:self.navigationItem isInDemo:NO];
+        
         [UIView setAnimationsEnabled:YES];
     }
     

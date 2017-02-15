@@ -98,29 +98,30 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    //update navigation bar
+    // Update navigation bar
     EQRModeManager* modeManager = [EQRModeManager sharedInstance];
     if (modeManager.isInDemoMode){
         
-        //set prompt
+        // Set prompt
         [UIView setAnimationsEnabled:NO];
-        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
+        self.navigationItem.prompt = @"DEMO MODE";
         
-        //set color of navigation bar
-        EQRColors* colors = [EQRColors sharedInstance];
-        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
+        // Set colors of navigation bar and item
+        [modeManager alterNavigationBar:self.navigationController.navigationBar navigationItem:self.navigationItem isInDemo:YES];
+        
         [UIView setAnimationsEnabled:YES];
         
         [self.demoModeSwitch setOn:YES];
         
     }else{
         
-        //set prompt
+        // Set prompt
         [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = nil;
         
-        //set color of navigation bar
-        self.navigationController.navigationBar.barTintColor = nil;
+        // Set colors of navigation bar and item
+        [modeManager alterNavigationBar:self.navigationController.navigationBar navigationItem:self.navigationItem isInDemo:NO];
+        
         [UIView setAnimationsEnabled:YES];
         
         [self.demoModeSwitch setOn:NO];
@@ -401,18 +402,17 @@
         
         //set prompt
         [UIView setAnimationsEnabled:NO];
-        self.navigationItem.prompt = @"!!! DEMO MODE !!!";
-        
-        //set color of navigation bar
-        EQRColors* colors = [EQRColors sharedInstance];
-        self.navigationController.navigationBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
-        [UIView setAnimationsEnabled:YES];
+        self.navigationItem.prompt = @"DEMO MODE";
         
         //set singleton
         EQRModeManager* modeManager = [EQRModeManager sharedInstance];
         [modeManager enableDemoMode:YES];
         
+        [modeManager alterNavigationBar:self.navigationController.navigationBar navigationItem:self.navigationItem isInDemo:YES];
+        
         [self.delegate demoModeChanged:YES];
+        
+        [UIView setAnimationsEnabled:YES];
         
     }else{
         
@@ -420,15 +420,15 @@
         [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = nil;
         
-        //set color of navigation bar
-        self.navigationController.navigationBar.barTintColor = nil;
-        [UIView setAnimationsEnabled:YES];
-        
         //set singleton
         EQRModeManager* modeManager = [EQRModeManager sharedInstance];
         [modeManager enableDemoMode:NO];
         
+        [modeManager alterNavigationBar:self.navigationController.navigationBar navigationItem:self.navigationItem isInDemo:NO];
+        
         [self.delegate demoModeChanged:NO];
+        
+        [UIView setAnimationsEnabled:YES];
     }
     
     //inform other VCs that they need to reload their data

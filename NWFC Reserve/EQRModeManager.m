@@ -7,6 +7,8 @@
 //
 
 #import "EQRModeManager.h"
+#import "EQRColors.h"
+#import "EQRGlobals.h"
 
 @implementation EQRModeManager
 
@@ -62,6 +64,37 @@
     
     [defaults setObject:newDic forKey:@"demoModeIsOn"];
     [defaults synchronize];
+}
+
+-(void)alterNavigationBar:(UINavigationBar *)navBar navigationItem:(UINavigationItem *)navItem isInDemo:(BOOL)isInDemo {
+    
+    if (isInDemo){
+        if (EQRSuppressDemoColor == NO){
+
+            EQRColors* colors = [EQRColors sharedInstance];
+            navBar.barTintColor = [colors.colorDic objectForKey:EQRColorDemoMode];
+            navBar.barStyle = UIBarStyleBlackOpaque;
+            navBar.tintColor = [colors.colorDic objectForKey:EQRColorDemoNavItems];
+            
+            for (UIBarButtonItem *button in navItem.leftBarButtonItems){
+                button.tintColor = [colors.colorDic objectForKey:EQRColorDemoNavItems];
+            }
+            for (UIBarButtonItem *button in navItem.rightBarButtonItems){
+                button.tintColor = [colors.colorDic objectForKey:EQRColorDemoNavItems];
+            }
+        }
+    }else{
+        navBar.barTintColor = nil;
+        navBar.barStyle = UIBarStyleDefault;
+        navBar.tintColor = nil;
+        
+        for (UIBarButtonItem *button in navItem.leftBarButtonItems){
+            button.tintColor = nil;
+        }
+        for (UIBarButtonItem *button in navItem.rightBarButtonItems){
+            button.tintColor = nil;
+        }
+    }
 }
 
 

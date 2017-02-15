@@ -12,6 +12,8 @@
 BOOL EQRBuildNWDoc = NO;
 BOOL EQRBuildPSU = YES;
 
+BOOL EQRSuppressDemoColor = NO;
+
 // Logs
 BOOL EQRLogInputStrings = NO;
 
