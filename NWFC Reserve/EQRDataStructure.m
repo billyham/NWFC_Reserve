@@ -589,13 +589,11 @@
             return nil;
         }
         
-        NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                equipItem, @"equipTitleObject",
-                                qty, @"quantity",
-                                nil];
+        NSDictionary* newDict = @{ @"equipTitleObject": equipItem,
+                                   @"quantity": qty };
         
         //add this dic to the returnArray
-        [arrayToReturn addObject:newDic];
+        [arrayToReturn addObject:newDict];
         
     }
     

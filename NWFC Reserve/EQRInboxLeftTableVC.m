@@ -66,10 +66,11 @@
     //what does this do?
     self.definesPresentationContext = YES;
     
- 
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
 
+    
+    [self renewTheView];
 }
 
 
@@ -99,8 +100,6 @@
         [UIView setAnimationsEnabled:YES];
     }
     
-    [self renewTheView];
-
     [super viewWillAppear:animated];
 }
 
@@ -114,183 +113,133 @@
 
 -(void)renewTheView{
     
-    //refresh or initiate the array of objects
+    // Refresh or initiate the array of objects
     if (!self.arrayOfRequests){
         self.arrayOfRequests = [NSMutableArray arrayWithCapacity:1];
     }
     [self.arrayOfRequests removeAllObjects];
     
-    //load the local array ONLY with upcoming unconfirmed requests
+    // Load the local array ONLY with upcoming unconfirmed requests
     EQRWebData* webData = [EQRWebData sharedInstance];
-    webData.delegateDataFeed = self;
     self.myWebData = webData;
 
-    
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     NSLocale* thisLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     dateFormatter.locale = thisLocale;
     dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
     
-    //need to subtract a day off of the date (strange)
+    // Need to subtract a day off of the date (strange)
     NSDate* adjustedDate = [[NSDate date] dateByAddingTimeInterval:-86400]; //86400 seconds is one day
     
-    NSArray* firstArray = [NSArray arrayWithObjects:@"request_date_begin", [dateFormatter stringFromDate:adjustedDate], nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, nil];
+    NSArray* topArray = @[ @[@"request_date_begin", [dateFormatter stringFromDate:adjustedDate]] ];
     
     self.indexOfLastReturnedItem = -1;
     
-    //_________determine which selection was made from top VC (Inbox or Archive)
+    // Determine which selection was made from top VC (Inbox or Archive)
     NSString* selectionType = [self.delegateForLeftSide selectedInboxOrArchive];
     
-    //get only needs confirmation
-    if ([selectionType isEqualToString:@"NeedsConfirmation"]){  //get only inbox
+    if ([selectionType isEqualToString:@"NeedsConfirmation"]){
         
-        //set nav bar title (override nav bar title from nib)
+        // Set nav bar title (override nav bar title from nib)
         self.navigationItem.title = @"Inbox";
         
-        //__1__ get total count of items that will be ultimately be returned
-        NSString* countOfRequests = [webData queryForStringWithLink:@"EQGetCountOfRequestsUpcomingUnconfirmed.php" parameters:topArray];
-
-        self.countOfUltimageReturnedItems = [countOfRequests integerValue];
+        [self fetchDataWithCountRequest:@"EQGetCountOfRequestsUpcomingUnconfirmed.php" andDataRequest:@"EQGetScheduleRequestsUpcomingUnconfirmed.php" withParams:topArray];
         
-        //__2__ do asynchronous call to webData
-        SEL thisSelector = @selector(addToArrayOfRequests:);
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
-        dispatch_async(queue, ^{
-            
-            [webData queryWithAsync:@"EQGetScheduleRequestsUpcomingUnconfirmed.php" parameters:topArray class:@"EQRScheduleRequestItem" selector:thisSelector  completion:^(BOOL isLoadingFlagUp) {
-                
-                //identify when loading is complete
-                self.finishedAsyncDBCall = isLoadingFlagUp;
-                
-//                NSLog(@"loading is DONE!!");
-            }];
-        });
+    }else if ([selectionType isEqualToString:@"PastDue"]){
         
-    }else if ([selectionType isEqualToString:@"PastDue"]){   //get all past due
-        
-        //set nav bar title
+        // Set nav bar title
         self.navigationItem.title = @"Past Due";
         
-        //__1__ get total count of items that will be ultimately be returned
-        NSString* countOfRequests = [webData queryForStringWithLink:@"EQGetCountOfRequestsPastDue.php" parameters:topArray];
-        
-        self.countOfUltimageReturnedItems = [countOfRequests integerValue];
-        
-        //__2__ do asynchronous call to webData
-        SEL thisSelector = @selector(addToArrayOfRequests:);
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
-        dispatch_async(queue, ^{
-            
-            [webData queryWithAsync:@"EQGetScheduleRequestsPastDue.php" parameters:topArray class:@"EQRScheduleRequestItem" selector:thisSelector  completion:^(BOOL isLoadingFlagUp) {
-                
-                //identify when loading is complete
-                self.finishedAsyncDBCall = isLoadingFlagUp;
-                
-                //                NSLog(@"loading is DONE!!");
-            }];
-        });
+        [self fetchDataWithCountRequest:@"EQGetCountOfRequestsPastDue.php" andDataRequest:@"EQGetScheduleRequestsPastDue.php" withParams:topArray];
     
+    }else if ([selectionType isEqualToString:@"AllRequestsByName"]){
     
-    }else if ([selectionType isEqualToString:@"AllRequestsByName"]){     //get ALL requests
-    
-        //set the search bar placeholder text
+        // Set the search bar placeholder text
         self.mySearchController.searchBar.placeholder = @"Search by Name";
         
-        //set nav bar title (override nav bar title from nib)
+        // Set nav bar title (override nav bar title from nib)
         self.navigationItem.title = @"Archive";
         
-        //__1__ get total count of items that will be ultimately be returned
-        NSString* countOfRequests = [webData queryForStringWithLink:@"EQGetCountOfScheduleRequestsAll.php" parameters:nil];
-//        NSLog(@"this is the count of all requests as a string: %@", countOfRequests);
-        self.countOfUltimageReturnedItems = [countOfRequests integerValue];
-        
-        //__2__ do asynchronous call to webData
-        SEL thisSelector = @selector(addToArrayOfRequests:);
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
-        dispatch_async(queue, ^{
-            
-            [webData queryWithAsync:@"EQGetScheduleRequestsAll.php" parameters:nil class:@"EQRScheduleRequestItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
-                
-                //identify when loading is complete
-                self.finishedAsyncDBCall = isLoadingFlagUp;
-                
-//                NSLog(@"loading is DONE!!");
-            }];
-        });
+        [self fetchDataWithCountRequest:@"EQGetCountOfScheduleRequestsAll.php" andDataRequest:@"EQGetScheduleRequestsAll.php" withParams:nil];
         
     }else if ([selectionType isEqualToString:@"AllRequestsByClassTitle"]){
         
-        //set the search bar placeholder text
+        // Set the search bar placeholder text
         self.mySearchController.searchBar.placeholder = @"Search by Class";
         
-        //set nav bar title (override nav bar title from nib)
+        // Set nav bar title (override nav bar title from nib)
         self.navigationItem.title = @"Archive";
         
-        NSString* countOfRequests = [webData queryForStringWithLink:@"EQGetCountOfScheduleRequestsAll.php" parameters:nil];
-        self.countOfUltimageReturnedItems = [countOfRequests integerValue];
-        
-        SEL thisSelector = @selector(addToArrayOfRequests:);
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
-        dispatch_async(queue, ^{
-            
-            [webData queryWithAsync:@"EQGetScheduleRequestsAll.php" parameters:nil class:@"EQRScheduleRequestItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
-                
-                //identify when loading is complete
-                self.finishedAsyncDBCall = isLoadingFlagUp;
-            }];
-        });
-
+        [self fetchDataWithCountRequest:@"EQGetCountOfScheduleRequestsAll.php" andDataRequest:@"EQGetScheduleRequestsAll.php" withParams:nil];
     
-    }else if ([selectionType isEqualToString:@"datesToTable"]){    //get request according to pickup date range
+    }else if ([selectionType isEqualToString:@"datesToTable"]){
     
-        //set nav bar title (override nav bar title from nib)
+        // Set nav bar title (override nav bar title from nib)
         self.navigationItem.title = @"Archive";
         
-        //get dates
+        // Get dates
         NSDictionary* dateRange = [self.delegateForLeftSide getDateRange];
         NSDate* beginDate = [dateRange objectForKey:@"beginDate"];
         NSDate* endDate = [dateRange objectForKey:@"endDate"];
         NSString* beginDateString = [EQRDataStructure dateAsStringSansTime:beginDate];
         NSString* endDateString = [EQRDataStructure dateAsStringSansTime:endDate];
-        NSArray* firstArray = @[@"request_date_begin", beginDateString];
-        NSArray* secondArray = @[@"request_date_end", endDateString];
-        NSArray* topArray = @[firstArray, secondArray];
+        NSArray* topArray = @[ @[@"request_date_begin", beginDateString],
+                               @[@"request_date_end", endDateString] ];
 
-        
-        //__1__ get total count of items that will be ultimately be returned
-        NSString* countOfRequests = [webData queryForStringWithLink:@"EQGetCountOfRequestsInDateRange.php" parameters:topArray];
-        //        NSLog(@"this is the count of all requests as a string: %@", countOfRequests);
-        self.countOfUltimageReturnedItems = [countOfRequests integerValue];
-        
-        //__2__ do asynchronous call to webData
-        SEL thisSelector = @selector(addToArrayOfRequests:);
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
-        dispatch_async(queue, ^{
-            
-            [webData queryWithAsync:@"EQGetScheduleItemsCompleteInDateRange.php" parameters:topArray class:@"EQRScheduleRequestItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
-                
-                //identify when loading is complete
-                self.finishedAsyncDBCall = isLoadingFlagUp;
-            }];
-        });
-        
+        [self fetchDataWithCountRequest:@"EQGetCountOfRequestsInDateRange.php" andDataRequest:@"EQGetScheduleItemsCompleteInDateRange.php" withParams:topArray];
         
     }else{
         
-        //error handling when failed to create delegate or idenfity the segue
+        NSLog(@"EQRInboxLeftTable > renewTheView, failed to create delegate or idenfity the segue");
     }
     
-    //reload the table
     [self.tableView reloadData];
+}
+
+-(void)fetchDataWithCountRequest:(NSString *)countReq andDataRequest:(NSString *)dataReq withParams:(NSArray *)params{
     
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"fetchDataWithCountRequest";
+    queue.maxConcurrentOperationCount = 1;
+
+    
+    NSBlockOperation *requestCount = [NSBlockOperation blockOperationWithBlock:^{
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        NSString *countOfRequests = [webData queryForStringWithLink:countReq parameters:params];
+        self.countOfUltimageReturnedItems = [countOfRequests integerValue];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
+    }];
+    
+    
+    NSBlockOperation *requestData = [NSBlockOperation blockOperationWithBlock:^{
+
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        
+        [webData queryWithLink:dataReq parameters:params class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray) {
+            self.finishedAsyncDBCall = YES;
+            if (!muteArray) return NSLog(@"EQRInboxLeftVC > fetchDataWith..., failed to retrieve array");
+            self.arrayOfRequests = [NSMutableArray arrayWithArray:muteArray];
+            
+            self.indexOfLastReturnedItem = [muteArray count] -1;
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+        }];
+    }];
+    [requestData addDependency:requestCount];
+
+    
+    [queue addOperation:requestCount];
+    [queue addOperation:requestData];
 }
 
 
 #pragma mark - UISearchResultsUpdating
 
 -(void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    
     
     NSString *searchString = [self.mySearchController.searchBar text];
     
@@ -316,8 +265,6 @@
 
 #pragma mark - Content Filtering
 
-//Basically, a predicate is an expression that returns a Boolean value (true or false). You specify the search criteria in the format of NSPredicate and use it to filter data in the array. As the search is on the name of recipe, we specify the predicate as “name contains[c] %@”. The “name” refers to the name property of the Recipe object. NSPredicate supports a wide range of filters including: BEGINSWITH, ENDSWITH, LIKE, MATCHES, CONTAINS. Here we choose to use the “contains” filter. The operator “[c]” means the comparison is case-insensitive.
-
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
     
@@ -337,69 +284,15 @@
 }
 
 
-#pragma mark - webData dataFeedDelegate methods
-
--(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
-    
-    //abort if selector is unrecognized, otherwise crash
-    if (![self respondsToSelector:action]){
-        NSLog(@"cannot perform selector: %@", NSStringFromSelector(action));
-        return;
-    }
-    
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [self performSelector:action withObject:currentThing];
-#pragma clang diagnostic pop
-    
-}
-
--(void)addToArrayOfRequests:(id)currentThing{
-    
-    if (currentThing){
-        [self.arrayOfRequests addObject:currentThing];
-    }
-    
-    //uptick on the index
-    self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
-    
-    //test to see if the cell is visible and needs data...
-    for (NSIndexPath* indexPath in [self.tableView indexPathsForVisibleRows]){
-        
-        if (self.indexOfLastReturnedItem == indexPath.row){
-            
-            NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:self.indexOfLastReturnedItem inSection:0];
-            NSArray* rowsOfIndexPaths = @[newIndexPath];
-            
-            //delay the refresh, the object's don't appear in the array immediately
-            [self performSelector:@selector(delayedCallToRefreshCellUITableViewRowAnimation:) withObject:rowsOfIndexPaths afterDelay:0.25];
-        }
-    }
-}
-
--(void)delayedCallToRefreshCellUITableViewRowAnimation:(NSArray*)indexPaths{
-    
-    [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
-}
-
-
-//______something else to think about (this is used in scheduleDisplayTopVC)
-// [self.myWebData.xmlParser abortParsing]
-
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     
-    //determine either search results table or normal table
+    // Determine either search results table or normal table
     if (self.mySearchController.active) {
-        
         return 1;
-        
     }else{
-        
-        // Return the number of sections.
         return 1;
     }
 }
@@ -407,30 +300,20 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     
-    //determine either search results table or normal table
+    // Determine either search results table or normal table
     if (self.mySearchController.active) {
-        
         return [self.searchResultArrayOfRequests count];
-        
     }else{
-        
-    // Return the number of rows in the section.
-    return self.countOfUltimageReturnedItems;
+        return self.countOfUltimageReturnedItems;
     }
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
-    //determine either search results table or normal table
     
-    
-    //____________  NOTICE A KEY FEATURE: USING self.tableview INSTEAD OF tableview  !!!!!!_______________
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell* cell;
-    
-//    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     if (cell == nil){
         
@@ -481,7 +364,7 @@
     timeFormatter1.dateFormat = @"h:mm aaa";
     
     
-    //_______determine either search results table or normal table
+    // Determine either search results table or normal table
     if (self.mySearchController.active) {         //search results!!!
         
         //this seems like a weird place to put the row height, but it works
@@ -507,9 +390,9 @@
             }
         }
         
-    } else {                                                                            //is content table
+    } else {                                                                           
         
-        //determine if data has been loaded
+        // Determine if data has been loaded
         if ([self.arrayOfRequests count] > indexPath.row){  //yes, indexed indicate is has arrived
             
             nameString = [(EQRScheduleRequestItem*)[self.arrayOfRequests objectAtIndex:indexPath.row] contact_name];
@@ -588,21 +471,21 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    //identify the selected request for later
-    //____determine if search view is present
+    // Prevent cell selection if data is still loading
+    if (self.finishedAsyncDBCall == NO) {
+        [[tableView cellForRowAtIndexPath:indexPath] setSelected:NO];
+        return;
+    }
+    
+    // Determine if search view is present
     if (self.mySearchController.active) {
-        
         self.chosenRequest = [self.searchResultArrayOfRequests objectAtIndex:indexPath.row];
-        
     }else{
-        
         self.chosenRequest = [self.arrayOfRequests objectAtIndex:indexPath.row];
     }
     
     //send message to InboxRightVC to renew the view
     [(EQRInboxRightVC*) [[(UINavigationController*) [self.splitViewController.viewControllers objectAtIndex:1] viewControllers] objectAtIndex:0] renewTheViewWithRequest:self.chosenRequest];
-    
-
 }
 
 

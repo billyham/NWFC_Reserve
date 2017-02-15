@@ -13,24 +13,16 @@
 @protocol EQRInboxLeftTableDelegate;
 
 
-@interface EQRInboxLeftTableVC : UITableViewController <EQRInboxRightDelegate, EQRWebDataDelegate>{
-    
+@interface EQRInboxLeftTableVC : UITableViewController <EQRInboxRightDelegate>{
     __weak id <EQRInboxLeftTableDelegate> delegateForLeftSide;
-
 }
 
 @property (weak, nonatomic) id <EQRInboxLeftTableDelegate> delegateForLeftSide;
 
-//webData dataFeedDelegate methods
--(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action;
-
 @end
 
 
-
-
 @protocol EQRInboxLeftTableDelegate <NSObject>
-
 -(NSString*)selectedInboxOrArchive;
 
 @optional
