@@ -233,7 +233,7 @@
 }
 
 
-#pragma mark - notes
+#pragma mark - Notification when Check In/Out view is (in)completed
 
 -(void)dismissedCheckInOut:(NSNotification*)note{
     
@@ -275,7 +275,8 @@
                 
                 [self updateData:tag nix:NO callback:^{
                     NSDictionary* infoDic = @{ @"status": [NSNumber numberWithInteger:self.myStatus],
-                                               @"markedForReturning": [NSNumber numberWithBool:self.markedForReturning] };
+                                               @"markedForReturning": [NSNumber numberWithBool:self.markedForReturning],
+                                               @"scheduleKey": scheduleKey };
                     [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
                 }];
                 
@@ -304,7 +305,8 @@
                 
                 [self updateData:tag nix:NO callback:^{
                     NSDictionary* infoDic = @{ @"status": [NSNumber numberWithInteger:self.myStatus],
-                                               @"markedForReturning": [NSNumber numberWithBool:self.markedForReturning] };
+                                               @"markedForReturning": [NSNumber numberWithBool:self.markedForReturning],
+                                               @"scheduleKey": scheduleKey };
                     [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
                 }];
             }
@@ -332,7 +334,8 @@
                 
                 [self updateData:tag nix:YES callback:^{
                     NSDictionary* infoDic = @{ @"status": [NSNumber numberWithInteger:self.myStatus],
-                                               @"markedForReturning": [NSNumber numberWithBool:self.markedForReturning] };
+                                               @"markedForReturning": [NSNumber numberWithBool:self.markedForReturning],
+                                               @"scheduleKey": scheduleKey };
                     [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
                 }];
                 
@@ -371,7 +374,8 @@
                 
                 [self updateData:tag nix:YES callback:^{
                     NSDictionary* infoDic = @{ @"status": [NSNumber numberWithInteger:self.myStatus],
-                                               @"markedForReturning": [NSNumber numberWithBool:self.markedForReturning] };
+                                               @"markedForReturning": [NSNumber numberWithBool:self.markedForReturning],
+                                               @"scheduleKey": scheduleKey };
                     [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
                 }];
             }

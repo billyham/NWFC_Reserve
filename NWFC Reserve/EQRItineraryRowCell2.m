@@ -138,8 +138,8 @@
         
     }
     
-    //____ this is important... add constraints to the custom view that gets added to the cell's contentView, otherwise, the animation movement
-    //_____of the cell gets glitchy
+    // Add constraints to the custom view that gets added to the cell's contentView, otherwise, the animation movement
+    // of the cell gets glitchy
     self.contentVC.view.translatesAutoresizingMaskIntoConstraints = NO;
     NSDictionary *viewsDictionary = @{@"contentVC":self.contentVC.view};
     
@@ -332,10 +332,6 @@
     UIImage *backgroundImage = [[button imageForState:UIControlStateNormal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [button setImage:backgroundImage forState:UIControlStateNormal];
 }
-
-
-
-    
 
 
 -(void)updateButtonLabels:(EQRScheduleRequestItem *)requestItem{

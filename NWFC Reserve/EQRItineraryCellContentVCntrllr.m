@@ -197,7 +197,7 @@
 
 
 
-#pragma mark - notes
+#pragma mark - Notification when Check In/Out view is (in)completed
 
 -(void)dismissedCheckInOut:(NSNotification*)note{
     

@@ -62,8 +62,8 @@
 @property NSInteger indexOfLastReturnedItem;
 @property BOOL finishedAsyncDBCallForPickup;
 @property BOOL finishedAsyncDBCallForReturn;
-@property BOOL finishedAsyncDBCallForEquipJoins;
-@property BOOL finishedAsyncDBCallForMiscJoins;
+//@property BOOL finishedAsyncDBCallForEquipJoins;
+//@property BOOL finishedAsyncDBCallForMiscJoins;
 @property BOOL readyToCheckForScheduleWarningsFlag;
 @property BOOL freezeOnInsertionsFlag;
 @property (strong, nonatomic) NSTimer *delayTheInsertions;
@@ -72,6 +72,9 @@
 @property (strong, nonatomic) EQRWebData *webDataForReturn;
 @property (strong, nonatomic) EQRWebData *webDataForEquipJoins;
 @property (strong, nonatomic) EQRWebData *webDataForMiscJoins;
+
+// Operation Queues
+@property (strong, nonatomic) NSOperationQueue *updateLabelsQueue;
 
 
 -(IBAction)moveToNextDay:(id)sender;
@@ -190,15 +193,11 @@
     
     //this will load the ivar array of scheduleReqeust items based on the dateForShow ivar
     [self refreshTheView];
-   
-    
-
-
 }
 
 
 -(void)viewWillAppear:(BOOL)animated{
-    
+
     // Test if a change has occurred in the data
     if (self.aChangeWasMade == YES){
         self.aChangeWasMade = NO;
@@ -255,15 +254,10 @@
 
 
 -(void)refreshTheView{
-
-//    NSLog(@"refreshTheView fires");
     
     if ([self.arrayOfScheduleRequests count] > 0){
         self.freezeOnInsertionsFlag = YES;
     }
-    
-    //_____this doesn't help
-//    self.countOfUltimageReturnedItems = 0;
     [self.arrayOfScheduleRequests removeAllObjects];
     
     //reload the view
@@ -272,45 +266,75 @@
     [self.webDataForPickup stopXMLParsing];
     [self.webDataForReturn stopXMLParsing];
     
-    //this does nothing
-//    self.webDataForPickup.delegateDataFeed = nil;
-//    self.webDataForReturn.delegateDataFeed = nil;
-    
     if (self.partialRefreshTimer){
         [self.partialRefreshTimer invalidate];
     }
     
     self.partialRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(partialRefreshToUpdateTheArrayOfRequests:) userInfo:nil repeats:NO];
-    
-    
-    //update the array first
-//    [self partialRefreshToUpdateTheArrayOfRequests:nil];
-
-    
-//    //reload the view
-//    [self.myMasterItineraryCollection reloadData];
-    
 }
 
 
 -(void)partialRefreshFromCheckInOutCellNotification:(NSNotification*)note{
     
-    //remove all filters
-    self.currentFilterBitmask = EQRFilterAll;
-    [self resetColorsOnFilterButtons];
+    NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatForDate setLocale:usLocale];
+    [dateFormatForDate setDateFormat:@"yyyy-MM-dd"];
+    NSString* dateBeginString = [NSString stringWithFormat:@"%@ 00:00:00", [dateFormatForDate stringFromDate:self.dateForShow]];
+    NSString* dateEndString = [NSString stringWithFormat:@"%@ 23:59:59", [dateFormatForDate stringFromDate:self.dateForShow]];
     
-    //the list of requests will load twice and show duplicate information without this timer
-    if (self.partialRefreshTimer){
-        [self.partialRefreshTimer invalidate];
+    NSArray* firstArray = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
+    NSArray* secondArray = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
+    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+    [self continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray: topArray];
+    
+    // Re-render the cell
+    NSString *scheduleKey = [[note userInfo] objectForKey:@"scheduleKey"];
+    for (EQRScheduleRequestItem *item in self.arrayOfScheduleRequests){
+        if ([item.key_id isEqualToString:scheduleKey]){
+            if ([[[note userInfo] objectForKey:@"markedForReturning"] isEqual:[NSNumber numberWithInteger:1]]){
+                if ([[[note userInfo] objectForKey:@"status"] isEqual:[NSNumber numberWithInteger:2]]){
+                    item.staff_shelf_date = [NSDate date];
+                    item.staff_checkin_date = [NSDate date];
+                    item.shouldCollapseReturningCell = YES;
+                } else if ([[[note userInfo] objectForKey:@"status"] isEqual:[NSNumber numberWithInteger:1]]){
+                    item.staff_shelf_date = nil;
+                    item.staff_checkin_date = [NSDate date];
+                    item.shouldCollapseReturningCell = YES;
+                } else {
+                    item.staff_shelf_date = nil;
+                    item.staff_checkin_date = nil;
+                    item.shouldCollapseReturningCell = NO;
+                }
+            }else{
+                if ([[[note userInfo] objectForKey:@"status"] isEqual:[NSNumber numberWithInteger:2]]){
+                    item.staff_checkout_date = [NSDate date];
+                    item.staff_prep_date = [NSDate date];
+                    item.shouldCollapseGoingCell = YES;
+                } else if ([[[note userInfo] objectForKey:@"status"] isEqual:[NSNumber numberWithInteger:1]]){
+                    item.staff_checkout_date = nil;
+                    item.staff_prep_date = [NSDate date];
+                    item.shouldCollapseGoingCell = NO;
+                } else {
+                    item.staff_checkout_date = nil;
+                    item.staff_prep_date = nil;
+                    item.shouldCollapseGoingCell = NO;
+                }
+            }
+        }
     }
     
-    self.partialRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(partialRefreshToUpdateTheArrayOfRequests:) userInfo:nil repeats:NO];
+    [self.myMasterItineraryCollection reloadData];
 }
 
 
+// This notification method is ONLY called from the above method, never something sending a note to default notification center
 -(void)partialRefreshToUpdateTheArrayOfRequests:(NSNotification*)note{
-
-//    NSLog(@"Itinerary > partialRefreshToUpdate fires");
+    
+    // Remove all filters
+    //_______!!!!!!!!! This is a work around for an unsolved error regarding crashing as a result of the collection view looking for rows in an empty array
+    self.currentFilterBitmask = EQRFilterAll;
+    [self resetColorsOnFilterButtons];
     
     self.filteredArrayOfScheduleRequests = nil;
     self.readyToCheckForScheduleWarningsFlag = NO;
@@ -319,38 +343,39 @@
     self.finishedAsyncDBCallForReturn = NO;
 
     
+    //________!!!!!!!!! This section is eaningless until the crashing error refernced above gets resolved
     //test if a cell is now displaying a status that has been filtered out
     //change bitmask to allow for that status
-    BOOL needToReloadTheView = NO;
-    
-    NSUInteger cellBitmaskValue = [self determineTheBitmaskFromCellInfo:[note userInfo]];
-    
-    if ((self.currentFilterBitmask & cellBitmaskValue) == NO){
-                
-        //add the value to the bitmask
-        self.currentFilterBitmask = self.currentFilterBitmask | cellBitmaskValue;
-        
-        //update the filter button to ON
-        [self updateFilterButtonDisplayWithAddedBitmask:cellBitmaskValue];
-        
-        //if all filters are added, switch 'all' on
-        if (self.currentFilterBitmask == EQRFilterAll){
-            
-            EQRColors* sharedColors = [EQRColors sharedInstance];
-            [self.buttonAll setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
-            
-            //set all other buttons to white (off color)
-            [self.buttonGoingShelf setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [self.buttonGoingPrepped setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [self.buttonGoingPickedUp setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [self.buttonReturningOut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [self.buttonReturningReturned setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [self.buttonReturningShelved setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        }
-        
-        //need to reload the view???
-        needToReloadTheView = YES;
-    }
+//    BOOL needToReloadTheView = NO;
+//    
+//    NSUInteger cellBitmaskValue = [self determineTheBitmaskFromCellInfo:[note userInfo]];
+//    
+//    if ((self.currentFilterBitmask & cellBitmaskValue) == NO){
+//                
+//        //add the value to the bitmask
+//        self.currentFilterBitmask = self.currentFilterBitmask | cellBitmaskValue;
+//        
+//        //update the filter button to ON
+//        [self updateFilterButtonDisplayWithAddedBitmask:cellBitmaskValue];
+//        
+//        //if all filters are added, switch 'all' on
+//        if (self.currentFilterBitmask == EQRFilterAll){
+//            
+//            EQRColors* sharedColors = [EQRColors sharedInstance];
+//            [self.buttonAll setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
+//            
+//            //set all other buttons to white (off color)
+//            [self.buttonGoingShelf setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//            [self.buttonGoingPrepped setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//            [self.buttonGoingPickedUp setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//            [self.buttonReturningOut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//            [self.buttonReturningReturned setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//            [self.buttonReturningShelved setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//        }
+//        
+//        //need to reload the view???
+//        needToReloadTheView = YES;
+//    }
     
     
     //intiate array or empty out the existing array
@@ -404,8 +429,6 @@
                //___ place data call all associated joins here, then update with "Some items are not..."
                [self continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray:topArray];
                
-//               NSLog(@"loading is DONE!! with begin date");
-               
                //    //if a bitmisk filer is on, update it also
                if (self.currentFilterBitmask != EQRFilterAll){
                    
@@ -416,7 +439,7 @@
        }];
     });
     
-    //do asynchronous call to a DIFFERENT IMPLEMENTATION OF WEBDATA
+    // Do asynchronous call to a DIFFERENT IMPLEMENTATION OF WEBDATA
     EQRWebData *webData2 = [EQRWebData sharedInstance];
     self.webDataForReturn = webData2;
     self.webDataForReturn.delegateDataFeed = self;
@@ -433,12 +456,10 @@
                 self.finishedAsyncDBCallForPickup = NO;
                 self.finishedAsyncDBCallForReturn = NO;
                 
-                //___ place data call all associated joins here, then update with "Some items are not..."
+                // Place data call all associated joins here, then update with "Some items are not..."
                 [self continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray:topArray];
                 
-//                NSLog(@"loading is DONE!! with end date");
-                
-                //    //if a bitmisk filer is on, update it also
+                // If a bitmisk filer is on, update it also
                 if (self.currentFilterBitmask != EQRFilterAll){
                     
                     [self createTheFilteredArray:self.currentFilterBitmask];
@@ -448,81 +469,85 @@
         }];
     });
     
-    //reload the view
+    // Reload the view
     [self.myMasterItineraryCollection reloadData];
 }
 
+// Update and render button labels
 -(void)continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray:(NSArray *)topArray{
-    
-//    NSLog(@"continueAfterPartial... fired");
-    
-    self.finishedAsyncDBCallForEquipJoins = NO;
-    self.finishedAsyncDBCallForMiscJoins = NO;
-    
-    //top array has RequestDateBegin and RequestDateEnd values
+
+    // Top array has RequestDateBegin and RequestDateEnd values
+
+//    self.finishedAsyncDBCallForEquipJoins = NO;
+//    self.finishedAsyncDBCallForMiscJoins = NO;
     
     if (self.arrayOfJoinsAll){
         [self.arrayOfJoinsAll removeAllObjects];
     }
     
-    EQRWebData *webData = [EQRWebData sharedInstance];
-    self.webDataForEquipJoins = webData;
-    self.webDataForEquipJoins.delegateDataFeed = self;
-    SEL thisSelector = @selector(addToArrayOfJoins:);
+    if (!self.updateLabelsQueue){
+        self.updateLabelsQueue = [[NSOperationQueue alloc] init];
+        self.updateLabelsQueue.name = @"continueAfterPartialRequest";
+        self.updateLabelsQueue.maxConcurrentOperationCount = 1;
+    }
+    [self.updateLabelsQueue cancelAllOperations];
     
-    dispatch_queue_t queue3 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0ul);
-    dispatch_async(queue3, ^{
-        
-        [self.webDataForEquipJoins queryWithAsync:@"EQGetScheduleEquipUniqueJoinsOnDate.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
-            
-            self.finishedAsyncDBCallForEquipJoins = YES;
-            
-            if (self.finishedAsyncDBCallForMiscJoins){
-                
-                [self continueAfterJoinCallCompleted];
-            }
-            
+    
+    __block NSMutableArray *tempJoinsAll = [NSMutableArray arrayWithCapacity:1];
+    NSBlockOperation *getScheduleEquipUniqueJoinsOnDate = [NSBlockOperation blockOperationWithBlock:^{
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetScheduleEquipUniqueJoinsOnDate.php" parameters:topArray class:@"EQRScheduleTracking_EquipmentUnique_Join" completion:^(NSMutableArray *muteArray) {
+            if (!muteArray) return;
+            [tempJoinsAll addObjectsFromArray:muteArray];
         }];
-    });
- 
+    }];
     
-    EQRWebData *webData2 = [EQRWebData sharedInstance];
-    self.webDataForMiscJoins = webData2;
-    self.webDataForMiscJoins.delegateDataFeed = self;
-    
-    dispatch_queue_t queue4 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0ul);
-    dispatch_async(queue4, ^{
-        
-        [self.webDataForMiscJoins queryWithAsync:@"EQGetMiscJoinsOnDate.php" parameters:topArray class:@"EQRMiscJoin" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
-            
-            self.finishedAsyncDBCallForMiscJoins = YES;
-            
-            if (self.finishedAsyncDBCallForEquipJoins){
-                
-                [self continueAfterJoinCallCompleted];
-            }
+    NSBlockOperation *getMiscJoinsOnDate = [NSBlockOperation blockOperationWithBlock:^{
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetMiscJoinsOnDate.php" parameters:topArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray) {
+            if (!muteArray) return;
+            [tempJoinsAll addObjectsFromArray:muteArray];
         }];
-    });
+    }];
+    
+    NSBlockOperation *updateAndRenderButtonLabels = [NSBlockOperation blockOperationWithBlock:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.arrayOfJoinsAll = tempJoinsAll;
+            [self continueAfterJoinCallCompleted];
+        });
+    }];
+    [updateAndRenderButtonLabels addDependency:getScheduleEquipUniqueJoinsOnDate];
+    [updateAndRenderButtonLabels addDependency:getMiscJoinsOnDate];
+    
+    
+    [self.updateLabelsQueue addOperation:getScheduleEquipUniqueJoinsOnDate];
+    [self.updateLabelsQueue addOperation:getMiscJoinsOnDate];
+    [self.updateLabelsQueue addOperation:updateAndRenderButtonLabels];
 }
 
-
+// Update and render button labels
 -(void)continueAfterJoinCallCompleted{
     
-//    NSLog(@"this should appear only AFTER all the joins have been loaded, this is the count of joins: %ld", (long)[self.arrayOfJoinsAll count]);
-//    NSLog(@"this is the value for EquipJoinsFlag: %u, this is MiscJoins: %u", self.finishedAsyncDBCallForEquipJoins, self.finishedAsyncDBCallForMiscJoins);
+//    self.finishedAsyncDBCallForEquipJoins = NO;
+//    self.finishedAsyncDBCallForMiscJoins = NO;
     
-    self.finishedAsyncDBCallForEquipJoins = NO;
-    self.finishedAsyncDBCallForMiscJoins = NO;
+    // Update array of scheduleRequests with info about completed and uncompleted joins
     
-    //_____update array of scheduleRequests with info about completed and uncompleted joins_____
+    for (EQRScheduleRequestItem *thisItem in self.arrayOfScheduleRequests){
+        thisItem.totalJoinCoint = 0;
+        thisItem.unTickedJoinCountForButton1 = 0;
+        thisItem.unTickedJoinCountForButton2 = 0;
+    }
     
     for (EQRScheduleRequestItem* thisItem in self.arrayOfScheduleRequests){
         for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfJoinsAll){
             if ([join.scheduleTracking_foreignKey isEqualToString:thisItem.key_id]){
                 thisItem.totalJoinCoint++;
                 
-                //further test if this join item is incomplete
-                if (!thisItem.markedForReturn){  //marked to be out bound
+                // Further test if this join item is incomplete
+                
+                // Marked to be picked up
+                if (!thisItem.markedForReturn){
                     if (([join.prep_flag isEqualToString:@""]) || (join.prep_flag == nil)){
                         thisItem.unTickedJoinCountForButton1++;
                     }
@@ -531,7 +556,8 @@
                         thisItem.unTickedJoinCountForButton2++;
                     }
                     
-                }else{  //is marked for return
+                // Marked to be returned
+                }else{
                     if (([join.checkin_flag isEqualToString:@""]) || (join.checkin_flag == nil)){
                         thisItem.unTickedJoinCountForButton1++;
                     }
@@ -544,7 +570,7 @@
         }
     }
 
-    //tell cells to check for and show warning message
+    // Tell cells to check for and show warning message
     self.readyToCheckForScheduleWarningsFlag = YES;
     
     NSArray *tempArray = [NSArray arrayWithArray:[self.myMasterItineraryCollection visibleCells]];
@@ -576,15 +602,14 @@
     //extend edges under nav and tab bar
     checkViewController.edgesForExtendedLayout = UIRectEdgeAll;
     
-    NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:scheduleKey, @"scheduleKey",
-                            marked_for_returning, @"marked_for_returning",
-                            switch_num, @"switch_num",
-                            nil];
+    NSDictionary* newDict = @{ @"scheduleKey": scheduleKey,
+                               @"marked_for_returning": marked_for_returning,
+                               @"switch_num": switch_num };
     
     //initial setup
-    [checkViewController initialSetupWithInfo:newDic];
+    [checkViewController initialSetupWithInfo:newDict];
     
-    //model pops up from below, removes navigiation controller
+    //modal pops up from below, removes navigiation controller
     UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:checkViewController];
     
     //add staff picker and cancel buttons in nav bar??
@@ -1195,7 +1220,6 @@
         [self resetColorsOnFilterButtons];
     }
     
-//    NSLog(@"this is the bitmask: %u", (int)self.currentFilterBitmask);
 }
 
 
@@ -1465,7 +1489,7 @@
         return;
     }
     
-    NSInteger indexpathRow;\
+    NSInteger indexpathRow;
     
     //set some properties at 0
     [(EQRScheduleRequestItem *)currentThing setTotalJoinCoint:0];
@@ -1581,20 +1605,6 @@
     }
     
     [self addPickupToIntineraryList:currentThing];
-}
-
-
--(void)addToArrayOfJoins:(id)currentThing{
-    
-    if (currentThing){
-        
-        if (!self.arrayOfJoinsAll){
-            self.arrayOfJoinsAll = [NSMutableArray arrayWithCapacity:1];
-        }
-        
-//        NSLog(@"adding to array of joins");
-        [self.arrayOfJoinsAll addObject:currentThing];
-    }
 }
 
 
@@ -1922,18 +1932,13 @@
        willDisplayCell:(UICollectionViewCell *)cell
     forItemAtIndexPath:(NSIndexPath *)indexPath{
     
-//    NSLog(@"willDisplayCell for indexPathRow: %lu", (long)indexPath.row);
-    
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
   didEndDisplayingCell:(UICollectionViewCell *)cell
     forItemAtIndexPath:(NSIndexPath *)indexPath{
     
-//     NSLog(@"didEndDisplayCell for indexPathRow: %lu", (long)indexPath.row);
-    
     self.freezeOnInsertionsFlag = NO;
-    
 }
 
 
