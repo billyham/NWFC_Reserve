@@ -84,6 +84,22 @@
 
 @implementation EQRItineraryVCntrllr
 
+#pragma mark - computed properties
+
+-(NSArray *)pickupAndReturnDatesAsSQLStrings{
+    NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatForDate setLocale:usLocale];
+    [dateFormatForDate setDateFormat:@"yyyy-MM-dd"];
+    NSString* dateBeginString = [NSString stringWithFormat:@"%@ 00:00:00", [dateFormatForDate stringFromDate:self.dateForShow]];
+    NSString* dateEndString = [NSString stringWithFormat:@"%@ 23:59:59", [dateFormatForDate stringFromDate:self.dateForShow]];
+    
+    NSArray* arr = @[ @[@"request_date_begin", dateBeginString],
+                           @[@"request_date_end", dateEndString] ];
+    
+    return arr;
+}
+
 #pragma mark - init methods
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -172,25 +188,6 @@
     //set rightBarButton item in SELF
     [self.navigationItem setRightBarButtonItems:arrayOfRightButtons];
     
-    
-    //___________
-
-    
-    
-    
-    
-    
-    //instantiate private request manager
-//    if (!self.privateRequestManager){
-//        
-//        self.privateRequestManager = [[EQRScheduleRequestManager alloc] init];
-//    }
-//    
-//    //two important methods that initiate requestManager ivar arrays
-//    [self.privateRequestManager resetEquipListAndAvailableQuantites];
-//    [self.privateRequestManager retrieveAllEquipUniqueItems];  !! NOT HOW THIS METHOD WORKS ANYMORE
-    
-    
     //this will load the ivar array of scheduleReqeust items based on the dateForShow ivar
     [self refreshTheView];
 }
@@ -260,7 +257,7 @@
     }
     [self.arrayOfScheduleRequests removeAllObjects];
     
-    //reload the view
+    // Reload the collection
     [self.myMasterItineraryCollection reloadData];
     
     [self.webDataForPickup stopXMLParsing];
@@ -276,16 +273,8 @@
 
 -(void)partialRefreshFromCheckInOutCellNotification:(NSNotification*)note{
     
-    NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];
-    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [dateFormatForDate setLocale:usLocale];
-    [dateFormatForDate setDateFormat:@"yyyy-MM-dd"];
-    NSString* dateBeginString = [NSString stringWithFormat:@"%@ 00:00:00", [dateFormatForDate stringFromDate:self.dateForShow]];
-    NSString* dateEndString = [NSString stringWithFormat:@"%@ 23:59:59", [dateFormatForDate stringFromDate:self.dateForShow]];
+    NSArray* topArray = [self pickupAndReturnDatesAsSQLStrings];
     
-    NSArray* firstArray = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
-    NSArray* secondArray = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
     [self continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray: topArray];
     
     // Re-render the cell
@@ -321,6 +310,7 @@
                     item.shouldCollapseGoingCell = NO;
                 }
             }
+            break;
         }
     }
     
@@ -343,7 +333,7 @@
     self.finishedAsyncDBCallForReturn = NO;
 
     
-    //________!!!!!!!!! This section is eaningless until the crashing error refernced above gets resolved
+    //________!!!!!!!!! This section is meaningless until the crashing error refernced above gets resolved
     //test if a cell is now displaying a status that has been filtered out
     //change bitmask to allow for that status
 //    BOOL needToReloadTheView = NO;
@@ -385,19 +375,8 @@
         [self.arrayOfScheduleRequests removeAllObjects];
     }
     
-    //put the date in timestamp format
-    //format the nsdates to a mysql compatible string
-    NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];
-    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [dateFormatForDate setLocale:usLocale];
-    [dateFormatForDate setDateFormat:@"yyyy-MM-dd"];
-    NSString* dateBeginString = [NSString stringWithFormat:@"%@ 00:00:00", [dateFormatForDate stringFromDate:self.dateForShow]];
-    NSString* dateEndString = [NSString stringWithFormat:@"%@ 23:59:59", [dateFormatForDate stringFromDate:self.dateForShow]];
-    
-    //go get an array
-    NSArray* firstArray = [NSArray arrayWithObjects:@"request_date_begin", dateBeginString, nil];
-    NSArray* secondArray = [NSArray arrayWithObjects:@"request_date_end", dateEndString, nil];
-    NSArray* topArray = [NSArray arrayWithObjects:firstArray, secondArray, nil];
+    // Format the nsdates to a mysql compatible string
+    NSArray* topArray = [self pickupAndReturnDatesAsSQLStrings];
     
     self.indexOfLastReturnedItem = -1;
     
@@ -411,7 +390,6 @@
 //    NSString *countOfReturns = [self.webDataForPickup queryForStringWithLink:@"EQGetCountOfScheduleItemsWithEndDate.php" parameters:topArray];
 //    self.countOfUltimageReturnedItems = self.countOfUltimageReturnedItems + [countOfReturns  intValue];
     
-    //__2__ do asynchronous call
     SEL thisSelectorPickup = @selector(addPickupToIntineraryList:);
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
@@ -426,10 +404,9 @@
                self.finishedAsyncDBCallForPickup = NO;
                self.finishedAsyncDBCallForReturn = NO;
                
-               //___ place data call all associated joins here, then update with "Some items are not..."
                [self continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray:topArray];
                
-               //    //if a bitmisk filer is on, update it also
+               // If a bitmisk filter is on, update it also
                if (self.currentFilterBitmask != EQRFilterAll){
                    
                    [self createTheFilteredArray:self.currentFilterBitmask];
@@ -439,7 +416,6 @@
        }];
     });
     
-    // Do asynchronous call to a DIFFERENT IMPLEMENTATION OF WEBDATA
     EQRWebData *webData2 = [EQRWebData sharedInstance];
     self.webDataForReturn = webData2;
     self.webDataForReturn.delegateDataFeed = self;
@@ -459,7 +435,7 @@
                 // Place data call all associated joins here, then update with "Some items are not..."
                 [self continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray:topArray];
                 
-                // If a bitmisk filer is on, update it also
+                // If a bitmisk filter is on, update it also
                 if (self.currentFilterBitmask != EQRFilterAll){
                     
                     [self createTheFilteredArray:self.currentFilterBitmask];
@@ -477,9 +453,6 @@
 -(void)continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray:(NSArray *)topArray{
 
     // Top array has RequestDateBegin and RequestDateEnd values
-
-//    self.finishedAsyncDBCallForEquipJoins = NO;
-//    self.finishedAsyncDBCallForMiscJoins = NO;
     
     if (self.arrayOfJoinsAll){
         [self.arrayOfJoinsAll removeAllObjects];
@@ -527,9 +500,6 @@
 
 // Update and render button labels
 -(void)continueAfterJoinCallCompleted{
-    
-//    self.finishedAsyncDBCallForEquipJoins = NO;
-//    self.finishedAsyncDBCallForMiscJoins = NO;
     
     // Update array of scheduleRequests with info about completed and uncompleted joins
     
@@ -584,7 +554,6 @@
             [cell updateButtonLabels:thisItem];
         }
     }
-    
 }
 
 

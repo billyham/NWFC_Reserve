@@ -221,10 +221,14 @@
     
     // Load the scheduleTracking information BUT ONLY if a change has been made
     if (self.aChangeWasMade){
+        
+        // Indicate that the array for the NavBar categories needs to be refeshed
+        [self.equipUniqueCategoriesList removeAllObjects];
+        
         [self renewTheView];
     }
     
-    //set the current staffUser name in nav bar
+    // Set the current staffUser name in nav bar
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     NSString* newUserString = [NSString stringWithFormat:@"Logged in as %@", staffUserManager.currentStaffUser.first_name];
     [[self.navigationItem.rightBarButtonItems objectAtIndex:0] setTitle:newUserString];
@@ -346,7 +350,14 @@
         // Pick an initial tracking sheet item
         EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
         if (([self.equipUniqueCategoriesList count] > 0) && ([requestManager.arrayOfEquipSectionsThatShouldBeVisibleInSchedule count] < 1)){
-            [requestManager collapseOrExpandSectionInSchedule:[self.equipUniqueCategoriesList objectAtIndex:0]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [requestManager collapseOrExpandSectionInSchedule:[self.equipUniqueCategoriesList objectAtIndex:0]];
+                
+                // This delay is not ideal
+                [self performSelector:@selector(delayedHighlight:) withObject:@{@"sectionString": [self.equipUniqueCategoriesList objectAtIndex:0]} afterDelay:0.5];
+                
+            });
+            
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -356,8 +367,6 @@
             // Yes, this is necesary
             [self.myMasterScheduleCollectionView reloadData];
             [self.myNavBarCollectionView reloadData];
-            
-            [self.myNavBarCollectionView selectItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UICollectionViewScrollPositionNone];
         });
     
     });
@@ -412,6 +421,10 @@
         
         [UIView setAnimationsEnabled:YES];
     }
+}
+
+-(void)delayedHighlight:(NSDictionary *)dict{
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRButtonHighlight object:nil userInfo:dict];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -1384,8 +1397,21 @@
     
     if (collectionView == self.myMasterScheduleCollectionView){
         
-        //test if this section is flagged to be collapsed
+        if ([self.equipUniqueArrayWithSections count] <= section){
+            return 0;
+        }
+        if ([(NSArray *)[self.equipUniqueArrayWithSections objectAtIndex:section] count] == 0){
+            return 0;
+        }
+        
+        // Test if this section is flagged to be collapsed
         EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+        
+//        NSLog(@"count of equipUniqueArrayWithSections: %lu", [self.equipUniqueArrayWithSections count]);
+//        if ([self.equipUniqueArrayWithSections count] >= section + 1){
+//            NSLog(@"count of items in section index: %lu", [[self.equipUniqueArrayWithSections objectAtIndex:section] count]);
+//        }
+        
         
         EQREquipUniqueItem* sampleItem = [[self.equipUniqueArrayWithSections objectAtIndex:section] objectAtIndex:0];
         
