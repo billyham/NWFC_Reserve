@@ -80,6 +80,7 @@
 @property (strong, nonatomic) UIPopoverController* myClassPicker;
 @property (strong, nonatomic) NSString *filter_classSectionKey;
 @property BOOL filterIsOnFlag;
+@property BOOL isSuppressingNavBarSelection;
 
 -(IBAction)moveToNextMonth:(id)sender;
 -(IBAction)moveToPreviousMonth:(id)sender;
@@ -225,6 +226,8 @@
         // Indicate that the array for the NavBar categories needs to be refeshed
         [self.equipUniqueCategoriesList removeAllObjects];
         
+        self.isSuppressingNavBarSelection = YES;
+        
         [self renewTheView];
     }
     
@@ -353,9 +356,8 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [requestManager collapseOrExpandSectionInSchedule:[self.equipUniqueCategoriesList objectAtIndex:0]];
                 
-                // This delay is not ideal
+                // This delay is not an ideal solution
                 [self performSelector:@selector(delayedHighlight:) withObject:@{@"sectionString": [self.equipUniqueCategoriesList objectAtIndex:0]} afterDelay:0.5];
-                
             });
             
         }
@@ -364,16 +366,17 @@
             
             self.equipUniqueArrayWithSections = [NSMutableArray arrayWithArray:tempUniqueArrayWithSections];
             
-            // Yes, this is necesary
             [self.myMasterScheduleCollectionView reloadData];
             [self.myNavBarCollectionView reloadData];
+            
+            self.isSuppressingNavBarSelection = NO;
         });
     
     });
     
     
     
-    // Update opacity and width of navBarDates if in change orientation
+    // Update opacity and width of navBarDates if changing orientation
     UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
     if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
         
@@ -394,8 +397,9 @@
         [self.navBarWeeks setNeedsDisplay];
     }
 
-    //this updates placement of day and dates if orientation changed while in a different tab
+    // This updates placement of day and dates if orientation changed while in a different tab
     [self.myDateBarCollection.collectionViewLayout invalidateLayout];
+    
     
     // Update navigation bar
     EQRModeManager* modeManager = [EQRModeManager sharedInstance];
@@ -1778,6 +1782,8 @@
         //no action necessary
         
     } else if (collectionView == self.myNavBarCollectionView){
+        
+        if (self.isSuppressingNavBarSelection) return;
         
         EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
         
