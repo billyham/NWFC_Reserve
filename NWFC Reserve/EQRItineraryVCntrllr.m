@@ -280,7 +280,8 @@
     // Re-render the cell
     NSString *scheduleKey = [[note userInfo] objectForKey:@"scheduleKey"];
     for (EQRScheduleRequestItem *item in self.arrayOfScheduleRequests){
-        if ([item.key_id isEqualToString:scheduleKey]){
+        if (([item.key_id isEqualToString:scheduleKey]) && (item.markedForReturn == [[[note userInfo] objectForKey:@"markedForReturning"] integerValue])){
+
             if ([[[note userInfo] objectForKey:@"markedForReturning"] isEqual:[NSNumber numberWithInteger:1]]){
                 if ([[[note userInfo] objectForKey:@"status"] isEqual:[NSNumber numberWithInteger:2]]){
                     item.staff_shelf_date = [NSDate date];
@@ -310,7 +311,6 @@
                     item.shouldCollapseGoingCell = NO;
                 }
             }
-            break;
         }
     }
     

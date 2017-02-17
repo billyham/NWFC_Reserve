@@ -231,13 +231,13 @@
     }];
     
     //_______********  try allocating the gear list here... *****______
-    
+    NSLog(@"start resetEquipList");
     // Must entirely build or rebuild list available equipment as the user could go back and change the dates at anytime
     [requestManager resetEquipListAndAvailableQuantites];
-    
+    NSLog(@"start allocateGearList");
     // Factor in the gear already scheduled for the chosen dates in the available quantities.
     [self allocateGearList];
-    
+
     // If request manager already has a request object, remove any recently added joins
     [requestManager emptyTheArrayOfEquipJoins];
     
@@ -263,6 +263,7 @@
     
     
     NSBlockOperation *getEquipTitlesWithClassCatalogKey = [NSBlockOperation blockOperationWithBlock:^{
+
         // Set webData request for equiplist
         NSArray* secondParamArray = @[ @[@"ClassCatalog_foreignKey", classTitleKey] ];
         
@@ -410,7 +411,6 @@
        dispatch_async(dispatch_get_main_queue(), ^{
            self.dataIsLoadingView.hidden = YES;
            
-           //is this necessary_____???
            [self.equipCollectionView reloadData];
        });
     }];
