@@ -679,7 +679,6 @@
                          nil];
     
     [webData queryForStringWithLink:@"EQSetNewScheduleRequest.php" parameters:bigArray];
-//    NSLog(@"this is the returnID: %@", returnID);
     
     //send note to schedule that a change has been saved
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
@@ -793,10 +792,6 @@
         [webData queryForStringwithAsync:@"EQSetConfirmation.php" parameters:topArray completion:^(NSString *returnValue) {
             
             [self composeEmail];
-            
-            // Hide right side to indicate completion
-//            [self.rightView setHidden:YES];
-//            [self.leftView setHidden:YES];
             [self exitEditMode];
         }];
     });
@@ -949,9 +944,7 @@
     SEL thisSelector = @selector(receiveTextElementForEmailSignature:);
     
     [webData queryWithAsync:@"EQGetTextElementsWithContext.php" parameters:topArray class:@"EQRTextElement" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
-//        if (isLoadingFlagUp){
-//            NSLog(@"%@", self.myEmailSignature);
-//        }
+
     }];
 }
 
@@ -1030,9 +1023,6 @@
     //alter table to reveal add and done buttons
     self.tablebottomGuideConstraint.constant = 50.f;
     self.tableTopGuideConstraint.constant = 50.f;
-    
-    //lower main sub view to reveal save button
-//    self.topLayoutGuideConstraint.constant = 50;
     
     //animate changes in the constraints (specifically the constraints added to mainSubView)
     [self.mainSubView setNeedsUpdateConstraints];
@@ -1213,10 +1203,7 @@
     
     //assign self as delegate of name picker
     self.myContactVC.delegate = self;
-
 }
-
-
 
 
 -(IBAction)changeTypeTextField:(id)sender{
@@ -1245,8 +1232,8 @@
     
     //assign self as delegate
     self.myRenterTypeVC.delegate = self;
-    
 }
+
 
 -(IBAction)changeClassTextField:(id)sender{
     
@@ -1276,6 +1263,7 @@
     self.myClassPickerVC.delegate = self;
     
 }
+
 
 -(IBAction)removeClassButton:(id)sender{
     
@@ -1317,8 +1305,8 @@
     //assign target for datDatePicker's actions
     [self.myDayDateVC.saveButton addTarget:self action:@selector(receiveNewPickupDate) forControlEvents:UIControlEventTouchUpInside];
     [self.myDayDateVC.showOrHideExtendedButton addTarget:self action:@selector(showExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
-    
 }
+
 
 -(IBAction)showExtendedDate:(id)sender{
     
@@ -1365,6 +1353,7 @@
     self.myDayDateVC = myDateViewController;
 }
 
+
 #pragma mark - Pricing Matrix 
 
 -(IBAction)showPricingButton:(id)sender{
@@ -1376,25 +1365,16 @@
     newView.modalPresentationStyle = UIModalPresentationPageSheet;
     [self presentViewController:newView animated:YES completion:^{
         
-        //provide VC with request information
+        // Provide VC with request information
         [newView provideScheduleRequest:self.myScheduleRequest];
-        
-        
     }];
-    
-    
-//    
-//    newView.edgesForExtendedLayout = UIRectEdgeAll;
-//    [self.navigationController pushViewController:newView animated:YES];
 }
 
-// EQRPriceMatrixVC delegate method
 
 -(void)aChangeWasMadeToPriceMatrix{
     
     [self getTransactionInfo];
 }
-
 
 
 #pragma mark - handle add equip item
@@ -1453,7 +1433,6 @@
     NSDate* newPickupDate = [self.myDayDateVC retrievePickUpDate];
     NSDate* newReturnDate = [self.myDayDateVC retrieveReturnDate];
     
-    
     //update date in ivar myScheduleRequest
     self.myScheduleRequest.request_date_begin = [EQRDataStructure dateByStrippingOffTime:newPickupDate];
     self.myScheduleRequest.request_time_begin = [EQRDataStructure timeByStrippingOffDate:newPickupDate];
@@ -1469,9 +1448,6 @@
     //dismiss the popover
     [self.myDayDatePicker dismissPopoverAnimated:YES];
     self.myDayDatePicker = nil;
-//    self.myDayDateVC = nil;
-    
-    
 }
 
 
@@ -1499,10 +1475,6 @@
     //dismiss the popover
     [self.myContactPicker dismissPopoverAnimated:YES];
     self.myContactPicker = nil;
-    
-    //i think this is unnecessary if the popover is set to nil
-    //release mycontactVC
-//    self.myContactVC = nil;
 }
 
 
@@ -1625,13 +1597,12 @@
 
 #pragma mark - Distingishing ID Picker Button
 
-//an equipCell delegate method
+// An equipCell delegate method
 -(void)distIDPickerTapped:(NSDictionary*)infoDictionary{
     
     //get cell's equipUniqueKey, titleKey, buttonRect and button
     NSString* equipTitleItem_foreignKey = [infoDictionary objectForKey:@"equipTitleItem_foreignKey"];
     NSString* equipUniqueItem_foreignKey = [infoDictionary objectForKey:@"equipUniqueItem_foreignKey"];
-//    CGRect buttonRect = [(UIButton*)[infoDictionary objectForKey:@"distButton"] frame];
     UIButton* thisButton = (UIButton*)[infoDictionary objectForKey:@"distButton"];
     
     //create content VC
@@ -1660,7 +1631,7 @@
 }
 
 
-//distIDPicker Delegate method
+// distIDPicker Delegate method
 -(void)distIDSelectionMadeWithOriginalEquipUniqueKey:(NSString*)originalKeyID equipUniqueItem:(id)distEquipUniqueItem{
     
     //retrieve key id of selected equipUniqueItem AND indexPath of the collection cell that initiated the distID picker
@@ -1768,16 +1739,11 @@
 }
 
 
-
-//#pragma mark - equip item deletion notification methods
-
-
 #pragma mark - alert view delegate  / compose email
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     
     //0 is cancel, 1 is use template, 2 is blank email
-    
     
     if (alertView == self.sendEmailAlert){
         switch (buttonIndex) {
@@ -1850,7 +1816,6 @@
     //dismiss the picker
     [self.myStaffUserPicker dismissPopoverAnimated:YES];
     self.myStaffUserPicker = nil;
-    
 }
 
 
@@ -1884,9 +1849,6 @@
     //dismiss email compose
     [self dismissViewControllerAnimated:YES completion:^{
         
-        //hide right side to indicate completion
-//        [self.rightView setHidden:YES];
-//        [self.leftView setHidden:YES];
         [self exitEditMode];
     }];
 }
@@ -1896,14 +1858,12 @@
 
 -(void)splitViewController:(UISplitViewController *)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)pc{
     
-//    NSLog(@"inside willHide split view delegate method");
-    
     barButtonItem.title = @"Requests";
     [self.navigationItem setLeftBarButtonItem:barButtonItem];
     
     self.popover = pc;
-    
 }
+
 
 -(void)splitViewController:(UISplitViewController *)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem{
     
@@ -2030,8 +1990,6 @@
 
 -(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
  
-    //there are 8 different popovers!
-
     if (popoverController == self.myStaffUserPicker){
         
         self.myStaffUserPicker = nil;
@@ -2071,26 +2029,7 @@
 }
 
 
-
-#pragma mark - table delegate methods
-
-//- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
-//    
-//    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
-//    
-//    header.textLabel.textColor = [UIColor blackColor];
-//    header.textLabel.font = [UIFont boldSystemFontOfSize:12];
-//    CGRect headerFrame = header.frame;
-//    header.textLabel.frame = headerFrame;
-//    header.textLabel.textAlignment = NSTextAlignmentLeft;
-//    
-//}
-//
-//
-//-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-//    
-//
-//}
+#pragma mark - Dealloc
 
 -(void)dealloc{
     

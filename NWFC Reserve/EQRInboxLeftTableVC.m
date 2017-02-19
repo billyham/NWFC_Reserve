@@ -23,10 +23,11 @@
 @property BOOL finishedAsyncDBCall;
 @property (strong, nonatomic) NSArray* searchResultArrayOfRequests;
 @property (strong, nonatomic) EQRScheduleRequestItem* chosenRequest;
-
 @property (strong, nonatomic) UISearchController *mySearchController;
-
 @property (strong, nonatomic) EQRWebData* myWebData;
+
+@property BOOL aChangeWasMade;
+
 
 @end
 
@@ -49,6 +50,10 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
+    
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(raiseFlagThatAChangeHasBeenMade:) name:EQRAChangeWasMadeToTheSchedule object:nil];
+    [nc addObserver:self selector:@selector(raiseFlagThatAChangeHasBeenMade:) name:EQRAChangeWasMadeToTheSchedule object:nil];
     
     self.mySearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     
@@ -75,6 +80,11 @@
 
 
 - (void)viewWillAppear:(BOOL)animated{
+    
+    if (self.aChangeWasMade){
+        self.aChangeWasMade = NO;
+        [self renewTheView];
+    }
     
     // Update navigation bar
     EQRModeManager* modeManager = [EQRModeManager sharedInstance];
@@ -106,9 +116,12 @@
 
 
 -(void)viewDidAppear:(BOOL)animated{
-
-
     
+}
+
+
+-(void)raiseFlagThatAChangeHasBeenMade:(NSNotification *)note{
+    self.aChangeWasMade = YES;
 }
 
 

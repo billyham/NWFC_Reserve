@@ -311,6 +311,7 @@
                     item.shouldCollapseGoingCell = NO;
                 }
             }
+            break;
         }
     }
     
