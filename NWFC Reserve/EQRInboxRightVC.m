@@ -230,7 +230,7 @@
         self.aChangeWasMade = NO;
         
         if (self.myScheduleRequest == nil){
-            //do nothing when no item is currently loaded into the rightView
+            [self renewTheViewWithRequest:nil];
         }else{
             [self retrieveRequestItemWithRequestKeyID:self.myScheduleRequest.key_id];
         }
@@ -619,7 +619,8 @@
 }
 
 -(void)raiseFlagThatDatabaseChanged:(NSNotification *)note{
-    
+    self.aChangeWasMade = YES;
+    self.myScheduleRequest = nil;
     [self getEmailSignatureFromDB];
 }
 
