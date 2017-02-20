@@ -577,6 +577,12 @@ const int intEQRTransaction = 11;
         return;
     }
     
+    if ([elementName isEqualToString:@"count_of_available"]){
+        
+        self.currentProperty = elementName;
+        return;
+    }
+    
     
     //Properties for EquipUniqueItem
     if ([elementName isEqualToString:@"equipTitleItem_foreignKey"]){
@@ -1136,6 +1142,16 @@ const int intEQRTransaction = 11;
         if ([self.currentThing respondsToSelector:@selector(schedule_grouping)]){
             
             [(EQREquipItem*)self.currentThing setSchedule_grouping: self.currentValue];
+            
+            self.currentValue = nil;
+        }
+    }
+    
+    if ([prop isEqualToString:@"count_of_available"]){
+        
+        if ([self.currentThing respondsToSelector:@selector(count_of_available)]){
+            
+            [(EQREquipItem*)self.currentThing setCount_of_available: self.currentValue];
             
             self.currentValue = nil;
         }
