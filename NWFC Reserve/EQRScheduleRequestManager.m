@@ -130,7 +130,7 @@
 
 #pragma mark -  Equipment lists and available quantities
 
-//load list of equipment and total count of related unqiue items
+// Load list of equipment and total count of related unqiue items
 
 -(void)resetEquipListAndAvailableQuantites{
     if (self.arrayOfEquipUniqueItemsByDateCollision){
@@ -163,136 +163,6 @@
         }
     }];
 }
-
-//-(void)resetEquipListAndAvailableQuantites{
-//    
-//    //whether or not to include equipment that is damaged and needs repair
-//    BOOL allowSeriousServiceIssueFlag = self.request.allowSeriousServiceIssueFlag;
-//    
-//    //clean out existing arrays
-//    if (self.arrayOfEquipTitlesWithCountOfUniqueItems){
-//        
-//        [self.arrayOfEquipTitlesWithCountOfUniqueItems removeAllObjects];
-//    }
-//    
-//    if (self.arrayOfEquipUniqueItemsByDateCollision){
-//        
-//        [self.arrayOfEquipUniqueItemsByDateCollision removeAllObjects];
-//    }
-//    NSLog(@"start equipUniqueItems php call");
-//    EQRWebData* webData = [EQRWebData sharedInstance];
-//    [webData queryWithLink:@"EQGetEquipUniqueItemsAllIncludeHighestIssue.php" parameters:nil class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
-//        NSLog(@"end php call");
-//        //organize into a nested array
-//        NSMutableArray* topArray = [NSMutableArray arrayWithCapacity:1];
-//        
-//        for (EQREquipUniqueItem* obj in muteArray){
-//            
-//            BOOL foundObjectFlag = NO;
-//            
-//            NSString* thisTitleKey = obj.equipTitleItem_foreignKey;
-//            
-//            for (NSMutableArray* objArray in topArray){
-//                
-//                if ([[objArray objectAtIndex:0] isEqualToString:thisTitleKey]){
-//                    
-//                    //prevent the addition of this item if its broken and flag is up
-//                    if ((allowSeriousServiceIssueFlag == NO) && ([obj.status_level integerValue] >= EQRThresholdForSeriousIssue)){
-//                        
-//                        foundObjectFlag = YES;
-//                        break;
-//                        
-//                    }else{  //otherwise continue by upticking the item count
-//                    
-//                        //replace the existing NSNumber at index 1 by adding one
-//                        int newInt =  [(NSNumber*)[objArray objectAtIndex:1] intValue] + 1;
-//                        NSNumber* newNumber = [NSNumber numberWithInt:newInt];
-//                        [objArray replaceObjectAtIndex:1 withObject:newNumber];
-//                    }
-//                    
-//                    foundObjectFlag = YES;
-//                    
-//                    //found a match so exit the inner loop
-//                    break;
-//                }
-//            }
-//            
-//            if (!foundObjectFlag){
-//                
-//                //prevent the addition of this item if its broken and flag is up
-//                if ((allowSeriousServiceIssueFlag == NO) && ([obj.status_level integerValue] >= EQRThresholdForSeriousIssue)){
-//                    
-//                    //dont' add this item, it's busted
-//                    
-//                }else{
-//                    
-//                    //didn't find a match, create a new entry for this title item
-//                    NSMutableArray* brandNewArray = [NSMutableArray arrayWithObjects:obj.equipTitleItem_foreignKey, [NSNumber numberWithInt:1], nil];
-//                    
-//                    [topArray addObject:brandNewArray];
-//                }
-//            }
-//        }
-//        
-//        //assign newly built array to the requestManager (why again the requestManager???
-//        self.arrayOfEquipTitlesWithCountOfUniqueItems = topArray;
-//    }];
-//
-//    //______A function to add in any items from the list of title equipment where no uniques existed
-//    //loop through list of existing titleItems. subloop against all uniqueItems and add in where no match is found
-//    
-//    //_______get the ENTIRE list of equipment titles
-//    
-//    //empty out the current ivar
-//    [self.arrayOfEquipTitleItems removeAllObjects];
-//    
-//    NSMutableArray* weirdNewArray = [NSMutableArray arrayWithCapacity:1];
-//    NSLog(@"start EquipmentTitlesAll php call");
-//    [webData queryWithLink:@"EQGetEquipmentTitlesAll.php" parameters:nil class:@"EQREquipItem" completion:^(NSMutableArray *muteArray2) {
-//        
-//        //do something with the returned array...
-//        //assign array of equipItems to requestManager ivar
-//        
-//        
-//        for (EQREquipItem* meMeMe in muteArray2){
-//            
-//            [weirdNewArray addObject:meMeMe];
-//        }
-//    }];
-//    
-//    self.arrayOfEquipTitleItems = weirdNewArray;
-//    
-//    //compare the two arrays with title info...
-//    NSMutableArray* additionalTitles = [NSMutableArray arrayWithCapacity:1];
-//    
-//    for (EQREquipItem* equipTitleItem in self.arrayOfEquipTitleItems){
-//        
-//        BOOL flagToSkip = NO;
-//        
-//        for (NSArray* equipUniqueItemArray in self.arrayOfEquipTitlesWithCountOfUniqueItems){
-//
-//            if ([(NSString*)[equipUniqueItemArray objectAtIndex:0] isEqualToString:equipTitleItem.key_id]){
-//                
-//                flagToSkip = YES;
-//                break;
-//            }
-//        }
-//        
-//        if (!flagToSkip){
-//            
-//            //add title item because it doesn't exist yet
-//            NSArray* newArrayItem = [NSArray arrayWithObjects:equipTitleItem.key_id, [NSNumber numberWithInt:0], nil];
-//            [additionalTitles addObject:newArrayItem];
-//        }
-//    }
-//    
-//    //append the requestManager array ivar with the new items
-//    [self.arrayOfEquipTitlesWithCountOfUniqueItems addObjectsFromArray:additionalTitles];
-////    NSLog(@"this is the arrayOfEequipTitlesWithCountOfUniqueItems: %@", self.arrayOfEquipTitlesWithCountOfUniqueItems);
-//    
-//    //---------------------
-//    
-//}
 
 
 -(BOOL)confirmAvailabilityOfTitleItem:(NSString*)equipTitleItem_foreignKey{
@@ -924,17 +794,6 @@
 
 #pragma mark - gear allocation
 
-// get a list of uniqueItems that fall within the rental dates.
-// 1. get scheduleTracking objects within the dates (sql script?)
-// 2. gather matching scheduleTracking_equip_joins (using scheduleTracking_foreignKey in schedule_equipUnique_joins)
-// 3. gather key_ids for equipUniqueItems (using equipUniqueItem_foreignKey in scheduleTracking_equipUnique_joins)
-
-// subtract out the quantity of uniqueItems available per titleItems
-// compare with the quantitys requested, then pause and alert user if quantities are exceeded. Identified where excesses are.
-// 1. create a subnested array of titleItems with quantities (similar to the requestManager's ivar
-// 2. cycle through and add quantities from this request
-// 3. cycle through, comparing with titleItem key_ids in requestManager's ivar,
-
 -(void)allocateGearListWithDates:(NSDictionary*)datesDic{
     
     //______DATESDIC CAN BE NIL, THEN IT IS USES DATES ASSIGNED TO THE REQUEST ITEM_____
@@ -987,50 +846,35 @@
         dateEndString = [datesDic objectForKey:@"request_date_end"];
     }
     
-    self.arrayOfEquipUniqueItemsByDateCollision = [self getArrayOfEquipUniquesWithBeginDate:dateBeginString EndDate:dateEndString];
     
-    //remove duplicate equipUniqueItems so they don't get double counted in the next step
-    NSMutableArray *arrayOfEquipUniqueItemsByDataCollisionDeDuped = [NSMutableArray arrayWithCapacity:1];
-    for (EQREquipUniqueItem *thisItem in self.arrayOfEquipUniqueItemsByDateCollision){
-        BOOL addMeToTheArray = YES;
-        for (EQREquipUniqueItem *thisOtherItem in arrayOfEquipUniqueItemsByDataCollisionDeDuped){
-            if ([thisItem.key_id isEqualToString:thisOtherItem.key_id]){
-                //found a match to an existing uniqueItem, so dismiss me
-                addMeToTheArray = NO;
-                break;
-            }
+    // Whether or not to include equipment that is damaged and needs repair
+    BOOL allowSeriousServiceIssueFlag = self.request.allowSeriousServiceIssueFlag;
+    NSString *issueThreshold = [NSString stringWithFormat:@"%lu", (long)EQRThresholdForSeriousIssue];
+    if (allowSeriousServiceIssueFlag) issueThreshold = @"10";
+    
+    NSArray *params = @[ @[@"issue_threshold", issueThreshold],
+                         @[@"request_date_begin", dateBeginString],
+                         @[@"request_date_end", dateEndString] ];
+    
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    [webData queryWithLink:@"EQGetEquipTitleKeysAndCountOfAvailableWithDates.php" parameters:params class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
+        if (!muteArray){
+            return NSLog(@"EQRScheduleRequestManager > allocateGearListWithDates, fails to retrieve array of available equip titles with counts");
         }
-        if (addMeToTheArray){
-            [arrayOfEquipUniqueItemsByDataCollisionDeDuped addObject:thisItem];
+        if (!self.arrayOfEquipTitlesWithCountOfUniqueItems){
+            self.arrayOfEquipTitlesWithCountOfUniqueItems = [NSMutableArray arrayWithCapacity:1];
         }
-    }
-    
-    //assign de-duped array to property
-    self.arrayOfEquipUniqueItemsByDateCollision = arrayOfEquipUniqueItemsByDataCollisionDeDuped;
-    
-    //Update the array that tracks the COUNT of equipTitleItems
-    //loop through arrayOfEquipUniqueItems
-    for (EQREquipUniqueItem* eqritem in self.arrayOfEquipUniqueItemsByDateCollision){
+        [self.arrayOfEquipTitlesWithCountOfUniqueItems removeAllObjects];
         
-        for (NSMutableArray* checkArray in self.arrayOfEquipTitlesWithCountOfUniqueItems){
-            
-            if ([eqritem.equipTitleItem_foreignKey isEqualToString:[checkArray objectAtIndex:0]] ){
-                
-                //found a matching title item, now reduce the count of available items by one
-                //... but only if the current available quantity is above 0 (to prevent going into negative integers)
-                
-                if ([(NSNumber*)[checkArray objectAtIndex:1] integerValue] > 0){
-                    
-                    int newIntValue = [(NSNumber*)[checkArray objectAtIndex:1] intValue] - 1;
-                    NSNumber* newNumber = [NSNumber numberWithInt: newIntValue];
-                    [checkArray replaceObjectAtIndex:1 withObject:newNumber];
-                }
-                
-                break;
+        for (EQREquipItem *item in muteArray){
+            if (item.count_of_available == nil){
+                item.count_of_available = @"0";
             }
+            NSNumber *num = [NSNumber numberWithInteger: [item.count_of_available integerValue]];
+            NSMutableArray *itemArray = [NSMutableArray arrayWithArray:@[item.key_id, num]];
+            [self.arrayOfEquipTitlesWithCountOfUniqueItems addObject:itemArray];
         }
-    }
-    //____!!!!!!  further reduce the available list of items by removing the damaged equipment from play   !!!!!______
+    }];
 }
 
 

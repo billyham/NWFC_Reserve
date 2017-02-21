@@ -233,7 +233,7 @@
     //_______********  try allocating the gear list here... *****______
 
     // Must entirely build or rebuild list available equipment as the user could go back and change the dates at anytime
-    [requestManager resetEquipListAndAvailableQuantites];
+//    [requestManager resetEquipListAndAvailableQuantites];
 
     // Factor in the gear already scheduled for the chosen dates in the available quantities.
     [self allocateGearList];
