@@ -10,7 +10,7 @@
 
 // Build spec, defaults to NWFC
 BOOL EQRBuildNWDoc = NO;
-BOOL EQRBuildPSU = YES;
+BOOL EQRBuildPSU = NO;
 
 BOOL EQRSuppressDemoColor = NO;
 
