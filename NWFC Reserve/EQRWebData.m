@@ -19,6 +19,7 @@
 #import "EQRModeManager.h"
 #import "EQRTextElement.h"
 #import "EQRCloudData.h"
+#import "EQRCoreData.h"
 #import "EQRTransaction.h"
 
 @interface EQRWebData ()
@@ -72,10 +73,16 @@ const int intEQRTransaction = 11;
 +(EQRWebData*)sharedInstance{
     
     NSString *useCloudKit = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useCloudKit"] objectForKey:@"useCloudKit"];
+    NSString *useCoreData = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useCoreData"] objectForKey:@"useCoreData"];
     
     if ([useCloudKit isEqualToString:@"yes"]){
         
         EQRCloudData *myInstance = [[EQRCloudData alloc] init];
+        return myInstance;
+        
+    }else if ([useCoreData isEqualToString:@"yes"]){
+        
+        EQRCoreData *myInstance = [[EQRCoreData alloc] init];
         return myInstance;
         
     }else{

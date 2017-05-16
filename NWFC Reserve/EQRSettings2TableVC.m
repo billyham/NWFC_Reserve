@@ -18,6 +18,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *backupUrlString;
 @property (strong, nonatomic) IBOutlet UISwitch *useBackupSwitch;
 @property (strong, nonatomic) IBOutlet UISwitch *useCloudKitSwitch;
+@property (strong, nonatomic) IBOutlet UISwitch *useCoreDataSwitch;
 @property (strong, nonatomic) EQRGenericTextEditor* genericTextEditor;
 @property (strong, nonatomic) IBOutlet UILabel *versionNumber;
 @property (strong, nonatomic) IBOutlet UILabel *bundleNumber;
@@ -83,6 +84,14 @@
         [self.useCloudKitSwitch setOn:YES];
     }else{
         [self.useCloudKitSwitch setOn:NO];
+    }
+    
+    //set useCoreData switch
+    NSString *useCoreData = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useCoreData"] objectForKey:@"useCoreData"];
+    if ([useCoreData isEqualToString:@"yes"]){
+        [self.useCoreDataSwitch setOn:YES];
+    }else{
+        [self.useCoreDataSwitch setOn:NO];
     }
     
     [super viewWillAppear:animated];
@@ -334,26 +343,52 @@
 -(IBAction)cloudKitDidChange:(id)sender{
     
     NSString* setStringForDefaults;
-    
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+
     if (self.useCloudKitSwitch.on){
         setStringForDefaults = @"yes";
+        
+        [self.useCoreDataSwitch setOn:NO];
+        NSDictionary *coreDict = @{ @"useCoreData": @"no" };
+        [defaults setObject:coreDict forKey:@"useCoreData"];
     }else{
         setStringForDefaults = @"no";
     }
     
-    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    
-    //change user defaults with new string text
-    NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                            setStringForDefaults, @"useCloudKit"
-                            , nil];
-    
+    // Change user defaults with new string text
+    NSDictionary* newDic = @{ @"useCloudKit": setStringForDefaults };
     [defaults setObject:newDic forKey:@"useCloudKit"];
+    
     [defaults synchronize];
     
-    //inform other VCs that they need to reload their data
+    // Inform other VCs that they need to reload their data
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
-    //this informs reqeust view to reload classes and contacts (among other things???)
+    // Inform request view to reload classes and contacts (among other things???)
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheDatabaseSource object:nil];
+}
+
+-(IBAction)coreDataDidChange:(id)sender{
+    NSString *setStringForDefaults;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if (self.useCoreDataSwitch.on){
+        setStringForDefaults = @"yes";
+        
+        [self.useCloudKitSwitch setOn:NO];
+        NSDictionary *cloudDict = @{ @"useCloudKit": @"no" };
+        [defaults setObject:cloudDict forKey:@"useCloudKit"];
+    }else{
+        setStringForDefaults = @"no";
+    }
+    
+    NSDictionary *newDict = @{ @"useCoreData": setStringForDefaults };
+    [defaults setObject:newDict forKey:@"useCoreData"];
+
+    [defaults synchronize];
+    
+    // Inform other VSs that they need to reload their data
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
+    // Inform request view to reload classes and contacts
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheDatabaseSource object:nil];
 }
 

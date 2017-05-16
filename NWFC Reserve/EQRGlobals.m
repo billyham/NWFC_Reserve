@@ -9,7 +9,7 @@
 #import "EQRGlobals.h"
 
 // Build spec, defaults to NWFC
-BOOL EQRBuildNWDoc = NO;
+BOOL EQRBuildNWDoc = YES;
 BOOL EQRBuildPSU = NO;
 
 BOOL EQRSuppressDemoColor = NO;

@@ -10,10 +10,17 @@
 
 @implementation EQRCoreData
 
-+(EQRCoreData*)sharedInstance{
+//+(EQRCoreData*)sharedInstance{
+//    
+//    EQRCoreData *myInstance = [[EQRCoreData alloc] init];
+//    return myInstance;
+//}
+
+-(void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock{
+ 
+    NSLog(@"core data fires");
     
-    EQRCoreData *myInstance = [[EQRCoreData alloc] init];
-    return myInstance;
+    [super queryWithLink:link parameters:para class:classString completion:completeBlock];
 }
 
 @end

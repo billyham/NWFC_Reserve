@@ -20,7 +20,7 @@ typedef void (^CompletionBlockWithBool) (BOOL isLoadingFlagUp);
     
 }
 
-+(EQRCoreData*)sharedInstance;
+//+(EQRCoreData*)sharedInstance;
 
 @end
 

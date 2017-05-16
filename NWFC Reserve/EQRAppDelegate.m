@@ -65,6 +65,7 @@
     NSDictionary *EQRDemoModeIsOn = @{@"demoModeIsOn":@"no"};
     NSDictionary *EQRUseBackup = @{@"useBackup":@"no"};
     NSDictionary *EQRUseCloudKit = @{@"useCloudKit":@"no"};
+    NSDictionary *EQRUseCoreData = @{@"useCoreData":@"no"};
     
     NSDictionary* appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
                                  EQRWebDataUrl, @"url",
@@ -76,6 +77,7 @@
                                  EQRDemoModeIsOn, @"demoModeIsOn",
                                  EQRUseBackup, @"useBackup",
                                  EQRUseCloudKit, @"useCloudKit",
+                                 EQRUseCoreData, @"useCoreData",
                                  nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
