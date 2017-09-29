@@ -77,12 +77,13 @@
     if (![[self privateContext] hasChanges] && ![[self managedObjectContext] hasChanges]) return;
     
     [[self managedObjectContext] performBlockAndWait:^{
-        NSError *error = nil;
+//        NSError *error = nil;
         
 //        ZAssert([[self managedObjectContext] save:&error], @"Failed to save main context: %@\n%@", [error localizedDescription], [error userInfo]);
 
         [[self privateContext] performBlock:^{
-            NSError *privateError = nil;
+//            NSError *privateError = nil;
+            
 //            ZAssert([[self privateContext] save:&privateError], @"Error saving private context: %@\n%@", [privateError localizedDescription], [privateError userInfo]);
         }];
     }];

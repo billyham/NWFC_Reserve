@@ -354,7 +354,7 @@
     queue.name = @"selectInstructor";
     queue.maxConcurrentOperationCount = 1;
     
-    
+
     NSBlockOperation *getFacultyNames = [NSBlockOperation blockOperationWithBlock:^{
         
         EQRWebData* webData2 = [EQRWebData sharedInstance];

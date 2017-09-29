@@ -18,7 +18,7 @@ BOOL EQRSuppressDemoColor = NO;
 BOOL EQRLogInputStrings = NO;
 
 // Datastore Settings
-BOOL EQRUseCoreData = YES;
+BOOL EQRUseCoreData = NO;
 NSString *EQRCloudKitContainer = @"iCloud.com.David-Vincent-Hanagan.GlobalGear";
 NSString *EQRRecordZoneStandard = @"standardPrimary";
 NSString *EQRRecordZoneDemo = @"demoPrimary";

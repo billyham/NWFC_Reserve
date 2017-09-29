@@ -382,13 +382,13 @@
 
 -(id)retrieveContactItem{
     
-    return self.selectedNameItem;
-    
     //release self as delegate
     self.addContactVC.delegate = nil;
     
     //release addContactVC
     self.addContactVC = nil;
+    
+    return self.selectedNameItem;
 }
 
 

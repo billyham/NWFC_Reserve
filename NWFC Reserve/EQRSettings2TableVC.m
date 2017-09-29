@@ -30,7 +30,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    //populate text field with information from user settings
+    // Populate text field with information from user settings
     NSString* currentUrl = [[[NSUserDefaults standardUserDefaults] objectForKey:@"url"] objectForKey:@"url"];
     NSString *currentBackupUrl = [[[NSUserDefaults standardUserDefaults] objectForKey:@"backupUrl"] objectForKey:@"backupUrl"];
     self.urlString.text = currentUrl;
@@ -40,10 +40,10 @@
     self.bundleNumber.text = [infoDictionary objectForKey:@"CFBundleVersion"];
     self.versionNumber.text = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
     
-    //hide the back button
+    // Hide the back button
     self.navigationItem.hidesBackButton = YES;
     
-    //set background color on cells by looping through all cells
+    // Set background color on cells by looping through all cells
     for (int section = 0; section < [self.tableView numberOfSections]; section++){
         for (int row = 0; row < [self.tableView numberOfRowsInSection:section]; row++) {
             
@@ -67,10 +67,10 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    //update navigation bar
+    // Update navigation bar
     [self updateNavItemPromptWithDemoModeState];
     
-    //set useBackup switch
+    // Set useBackup switch
     NSString *useBackup = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useBackup"] objectForKey:@"useBackup"];
     if ([useBackup isEqualToString:@"yes"]){
         [self.useBackupSwitch setOn:YES];
@@ -78,7 +78,7 @@
         [self.useBackupSwitch setOn:NO];
     }
     
-    //set useCloudKit switch
+    // Set useCloudKit switch
     NSString* useCloudKit = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useCloudKit"] objectForKey:@"useCloudKit"];
     if ([useCloudKit isEqualToString:@"yes"]){
         [self.useCloudKitSwitch setOn:YES];
@@ -86,7 +86,7 @@
         [self.useCloudKitSwitch setOn:NO];
     }
     
-    //set useCoreData switch
+    // Set useCoreData switch
     NSString *useCoreData = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useCoreData"] objectForKey:@"useCoreData"];
     if ([useCoreData isEqualToString:@"yes"]){
         [self.useCoreDataSwitch setOn:YES];
@@ -154,17 +154,12 @@
 
 -(IBAction)tapInShowPDF:(id)sender{
     
-//    NSLog(@"viewPDF fires");
-    
 //    NSString *urlString = [[self applicationDocumentDirectory] stringByAppendingPathComponent:@"/testFile"];
 //    NSURL *myUrl = [[NSURL alloc] initFileURLWithPath:urlString];
-    
     
     NSURL *baseUrl = [NSURL URLWithString:[NSString stringWithFormat:@"file:%@",[self applicationCacheDirectory]]];
     NSURL *url = [NSURL URLWithString:@"Caches/testFile.pdf" relativeToURL:baseUrl];
     NSURL *absUrl = [url absoluteURL];
-    
-//    NSLog(@"this is the url: %@", absUrl);
     
     NSError *error;
     if ([absUrl checkResourceIsReachableAndReturnError:&error]){
@@ -214,7 +209,6 @@
 - (NSString*)applicationCacheDirectory {
     
     //Returns the path to the application's documents directory.
-    
     NSArray* paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
     return basePath;
@@ -223,37 +217,27 @@
 - (NSString*)applicationDocumentDirectory {
     
     //Returns the path to the application's documents directory.
-    
-//    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-//    return basePath;
-    
     NSString *documentsDirectory = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     return documentsDirectory;
-
 }
 
 #pragma mark - UIDocumentationInteractionControllerDelegate method
 
 - (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller{
     
-    //    NSLog(@"documentInteractionControllerViewControllerForPreview fires");
-    
     // ___ This presents an action sheet, but it's unresponsive... ___
 //    [controller presentOptionsMenuFromRect:[[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]] frame]     inView:self.view animated:YES];
     
     return  [self navigationController];
-
 }
 
 #pragma mark - EQRGenericTextEditor delegate methods
 
-//a delegate method
 -(void)cancelByDismissingVC;{
     
     [self dismissViewControllerAnimated:YES completion:^{
         
-        //de-select cell
+        // Deselect cell
         NSArray *selectedIndexes = self.tableView.indexPathsForSelectedRows;
         for (NSIndexPath *indexPath in selectedIndexes){
             [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -275,12 +259,11 @@
         self.genericTextEditor = nil;
     }];
     
-    //de-select cell
+    // Deselect cell
     NSArray *selectedIndexes = self.tableView.indexPathsForSelectedRows;
     for (NSIndexPath *indexPath in selectedIndexes){
         [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     }
-    
 }
 
 
@@ -288,7 +271,7 @@
     
     self.urlString.text = returnText;
     
-    //change user defaults with new string text
+    // Change user defaults with new string text
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
                             self.urlString.text, @"url"
@@ -296,13 +279,17 @@
     
     [defaults setObject:newDic forKey:@"url"];
     [defaults synchronize];
+    
+    if (!self.useBackupSwitch.on){
+        [self broadcastChanges];
+    }
 }
 
 -(void)backupUrlTextFieldDidChange:(NSString *)returnText{
     
     self.backupUrlString.text = returnText;
     
-    //change user defaults with new string text
+    // Change user defaults with new string text
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
                             self.backupUrlString.text, @"backupUrl"
@@ -310,6 +297,17 @@
     
     [defaults setObject:newDic forKey:@"backupUrl"];
     [defaults synchronize];
+    
+    if (self.useBackupSwitch.on){
+        [self broadcastChanges];
+    }
+}
+
+-(void)broadcastChanges{
+    // Inform other VCs that they need to reload their data
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
+    // Inform request view to reload classes and contacts (among other things???)
+    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheDatabaseSource object:nil];
 }
 
 
@@ -325,7 +323,7 @@
     
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     
-    //change user defaults with new string text
+    // Change user defaults with new string text
     NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
                             setStringForDefaults, @"useBackup"
                             , nil];
@@ -333,10 +331,7 @@
     [defaults setObject:newDic forKey:@"useBackup"];
     [defaults synchronize];
     
-    //inform other VCs that they need to reload their data
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
-    //this informs reqeust view to reload classes and contacts (among other things???)
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheDatabaseSource object:nil];
+    [self broadcastChanges];
     
 }
 
@@ -361,10 +356,7 @@
     
     [defaults synchronize];
     
-    // Inform other VCs that they need to reload their data
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
-    // Inform request view to reload classes and contacts (among other things???)
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheDatabaseSource object:nil];
+    [self broadcastChanges];
 }
 
 -(IBAction)coreDataDidChange:(id)sender{
@@ -386,10 +378,7 @@
 
     [defaults synchronize];
     
-    // Inform other VSs that they need to reload their data
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheSchedule object:nil];
-    // Inform request view to reload classes and contacts
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRAChangeWasMadeToTheDatabaseSource object:nil];
+    [self broadcastChanges];
 }
 
 #pragma mark - table view delegate methods

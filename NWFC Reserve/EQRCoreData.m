@@ -7,14 +7,28 @@
 //
 
 #import "EQRCoreData.h"
+#import "EQRAppDelegate.h"
+#import "EQRPersistenceController.h"
+
+//@class EQRAppDelegate;
+
+@interface EQRCoreData()
+@property(strong, nonatomic) NSManagedObjectContext *moc;
+@end
 
 @implementation EQRCoreData
 
-//+(EQRCoreData*)sharedInstance{
-//    
-//    EQRCoreData *myInstance = [[EQRCoreData alloc] init];
-//    return myInstance;
-//}
++(EQRCoreData*)sharedInstance{
+    
+    EQRCoreData *coreData = (EQRCoreData *)[super sharedInstance];
+    
+    // TODO: replace with dependency injection
+    EQRAppDelegate *appDelegate = (EQRAppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *moc = [[appDelegate persistenceController] managedObjectContext];
+    coreData.moc = moc;
+    
+    return coreData;
+}
 
 -(void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock{
  

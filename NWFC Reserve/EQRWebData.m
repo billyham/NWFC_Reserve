@@ -61,6 +61,7 @@ const int intEQREquipUniqueItem = 8;
 const int intEQRMiscJoin = 9;
 const int intEQRTextElement = 10;
 const int intEQRTransaction = 11;
+const int intEQREquipCategory = 12;
 
 
 @implementation EQRWebData
@@ -148,6 +149,11 @@ const int intEQRTransaction = 11;
     
     if ([classString isEqualToString:@"EQRTransaction"]){
         self.returnClassInt = intEQRTransaction;
+        return;
+    }
+    
+    if ([classString isEqualToString:@"EQREquipCategory"]){
+        self.returnClassInt = intEQREquipCategory;
         return;
     }
     
@@ -2433,6 +2439,23 @@ const int intEQRTransaction = 11;
         });
         return;
     }
+    
+//    if ([link isEqualToString:@"EQGetEquipCategoriesAll.php"]){
+//        // Return the Contact object
+//        [self queryWithLink:@"EQGetEquipCategoriesAll.php" parameters:para class:@"EQREquipCategory" completion:^(NSMutableArray *muteArray) {
+//            if ([muteArray count] > 0){
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    completeBlock(muteArray);
+//                });
+//            }else{
+//                // No object got returned, pass this error downstream... with nil
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    completeBlock(nil);
+//                });
+//            }
+//        }];
+//        return;
+//    }
     
 }
 
