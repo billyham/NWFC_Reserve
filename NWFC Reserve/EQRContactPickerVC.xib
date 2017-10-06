@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="ipad9_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRContactPickerVC">
@@ -23,14 +27,14 @@
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J4f-E7-trW" userLabel="search bar view">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="44" id="rRQ-fY-gxX"/>
                             </constraints>
                         </view>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="s3k-NH-6My">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="450"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <outlet property="dataSource" destination="-1" id="K0S-hq-dED"/>
                                 <outlet property="delegate" destination="-1" id="Xt2-ac-Snf"/>
@@ -45,14 +49,14 @@
                                         <constraint firstAttribute="height" constant="30" id="ZR3-qb-5fC"/>
                                     </constraints>
                                     <state key="normal" title="Add New Contact">
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </state>
                                     <connections>
                                         <action selector="addNewContactButton:" destination="-1" eventType="touchUpInside" id="qYt-vW-dU6"/>
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="AYo-T7-GFk"/>
                                 <constraint firstItem="28b-Xt-A1t" firstAttribute="leading" secondItem="qNS-DK-ngq" secondAttribute="leading" constant="17" id="Egf-wt-sa6"/>
@@ -66,7 +70,7 @@
                             </variation>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="qNS-DK-ngq" secondAttribute="bottom" id="5CV-Hq-SeA"/>
                         <constraint firstAttribute="trailing" secondItem="qNS-DK-ngq" secondAttribute="trailing" id="E1Q-93-2WV"/>
@@ -81,7 +85,7 @@
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="gVB-SH-xSi" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="AMP-yV-vSB"/>
                 <constraint firstAttribute="trailing" secondItem="gVB-SH-xSi" secondAttribute="trailing" id="qtq-hr-2mw"/>
@@ -89,7 +93,6 @@
                 <constraint firstItem="gVB-SH-xSi" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="tk3-dR-mfR"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
-            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
     </objects>

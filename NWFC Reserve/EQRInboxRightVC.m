@@ -1510,7 +1510,7 @@
 }
 
 
--(void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem;{
+-(void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem{
     
     //can be nil... no class assigned to request
 //    EQRClassItem* thisClassItem = [self.myClassPickerVC retrieveClassItem];

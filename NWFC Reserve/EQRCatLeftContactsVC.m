@@ -1,25 +1,25 @@
 //
-//  EQRCatLeftEquipTitlesVC.m
+//  EQRCatLeftContactsVC.m
 //  Gear
 //
-//  Created by Ray Smith on 9/18/17.
+//  Created by Ray Smith on 9/29/17.
 //  Copyright © 2017 Ham Again LLC. All rights reserved.
 //
 
-#import "EQRCatLeftEquipTitlesVC.h"
+#import "EQRCatLeftContactsVC.h"
+#import "EQRContactNameItem.h"
 #import "EQRModeManager.h"
 #import "EQRWebData.h"
-#import "EQREquipItem.h"
 
-@interface EQRCatLeftEquipTitlesVC ()
-@property (nonatomic, strong) NSArray *arrayOfTitles;
+@interface EQRCatLeftContactsVC ()
+@property (nonatomic, strong) NSArray *arrayOfContacts;
 @end
 
-@implementation EQRCatLeftEquipTitlesVC
+@implementation EQRCatLeftContactsVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.arrayOfTitles = @[];
+    self.arrayOfContacts = @[];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -29,7 +29,6 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    
     // Update navigation bar
     EQRModeManager* modeManager = [EQRModeManager sharedInstance];
     if (modeManager.isInDemoMode){
@@ -58,7 +57,7 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    [self loadTitles];
+    [self loadContacts];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -68,59 +67,53 @@
 
 #pragma mark - data methods
 
--(void)loadTitles{
+-(void)loadContacts{
     
-    self.arrayOfTitles = @[];
+    self.arrayOfContacts = @[];
     
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    queue.name = @"titlesByCategory";
+    queue.name = @"allContacts";
     queue.maxConcurrentOperationCount = 1;
     
-    NSArray *topArray = @[ @[@"category", self.selectedCategory] ];
-    
-    NSBlockOperation *getEquipTitles = [NSBlockOperation blockOperationWithBlock:^{
-        EQRWebData *webData = [EQRWebData sharedInstance];
-        [webData queryWithLink:@"EQGetEquipTitlesWithCategory.php" parameters:topArray class:@"EQREquipItem" completion:^(NSMutableArray *arrayOfEquipTitles) {
+    NSBlockOperation *getContacts = [NSBlockOperation blockOperationWithBlock:^{
+       
+        EQRWebData *webData =[EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *arrayOfContacts) {
             NSMutableArray *muteArray = [NSMutableArray arrayWithCapacity:1];
-            for (EQREquipItem *equipTitleItem in arrayOfEquipTitles) {
-                [muteArray addObject:equipTitleItem.shortname];
+            for (EQRContactNameItem *contact in arrayOfContacts){
+                [muteArray addObject:contact.first_and_last];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.arrayOfTitles = [NSArray arrayWithArray:muteArray];
+                self.arrayOfContacts = [NSArray arrayWithArray:muteArray];
                 [self.tableView reloadData];
             });
         }];
     }];
     
-    [queue addOperation:getEquipTitles];
+    [queue addOperation:getContacts];
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
-//    return self.arrayOfTitles.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.arrayOfTitles.count;
-//    return 0;
+    return self.arrayOfContacts.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"equipTitlesCell" forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"contactCell" forIndexPath:indexPath];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    cell.textLabel.text = [self.arrayOfTitles objectAtIndex:indexPath.row];
+    cell.textLabel.text = [self.arrayOfContacts objectAtIndex:indexPath.row];
     
     return cell;
 }
 
-//-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-//    return [self.arrayOfTitles objectAtIndex:section];
-//}
 
 /*
 // Override to support conditional editing of the table view.
@@ -156,14 +149,14 @@
 }
 */
 
-
+/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    // Get the new view controller using [segue destinationViewController].
-//    // Pass the selected object to the new view controller.
-//}
-
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
 
 @end

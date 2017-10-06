@@ -19,18 +19,17 @@
     
     [super awakeFromNib];
     [self.splitViewController setDelegate:self];
-    [self.navigationItem setLeftBarButtonItem:self.splitViewController.displayModeButtonItem];
+//    [self.navigationItem setLeftBarButtonItem:self.splitViewController.displayModeButtonItem];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"do anything");
     // UIBar Buttons
     // Create fixed spaces
-    UIBarButtonItem *twentySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
-    twentySpace.width = 20;
-    UIBarButtonItem *thirtySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
-    thirtySpace.width = 30;
+//    UIBarButtonItem *twentySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+//    twentySpace.width = 20;
+//    UIBarButtonItem *thirtySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+//    thirtySpace.width = 30;
     
     // Right buttons
     
@@ -64,6 +63,11 @@
         [UIView setAnimationsEnabled:YES];
     }
     [super viewWillAppear:animated];
+    
+    UIStoryboard *equipTitleDetailStoryboard = [UIStoryboard storyboardWithName:@"EquipTitleDetail" bundle:nil];
+    UITableViewController *tableView = [equipTitleDetailStoryboard instantiateViewControllerWithIdentifier:@"EquipTitleDetail"];
+    
+    [self.navigationController pushViewController:tableView animated:YES];
 }
 
 #pragma mark - split view delegate methods

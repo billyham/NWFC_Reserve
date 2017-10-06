@@ -514,30 +514,7 @@
     
     //set rightBarButton item in SELF
     [self.navigationItem setRightBarButtonItems:arrayOfRightButtons];
-    
-    
-    //___________
-    
-    //searchcontroller setup
-    self.mySearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
-    
-    self.mySearchController.searchResultsUpdater = self;
-    
-    self.mySearchController.dimsBackgroundDuringPresentation = NO;
-    self.mySearchController.hidesNavigationBarDuringPresentation = NO;
-    
-    self.mySearchController.searchBar.frame = CGRectMake(0, 0, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
-    
-    [self.searchBoxView addSubview:self.mySearchController.searchBar];
-    
-    //search bar needs constraints???
-    
-    
-    self.mySearchController.searchBar.delegate = self;
-    self.mySearchController.searchBar.searchBarStyle = UISearchBarStyleMinimal;
-    
-    //what does this do?
-    self.definesPresentationContext = YES;
+
     
     // price widget
     EQRPricingWidgetCheckInVC *priceWidget = [[EQRPricingWidgetCheckInVC alloc] initWithNibName:@"EQRPricingWidgetCheckInVC" bundle:nil];
@@ -550,6 +527,55 @@
     //set button target
     [self.priceWidget.editButton addTarget:self action:@selector(showPricingButton:) forControlEvents:UIControlEventTouchUpInside];
     
+}
+
+-(void)placeSearchBox{
+    
+    //searchcontroller setup
+    self.mySearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    
+    self.mySearchController.searchResultsUpdater = self;
+    
+    self.mySearchController.dimsBackgroundDuringPresentation = NO;
+    self.mySearchController.hidesNavigationBarDuringPresentation = NO;
+    
+    //    UISearchContainerViewController *searchContainer = [[UISearchContainerViewController alloc] initWithSearchController:self.mySearchController];
+    //
+    [self addChildViewController:self.mySearchController];
+    
+    // This applies to the searchbox before entry, it has no effect to
+    // the searchbox after entry
+    self.mySearchController.searchBar.frame = CGRectMake(0, 0, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
+    
+    
+    [self.searchBoxView addSubview:self.mySearchController.searchBar];
+    
+    
+    // So far this isn't doing anything.
+    self.mySearchController.searchBar.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *viewDictionary = @{@"searchBoxView":self.searchBoxView, @"searchBar":self.mySearchController.searchBar};
+    NSArray *constraint_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[searchBar]" options:0 metrics:nil views:viewDictionary];
+    NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[searchBar]-0-|" options:0 metrics:nil views:viewDictionary];
+    NSArray *constraint_POS_H = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[searchBar]" options:0 metrics:nil views:viewDictionary];
+    NSArray *constraint_POS_HB = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[searchBar]-0-|" options:0 metrics:nil views:viewDictionary];
+    [[self.searchBoxView superview] addConstraints:constraint_POS_V];
+    [[self.searchBoxView superview] addConstraints:constraint_POS_VB];
+    [[self.searchBoxView superview] addConstraints:constraint_POS_H];
+    [[self.searchBoxView superview] addConstraints:constraint_POS_HB];
+    
+    
+    [self.mySearchController didMoveToParentViewController:self];
+    
+    
+    //    UISearchContainerViewController *searchContainer = [[UISearchContainerViewController alloc] initWithSearchController:self.mySearchController];
+    //    [self.searchBoxView addSubview:searchContainer.view];
+    
+    
+    self.mySearchController.searchBar.delegate = self;
+    self.mySearchController.searchBar.searchBarStyle = UISearchBarStyleMinimal;
+    
+    //what does this do?
+    self.definesPresentationContext = YES;
 }
 
 
@@ -616,8 +642,6 @@
     self.mainSubTopGuideConstraint = [constraint_POS_V objectAtIndex:0];
     self.mainSubBottomGuideConstraint = [constraint_POS_VB objectAtIndex:0];
     
-    
-    
     [super viewWillAppear:animated];
 }
 
@@ -627,6 +651,8 @@
 //    [UIView animateWithDuration:0.1 animations:^{
 //        self.mySearchController.searchBar.frame = CGRectMake(0, 0, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
 //    }];
+    
+    [self placeSearchBox];
 }
 
 
@@ -2005,7 +2031,7 @@
 
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
-    
+
     //change background color
     EQRColors *colors = [EQRColors sharedInstance];
     self.rightSubviewTopBar.backgroundColor = [colors.colorDic objectForKey:EQRColorFilterBarAndSearchBarBackground];
@@ -2013,10 +2039,13 @@
     self.mySearchController.searchBar.tintColor = [UIColor whiteColor];
     self.mySearchController.searchBar.searchBarStyle = UISearchBarStyleProminent;
     self.mySearchController.searchBar.barTintColor = [colors.colorDic objectForKey:EQRColorFilterBarAndSearchBarBackground];
+
+//    self.searchBoxView.backgroundColor = [UIColor redColor];
+//    self.mySearchController.searchBar.backgroundColor = [UIColor greenColor];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
-    
+
     //change background color
     self.rightSubviewTopBar.backgroundColor = [UIColor whiteColor];
     self.searchBoxView.backgroundColor = [UIColor whiteColor];

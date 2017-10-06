@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1605" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+    <device id="ipad9_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRCheckVCntrllr">
@@ -40,13 +44,13 @@
                             <subviews>
                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j4E-ZN-M9v" userLabel="Text View - display status">
                                     <rect key="frame" x="20" y="0.0" width="552" height="100"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 </textView>
                             </subviews>
-                            <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstItem="j4E-ZN-M9v" firstAttribute="leading" secondItem="3kH-Fl-Al8" secondAttribute="leading" constant="20" id="3J6-AU-Dkh"/>
                                 <constraint firstItem="j4E-ZN-M9v" firstAttribute="top" secondItem="3kH-Fl-Al8" secondAttribute="top" id="6ml-uz-Ky6"/>
@@ -60,7 +64,7 @@
                             <subviews>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="fVz-SU-K6t">
                                     <rect key="frame" x="0.0" y="50" width="590" height="924"/>
-                                    <color key="backgroundColor" white="0.96983348540145986" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" red="0.96983349323272705" green="0.96983349323272705" blue="0.96983349323272705" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="4" id="V8l-3e-9FX">
                                         <size key="itemSize" width="590" height="40"/>
                                         <size key="headerReferenceSize" width="590" height="30"/>
@@ -78,14 +82,14 @@
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nbu-3Q-0PJ" userLabel="View - search box">
                                             <rect key="frame" x="126" y="3" width="338" height="44"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="44" id="1tX-Xf-jo9"/>
                                                 <constraint firstAttribute="width" constant="338" id="CIu-R5-05q"/>
                                             </constraints>
                                         </view>
                                     </subviews>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="50" id="8oH-sf-BXX"/>
                                         <constraint firstAttribute="centerX" secondItem="Nbu-3Q-0PJ" secondAttribute="centerX" id="RJk-Jc-CSQ"/>
@@ -93,7 +97,7 @@
                                     </constraints>
                                 </view>
                             </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstItem="fVz-SU-K6t" firstAttribute="top" secondItem="sls-74-3hL" secondAttribute="top" constant="50" id="1wS-NF-SRP"/>
                                 <constraint firstItem="fVz-SU-K6t" firstAttribute="leading" secondItem="sls-74-3hL" secondAttribute="leading" id="4Wm-K3-e6w"/>
@@ -113,18 +117,18 @@
                                         <constraint firstAttribute="height" constant="21" id="UJz-x0-62S"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Bi-6v-kk2">
                                     <rect key="frame" x="14" y="132" width="150" height="30"/>
-                                    <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="Mqk-SR-Gsp"/>
                                         <constraint firstAttribute="width" constant="150" id="cWa-Al-C3H"/>
                                     </constraints>
                                     <state key="normal" title="Mark As Complete">
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </state>
                                     <connections>
                                         <action selector="markAsComplete:" destination="-1" eventType="touchUpInside" id="AjK-My-mRt"/>
@@ -132,13 +136,13 @@
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bHs-uE-ik1">
                                     <rect key="frame" x="14" y="187" width="150" height="30"/>
-                                    <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="Ml5-C0-6wM"/>
                                         <constraint firstAttribute="width" constant="150" id="dJT-Fh-9Z7"/>
                                     </constraints>
                                     <state key="normal" title="Mark As Incomplete">
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </state>
                                     <connections>
                                         <action selector="markAsIncomplete:" destination="-1" eventType="touchUpInside" id="3Oe-mJ-lYi"/>
@@ -146,13 +150,13 @@
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gg-aJ-9eq">
                                     <rect key="frame" x="14" y="244" width="150" height="30"/>
-                                    <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="150" id="B5h-Mm-Dco"/>
                                         <constraint firstAttribute="height" constant="30" id="XKE-eE-4Vz"/>
                                     </constraints>
                                     <state key="normal" title="Print Request">
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </state>
                                     <connections>
                                         <action selector="printMeForReal:" destination="-1" eventType="touchUpInside" id="tfM-Zy-FFw"/>
@@ -160,7 +164,7 @@
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O2Z-k7-3GK" userLabel="Capture Signature">
                                     <rect key="frame" x="14" y="300" width="150" height="30"/>
-                                    <color key="backgroundColor" red="0.89621782299999997" green="0.93939214940000004" blue="0.97718256709999995" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.89621782299999997" green="0.93939214940000004" blue="0.97718256709999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="150" id="QD7-uq-0e1"/>
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="X9l-rB-KKF"/>
@@ -168,7 +172,7 @@
                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="iRV-JW-9sq"/>
                                     </constraints>
                                     <state key="normal" title=" Capture Sig">
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </state>
                                     <connections>
                                         <action selector="captureSig:" destination="-1" eventType="touchUpInside" id="Y4n-B6-Kmo"/>
@@ -179,7 +183,7 @@
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nkT-lj-Anx" userLabel="x background">
                                             <rect key="frame" x="17" y="3" width="22" height="21"/>
-                                            <color key="backgroundColor" white="0.91471809439999996" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="backgroundColor" red="0.91471809148788452" green="0.91471809148788452" blue="0.91471809148788452" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="22" id="NMj-qN-a8S"/>
                                                 <constraint firstAttribute="height" constant="21" id="V0b-nA-4al"/>
@@ -191,7 +195,7 @@
                                                 <constraint firstAttribute="height" constant="16" id="QcT-Xm-5qp"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="italicSystem" pointSize="13"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="X" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dtw-qT-7bh">
@@ -201,11 +205,11 @@
                                                 <constraint firstAttribute="width" constant="12" id="gYR-EC-WL0"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstItem="nkT-lj-Anx" firstAttribute="top" secondItem="eaz-9F-Az7" secondAttribute="top" constant="3" id="MEi-Kf-GgN"/>
                                         <constraint firstItem="nJL-SX-bPY" firstAttribute="top" secondItem="eaz-9F-Az7" secondAttribute="top" constant="5" id="N0c-eS-UU5"/>
@@ -218,7 +222,7 @@
                                 </view>
                                 <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="anC-Zh-lsv" userLabel="pricing widget subview">
                                     <rect key="frame" x="0.0" y="390" width="177" height="120"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="120" id="E0F-yh-bBC"/>
                                     </constraints>
@@ -228,7 +232,7 @@
                                     <subviews>
                                         <textView clipsSubviews="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LCR-FF-L8e">
                                             <rect key="frame" x="8" y="19" width="162" height="473"/>
-                                            <color key="backgroundColor" white="0.96983349323272705" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="backgroundColor" red="0.96983349323272705" green="0.96983349323272705" blue="0.96983349323272705" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                             <dataDetectorType key="dataDetectorTypes" link="YES"/>
@@ -243,7 +247,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
-                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstItem="8PK-sl-nJT" firstAttribute="centerX" secondItem="4de-8d-XvZ" secondAttribute="centerX" id="CK9-60-OwN"/>
                                         <constraint firstAttribute="trailing" secondItem="LCR-FF-L8e" secondAttribute="trailing" constant="8" id="Nd0-Bm-Hod"/>
@@ -259,7 +263,7 @@
                                         <constraint firstAttribute="height" constant="21" id="4ti-Bq-vKt"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Renter Type" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nOj-Lf-asi">
@@ -268,11 +272,11 @@
                                         <constraint firstAttribute="height" constant="21" id="vbR-MM-LBI"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
-                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstItem="qXe-qA-L8C" firstAttribute="leading" secondItem="DTX-f9-bSI" secondAttribute="leading" constant="20" id="1fU-Wa-Gs2"/>
                                 <constraint firstAttribute="bottom" secondItem="4de-8d-XvZ" secondAttribute="bottom" id="4xh-pt-lJD"/>
@@ -310,7 +314,7 @@
                                         <constraint firstAttribute="height" constant="30" id="rnH-lL-Qsj"/>
                                     </constraints>
                                     <state key="normal" title="Add Item">
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </state>
                                     <connections>
                                         <action selector="addEquipItem:" destination="-1" eventType="touchUpInside" id="sDh-wY-YRj"/>
@@ -322,14 +326,14 @@
                                         <constraint firstAttribute="height" constant="30" id="wcH-FA-Hxy"/>
                                     </constraints>
                                     <state key="normal" title="Delete Marked Items">
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </state>
                                     <connections>
                                         <action selector="deleteMarkedItemsButton:" destination="-1" eventType="touchUpInside" id="c8e-xK-EFa"/>
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="rXR-td-KJn" secondAttribute="trailing" constant="66" id="6vU-fg-zMi"/>
                                 <constraint firstItem="eTA-kD-Iaw" firstAttribute="top" secondItem="pAS-4h-6RA" secondAttribute="top" constant="10" id="9Yc-Fw-84e"/>
@@ -339,7 +343,7 @@
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstItem="3kH-Fl-Al8" firstAttribute="top" secondItem="5b2-Dd-rG3" secondAttribute="top" constant="50" id="07p-fl-qSV"/>
                         <constraint firstAttribute="bottom" secondItem="sls-74-3hL" secondAttribute="bottom" constant="50" id="Crl-9S-7fM"/>
@@ -357,7 +361,7 @@
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="5b2-Dd-rG3" secondAttribute="trailing" id="Fbg-UX-lhD"/>
                 <constraint firstAttribute="bottom" secondItem="5b2-Dd-rG3" secondAttribute="bottom" id="HSg-jR-ruK"/>

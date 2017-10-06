@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="ipad9_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EQRClassPickerVC">
@@ -36,7 +40,7 @@
                             </connections>
                         </segmentedControl>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstItem="Q5b-jJ-KB6" firstAttribute="top" secondItem="GaY-5Q-xRE" secondAttribute="top" constant="8" id="3BE-Zb-TU7"/>
                         <constraint firstAttribute="height" constant="50" id="MU7-qr-p11"/>
@@ -45,7 +49,7 @@
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ua8-20-DJg" userLabel="View - with search bar">
                     <rect key="frame" x="0.0" y="50" width="300" height="44"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="W5i-mA-Tf7"/>
                     </constraints>
@@ -55,14 +59,14 @@
                     <subviews>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="63o-L0-Osj">
                             <rect key="frame" x="0.0" y="0.0" width="300" height="406"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <outlet property="dataSource" destination="-1" id="jTF-4Y-6ca"/>
                                 <outlet property="delegate" destination="-1" id="Tfl-kE-1wZ"/>
                             </connections>
                         </tableView>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="63o-L0-Osj" secondAttribute="trailing" id="8ir-Pa-7rB"/>
                         <constraint firstAttribute="bottom" secondItem="63o-L0-Osj" secondAttribute="bottom" id="Spr-vm-kc3"/>
@@ -79,14 +83,14 @@
                                 <constraint firstAttribute="height" constant="30" id="gEf-Rt-oLY"/>
                             </constraints>
                             <state key="normal" title="Add New Class">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
                                 <action selector="addNewClassButton:" destination="-1" eventType="touchUpInside" id="3fN-2A-VaH"/>
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstItem="Gft-CQ-eme" firstAttribute="top" secondItem="e6N-uR-6cy" secondAttribute="top" constant="12" id="0qZ-rG-S7f"/>
                         <constraint firstAttribute="height" constant="50" id="Ume-Yg-SF8"/>
@@ -102,7 +106,7 @@
                                 <constraint firstAttribute="height" constant="30" id="WpY-DC-0Yt"/>
                             </constraints>
                             <state key="normal" title="Alphabetical">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kKw-37-xZ1">
@@ -111,11 +115,11 @@
                                 <constraint firstAttribute="height" constant="30" id="8vs-pd-Jkw"/>
                             </constraints>
                             <state key="normal" title="Chronological">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.89621782302856445" green="0.93939214944839478" blue="0.97718256711959839" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstItem="Ojn-NB-YNl" firstAttribute="leading" secondItem="hUq-wg-vjG" secondAttribute="leading" constant="32" id="FLQ-QH-gvn"/>
                         <constraint firstItem="kKw-37-xZ1" firstAttribute="top" secondItem="hUq-wg-vjG" secondAttribute="top" constant="10" id="RiS-lY-adO"/>
@@ -125,7 +129,7 @@
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="hUq-wg-vjG" secondAttribute="trailing" id="0RJ-e7-v8N"/>
                 <constraint firstItem="GaY-5Q-xRE" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="37g-d9-KqR"/>
@@ -148,7 +152,6 @@
                 <constraint firstAttribute="trailing" secondItem="GaY-5Q-xRE" secondAttribute="trailing" id="zOg-fV-GGL"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
-            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <variation key="default">
                 <mask key="constraints">
