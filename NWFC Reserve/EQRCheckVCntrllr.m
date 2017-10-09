@@ -37,7 +37,7 @@
 #import "EQRAlternateWrappperPriceMatrix.h"
 
 
-@interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate, UISearchBarDelegate, UISearchResultsUpdating, EQRPriceMatrixDelegate, EQRSigCaptureDelegate>
+@interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate, UISearchBarDelegate, UISearchResultsUpdating, UISearchControllerDelegate, EQRPriceMatrixDelegate, EQRSigCaptureDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem* myScheduleRequestItem;
 
@@ -535,43 +535,46 @@
     self.mySearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     
     self.mySearchController.searchResultsUpdater = self;
+    self.mySearchController.searchBar.delegate = self;
+    self.mySearchController.delegate = self;
+
     
     self.mySearchController.dimsBackgroundDuringPresentation = NO;
     self.mySearchController.hidesNavigationBarDuringPresentation = NO;
     
     //    UISearchContainerViewController *searchContainer = [[UISearchContainerViewController alloc] initWithSearchController:self.mySearchController];
     //
-    [self addChildViewController:self.mySearchController];
     
-    // This applies to the searchbox before entry, it has no effect to
-    // the searchbox after entry
+    
+//    [self addChildViewController:self.mySearchController];
+    
+    // This applies to the searchbox before entry, it has no effect to the searchbox after entry
     self.mySearchController.searchBar.frame = CGRectMake(0, 0, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
-    
-    
+
+
     [self.searchBoxView addSubview:self.mySearchController.searchBar];
     
-    
+
     // So far this isn't doing anything.
-    self.mySearchController.searchBar.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *viewDictionary = @{@"searchBoxView":self.searchBoxView, @"searchBar":self.mySearchController.searchBar};
-    NSArray *constraint_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[searchBar]" options:0 metrics:nil views:viewDictionary];
-    NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[searchBar]-0-|" options:0 metrics:nil views:viewDictionary];
-    NSArray *constraint_POS_H = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[searchBar]" options:0 metrics:nil views:viewDictionary];
-    NSArray *constraint_POS_HB = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[searchBar]-0-|" options:0 metrics:nil views:viewDictionary];
-    [[self.searchBoxView superview] addConstraints:constraint_POS_V];
-    [[self.searchBoxView superview] addConstraints:constraint_POS_VB];
-    [[self.searchBoxView superview] addConstraints:constraint_POS_H];
-    [[self.searchBoxView superview] addConstraints:constraint_POS_HB];
+//    self.mySearchController.searchBar.translatesAutoresizingMaskIntoConstraints = NO;
+//    NSDictionary *viewDictionary = @{@"searchBoxView":self.searchBoxView, @"searchBar":self.mySearchController.searchBar};
+//    NSArray *constraint_POS_V = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[searchBar]" options:0 metrics:nil views:viewDictionary];
+//    NSArray *constraint_POS_VB = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[searchBar]-0-|" options:0 metrics:nil views:viewDictionary];
+//    NSArray *constraint_POS_H = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[searchBar]" options:0 metrics:nil views:viewDictionary];
+//    NSArray *constraint_POS_HB = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[searchBar]-0-|" options:0 metrics:nil views:viewDictionary];
+//    [[self.searchBoxView superview] addConstraints:constraint_POS_V];
+//    [[self.searchBoxView superview] addConstraints:constraint_POS_VB];
+//    [[self.searchBoxView superview] addConstraints:constraint_POS_H];
+//    [[self.searchBoxView superview] addConstraints:constraint_POS_HB];
     
     
-    [self.mySearchController didMoveToParentViewController:self];
+//    [self.mySearchController didMoveToParentViewController:self];
     
     
     //    UISearchContainerViewController *searchContainer = [[UISearchContainerViewController alloc] initWithSearchController:self.mySearchController];
     //    [self.searchBoxView addSubview:searchContainer.view];
     
     
-    self.mySearchController.searchBar.delegate = self;
     self.mySearchController.searchBar.searchBarStyle = UISearchBarStyleMinimal;
     
     //what does this do?
@@ -2013,8 +2016,6 @@
         searchString = @" ";
     }
     
-    //    NSLog(@"inside updateSearchResultsForSearchController with search text: %@", searchString);
-    
     NSString *scope = nil;
     
     [self filterContentForSearchText:searchString scope:scope];
@@ -2032,6 +2033,12 @@
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
 
+//#ifdef __IPHONE_11_0
+//    if (@available(iOS 11.0, *)) {
+//        self.navigationItem.searchController = self.mySearchController;
+//    }
+//#endif
+    
     //change background color
     EQRColors *colors = [EQRColors sharedInstance];
     self.rightSubviewTopBar.backgroundColor = [colors.colorDic objectForKey:EQRColorFilterBarAndSearchBarBackground];
@@ -2040,18 +2047,37 @@
     self.mySearchController.searchBar.searchBarStyle = UISearchBarStyleProminent;
     self.mySearchController.searchBar.barTintColor = [colors.colorDic objectForKey:EQRColorFilterBarAndSearchBarBackground];
 
-//    self.searchBoxView.backgroundColor = [UIColor redColor];
-//    self.mySearchController.searchBar.backgroundColor = [UIColor greenColor];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
 
+//#ifdef __IPHONE_11_0
+//    if (@available(iOS 11.0, *)) {
+//        [self.searchBoxView addSubview:self.mySearchController.view];
+//        self.navigationItem.searchController = nil;
+//    }
+//#endif
+    
     //change background color
     self.rightSubviewTopBar.backgroundColor = [UIColor whiteColor];
     self.searchBoxView.backgroundColor = [UIColor whiteColor];
     self.mySearchController.searchBar.tintColor = nil;
     self.mySearchController.searchBar.searchBarStyle = UISearchBarStyleMinimal;
 }
+
+
+#pragma mark - UISearchControllerDelegate methods
+
+-(void)didPresentSearchController:(UISearchController *)searchController {
+    // Somewhere after searchBarTextDidBeginEditing: and willPresentSearchController, the frame for the searchbar changes to
+    // width of the device's screen size. Super annoying
+    self.mySearchController.searchBar.frame = CGRectMake(0, 0, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
+}
+
+-(void)didDismissSearchController:(UISearchController *)searchController {
+    self.mySearchController.searchBar.frame = CGRectMake(0, 0, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
+}
+
 
 
 #pragma mark - Content Filtering

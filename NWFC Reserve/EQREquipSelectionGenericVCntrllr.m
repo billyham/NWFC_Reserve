@@ -25,7 +25,7 @@
 #import "EQRStaffUserManager.h"
 #import "EQRMiscJoin.h"
 
-@interface EQREquipSelectionGenericVCntrllr () <UISearchResultsUpdating, UISearchBarDelegate>
+@interface EQREquipSelectionGenericVCntrllr () <UISearchResultsUpdating, UISearchBarDelegate, UISearchControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView* mainSubView;
 @property (strong, nonatomic) IBOutlet UIView *dataIsLoadingView;
@@ -110,6 +110,7 @@
     
     //searchcontroller setup
     self.mySearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.mySearchController.delegate = self;
     
     self.mySearchController.searchResultsUpdater = self;
     
@@ -921,6 +922,18 @@
     [self.addMiscellaneousButton setEnabled:YES];
 //    [self.continueButton setEnabled:YES];
     [self.listAllEquipButton setEnabled:YES];
+}
+
+#pragma mark - UISearchControllerDelegate methods
+
+-(void)didPresentSearchController:(UISearchController *)searchController {
+    // Somewhere after searchBarTextDidBeginEditing: and willPresentSearchController, the frame for the searchbar changes to
+    // width of the device's screen size. Super annoying
+    self.mySearchController.searchBar.frame = CGRectMake(0, 0, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
+}
+
+-(void)didDismissSearchController:(UISearchController *)searchController {
+    self.mySearchController.searchBar.frame = CGRectMake(0, 0, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
 }
 
 

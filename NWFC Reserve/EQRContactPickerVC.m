@@ -67,8 +67,22 @@
     // This does nothing
 //    self.mySearchController.searchBar.frame = CGRectMake(self.mySearchController.searchBar.frame.origin.x, self.mySearchController.searchBar.frame.origin.y, self.mySearchController.searchBar.frame.size.width, 44.0);
     
-    // This does everything
+    
+    
+    // Keeps search bar attached to the top and doesn't scroll, but search bar doesn't appear
+    // in shared nib popovers
+//#ifdef __IPHONE_11_0
+//    if (@available(iOS 11.0, *)) {
+//        self.navigationItem.searchController = self.mySearchController;
+//    }else{
+//        self.tableView.tableHeaderView = self.mySearchController.searchBar;
+//    }
+//#endif
+    
     self.tableView.tableHeaderView = self.mySearchController.searchBar;
+    
+    
+    
     
     //__2.__keep search above above and outside of table view
 //    self.mySearchController.searchBar.frame = CGRectMake(0,0, self.mySearchBarView.frame.size.width, 44.0);
