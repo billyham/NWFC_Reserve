@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRVCWithDemoModePrompt.h"
 
-@interface EQRCatRightVC : UIViewController <UISplitViewControllerDelegate>
+@interface EQRCatRightVC : EQRVCWithDemoModePrompt 
 
 @end

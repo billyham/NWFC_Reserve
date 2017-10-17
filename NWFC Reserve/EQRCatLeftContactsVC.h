@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRTableVCWithDemoModePrompt.h"
 
-@interface EQRCatLeftContactsVC : UITableViewController
+@interface EQRCatLeftContactsVC : EQRTableVCWithDemoModePrompt
 
 @end

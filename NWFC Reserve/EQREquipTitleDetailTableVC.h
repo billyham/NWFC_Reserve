@@ -11,4 +11,5 @@
 
 @interface EQREquipTitleDetailTableVC : EQRTableVCWithDemoModePrompt
 
+- (void)launchWithKey:(NSString *)keyId;
 @end

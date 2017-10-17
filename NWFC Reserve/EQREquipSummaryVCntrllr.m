@@ -180,7 +180,7 @@
             for (EQREquipItem* equipItemObj in muteArray){
                 
                 NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
-                NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", equipItemObj.shortname] attributes:arrayAtt11];
+                NSAttributedString* thisHereAttString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\r", equipItemObj.short_name] attributes:arrayAtt11];
                 
                 [self.summaryTotalAtt appendAttributedString:thisHereAttString];
             }

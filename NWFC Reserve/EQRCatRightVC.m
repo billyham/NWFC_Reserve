@@ -8,8 +8,9 @@
 
 #import "EQRCatRightVC.h"
 #import "EQRModeManager.h"
+#import "EQRCatLeftEquipTitlesVC.h"
 
-@interface EQRCatRightVC ()
+@interface EQRCatRightVC () <UISplitViewControllerDelegate>
 
 @end
 
@@ -38,39 +39,26 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    // Update navigation bar
-    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
-    if (modeManager.isInDemoMode){
-        
-        // Set prompt
-        [UIView setAnimationsEnabled:NO];
-        self.navigationItem.prompt = @"DEMO MODE";
-        
-        // Set colors of navigation bar and item
-        [modeManager alterNavigationBar:self.navigationController.navigationBar navigationItem:self.navigationItem isInDemo:YES];
-        
-        [UIView setAnimationsEnabled:YES];
-        
-    }else{
-        
-        // Set prompt
-        [UIView setAnimationsEnabled:NO];
-        self.navigationItem.prompt = nil;
-        
-        // Set colors of navigation bar and item
-        [modeManager alterNavigationBar:self.navigationController.navigationBar navigationItem:self.navigationItem isInDemo:NO];
-        
-        [UIView setAnimationsEnabled:YES];
-    }
     [super viewWillAppear:animated];
-    
-    UIStoryboard *equipTitleDetailStoryboard = [UIStoryboard storyboardWithName:@"EquipTitleDetail" bundle:nil];
-    UITableViewController *tableView = [equipTitleDetailStoryboard instantiateViewControllerWithIdentifier:@"EquipTitleDetail"];
-    
-    [self.navigationController pushViewController:tableView animated:YES];
 }
 
+#pragma mark - CatLeftEquipTitleDelegate methods
+//-(void)didSelectEquipTitle:(NSString *)selectedEquipTitle {
+//    NSLog(@"catRightVC says equip title is tapped: %@", selectedEquipTitle);
+//
+//    UIStoryboard *equipTitleDetailStoryboard = [UIStoryboard storyboardWithName:@"EquipTitleDetail" bundle:nil];
+//    UITableViewController *tableView = [equipTitleDetailStoryboard instantiateViewControllerWithIdentifier:@"EquipTitleDetail"];
+//
+//    [self.navigationController pushViewController:tableView animated:YES];
+//}
+
 #pragma mark - split view delegate methods
+
+-(BOOL)splitViewController:(UISplitViewController *)splitViewController showDetailViewController:(UIViewController *)vc sender:(id)sender {
+    
+    NSLog(@"showDetailView fires: %@", vc);
+    return NO;
+}
 
 -(void)splitViewController:(UISplitViewController *)svc willChangeToDisplayMode:(UISplitViewControllerDisplayMode)displayMode {
 //    NSLog(@"displayMode is: %ld", (long)displayMode);
@@ -80,6 +68,8 @@
 -(void)collapseSecondaryViewController:(UIViewController *)secondaryViewController forSplitViewController:(UISplitViewController *)splitViewController {
     
 }
+
+#pragma mark - memory warning
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

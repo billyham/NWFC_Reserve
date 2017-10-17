@@ -92,7 +92,7 @@
             
             NSString* quantityFollowedByShortname = [NSString stringWithFormat:@"%@ x %@",
                                                      [innerSubDictionary objectForKey:@"quantity"],
-                                                     [(EQREquipItem*)[innerSubDictionary objectForKey:@"equipTitleObject"] shortname]
+                                                     [(EQREquipItem*)[innerSubDictionary objectForKey:@"equipTitleObject"] short_name]
                                                      ];
             
             NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];
@@ -225,7 +225,7 @@
 //            
 //            NSString* quantityFollowedByShortname = [NSString stringWithFormat:@"%@ x %@",
 //                                                     [innerSubDictionary objectForKey:@"quantity"],
-//                                                     [(EQREquipItem*)[innerSubDictionary objectForKey:@"equipTitleObject"] shortname]
+//                                                     [(EQREquipItem*)[innerSubDictionary objectForKey:@"equipTitleObject"] short_name]
 //                                                     ];
 //            
 //            NSDictionary* arrayAtt11 = [NSDictionary dictionaryWithObject:normalFont forKey:NSFontAttributeName];

@@ -12,7 +12,7 @@
 
 @property (strong, nonatomic) NSString* key_id;
 @property (strong, nonatomic) NSString* name;
-@property (strong, nonatomic) NSString* shortname;
+@property (strong, nonatomic) NSString* short_name;
 @property (strong, nonatomic) NSString* price_commercial;
 @property (strong, nonatomic) NSString *price_staff;
 @property (strong, nonatomic) NSString* price_artist;

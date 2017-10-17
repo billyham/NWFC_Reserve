@@ -540,10 +540,14 @@
         
         //two important methods that initiate requestManager ivar arrays
         [self.privateRequestManager resetEquipListAndAvailableQuantites];
-        [self.privateRequestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
-            //        TODO: retrieveAllEquipUniqueItems async
-        }];
-//        NSLog(@"PRIVATE REQUEST MANAGER UPDATED");
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Calling this method without dispatching to main will causes crashes
+            [self.privateRequestManager retrieveAllEquipUniqueItems:^(NSMutableArray *muteArray) {
+            }];
+        });
+        
     }];
     [updatePrivateRequestManager addDependency:nameAndDates];
     [updatePrivateRequestManager addDependency:class];

@@ -21,8 +21,12 @@
 #import "EQRCloudData.h"
 #import "EQRCoreData.h"
 #import "EQRTransaction.h"
+#import "EQRXMLParserHelper.h"
 
 @interface EQRWebData ()
+
+@property (strong, nonatomic) NSSet *validElements;
+@property (strong, nonatomic) NSSet *validStandardElements;
 
 @property (strong, nonatomic) NSMutableArray* muteArray;
 @property (strong, nonatomic) NSXMLParser* xmlParser;
@@ -76,19 +80,28 @@ const int intEQREquipCategory = 12;
     NSString *useCloudKit = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useCloudKit"] objectForKey:@"useCloudKit"];
     NSString *useCoreData = [[[NSUserDefaults standardUserDefaults] objectForKey:@"useCoreData"] objectForKey:@"useCoreData"];
     
+    NSSet *validStandardElements = [EQRXMLParserHelper generateStandardElements];
+    NSSet *validElements = [EQRXMLParserHelper generateValidElementsFromSets:@[validStandardElements]];
+    
     if ([useCloudKit isEqualToString:@"yes"]){
         
         EQRCloudData *myInstance = [[EQRCloudData alloc] init];
+        myInstance.validElements = validElements;
+        myInstance.validStandardElements = validStandardElements;
         return myInstance;
         
     }else if ([useCoreData isEqualToString:@"yes"]){
         
         EQRCoreData *myInstance = [[EQRCoreData alloc] init];
+        myInstance.validElements = validElements;
+        myInstance.validStandardElements = validStandardElements;
         return myInstance;
         
     }else{
     
         EQRWebData* myInstance = [[EQRWebData alloc] init];
+        myInstance.validElements = validElements;
+        myInstance.validStandardElements = validStandardElements;
         return myInstance;
     }
 }
@@ -157,7 +170,6 @@ const int intEQREquipCategory = 12;
         return;
     }
     
-    
     NSLog(@"WEBDATA DID NOT FIND A MATCHING INT FOR THE RETURN CLASS OBJECT");
 }
 
@@ -166,12 +178,14 @@ const int intEQREquipCategory = 12;
     //    NSLog(@"this here myChar: %@", myChar);
     
     //is it a return?
+//    if ([myChar length] < 4) {
+//        NSLog(@"myChar length is 3");
+//    }
+    
     if ([[myChar substringToIndex:1] isEqualToString: @"\n"]) {
-        
+//        NSLog(@"found a leading return: %@", [myChar substringFromIndex:1]);
         return @"";
-        
     }else{
-        
         return myChar;
     }
 }
@@ -516,10 +530,6 @@ const int intEQREquipCategory = 12;
 }
 
 
-
-
-
-
 #pragma mark - NSXMLParser Delegate methods
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
@@ -530,511 +540,27 @@ const int intEQREquipCategory = 12;
         return;
     }
     
-    //build an array of equipment items
+    // Reset the currentValue to use for this element
+    self.currentValue = nil;
+    
+    // Build an array of equipment items
     if ([elementName isEqualToString:@"entries"]){
-        
         if (!self.muteArray){
-            
             self.muteArray = [[NSMutableArray alloc] initWithCapacity:1];
         }
-        
         return;
     }
     
-    //this equip object
+    // This equip object
     if ([elementName isEqualToString:@"entry"]){
-
         //a variable property
         self.currentThing = [[NSClassFromString(self.variableClassString)  alloc] init];
-        
         return;
     }
     
-    
-    
-    //_______*******  list of equip properties
-    if ([elementName isEqualToString:@"key_id"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    //Properties for EquipTitle Item
-    if ([elementName isEqualToString:@"name"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"short_name"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"subcategory"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"category"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"schedule_grouping"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"count_of_available"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    
-    //Properties for EquipUniqueItem
-    if ([elementName isEqualToString:@"equipTitleItem_foreignKey"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"distinquishing_id"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"status_level"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    //Properties for Contact Item
-    if ([elementName isEqualToString:@"last_name"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"first_name"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"first_and_last"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"phone"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"email"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    
-    //Properties for Class Section Item
-    if ([elementName isEqualToString:@"section_name"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"term"]){
-
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"catalog_foreign_key"]){
-
-        self.currentProperty = elementName;
-        return;
-    }
-    
-//    if ([elementName isEqualToString:@"instructor_name"]){
-//        
-//        self.currentProperty = elementName;
-//        return;
-//    }
-    
-    if ([elementName isEqualToString:@"instructor_foreign_key"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    //Properties for Class Registration Item
-    if ([elementName isEqualToString:@"contact_foreignKey"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    //Properties for ClassCatalog_EquipTitleItem_Join Item
-    if ([elementName isEqualToString:@"EquipTitleItem_foreignKey"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    
-    //Properties for ScheduleTracking_EquipUniqueItem_Join
-    if ([elementName isEqualToString:@"equipUniqueItem_foreignKey"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"scheduleTracking_foreignKey"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"contact_name"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"renter_type"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"request_date_begin"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"request_date_end"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"request_time_begin"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"request_time_end"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"prep_flag"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"checkout_flag"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"checkin_flag"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"shelf_flag"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-
-    
-    //Properties for ScheduleTracking
-    
-    if ([elementName isEqualToString:@"classSection_foreignKey"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"classTitle_foreignKey"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"time_of_request"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"staff_confirmation_date"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"staff_prep_date"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"staff_checkout_date"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"staff_checkin_date"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"staff_shelf_date"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"staff_confirmation_id"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"staff_prep_id"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"staff_checkout_id"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"staff_checkin_id"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"staff_shelf_id"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"notes"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"title"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    
-    //properties for servcie issues (and EquipUniqueItem objects)
-    if ([elementName isEqualToString:@"issue_short_name"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"status_level_numeric"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    
-    //properties for TextElements
-    if ([elementName isEqualToString:@"text"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"page"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"distinguishing_id"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"context"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"cost"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"deposit"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"price_commercial"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"price_artist"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"price_staff"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"price_nonprofit"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"price_student"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"price_deposit"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    // Properties for Transaction
-    if ([elementName isEqualToString:@"rental_days_for_pricing"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"renter_pricing_class"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"subtotal"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"total_due"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"total_paid"]){
-        
+    if ([EQRXMLParserHelper isValidElement:elementName inSet:self.validElements]) {
         self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"deposit_due"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"deposit_paid"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"discount_value"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"discount_type"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"discount_total"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"payment_timestamp"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"payment_staff_foreignKey"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"pdf_name"]){
-        
-        self.currentProperty = elementName;
-        return;
-    }
-    
-    if ([elementName isEqualToString:@"pdf_timestamp"]){
-        
-        self.currentProperty = elementName;
-        return;
     }
-    
-    
-    
 }
 
 
@@ -1045,15 +571,10 @@ const int intEQREquipCategory = 12;
     }
     
     if (!self.currentValue){
-        
-        self.currentValue = [[NSMutableString alloc] initWithCapacity:50];
+        self.currentValue = [[NSMutableString alloc] initWithCapacity:1];
     }
     
-    //_____remove non alpha numerica characters at the start of the value
-    NSString* newString = [self testForValidChar:string];
-        
-    [self.currentValue appendString:newString];
-    
+    [self.currentValue appendString:string];
 }
 
 
@@ -1065,8 +586,6 @@ const int intEQREquipCategory = 12;
     }
     
     if ([elementName isEqualToString:@"entry"]){
-        
-//        NSLog(@"this is the current thing class: %@", [self.currentThing class]);
         
         //add item to ivar array
         if (self.currentThing){
@@ -1101,305 +620,36 @@ const int intEQREquipCategory = 12;
     //_______***********END OF EFFICIENCY METHODS
     
     
-    
-    //_______********* START
-    
     //Properties for EquipTitle
-    if ([prop isEqualToString:@"name"]){
+    if ([prop isEqualToString:@"description_long"]){
+        NSLog(@"--------- description_long --------%@", self.currentValue);
+    }
+    
+    // Leverage helper method
+    if ([EQRXMLParserHelper assignCurrentValue:self.currentValue toCurrentThing:self.currentThing forProp:prop forStandardSet:self.validStandardElements]) {
         
-        //_______********  adds a return at the very start of the value?? Use substring to remove it
-        if ([self.currentThing respondsToSelector:@selector(name)]){
-            
-            [(EQREquipItem*)self.currentThing setName: self.currentValue];
-            
-            self.currentValue = nil;
-        }
+        self.currentValue = nil;
         return;
     }
     
-    if ([prop isEqualToString:@"short_name"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(shortname)]){
-            
-            [(EQREquipItem*)self.currentThing setShortname: self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"subcategory"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(subcategory)]){
-            
-            [(EQREquipItem*)self.currentThing setSubcategory: self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"category"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(category)]){
-            
-            [(EQREquipItem*)self.currentThing setCategory: self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"schedule_grouping"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(schedule_grouping)]){
-            
-            [(EQREquipItem*)self.currentThing setSchedule_grouping: self.currentValue];
-            
-            self.currentValue = nil;
-        }
-    }
-    
-    if ([prop isEqualToString:@"count_of_available"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(count_of_available)]){
-            
-            [(EQREquipItem*)self.currentThing setCount_of_available: self.currentValue];
-            
-            self.currentValue = nil;
-        }
-    }
-    
-    
-    //Properties for EquipUniqueItem
-    if ([prop isEqualToString:@"equipTitleItem_foreignKey"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(equipTitleItem_foreignKey)]){
-            
-            [(EQREquipUniqueItem*)self.currentThing setEquipTitleItem_foreignKey: self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"status_level"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(status_level)]){
-            
-            [(EQREquipUniqueItem*)self.currentThing setStatus_level: self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"distinquishing_id"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(distinquishing_id)]){
-            
-            [(EQREquipUniqueItem*)self.currentThing setDistinquishing_id: self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    
-    //Properties for Contact
-    if ([prop isEqualToString:@"first_name"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(first_name)]){
-            
-            [(EQRContactNameItem*)self.currentThing setFirst_name:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"last_name"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(last_name)]){
-            
-            [(EQRContactNameItem*)self.currentThing setLast_name:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"first_and_last"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(first_and_last)]){
-            
-            [(EQRContactNameItem*)self.currentThing setFirst_and_last:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"phone"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(phone)]){
-            
-            [(EQRContactNameItem*)self.currentThing setPhone:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"email"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(email)]){
-            
-            [(EQRContactNameItem*)self.currentThing setEmail:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    
-    //Properties for Class Section
-    if ([prop isEqualToString:@"section_name"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(section_name)]){
-            
-            [(EQRClassItem*)self.currentThing setSection_name:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"key_id"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(key_id)]){
-            
-            [(EQRClassItem*)self.currentThing setKey_id:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"term"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(term)]){
-            
-            [(EQRClassItem*)self.currentThing setTerm:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"catalog_foreign_key"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(catalog_foreign_key)]){
-            
-            [(EQRClassItem*)self.currentThing setCatalog_foreign_key:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-//    if ([prop isEqualToString:@"instructor_name"]){
-//        
-//        if ([self.currentThing respondsToSelector:@selector(instructor_name)]){
-//            
-//            [(EQRClassItem*)self.currentThing setInstructor_name:self.currentValue];
-//            
+//    if ([prop isEqualToString:@"short_name"]){
+//
+//        if ([self.currentThing respondsToSelector:@selector(short_name)]){
+//
+//            NSString *previousValue = [(EQREquipItem*)self.currentThing short_name];
+//            NSString *combinedValue;
+//            if (previousValue != nil){
+//                combinedValue = [NSString stringWithFormat:@"%@%@", previousValue, self.currentValue];
+//            } else {
+//                combinedValue = self.currentValue;
+//            }
+//            [(EQREquipItem*)self.currentThing setShortname: combinedValue];
+//
 //            self.currentValue = nil;
 //        }
 //        return;
 //    }
-    
-    if ([prop isEqualToString:@"instructor_foreign_key"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(instructor_foreign_key)]){
-            
-            [(EQRClassItem*)self.currentThing setInstructor_foreign_key:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    //Properties for Class Registration
-    if ([prop isEqualToString:@"contact_foreignKey"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(contact_foreignKey)]){
-            
-            [(EQRClassRegistrationItem*)self.currentThing setContact_foreignKey:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    //Properties for ClassCatalog_EquipTitleItem_Join Item
-    if ([prop isEqualToString:@"EquipTitleItem_foreignKey"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(equipTitleItem_foreignKey)]){
-            
-            [(EQRClassCatalog_EquipTitleItem_Join*)self.currentThing setEquipTitleItem_foreignKey:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    //Properties for ScheduleTracking_EquipUniqueItem_Join
-    if ([prop isEqualToString:@"equipUniqueItem_foreignKey"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(equipUniqueItem_foreignKey)]){
-            
-            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setEquipUniqueItem_foreignKey:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"scheduleTracking_foreignKey"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(scheduleTracking_foreignKey)]){
-            
-            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setScheduleTracking_foreignKey:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"contact_name"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(contact_name)]){
-            
-            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setContact_name:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"renter_type"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(renter_type)]){
-            
-            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setRenter_type:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    
+
     if ([prop isEqualToString:@"request_date_begin"]){
         
         if ([self.currentThing respondsToSelector:@selector(request_date_begin)]){
@@ -1482,75 +732,6 @@ const int intEQREquipCategory = 12;
             
             self.currentValue = nil;
         }
-    }
-    
-    if ([prop isEqualToString:@"prep_flag"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(prep_flag)]){
-            
-            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setPrep_flag:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-
-    if ([prop isEqualToString:@"checkout_flag"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(checkout_flag)]){
-            
-            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setCheckout_flag:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"checkin_flag"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(checkin_flag)]){
-            
-            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setCheckin_flag:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"shelf_flag"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(shelf_flag)]){
-            
-            [(EQRScheduleTracking_EquipmentUnique_Join*)self.currentThing setShelf_flag:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    //Properties for ScheduleRequestItem
-
-
-    if ([prop isEqualToString:@"classSection_foreignKey"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(classSection_foreignKey)]){
-            
-            [(EQRScheduleRequestItem*)self.currentThing setClassSection_foreignKey:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"classTitle_foreignKey"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(classTitle_foreignKey)]){
-            
-            [(EQRScheduleRequestItem*)self.currentThing setClassTitle_foreignKey:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
     }
     
     if ([prop isEqualToString:@"time_of_request"]){
@@ -1649,364 +830,6 @@ const int intEQREquipCategory = 12;
         return;
     }
     
-    if ([prop isEqualToString:@"staff_confirmation_id"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(staff_confirmation_id)]){
-            
-            [(EQRScheduleRequestItem*)self.currentThing setStaff_confirmation_id:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"staff_prep_id"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(staff_prep_id)]){
-            
-            [(EQRScheduleRequestItem*)self.currentThing setStaff_prep_id:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"staff_checkout_id"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(staff_checkout_id)]){
-            
-            [(EQRScheduleRequestItem*)self.currentThing setStaff_checkout_id:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"staff_checkin_id"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(staff_checkin_id)]){
-            
-            [(EQRScheduleRequestItem*)self.currentThing setStaff_checkin_id:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"staff_shelf_id"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(staff_shelf_id)]){
-            
-            [(EQRScheduleRequestItem*)self.currentThing setStaff_shelf_id:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"notes"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(notes)]){
-            
-            [(EQRScheduleRequestItem*)self.currentThing setNotes:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"title"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(title)]){
-            
-            [(EQRScheduleRequestItem*)self.currentThing setTitle:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-
-    
-    //Servcie Issues properties
-    
-    if ([prop isEqualToString:@"issue_short_name"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(issue_short_name)]){
-            
-            [(EQREquipUniqueItem*)self.currentThing setIssue_short_name:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-//    if ([prop isEqualToString:@"status_level_numeric"]){
-//        
-//        if ([self.currentThing respondsToSelector:@selector(status_level_numeric)]){
-//            
-//            [(EQREquipUniqueItem*)self.currentThing setStatus_level_numeric:self.currentValue];
-//            
-//            self.currentValue = nil;
-//        }
-//        return;
-//    }
-    
-    
-    //Text Elements
-    
-    if ([prop isEqualToString:@"text"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(text)]){
-            
-            [(EQRTextElement*)self.currentThing setText:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"context"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(context)]){
-            
-            [(EQRTextElement*)self.currentThing setContext:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"page"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(page)]){
-            
-            [(EQRTextElement*)self.currentThing setPage:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"distinguishing_id"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(distinguishing_id)]){
-            
-            [(EQRTextElement*)self.currentThing setDistinguishing_id:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"price_commercial"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(price_commercial)]){
-            
-            [(EQREquipItem *)self.currentThing setPrice_commercial:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"price_artist"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(price_artist)]){
-            
-            [(EQREquipItem *)self.currentThing setPrice_artist:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"price_staff"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(price_staff)]){
-            
-            [(EQREquipItem *)self.currentThing setPrice_staff:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"price_nonprofit"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(price_nonprofit)]){
-            
-            [(EQREquipItem *)self.currentThing setPrice_nonprofit:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"price_student"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(price_student)]){
-            
-            [(EQREquipItem *)self.currentThing setPrice_student:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"price_deposit"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(price_deposit)]){
-            
-            [(EQREquipItem *)self.currentThing setPrice_deposit:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-
-    if ([prop isEqualToString:@"cost"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(cost)]){
-            
-            [(EQRScheduleTracking_EquipmentUnique_Join *)self.currentThing setCost:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"deposit"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(deposit)]){
-            
-            [(EQRScheduleTracking_EquipmentUnique_Join *)self.currentThing setDeposit:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    // Transaction Properties
-    if ([prop isEqualToString:@"rental_days_for_pricing"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(rental_days_for_pricing)]){
-            
-            [(EQRTransaction *)self.currentThing setRental_days_for_pricing:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"renter_pricing_class"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(renter_pricing_class)]){
-            
-            [(EQRTransaction* )self.currentThing setRenter_pricing_class:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-    }
-
-    if ([prop isEqualToString:@"subtotal"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(subtotal)]){
-            
-            [(EQRTransaction *)self.currentThing setSubtotal:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"total_due"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(total_due)]){
-            
-            [(EQRTransaction *)self.currentThing setTotal_due:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"total_paid"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(total_paid)]){
-            
-            [(EQRTransaction *)self.currentThing setTotal_paid:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"deposit_due"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(deposit_due)]){
-            
-            [(EQRTransaction *)self.currentThing setDeposit_due:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"deposit_paid"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(deposit_paid)]){
-            
-            [(EQRTransaction *)self.currentThing setDeposit_paid:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"discount_value"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(discount_value)]){
-            
-            [(EQRTransaction *)self.currentThing setDiscount_value:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"discount_type"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(discount_type)]){
-            
-            [(EQRTransaction *)self.currentThing setDiscount_type:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"discount_total"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(discount_total)]){
-            
-            [(EQRTransaction *)self.currentThing setDiscount_total:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"payment_staff_foreignKey"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(payment_staff_foreignKey)]){
-            
-            [(EQRTransaction *)self.currentThing setPayment_staff_foreignKey:self.currentValue];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
     if ([prop isEqualToString:@"payment_timestamp"]){
         
         if ([self.currentThing respondsToSelector:@selector(payment_timestamp)]){
@@ -2017,17 +840,6 @@ const int intEQREquipCategory = 12;
             dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
             
             [(EQRTransaction *)self.currentThing setPayment_timestamp:[dateFormatter dateFromString:self.currentValue]];
-            
-            self.currentValue = nil;
-        }
-        return;
-    }
-    
-    if ([prop isEqualToString:@"pdf_name"]){
-        
-        if ([self.currentThing respondsToSelector:@selector(pdf_name)]){
-            
-            [(EQRScheduleRequestItem *)self.currentThing setPdf_name:self.currentValue];;
             
             self.currentValue = nil;
         }

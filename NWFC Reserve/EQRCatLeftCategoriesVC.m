@@ -12,11 +12,12 @@
 #import "EQRWebData.h"
 #import "EQREquipCategory.h"
 
-@interface EQRCatLeftCategoriesVC ()
+@interface EQRCatLeftCategoriesVC () <EQRCatEquipTitleDelegate>
 @property (nonatomic, strong) NSArray *arrayOfCategories;
 @end
 
 @implementation EQRCatLeftCategoriesVC
+@synthesize delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -24,38 +25,13 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    
-    // Update navigation bar
-    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
-    if (modeManager.isInDemoMode){
-        
-        // Set prompt
-        [UIView setAnimationsEnabled:NO];
-        self.navigationItem.prompt = @"DEMO MODE";
-        
-        // Set colors of navigation bar and item
-        [modeManager alterNavigationBar:self.navigationController.navigationBar navigationItem:self.navigationItem isInDemo:YES];
-        
-        [UIView setAnimationsEnabled:YES];
-        
-    }else{
-        
-        // Set prompt
-        [UIView setAnimationsEnabled:NO];
-        self.navigationItem.prompt = nil;
-        
-        // Set colors of navigation bar and item
-        [modeManager alterNavigationBar:self.navigationController.navigationBar navigationItem:self.navigationItem isInDemo:NO];
-        
-        [UIView setAnimationsEnabled:YES];
-    }
+    // Populate list
+    [self loadCategories];
     [super viewWillAppear:animated];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    
-    // Populate list
-    [self loadCategories];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -63,9 +39,26 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - segue methods
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+//    if ([segue.identifier isEqualToString:@"catEquipTitles"]) {
+//    }
+    
+    EQRCatLeftEquipTitlesVC * destinationVC = [segue destinationViewController];
+    destinationVC.delegate = self;
+    destinationVC.selectedCategory = [[(UITableViewCell *)sender textLabel] text];
+}
+
+#pragma mark - EQRCatLeftEquipTitle delegate
+- (void)didSelectEquipTitle:(NSDictionary *)selectedEquipTitle {
+    NSLog(@"EQRCatLeftCategoriesVC fires didSelectEquipTitle: %@", [selectedEquipTitle objectForKey:@"shortName"]);
+    [self.delegate didPassEquipTitleThroughCategory:selectedEquipTitle];
+}
+
 #pragma mark - data methods
 
--(void)loadCategories{
+-(void)loadCategories {
     
     self.arrayOfCategories = @[];
     
@@ -113,6 +106,10 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.delegate didSelectCategory:[self.arrayOfCategories objectAtIndex:indexPath.row]];
+}
+
 
 /*
 // Override to support conditional editing of the table view.
@@ -152,12 +149,12 @@
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-    EQRCatLeftEquipTitlesVC * destinationVC = [segue destinationViewController];
-    destinationVC.selectedCategory = [[(UITableViewCell *)sender textLabel] text];
-}
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+//    // Get the new view controller using [segue destinationViewController].
+//    // Pass the selected object to the new view controller.
+//    EQRCatLeftEquipTitlesVC * destinationVC = [segue destinationViewController];
+//    destinationVC.selectedCategory = [[(UITableViewCell *)sender textLabel] text];
+//}
 
 
 @end

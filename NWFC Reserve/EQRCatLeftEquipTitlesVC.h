@@ -7,9 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRTableVCWithDemoModePrompt.h"
 
-@interface EQRCatLeftEquipTitlesVC : UITableViewController
+@protocol EQRCatEquipTitleDelegate;
 
+@interface EQRCatLeftEquipTitlesVC : EQRTableVCWithDemoModePrompt {
+    __weak id <EQRCatEquipTitleDelegate> delegate;
+}
+@property (weak, nonatomic) id <EQRCatEquipTitleDelegate> delegate;
 @property (strong, nonatomic) NSString *selectedCategory;
+@end
 
+@protocol EQRCatEquipTitleDelegate <NSObject>
+- (void)didSelectEquipTitle:(NSDictionary *)selectedEquipTitle;
 @end

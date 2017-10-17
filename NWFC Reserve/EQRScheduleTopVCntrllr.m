@@ -338,9 +338,9 @@
                 }
                 
                 NSString* string1 = [NSString stringWithFormat:@"%@%@",
-                                     [(EQREquipUniqueItem*)obj1 shortname], newDist1];
+                                     [(EQREquipUniqueItem*)obj1 short_name], newDist1];
                 NSString* string2 = [NSString stringWithFormat:@"%@%@",
-                                     [(EQREquipUniqueItem*)obj2 shortname], newDist2];
+                                     [(EQREquipUniqueItem*)obj2 short_name], newDist2];
                 
                 return [string1 compare:string2];
             }];
@@ -1488,7 +1488,7 @@
         
         //get the item name and distinquishing ID from the nested array
         NSString* myTitleString = [NSString stringWithFormat:@"%@  #%@",
-                                   [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] shortname],
+                                   [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] short_name],
                                    [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id]];
         
         [cell initialSetupWithTitle:myTitleString equipKey:[(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id] indexPath:indexPath dateForShow:self.dateForShow];

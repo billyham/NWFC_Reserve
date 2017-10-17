@@ -1,25 +1,23 @@
 //
-//  EQRCatLeftContactsVC.m
+//  EQRCatLeftVCTableViewController.m
 //  Gear
 //
-//  Created by Ray Smith on 9/29/17.
+//  Created by Ray Smith on 10/10/17.
 //  Copyright © 2017 Ham Again LLC. All rights reserved.
 //
 
-#import "EQRCatLeftContactsVC.h"
-#import "EQRContactNameItem.h"
-#import "EQRModeManager.h"
-#import "EQRWebData.h"
+#import "EQRCatLeftVC.h"
+#import "EQRCatLeftCategoriesVC.h"
+#import "EQREquipTitleDetailTableVC.h"
 
-@interface EQRCatLeftContactsVC ()
-@property (nonatomic, strong) NSArray *arrayOfContacts;
+@interface EQRCatLeftVC () <EQRCatLeftCategoriesDelegate>
+@property (nonatomic, strong) NSString *segueSelectionType;
 @end
 
-@implementation EQRCatLeftContactsVC
+@implementation EQRCatLeftVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.arrayOfContacts = @[];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -28,69 +26,61 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
--(void)viewWillAppear:(BOOL)animated{
+#pragma mark - segue
 
-    [super viewWillAppear:animated];
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"catCategories"]) {
+
+        self.segueSelectionType = segue.identifier;
+        
+        EQRCatLeftCategoriesVC *vc = [segue destinationViewController];
+        vc.delegate = self;
+    }
 }
 
--(void)viewDidAppear:(BOOL)animated{
-    [self loadContacts];
+#pragma mark - EQRCatLeftCategories delegate
+
+- (void)didPassEquipTitleThroughCategory:(NSDictionary *)selectedEquipTitle {
+    UIStoryboard *equipTitleDetailStoryboard = [UIStoryboard storyboardWithName:@"EquipTitleDetail" bundle:nil];
+    
+    EQREquipTitleDetailTableVC *detailVCStory = [equipTitleDetailStoryboard instantiateViewControllerWithIdentifier:@"EquipTitleDetail"];
+
+    [detailVCStory launchWithKey:[selectedEquipTitle objectForKey:@"keyId"]];
+    [self.splitViewController showDetailViewController:detailVCStory sender:self];
 }
+
+- (void)didSelectCategory:(NSString *)selectedCategory {
+
+}
+
+#pragma mark - memory warning
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - data methods
-
--(void)loadContacts{
-    
-    self.arrayOfContacts = @[];
-    
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    queue.name = @"allContacts";
-    queue.maxConcurrentOperationCount = 1;
-    
-    NSBlockOperation *getContacts = [NSBlockOperation blockOperationWithBlock:^{
-       
-        EQRWebData *webData =[EQRWebData sharedInstance];
-        [webData queryWithLink:@"EQGetAllContactNames.php" parameters:nil class:@"EQRContactNameItem" completion:^(NSMutableArray *arrayOfContacts) {
-            NSMutableArray *muteArray = [NSMutableArray arrayWithCapacity:1];
-            for (EQRContactNameItem *contact in arrayOfContacts){
-                [muteArray addObject:contact.first_and_last];
-            }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.arrayOfContacts = [NSArray arrayWithArray:muteArray];
-                [self.tableView reloadData];
-            });
-        }];
-    }];
-    
-    [queue addOperation:getContacts];
-}
-
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
+//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+//#warning Incomplete implementation, return the number of sections
+//    return 0;
+//}
+//
+//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+//#warning Incomplete implementation, return the number of rows
+//    return 0;
+//}
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.arrayOfContacts.count;
-}
-
-
+/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"contactCell" forIndexPath:indexPath];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    
-    cell.textLabel.text = [self.arrayOfContacts objectAtIndex:indexPath.row];
+    // Configure the cell...
     
     return cell;
 }
-
+*/
 
 /*
 // Override to support conditional editing of the table view.

@@ -1866,7 +1866,7 @@
         <!--Catalogs-->
         <scene sceneID="M6V-Pp-hrJ">
             <objects>
-                <tableViewController title="Catalogs" clearsSelectionOnViewWillAppear="NO" id="RAt-ds-u8f" customClass="EQRTableVCWithDemoModePrompt" sceneMemberID="viewController">
+                <tableViewController title="Catalogs" clearsSelectionOnViewWillAppear="NO" id="RAt-ds-u8f" customClass="EQRCatLeftVC" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="CZX-fF-wQB">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1891,7 +1891,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="NgD-GQ-pag" kind="push" id="Bzs-tP-YGc"/>
+                                            <segue destination="NgD-GQ-pag" kind="push" identifier="catCategories" id="Bzs-tP-YGc"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="F53-T5-rtC" style="IBUITableViewCellStyleDefault" id="E5P-t7-Q5a">
@@ -1911,7 +1911,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="DOF-Gy-TcT" kind="push" id="VOT-D8-ldW"/>
+                                            <segue destination="DOF-Gy-TcT" kind="push" identifier="catClasses" id="VOT-D8-ldW"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="qzz-dQ-xyZ" style="IBUITableViewCellStyleDefault" id="xI0-7V-o6B">
@@ -1931,7 +1931,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="fiE-K0-qsR" kind="push" id="EtE-I5-OO8"/>
+                                            <segue destination="fiE-K0-qsR" kind="push" identifier="catPeople" id="EtE-I5-OO8"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="Ecr-MP-ivU" style="IBUITableViewCellStyleDefault" id="nzv-l9-mY6">
@@ -1984,7 +1984,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="ICp-pp-MYD" kind="push" id="KhO-Dm-RtE"/>
+                                    <segue destination="ICp-pp-MYD" kind="push" identifier="catEquipTitles" id="KhO-Dm-RtE"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

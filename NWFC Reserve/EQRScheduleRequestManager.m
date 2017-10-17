@@ -237,6 +237,7 @@
     return [(EQREquipUniqueItem*)[tempMuteArray objectAtIndex:0] key_id];
 }
 
+// Calling this method from an NSBlockOperation without dispatching to main will causes crashes
 -(void)retrieveAllEquipUniqueItems:(BlockWithArray)cb{
     
     EQRWebData* webData = [EQRWebData sharedInstance];
@@ -261,7 +262,6 @@
     
     for (EQREquipUniqueItem* uItem in self.arrayOfEquipUniqueItemsAll){
         
-        
         NSMutableArray* nestedArray = [NSMutableArray arrayWithCapacity:1];
         BOOL gladflag = NO;
         
@@ -285,6 +285,10 @@
     }
     
     //assign to ivar
+    // BUG-to-Fix here EXC_BAD_ACCESS
+    // Experience after tapping quickly between two requests in the master/Left column of inbox
+    // but not too quickly
+    NSLog(@"EQRScheduleRequestManager > retreiveAllEquip2 about to assign arrayWithSubArrays");
     self.arrayOfEquipUniqueItemsWithSubArrays = arrayWithSubArrays;
     
     NSMutableArray *arrayToReturn = [NSMutableArray arrayWithArray:self.arrayOfEquipUniqueItemsAll];

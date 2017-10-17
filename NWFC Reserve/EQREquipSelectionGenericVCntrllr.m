@@ -315,11 +315,13 @@
             // Create a list of unique categories names by looping through the array of equipTitles
             for (EQREquipItem* obj in self.equipTitleArray){
                 
-                if ([tempSet containsObject:obj.category] == NO){
-                    
-                    [tempSet addObject:obj.category];
-                    [self.equipTitleCategoriesList addObject:[NSString stringWithString:obj.category]];
+                if (obj.category != nil) {
+                    if ([tempSet containsObject:obj.category] == NO){
+                        [tempSet addObject:obj.category];
+                        [self.equipTitleCategoriesList addObject:[NSString stringWithString:obj.category]];
+                    }
                 }
+                
             }
             
             [tempSet removeAllObjects];
@@ -366,8 +368,8 @@
             
             NSArray* tempSubNestArray = [obj sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
                 
-                NSString* string1 = [(EQREquipItem*)obj1 shortname];
-                NSString* string2 = [(EQREquipItem*)obj2 shortname];
+                NSString* string1 = [(EQREquipItem*)obj1 short_name];
+                NSString* string2 = [(EQREquipItem*)obj2 short_name];
                 
                 return [string1 compare:string2];
             }];
@@ -943,7 +945,7 @@
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope{
     
-    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"shortname contains[c] %@", searchText];
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"short_name contains[c] %@", searchText];
     self.searchResultArrayOfEquipTitles = [self.equipTitleArray filteredArrayUsingPredicate:resultPredicate];
 }
 
@@ -1099,11 +1101,11 @@
         //_______determine either search results table or normal table
         if (self.mySearchController.active) {
             
-            [cell initialSetupWithTitle:[[self.searchResultArrayOfEquipTitles objectAtIndex:indexPath.row]  shortname] andEquipItem:[self.searchResultArrayOfEquipTitles objectAtIndex:indexPath.row]];
+            [cell initialSetupWithTitle:[[self.searchResultArrayOfEquipTitles objectAtIndex:indexPath.row]  short_name] andEquipItem:[self.searchResultArrayOfEquipTitles objectAtIndex:indexPath.row]];
             
         }else{
             
-            [cell initialSetupWithTitle:[[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]  shortname] andEquipItem:[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
+            [cell initialSetupWithTitle:[[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]  short_name] andEquipItem:[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
             
             //        [cell initialSetupWithTitle:[(EQREquipItem*)[self.equipTitleArray objectAtIndex:indexPath.row] name] andEquipItem:[self.equipTitleArray objectAtIndex:indexPath.row]];
         }

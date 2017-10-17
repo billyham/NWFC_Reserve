@@ -16,6 +16,7 @@
 @end
 
 @implementation EQRCatLeftEquipTitlesVC
+@synthesize delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -28,37 +29,13 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    
-    // Update navigation bar
-    EQRModeManager* modeManager = [EQRModeManager sharedInstance];
-    if (modeManager.isInDemoMode){
-        
-        // Set prompt
-        [UIView setAnimationsEnabled:NO];
-        self.navigationItem.prompt = @"DEMO MODE";
-        
-        // Set colors of navigation bar and item
-        [modeManager alterNavigationBar:self.navigationController.navigationBar navigationItem:self.navigationItem isInDemo:YES];
-        
-        [UIView setAnimationsEnabled:YES];
-        
-    }else{
-        
-        // Set prompt
-        [UIView setAnimationsEnabled:NO];
-        self.navigationItem.prompt = nil;
-        
-        // Set colors of navigation bar and item
-        [modeManager alterNavigationBar:self.navigationController.navigationBar navigationItem:self.navigationItem isInDemo:NO];
-        
-        [UIView setAnimationsEnabled:YES];
-    }
+- (void)viewWillAppear:(BOOL)animated{
+    [self loadTitles];
     [super viewWillAppear:animated];
 }
 
--(void)viewDidAppear:(BOOL)animated{
-    [self loadTitles];
+- (void)viewDidAppear:(BOOL)animated{
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -68,7 +45,7 @@
 
 #pragma mark - data methods
 
--(void)loadTitles{
+- (void)loadTitles{
     
     self.arrayOfTitles = @[];
     
@@ -83,7 +60,7 @@
         [webData queryWithLink:@"EQGetEquipTitlesWithCategory.php" parameters:topArray class:@"EQREquipItem" completion:^(NSMutableArray *arrayOfEquipTitles) {
             NSMutableArray *muteArray = [NSMutableArray arrayWithCapacity:1];
             for (EQREquipItem *equipTitleItem in arrayOfEquipTitles) {
-                [muteArray addObject:equipTitleItem.shortname];
+                [muteArray addObject:@{@"shortName": equipTitleItem.short_name, @"keyId": equipTitleItem.key_id}];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.arrayOfTitles = [NSArray arrayWithArray:muteArray];
@@ -113,9 +90,14 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"equipTitlesCell" forIndexPath:indexPath];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    cell.textLabel.text = [self.arrayOfTitles objectAtIndex:indexPath.row];
+    cell.textLabel.text = [[self.arrayOfTitles objectAtIndex:indexPath.row] objectForKey:@"shortName"];
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    [self.delegate didSelectEquipTitle:[self.arrayOfTitles objectAtIndex:indexPath.row]];
 }
 
 //-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
