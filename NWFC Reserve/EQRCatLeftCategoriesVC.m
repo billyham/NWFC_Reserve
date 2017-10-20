@@ -52,7 +52,6 @@
 
 #pragma mark - EQRCatLeftEquipTitle delegate
 - (void)didSelectEquipTitle:(NSDictionary *)selectedEquipTitle {
-    NSLog(@"EQRCatLeftCategoriesVC fires didSelectEquipTitle: %@", [selectedEquipTitle objectForKey:@"shortName"]);
     [self.delegate didPassEquipTitleThroughCategory:selectedEquipTitle];
 }
 

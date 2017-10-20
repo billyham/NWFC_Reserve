@@ -604,7 +604,7 @@ const int intEQREquipCategory = 12;
     
     NSString* prop = self.currentProperty;
     
-    //________*********START WITH TIME SAVING EFFICIENCY METHODS
+    //________********* START WITH TIME SAVING EFFICIENCY METHODS
     
     switch (self.returnClassInt) {
         case intEQRScheduleTracking_EquipmentUnique_Join:
@@ -617,13 +617,7 @@ const int intEQREquipCategory = 12;
         default:
             break;
     }
-    //_______***********END OF EFFICIENCY METHODS
-    
-    
-    //Properties for EquipTitle
-    if ([prop isEqualToString:@"description_long"]){
-        NSLog(@"--------- description_long --------%@", self.currentValue);
-    }
+    //_______*********** END OF EFFICIENCY METHODS
     
     // Leverage helper method
     if ([EQRXMLParserHelper assignCurrentValue:self.currentValue toCurrentThing:self.currentThing forProp:prop forStandardSet:self.validStandardElements]) {
@@ -631,24 +625,6 @@ const int intEQREquipCategory = 12;
         self.currentValue = nil;
         return;
     }
-    
-//    if ([prop isEqualToString:@"short_name"]){
-//
-//        if ([self.currentThing respondsToSelector:@selector(short_name)]){
-//
-//            NSString *previousValue = [(EQREquipItem*)self.currentThing short_name];
-//            NSString *combinedValue;
-//            if (previousValue != nil){
-//                combinedValue = [NSString stringWithFormat:@"%@%@", previousValue, self.currentValue];
-//            } else {
-//                combinedValue = self.currentValue;
-//            }
-//            [(EQREquipItem*)self.currentThing setShortname: combinedValue];
-//
-//            self.currentValue = nil;
-//        }
-//        return;
-//    }
 
     if ([prop isEqualToString:@"request_date_begin"]){
         
@@ -911,7 +887,6 @@ const int intEQREquipCategory = 12;
 #pragma mark - Asynchronous methods
 
 -(void)queryForStringwithAsync:(NSString *)link parameters:(NSArray *)para completion:(CompletionBlockWithUnknownObject)completeBlock{
-    
     
     if ([link isEqualToString:@"EQSetNewContact.php"]){
         
@@ -1352,7 +1327,6 @@ const int intEQREquipCategory = 12;
         inputString = [NSString stringWithFormat:@"%@%@?%@", urlRootString, link, ck];
     }
     
-    
 	//encode the url string
 	NSString* urlString = [inputString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -1435,8 +1409,8 @@ const int intEQREquipCategory = 12;
     
     //reset the mutable array back to zero
     [self.muteArray removeAllObjects];
-    
 }
+
 
 -(void)asyncDispatchWithObject:(id)currentThing {
     
@@ -1454,6 +1428,7 @@ const int intEQREquipCategory = 12;
         });
     }
 }
+
 
 -(void)sendAsyncCompletionBlock{
     
@@ -1476,7 +1451,6 @@ const int intEQREquipCategory = 12;
             self.delayedCompletionBlock = nil;
         }
     });
-    
 }
 
 

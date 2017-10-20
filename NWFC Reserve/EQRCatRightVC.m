@@ -56,7 +56,7 @@
 
 -(BOOL)splitViewController:(UISplitViewController *)splitViewController showDetailViewController:(UIViewController *)vc sender:(id)sender {
     
-    NSLog(@"showDetailView fires: %@", vc);
+
     return NO;
 }
 

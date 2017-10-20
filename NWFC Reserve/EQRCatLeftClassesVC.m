@@ -50,7 +50,7 @@
     if (!selectedClassItem){
         NSLog(@"no class selected");
     }else{
-        NSLog(@"this is the class: %@", selectedClassItem.section_name);
+//        NSLog(@"this is the class: %@", selectedClassItem.section_name);
         
         
     }

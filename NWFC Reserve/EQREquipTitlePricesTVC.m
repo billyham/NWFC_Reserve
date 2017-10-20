@@ -1,20 +1,30 @@
 //
-//  EQRCatLeftVCTableViewController.m
+//  EQREquipTitlePricesTVC.m
 //  Gear
 //
-//  Created by Ray Smith on 10/10/17.
+//  Created by Ray Smith on 10/19/17.
 //  Copyright © 2017 Ham Again LLC. All rights reserved.
 //
 
-#import "EQRCatLeftVC.h"
-#import "EQRCatLeftCategoriesVC.h"
-#import "EQREquipTitleDetailVC.h"
+#import "EQREquipTitlePricesTVC.h"
 
-@interface EQRCatLeftVC () <EQRCatLeftCategoriesDelegate>
-@property (nonatomic, strong) NSString *segueSelectionType;
+@interface EQREquipTitlePricesTVC ()
+
+@property (strong, nonatomic) NSString *commercial;
+@property (strong, nonatomic) NSString *artist;
+@property (strong, nonatomic) NSString *student;
+@property (strong, nonatomic) NSString *staff;
+@property (strong, nonatomic) NSString *faculty;
+
+@property (weak, nonatomic) IBOutlet UILabel *commercialLabel;
+@property (weak, nonatomic) IBOutlet UILabel *artistLabel;
+@property (weak, nonatomic) IBOutlet UILabel *studentLabel;
+@property (weak, nonatomic) IBOutlet UILabel *staffLabel;
+@property (weak, nonatomic) IBOutlet UILabel *facultyLabel;
+
 @end
 
-@implementation EQRCatLeftVC
+@implementation EQREquipTitlePricesTVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -26,42 +36,31 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-#pragma mark - segue
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"catCategories"]) {
-
-        self.segueSelectionType = segue.identifier;
-        
-        EQRCatLeftCategoriesVC *vc = [segue destinationViewController];
-        vc.delegate = self;
-    }
+- (void)viewWillAppear:(BOOL)animated {
+    [self renderText];
+    [super viewWillAppear:animated];
 }
 
-#pragma mark - EQRCatLeftCategories delegate
 
-- (void)didPassEquipTitleThroughCategory:(NSDictionary *)selectedEquipTitle {
-    UIStoryboard *equipTitleDetailStoryboard = [UIStoryboard storyboardWithName:@"EquipTitleDetailVC" bundle:nil];
-    EQREquipTitleDetailVC *detailVCStory = [equipTitleDetailStoryboard instantiateViewControllerWithIdentifier:@"EquipTitleDetail"];
+- (void)setText:(NSDictionary *)properties {
     
-    [detailVCStory launchWithKey:[selectedEquipTitle objectForKey:@"keyId"]];
-    UINavigationController *navVC = [[self.splitViewController childViewControllers] objectAtIndex:1];
-    [navVC popToRootViewControllerAnimated:NO];
-    [navVC pushViewController:detailVCStory animated:NO];
+    self.commercial = properties[@"commercial"];
+    self.artist = properties[@"artist"];
+    self.student = properties[@"student"];
+    self.staff = properties[@"staff"];
+    self.faculty = properties[@"faculty"];
     
-    // Replaces UINavigationController
-//    [self.splitViewController showDetailViewController:detailVCStory sender:self];
+    [self renderText];
 }
 
-- (void)didSelectCategory:(NSString *)selectedCategory {
-
+- (void)renderText {
+    self.commercialLabel.text = self.commercial;
+    self.artistLabel.text = self.artist;
+    self.studentLabel.text = self.student;
+    self.staffLabel.text = self.staff;
+    self.facultyLabel.text = self.faculty;
 }
 
-#pragma mark - memory warning
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
 
 #pragma mark - Table view data source
 
@@ -128,5 +127,11 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark - memory warning
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
 
 @end

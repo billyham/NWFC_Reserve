@@ -1,20 +1,32 @@
 //
-//  EQRCatLeftVCTableViewController.m
+//  EQREquipTitleInfoTVC.m
 //  Gear
 //
-//  Created by Ray Smith on 10/10/17.
+//  Created by Ray Smith on 10/19/17.
 //  Copyright © 2017 Ham Again LLC. All rights reserved.
 //
 
-#import "EQRCatLeftVC.h"
-#import "EQRCatLeftCategoriesVC.h"
-#import "EQREquipTitleDetailVC.h"
+#import "EQREquipTitleInfoTVC.h"
 
-@interface EQRCatLeftVC () <EQRCatLeftCategoriesDelegate>
-@property (nonatomic, strong) NSString *segueSelectionType;
+@interface EQREquipTitleInfoTVC ()
+
+@property (strong, nonatomic) NSString *name;
+@property (strong, nonatomic) NSString *shortName;
+@property (strong, nonatomic) NSString *category;
+@property (strong, nonatomic) NSString *subcategory;
+@property (strong, nonatomic) NSString *scheduleGrouping;
+
+@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *shortNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *categoryLabel;
+@property (weak, nonatomic) IBOutlet UILabel *subcategoryLabel;
+@property (weak, nonatomic) IBOutlet UILabel *scheduleGroupingLabel;
+
 @end
 
-@implementation EQRCatLeftVC
+@implementation EQREquipTitleInfoTVC
+
+@synthesize delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -26,45 +38,39 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-#pragma mark - segue
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"catCategories"]) {
-
-        self.segueSelectionType = segue.identifier;
-        
-        EQRCatLeftCategoriesVC *vc = [segue destinationViewController];
-        vc.delegate = self;
-    }
+- (void)viewWillAppear:(BOOL)animated {
+    [self renderText];
+    [super viewWillAppear:animated];
 }
 
-#pragma mark - EQRCatLeftCategories delegate
 
-- (void)didPassEquipTitleThroughCategory:(NSDictionary *)selectedEquipTitle {
-    UIStoryboard *equipTitleDetailStoryboard = [UIStoryboard storyboardWithName:@"EquipTitleDetailVC" bundle:nil];
-    EQREquipTitleDetailVC *detailVCStory = [equipTitleDetailStoryboard instantiateViewControllerWithIdentifier:@"EquipTitleDetail"];
+- (void)setText:(NSDictionary *)properties {
+    self.name = properties[@"name"];
+    self.shortName = properties[@"shortName"];
+    self.category = properties[@"category"];
+    self.subcategory = properties[@"subcategory"];
+    self.scheduleGrouping = properties[@"scheduleGrouping"];
     
-    [detailVCStory launchWithKey:[selectedEquipTitle objectForKey:@"keyId"]];
-    UINavigationController *navVC = [[self.splitViewController childViewControllers] objectAtIndex:1];
-    [navVC popToRootViewControllerAnimated:NO];
-    [navVC pushViewController:detailVCStory animated:NO];
-    
-    // Replaces UINavigationController
-//    [self.splitViewController showDetailViewController:detailVCStory sender:self];
+    [self renderText];
 }
 
-- (void)didSelectCategory:(NSString *)selectedCategory {
 
+- (void)renderText {
+    self.nameLabel.text = self.name;
+    self.shortNameLabel.text = self.shortName;
+    self.categoryLabel.text = self.category;
+    self.subcategoryLabel.text = self.subcategory;
+    self.scheduleGroupingLabel.text = self.scheduleGrouping;
 }
 
-#pragma mark - memory warning
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
-#pragma mark - Table view data source
-
+//#pragma mark - Table view data source
+//
 //- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 //#warning Incomplete implementation, return the number of sections
 //    return 0;

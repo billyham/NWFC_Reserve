@@ -1,16 +1,19 @@
 //
-//  EQREquipTitleDetailTableVC.m
+//  EQREquipTitleDetailVC.m
 //  Gear
 //
-//  Created by Ray Smith on 10/1/17.
+//  Created by Ray Smith on 10/18/17.
 //  Copyright © 2017 Ham Again LLC. All rights reserved.
 //
 
-#import "EQREquipTitleDetailTableVC.h"
+#import "EQREquipTitleDetailVC.h"
 #import "EQRWebData.h"
 #import "EQREquipItem.h"
+#import "EQREquipTitleInfoTVC.h"
+#import "EQREquipTitlePricesTVC.h"
 
-@interface EQREquipTitleDetailTableVC ()
+@interface EQREquipTitleDetailVC () <UITableViewDelegate, UITableViewDataSource>
+
 @property (strong, nonatomic) NSString *equipTitleKeyId;
 @property (strong, nonatomic) EQREquipItem *equipTitle;
 
@@ -34,9 +37,13 @@
 @property (weak, nonatomic) IBOutlet UISwitch *hideFromPublic;
 @property (weak, nonatomic) IBOutlet UISwitch *hideFromStudent;
 
+@property (weak, nonatomic) EQREquipTitleInfoTVC *equipTitleInfo;
+@property (weak, nonatomic) EQREquipTitlePricesTVC *equipTitlePrices;
+@property (weak, nonatomic) IBOutlet UITableView *itemsUniqueTable;
+
 @end
 
-@implementation EQREquipTitleDetailTableVC
+@implementation EQREquipTitleDetailVC
 
 #pragma mark - launch with title key
 - (void)launchWithKey:(NSString *)keyId {
@@ -54,7 +61,7 @@
         [webData queryWithLink:@"EQGetEquipTitleWithKey.php" parameters:topArray class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {
             
             if ([muteArray count] < 1) {
-                NSLog(@"EQREquipTitleDetailTableVC > lauch, failed to retrieve equipTitleItem");
+                NSLog(@"EQREquipTitleDetailTableVC > launch, failed to retrieve equipTitleItem");
                 return;
             }
             
@@ -75,14 +82,13 @@
     [queue addOperation:showEquipItem];
 }
 
+
+#pragma mark - view methods
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self.itemsUniqueTable registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     
 }
 
@@ -117,81 +123,75 @@
     BOOL hideFromStudent = [equipItem.hide_from_student boolValue];
     [self.hideFromStudent setOn:hideFromStudent animated:NO];
     
-    NSLog(@"description_long: %@", equipItem.description_long);
-    NSLog(@"description_short: %@", equipItem.description_short);
-}
-
-#pragma mark - Table view data source
-
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-//#warning Incomplete implementation, return the number of sections
-//    return 0;
-//}
-//
-//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-//#warning Incomplete implementation, return the number of rows
-//    return 0;
-//}
-
-/*
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    // Send data to container TableVCs
+    [self.equipTitleInfo setText:@{
+                                   @"name": self.equipTitle.name,
+                                   @"shortName": self.equipTitle.short_name,
+                                   @"category": self.equipTitle.category,
+                                   @"subcategory": self.equipTitle.subcategory,
+                                   @"scheduleGrouping": self.equipTitle.schedule_grouping
+                                   }];
     
-    // Configure the cell...
+    if (self.equipTitle.price_commercial == nil) self.equipTitle.price_commercial = @"0";
+    if (self.equipTitle.price_artist == nil) self.equipTitle.price_artist = @"0";
+    if (self.equipTitle.price_student == nil) self.equipTitle.price_student = @"0";
+    if (self.equipTitle.price_staff == nil) self.equipTitle.price_staff = @"0";
+    if (self.equipTitle.price_nonprofit == nil) self.equipTitle.price_nonprofit = @"0";
     
-    return cell;
+    [self.equipTitlePrices setText:@{
+                                     @"commercial": self.equipTitle.price_commercial,
+                                     @"artist": self.equipTitle.price_artist,
+                                     @"student": self.equipTitle.price_student,
+                                     @"staff": self.equipTitle.price_staff,
+                                     @"faculty": self.equipTitle.price_nonprofit
+                                     }];
 }
-*/
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    
+    if ([segue.identifier isEqualToString:@"EquipTitleInfo"]) {
+        // Prepare for Segue gets called before the contained view is loaded.
+        // Save a reference to the destination VC for later
+        EQREquipTitleInfoTVC *infoTVC = [segue destinationViewController];
+        self.equipTitleInfo = infoTVC;
+    }
+    
+    if ([segue.identifier isEqualToString:@"EquipTitlePrices"]) {
+        EQREquipTitlePricesTVC *pricesTVC = [segue destinationViewController];
+        self.equipTitlePrices = pricesTVC;
+    }
 }
-*/
+
+#pragma mark - tableview datasource
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 3;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+    
+    cell.textLabel.text = @"The country bumpkins";
+    return cell;
+}
+
+#pragma mark - EQREquipTitleItemInfo delegate methods
+
+
 
 #pragma mark - memory warning
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
+
 
 @end

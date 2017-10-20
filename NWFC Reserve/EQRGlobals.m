@@ -15,7 +15,7 @@ BOOL EQRBuildPSU = NO;
 BOOL EQRSuppressDemoColor = NO;
 
 // Logs
-BOOL EQRLogInputStrings = YES;
+BOOL EQRLogInputStrings = NO;
 
 // Datastore Settings
 BOOL EQRUseCoreData = NO;
