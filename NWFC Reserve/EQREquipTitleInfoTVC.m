@@ -63,7 +63,36 @@
     self.scheduleGroupingLabel.text = self.scheduleGrouping;
 }
 
+#pragma mark - tableview delegate methods
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    switch (indexPath.row) {
+        case 0:
+            [self.delegate propertySelection:@"name" value:self.name];
+            break;
+        case 1:
+            [self.delegate propertySelection:@"short_name" value:self.shortName];
+            break;
+        case 2:
+            [self.delegate propertySelection:@"category" value:self.category];
+            break;
+        case 3:
+            [self.delegate propertySelection:@"subcategory" value:self.subcategory];
+            break;
+        case 4:
+            [self.delegate propertySelection:@"schedule_grouping" value:self.scheduleGrouping];
+            break;
+        default:
+            break;
+    }
+    
+    [[self.tableView cellForRowAtIndexPath:indexPath] setHighlighted:NO];
+}
+
+
+
+#pragma mark - memory warning
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

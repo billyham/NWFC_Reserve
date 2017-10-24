@@ -25,6 +25,7 @@
 @end
 
 @implementation EQREquipTitlePricesTVC
+@synthesize delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -61,6 +62,32 @@
     self.facultyLabel.text = self.faculty;
 }
 
+#pragma mark - tableview delegate methods
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    switch (indexPath.row) {
+        case 0:
+            [self.delegate propertySelection:@"price_commercial" value:self.commercial];
+            break;
+        case 1:
+            [self.delegate propertySelection:@"price_artist" value:self.artist];
+            break;
+        case 2:
+            [self.delegate propertySelection:@"price_student" value:self.student];
+            break;
+        case 3:
+            [self.delegate propertySelection:@"price_staff" value:self.staff];
+            break;
+        case 4:
+            [self.delegate propertySelection:@"price_nonprofit" value:self.faculty];
+            break;
+        default:
+            break;
+    }
+    
+    [[self.tableView cellForRowAtIndexPath:indexPath] setHighlighted:NO];
+}
 
 #pragma mark - Table view data source
 

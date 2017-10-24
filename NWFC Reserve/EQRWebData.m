@@ -553,13 +553,17 @@ const int intEQREquipCategory = 12;
     
     // This equip object
     if ([elementName isEqualToString:@"entry"]){
-        //a variable property
+        // A variable property
         self.currentThing = [[NSClassFromString(self.variableClassString)  alloc] init];
         return;
     }
     
     if ([EQRXMLParserHelper isValidElement:elementName inSet:self.validElements]) {
         self.currentProperty = elementName;
+    } else {
+        // No match was found among valid properties.
+        // Don't know how to stop parsing, so tag this as a non-existent element
+        self.currentProperty = @"rejectThis";
     }
 }
 
@@ -838,6 +842,8 @@ const int intEQREquipCategory = 12;
         return;
     }
 
+    // If no match is found, reset the currentValue
+    self.currentValue = nil;
 }
 
 

@@ -86,6 +86,7 @@
                   @"EquipTitleItem_foreignKey",
                   @"description_long",
                   @"short_name",
+                  @"category_for_ratesheet",
                   nil];
     return set;
 }

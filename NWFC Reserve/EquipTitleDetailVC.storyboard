@@ -151,7 +151,9 @@
                         <viewLayoutGuide key="safeArea" id="7BP-ns-cKM"/>
                     </view>
                     <connections>
+                        <outlet property="descriptionLongBG" destination="2Yz-Cx-1hH" id="b12-9j-IgB"/>
                         <outlet property="descriptionLongLabel" destination="6bo-Pr-9GW" id="jBS-cy-nUr"/>
+                        <outlet property="descriptionShortBG" destination="Vgp-4t-pLb" id="p2G-GC-enB"/>
                         <outlet property="descriptionShortLabel" destination="NFE-Jf-9HQ" id="MKt-6B-sTy"/>
                         <outlet property="nameLabel" destination="8IU-Ys-wWt" id="2HE-Dy-9T1"/>
                         <outlet property="shortNameLabel" destination="epP-wU-paD" id="Ber-qH-R7K"/>
@@ -323,7 +325,7 @@
                     <connections>
                         <outlet property="categoryLabel" destination="hiR-Dj-KdH" id="NPD-RC-EGo"/>
                         <outlet property="nameLabel" destination="3qy-zl-VYm" id="85G-TQ-Gm4"/>
-                        <outlet property="scheduleGroupingLabel" destination="KsN-3S-5so" id="bWw-SP-NxS"/>
+                        <outlet property="scheduleGroupingLabel" destination="KsN-3S-5so" id="ES4-aB-qtf"/>
                         <outlet property="shortNameLabel" destination="ghU-tG-DxY" id="UXe-E8-ffU"/>
                         <outlet property="subcategoryLabel" destination="ek7-d6-tk9" id="Ej9-5i-IKo"/>
                     </connections>

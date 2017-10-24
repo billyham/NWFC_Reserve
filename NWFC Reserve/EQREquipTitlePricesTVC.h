@@ -8,8 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQREquipTitlePricesTVC : UITableViewController
+@protocol EQREquipTitlePricesDelegate;
+
+@interface EQREquipTitlePricesTVC : UITableViewController {
+    __weak id <EQREquipTitlePricesDelegate> delegate;
+}
+
+@property (weak, nonatomic) id <EQREquipTitlePricesDelegate> delegate;
 
 - (void)setText:(NSDictionary *)properties;
 
+@end
+
+@protocol EQREquipTitlePricesDelegate
+- (void)propertySelection:(NSString *)property value:(NSString *)value;
 @end

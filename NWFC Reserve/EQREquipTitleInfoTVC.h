@@ -21,5 +21,5 @@
 @end
 
 @protocol EQREquipTitleInfoDelegate
-
+- (void)propertySelection:(NSString *)property value:(NSString *)value;
 @end
