@@ -10,23 +10,26 @@
 #import "EQRModeManager.h"
 #import "EQRWebData.h"
 #import "EQREquipItem.h"
+#import "EQRGenericTextEditor.h"
 
-@interface EQRCatLeftEquipTitlesVC ()
+@interface EQRCatLeftEquipTitlesVC () <EQRGenericEditorDelegate>
 @property (nonatomic, strong) NSArray *arrayOfTitles;
+@property (nonatomic, strong) EQRGenericTextEditor *genericTextEditor;
 @end
 
 @implementation EQRCatLeftEquipTitlesVC
 @synthesize delegate;
 
+#pragma mark - view methods
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.arrayOfTitles = @[];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithTitle:@"Add" style:UIBarButtonItemStylePlain target:self action:@selector(newTitleItem:)];
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    NSArray *rightButtons = @[addButton];
+    
+    [self.navigationItem setRightBarButtonItems:rightButtons];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -38,9 +41,72 @@
     
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark - button actions
+- (IBAction)newTitleItem:(id)sender {
+    self.genericTextEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
+    self.genericTextEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    self.genericTextEditor.delegate = self;
+    NSString *subtitle = [NSString stringWithFormat:@"Enter a new item in the %@ category", self.selectedCategory];
+    [self.genericTextEditor initalSetupWithTitle:@"Name" subTitle:subtitle currentText:@"" keyboard:nil returnMethod:@"continueAddItem:"];
+    [self presentViewController:self.genericTextEditor animated:YES completion:^{
+        
+    }];
+}
+
+#pragma mark - passed from detail view
+- (void)reloadTitles {
+    [self loadTitles];
+}
+
+- (void)reloadTitlesAndSelect:(NSString *)item {
+    [self loadTitles];
+}
+
+#pragma mark - generic editor delegate methods
+- (void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod {
+    
+    self.genericTextEditor.delegate = nil;
+    [self dismissViewControllerAnimated:YES completion:^{
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        [self performSelector:NSSelectorFromString(returnMethod) withObject:returnText];
+#   pragma clang diagnostic pop
+        self.genericTextEditor = nil;
+    }];
+}
+
+- (void)cancelByDismissingVC {
+    self.genericTextEditor.delegate = nil;
+    [self dismissViewControllerAnimated:YES completion:^{
+        self.genericTextEditor = nil;
+    }];
+}
+
+- (void)continueAddItem:(NSString *)currentText {
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.maxConcurrentOperationCount = 1;
+    
+    __block NSString *keyId;
+    NSBlockOperation *createNewItem = [NSBlockOperation blockOperationWithBlock:^{
+        NSArray *topArray = @[
+                              @[@"short_name", currentText],
+                              @[@"category", self.selectedCategory]
+                              ];
+        
+        keyId = [webData queryForStringWithLink:@"EQSetNewEquipTitle.php" parameters:topArray];
+    }];
+    
+    NSBlockOperation *renderNewItem = [NSBlockOperation blockOperationWithBlock:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self loadTitles];
+        });
+    }];
+    [renderNewItem addDependency:createNewItem];
+    
+    [queue addOperation:createNewItem];
+    [queue addOperation:renderNewItem];
 }
 
 #pragma mark - data methods
@@ -76,12 +142,10 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
-//    return self.arrayOfTitles.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.arrayOfTitles.count;
-//    return 0;
 }
 
 
@@ -139,13 +203,16 @@
 */
 
 
-#pragma mark - Navigation
-
+//#pragma mark - Navigation
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 //- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 //    // Get the new view controller using [segue destinationViewController].
 //    // Pass the selected object to the new view controller.
 //}
 
+#pragma mark - memory warning
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
 
 @end

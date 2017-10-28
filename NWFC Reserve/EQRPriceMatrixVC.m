@@ -26,7 +26,7 @@
 #import "EQRRenterPricingTypeTableVC.h"
 
 
-@interface EQRPriceMatrixVC () <EQRWebDataDelegate, UICollectionViewDataSource, UICollectionViewDelegate, EQRGenericNumberEditorDelegate, EQRPriceMatrixContentDelegate, UIAlertViewDelegate, EQRRenterPricingDelegate>
+@interface EQRPriceMatrixVC () <EQRWebDataDelegate, UICollectionViewDataSource, UICollectionViewDelegate, EQRGenericEditorDelegate, EQRPriceMatrixContentDelegate, UIAlertViewDelegate, EQRRenterPricingDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem *myRequestItem;
 
@@ -1075,7 +1075,10 @@
     
     [self presentViewController:numberEditor animated:YES completion:^{
        
-        [numberEditor initalSetupWithTitle:@"Enter Number of Days for Pricing" subTitle:[NSString stringWithFormat:@"For rental happening %@", self.daysForPrice.text] currentText:currentValueString returnMethod:@"updateDaysForPrice:"];
+        [numberEditor initalSetupWithTitle:@"Enter Number of Days for Pricing"
+                                  subTitle:[NSString stringWithFormat:@"For rental happening %@", self.daysForPrice.text] currentText:currentValueString
+                                  keyboard:nil
+                              returnMethod:@"updateDaysForPrice:"];
         
     }];
 }
@@ -1096,7 +1099,11 @@
     
     [self presentViewController:numberEditor animated:YES completion:^{
         
-        [numberEditor initalSetupWithTitle:@"Enter New Daily Cost" subTitle:nil currentText:cost returnMethod:@"updateJoinRowWithNewCost:"];
+        [numberEditor initalSetupWithTitle:@"Enter New Daily Cost"
+                                  subTitle:nil
+                               currentText:cost
+                                  keyboard:nil
+                              returnMethod:@"updateJoinRowWithNewCost:"];
         
     }];
 }
@@ -1112,7 +1119,11 @@
     
     [self presentViewController:numberEditor animated:YES completion:^{
         
-        [numberEditor initalSetupWithTitle:@"Enter New Deposit Amount" subTitle:nil currentText:deposit returnMethod:@"updateJoinRowWithNewDeposit:"];
+        [numberEditor initalSetupWithTitle:@"Enter New Deposit Amount"
+                                  subTitle:nil
+                               currentText:deposit
+                                  keyboard:nil
+                              returnMethod:@"updateJoinRowWithNewDeposit:"];
         
     }];
     

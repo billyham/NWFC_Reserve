@@ -9,8 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "EQRVCWithDemoModePrompt.h"
 
-@interface EQREquipTitleDetailVC : EQRVCWithDemoModePrompt
+@protocol EQREquipTitleDetailDelegate;
+
+@interface EQREquipTitleDetailVC : EQRVCWithDemoModePrompt {
+    __weak id <EQREquipTitleDetailDelegate> delegate;
+}
+@property (weak, nonatomic) id <EQREquipTitleDetailDelegate> delegate;
 
 - (void)launchWithKey:(NSString *)keyId;
 
+@end
+
+@protocol EQREquipTitleDetailDelegate <NSObject>
+- (void)reloadList;
+- (void)reloadAndSelect:(NSString *)keyId;
 @end

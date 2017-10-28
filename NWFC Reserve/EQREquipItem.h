@@ -29,6 +29,7 @@
 @property (strong, nonatomic) NSString* hide_from_public;
 @property (strong, nonatomic) NSString* hide_from_student;
 @property (strong, nonatomic) NSString* schedule_grouping;
+@property (strong, nonatomic) NSString *decommissioned;
 
 // Non-database properties
 @property (strong, nonatomic) NSString *count_of_available;

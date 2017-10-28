@@ -16,6 +16,9 @@
 }
 @property (weak, nonatomic) id <EQRCatEquipTitleDelegate> delegate;
 @property (strong, nonatomic) NSString *selectedCategory;
+
+- (void)reloadTitles;
+- (void)reloadTitlesAndSelect:(NSString *)item;
 @end
 
 @protocol EQRCatEquipTitleDelegate <NSObject>

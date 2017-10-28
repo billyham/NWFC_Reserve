@@ -13,7 +13,7 @@
 
 @protocol EQREditorMiscCellDelegate;
 
-@interface EQREditorMiscListCell : UICollectionViewCell <EQRGenericTextEditorDelegate> {
+@interface EQREditorMiscListCell : UICollectionViewCell <EQRGenericEditorDelegate> {
     __weak id <EQREditorMiscCellDelegate> delegate;
 }
 

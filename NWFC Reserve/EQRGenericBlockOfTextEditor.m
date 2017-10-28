@@ -25,8 +25,6 @@
 
 @implementation EQRGenericBlockOfTextEditor
 
-@synthesize delegate;
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     

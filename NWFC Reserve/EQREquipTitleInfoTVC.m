@@ -10,14 +10,14 @@
 
 @interface EQREquipTitleInfoTVC ()
 
-@property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSString *shortName;
+@property (strong, nonatomic) NSString *longName;
 @property (strong, nonatomic) NSString *category;
 @property (strong, nonatomic) NSString *subcategory;
 @property (strong, nonatomic) NSString *scheduleGrouping;
 
-@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *shortNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *longNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *categoryLabel;
 @property (weak, nonatomic) IBOutlet UILabel *subcategoryLabel;
 @property (weak, nonatomic) IBOutlet UILabel *scheduleGroupingLabel;
@@ -45,8 +45,8 @@
 
 
 - (void)setText:(NSDictionary *)properties {
-    self.name = properties[@"name"];
     self.shortName = properties[@"shortName"];
+    self.longName = properties[@"name"];
     self.category = properties[@"category"];
     self.subcategory = properties[@"subcategory"];
     self.scheduleGrouping = properties[@"scheduleGrouping"];
@@ -56,8 +56,8 @@
 
 
 - (void)renderText {
-    self.nameLabel.text = self.name;
     self.shortNameLabel.text = self.shortName;
+    self.longNameLabel.text = self.longName;
     self.categoryLabel.text = self.category;
     self.subcategoryLabel.text = self.subcategory;
     self.scheduleGroupingLabel.text = self.scheduleGrouping;
@@ -66,13 +66,13 @@
 #pragma mark - tableview delegate methods
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+
     switch (indexPath.row) {
         case 0:
-            [self.delegate propertySelection:@"name" value:self.name];
+            [self.delegate propertySelection:@"short_name" value:self.shortName];
             break;
         case 1:
-            [self.delegate propertySelection:@"short_name" value:self.shortName];
+            [self.delegate propertySelection:@"name" value:self.longName];
             break;
         case 2:
             [self.delegate propertySelection:@"category" value:self.category];
@@ -86,8 +86,6 @@
         default:
             break;
     }
-    
-    [[self.tableView cellForRowAtIndexPath:indexPath] setHighlighted:NO];
 }
 
 

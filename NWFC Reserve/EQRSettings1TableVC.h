@@ -13,7 +13,7 @@
 
 @protocol EQRSettings1TableDelegate;
 
-@interface EQRSettings1TableVC : UITableViewController  <EQRPasswordEntryDelegate, UIPopoverControllerDelegate, EQRGenericTextEditorDelegate, UITableViewDelegate, EQRGenericBlockOfTextTextEditorDelegate>{
+@interface EQRSettings1TableVC : UITableViewController  <EQRPasswordEntryDelegate, UIPopoverControllerDelegate, EQRGenericEditorDelegate, UITableViewDelegate>{
     __weak id <EQRSettings1TableDelegate> delegate;
 }
 
@@ -26,7 +26,7 @@
 //passwordEntryVC delegate methods
 -(void)passwordEntered:(BOOL)passwordSuccessful;
 
-//EQRGenericTextEditorDelegate  and EQRGenericBlockOfTextEditorDelegate methods
+//EQRGenericEditorDelegate  and EQRGenericBlockOfTextEditorDelegate methods
 -(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod;
 
 @end

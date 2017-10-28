@@ -15,6 +15,9 @@
     __weak id <EQRCatLeftCategoriesDelegate> delegate;
 }
 @property (weak, nonatomic) id <EQRCatLeftCategoriesDelegate> delegate;
+
+- (void)reloadTitles;
+- (void)reloadTitlesAndSelect:(NSString *)item;
 @end
 
 @protocol EQRCatLeftCategoriesDelegate <NSObject>

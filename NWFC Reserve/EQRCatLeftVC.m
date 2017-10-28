@@ -10,8 +10,9 @@
 #import "EQRCatLeftCategoriesVC.h"
 #import "EQREquipTitleDetailVC.h"
 
-@interface EQRCatLeftVC () <EQRCatLeftCategoriesDelegate>
+@interface EQRCatLeftVC () <EQRCatLeftCategoriesDelegate, EQREquipTitleDetailDelegate>
 @property (nonatomic, strong) NSString *segueSelectionType;
+@property (nonatomic, weak) EQRCatLeftCategoriesVC *categoriesVC;
 @end
 
 @implementation EQRCatLeftVC
@@ -35,26 +36,33 @@
         
         EQRCatLeftCategoriesVC *vc = [segue destinationViewController];
         vc.delegate = self;
+        self.categoriesVC = vc;
     }
 }
 
 #pragma mark - EQRCatLeftCategories delegate
-
 - (void)didPassEquipTitleThroughCategory:(NSDictionary *)selectedEquipTitle {
     UIStoryboard *equipTitleDetailStoryboard = [UIStoryboard storyboardWithName:@"EquipTitleDetailVC" bundle:nil];
     EQREquipTitleDetailVC *detailVCStory = [equipTitleDetailStoryboard instantiateViewControllerWithIdentifier:@"EquipTitleDetail"];
+    detailVCStory.delegate = self;
     
     [detailVCStory launchWithKey:[selectedEquipTitle objectForKey:@"keyId"]];
     UINavigationController *navVC = [[self.splitViewController childViewControllers] objectAtIndex:1];
     [navVC popToRootViewControllerAnimated:NO];
     [navVC pushViewController:detailVCStory animated:NO];
-    
-    // Replaces UINavigationController
-//    [self.splitViewController showDetailViewController:detailVCStory sender:self];
 }
 
 - (void)didSelectCategory:(NSString *)selectedCategory {
 
+}
+
+#pragma mark - EQREquipTitleDetail delegate methods
+- (void)reloadList {
+    [self.categoriesVC reloadTitles];
+}
+
+- (void)reloadAndSelect:(NSString *)keyId {
+    [self.categoriesVC reloadTitlesAndSelect:keyId];
 }
 
 #pragma mark - memory warning

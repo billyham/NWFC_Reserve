@@ -9,11 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "EQRGenericTextEditor.h"
 
-@interface EQRSettings2TableVC : UITableViewController <EQRGenericTextEditorDelegate>
+@interface EQRSettings2TableVC : UITableViewController <EQRGenericEditorDelegate>
 
 -(IBAction)urlTextFieldDidChange:(id)sender;
 
-//EQRGenericTextEditorDelegate methods
+//EQRGenericEditorDelegate methods
 -(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod;
 
 @end

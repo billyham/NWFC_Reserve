@@ -18,13 +18,12 @@
 @property (strong, nonatomic) NSString* titleString;
 @property (strong, nonatomic) NSString* subTitleString;
 @property (strong, nonatomic) NSString* textFieldString;
+@property (strong, nonatomic) NSString* keyboardPreference;
 @property (strong, nonatomic) NSString* returnMethod;
 
 @end
 
 @implementation EQRGenericNumberEditor
-
-@synthesize delegate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -43,11 +42,16 @@
 }
 
 
--(void)initalSetupWithTitle:(NSString *)title subTitle:(NSString *)subtitle currentText:(NSString *)currentText returnMethod:(NSString *)returnMethod{
+-(void)initalSetupWithTitle:(NSString *)title
+                   subTitle:(NSString *)subtitle
+                currentText:(NSString *)currentText
+                   keyboard:(NSString *)keyboard
+               returnMethod:(NSString *)returnMethod{
     
     self.titleString = title;
     self.textFieldString = currentText;
     self.subTitleString = subtitle;
+    self.keyboardPreference = keyboard;
     self.returnMethod = returnMethod;
     
     self.textViewText.text = self.textFieldString;

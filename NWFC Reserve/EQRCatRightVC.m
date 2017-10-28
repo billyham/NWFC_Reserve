@@ -9,6 +9,7 @@
 #import "EQRCatRightVC.h"
 #import "EQRModeManager.h"
 #import "EQRCatLeftEquipTitlesVC.h"
+//#import "EQRGenericTextEditor.h"
 
 @interface EQRCatRightVC () <UISplitViewControllerDelegate>
 
@@ -25,16 +26,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // UIBar Buttons
-    // Create fixed spaces
-//    UIBarButtonItem *twentySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
-//    twentySpace.width = 20;
-//    UIBarButtonItem *thirtySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
-//    thirtySpace.width = 30;
-    
-    // Right buttons
-    
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -42,26 +33,13 @@
     [super viewWillAppear:animated];
 }
 
-#pragma mark - CatLeftEquipTitleDelegate methods
-//-(void)didSelectEquipTitle:(NSString *)selectedEquipTitle {
-//    NSLog(@"catRightVC says equip title is tapped: %@", selectedEquipTitle);
-//
-//    UIStoryboard *equipTitleDetailStoryboard = [UIStoryboard storyboardWithName:@"EquipTitleDetail" bundle:nil];
-//    UITableViewController *tableView = [equipTitleDetailStoryboard instantiateViewControllerWithIdentifier:@"EquipTitleDetail"];
-//
-//    [self.navigationController pushViewController:tableView animated:YES];
-//}
 
 #pragma mark - split view delegate methods
-
 -(BOOL)splitViewController:(UISplitViewController *)splitViewController showDetailViewController:(UIViewController *)vc sender:(id)sender {
-    
-
     return NO;
 }
 
 -(void)splitViewController:(UISplitViewController *)svc willChangeToDisplayMode:(UISplitViewControllerDisplayMode)displayMode {
-//    NSLog(@"displayMode is: %ld", (long)displayMode);
     
 }
 
@@ -69,11 +47,10 @@
     
 }
 
-#pragma mark - memory warning
 
+#pragma mark - memory warning
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 /*

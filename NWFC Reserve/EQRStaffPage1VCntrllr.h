@@ -10,7 +10,7 @@
 #import "EQRPasswordEntryVC.h"
 #import "EQRGenericTextEditor.h"
 
-@interface EQRStaffPage1VCntrllr : UIViewController <EQRPasswordEntryDelegate, UIPopoverControllerDelegate, EQRGenericTextEditorDelegate>
+@interface EQRStaffPage1VCntrllr : UIViewController <EQRPasswordEntryDelegate, UIPopoverControllerDelegate, EQRGenericEditorDelegate>
 
 -(IBAction)urlTextFieldDidChange:(id)sender;
 -(IBAction)termTextFieldDidChange:(id)sender;
@@ -19,7 +19,7 @@
 //passwordEntryVC delegate methods
 -(void)passwordEntered:(BOOL)passwordSuccessful;
 
-//EQRGenericTextEditorDelegate methods
+//EQRGenericEditorDelegate methods
 -(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod;
 
 @end

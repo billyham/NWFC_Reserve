@@ -7,26 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRGenericEditor.h"
 
-@protocol EQRGenericNumberEditorDelegate;
 
-@interface EQRGenericNumberEditor : UIViewController{
-    
-    __weak id <EQRGenericNumberEditorDelegate> delegate;
+@interface EQRGenericNumberEditor : EQRGenericEditor{
 }
-
-@property (weak, nonatomic) id <EQRGenericNumberEditorDelegate> delegate;
-
--(void)initalSetupWithTitle:(NSString *)title subTitle:(NSString *)subtitle currentText:(NSString *)currentText returnMethod:(NSString *)returnMethod;
-
-
-
-@end
-
-
-@protocol EQRGenericNumberEditorDelegate <NSObject>
-
--(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod;
--(void)cancelByDismissingVC;
 
 @end

@@ -14,6 +14,7 @@
 
 @interface EQRCatLeftCategoriesVC () <EQRCatEquipTitleDelegate>
 @property (nonatomic, strong) NSArray *arrayOfCategories;
+@property (nonatomic, weak) EQRCatLeftEquipTitlesVC *titlesVC;
 @end
 
 @implementation EQRCatLeftCategoriesVC
@@ -48,11 +49,21 @@
     EQRCatLeftEquipTitlesVC * destinationVC = [segue destinationViewController];
     destinationVC.delegate = self;
     destinationVC.selectedCategory = [[(UITableViewCell *)sender textLabel] text];
+    self.titlesVC = destinationVC;
 }
 
 #pragma mark - EQRCatLeftEquipTitle delegate
 - (void)didSelectEquipTitle:(NSDictionary *)selectedEquipTitle {
     [self.delegate didPassEquipTitleThroughCategory:selectedEquipTitle];
+}
+
+#pragma mark - pass along to titlesVC
+- (void)reloadTitles {
+    [self.titlesVC reloadTitles];
+}
+
+-(void)reloadTitlesAndSelect:(NSString *)item {
+    [self.titlesVC reloadTitlesAndSelect:item];
 }
 
 #pragma mark - data methods

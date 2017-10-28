@@ -13,30 +13,38 @@
 #import "EQREquipTitlePricesTVC.h"
 #import "EQRGenericBlockOfTextEditor.h"
 #import "EQRGenericTextEditor.h"
+#import "EQRGenericNumberEditor.h"
+#import "EQRGenericEditor.h"
 
-@interface EQREquipTitleDetailVC () <EQRGenericBlockOfTextTextEditorDelegate, EQRGenericTextEditorDelegate, EQREquipTitleInfoDelegate, EQREquipTitlePricesDelegate>
+@interface EQREquipTitleDetailVC () <EQRGenericEditorDelegate, EQREquipTitleInfoDelegate, EQREquipTitlePricesDelegate>
 
 @property (strong, nonatomic) NSString *equipTitleKeyId;
 @property (strong, nonatomic) EQREquipItem *equipTitle;
 
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *shortNameLabel;
-
-@property (weak, nonatomic) IBOutlet UILabel *descriptionLongLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionShortLabel;
 @property (weak, nonatomic) IBOutlet UIView *descriptionShortBG;
+@property (weak, nonatomic) IBOutlet UILabel *descriptionLongLabel;
 @property (weak, nonatomic) IBOutlet UIView *descriptionLongBG;
+@property (weak, nonatomic) IBOutlet UILabel *depositLabel;
+@property (weak, nonatomic) IBOutlet UIView *depositBG;
+@property (weak, nonatomic) IBOutlet UISwitch *hideFromPublicSwitch;
+@property (weak, nonatomic) IBOutlet UISwitch *hideFromStudentsSwitch;
+
 
 @property (weak, nonatomic) EQREquipTitleInfoTVC *equipTitleInfo;
 @property (weak, nonatomic) EQREquipTitlePricesTVC *equipTitlePrices;
-//@property (weak, nonatomic) IBOutlet UITableView *itemsUniqueTable;
 
-@property (strong, nonatomic) EQRGenericBlockOfTextEditor *genericTextEditor;
-@property (strong, nonatomic) EQRGenericTextEditor *genericSingleLineTextEditor;
+@property (strong, nonatomic) EQRGenericEditor *genericEditor;
+//@property (strong, nonatomic) EQRGenericBlockOfTextEditor *genericTextEditor;
+//@property (strong, nonatomic) EQRGenericTextEditor *genericSingleLineTextEditor;
+//@property (strong, nonatomic) EQRGenericNumberEditor *genericNumberEditor;
 
 @end
 
 @implementation EQREquipTitleDetailVC
+@synthesize delegate;
 
 #pragma mark - launch with title key
 - (void)launchWithKey:(NSString *)keyId {
@@ -76,11 +84,8 @@
 
 
 #pragma mark - view methods
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-//    [self.itemsUniqueTable registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     
     UITapGestureRecognizer *tapShortDesc = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editDescriptionShort:)];
     tapShortDesc.cancelsTouchesInView = NO;
@@ -89,6 +94,24 @@
     UITapGestureRecognizer *tapLongDesc = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editDescriptionLong:)];
     tapLongDesc.cancelsTouchesInView = NO;
     [self.descriptionLongBG addGestureRecognizer:tapLongDesc];
+    
+    UITapGestureRecognizer *tapDeposit = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editDeposit:)];
+    tapDeposit.cancelsTouchesInView = NO;
+    [self.depositBG addGestureRecognizer:tapDeposit];
+    
+    // Right buttons
+    UIBarButtonItem *twentySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+    twentySpace.width = 20;
+    UIBarButtonItem *thirtySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+    thirtySpace.width = 30;
+    
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithTitle:@"Delete" style:UIBarButtonItemStylePlain target:self action:@selector(deleteItem:)];
+    
+    NSArray *rightButtons = @[addButton];
+    
+    [self.navigationItem setRightBarButtonItems:rightButtons];
+
+    [self.navigationItem setHidesBackButton:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -99,6 +122,7 @@
     }
 }
 
+#pragma mark - render
 - (void)renderInfo:(EQREquipItem *)equipItem {
     self.nameLabel.text = equipItem.name;
     self.shortNameLabel.text = equipItem.short_name;
@@ -110,6 +134,12 @@
     self.descriptionShortLabel.text = equipItem.description_short;
     
     // Send data to container TableVCs
+    if (self.equipTitle.name == nil) self.equipTitle.name = @"";
+    if (self.equipTitle.short_name == nil) self.equipTitle.short_name = @"";
+    if (self.equipTitle.category == nil) self.equipTitle.category = @"";
+    if (self.equipTitle.subcategory == nil) self.equipTitle.subcategory = @"";
+    if (self.equipTitle.schedule_grouping == nil) self.equipTitle.schedule_grouping = @"";
+    
     [self.equipTitleInfo setText:@{
                                    @"name": self.equipTitle.name,
                                    @"shortName": self.equipTitle.short_name,
@@ -123,6 +153,7 @@
     if (self.equipTitle.price_student == nil) self.equipTitle.price_student = @"0";
     if (self.equipTitle.price_staff == nil) self.equipTitle.price_staff = @"0";
     if (self.equipTitle.price_nonprofit == nil) self.equipTitle.price_nonprofit = @"0";
+    if (self.equipTitle.price_deposit == nil) self.equipTitle.price_deposit = @"0";
     
     [self.equipTitlePrices setText:@{
                                      @"commercial": self.equipTitle.price_commercial,
@@ -131,11 +162,64 @@
                                      @"staff": self.equipTitle.price_staff,
                                      @"faculty": self.equipTitle.price_nonprofit
                                      }];
+    
+    self.depositLabel.text = equipItem.price_deposit;
+    
+    if (self.equipTitle.decommissioned == nil) self.equipTitle.decommissioned = @"0";
+    
+    if ([self.equipTitle.hide_from_public isEqualToString:@"1"]) {
+        [self.hideFromPublicSwitch setOn:YES];
+    }
+    
+    if ([self.equipTitle.hide_from_student isEqualToString:@"1"]) {
+        [self.hideFromStudentsSwitch setOn:YES];
+    }
 }
 
+#pragma mark - button actions
+
+- (IBAction)deleteItem:(id)keyId {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Delete Item" message:@"Permanently delete this equipment item from your catalog" preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *alertOk = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+        self.equipTitle.decommissioned = @"1";
+        [self updateEquipTitle:^{
+            [self.navigationController popViewControllerAnimated:NO];
+            [self.delegate reloadList];
+        }];
+    }];
+    
+    UIAlertAction *alertCancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    
+    [alert addAction:alertOk];
+    [alert addAction:alertCancel];
+    [self presentViewController:alert animated:YES completion:^{
+    }];
+}
+
+#pragma mark - switch actions
+- (IBAction)togglePublic:(id)sender {
+    if (self.hideFromPublicSwitch.on) {
+        self.equipTitle.hide_from_public = @"1";
+    } else {
+        self.equipTitle.hide_from_public = @"0";
+    }
+    
+    [self updateEquipTitle:^{}];
+}
+
+- (IBAction)toggleStudent:(id)sender {
+    if (self.hideFromStudentsSwitch.on) {
+        self.equipTitle.hide_from_student = @"1";
+    } else {
+        self.equipTitle.hide_from_student = @"0";
+    }
+    
+    [self updateEquipTitle:^{}];
+}
 
 #pragma mark - Initiate editing
-
 - (void)editDescriptionShort:(UITapGestureRecognizer *)sender {
     [self editDescription:@"updateDescriptionShort:" property:self.equipTitle.description_short];
 }
@@ -145,143 +229,166 @@
 }
 
 - (void)editDescription:(NSString *)returnMethod property:(NSString *)property {
-    self.genericTextEditor = [[EQRGenericBlockOfTextEditor alloc] initWithNibName:@"EQRGenericBlockOfTextEditor" bundle:nil];
-    self.genericTextEditor.modalPresentationStyle = UIModalPresentationFormSheet;
-    self.genericTextEditor.delegate = self;
-    [self.genericTextEditor initalSetupWithTitle:@"none" subTitle:@"none" currentText:property keyboard:nil returnMethod:returnMethod];
-    [self presentViewController:self.genericTextEditor animated:YES
+    self.genericEditor = [[EQRGenericBlockOfTextEditor alloc] initWithNibName:@"EQRGenericBlockOfTextEditor" bundle:nil];
+    self.genericEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    self.genericEditor.delegate = self;
+    [self.genericEditor initalSetupWithTitle:@"none" subTitle:@"none" currentText:property keyboard:nil returnMethod:returnMethod];
+    [self presentViewController:self.genericEditor animated:YES
                      completion:^{
                          
                      }];
 }
 
-#pragma mark - EquipTitleDetailDelegate method
+- (void)editDeposit:(UITapGestureRecognizer *)sender {
+    self.genericEditor = [[EQRGenericNumberEditor alloc] initWithNibName:@"EQRGenericNumberEditor" bundle:nil];
+    self.genericEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    self.genericEditor.delegate = self;
+    [self.genericEditor initalSetupWithTitle:@"none"
+                                          subTitle:@"none"
+                                       currentText:self.equipTitle.price_deposit
+                                          keyboard:nil
+                                      returnMethod:@"updateDeposit:"];
+    [self presentViewController:self.genericEditor animated:YES completion:^{
+        
+    }];
+}
 
+#pragma mark - Info and Prices table delegate method
 - (void)propertySelection:(NSString *)property value:(NSString *)value {
     
     NSString *updateMethod;
     if ([property isEqualToString:@"name"]) {
+        self.genericEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
         updateMethod = @"updateName:";
     }else if([property isEqualToString:@"short_name"]) {
+        self.genericEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
         updateMethod = @"updateShortName:";
     }else if([property isEqualToString:@"category"]) {
+        self.genericEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
         updateMethod = @"updateCategory:";
     }else if([property isEqualToString:@"subcategory"]) {
+        self.genericEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
         updateMethod = @"updateSubcategory:";
     }else if([property isEqualToString:@"schedule_grouping"]) {
+        self.genericEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
         updateMethod = @"updateScheduleGrouping:";
     }else if([property isEqualToString:@"price_commercial"]) {
+        self.genericEditor = [[EQRGenericNumberEditor alloc] initWithNibName:@"EQRGenericNumberEditor" bundle:nil];
         updateMethod = @"updatePriceCommercial:";
     }else if([property isEqualToString:@"price_artist"]) {
+        self.genericEditor = [[EQRGenericNumberEditor alloc] initWithNibName:@"EQRGenericNumberEditor" bundle:nil];
         updateMethod = @"updatePriceArtist:";
     }else if([property isEqualToString:@"price_student"]) {
+        self.genericEditor = [[EQRGenericNumberEditor alloc] initWithNibName:@"EQRGenericNumberEditor" bundle:nil];
         updateMethod = @"updatePriceStudent:";
     }else if([property isEqualToString:@"price_staff"]) {
+        self.genericEditor = [[EQRGenericNumberEditor alloc] initWithNibName:@"EQRGenericNumberEditor" bundle:nil];
         updateMethod = @"updatePriceStaff:";
     }else if([property isEqualToString:@"price_nonprofit"]) {
+        self.genericEditor = [[EQRGenericNumberEditor alloc] initWithNibName:@"EQRGenericNumberEditor" bundle:nil];
         updateMethod = @"updatePriceNonprofit:";
     }else{
         NSLog(@"EQREquipTitleDetailVC > propertySelection failed to match the property: %@", property);
         return;
     }
     
-    self.genericSingleLineTextEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
-    self.genericSingleLineTextEditor.modalPresentationStyle = UIModalPresentationFormSheet;
-    self.genericSingleLineTextEditor.delegate = self;
-    [self.genericSingleLineTextEditor initalSetupWithTitle:@"none" subTitle:@"none" currentText:value keyboard:nil returnMethod:updateMethod];
-    [self presentViewController:self.genericSingleLineTextEditor animated:YES completion:^{
+    self.genericEditor.modalPresentationStyle = UIModalPresentationFormSheet;
+    self.genericEditor.delegate = self;
+    [self.genericEditor initalSetupWithTitle:@"none" subTitle:@"none" currentText:value keyboard:nil returnMethod:updateMethod];
+    [self presentViewController:self.genericEditor animated:YES completion:^{
         
     }];
-    
 }
 
-#pragma mark - Complete editing
-
+#pragma mark - generic editor delegate methods
 - (void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod {
     
-    self.genericTextEditor.delegate = nil;
-    self.genericSingleLineTextEditor.delegate = nil;
+    self.genericEditor.delegate = nil;
     
     [self dismissViewControllerAnimated:YES completion:^{
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [self performSelector:NSSelectorFromString(returnMethod) withObject:returnText];
 #   pragma clang diagnostic pop
-        
-        self.genericTextEditor = nil;
-        self.genericSingleLineTextEditor = nil;
+        self.genericEditor = nil;
     }];
 }
 
 - (void)cancelByDismissingVC {
-    self.genericTextEditor.delegate = nil;
+    self.genericEditor.delegate = nil;
     [self dismissViewControllerAnimated:YES completion:^{
-        
+        self.genericEditor = nil;
     }];
-    self.genericTextEditor = nil;
 }
 
+#pragma mark - complete edits
 - (void)updateName:(NSString *)currentText {
     self.equipTitle.name = currentText;
-    [self updateEquipTitle];
+    [self updateEquipTitle:^{}];
 }
 
 - (void)updateShortName:(NSString *)currentText {
     self.equipTitle.short_name = currentText;
-    [self updateEquipTitle];
+    [self updateEquipTitle:^{    }];
 }
 
 - (void)updateCategory:(NSString *)currentText {
     self.equipTitle.category = currentText;
-    [self updateEquipTitle];
+    [self updateEquipTitle:^{    }];
 }
 
 - (void)updateSubcategory:(NSString *)currentText {
     self.equipTitle.subcategory = currentText;
-    [self updateEquipTitle];
+    [self updateEquipTitle:^{    }];
 }
 
 - (void)updateScheduleGrouping:(NSString *)currentText {
     self.equipTitle.schedule_grouping = currentText;
-    [self updateEquipTitle];
+    [self updateEquipTitle:^{    }];
 }
 
 - (void)updatePriceCommercial:(NSString *)currentText {
     self.equipTitle.price_commercial = currentText;
-    [self updateEquipTitle];
+    [self updateEquipTitle:^{    }];
 }
 
 - (void)updatePriceArtist:(NSString *)currentText {
     self.equipTitle.price_artist = currentText;
-    [self updateEquipTitle];
+    [self updateEquipTitle:^{    }];
 }
 
 - (void)updatePriceStudent:(NSString *)currentText {
     self.equipTitle.price_student = currentText;
-    [self updateEquipTitle];
+    [self updateEquipTitle:^{    }];
 }
 
 - (void)updatePriceStaff:(NSString *)currentText {
     self.equipTitle.price_staff = currentText;
-    [self updateEquipTitle];
+    [self updateEquipTitle:^{    }];
 }
 
 - (void)updatePriceNonprofit:(NSString *)currentText {
     self.equipTitle.price_nonprofit = currentText;
-    [self updateEquipTitle];
+    [self updateEquipTitle:^{    }];
 }
 
 - (void)updateDescriptionShort:(NSString *)currentText {
     self.equipTitle.description_short = currentText;
-    [self updateEquipTitle];
+    [self updateEquipTitle:^{    }];
 }
 
 - (void)updateDescriptionLong:(NSString *)currentText {
     self.equipTitle.description_long = currentText;
-    [self updateEquipTitle];
+    [self updateEquipTitle:^{    }];
 }
 
-- (void)updateEquipTitle {
+- (void)updateDeposit:(NSString *)currentText {
+    self.equipTitle.price_deposit = currentText;
+    [self updateEquipTitle:^{    }];
+}
+
+#pragma mark - render equiptitle changes and update database
+- (void)updateEquipTitle:(void (^)(void))onDone {
     // Render to screen
     [self renderInfo:self.equipTitle];
     
@@ -302,7 +409,8 @@
                           @[@"price_nonprofit", self.equipTitle.price_nonprofit],
                           @[@"price_deposit", self.equipTitle.price_deposit],
                           @[@"hide_from_public", self.equipTitle.hide_from_public],
-                          @[@"hide_from_student", self.equipTitle.hide_from_student]
+                          @[@"hide_from_student", self.equipTitle.hide_from_student],
+                          @[@"decommissioned", self.equipTitle.decommissioned]
                           ];
     
     EQRWebData *webData = [EQRWebData sharedInstance];
@@ -320,6 +428,11 @@
         if (![originalKey isEqualToString:returnValue]) {
             NSLog(@"EQREquipTitleDetailVC > updateEquipTitle Failed to alter DB: %@", returnValue);
             // TODO: revert display to previous value if database call fails
+        } else {
+            // Otherwise invoke the onDone method
+            dispatch_async(dispatch_get_main_queue(), ^{
+                onDone();
+            });
         }
     }];
     [receiveData addDependency:alterItem];
@@ -329,7 +442,6 @@
 }
 
 #pragma mark - Navigation
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:@"EquipTitleInfo"]) {
@@ -347,8 +459,8 @@
     }
 }
 
-#pragma mark - tableview datasource
-
+//#pragma mark - tableview datasource
+//
 //-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 //    return 1;
 //}
@@ -364,12 +476,8 @@
 //    return cell;
 //}
 
-#pragma mark - EQREquipTitleItemInfo delegate methods
-
-
 
 #pragma mark - memory warning
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
