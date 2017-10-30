@@ -128,9 +128,15 @@
     //show request editor (from quick view duplicate button)
     [nc addObserver:self selector:@selector(showRequestEditor:) name:EQRPresentRequestEditorFromItinerary object:nil];
     
+    
+    
     //register collection view cell
-    [self.myMasterItineraryCollection registerClass:[EQRItineraryRowCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.myMasterItineraryCollection registerClass:[EQRItineraryRowCell2 class] forCellWithReuseIdentifier:@"Cell2"];
+//    UINib *nib = [UINib nibWithNibName:@"EQRItineraryCellContent2VC" bundle:nil];
+//    [self.myMasterItineraryCollection registerNib:nib  forCellWithReuseIdentifier:@"Cell2"];
+
+    
+    
     
     self.myMasterItineraryCollection.backgroundColor = [UIColor darkGrayColor];
     
@@ -385,12 +391,6 @@
     self.webDataForPickup = webData;
     self.webDataForPickup.delegateDataFeed = self;
     
-    //__1__ get total count of items that will be ultimately be returned
-//    NSString* countOfPickUps = [self.webDataForPickup queryForStringWithLink:@"EQGetCountOfScheduleItemsWithBeginDate.php" parameters:topArray];
-//    self.countOfUltimageReturnedItems = [countOfPickUps integerValue];
-//    NSString *countOfReturns = [self.webDataForPickup queryForStringWithLink:@"EQGetCountOfScheduleItemsWithEndDate.php" parameters:topArray];
-//    self.countOfUltimageReturnedItems = self.countOfUltimageReturnedItems + [countOfReturns  intValue];
-    
     SEL thisSelectorPickup = @selector(addPickupToIntineraryList:);
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
@@ -559,42 +559,34 @@
 
 
 #pragma mark - show dismiss check out in view
-
 -(void)showCheckInOut:(NSNotification*)note{
-    
     NSString* scheduleKey = [[note userInfo] objectForKey:@"scheduleKey"];
     NSNumber* marked_for_returning = [[note userInfo] objectForKey:@"marked_for_returning"];
     NSNumber* switch_num = [[note userInfo] objectForKey:@"switch_num"];
     
-    
     EQRCheckVCntrllr* checkViewController = [[EQRCheckVCntrllr alloc] initWithNibName:@"EQRCheckVCntrllr" bundle:nil];
     
-    //extend edges under nav and tab bar
+    // Extend edges under nav and tab bar
     checkViewController.edgesForExtendedLayout = UIRectEdgeAll;
     
     NSDictionary* newDict = @{ @"scheduleKey": scheduleKey,
                                @"marked_for_returning": marked_for_returning,
                                @"switch_num": switch_num };
-    
-    //initial setup
+    // Initial setup
     [checkViewController initialSetupWithInfo:newDict];
     
-    //modal pops up from below, removes navigiation controller
+    // Modal pops up from below, removes navigiation controller
     UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:checkViewController];
     
-    //add staff picker and cancel buttons in nav bar??
+    // Add staff picker and cancel buttons in nav bar??
     
     [self presentViewController:newNavController animated:YES completion:^{
-        
     }];
 }
 
 
 #pragma mark - showStaffUser view
-
-
 -(void)showStaffUserPicker{
-    
     EQRStaffUserPickerViewController* staffUserPicker = [[EQRStaffUserPickerViewController alloc] initWithNibName:@"EQRStaffUserPickerViewController" bundle:nil];
     self.myStaffUserPicker = [[UIPopoverController alloc] initWithContentViewController:staffUserPicker];
     self.myStaffUserPicker.delegate = self;
@@ -607,13 +599,11 @@
     
     //set target of continue button
     [staffUserPicker.continueButton addTarget:self action:@selector(dismissStaffUserPicker) forControlEvents:UIControlEventTouchUpInside];
-    
 }
 
 
 -(void)dismissStaffUserPicker{
-    
-    //do stuff with the iboutlet of the
+    // Do stuff with the iboutlet of the
     EQRStaffUserPickerViewController* thisStaffUserPicker = (EQRStaffUserPickerViewController*)[self.myStaffUserPicker contentViewController];
     int selectedRow = (int)[thisStaffUserPicker.myPicker selectedRowInComponent:0];
 
@@ -634,19 +624,14 @@
     //dismiss the picker
     [self.myStaffUserPicker dismissPopoverAnimated:YES];
     self.myStaffUserPicker = nil;
-    
 }
 
 
-
 #pragma mark - show request editor
-
 -(void) showRequestEditor:(NSNotification*)note{
-    
-    //dismiss any popovers that may exist (ie the quickview when "duplicate" is tapped)
+    // Dismiss any popovers that may exist (ie the quickview when "duplicate" is tapped)
     [self.myQuickView dismissPopoverAnimated:YES];
     self.myQuickView = nil;
-    
     
     EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
     
@@ -659,25 +644,20 @@
     //assign editor's keyID property
     //    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
     
-    
-    
     //______1_______pushes from the side and preserves navigation controller
     //    [self.navigationController pushViewController:editorViewController animated:YES];
-    
     
     //______2_______model pops up from below, removes navigiation controller
     UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
     //add cancel button
     
     [self presentViewController:newNavController animated:YES completion:^{
-        
     }];
 }
 
 
 -(IBAction)showRequestEditorFromQuickView:(id)sender{
-    
-    //dismiss the quickView popover
+    // Dismiss the quickView popover
     [self.myQuickView dismissPopoverAnimated:YES];
     self.myQuickView = nil;
     
@@ -696,34 +676,28 @@
     [newDic setValue:newBeginDate forKey:@"request_date_begin"];
     [newDic setValue:newEndDate forKey:@"reqeust_date_end"];
     
-    //initial setup
+    // Initial setup
     [editorViewController initialSetupWithInfo:newDic];
     
-    //assign editor's keyID property
+    // Assign editor's keyID property
     //    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
-    
-    
     
     //______1_______pushes from the side and preserves navigation controller
     //    [self.navigationController pushViewController:editorViewController animated:YES];
     
-    
     //______2_______model pops up from below, removes navigiation controller
     UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
-    //add cancel button
+    // Add cancel button
     
     [self presentViewController:newNavController animated:YES completion:^{
-        
     }];
     
 }
 
 
 #pragma mark - showQuickView
-
 -(void)showQuickView:(NSNotification*)note{
-    
-    //create quickview scroll view
+    // Create quickview scroll view
     EQRQuickViewScrollVCntrllr* quickView = [[EQRQuickViewScrollVCntrllr alloc] initWithNibName:@"EQRQuickViewScrollVCntrllr" bundle:nil];
     self.myQuickViewScrollVCntrllr = quickView;
     
@@ -741,16 +715,13 @@
     
     [self.myQuickView setPopoverContentSize:CGSizeMake(300.f, 502.f)];
     
-    
     //empty the temp array
     if ([self.temporaryDicFromQuickView count] > 0){
-        
         self.temporaryDicFromQuickView = nil;
     }
     
     NSMutableDictionary* dicAlso = [NSMutableDictionary dictionaryWithCapacity:1];
 
-    
     EQRScheduleRequestItem* myItem;
     for (EQRScheduleRequestItem* thisItem in self.arrayOfScheduleRequests){
         
@@ -760,7 +731,6 @@
         if (([thisItem.key_id isEqualToString:[[note userInfo] objectForKey:@"key_ID"]]) && (marked_for_returning == thisItem.markedForReturn)){
             
             myItem = thisItem;
-            
             
             //get the remaining join information...
             NSArray* firstArray = @[@"key_id", myItem.key_id];
@@ -773,7 +743,6 @@
                     thisRequestItem = [muteArray objectAtIndex:0];
                 }
             }];
-            
             
             //add in information from quickviewData request
             if (thisRequestItem){
@@ -790,13 +759,6 @@
                 if (thisRequestItem.staff_shelf_id) [dicAlso setObject:thisRequestItem.staff_shelf_id forKey:@"staff_shelf_id"];
                 if (thisRequestItem.staff_shelf_date) [dicAlso setObject:thisRequestItem.staff_shelf_date forKey:@"staff_shelf_date"];
             }
-            
-            //undo the adjustment to the time difference
-            //            //adjust the time by adding 9 hours... or 8 hours
-            //            float secondsForOffset = 28800;    //this is 9 hours = 32400;
-            //            myItem.request_time_begin = [myItem.request_time_begin dateByAddingTimeInterval:secondsForOffset];
-            //            myItem.request_time_end = [myItem.request_time_end dateByAddingTimeInterval:secondsForOffset];
-            
         }
     }
     
@@ -828,16 +790,12 @@
     [quickViewPage3 initialSetupWithKeyID:[[note userInfo] objectForKey: @"key_ID"] andUserInfoDic:dic];
     quickViewPage3.fromItinerary = YES;
     
-    //    NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
-//    CGRect selectedRect = [valueOfRect CGRectValue];
-    
     //_____presenting the popover must be delayed (why?????)
     [self performSelector:@selector(mustDelayThePresentationOfAPopOver:) withObject:[note userInfo] afterDelay:0.1];
 }
 
 
 -(void)mustDelayThePresentationOfAPopOver:(NSDictionary*)userInfo{
-    
     NSValue* rectValue = [userInfo objectForKey:@"rectValue"];
     CGRect thisRect = [rectValue CGRectValue];
     UIView* thisView = [userInfo objectForKey:@"thisView"];
@@ -873,73 +831,46 @@
     UISwipeGestureRecognizer* swipeRightGestureOnQuickview2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideRight:)];
     swipeRightGestureOnQuickview2.direction = UISwipeGestureRecognizerDirectionRight;
     [self.myQuickViewScrollVCntrllr.myContentPage3 addGestureRecognizer:swipeRightGestureOnQuickview2];
-    
 }
-
-
-
-
-
-//-(void)dismissedCheckInOut:(NSNotification*)note{
-//    
-//    NSString* scheduleKey = [[note userInfo] objectForKey:@"scheduleKey"];
-//    NSString* completeOrIncomplete = [[note userInfo] objectForKey:@"comleteOrIncomplete"];
-//    
-//    if ([completeOrIncomplete isEqualToString:@"complete"]){
-//        
-//        self.
-//        
-//    }else{
-//        
-//        
-//    }
-//}
 
 
 #pragma mark - day movement
-
 -(IBAction)moveToNextDay:(id)sender{
-    
-    //seconds in a day 86400
-    
+    // Seconds in a day 86400
     self.dateForShow = [self.dateForShow dateByAddingTimeInterval:86400];
     
-    //update day label
+    // Update day label
     NSDateFormatter* dayNameFormatter = [[NSDateFormatter alloc] init];
     dayNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     dayNameFormatter.dateFormat =@"EEEE, MMM d, yyyy";
     
-    //assign day to nav bar title
+    // Assign day to nav bar title
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
     
-    //remove all filters
+    // Remove all filters
     self.currentFilterBitmask = EQRFilterAll;
     [self resetColorsOnFilterButtons];
     
     [self refreshTheView];
-    
 }
 
 
-
 -(IBAction)moveToPreviousDay:(id)sender{
-    
     self.dateForShow = [self.dateForShow dateByAddingTimeInterval:-86400];
     
-    //update day label
+    // Update day label
     NSDateFormatter* dayNameFormatter = [[NSDateFormatter alloc] init];
     dayNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     dayNameFormatter.dateFormat =@"EEEE, MMM d, yyyy";
     
-    //assign day to nav bar title
+    // Assign day to nav bar title
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
     
-    //remove all filters
+    // Remove all filters
     self.currentFilterBitmask = EQRFilterAll;
     [self resetColorsOnFilterButtons];
     
     [self refreshTheView];
-    
 }
 
 
@@ -947,60 +878,55 @@
     
     self.dateForShow = [NSDate date];
     
-    //update day label
+    // Update day label
     NSDateFormatter* dayNameFormatter = [[NSDateFormatter alloc] init];
     dayNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     dayNameFormatter.dateFormat =@"EEEE, MMM d, yyyy";
     
-    //assign day to nav bar title
+    // Assign day to nav bar title
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
     
-    //remove all filters
+    // Remove all filters
     self.currentFilterBitmask = EQRFilterAll;
     [self resetColorsOnFilterButtons];
     
     [self refreshTheView];
-    
 }
 
 
 -(void)showDatePicker{
-    
     EQRDayDatePickerVCntrllr* dayDateView = [[EQRDayDatePickerVCntrllr alloc] initWithNibName:@"EQRDayDatePickerVCntrllr" bundle:nil];
     self.myDayDatePicker = [[UIPopoverController alloc] initWithContentViewController:dayDateView];
     self.myDayDatePicker.delegate = self;
     
-    //set size
+    // Set size
     [self.myDayDatePicker setPopoverContentSize:CGSizeMake(400, 400)];
     
-    //present popover
+    // Present popover
     [self.myDayDatePicker presentPopoverFromBarButtonItem:[self.navigationItem.leftBarButtonItems objectAtIndex:1]  permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
-    //set target of continue button
+    // Set target of continue button
     [dayDateView.myContinueButton addTarget:self action:@selector(dismissShowDatePicker:) forControlEvents:UIControlEventTouchUpInside];
-    
-    
 }
 
 
 -(IBAction)dismissShowDatePicker:(id)sender{
-    
-    //get date from the popover's content view controller, a public method
+    // Get date from the popover's content view controller, a public method
     self.dateForShow = [(EQRDayDatePickerVCntrllr*)[self.myDayDatePicker contentViewController] retrieveSelectedDate];
 
-    //update day label
+    // Update day label
     NSDateFormatter* dayNameFormatter = [[NSDateFormatter alloc] init];
     dayNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     dayNameFormatter.dateFormat =@"EEEE, MMM d, yyyy";
     
-    //assign day to nav bar title
+    // Assign day to nav bar title
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
     
-    //dismiss the picker
+    // Dismiss the picker
     [self.myDayDatePicker dismissPopoverAnimated:YES];
     self.myDayDatePicker = nil;
     
-    //remove all filters
+    // Remove all filters
     self.currentFilterBitmask = EQRFilterAll;
     [self resetColorsOnFilterButtons];
     
@@ -1008,47 +934,30 @@
 }
 
 
-
 #pragma mark - filter methods
-
-
 -(IBAction)dismissFilters:(id)sender{
-    
     self.currentFilterBitmask = EQRFilterAll;
-    
-    
-    
 }
 
 
-
-
 -(IBAction)applyFilter:(id)sender{
-    
-    //get the color dic
     EQRColors* sharedColors = [EQRColors sharedInstance];
-    
-    
     if (self.currentFilterBitmask == EQRFilterAll){
-        
         self.currentFilterBitmask = EQRFilterNone;
-        
     }
     
-    
     if ([sender tag] > 0){
-        
-        //if any filter button is tapped, make sure all button is set to white
+        // If any filter button is tapped, make sure all button is set to white
         [self.buttonAll setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
     
-    //add to the bitmask based on the tag of the sender button
+    // Add to the bitmask based on the tag of the sender button
     switch ([sender tag]) {
         case 0:
             self.currentFilterBitmask = EQRFilterAll;
             [self.buttonAll setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
             
-            //set all other buttons to white (off color)
+            // Set all other buttons to white (off color)
             [self.buttonGoingShelf setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [self.buttonGoingPrepped setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [self.buttonGoingPickedUp setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -1057,225 +966,159 @@
             [self.buttonReturningShelved setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             
             [self.myMasterItineraryCollection reloadData];
-            
             break;
             
         case 1:
             if (self.currentFilterBitmask & EQRGoingShelf){
-                
-                //if it already contains this bit, then remove it
+                // If it already contains this bit, then remove it
                 self.currentFilterBitmask = self.currentFilterBitmask & ~EQRGoingShelf;
                 [self.buttonGoingShelf setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-
-                
             } else {
-                
-                //if it doesn't contain this bit, then add it
+                // I it doesn't contain this bit, then add it
                 self.currentFilterBitmask = self.currentFilterBitmask | EQRGoingShelf;
                 [self.buttonGoingShelf setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
-
             }
-    
             [self createTheFilteredArray:self.currentFilterBitmask];
             [self.myMasterItineraryCollection reloadData];
-            
             break;
             
         case 2:
             if (self.currentFilterBitmask & EQRGoingPrepped){
-                
                 self.currentFilterBitmask = self.currentFilterBitmask & ~EQRGoingPrepped;
                 [self.buttonGoingPrepped setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                
             } else {
-                
                 self.currentFilterBitmask = self.currentFilterBitmask | EQRGoingPrepped;
                 [self.buttonGoingPrepped setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
-
             }
-            
             [self createTheFilteredArray:self.currentFilterBitmask];
             [self.myMasterItineraryCollection reloadData];
-            
             break;
             
         case 3:
             if (self.currentFilterBitmask & EQRGoingPickedUp){
-                
                 self.currentFilterBitmask = self.currentFilterBitmask & ~EQRGoingPickedUp;
                 [self.buttonGoingPickedUp setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                
             } else {
-                
                 self.currentFilterBitmask = self.currentFilterBitmask | EQRGoingPickedUp;
                 [self.buttonGoingPickedUp setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
-
             }
-            
             [self createTheFilteredArray:self.currentFilterBitmask];
             [self.myMasterItineraryCollection reloadData];
-            
             break;
             
         case 4:
             if (self.currentFilterBitmask & EQRReturningOut){
-                
                 self.currentFilterBitmask = self.currentFilterBitmask & ~EQRReturningOut;
                 [self.buttonReturningOut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                
             } else {
-                
                 self.currentFilterBitmask = self.currentFilterBitmask | EQRReturningOut;
                 [self.buttonReturningOut setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
-
             }
-            
             [self createTheFilteredArray:self.currentFilterBitmask];
             [self.myMasterItineraryCollection reloadData];
-            
             break;
             
         case 5:
             if (self.currentFilterBitmask & EQRReturningReturned){
-                
                 self.currentFilterBitmask = self.currentFilterBitmask & ~EQRReturningReturned;
                 [self.buttonReturningReturned setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                
             } else {
-                
                 self.currentFilterBitmask = self.currentFilterBitmask | EQRReturningReturned;
                 [self.buttonReturningReturned setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
-
             }
-            
             [self createTheFilteredArray:self.currentFilterBitmask];
             [self.myMasterItineraryCollection reloadData];
-            
             break;
             
         case 6:
             if (self.currentFilterBitmask & EQRReturningShelved){
-                
                 self.currentFilterBitmask = self.currentFilterBitmask & ~EQRReturningShelved;
                 [self.buttonReturningShelved setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                
             } else {
-                
                 self.currentFilterBitmask = self.currentFilterBitmask | EQRReturningShelved;
                 [self.buttonReturningShelved setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
-
             }
-            
             [self createTheFilteredArray:self.currentFilterBitmask];
             [self.myMasterItineraryCollection reloadData];
-            
             break;
             
         default:
             break;
     }
     
-    //if all filters removed, switch all on
+    // If all filters removed, switch all on
     if (self.currentFilterBitmask == EQRFilterNone) {
-        
         self.currentFilterBitmask = EQRFilterAll;
-     
         [self.buttonAll setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
-        
     }
     
-    //if all filters are added, switch 'all' on
+    // If all filters are added, switch 'all' on
     if ((self.currentFilterBitmask == EQRFilterAll) && ([sender tag] != 0)){
-        
         [self resetColorsOnFilterButtons];
     }
-    
 }
 
 
 -(void)resetColorsOnFilterButtons{
-    
     EQRColors *sharedColors = [EQRColors sharedInstance];
     [self.buttonAll setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
     
-    //set all other buttons to white (off color)
+    // Set all other buttons to white (off color)
     [self.buttonGoingShelf setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.buttonGoingPrepped setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.buttonGoingPickedUp setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.buttonReturningOut setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.buttonReturningReturned setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.buttonReturningShelved setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
 }
 
 
 -(void)createTheFilteredArray:(NSUInteger)myBitmask{
-    
-    
     NSMutableArray* tempFilteredArray = [NSMutableArray arrayWithCapacity:1];
     
-    
     if (myBitmask & EQRGoingShelf){
-        
         for (EQRScheduleRequestItem* object in self.arrayOfScheduleRequests){
-            
             if (!object.markedForReturn && !object.staff_prep_date){
-                
                 [tempFilteredArray addObject:object];
             }
         }
     }
     
     if (myBitmask & EQRGoingPrepped){
-        
         for (EQRScheduleRequestItem* object in self.arrayOfScheduleRequests){
-            
             if (!object.markedForReturn && object.staff_prep_date && !object.staff_checkout_date){
-                
                 [tempFilteredArray addObject:object];
             }
         }
     }
     
     if (myBitmask & EQRGoingPickedUp){
-        
         for (EQRScheduleRequestItem* object in self.arrayOfScheduleRequests){
-            
             if (!object.markedForReturn && object.staff_checkout_date){
-                
                 [tempFilteredArray addObject:object];
             }
         }
     }
     
     if (myBitmask & EQRReturningOut){
-        
         for (EQRScheduleRequestItem* object in self.arrayOfScheduleRequests){
-            
             if (object.markedForReturn && !object.staff_checkin_date){
-                
                 [tempFilteredArray addObject:object];
             }
         }
     }
     
     if (myBitmask & EQRReturningReturned){
-        
         for (EQRScheduleRequestItem* object in self.arrayOfScheduleRequests){
-            
             if (object.markedForReturn && object.staff_checkin_date && !object.staff_shelf_date){
-                
                 [tempFilteredArray addObject:object];
             }
         }
     }
     
     if (myBitmask & EQRReturningShelved){
-        
         for (EQRScheduleRequestItem* object in self.arrayOfScheduleRequests){
-            
             if (object.markedForReturn && object.staff_shelf_date){
-                
                 [tempFilteredArray addObject:object];
             }
         }
@@ -1286,7 +1129,7 @@
     
     NSArray* tempFilterArrayAlpha = [tempFilteredArray sortedArrayUsingComparator:^NSComparisonResult(EQRScheduleRequestItem* obj1, EQRScheduleRequestItem* obj2) {
         
-        //use either time begin or time end depending on whether this item is going or returning
+        // Use either time begin or time end depending on whether this item is going or returning
         
         NSDate* date1;
         if (!obj1.markedForReturn){
@@ -1301,58 +1144,41 @@
         } else{
             date2 = [obj2 request_time_end];
         }
-        
         return [date1 compare:date2];
     }];
-    
-    
     self.filteredArrayOfScheduleRequests = [NSArray arrayWithArray:tempFilterArrayAlpha];
 }
 
 
 -(NSUInteger)determineTheBitmaskFromCellInfo:(NSDictionary*)cellData{
-    
     NSUInteger cellStatus = [[cellData objectForKey:@"status"] unsignedIntegerValue];
     BOOL cellMarkedForReturning = [[cellData objectForKey:@"markedForReturning"] boolValue];
     
     NSUInteger returnValue = EQRFilterNone;
     
     if ((cellStatus == 0) && (cellMarkedForReturning == NO)){
-        
         returnValue = EQRGoingShelf;
     }
-    
     if ((cellStatus == 1) && (cellMarkedForReturning == NO)){
-        
         returnValue = EQRGoingPrepped;
     }
-    
     if ((cellStatus == 2) && (cellMarkedForReturning == NO)){
-        
         returnValue = EQRGoingPickedUp;
     }
-    
     if ((cellStatus == 0) && (cellMarkedForReturning == YES)){
-        
         returnValue = EQRReturningOut;
     }
-    
     if ((cellStatus == 1) && (cellMarkedForReturning == YES)){
-        
         returnValue = EQRReturningReturned;
     }
-    
     if ((cellStatus == 2) && (cellMarkedForReturning == YES)){
-        
         returnValue = EQRReturningShelved;
     }
-    
     return returnValue;
 }
 
 
 -(int)determineFilterButtonTagFromBitmaskValue:(NSUInteger)bitmaskValue{
-    
     int returnValue = 0;
     
     switch (bitmaskValue) {
@@ -1388,13 +1214,11 @@
         default:
             break;
     }
-    
     return returnValue;
 }
 
 
 -(void)updateFilterButtonDisplayWithAddedBitmask:(NSUInteger)addedBitmask{
-    
     EQRColors* sharedColors = [EQRColors sharedInstance];
     
     switch (addedBitmask) {
@@ -1430,14 +1254,12 @@
 
 
 #pragma mark - request box methods
-
 -(IBAction)requestBoxOpen:(id)sender{
     
 }
 
 
 #pragma mark - webData Delegate methods
-
 -(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
     
     //abort if selector is unrecognized, otherwise crash
@@ -1454,11 +1276,9 @@
 }
 
 -(void)addPickupToIntineraryList:(id)currentThing{
-    
     if (!currentThing){
         return;
     }
-    
     NSInteger indexpathRow;
     
     //set some properties at 0
@@ -1468,23 +1288,20 @@
     
     //evaluate if cell should be collapsed
     if ([(EQRScheduleRequestItem *)currentThing markedForReturn] == YES){
-        
         if ([(EQRScheduleRequestItem *)currentThing staff_checkin_date]){
             [(EQRScheduleRequestItem *)currentThing setShouldCollapseReturningCell:YES];
         }
     }else{
-        
         if ([(EQRScheduleRequestItem *)currentThing staff_checkout_date]){
             [(EQRScheduleRequestItem *)currentThing setShouldCollapseGoingCell:YES];
         }
     }
-    
     [self.arrayOfScheduleRequests addObject:currentThing];
     
-    //sort by request date begin (...and end)
+    // Sort by request date begin (...and end)
     NSArray* tempArrayAlpha = [self.arrayOfScheduleRequests sortedArrayUsingComparator:^NSComparisonResult(EQRScheduleRequestItem* obj1, EQRScheduleRequestItem* obj2) {
         
-        //use either time begin or time end depending on whether this item is going or returning
+        // Use either time begin or time end depending on whether this item is going or returning
         NSDate* date1;
         if (!obj1.markedForReturn){
             date1 = [obj1 request_time_begin];
@@ -1498,43 +1315,30 @@
         } else{
             date2 = [obj2 request_time_end];
         }
-        
         return [date1 compare:date2];
     }];
-    
     self.arrayOfScheduleRequests = [NSMutableArray arrayWithArray:tempArrayAlpha];
     
-    //the new index of the newly added item
+    // The new index of the newly added item
     indexpathRow = [self.arrayOfScheduleRequests indexOfObject:currentThing];
 
-    
-    //uptick on the index
+    // Uptick on the index
     self.indexOfLastReturnedItem = self.indexOfLastReturnedItem + 1;
-    
     
     //__1__
     //try inserting in the collection view
     NSInteger countOfCollectionView = [self.myMasterItineraryCollection numberOfItemsInSection:0];
-    
-//    NSLog(@"this is the insertion index: %ld  this is the current count of items in array: %lu  this is the count of items in collection view: %ld", (long)indexpathRow, (unsigned long)[self.arrayOfScheduleRequests count], (long)countOfCollectionView );
-    
     NSMutableArray *tempArray = [NSMutableArray arrayWithObject:[NSIndexPath indexPathForRow:indexpathRow inSection:0]];
-
     
-    //it is instructing to make 1 insertion. The count of items array should be exactly one more than the items in the collection view. If the difference is greater or less than 1, don't insert, fire the timer to reload the collection view.
+    // It is instructing to make 1 insertion. The count of items array should be exactly one more than the items in the collection view. If the difference is greater or less than 1, don't insert, fire the timer to reload the collection view.
     
     NSInteger y = [self.arrayOfScheduleRequests count] - countOfCollectionView;
     if (y != 1){
-        
         self.freezeOnInsertionsFlag = YES;
     }
-    
     if (self.freezeOnInsertionsFlag == NO){
-        
         [self.myMasterItineraryCollection insertItemsAtIndexPaths:tempArray];
-        
     }else{
-        
         if (self.delayTheInsertions){
             [self.delayTheInsertions invalidate];
         }
@@ -1565,25 +1369,18 @@
 }
 
 
-
 -(void)addReturnToItineraryList:(id)currentThing{
-    
     if (currentThing){
-        
-        //mark the request item as a return object
+        // Mark the request item as a return object
         [(EQRScheduleRequestItem*)currentThing setMarkedForReturn:YES];
     }
-    
     [self addPickupToIntineraryList:currentThing];
 }
 
 
 #pragma mark - EQRItineraryContentDelegate methods
-
-
 -(void)collapseTapped:(NSString *) requestKeyId isReturning:(BOOL)markedForReturning{
-    
-    //test if a filter has been applied
+    // Test if a filter has been applied
     NSArray *variableArray;
     
     if (self.currentFilterBitmask == EQRFilterAll){
@@ -1593,15 +1390,10 @@
     }
     
     [variableArray enumerateObjectsUsingBlock:^(EQRScheduleRequestItem *requestItem, NSUInteger idx, BOOL * _Nonnull stop) {
-        
         if (([requestItem.key_id isEqualToString:requestKeyId]) && (requestItem.markedForReturn == markedForReturning)){
-            
             if (requestItem.markedForReturn){
-                
                 requestItem.shouldCollapseReturningCell = YES;
-                
             }else{
-                
                 requestItem.shouldCollapseGoingCell = YES;
             }
             
@@ -1616,7 +1408,6 @@
             //_____but this way you can specify the animation duration
             
             [UIView animateWithDuration: 0.15 animations:^{
-                
                 [self.myMasterItineraryCollection setCollectionViewLayout:thisFlowLayout animated:YES];
             }];
             
@@ -1638,15 +1429,10 @@
     }
     
     [variableArray enumerateObjectsUsingBlock:^(EQRScheduleRequestItem *requestItem, NSUInteger idx, BOOL * _Nonnull stop) {
-        
         if (([requestItem.key_id isEqualToString:requestKeyId]) && (requestItem.markedForReturn == markedForReturning)){
-            
             if (requestItem.markedForReturn){
-                
                 requestItem.shouldCollapseReturningCell = NO;
-                
             }else{
-                
                 requestItem.shouldCollapseGoingCell = NO;
             }
             
@@ -1672,8 +1458,7 @@
 
 
 -(IBAction)collapseAllCells:(id)sender{
-    
-    //test if a filter has been applied
+    // Test if a filter has been applied
     NSArray *variableArray;
     
     if (self.currentFilterBitmask == EQRFilterAll){
@@ -1683,8 +1468,7 @@
     }
     
     [variableArray enumerateObjectsUsingBlock:^(EQRScheduleRequestItem *requestItem, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        //skip this request item if the cell is already expanded...
+        // Skip this request item if the cell is already expanded...
         if (requestItem.shouldCollapseReturningCell && (requestItem.markedForReturn == YES)){
             return;
         }
@@ -1692,7 +1476,7 @@
             return;
         }
         
-        //get the cell
+        // Get the cell
         EQRItineraryCellContent2VC *cellContentVC = (EQRItineraryCellContent2VC *)[(EQRItineraryRowCell2 *)[self.myMasterItineraryCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]] contentVC];
         cellContentVC.isCollapsed = YES;
         cellContentVC.collapseButton.alpha = 0.0;
@@ -1704,45 +1488,32 @@
         cellContentVC.topOfButton1Constraint.constant = 16;
         cellContentVC.topOfButton2Constraint.constant = 16;
         cellContentVC.topOfTextConstraint.constant = -8;
-        //cellContentVC.bottomOfMainSubviewConstraint.constant = 60;
 
-
-        
         if (requestItem.markedForReturn){
-            
             requestItem.shouldCollapseReturningCell = YES;
-            
         }else{
-            
             requestItem.shouldCollapseGoingCell = YES;
         }
-        
-
     }];
     
     [self.myMasterItineraryCollection performBatchUpdates:^{
         
     } completion:^(BOOL finished) {
-        
-//        cellContentVC.bottomOfMainSubviewConstraint.constant = 0;
-        
         UICollectionViewFlowLayout *thisFlowLayout = [[UICollectionViewFlowLayout alloc] init];
-        //min spacing size for cells is 0, min spacing size for lines is 2
+        // Min spacing size for cells is 0, min spacing size for lines is 2
         thisFlowLayout.minimumLineSpacing = 2.0;
-        //section inset at top is 10. All other insets are 0.
+        // Section inset at top is 10. All other insets are 0.
         UIEdgeInsets thisInsets = UIEdgeInsetsMake(10.0, 0, 0, 0);
         thisFlowLayout.sectionInset = thisInsets;
         
         [UIView animateWithDuration: 0.15 animations:^{
-            
             [self.myMasterItineraryCollection setCollectionViewLayout:thisFlowLayout animated:YES];
         }];
     }];
 }
 
 -(IBAction)expandAllCells:(id)sender{
-    
-    //test if a filter has been applied
+    // Test if a filter has been applied
     NSArray *variableArray;
     
     if (self.currentFilterBitmask == EQRFilterAll){
@@ -1752,8 +1523,7 @@
     }
     
     [variableArray enumerateObjectsUsingBlock:^(EQRScheduleRequestItem *requestItem, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        //skip this request item if the cell is already expanded...
+        // Skip this request item if the cell is already expanded...
         if (!requestItem.shouldCollapseReturningCell && (requestItem.markedForReturn == YES)){
             return;
         }
@@ -1761,7 +1531,7 @@
             return;
         }
         
-        //get the cell
+        // Get the cell
         EQRItineraryCellContent2VC *cellContentVC = (EQRItineraryCellContent2VC *)[(EQRItineraryRowCell2 *)[self.myMasterItineraryCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]] contentVC];
         cellContentVC.isCollapsed = NO;
         cellContentVC.collapseButton.alpha = 1.0;
@@ -1774,19 +1544,12 @@
         cellContentVC.topOfButton2Constraint.constant = 8;
         cellContentVC.topOfTextConstraint.constant = 0;
         //self.bottomOfMainSubviewConstraint.constant = -60;
-
         
         if (requestItem.markedForReturn){
-            
             requestItem.shouldCollapseReturningCell = NO;
-            
         }else{
-            
             requestItem.shouldCollapseGoingCell = NO;
         }
-        
-    
-        
     }];
     
     [self.myMasterItineraryCollection performBatchUpdates:^{
@@ -1810,98 +1573,63 @@
 }
 
 
-
-
 #pragma mark - collection view data source methods
-
-
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    
     return 1;
 }
 
-
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    
-    //first test if a filter has been applied
+    // Test if a filter has been applied
     if (self.currentFilterBitmask == EQRFilterAll){
-        //no filter
-        
-        //__1__
-//        return self.countOfUltimageReturnedItems;
-        
-        //__2__
         return [self.arrayOfScheduleRequests count];
-        
-        
     }else{
-        //yes filter
-        
         return [self.filteredArrayOfScheduleRequests count];
     }
-    
 }
 
 -(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
     static NSString* CellIdentifier = @"Cell2";
     
-    
-//    EQRItineraryRowCell* cell = [self.myMasterItineraryCollection dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
     EQRItineraryRowCell2 *cell = [self.myMasterItineraryCollection dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    //remove subviews
     for (UIView* view in cell.contentView.subviews){
-        
         [view removeFromSuperview];
     }
     
-    //content view potentially has the wrong size
+    // Content view potentially has the wrong size
     cell.contentView.frame = CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height);
-    
-    //and reset the cell's background color...
+    // And reset the cell's background color...
     cell.backgroundColor = [UIColor whiteColor];
     
-    
-    
-    //test if a filter has been applied
-    
-    if (self.currentFilterBitmask == EQRFilterAll){          //no filter
+    // Test if a filter has been applied
+    if (self.currentFilterBitmask == EQRFilterAll){          // No filter
         
-        //determine if data is loaded
-        if ([self.arrayOfScheduleRequests count] > indexPath.row){ //yes, indexed object has arrived
+        // Determine if data is loaded
+        if ([self.arrayOfScheduleRequests count] > indexPath.row){  // Yes, indexed object has arrived
             
             [cell initialSetupWithRequestItem:[self.arrayOfScheduleRequests objectAtIndex:indexPath.row]];
             cell.contentVC.delegate = self;
             
-            //determine if all joins are loaded
+            // Determine if all joins are loaded
             if (self.readyToCheckForScheduleWarningsFlag){
-                
                 EQRScheduleRequestItem* thisItem = [self.arrayOfScheduleRequests objectAtIndex:indexPath.row];
                 [cell updateButtonLabels:thisItem];
             }
-            
-        }else{ // no, the data is no loaded yet
-            
+        }else{ // No, the data is not loaded yet
             return cell;
         }
-        
-    }else{        //yes filter
-        
+    }else{    // Yes filter
         [cell initialSetupWithRequestItem:[self.filteredArrayOfScheduleRequests objectAtIndex:indexPath.row]];
         cell.contentVC.delegate = self;
     }
-    
     return cell;
 }
 
 
 #pragma mark - collection view delegate methods
-
 - (void)collectionView:(UICollectionView *)collectionView
        willDisplayCell:(UICollectionViewCell *)cell
     forItemAtIndexPath:(NSIndexPath *)indexPath{
-    
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
@@ -1912,96 +1640,64 @@
 }
 
 
-//cell size
+// Cell size
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    //test if a filter has been applied
+    // Test if a filter has been applied
     NSArray *variableArray;
     
     if (self.currentFilterBitmask == EQRFilterAll){
         variableArray = self.arrayOfScheduleRequests;
-    } else {  //a filter has been applied
+    } else {  // A filter has been applied
         variableArray = self.filteredArrayOfScheduleRequests;
     }
     
-    //if cell button was tapped to collapse
-    //or if cell requestObject has been completed
-    
+    // If cell button was tapped to collapse
+    // or if cell requestObject has been completed
     EQRScheduleRequestItem *tempRequestItem = (EQRScheduleRequestItem *)[variableArray objectAtIndex:indexPath.row];
-    
     if (tempRequestItem.shouldCollapseReturningCell && tempRequestItem.markedForReturn){
         return  CGSizeMake(668.0, 40);
     }else if (tempRequestItem.shouldCollapseGoingCell && !tempRequestItem.markedForReturn){
-//        NSLog(@"is making size of going cell");
         return  CGSizeMake(668.0, 40);
     }else{
-//        NSLog(@"is making standard large size");
         return CGSizeMake(668.0, 100.0);
     }
 }
 
 #pragma mark - dealloc and such
-
 -(void)dealloc{
-    
     self.privateRequestManager = nil;
 }
 
 
 - (void)viewWillDisappear:(BOOL)animated{
-    
-    //stop the async data loading
+    // Stop the async data loading
     [self.webDataForPickup stopXMLParsing];
     [self.webDataForReturn stopXMLParsing];
-    
     [super viewWillDisappear:animated];
 }
 
 
 #pragma mark - popover delegate methods
-
 -(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
     
-    //there are 3 popovers
-    //myDayDatePicker;
-    //myStaffUserPicker;
-    //myQuickView;
-    
     if (popoverController == self.myDayDatePicker){
-        
         self.myDayDatePicker = nil;
-        
     }else if (popoverController == self.myStaffUserPicker){
-        
         self.myStaffUserPicker = nil;
-        
     }else if (popoverController == self.myQuickView){
-        
         self.myQuickView = nil;
     }
 }
 
-
-
 #pragma mark - memory warning
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

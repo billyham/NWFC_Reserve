@@ -12,26 +12,25 @@
 #import "EQRWebData.h"
 #import "EQRStaffUserManager.h"
 
-
-
 @interface EQRItineraryCellContent2VC ()
-
 @property (strong, nonatomic) UIColor* myAssignedColor;
 @property (strong, nonatomic) IBOutlet UIButton *detailsButton;
-
-
-
-
-//@property (strong, nonatomic) IBOutlet UIView *button1Background;
-//@property (strong, nonatomic) IBOutlet UIView *button2Background;
-
 
 @end
 
 @implementation EQRItineraryCellContent2VC
-
 @synthesize delegate;
 
+#pragma mark - api methods
+//-(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem {
+//    
+//}
+//
+//-(void)updateButtonLabels:(EQRScheduleRequestItem *)requestItem {
+//
+//}
+
+#pragma mark - view methods
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -43,51 +42,18 @@
     //add tap gesture to expand cell when it's collapsed
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandCellFromTapGesture)];
     [self.view addGestureRecognizer:tapGesture];
-    
-    
-    
-
-    
-    
-//    self.button2.alpha = 0.2;
-    
-    
-    
-    //---
-    
-//    UIImage *originalImage = self.button1.imageView.image;
-//    UIImage *tintedImage = [originalImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-//    [self.button1 setImage:tintedImage forState:UIControlStateNormal];
-//    self.button1.tintColor = [[colors colorDic] objectForKey:EQRColorStatusGoing];
-    
-//    UIImage *originalImage2 = self.button1.imageView.image;
-//    UIImage *tintedImage2 = [originalImage2 imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-//    [self.button2 setImage:tintedImage2 forState:UIControlStateNormal];
-//    self.button2.tintColor = [[colors colorDic] objectForKey:EQRColorStatusReturning];
-
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    
-
-    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-        
-
-    
     [super viewDidAppear:animated];
-    
 }
 
 
 #pragma mark - switch methods
-
-
 -(IBAction)switch1Fires:(id)sender{
-    
     if ([sender tag] == 2){
         return;
     }
@@ -99,12 +65,9 @@
                              nil];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentCheckInOut object:nil userInfo:userDic];
-    
 }
 
-
 -(IBAction)switch2Fires:(id)sender{
-    
     if ([sender tag] == 1){
         return;
     }
@@ -116,12 +79,9 @@
                              nil];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentCheckInOut object:nil userInfo:userDic];
-    
 }
 
-
 -(IBAction)showQuickView:(id)sender{
-    
     NSValue* rectValue = [NSValue valueWithCGRect:self.detailsButton.frame];
     UIView* thisView = self.view;
     NSDictionary* dic = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -129,56 +89,35 @@
                          [NSNumber numberWithBool:self.markedForReturning], @"marked_for_returning",
                          rectValue, @"rectValue",
                          thisView, @"thisView", nil];
-    
-    
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentItineraryQuickView object:nil userInfo:dic];
-    
-    
 }
 
 
 #pragma mark - collapse and expand actions
-
 -(IBAction)collapseCell:(id)sender{
-    
     if (self.isCollapsed){
-        
         self.isCollapsed = NO;
-        
         [self animateExpansionOfCell];
-        
     }else{
-        
         self.isCollapsed = YES;
-        
-        
         [self animateCollapseOfCell];
-        
     }
-    
 }
 
 -(void)expandCellFromTapGesture{
-    
     if (self.isCollapsed){
-        
         self.isCollapsed = NO;
-
         [self animateExpansionOfCell];
     }
 }
 
 -(void)animateCollapseOfCell{
-    
     self.topOfTextConstraint.constant = -8;
     self.bottomOfMainSubviewConstraint.constant = 60;
     self.topOfButton1Constraint.constant = 16;
     self.topOfButton2Constraint.constant = 16;
     
-    
     [UIView animateWithDuration:0.15 animations:^{
-        
         [self.view layoutIfNeeded];
         self.collapseButton.alpha = 0.0;
         
@@ -186,21 +125,14 @@
         [self.button2 setTransform:CGAffineTransformMakeScale(.5, .5)];
         self.textOverButton1.alpha = 0.0;
         self.textOverButton2.alpha = 0.0;
-
-
-        
     } completion:^(BOOL finished) {
-    
         self.collapseButton.hidden = YES;
         [self.delegate collapseTapped:self.requestKeyId isReturning:self.markedForReturning];
         self.bottomOfMainSubviewConstraint.constant = 0;
     }];
-
-
 }
 
 -(void)animateExpansionOfCell{
-    
     self.topOfTextConstraint.constant = 0;
     self.bottomOfMainSubviewConstraint.constant = -60;
     self.topOfButton1Constraint.constant = 8;
@@ -208,10 +140,7 @@
     
     self.collapseButton.hidden = NO;
 
-
-    
     [UIView animateWithDuration:0.15 animations:^{
-        
         [self.view layoutIfNeeded];
         self.collapseButton.alpha = 1.0;
         
@@ -219,24 +148,15 @@
         [self.button2 setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
         self.textOverButton1.alpha = 1.0;
         self.textOverButton2.alpha = 1.0;
-        
-
-
-        
     } completion:^(BOOL finished) {
-        
         [self.delegate expandTapped:self.requestKeyId isReturning:self.markedForReturning];
         self.bottomOfMainSubviewConstraint.constant = 0;
-        
     }];
-    
 }
 
 
 #pragma mark - Notification when Check In/Out view is (in)completed
-
 -(void)dismissedCheckInOut:(NSNotification*)note{
-    
     NSString* scheduleKey = [[note userInfo] objectForKey:@"scheduleKey"];
     NSString* completeOrIncomplete = [[note userInfo] objectForKey:@"comleteOrIncomplete"];
     BOOL markedForReturning = [(NSNumber*)[[note userInfo] objectForKey:@"marked_for_returning"] boolValue];
@@ -244,14 +164,11 @@
     BOOL foundOutstandingItem = [[[note userInfo] objectForKey:@"foundOutstandingItem"] boolValue];
     
     if (([self.requestKeyId isEqualToString:scheduleKey]) && (markedForReturning == self.markedForReturning)){
-        
         if ([completeOrIncomplete isEqualToString:@"complete"]){
-            
             if (switch_num == 1){
                 
                 // Don't change status if it's at 2
                 if (self.myStatus == 0){
-                    
                     self.myStatus = 1;
                 }
                 
@@ -279,11 +196,7 @@
                                                @"scheduleKey": scheduleKey };
                     [[NSNotificationCenter defaultCenter] postNotificationName:EQRPartialRefreshToItineraryArray object:nil userInfo:infoDic];
                 }];
-                
             }else{
-                
-                //swtichNum == 2
-                
                 self.myStatus = 2;
                 
                 //change color of inside of tap button
@@ -313,9 +226,7 @@
             
         }else{
             //marked as incomplete
-            
             if (switch_num == 1){
-                
                 NSUInteger originalStatus = self.myStatus;
                 self.myStatus = 0;
                 
@@ -350,15 +261,9 @@
                     }
                     
                     [self updateData:tag nix:YES callback:^{
-   
                     }];
                 }
-                
-                
             }else{
-                
-                //swtichNum == 2
-                
                 self.myStatus = 1;
                 
                 //change color of inside of tap button
@@ -385,10 +290,8 @@
 
 
 -(void)updateData:(NSString*)tag nix:(BOOL)nix callback:(void (^)(void))cb{
-
     // Update the model
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
-    
     NSString *tagValue;
     if (nix){
         tagValue = @"nix";
@@ -416,17 +319,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

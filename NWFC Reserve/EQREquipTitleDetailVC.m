@@ -32,14 +32,10 @@
 @property (weak, nonatomic) IBOutlet UISwitch *hideFromPublicSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *hideFromStudentsSwitch;
 
-
 @property (weak, nonatomic) EQREquipTitleInfoTVC *equipTitleInfo;
 @property (weak, nonatomic) EQREquipTitlePricesTVC *equipTitlePrices;
 
 @property (strong, nonatomic) EQRGenericEditor *genericEditor;
-//@property (strong, nonatomic) EQRGenericBlockOfTextEditor *genericTextEditor;
-//@property (strong, nonatomic) EQRGenericTextEditor *genericSingleLineTextEditor;
-//@property (strong, nonatomic) EQRGenericNumberEditor *genericNumberEditor;
 
 @end
 
@@ -121,6 +117,7 @@
         [self renderInfo:self.equipTitle];
     }
 }
+
 
 #pragma mark - render
 - (void)renderInfo:(EQREquipItem *)equipItem {

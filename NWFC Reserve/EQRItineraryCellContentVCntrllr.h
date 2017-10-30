@@ -10,6 +10,7 @@
 #import "EQRStatusBarView.h"
 #import "EQRTapRadioButtonView.h"
 
+
 @interface EQRItineraryCellContentVCntrllr : UIViewController <EQRTapRadioButtonDelegate, UIPopoverControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel* interactionTime;
@@ -40,6 +41,5 @@
 
 -(IBAction)switch1Fires:(id)sender;
 -(IBAction)switch2Fires:(id)sender;
-
 
 @end

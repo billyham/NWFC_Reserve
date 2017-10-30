@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EQRScheduleRequestItem.h"
 
 @protocol EQRItineraryContentDelegate;
 
 @interface EQRItineraryCellContent2VC : UIViewController{
-    
     __weak id <EQRItineraryContentDelegate> delegate;
 }
 
@@ -25,7 +25,6 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *bottomOfMainSubviewConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *topOfButton1Constraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *topOfButton2Constraint;
-
 
 @property (strong, nonatomic) IBOutlet UIView *subViewFullSize;
 
@@ -51,17 +50,17 @@
 @property bool isCollapsed;
 
 
-//button methods
-
+// Button methods
 -(IBAction)switch1Fires:(id)sender;
 -(IBAction)switch2Fires:(id)sender;
 
+// Cell API
+//-(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem;
+//-(void)updateButtonLabels:(EQRScheduleRequestItem *)requestItem;
+
 @end
 
-
 @protocol EQRItineraryContentDelegate <NSObject>
-
 -(void)collapseTapped:(NSString *) requestKeyId isReturning:(BOOL)markedForReturning;
 -(void)expandTapped:(NSString *) requestKeyId isReturning:(BOOL)markedForReturning;
-
 @end

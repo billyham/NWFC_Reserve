@@ -1164,11 +1164,6 @@
 			children = (
 				542F5FF6192355E6001C28CA /* EQRItineraryVCntrllr.h */,
 				542F5FF7192355E6001C28CA /* EQRItineraryVCntrllr.m */,
-				54E046ED192499E9006912F9 /* EQRItineraryRowCell.h */,
-				54E046EE192499E9006912F9 /* EQRItineraryRowCell.m */,
-				54E046F01924A062006912F9 /* EQRItineraryCellContentVCntrllr.h */,
-				54E046F11924A062006912F9 /* EQRItineraryCellContentVCntrllr.m */,
-				54E046F21924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib */,
 				54156FF91B4BC71400BEC26A /* EQRItineraryRowCell2.h */,
 				54156FFA1B4BC71400BEC26A /* EQRItineraryRowCell2.m */,
 				54156FF41B4BC64E00BEC26A /* EQRItineraryCellContent2VC.h */,
@@ -1228,6 +1223,11 @@
 		54482499191CC8A300E285E2 /* deprecated */ = {
 			isa = PBXGroup;
 			children = (
+				54E046ED192499E9006912F9 /* EQRItineraryRowCell.h */,
+				54E046EE192499E9006912F9 /* EQRItineraryRowCell.m */,
+				54E046F01924A062006912F9 /* EQRItineraryCellContentVCntrllr.h */,
+				54E046F11924A062006912F9 /* EQRItineraryCellContentVCntrllr.m */,
+				54E046F21924A062006912F9 /* EQRItineraryCellContentVCntrllr.xib */,
 				54AB4DCD1BA2D53B00A0358C /* EQRSigRentalFeeVC.h */,
 				54AB4DCE1BA2D53B00A0358C /* EQRSigRentalFeeVC.m */,
 				438EDCF7182B7ABE0090F882 /* EQRSecondViewController.h */,
