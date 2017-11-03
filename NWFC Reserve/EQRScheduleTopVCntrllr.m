@@ -1271,9 +1271,19 @@
                     self.thisTempIndexPath = indexPathForRowCell;
                     self.thisTempNewRowInt = newRowInt;
                     
-                    UIAlertView* newAlertView = [[UIAlertView alloc] initWithTitle:@"New Equipment" message:@"You have selected a different type of equipment" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles: @"Continue", nil];
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"New Equipment" message:@"You have selected a different type of equipment" preferredStyle:UIAlertControllerStyleAlert];
                     
-                    [newAlertView show];
+                    UIAlertAction *alertContinue = [UIAlertAction actionWithTitle:@"Continue" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        [self continueLongPressMove];
+                    }];
+                    
+                    UIAlertAction *alertCancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                        [self cancelLongPressAction];
+                    }];
+                    
+                    [alert addAction:alertContinue];
+                    [alert addAction:alertCancel];
+                    [self presentViewController:alert animated:YES completion:^{ }];
                     
                 }else{  //titleKey remains the same
                     
@@ -1285,10 +1295,19 @@
                         self.thisTempIndexPath = indexPathForRowCell;
                         self.thisTempNewRowInt = newRowInt;
                         
-                        //landed on item that has serious service issues
-                        UIAlertView* issueAlertView = [[UIAlertView alloc] initWithTitle:@"Equipment Down" message:@"You have selected an item that is not available or non-functioning properly" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles: @"Continue", nil];
+                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Equipment Down" message:@"You have selected an item that is not available or not functioning properly" preferredStyle:UIAlertControllerStyleAlert];
                         
-                        [issueAlertView show];
+                        UIAlertAction *alertContinue = [UIAlertAction actionWithTitle:@"Continue" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                            [self continueLongPressMove];
+                        }];
+                        
+                        UIAlertAction *alertCancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                            [self cancelLongPressAction];
+                        }];
+                        
+                        [alert addAction:alertContinue];
+                        [alert addAction:alertCancel];
+                        [self presentViewController:alert animated:YES completion:^{  }];
                         
                     }else{  //continue as planned
                         
@@ -1325,71 +1344,60 @@
     
     if ((gesture.state == UIGestureRecognizerStateCancelled) || (gesture.state ==UIGestureRecognizerStateFailed)){
         
-        
     }
 }
 
 
 #pragma mark - alert view delegate
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-
-    // Continue button tapped, continue with change
-    if (buttonIndex == 1){
+- (void)continueLongPressMove {
+    
+    NSString* joinKey_id = self.thisTempJoinKey;
+    NSIndexPath* indexPathForRowCell = self.thisTempIndexPath;
+    int newRowInt = (int)self.thisTempNewRowInt;
+    NSString* equipUniqueItem_foreignKey;
+    NSString* equipTitleItem_foreignKey;
+    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
+    
+    for (EQRScheduleTracking_EquipmentUnique_Join* thisJoin in requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins){
         
-        NSString* joinKey_id = self.thisTempJoinKey;
-        NSIndexPath* indexPathForRowCell = self.thisTempIndexPath;
-        int newRowInt = (int)self.thisTempNewRowInt;
-        NSString* equipUniqueItem_foreignKey;
-        NSString* equipTitleItem_foreignKey;
-        EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-        
-        for (EQRScheduleTracking_EquipmentUnique_Join* thisJoin in requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins){
+        if ([thisJoin.key_id isEqualToString:joinKey_id]){
             
-            if ([thisJoin.key_id isEqualToString:joinKey_id]){
-                
-                //now update the equipUnique and equipTitle values
-                equipUniqueItem_foreignKey = [(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] key_id];
-                
-                thisJoin.equipUniqueItem_foreignKey = equipUniqueItem_foreignKey;
-                
-                equipTitleItem_foreignKey =[(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] equipTitleItem_foreignKey];
-                
-                thisJoin.equipTitleItem_foreignKey = equipTitleItem_foreignKey;
-                
-                //then reload the collection views in the former and new rowCells
-                [self.myMasterScheduleCollectionView reloadData];
-                
-                // WebData query to change equipKeyID on schedule_equip_join (or delete previous and create a new one)
-                NSArray* topArray = @[ @[@"equipUniqueItem_foreignKey", equipUniqueItem_foreignKey],
-                                       @[@"equipTitleItem_foreignKey", equipTitleItem_foreignKey],
-                                       @[@"key_id", joinKey_id] ];
-                
-                dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0u);
-                dispatch_async(queue, ^{
-                    EQRWebData* webData = [EQRWebData sharedInstance];
-                    [webData queryForStringwithAsync:@"EQAlterScheduleEquipJoin.php" parameters:topArray completion:^(NSString *returnString) {
-                        if (!returnString){
-                            NSLog(@"EQRScheduleTopVC > longPressMoveNestedDayCell, faile to alter schedule equip join");
-                        }
-                    }];
-                });
-                
-                [self.movingNestedCellView removeFromSuperview];
-            }
+            //now update the equipUnique and equipTitle values
+            equipUniqueItem_foreignKey = [(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] key_id];
+            
+            thisJoin.equipUniqueItem_foreignKey = equipUniqueItem_foreignKey;
+            
+            equipTitleItem_foreignKey =[(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] equipTitleItem_foreignKey];
+            
+            thisJoin.equipTitleItem_foreignKey = equipTitleItem_foreignKey;
+            
+            //then reload the collection views in the former and new rowCells
+            [self.myMasterScheduleCollectionView reloadData];
+            
+            // WebData query to change equipKeyID on schedule_equip_join (or delete previous and create a new one)
+            NSArray* topArray = @[ @[@"equipUniqueItem_foreignKey", equipUniqueItem_foreignKey],
+                                   @[@"equipTitleItem_foreignKey", equipTitleItem_foreignKey],
+                                   @[@"key_id", joinKey_id] ];
+            
+            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0u);
+            dispatch_async(queue, ^{
+                EQRWebData* webData = [EQRWebData sharedInstance];
+                [webData queryForStringwithAsync:@"EQAlterScheduleEquipJoin.php" parameters:topArray completion:^(NSString *returnString) {
+                    if (!returnString){
+                        NSLog(@"EQRScheduleTopVC > longPressMoveNestedDayCell, faile to alter schedule equip join");
+                    }
+                }];
+            });
+            
+            [self.movingNestedCellView removeFromSuperview];
         }
     }
-    
-    //cancel button, move nestedCellView back to original position
-    if (buttonIndex == 0){
-        
-        [self.movingNestedCellView removeFromSuperview];
-        
-        //make original cell visible again
-        [self.myMasterScheduleCollectionView reloadData];
-        
-    }
-    
+}
+
+- (void)cancelLongPressAction {
+    [self.movingNestedCellView removeFromSuperview];
+    //make original cell visible again
+    [self.myMasterScheduleCollectionView reloadData];
 }
 
 

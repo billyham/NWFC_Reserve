@@ -14,7 +14,6 @@
 @interface EQRItineraryCellContent2VC : UIViewController{
     __weak id <EQRItineraryContentDelegate> delegate;
 }
-
 @property (weak, nonatomic) id <EQRItineraryContentDelegate> delegate;
 
 @property BOOL markedForReturning;
@@ -53,6 +52,8 @@
 // Button methods
 -(IBAction)switch1Fires:(id)sender;
 -(IBAction)switch2Fires:(id)sender;
+
+- (void)resetState;
 
 // Cell API
 //-(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem;

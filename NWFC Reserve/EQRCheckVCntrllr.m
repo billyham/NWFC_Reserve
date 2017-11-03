@@ -996,9 +996,13 @@
                 
             }else{
                 
-                //____send alert that item is not available____
-                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Not Available" message:[NSString stringWithFormat:@"Gear is no longer available for this date range"]  delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
-                [alertView show];
+                //____send alert that item is not available____                
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Not Available" message:@"Gear is no longer available for this date range" preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *alertOk = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) { }];
+                
+                [alert addAction:alertOk];
+                [self presentViewController:alert animated:YES completion:^{ }];
                 
                 //advance the cycle
                 continue;

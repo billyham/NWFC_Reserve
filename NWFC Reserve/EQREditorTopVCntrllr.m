@@ -509,23 +509,23 @@
 
 
 -(IBAction)deleteRequest:(id)sender{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Delete Confirmation" message:@"Are you sure you want to delete this reservation?" preferredStyle:UIAlertControllerStyleAlert];
     
-    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Delete Confirmation"
-                                                        message:@"Are you sure want to delete this reservation?"
-                                                       delegate:self
-                                              cancelButtonTitle:@"Cancel"
-                                              otherButtonTitles:@"Continue", nil];
-    [alertView show];
+    UIAlertAction *alertContinue = [UIAlertAction actionWithTitle:@"Continue" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self deleteContinue];
+    }];
+    
+    UIAlertAction *alertCancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) { }];
+    
+    [alert addAction:alertContinue];
+    [alert addAction:alertCancel];
+    [self presentViewController:alert animated:YES completion:^{ }];
 }
 
 
 #pragma mark - alert view delegate methods
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    
-    // ButtonIndex at 0 is cancel
-    if (buttonIndex != 1) return;
-
+- (void)deleteContinue {
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     queue.name = @"deleteButtonAlert";
     queue.maxConcurrentOperationCount = 1;

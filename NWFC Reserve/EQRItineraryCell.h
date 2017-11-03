@@ -12,7 +12,7 @@
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
 #import "EQRItineraryCellContent2VC.h"
 
-@interface EQRItineraryRowCell2 : UICollectionViewCell
+@interface EQRItineraryCell : UICollectionViewCell
 
 @property (strong, nonatomic) EQRItineraryCellContent2VC *contentVC;
 

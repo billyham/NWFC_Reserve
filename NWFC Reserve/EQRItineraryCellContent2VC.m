@@ -30,6 +30,44 @@
 //
 //}
 
+- (void)resetState {
+    self.markedForReturning = NO;
+    self.myStatus = 0;
+    self.requestKeyId = nil;
+    self.isCollapsed = NO;
+    self.myAssignedColor = nil;
+    [self.subViewFullSize setBackgroundColor:[UIColor lightGrayColor]];
+    [self.subViewFullSize setAlpha:1.0];
+    
+    [self resetCellExpansion];
+    
+    [self resetButtonTint:self.button1];
+    [self resetButtonTint:self.button2];
+}
+
+- (void)resetCellExpansion {
+    self.topOfTextConstraint.constant = 0;
+    self.bottomOfMainSubviewConstraint.constant = -60;
+    self.topOfButton1Constraint.constant = 8;
+    self.topOfButton2Constraint.constant = 8;
+    self.collapseButton.hidden = NO;
+    self.collapseButton.alpha = 1.0;
+    [self.button1 setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
+    [self.button2 setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
+    self.textOverButton1.alpha = 1.0;
+    self.textOverButton2.alpha = 1.0;
+    self.textOverButton1.textColor = [UIColor blackColor];
+    self.textOverButton2.textColor = [UIColor blackColor];
+    self.bottomOfMainSubviewConstraint.constant = 0;
+}
+
+- (void)resetButtonTint:(UIButton *)button {
+    UIImage *tintedImage = button.imageView.image;
+    UIImage *originalImage = [tintedImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    [button setImage:originalImage forState:UIControlStateNormal];
+    button.tintColor = nil;
+}
+
 #pragma mark - view methods
 - (void)viewDidLoad {
     [super viewDidLoad];

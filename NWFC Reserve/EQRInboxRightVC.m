@@ -99,10 +99,6 @@
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
 @property (strong, nonatomic) UIPopoverController* myAddEquipPopover;
 
-//alerts
-@property (strong, nonatomic) UIAlertView *confirmationAlert;
-@property (strong, nonatomic) UIAlertView *sendEmailAlert;
-
 @property (strong, nonatomic) NSString *myEmailSignature;
 @property BOOL inEditModeFlag;
 @property BOOL aChangeWasMade;
@@ -695,14 +691,24 @@
 
 
 -(void)composeEmail{
-    
     if (!self.myScheduleRequest) return;
     
-    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Send Email" message:@"Message options:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Student Confirmation", @"Send Blank Email", nil];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Send Email" message:@"Message options:" preferredStyle:UIAlertControllerStyleAlert];
     
-    self.sendEmailAlert = alertView;
+    UIAlertAction *alertConfirmation = [UIAlertAction actionWithTitle:@"Student Confirmation" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self confirmWithEmail:self];
+    }];
     
-    [alertView show];
+    UIAlertAction *alertBlank = [UIAlertAction actionWithTitle:@"Send Blank Email" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self sendEmail];
+    }];
+    
+    UIAlertAction *alertCancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) { }];
+
+    [alert addAction:alertConfirmation];
+    [alert addAction:alertBlank];
+    [alert addAction:alertCancel];
+    [self presentViewController:alert animated:YES completion:^{ }];
 }
 
 
@@ -756,12 +762,15 @@
     EQRStaffUserManager* staffManager = [EQRStaffUserManager sharedInstance];
     if (!staffManager.currentStaffUser){
         
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Current User" message:@"Please log in as a user before marking an item complete or incomplete" delegate:[self presentingViewController] cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"No Current User" message:@"Please log in as a user before marking an item complete or incomplete" preferredStyle:UIAlertControllerStyleAlert];
         
-        [self dismissViewControllerAnimated:YES completion:^{
+        UIAlertAction *alertOk = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             
-            [alert show];
         }];
+        [alert addAction:alertOk];
+        
+        [self dismissViewControllerAnimated:YES completion:^{ }];
+        [self presentViewController:alert animated:YES completion:^{ }];
         
         return;
     }
@@ -769,11 +778,17 @@
     //2 strings to use in message text
     NSString *userName = staffManager.currentStaffUser.first_and_last;
     
-    UIAlertView *alertConfirmation = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Mark as Confirmed"] message:[NSString stringWithFormat:@"Stamped with staff signature: %@", userName] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Mark as Confirmed" message:[NSString stringWithFormat:@"Stamped with staff signature: %@", userName] preferredStyle:UIAlertControllerStyleAlert];
     
-    self.confirmationAlert = alertConfirmation;
+    UIAlertAction *alertOk = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self confirmedTheConfirm];
+    }];
     
-    [alertConfirmation show];
+    UIAlertAction *alertCancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) { }];
+    
+    [alert addAction:alertOk];
+    [alert addAction:alertCancel];
+    [self presentViewController:alert animated:YES completion:^{ }];
 }
 
 -(void)confirmedTheConfirm{
@@ -1741,40 +1756,6 @@
     //dismiss popover
     [self.myNotesPopover dismissPopoverAnimated:YES];
     self.myNotesPopover = nil;
-}
-
-
-#pragma mark - alert view delegate  / compose email
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    
-    //0 is cancel, 1 is use template, 2 is blank email
-    
-    if (alertView == self.sendEmailAlert){
-        switch (buttonIndex) {
-            case 0:
-                break;
-                
-            case 1:
-                [self confirmWithEmail:self];
-                break;
-                
-            case 2:
-                [self sendEmail];
-                break;
-                
-            default:
-                break;
-        }
-    }
-    
-    if (alertView == self.confirmationAlert){
-        
-        if (buttonIndex == 1){
-            [self confirmedTheConfirm];
-        }
-    }
-    
 }
 
 

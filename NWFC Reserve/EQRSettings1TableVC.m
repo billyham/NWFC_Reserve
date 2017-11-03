@@ -608,8 +608,13 @@
             // Exit and show alert if the QR code property is nil
             if (self.myQRCode == nil){
                 
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Incomplete" message:@"Please enter an alphanumeric code before printing" delegate:self cancelButtonTitle:@"Continue" otherButtonTitles:nil];
-                [alert show];
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Incomplete" message:@"Please enter an alphanumeric code before printing" preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *alertCancel = [UIAlertAction actionWithTitle:@"Continue" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {  }];
+                
+                [alert addAction:alertCancel];
+                [self presentViewController:alert animated:YES completion:^{  }];
+                
                 return;
             }
             

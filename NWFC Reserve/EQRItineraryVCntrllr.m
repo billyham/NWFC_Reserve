@@ -8,7 +8,7 @@
 
 #import "EQRItineraryVCntrllr.h"
 #import "EQRItineraryRowCell.h"
-#import "EQRItineraryRowCell2.h"
+#import "EQRItineraryCell.h"
 #import "EQRGlobals.h"
 #import "EQRColors.h"
 #import "EQRScheduleRequestItem.h"
@@ -23,6 +23,8 @@
 #import "EQRStaffUserManager.h"
 #import "EQRModeManager.h"
 #import "EQRMiscJoin.h"
+#import "EQRItineraryGoingCell.h"
+#import "EQRItineraryIncomingCell.h"
 
 @interface EQRItineraryVCntrllr () <EQRItineraryContentDelegate>
 
@@ -131,7 +133,9 @@
     
     
     //register collection view cell
-    [self.myMasterItineraryCollection registerClass:[EQRItineraryRowCell2 class] forCellWithReuseIdentifier:@"Cell2"];
+//    [self.myMasterItineraryCollection registerClass:[EQRItineraryCell class] forCellWithReuseIdentifier:@"Cell2"];
+    [self.myMasterItineraryCollection registerClass:[EQRItineraryGoingCell class] forCellWithReuseIdentifier:@"CellGoing"];
+    [self.myMasterItineraryCollection registerClass:[EQRItineraryIncomingCell class] forCellWithReuseIdentifier:@"CellIncoming"];
 //    UINib *nib = [UINib nibWithNibName:@"EQRItineraryCellContent2VC" bundle:nil];
 //    [self.myMasterItineraryCollection registerNib:nib  forCellWithReuseIdentifier:@"Cell2"];
 
@@ -545,7 +549,7 @@
     self.readyToCheckForScheduleWarningsFlag = YES;
     
     NSArray *tempArray = [NSArray arrayWithArray:[self.myMasterItineraryCollection visibleCells]];
-    for (EQRItineraryRowCell2 *cell in tempArray){
+    for (EQRItineraryCell *cell in tempArray){
         
         NSInteger tempInt = [[self.myMasterItineraryCollection indexPathForCell:cell] row];
         
@@ -1477,7 +1481,7 @@
         }
         
         // Get the cell
-        EQRItineraryCellContent2VC *cellContentVC = (EQRItineraryCellContent2VC *)[(EQRItineraryRowCell2 *)[self.myMasterItineraryCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]] contentVC];
+        EQRItineraryCellContent2VC *cellContentVC = (EQRItineraryCellContent2VC *)[(EQRItineraryCell *)[self.myMasterItineraryCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]] contentVC];
         cellContentVC.isCollapsed = YES;
         cellContentVC.collapseButton.alpha = 0.0;
         cellContentVC.collapseButton.hidden = YES;
@@ -1532,7 +1536,7 @@
         }
         
         // Get the cell
-        EQRItineraryCellContent2VC *cellContentVC = (EQRItineraryCellContent2VC *)[(EQRItineraryRowCell2 *)[self.myMasterItineraryCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]] contentVC];
+        EQRItineraryCellContent2VC *cellContentVC = (EQRItineraryCellContent2VC *)[(EQRItineraryCell *)[self.myMasterItineraryCollection cellForItemAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]] contentVC];
         cellContentVC.isCollapsed = NO;
         cellContentVC.collapseButton.alpha = 1.0;
         cellContentVC.collapseButton.hidden = NO;
@@ -1588,9 +1592,21 @@
 }
 
 -(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    static NSString* CellIdentifier = @"Cell2";
+//    static NSString* CellIdentifier = @"Cell2";
     
-    EQRItineraryRowCell2 *cell = [self.myMasterItineraryCollection dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    EQRScheduleRequestItem *requestItem;
+    if (self.currentFilterBitmask == EQRFilterAll) {
+        requestItem = [self.arrayOfScheduleRequests objectAtIndex:indexPath.row];
+    } else {
+        requestItem = [self.filteredArrayOfScheduleRequests objectAtIndex:indexPath.row];
+    }
+    
+    EQRItineraryCell *cell;
+    if (requestItem.markedForReturn == YES){
+         cell = [self.myMasterItineraryCollection dequeueReusableCellWithReuseIdentifier:@"CellIncoming" forIndexPath:indexPath];
+    } else {
+        cell = [self.myMasterItineraryCollection dequeueReusableCellWithReuseIdentifier:@"CellGoing" forIndexPath:indexPath];
+    }
     
     for (UIView* view in cell.contentView.subviews){
         [view removeFromSuperview];
@@ -1607,19 +1623,19 @@
         // Determine if data is loaded
         if ([self.arrayOfScheduleRequests count] > indexPath.row){  // Yes, indexed object has arrived
             
-            [cell initialSetupWithRequestItem:[self.arrayOfScheduleRequests objectAtIndex:indexPath.row]];
+            [cell initialSetupWithRequestItem:requestItem];
             cell.contentVC.delegate = self;
             
             // Determine if all joins are loaded
             if (self.readyToCheckForScheduleWarningsFlag){
-                EQRScheduleRequestItem* thisItem = [self.arrayOfScheduleRequests objectAtIndex:indexPath.row];
+                EQRScheduleRequestItem* thisItem = requestItem;
                 [cell updateButtonLabels:thisItem];
             }
         }else{ // No, the data is not loaded yet
             return cell;
         }
     }else{    // Yes filter
-        [cell initialSetupWithRequestItem:[self.filteredArrayOfScheduleRequests objectAtIndex:indexPath.row]];
+        [cell initialSetupWithRequestItem:requestItem];
         cell.contentVC.delegate = self;
     }
     return cell;

@@ -6,35 +6,22 @@
 //  Copyright (c) 2015 Ham Again LLC. All rights reserved.
 //
 
-#import "EQRItineraryRowCell2.h"
+#import "EQRItineraryCell.h"
 #import "EQRColors.h"
 #import "EQRGlobals.h"
 
-@interface EQRItineraryRowCell2 ()
+@interface EQRItineraryCell ()
 @end
 
-@implementation EQRItineraryRowCell2
+@implementation EQRItineraryCell
 
-- (void)awakeFromNib {
-    // Initialization code
-    [super awakeFromNib];
+- (void)resetCellContentState {
+    [self.contentVC resetState];
 }
 
--(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem{
+- (void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem{
     
-    if (requestItem.markedForReturn == YES){
-        
-        EQRItineraryCellContent2VC *content = [[EQRItineraryCellContent2VC alloc] initWithNibName:@"EQRItineraryCellContentReturning1" bundle:nil];
-        self.contentVC = content;
-        
-    }else{
-        
-        EQRItineraryCellContent2VC *content = [[EQRItineraryCellContent2VC alloc] initWithNibName:@"EQRItineraryCellContentGoing2" bundle:nil];
-        
-//        EQRItineraryCellContent2VC *content = [[EQRItineraryCellContent2VC alloc] initWithNibName:@"EQRItineraryCellContentReturning1" bundle:nil];
-        
-        self.contentVC = content;
-    }
+    [self resetCellContentState];
     
     //cascade the 'markedForReturning' bool ivar
     if (requestItem.markedForReturn == YES) {

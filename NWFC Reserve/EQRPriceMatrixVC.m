@@ -15,7 +15,6 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRWebData.h"
 #import "EQRDataStructure.h"
-//#import "EQRLineItem.h"
 #import "EQRPriceMatrixCllctnViewContentVC.h"
 #import "EQRPriceMatrixCllctnVwCll.h"
 #import "EQRScheduleTracking_EquipmentUnique_Join.h"
@@ -26,7 +25,7 @@
 #import "EQRRenterPricingTypeTableVC.h"
 
 
-@interface EQRPriceMatrixVC () <EQRWebDataDelegate, UICollectionViewDataSource, UICollectionViewDelegate, EQRGenericEditorDelegate, EQRPriceMatrixContentDelegate, UIAlertViewDelegate, EQRRenterPricingDelegate>
+@interface EQRPriceMatrixVC () <EQRWebDataDelegate, UICollectionViewDataSource, UICollectionViewDelegate, EQRGenericEditorDelegate, EQRPriceMatrixContentDelegate, EQRRenterPricingDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem *myRequestItem;
 
@@ -68,7 +67,6 @@
 @property float depositDueAsFloat;
 @property float depositPaidAsFloat;
 
-
 @property BOOL finishedLoadingEquipJoins;
 @property BOOL finishedLoadingMiscJoins;
 @property (strong, nonatomic) NSIndexPath *tempIndexPath;
@@ -89,24 +87,16 @@
 #pragma mark - View methods
 
 - (void)viewDidLoad {
-    
     [self.lineItemsCollection registerClass:[EQRPriceMatrixCllctnVwCll class] forCellWithReuseIdentifier:@"Cell"];
-
-    
-
-    
-    
     [super viewDidLoad];
 }
 
 
 -(void)viewWillAppear:(BOOL)animated{
-    
     [super viewWillAppear:animated];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    
     [super viewDidAppear:animated];
 }
 
@@ -121,9 +111,7 @@
 
 
 
-
 #pragma mark - Setup Methods
-
 -(void)sharedInitialSetup{
     
     //__fill scheduleReqeust info: name and dates
@@ -152,13 +140,10 @@
         daysDifference = 1;
     }
     self.daysForPrice.text = [NSString stringWithFormat:@"%ld", (long)daysDifference];
-    
 }
 
 -(void)startNewTransaction:(EQRScheduleRequestItem *)request{
-    
     self.IAmANewRequest = YES;
-    
     [self createANewTransaction:request];
 }
 
@@ -246,7 +231,6 @@
     dispatch_async(queue, ^{
         
         [webData queryWithAsync:@"EQGetEquipUniqueItemsAll.php" parameters:nil class:@"EQREquipUniqueItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
-            
             [self startNewStage3];
         }];
     });
@@ -264,16 +248,11 @@
             }
         }
     }
-    
-    
     //combine equipJoins and miscJoins into LineItem array
     [self startNewStage4];
-
 }
 
 -(void)startNewStage4{  //get ALL equipTitles
-    
-//    NSLog(@"this is the count of equipJoins: %lu", (long)[self.arrayOfEquipJoins count]);
     
     if (!self.arrayOfLineItems){
         self.arrayOfLineItems = [NSMutableArray arrayWithCapacity:1];
@@ -290,9 +269,6 @@
     
     [self.lineItemsCollection reloadData];
     
-//    NSLog(@"this is the count of the collection view: %lu", (long)[self.lineItemsCollection numberOfItemsInSection:0]);
-    
-    
     //get list of all equip prices
     EQRWebData *webData = [EQRWebData sharedInstance];
     webData.delegateDataFeed = self;
@@ -307,9 +283,7 @@
             [self editExistingStage4];
         }];
     });
-    
 }
-
 
 
 -(void)editExistingTransaction:(EQRScheduleRequestItem *)request{
@@ -351,19 +325,12 @@
         [webData queryForStringwithAsync:@"EQGetTransactionWithScheduleRequestKey.php" parameters:topArray completion:^(EQRTransaction *transaction) {
             
             if (transaction){
-                
-//                NSLog(@"this is the transaction's key_id: %@", transaction.key_id);
-                
                 self.myTransaction = transaction;
-                
                 //found a matching transaction for this schedule Request, go on...
                 [self editExistingStage2];
-
             }else{
-                
                 //no matching transaction, create a fresh one.
                 [self createANewTransaction:self.myRequestItem];
-//                NSLog(@"creating a new transaction because it didn't find an existing one");
             }
         }];
     });
@@ -386,10 +353,8 @@
         }
     }
     
-//    NSLog(@"EQRPriceMatrix > editExistingStage2");
     
-    //________!!!!!!!! The arrays already attached to the Reqeust are meaningless  !!!!!______
-    
+    //________!!!!!!!! The arrays already attached to the Reqeust are meaningless  !!!!!
     EQRWebData *webData = [EQRWebData sharedInstance];
     webData.delegateDataFeed = self;
     NSArray *firstArray = @[@"scheduleTracking_foreignKey", self.myRequestItem.key_id];
@@ -426,9 +391,8 @@
     });
 }
 
+
 -(void)editExistingStage3{  //get prices for equip titles
-    
-//    NSLog(@"this is the count of equipJoins: %lu", (long)[self.arrayOfEquipJoins count]);
     
     for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfEquipJoins){
         if (join.cost){
@@ -442,7 +406,6 @@
             }
         }
     }
-    
     
     for (EQRMiscJoin *miscJoin in self.arrayOfMiscJoins){
         if (miscJoin.cost){
@@ -472,9 +435,6 @@
     
     [self.lineItemsCollection reloadData];
     
-//    NSLog(@"this is the count of the collection view: %lu", (long)[self.lineItemsCollection numberOfItemsInSection:0]);
-    
-    
     //get list of all equip prices
     EQRWebData *webData = [EQRWebData sharedInstance];
     webData.delegateDataFeed = self;
@@ -491,14 +451,10 @@
             [self editExistingStage4];
         }];
     });
-    
-   
 }
 
 //this is implemented by both
 -(void)editExistingStage4{ //populate collection view objects with available prices
-    
-//    NSLog(@"inside editExistingStage 4, count of arrayOfPriceEquipTitles: %lu", (unsigned long)[self.arrayOfPriceEquipTitles count]);
     
     SEL priceSelector;
     
@@ -567,7 +523,6 @@
                 }
             }
         }
-        
     }
     
     //do the same for line items array????
@@ -669,11 +624,9 @@
                     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
                     dateFormatter.dateFormat = @"MMM dd, yyyy";
                     self.markAsPaidStaffAndTimestamp.text = [NSString stringWithFormat:@"%@ - %@", staffManager.currentStaffUser.first_name, [dateFormatter stringFromDate:self.myTransaction.payment_timestamp]];
-                    
                 }
             }
         }
-        
         //check calculations anyway, and show warning if a mismatch exists
         [self checkCalculations];
     }
@@ -751,21 +704,16 @@
         [webData queryForStringwithAsync:@"EQAlterTransactionTotals.php" parameters:topArray completion:^(NSString *returnKey) {
             
             if ([returnKey isEqualToString:self.myTransaction.key_id]){
-                
-                //everthign is cool
-                
+
             }else{
-                
-                //error handling
                 NSLog(@"failed to successfully alter transaction prices");
             }
         }];
     });
-    
 }
 
+
 -(void)checkCalculations{
-    
     float sumOfCosts = 0;
     float sumOfDeposits = 0;
     for (EQRScheduleTracking_EquipmentUnique_Join *join in self.arrayOfLineItems){
@@ -820,10 +768,7 @@
 }
 
 
-
 #pragma mark - Having tapped on things
-
-
 -(IBAction)recalculateTotals:(id)sender{
     
     //sum of join costs
@@ -843,11 +788,9 @@
     
     self.calculationWarning.hidden = YES;
     [self.recalculateTotals setTitleColor:[UIColor blueColor] forState:UIControlStateNormal & UIControlStateHighlighted & UIControlStateSelected];
-    
 }
 
 #pragma mark Select Rental Pricing Type
-
 -(IBAction)selectRenterPricingType:(id)sender{
     
     UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"Pricing" bundle:nil];
@@ -861,13 +804,8 @@
         if (![self.myTransaction.renter_pricing_class isEqualToString:@""]){
             [self.renterPricingTableVC shouldSelect:self.myTransaction.renter_pricing_class];
         }
-        
     }
-    
-    [self presentViewController:self.renterPricingTableVC animated:YES completion:^{
-        
-        
-    }];
+    [self presentViewController:self.renterPricingTableVC animated:YES completion:^{ }];
 }
 
 
@@ -885,8 +823,6 @@
         //this will update the view
         self.needsNewPriceCalculation = YES;
         [self editExistingStage4];
-        
-        
         
         //update database
         EQRWebData *webData = [EQRWebData sharedInstance];
@@ -920,92 +856,87 @@
 #pragma mark Mark As Paid or Unpaid
 
 -(IBAction)markAsPaid:(id)sender{
-    
-    //MUST CHECK THAT THE USER HAS LOGGED IN FIRST:
+    // Check that the user has logged in first
     EQRStaffUserManager* staffManager = [EQRStaffUserManager sharedInstance];
     if (!staffManager.currentStaffUser){
         
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Current User" message:@"Please log in as a user before marking an item complete or incomplete" delegate:[self presentingViewController] cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"No Current User" message:@"Please log in as a user before marking an item complete or incomplete" preferredStyle:UIAlertControllerStyleAlert];
         
-        [self dismissViewControllerAnimated:YES completion:^{
-            
-            [alert show];
+        UIAlertAction *alertOk = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         }];
+        
+        [alert addAction:alertOk];
+        [self presentViewController:alert animated:YES completion:^{ }];
         
         return;
     }
     
     NSString *userName = staffManager.currentStaffUser.first_and_last;
-
-    UIAlertView *alertConfirmation = [[UIAlertView alloc] initWithTitle:@"Mark as PAID" message:[NSString stringWithFormat:@"PAID and stamped with staff signature: %@", userName] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
     
-    [alertConfirmation show];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Mark as PAID" message:[NSString stringWithFormat:@"PAID and stamped with staff signature: %@", userName] preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *alertOk = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self completePaid];
+    }];
+    
+    UIAlertAction *alertCancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) { }];
+    
+    [alert addAction:alertOk];
+    [alert addAction:alertCancel];
+    [self presentViewController:alert animated:YES completion:^{ }];
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+
+- (void)completePaid {
+    //update display
+    //update transaction property with staff key_id and timestamp
+    //date Transaction DB with staff key_id and timestamp
+    EQRStaffUserManager *staffManager = [EQRStaffUserManager sharedInstance];
     
-    if ([alertView.title isEqualToString:@"Mark as PAID"]){
+    self.markAsPaid.hidden = YES;
+    self.removeAsPaid.hidden = NO;
+    
+    //formatted string for display
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    dateFormatter.dateFormat = @"MMM dd, yyyy";
+    self.markAsPaidStaffAndTimestamp.text = [NSString stringWithFormat:@"%@ - %@", staffManager.currentStaffUser.first_name, [dateFormatter stringFromDate:[NSDate date]]];
+    self.totalPaidAsFloat = self.totalAsFloat;
+    self.totalDueAsFloat = 0;
+    self.totalPaid.text = [NSString stringWithFormat:@"Total Paid %5.2f", self.totalPaidAsFloat];
+    self.totalDue.text = @"Total Due: 0.00";
+    self.depositPaidAsFloat = self.depositDueAsFloat;
+    self.depositPaid.text = [NSString stringWithFormat:@"Deposit Paid: %5.2f", self.depositPaidAsFloat];
+    
+    self.myTransaction.payment_timestamp = [NSDate date];
+    self.myTransaction.payment_staff_foreignKey = staffManager.currentStaffUser.key_id;
+    self.myTransaction.total_paid = [NSString stringWithFormat:@"%5.2f", self.totalPaidAsFloat];
+    self.myTransaction.total_due = @"0";
+    self.myTransaction.deposit_paid = [NSString stringWithFormat:@"%5.2f", self.depositPaidAsFloat];
+    
+    //formatted string for MYSQL
+    NSString *stringForDate = [EQRDataStructure dateAsString:[NSDate date]];
+    EQRWebData *webData = [EQRWebData sharedInstance];
+    NSArray *firstArray = @[@"key_id", self.myTransaction.key_id];
+    NSArray *secondArray = @[@"payment_timestamp", stringForDate];
+    NSArray *thirdarray = @[@"payment_staff_foreignKey", staffManager.currentStaffUser.key_id];
+    NSArray *fourthArray = @[@"payment_type", @""];
+    NSArray *fifthArray = @[@"total_paid", self.myTransaction.total_paid];
+    NSArray *sixthArray = @[@"deposit_paid", self.myTransaction.deposit_paid];
+    NSArray *topArray = @[firstArray, secondArray, thirdarray, fourthArray, fifthArray, sixthArray];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
         
-        if (buttonIndex != 1){
-            return;
-        }
-        
-        //update display
-        //update transaction property with staff key_id and timestamp
-        //date Transaction DB with staff key_id and timestamp
-        
-        EQRStaffUserManager *staffManager = [EQRStaffUserManager sharedInstance];
-        
-        self.markAsPaid.hidden = YES;
-        self.removeAsPaid.hidden = NO;
-        
-        //formatted string for display
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-        dateFormatter.dateFormat = @"MMM dd, yyyy";
-        self.markAsPaidStaffAndTimestamp.text = [NSString stringWithFormat:@"%@ - %@", staffManager.currentStaffUser.first_name, [dateFormatter stringFromDate:[NSDate date]]];
-        self.totalPaidAsFloat = self.totalAsFloat;
-        self.totalDueAsFloat = 0;
-        self.totalPaid.text = [NSString stringWithFormat:@"Total Paid %5.2f", self.totalPaidAsFloat];
-        self.totalDue.text = @"Total Due: 0.00";
-        self.depositPaidAsFloat = self.depositDueAsFloat;
-        self.depositPaid.text = [NSString stringWithFormat:@"Deposit Paid: %5.2f", self.depositPaidAsFloat];
-        
-        self.myTransaction.payment_timestamp = [NSDate date];
-        self.myTransaction.payment_staff_foreignKey = staffManager.currentStaffUser.key_id;
-        self.myTransaction.total_paid = [NSString stringWithFormat:@"%5.2f", self.totalPaidAsFloat];
-        self.myTransaction.total_due = @"0";
-        self.myTransaction.deposit_paid = [NSString stringWithFormat:@"%5.2f", self.depositPaidAsFloat];
-        
-        
-        //formatted string for MYSQL
-        NSString *stringForDate = [EQRDataStructure dateAsString:[NSDate date]];
-        EQRWebData *webData = [EQRWebData sharedInstance];
-        NSArray *firstArray = @[@"key_id", self.myTransaction.key_id];
-        NSArray *secondArray = @[@"payment_timestamp", stringForDate];
-        NSArray *thirdarray = @[@"payment_staff_foreignKey", staffManager.currentStaffUser.key_id];
-        NSArray *fourthArray = @[@"payment_type", @""];
-        NSArray *fifthArray = @[@"total_paid", self.myTransaction.total_paid];
-        NSArray *sixthArray = @[@"deposit_paid", self.myTransaction.deposit_paid];
-        NSArray *topArray = @[firstArray, secondArray, thirdarray, fourthArray, fifthArray, sixthArray];
-        
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-        dispatch_async(queue, ^{
+        [webData queryForStringwithAsync:@"EQAlterTransactionMarkAsPaid.php" parameters:topArray completion:^(NSString *returnKey) {
             
-            [webData queryForStringwithAsync:@"EQAlterTransactionMarkAsPaid.php" parameters:topArray completion:^(NSString *returnKey) {
+            if ([returnKey isEqualToString:self.myTransaction.key_id]){
                 
-                if ([returnKey isEqualToString:self.myTransaction.key_id]){
-                    
-                    //everthign is cool
-                    
-                }else{
-                    
-                    //error handling
-                    NSLog(@"failed to successfully alter transaction mark as paid");
-                }
-            }];
-        });
-    }
+            }else{
+                NSLog(@"failed to successfully alter transaction mark as paid");
+            }
+        }];
+    });
 }
 
 -(IBAction)markAsNotPaid:(id)sender{
