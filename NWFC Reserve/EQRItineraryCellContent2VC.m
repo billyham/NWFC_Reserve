@@ -33,6 +33,7 @@
     self.markedForReturning = NO;
     self.myStatus = 0;
     self.requestKeyId = nil;
+    self.delegate = nil;
     self.isCollapsed = NO;
     self.myAssignedColor = nil;
     [self.subViewFullSize setBackgroundColor:[UIColor lightGrayColor]];
@@ -82,27 +83,24 @@
     [self.view addGestureRecognizer:tapGesture];
 }
 
--(void)viewWillAppear:(BOOL)animated{
-}
-
--(void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-}
-
 
 #pragma mark - switch methods
 -(IBAction)switch1Fires:(id)sender{
-    if ([sender tag] == 2){
-        return;
-    }
-    [self.delegate showCheckInOut:self.requestKeyId mark:self.markedForReturning switch:1 cellContent:self];
+//    if ([sender tag] == 2){
+//        return;
+//    }
+    [self switchFires:sender];
 }
 
 -(IBAction)switch2Fires:(id)sender{
-    if ([sender tag] == 1){
-        return;
-    }
-    [self.delegate showCheckInOut:self.requestKeyId mark:self.markedForReturning switch:2 cellContent:self];
+//    if ([sender tag] == 1){
+//        return;
+//    }
+    [self switchFires:sender];
+}
+
+-(IBAction)switchFires:(id)sender {
+    [self.delegate showCheckInOut:self.requestKeyId mark:self.markedForReturning switch:[sender tag] cellContent:self];
 }
 
 -(IBAction)showQuickView:(id)sender{
@@ -191,7 +189,6 @@
                 outstanding:(BOOL)foundOutstandingItem {
 
     if (([self.requestKeyId isEqualToString:scheduleKey]) && (markedForReturning == self.markedForReturning)){
-        NSLog(@"found a match on key id: %@", self.requestKeyId);
 
         if ([completeOrIncomplete isEqualToString:@"complete"]){
             if (switchNum == 1){
@@ -287,7 +284,6 @@
 
 
 -(void)updateData:(NSString*)tag nix:(BOOL)nix callback:(void (^)(void))cb{
-    NSLog(@"update data fires");
     // Update the model
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     NSString *tagValue;

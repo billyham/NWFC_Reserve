@@ -279,7 +279,7 @@
 
 
 -(void)partialRefreshFromCheckInOutCellNotification:(NSNotification*)note{
-    NSLog(@"EQRItineraryVCntrlllr > partialRefresh fires");
+
     NSArray* topArray = [self pickupAndReturnDatesAsSQLStrings];
     
     [self continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray: topArray];
@@ -308,9 +308,7 @@
                     item.staff_checkout_date = [NSDate date];
                     item.staff_prep_date = [NSDate date];
                     item.shouldCollapseGoingCell = YES;
-                    NSLog(@"status is 2");
                 } else if ([[[note userInfo] objectForKey:@"status"] isEqual:[NSNumber numberWithInteger:1]]){
-                    NSLog(@"status is 1");
                     item.staff_checkout_date = nil;
                     item.staff_prep_date = [NSDate date];
                     item.shouldCollapseGoingCell = NO;
@@ -453,8 +451,6 @@
 
 // Update and render button labels
 -(void)continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray:(NSArray *)topArray{
-    NSLog(@"continueAfterPartial... fires");
-
     // Top array has RequestDateBegin and RequestDateEnd values
     
     if (self.arrayOfJoinsAll){
@@ -1355,7 +1351,7 @@
 
 #pragma mark - EQRItineraryContentDelegate methods
 - (void)showCheckInOut:(NSString *) scheduleKey mark:(BOOL)markedForReturning switch:(NSUInteger)switchNum cellContent:(EQRItineraryCellContent2VC *)cellContent {
-    
+
     EQRCheckVCntrllr* checkViewController = [[EQRCheckVCntrllr alloc] initWithNibName:@"EQRCheckVCntrllr" bundle:nil];
     
     // Extend edges under nav and tab bar
@@ -1610,7 +1606,7 @@
         
         // Determine if data is loaded
         if ([self.arrayOfScheduleRequests count] > indexPath.row){  // Yes, indexed object has arrived
-            
+
             [cell initialSetupWithRequestItem:requestItem];
             cell.contentVC.delegate = self;
             
@@ -1641,9 +1637,6 @@
     forItemAtIndexPath:(NSIndexPath *)indexPath{
     
     self.freezeOnInsertionsFlag = NO;
-    
-//    [(EQRItineraryCell *)cell resetCellContentState];
-    [[(EQRItineraryCell *)cell contentVC] setRequestKeyId:nil];
 }
 
 

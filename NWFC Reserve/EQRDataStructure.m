@@ -235,7 +235,6 @@
     __block NSMutableSet* tempMuteSetOfGroupingStrings = [NSMutableSet setWithCapacity:1];
     __block NSMutableDictionary* tempMuteDicOfTitleKeysToGrouping = [NSMutableDictionary dictionaryWithCapacity:1];
     
-        NSLog(@"EQRDataStructure > turnFlatArrayToStructuredArrayOldWay... calls getEquipTitlesAlls");
     //______!!!!!!!!!     METHOD 1, THE SLOW WAY    !!!!!!!!!!!!!
     EQRWebData* webData = [EQRWebData sharedInstance];
     [webData queryWithLink:@"EQGetEquipmentTitlesAll.php" parameters:nil class:@"EQREquipItem" completion:^(NSMutableArray *muteArray) {

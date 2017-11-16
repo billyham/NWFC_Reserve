@@ -130,17 +130,11 @@
 
 
 - (void)initialSetup:(NSString *)scheduleKey mark:(BOOL)markedForReturning switch:(NSUInteger)switchNum cellContent:(EQRItineraryCellContent2VC *)cellContent{
-
-//-(void)initialSetupWithInfo:(NSDictionary*)userInfo{
     
     self.didLoadFullyCompleteFlag = NO;
     self.didLoadContactCompleteFlag = NO;
     self.myScheduleRequestItem = nil;
     self.tempContact = nil;
-    
-//    self.scheduleRequestKeyID = [userInfo objectForKey:@"scheduleKey"];
-//    self.marked_for_returning = [[userInfo objectForKey:@"marked_for_returning"] boolValue];
-//    self.switch_num = [[userInfo objectForKey:@"switch_num"] integerValue];
     
     self.scheduleRequestKeyID = scheduleKey;
     self.marked_for_returning = markedForReturning;
@@ -151,21 +145,14 @@
     if (!self.marked_for_returning){
         
         if (self.switch_num == 1){
-            
             self.myProperty = @"prep_flag";
-            
         }else {
-            
             self.myProperty = @"checkout_flag";
         }
     }else{
-        
         if (self.switch_num == 1){
-            
             self.myProperty = @"checkin_flag";
-            
         }else {
-            
             self.myProperty = @"shelf_flag";
         }
     }
@@ -181,11 +168,8 @@
     dispatch_async(queue, ^{
        
         [self.webDataForFullyComplete queryWithAsync:@"EQGetScheduleRequestFullyComplete.php" parameters:topArray class:@"EQRScheduleRequestItem" selector:thisSelector completion:^(BOOL isLoadingFlagUp) {
-            
             self.didLoadFullyCompleteFlag = YES;
-            
             if (self.didLoadContactCompleteFlag){
-                
                 self.didLoadFullyCompleteFlag = NO;
                 self.didLoadContactCompleteFlag = NO;
                 
@@ -205,13 +189,9 @@
     
     dispatch_queue_t queue2 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue2, ^{
-       
         [self.webDataForContactComplete queryWithAsync:@"EQGetContactCompleteWithScheduleRequestKey.php" parameters:topArray class:@"EQRContactNameItem" selector:thisSelector2 completion:^(BOOL isLoadingFlagUp) {
-            
             self.didLoadContactCompleteFlag = YES;
-            
             if (self.didLoadFullyCompleteFlag){
-                
                 self.didLoadFullyCompleteFlag = NO;
                 self.didLoadContactCompleteFlag = NO;
                 
@@ -226,7 +206,6 @@
 
 
 -(void)initialSetupStage2{
-    
     //force out of search mode
     self.mySearchController.active = NO;
     
@@ -358,7 +337,6 @@
 
 
 -(void)initialSetupStage3{
-
     //expand the array
     self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
     [self.myEquipCollection reloadData];
@@ -449,7 +427,6 @@
 
 
 - (void)viewDidLoad{
-    
     [super viewDidLoad];
 
     //register collection view cells
