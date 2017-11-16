@@ -245,7 +245,6 @@
 
 
 #pragma mark - EQRContactPickerVC delegate methods
-
 -(void)retrieveSelectedNameItem{
     
     // Retrieve name item from shared nib
@@ -283,7 +282,6 @@
 
 
 #pragma mark - classPickerVC delegate method
-
 -(void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem{
     
     self.thisClassItem = selectedClassItem;
@@ -344,7 +342,6 @@
 
 
 #pragma mark - helper functions for populating name list
-
 -(void)populateNamesWithRequest:(NSString *)request params:(NSArray *)params{
     
     // Show name list
@@ -390,7 +387,6 @@
 
 
 #pragma mark - return to start screen
-
 -(void)startNewDisplay:(NSNotification*)note{
     
     // Deselect type
@@ -434,8 +430,6 @@
 
 
 #pragma mark - collectionView datasource methods
-
-
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     return 1;
 }
@@ -485,7 +479,6 @@
 
 
 #pragma mark - collection view delegate methods
-
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     
     //highlight cell manually (booo)

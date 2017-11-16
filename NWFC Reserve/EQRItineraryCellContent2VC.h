@@ -59,9 +59,19 @@
 //-(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem;
 //-(void)updateButtonLabels:(EQRScheduleRequestItem *)requestItem;
 
+- (void)dismissedCheckInOut:(NSString *)scheduleKey
+                   complete:(NSString *)completeOrIncomplete
+                  returning:(BOOL)markedForReturning
+                     switch:(NSUInteger)switchNum
+                outstanding:(BOOL)foundOutstandingItem;
+
 @end
 
 @protocol EQRItineraryContentDelegate <NSObject>
--(void)collapseTapped:(NSString *) requestKeyId isReturning:(BOOL)markedForReturning;
--(void)expandTapped:(NSString *) requestKeyId isReturning:(BOOL)markedForReturning;
+- (void)collapseTapped:(NSString *) requestKeyId isReturning:(BOOL)markedForReturning;
+- (void)expandTapped:(NSString *) requestKeyId isReturning:(BOOL)markedForReturning;
+- (void)showCheckInOut:(NSString *) scheduleKey mark:(BOOL)markedForReturning switch:(NSUInteger)switchNum cellContent:(EQRItineraryCellContent2VC *)cellContent;
 @end
+
+
+

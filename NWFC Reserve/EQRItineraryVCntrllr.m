@@ -7,7 +7,6 @@
 //
 
 #import "EQRItineraryVCntrllr.h"
-#import "EQRItineraryRowCell.h"
 #import "EQRItineraryCell.h"
 #import "EQRGlobals.h"
 #import "EQRColors.h"
@@ -123,8 +122,6 @@
     [nc addObserver:self selector:@selector(raiseFlagThatAChangeHasBeenMade:) name:EQRAChangeWasMadeToTheSchedule object:nil];
     //partial refresh to when a switch is thrown in the itinarary cell view
     [nc addObserver:self selector:@selector(partialRefreshFromCheckInOutCellNotification:) name:EQRPartialRefreshToItineraryArray object:nil];
-    //receive note from cellContentView to show check in out v controllr
-    [nc addObserver:self selector:@selector(showCheckInOut:) name:EQRPresentCheckInOut object:nil];
     //receive note from itinerary row to show quick view
     [nc addObserver:self selector:@selector(showQuickView:) name:EQRPresentItineraryQuickView object:nil];
     //show request editor (from quick view duplicate button)
@@ -282,7 +279,7 @@
 
 
 -(void)partialRefreshFromCheckInOutCellNotification:(NSNotification*)note{
-    
+    NSLog(@"EQRItineraryVCntrlllr > partialRefresh fires");
     NSArray* topArray = [self pickupAndReturnDatesAsSQLStrings];
     
     [self continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray: topArray];
@@ -311,7 +308,9 @@
                     item.staff_checkout_date = [NSDate date];
                     item.staff_prep_date = [NSDate date];
                     item.shouldCollapseGoingCell = YES;
+                    NSLog(@"status is 2");
                 } else if ([[[note userInfo] objectForKey:@"status"] isEqual:[NSNumber numberWithInteger:1]]){
+                    NSLog(@"status is 1");
                     item.staff_checkout_date = nil;
                     item.staff_prep_date = [NSDate date];
                     item.shouldCollapseGoingCell = NO;
@@ -398,7 +397,6 @@
     SEL thisSelectorPickup = @selector(addPickupToIntineraryList:);
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue, ^{
-        
        [self.webDataForPickup queryWithAsync:@"EQGetScheduleItemsWithBeginDate.php" parameters:topArray class:@"EQRScheduleRequestItem" selector:thisSelectorPickup completion:^(BOOL isLoadingFlagUp) {
           
            //identify when loading is complete
@@ -427,7 +425,6 @@
     SEL thisSelectorReturn = @selector(addReturnToItineraryList:);
     dispatch_queue_t queue2 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
     dispatch_async(queue2, ^{
-       
         [self.webDataForReturn queryWithAsync:@"EQGetScheduleItemsWithEndDate.php" parameters:topArray class:@"EQRScheduleRequestItem" selector:thisSelectorReturn completion:^(BOOL isLoadingFlagUp) {
            
             self.finishedAsyncDBCallForReturn = isLoadingFlagUp;
@@ -456,6 +453,7 @@
 
 // Update and render button labels
 -(void)continueAfterPartialRequestCompletedASyncCallForRequestsWithTopArray:(NSArray *)topArray{
+    NSLog(@"continueAfterPartial... fires");
 
     // Top array has RequestDateBegin and RequestDateEnd values
     
@@ -505,7 +503,7 @@
 
 // Update and render button labels
 -(void)continueAfterJoinCallCompleted{
-    
+
     // Update array of scheduleRequests with info about completed and uncompleted joins
     
     for (EQRScheduleRequestItem *thisItem in self.arrayOfScheduleRequests){
@@ -559,33 +557,6 @@
             [cell updateButtonLabels:thisItem];
         }
     }
-}
-
-
-#pragma mark - show dismiss check out in view
--(void)showCheckInOut:(NSNotification*)note{
-    NSString* scheduleKey = [[note userInfo] objectForKey:@"scheduleKey"];
-    NSNumber* marked_for_returning = [[note userInfo] objectForKey:@"marked_for_returning"];
-    NSNumber* switch_num = [[note userInfo] objectForKey:@"switch_num"];
-    
-    EQRCheckVCntrllr* checkViewController = [[EQRCheckVCntrllr alloc] initWithNibName:@"EQRCheckVCntrllr" bundle:nil];
-    
-    // Extend edges under nav and tab bar
-    checkViewController.edgesForExtendedLayout = UIRectEdgeAll;
-    
-    NSDictionary* newDict = @{ @"scheduleKey": scheduleKey,
-                               @"marked_for_returning": marked_for_returning,
-                               @"switch_num": switch_num };
-    // Initial setup
-    [checkViewController initialSetupWithInfo:newDict];
-    
-    // Modal pops up from below, removes navigiation controller
-    UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:checkViewController];
-    
-    // Add staff picker and cancel buttons in nav bar??
-    
-    [self presentViewController:newNavController animated:YES completion:^{
-    }];
 }
 
 
@@ -1383,6 +1354,23 @@
 
 
 #pragma mark - EQRItineraryContentDelegate methods
+- (void)showCheckInOut:(NSString *) scheduleKey mark:(BOOL)markedForReturning switch:(NSUInteger)switchNum cellContent:(EQRItineraryCellContent2VC *)cellContent {
+    
+    EQRCheckVCntrllr* checkViewController = [[EQRCheckVCntrllr alloc] initWithNibName:@"EQRCheckVCntrllr" bundle:nil];
+    
+    // Extend edges under nav and tab bar
+    checkViewController.edgesForExtendedLayout = UIRectEdgeAll;
+    
+    [checkViewController initialSetup:scheduleKey mark:markedForReturning switch:switchNum cellContent:cellContent];
+    
+    // Modal pops up from below, removes navigiation controller
+    UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:checkViewController];
+    [self presentViewController:newNavController animated:YES completion:^{ }];
+    
+    // Add staff picker and cancel buttons in nav bar??
+}
+
+
 -(void)collapseTapped:(NSString *) requestKeyId isReturning:(BOOL)markedForReturning{
     // Test if a filter has been applied
     NSArray *variableArray;
@@ -1653,6 +1641,9 @@
     forItemAtIndexPath:(NSIndexPath *)indexPath{
     
     self.freezeOnInsertionsFlag = NO;
+    
+//    [(EQRItineraryCell *)cell resetCellContentState];
+    [[(EQRItineraryCell *)cell contentVC] setRequestKeyId:nil];
 }
 
 

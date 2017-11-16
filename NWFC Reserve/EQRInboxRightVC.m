@@ -79,7 +79,6 @@
 
 //popOver controllers
 @property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
-@property (strong, nonatomic) UIPopoverController* myDayDatePicker;
 @property (strong, nonatomic) UIPopoverController* myContactPicker;
 @property (strong, nonatomic) UIPopoverController* myRenterTypePicker;
 @property (strong, nonatomic) UIPopoverController* myClassPicker;
@@ -88,6 +87,7 @@
 
 //popOver root VCs
 @property (strong, nonatomic) EQREditorDateVCntrllr* myDayDateVC;
+@property (strong, nonatomic) EQREditorExtendedDateVC *myExtendedDateVC;
 @property (strong, nonatomic) EQRContactPickerVC* myContactVC;
 @property (strong, nonatomic) EQREditorRenterVCntrllr* myRenterTypeVC;
 @property (strong, nonatomic) EQRClassPickerVC* myClassPickerVC;
@@ -1243,7 +1243,6 @@
     CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
     CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
     
-    
     //present the popover
     [self.myRenterTypePicker presentPopoverFromRect:step2Rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
     
@@ -1286,96 +1285,79 @@
 
 
 -(IBAction)removeClassButton:(id)sender{
-    
     [self initiateRetrieveClassItem:nil];
 }
 
 
 -(IBAction)changeDateTextFields:(id)sender{
     
-    //datDatePicker shared nib
     EQREditorDateVCntrllr* datePickerVC = [[EQREditorDateVCntrllr alloc] initWithNibName:@"EQREditorDateVCntrllr" bundle:nil];
     self.myDayDateVC = datePickerVC;
     
-    //create the popover and assign to ivar
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:datePickerVC];
-    self.myDayDatePicker = popOver;
-    self.myDayDatePicker.delegate = self;
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.myDayDateVC];
     
-    self.myDayDatePicker.popoverContentSize = CGSizeMake(320.f, 570.f);
+    navController.modalPresentationStyle = UIModalPresentationFormSheet;
     
-    //convert coordinates of textField frame to self.view
+    // Convert coordinates of textField frame to self.view
     UIView* originalRect = self.pickUpTimeValueField;
     CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
     CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
     
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelAction)];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(standardDateSave:)];
+    [datePickerVC.navigationItem setLeftBarButtonItem:leftButton];
+    [datePickerVC.navigationItem setRightBarButtonItem:rightButton];
     
-    //present the popover
-    [self.myDayDatePicker presentPopoverFromRect:step2Rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
-    //methods AFTER adding the popover to the view
-    
-    //enter dates into datepicker
+    // Enter dates into datepicker
     NSDate* combinedPickupDate = [EQRDataStructure dateFromCombinedDay:self.myScheduleRequest.request_date_begin And8HourShiftedTime:self.myScheduleRequest.request_time_begin];
     NSDate* combinedReturnDate = [EQRDataStructure dateFromCombinedDay:self.myScheduleRequest.request_date_end And8HourShiftedTime:self.myScheduleRequest.request_time_end];
+
+    [self.myDayDateVC setPickupDate:combinedPickupDate returnDate:combinedReturnDate];
     
-    self.myDayDateVC.pickupDateField.date = combinedPickupDate;
-    self.myDayDateVC.returnDateField.date = combinedReturnDate;
+    // Assign target for datDatePicker's actions
+    [self.myDayDateVC setSaveSelector:@"standardDateSave:" forTarget:self];
+    [self.myDayDateVC setShowExtended:@"showExtendedDate:" withTarget:self];
     
-    //assign target for datDatePicker's actions
-    [self.myDayDateVC.saveButton addTarget:self action:@selector(receiveNewPickupDate) forControlEvents:UIControlEventTouchUpInside];
-    [self.myDayDateVC.showOrHideExtendedButton addTarget:self action:@selector(showExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
+    [self presentViewController:navController animated:YES completion:^{ }];
+    
 }
 
 
 -(IBAction)showExtendedDate:(id)sender{
     
-    //change to Extended view
+    // Change to Extended view
     EQREditorExtendedDateVC* myDateViewController = [[EQREditorExtendedDateVC alloc] initWithNibName:@"EQREditorExtendedDateVC" bundle:nil];
-    CGSize thisSize = CGSizeMake(600.f, 570.f);
     
-    [self.myDayDatePicker setPopoverContentSize:thisSize animated:YES];
-    [self.myDayDatePicker setContentViewController:myDateViewController animated:YES];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(extendedDateSave:)];
+    [myDateViewController.navigationItem setRightBarButtonItem:rightButton];
     
-    [myDateViewController.saveButton addTarget:self action:@selector(receiveNewPickupDate)
-                              forControlEvents:UIControlEventTouchUpInside];
-    [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(returnToStandardDate:) forControlEvents:UIControlEventTouchUpInside];
+    [[self.myDayDateVC navigationController] pushViewController:myDateViewController animated:YES];
     
-    //need to set the date and time
-    myDateViewController.pickupDateField.date = [self.myDayDateVC retrievePickUpDate];
+    [myDateViewController setSaveSelector:@"extendedDateSave:" forTarget:self];
+    [myDateViewController setShowExtended:@"returnToStandardDate:" withTarget:self];
+    
+    // Need to set the date and time
+    [myDateViewController setPickupDate:[self.myDayDateVC retrievePickUpDate] returnDate:[self.myDayDateVC retrieveReturnDate]];
+    
     myDateViewController.pickupTimeField.date = [self.myDayDateVC retrievePickUpDate];
-    myDateViewController.returnDateField.date = [self.myDayDateVC retrieveReturnDate];
     myDateViewController.returnTimeField.date = [self.myDayDateVC retrieveReturnDate];
     
-    //assign content VC as ivar (necessary, because VCs always need to be retained)
-    self.myDayDateVC = myDateViewController;
+    // Assign content VC as ivar (necessary, because VCs always need to be retained)
+    self.myExtendedDateVC = myDateViewController;
 }
 
 
 -(void)returnToStandardDate:(id)sender{
-    
-    //change to regular day view
-    EQREditorDateVCntrllr* myDateViewController = [[EQREditorDateVCntrllr alloc] initWithNibName:@"EQREditorDateVCntrllr" bundle:nil];
-    CGSize thisSize = CGSizeMake(320.f, 570.f);
-    
-    [self.myDayDatePicker setPopoverContentSize:thisSize animated:YES];
-    [self.myDayDatePicker setContentViewController:myDateViewController animated:YES];
-    
-    [myDateViewController.saveButton addTarget:self action:@selector(receiveNewPickupDate)
-                              forControlEvents:UIControlEventTouchUpInside];
-    [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(showExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
-    
-    //need to set the date
-    myDateViewController.pickupDateField.date = [self.myDayDateVC retrievePickUpDate];
-    myDateViewController.returnDateField.date = [self.myDayDateVC retrieveReturnDate];
-    
-    //assign content VC as ivar
-    self.myDayDateVC = myDateViewController;
+    [[self.myExtendedDateVC navigationController] popViewControllerAnimated:NO];
+}
+
+-(void)cancelAction{
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 
 #pragma mark - Pricing Matrix 
-
 -(IBAction)showPricingButton:(id)sender{
     
     UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"Pricing" bundle:nil];
@@ -1392,14 +1374,11 @@
 
 
 -(void)aChangeWasMadeToPriceMatrix{
-    
-    [self getTransactionInfo];
+        [self getTransactionInfo];
 }
 
 
 #pragma mark - handle add equip item
-
-
 -(IBAction)addEquipItem:(id)sender{
     
     if (!self.myScheduleRequest) return;
@@ -1446,32 +1425,35 @@
 
 
 #pragma mark - receive shared nib actions
+- (IBAction)standardDateSave:(id)sender {
+    [self dateSaveButtonWithPickup:[self.myDayDateVC retrievePickUpDate]
+                            return:[self.myDayDateVC retrieveReturnDate]];
+}
 
--(void)receiveNewPickupDate{
+- (IBAction)extendedDateSave:(id)sender {
+    [self dateSaveButtonWithPickup:[self.myExtendedDateVC retrievePickUpDate]
+                            return:[self.myExtendedDateVC retrieveReturnDate]];
+}
+
+- (IBAction)dateSaveButtonWithPickup:(NSDate *)pickupDate return:(NSDate *)returnDate{
     
-    //retrieve date from picker
-    NSDate* newPickupDate = [self.myDayDateVC retrievePickUpDate];
-    NSDate* newReturnDate = [self.myDayDateVC retrieveReturnDate];
+    // Update date in ivar myScheduleRequest
+    self.myScheduleRequest.request_date_begin = [EQRDataStructure dateByStrippingOffTime:pickupDate];
+    self.myScheduleRequest.request_time_begin = [EQRDataStructure timeByStrippingOffDate:pickupDate];
+    self.myScheduleRequest.request_date_end = [EQRDataStructure dateByStrippingOffTime:returnDate];
+    self.myScheduleRequest.request_time_end = [EQRDataStructure timeByStrippingOffDate:returnDate];
     
-    //update date in ivar myScheduleRequest
-    self.myScheduleRequest.request_date_begin = [EQRDataStructure dateByStrippingOffTime:newPickupDate];
-    self.myScheduleRequest.request_time_begin = [EQRDataStructure timeByStrippingOffDate:newPickupDate];
-    self.myScheduleRequest.request_date_end = [EQRDataStructure dateByStrippingOffTime:newReturnDate];
-    self.myScheduleRequest.request_time_end = [EQRDataStructure timeByStrippingOffDate:newReturnDate];
-    
-    //renew the view
+    // Renew the view
     [self renewTheViewWithRequest:self.myScheduleRequest];
     
-    //_____!!!!!!  update data layer   !!!!!!______
+    // Update data layer
     [self updateScheduleRequest];
     
-    //dismiss the popover
-    [self.myDayDatePicker dismissPopoverAnimated:YES];
-    self.myDayDatePicker = nil;
+    [self dismissViewControllerAnimated:YES completion:^{  }];
 }
 
 
-//ContactPickerVC delegate method
+#pragma mark - ContactPickerVC delegate method
 -(void)retrieveSelectedNameItem{
     
     EQRContactNameItem* thisNameItem = [self.myContactVC retrieveContactItem];
@@ -1979,10 +1961,6 @@
     if (popoverController == self.myStaffUserPicker){
         
         self.myStaffUserPicker = nil;
-        
-    }else if (popoverController == self.myDayDatePicker){
-        
-        self.myDayDatePicker = nil;
         
     }else if (popoverController == self.myContactPicker){
         

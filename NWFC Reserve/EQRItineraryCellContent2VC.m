@@ -15,7 +15,6 @@
 @interface EQRItineraryCellContent2VC ()
 @property (strong, nonatomic) UIColor* myAssignedColor;
 @property (strong, nonatomic) IBOutlet UIButton *detailsButton;
-
 @end
 
 @implementation EQRItineraryCellContent2VC
@@ -38,6 +37,11 @@
     self.myAssignedColor = nil;
     [self.subViewFullSize setBackgroundColor:[UIColor lightGrayColor]];
     [self.subViewFullSize setAlpha:1.0];
+    self.button1Status.hidden = YES;
+    self.button2Status.hidden = YES;
+    self.button2.userInteractionEnabled = YES;
+    self.button2.alpha = 1.0;
+    self.textOverButton2.alpha = 1.0;
     
     [self resetCellExpansion];
     
@@ -68,14 +72,10 @@
     button.tintColor = nil;
 }
 
+
 #pragma mark - view methods
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    //register for notes
-    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
-    //receive complete or incomplete for this rows individual items editor
-    [nc addObserver:self selector:@selector(dismissedCheckInOut:) name:EQRMarkItineraryAsCompleteOrNot object:nil];
     
     //add tap gesture to expand cell when it's collapsed
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(expandCellFromTapGesture)];
@@ -95,28 +95,14 @@
     if ([sender tag] == 2){
         return;
     }
-    
-    //_______show check in out view
-    NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:self.requestKeyId, @"scheduleKey",
-                             [NSNumber numberWithBool:self.markedForReturning], @"marked_for_returning",
-                             [NSNumber numberWithInteger:1], @"switch_num",
-                             nil];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentCheckInOut object:nil userInfo:userDic];
+    [self.delegate showCheckInOut:self.requestKeyId mark:self.markedForReturning switch:1 cellContent:self];
 }
 
 -(IBAction)switch2Fires:(id)sender{
     if ([sender tag] == 1){
         return;
     }
-    
-    //_______show check in out view
-    NSDictionary* userDic = [NSDictionary dictionaryWithObjectsAndKeys:self.requestKeyId, @"scheduleKey",
-                             [NSNumber numberWithBool:self.markedForReturning], @"marked_for_returning",
-                             [NSNumber numberWithInteger:2], @"switch_num",
-                             nil];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentCheckInOut object:nil userInfo:userDic];
+    [self.delegate showCheckInOut:self.requestKeyId mark:self.markedForReturning switch:2 cellContent:self];
 }
 
 -(IBAction)showQuickView:(id)sender{
@@ -185,7 +171,11 @@
         [self.button1 setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
         [self.button2 setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
         self.textOverButton1.alpha = 1.0;
-        self.textOverButton2.alpha = 1.0;
+        if (self.myStatus < 1) {
+            self.textOverButton2.alpha = 0.3;
+        } else {
+            self.textOverButton2.alpha = 1.0;
+        }
     } completion:^(BOOL finished) {
         [self.delegate expandTapped:self.requestKeyId isReturning:self.markedForReturning];
         self.bottomOfMainSubviewConstraint.constant = 0;
@@ -193,32 +183,22 @@
 }
 
 
-#pragma mark - Notification when Check In/Out view is (in)completed
--(void)dismissedCheckInOut:(NSNotification*)note{
-    NSString* scheduleKey = [[note userInfo] objectForKey:@"scheduleKey"];
-    NSString* completeOrIncomplete = [[note userInfo] objectForKey:@"comleteOrIncomplete"];
-    BOOL markedForReturning = [(NSNumber*)[[note userInfo] objectForKey:@"marked_for_returning"] boolValue];
-    NSUInteger switch_num = [[[note userInfo] objectForKey:@"switch_num"] integerValue];
-    BOOL foundOutstandingItem = [[[note userInfo] objectForKey:@"foundOutstandingItem"] boolValue];
-    
+#pragma mark - public methods
+- (void)dismissedCheckInOut:(NSString *)scheduleKey
+                   complete:(NSString *)completeOrIncomplete
+                  returning:(BOOL)markedForReturning
+                     switch:(NSUInteger)switchNum
+                outstanding:(BOOL)foundOutstandingItem {
+
     if (([self.requestKeyId isEqualToString:scheduleKey]) && (markedForReturning == self.markedForReturning)){
+        NSLog(@"found a match on key id: %@", self.requestKeyId);
+
         if ([completeOrIncomplete isEqualToString:@"complete"]){
-            if (switch_num == 1){
+            if (switchNum == 1){
                 
                 // Don't change status if it's at 2
                 if (self.myStatus == 0){
                     self.myStatus = 1;
-                }
-                
-                //change color of inside of tap button
-                //enable switch2
-                //change status color
-                //change color of second status bar
-                //turn on caution label
-                if (foundOutstandingItem){
-
-                }else{
-
                 }
                 
                 NSString* tag;
@@ -237,16 +217,6 @@
             }else{
                 self.myStatus = 2;
                 
-                //change color of inside of tap button
-                //change status color
-                //change color of second status bar
-                //turn on caution label
-                if (foundOutstandingItem){
-                    
-                }else{
-                    
-                }
-                
                 NSString* tag;
                 if (!self.markedForReturning){
                     tag = @"staff_checkout_date";
@@ -264,16 +234,10 @@
             
         }else{
             //marked as incomplete
-            if (switch_num == 1){
+            if (switchNum == 1){
                 NSUInteger originalStatus = self.myStatus;
                 self.myStatus = 0;
-                
-                //change color of inside of tap button
-                //disable switch2
-                //also change color of inside of switch2 tap button
-                //change status color
-                //change color of second status bar
-
+    
                 NSString* tag;
                 if (!self.markedForReturning){
                     tag = @"staff_prep_date";
@@ -303,11 +267,6 @@
                 }
             }else{
                 self.myStatus = 1;
-                
-                //change color of inside of tap button
-                //change status color
-                //change color of second status bar
-     
                 NSString* tag;
                 if (!self.markedForReturning){
                     tag = @"staff_checkout_date";
@@ -328,6 +287,7 @@
 
 
 -(void)updateData:(NSString*)tag nix:(BOOL)nix callback:(void (^)(void))cb{
+    NSLog(@"update data fires");
     // Update the model
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     NSString *tagValue;

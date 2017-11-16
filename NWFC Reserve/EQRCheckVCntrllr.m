@@ -40,6 +40,7 @@
 @interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate, UISearchBarDelegate, UISearchResultsUpdating, UISearchControllerDelegate, EQRPriceMatrixDelegate, EQRSigCaptureDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem* myScheduleRequestItem;
+@property (strong, nonatomic) EQRItineraryCellContent2VC *cellContent;
 
 @property (strong, nonatomic) IBOutlet UIView* mainSubView;
 @property (strong, nonatomic) IBOutlet UIView *rightSubView;
@@ -128,16 +129,23 @@
 }
 
 
--(void)initialSetupWithInfo:(NSDictionary*)userInfo{
+- (void)initialSetup:(NSString *)scheduleKey mark:(BOOL)markedForReturning switch:(NSUInteger)switchNum cellContent:(EQRItineraryCellContent2VC *)cellContent{
+
+//-(void)initialSetupWithInfo:(NSDictionary*)userInfo{
     
     self.didLoadFullyCompleteFlag = NO;
     self.didLoadContactCompleteFlag = NO;
     self.myScheduleRequestItem = nil;
     self.tempContact = nil;
     
-    self.scheduleRequestKeyID = [userInfo objectForKey:@"scheduleKey"];
-    self.marked_for_returning = [[userInfo objectForKey:@"marked_for_returning"] boolValue];
-    self.switch_num = [[userInfo objectForKey:@"switch_num"] integerValue];
+//    self.scheduleRequestKeyID = [userInfo objectForKey:@"scheduleKey"];
+//    self.marked_for_returning = [[userInfo objectForKey:@"marked_for_returning"] boolValue];
+//    self.switch_num = [[userInfo objectForKey:@"switch_num"] integerValue];
+    
+    self.scheduleRequestKeyID = scheduleKey;
+    self.marked_for_returning = markedForReturning;
+    self.switch_num = switchNum;
+    self.cellContent = cellContent;
     
     //figure out the literal column name in the database to use
     if (!self.marked_for_returning){
@@ -978,9 +986,12 @@
                 
                 if (tempReturn == nil){
                     
-                    //error handling when nothing is returned
-                    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Scan Error" message:[NSString stringWithFormat:@"Scan Failed, an error occurred when trying to select this item"]  delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
-                    [alertView show];
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Scan Error" message:@"Scan Failed, an error occurred when trying to select this item" preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    UIAlertAction *alertOk = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) { }];
+                    
+                    [alert addAction:alertOk];
+                    [self presentViewController:alert animated:YES completion:^{ }];
                     
                     //advance the cycle
                     continue;
@@ -1077,13 +1088,14 @@
                 //can't find this uniqueKey in the database
                 //exit and alert user
                 //____!!!!!!  NEED TO INCLUDE THE TITLE ITEM NAME  !!!!!_______
-                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Not Found" message:[NSString stringWithFormat:@"Cannot find this item in the database"]  delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Not Found" message:@"Cannot find this item in the database" preferredStyle:UIAlertControllerStyleAlert];
                 
-                [alertView show];
+                UIAlertAction *alertOk = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {  }];
+                
+                [alert addAction:alertOk];
+                [self presentViewController:alert animated:YES completion:^{  }];
             }
         }];
-        
-        
     }
 }
 
@@ -1188,9 +1200,7 @@
 }
 
 
-
 #pragma mark - navigation buttons
-
 -(void)cancelAction{
 
     [self.webDataForEquipJoins stopXMLParsing];
@@ -1198,29 +1208,24 @@
     self.webDataForMiscJoins.delegateDataFeed = nil;
     self.webDataForEquipJoins.delegateDataFeed = nil;
     
-    [self dismissViewControllerAnimated:YES completion:^{
-
-
-    }];
-
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-
 -(IBAction)markAsComplete:(id)sender{
     
-    //MUST CHECK THAT THE USER HAS LOGGED IN FIRST:
+    // Check that a user has logged in
     EQRStaffUserManager* staffManager = [EQRStaffUserManager sharedInstance];
     if (!staffManager.currentStaffUser){
         
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Current User" message:@"Please log in as a user before marking an item complete or incomplete" delegate:[self presentingViewController] cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"No Current User" message:@"Please log in as a user before marking an item complete or incomplete" preferredStyle:UIAlertControllerStyleAlert];
         
-        [self dismissViewControllerAnimated:YES completion:^{
-            
-            [alert show];
-        }];
+        UIAlertAction *alertOk = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {  }];
+        
+        [alert addAction: alertOk];
+        [self presentViewController:alert animated:YES completion:^{ }];
         
         return;
     }
@@ -1239,80 +1244,55 @@
     }else{
         typeOfMark = @"Error in TypeOfMark";
     }
-
-    UIAlertView *alertConfirmation = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Mark as %@", typeOfMark] message:[NSString stringWithFormat:@"Stamped with staff signature: %@", userName] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
     
-    [alertConfirmation show];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"Mark as %@", typeOfMark] message:[NSString stringWithFormat:@"Stamped with staff signature: %@", userName] preferredStyle:UIAlertControllerStyleAlert];
     
-    if (buttonIndex == 1){
+    UIAlertAction *alertOk = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self confirmMarkAsComplete];
-    }
+    }];
+    
+    UIAlertAction *alertCancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {  }];
+    
+    [alert addAction: alertOk];
+    [alert addAction:alertCancel];
+    [self presentViewController:alert animated:YES completion:^{  }];
 }
+
 
 -(void)confirmMarkAsComplete{
     
-    //make special note if any of the joins in the ivar array are not complete
+    // make special note if any of the joins in the ivar array are not complete
     BOOL foundOutstandingItem = NO;
     
     for (EQRScheduleTracking_EquipmentUnique_Join* join in self.arrayOfEquipJoins){
-        
         if ([join respondsToSelector:NSSelectorFromString(self.myProperty)]){
-            
             SEL thisSelector = NSSelectorFromString(self.myProperty);
-            
             NSString* thisLiteralProperty = [join performSelector:thisSelector];
-            
             if (([thisLiteralProperty isEqualToString:@""]) || (thisLiteralProperty == nil)){
-                
                 foundOutstandingItem = YES;
-                
             }
         }
     }
     
-    //make special note if any of the joins in the ivar array are not complete **NOW for MiscJoins**
+    // make special note if any of the joins in the ivar array are not complete **NOW for MiscJoins**
     for (EQRMiscJoin* join in self.arrayOfMiscJoins){
-        
         if ([join respondsToSelector:NSSelectorFromString(self.myProperty)]){
-            
             SEL thisSelector = NSSelectorFromString(self.myProperty);
-            
             NSString* thisLiteralProperty = [join performSelector:thisSelector];
-            
             if (([thisLiteralProperty isEqualToString:@""]) || (thisLiteralProperty == nil)){
-                
                 foundOutstandingItem = YES;
-                
             }
         }
     }
     
-    
-    NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                             self.scheduleRequestKeyID, @"scheduleKey",
-                             @"complete", @"comleteOrIncomplete",
-                             [NSNumber numberWithBool:self.marked_for_returning], @"marked_for_returning",
-                             [NSNumber numberWithInteger:self.switch_num], @"switch_num",
-                             self.myProperty, @"propertyToUpdate",
-                             [NSNumber numberWithBool:foundOutstandingItem], @"foundOutstandingItem",
-                             nil];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRMarkItineraryAsCompleteOrNot object:nil userInfo:thisDic];
-    
-    [self dismissViewControllerAnimated:YES completion:^{
-        
-    }];
-    
+    [self.cellContent dismissedCheckInOut:self.scheduleRequestKeyID complete:@"complete" returning:self.marked_for_returning switch:self.switch_num outstanding:foundOutstandingItem];
+
+    [self dismissViewControllerAnimated:YES completion:^{  }];
 }
 
+
 #pragma clang diagnostic pop
-
-
 -(IBAction)printMeForReal:(id)sender{
-    
     [self printPageWithScheduleRequestItemKey:self.scheduleRequestKeyID];
 }
 
@@ -1370,32 +1350,19 @@
     EQRStaffUserManager* staffManager = [EQRStaffUserManager sharedInstance];
     if (!staffManager.currentStaffUser){
         
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"No Current User" message:@"Please log in as a user before marking an item complete or incomplete" delegate:[self presentingViewController] cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"No Current User" message:@"Please log in as a user before marking an item complete or incomplete" preferredStyle:UIAlertControllerStyleAlert];
         
-        [self dismissViewControllerAnimated:YES completion:^{
-            
-            [alert show];
-        }];
+        UIAlertAction *alertOk = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {  }];
+        
+        [alert addAction:alertOk];
+        [self presentViewController:alert animated:YES completion:^{  }];
         
         return;
     }
-    
-    
-    NSDictionary* thisDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                             self.scheduleRequestKeyID, @"scheduleKey",
-                             @"incomplete", @"comleteOrIncomplete",
-                             [NSNumber numberWithBool:self.marked_for_returning], @"marked_for_returning",
-                             [NSNumber numberWithInteger:self.switch_num], @"switch_num",
-                             self.myProperty, @"propertyToUpdate",
-                             [NSNumber numberWithBool:0], @"foundOutstandingItem",
-                             nil];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:EQRMarkItineraryAsCompleteOrNot object:nil userInfo:thisDic];
-    
-    [self dismissViewControllerAnimated:YES completion:^{
-        
-    }];
 
+    [self.cellContent dismissedCheckInOut:self.scheduleRequestKeyID complete:@"incomplete" returning:self.marked_for_returning switch:self.switch_num outstanding:[NSNumber numberWithBool:0]];
+    
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 

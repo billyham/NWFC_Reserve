@@ -8,14 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EQREditorDateVCntrllr : UIViewController 
+@interface EQREditorDateVCntrllr : UIViewController
 
-@property (strong, nonatomic) IBOutlet UIDatePicker* pickupDateField;
-@property (strong, nonatomic) IBOutlet UIDatePicker* returnDateField;
-@property (strong, nonatomic) IBOutlet UIButton* saveButton;
-@property (strong, nonatomic) IBOutlet UIButton* showOrHideExtendedButton;
+- (void)setPickupDate:(NSDate *)puDate returnDate:(NSDate *)reDate;
+- (void)setShowExtended:(NSString *)method withTarget:(id)target;
+- (void)setSaveSelector:(NSString *)method forTarget:(id)target;
+- (void)setPickupAction:(NSString *)pickupMethod returnAction:(NSString *)returnMethod forTarget:(id)target;
 
--(NSDate*)retrievePickUpDate;
--(NSDate*)retrieveReturnDate;
+- (void)setReturnDateAnimated:(NSDate *)date;
+- (void)setReturnMax:(NSDate *)date;
+- (void)setReturnMin:(NSDate *)date;
+
+- (NSDate *)retrievePickUpDate;
+- (NSDate *)retrieveReturnDate;
 
 @end

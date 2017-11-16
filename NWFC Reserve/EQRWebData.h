@@ -18,24 +18,14 @@ typedef void (^CompletionBlockWithUnknownObject) (id object);
 
 @protocol EQRWebDataDelegate;
 
-
 @interface EQRWebData : NSObject <NSXMLParserDelegate>{
-    
     __weak id <EQRWebDataDelegate> delegateDataFeed;
 }
 
 @property (nonatomic, weak) id <EQRWebDataDelegate> delegateDataFeed;
-
-//block as property
 @property (copy) CompletionBlockWithBool delayedCompletionBlock;
-
-//@property BOOL cancelTheScheduleDownloadFlag;
-//@property (strong, nonatomic) NSMutableArray* totalEquip;
-//@property (strong, nonatomic) NSMutableArray* muteArray;
-//@property (strong, nonatomic) NSXMLParser* xmlParser;
-
-
 +(EQRWebData*)sharedInstance;
+
 
 //- (void)hardCodedUrlTest;
 - (void) queryWithLink:(NSString*)link parameters:(NSArray*)para class:(NSString*)classString completion:(CompletionBlockWithArray)completeBlock;

@@ -741,10 +741,9 @@
 -(void)showStaffUserPicker{
     
     EQRStaffUserPickerViewController* staffUserPicker = [[EQRStaffUserPickerViewController alloc] initWithNibName:@"EQRStaffUserPickerViewController" bundle:nil];
+    
     self.myStaffUserPicker = [[UIPopoverController alloc] initWithContentViewController:staffUserPicker];
     self.myStaffUserPicker.delegate = self;
-    
-    //set size
     [self.myStaffUserPicker setPopoverContentSize:CGSizeMake(400, 400)];
     
     //present popover

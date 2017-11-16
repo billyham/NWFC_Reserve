@@ -16,7 +16,6 @@
 #import "EQRModeManager.h"
 #import "EQRColors.h"
 
-
 @interface EQREquipDateVCntrllr ()
 
 //remove from xib and then delete these
@@ -30,10 +29,7 @@
 @property BOOL dateReturnSelectionFlag;
 
 @property (strong, nonatomic) IBOutlet UIButton* showAllEquipmentButton;
-
 @property (strong, nonatomic) IBOutlet UIView* containerViewForDatePicker;
-
-
 
 @end
 
@@ -48,10 +44,8 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
     
     //register for notification
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
@@ -76,7 +70,6 @@
     requestManager.request.request_time_begin = self.pickUpDate;
     requestManager.request.request_date_end = self.returnDate;
     requestManager.request.request_time_end = self.returnDate;
-    
 }
 
 
@@ -96,7 +89,6 @@
         [UIView setAnimationsEnabled:YES];
         
     }else{
-        
         // Set prompt
         [UIView setAnimationsEnabled:NO];
         self.navigationItem.prompt = nil;
@@ -106,7 +98,6 @@
         
         [UIView setAnimationsEnabled:YES];
     }
-    
     [super viewWillAppear:animated];
 }
 
@@ -121,31 +112,21 @@
         EQREditorDateVCntrllr* myDateViewVCntrllr = (EQREditorDateVCntrllr*)[(UINavigationController*)[arrayOfChildVCs objectAtIndex:0] topViewController];
         
         //set button targets
-        [myDateViewVCntrllr.saveButton addTarget:self action:@selector(receiveContinueAction:) forControlEvents:UIControlEventTouchUpInside];
-        [myDateViewVCntrllr.showOrHideExtendedButton addTarget:self action:@selector(showOrHidExtendedPicker:) forControlEvents:UIControlEventTouchUpInside];
+        [myDateViewVCntrllr setSaveSelector:@"receiveContinueAction:" forTarget:self];
+        [myDateViewVCntrllr setShowExtended:@"showOrHideExtendedPicker:" withTarget:self];
         
         //set actions from pickers
-        [myDateViewVCntrllr.pickupDateField addTarget:self action:@selector(receivePickUpDate:) forControlEvents:UIControlEventValueChanged];
-        [myDateViewVCntrllr.returnDateField addTarget:self action:@selector(receiveReturnDate:) forControlEvents:UIControlEventValueChanged];
+        [myDateViewVCntrllr setPickupAction:@"receivePickUpDate:" returnAction:@"receiveReturnDate:" forTarget:self];
         
+        [myDateViewVCntrllr setPickupDate:self.pickUpDate returnDate:self.returnDate];
         
     }else{
-        
         //error handling
     }
 }
 
-//-(IBAction)showAllEquipment:(id)sender{
-//    
-//    EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-//    
-//    requestManager.request.showAllEquipmentFlag = YES;
-//    
-//}
-
 
 #pragma mark - childviewcontroller for dateview
-
 -(IBAction)receiveContinueAction:(id)sender{
     
     EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
@@ -153,7 +134,6 @@
     genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeAll;
     
     [self.navigationController pushViewController:genericEquipVCntrllr animated:YES];
-    
 }
 
 
@@ -175,7 +155,6 @@
             //push to extended view controller
             [navController pushViewController:extendedVC  animated:YES];
             
-            
             //set delegate for navcontroller to self
             //______because I can't set the targets of the new  view controller until they view is loaded
             [navController setDelegate:self];
@@ -185,96 +164,55 @@
 
 
 #pragma mark - uinavigationcontroller delegate methods
-
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated{
     
     if ([viewController class] == [EQREditorExtendedDateVC class]){
         
         //assign targets of extended vc
         //set button targets
-        [[(EQREditorExtendedDateVC*)viewController saveButton] addTarget:self action:@selector(receiveContinueAction:) forControlEvents:UIControlEventTouchUpInside];
-        [[(EQREditorExtendedDateVC*)viewController showOrHideExtendedButton] addTarget:self action:@selector(showOrHidExtendedPicker:) forControlEvents:UIControlEventTouchUpInside];
+        [(EQREditorExtendedDateVC *)viewController setSaveSelector:@"receiveContinueAction:" forTarget:self];
+        [(EQREditorExtendedDateVC *)viewController setShowExtended:@"showOrHidExtendedPicker:" withTarget:self];
         
         //set actions from date pickers
-        [[(EQREditorExtendedDateVC*)viewController pickupDateField] addTarget:self action:@selector(receivePickUpDate:) forControlEvents:UIControlEventValueChanged];
-        [[(EQREditorExtendedDateVC*)viewController returnDateField] addTarget:self action:@selector(receiveReturnDate:) forControlEvents:UIControlEventValueChanged];
+        [(EQREditorExtendedDateVC *)viewController setPickupAction:@"receivePickUpDate:" returnAction:@"receiveReturnDate:" forTarget:self];
         
         //also receive actions from time pickers
         [[(EQREditorExtendedDateVC*)viewController pickupTimeField] addTarget:self action:@selector(receivePickUpDate:) forControlEvents:UIControlEventValueChanged];
         [[(EQREditorExtendedDateVC*)viewController returnTimeField] addTarget:self action:@selector(receiveReturnDate:) forControlEvents:UIControlEventValueChanged];
         
-        [[(EQREditorExtendedDateVC*)viewController pickupDateField] setDate:self.pickUpDate animated:YES];
+        [(EQREditorExtendedDateVC *)viewController setPickupDate:self.pickUpDate returnDate:self.returnDate];
+
         [[(EQREditorExtendedDateVC*)viewController pickupTimeField] setDate:self.pickUpDate animated:YES];
-        [[(EQREditorExtendedDateVC*)viewController returnDateField] setDate:self.returnDate animated:YES];
         [[(EQREditorExtendedDateVC*)viewController returnTimeField] setDate:self.returnDate animated:YES];
         
     }else if([viewController class] == [EQREditorDateVCntrllr class] ){
-        
-        [[(EQREditorDateVCntrllr*)viewController pickupDateField] setDate:self.pickUpDate animated:YES];
-        [[(EQREditorDateVCntrllr*)viewController returnDateField] setDate:self.returnDate animated:YES];
+
+//        [(EQREditorDateVCntrllr *)viewController setPickupDate:self.pickUpDate returnDate:self.returnDate];
     }
 }
 
 
 #pragma mark - void date selection
-
 -(void)receiveVoidScheduleItem:(NSNotification*)note{
-
     self.datePickupSelectionFlag = NO;
 //    self.dateReturnSelectionFlag = NO;
-    
 }
 
 
 #pragma mark - cancel
-
 -(IBAction)cancelTheThing:(id)sender{
     
     //go back to first page in nav
     [self.navigationController popToRootViewControllerAnimated:YES];
     
-    //send note to reset eveything back to 0
-//    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
-    
     //reset eveything back to 0 (which in turn sends an nsnotification)
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     [requestManager dismissRequest:YES];
-    
 }
 
 
-
 #pragma mark - UIDatePickerMethods
-
 -(IBAction)receivePickUpDate:(id)sender{
-    
-//    //set pick up date
-////    self.pickUpDate = [sender date];
-//    
-//    //max time by adding  three days to the pickup date
-//    NSDate* datePlusThree = [self.pickUpDate dateByAddingTimeInterval:259200]; //25920 is three days
-//    
-//    //max return date
-//    if (EQRDisableTimeLimitForRequest){
-//        
-//        self.returnDatePicker.maximumDate = nil;
-//   
-//    } else {
-//        
-//        self.returnDatePicker.maximumDate = datePlusThree;
-//    }
-//    
-//    //min time for return date is the pick up date
-//    self.returnDatePicker.minimumDate = self.pickUpDate;
-//    
-//    //move return date to pick up date, unless it has already by set
-//    if (!self.datePickupSelectionFlag){
-//        
-//        [self.returnDatePicker setDate:self.pickUpDate animated:YES];
-//    }
-    
-    
-    
     
     //set pick up date
     //____*****   error handling for NULL tempReturnDate   *****_____
@@ -299,25 +237,26 @@
         //max return date
         if (EQRDisableTimeLimitForRequest){
             
-            dateVCntrllr.returnDateField.maximumDate = nil;
+//            dateVCntrllr.returnDateField.maximumDate = nil;
+            [dateVCntrllr setReturnMax:nil];
             
         }else {
             
-            dateVCntrllr.returnDateField.maximumDate = datePlusThree;
+//            dateVCntrllr.returnDateField.maximumDate = datePlusThree;
+            [dateVCntrllr setReturnMax:datePlusThree];
         }
         
         //min time for return date is the pick up date
-        dateVCntrllr.returnDateField.minimumDate = self.pickUpDate;
+//        dateVCntrllr.returnDateField.minimumDate = self.pickUpDate;
+        [dateVCntrllr setReturnMin:self.pickUpDate];
         
         //move return date to pick up date, unless it has already by set
         if (!self.datePickupSelectionFlag){
             
-            [dateVCntrllr.returnDateField setDate:self.pickUpDate animated:YES];
+//            [dateVCntrllr.returnDateField setDate:self.pickUpDate animated:YES];
+            [dateVCntrllr setReturnDateAnimated:self.pickUpDate];
         }
     }
-    
-    
-    
     
     //assign pu date to the scheduleRequest
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
@@ -334,23 +273,13 @@
 
 -(IBAction)receiveReturnDate:(id)sender{
     
-    
-//    self.returnDate = [sender date];
-    
-    
-    
-    
-    
     NSArray* arrayOfChildVCs = [self childViewControllers];
     if ([arrayOfChildVCs count] > 0){
         
         EQREditorDateVCntrllr* dateVCntrllr = (EQREditorDateVCntrllr*) [(UINavigationController*)[arrayOfChildVCs objectAtIndex:0] topViewController];
         
         self.returnDate = [dateVCntrllr retrieveReturnDate];
-
-        
     }
-    
     
     //assign return date to the scheduleRequest
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
@@ -360,11 +289,8 @@
 
 
 
-
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

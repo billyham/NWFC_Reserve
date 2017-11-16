@@ -59,16 +59,15 @@
 @property (strong, nonatomic) NSArray* arrayOfSchedule_Unique_JoinsWithStructure;
 
 @property (strong, nonatomic) EQREditorDateVCntrllr* myDateVC;
+@property (strong, nonatomic) EQREditorDateVCntrllr *myExtendedDateVC;
 @property (strong, nonatomic) EQRContactPickerVC* myContactVC;
 
 //popOvers
-@property (strong, nonatomic) UIPopoverController* theDatePopOver;
+//@property (strong, nonatomic) UIPopoverController* theDatePopOver;
 @property (strong, nonatomic) UIPopoverController* theRenterPopOver;
 @property (strong, nonatomic) UIPopoverController* theEquipSelectionPopOver;
-@property (strong, nonatomic) UIPopoverController* myContactPicker;
 @property (strong, nonatomic) UIPopoverController* distIDPopover;
 @property (strong, nonatomic) UIPopoverController* myNotesPopover;
-@property (strong, nonatomic) UIPopoverController* myClassPicker;
 
 @property (strong, nonatomic) IBOutlet UIView *priceMatrixSubView;
 @property (strong, nonatomic) EQRPricingWidgetVC *priceWidget;
@@ -371,13 +370,8 @@
 
 
 #pragma mark - button actions
-
-
 -(void)cancelAction{
-    
-    [self dismissViewControllerAnimated:YES completion:^{
-        
-    }];
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 
@@ -587,29 +581,37 @@
 
 #pragma mark - contact picker
 
--(IBAction)contactButton:(id)sender{
+- (IBAction)contactButton:(id)sender{
     
     EQRContactPickerVC* contactPickerVC = [[EQRContactPickerVC alloc] initWithNibName:@"EQRContactPickerVC" bundle:nil];
     self.myContactVC = contactPickerVC;
     
-    UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:self.myContactVC];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.myContactVC];
     [navController setNavigationBarHidden:YES];
     
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:navController];
-    self.myContactPicker = popOver;
-    self.myContactPicker.delegate = self;
-    
-    //set the size
-    [self.myContactPicker setPopoverContentSize:CGSizeMake(320, 550)];
-    
-    //get coordinates in proper view
-    
-    //present popOver
-    [self.myContactPicker presentPopoverFromRect:self.nameTextField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
-    
+//    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:navController];
+//    self.myContactPicker = popOver;
+//    self.myContactPicker.delegate = self;
+//
+//    //set the size
+//    [self.myContactPicker setPopoverContentSize:CGSizeMake(320, 550)];
+//
+//    //get coordinates in proper view
+//
+//    //present popOver
+//    [self.myContactPicker presentPopoverFromRect:self.nameTextField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
+
     //self as delegate
     self.myContactVC.delegate = self;
     
+    navController.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popoverPC = [navController popoverPresentationController];
+    popoverPC.permittedArrowDirections = UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight;
+    popoverPC.delegate = self;
+    [popoverPC setSourceRect:self.nameTextField.frame];
+    [popoverPC setSourceView:self.view];
+    
+    [self presentViewController:navController animated:YES completion:^{ }];
 }
 
 
@@ -628,68 +630,44 @@
     self.myContactVC.delegate = nil;
     
     //dismiss popover
-    [self.myContactPicker dismissPopoverAnimated:YES];
-    self.myContactPicker = nil;
-    
-    //release content view controller
-//    self.myContactVC = nil;
+//    [self.myContactPicker dismissPopoverAnimated:YES];
+//    self.myContactPicker = nil;
+
+    [self dismissViewControllerAnimated:YES completion:^{  }];
 }
 
 
 #pragma mark - class picker methods
-
-
--(IBAction)classButton:(id)sender{
+- (IBAction)classButton:(id)sender{
     
     EQRClassPickerVC* classPickerVC = [[EQRClassPickerVC alloc] initWithNibName:@"EQRClassPickerVC" bundle:nil];
     
     UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:classPickerVC];
     [navController setNavigationBarHidden:YES];
     
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:navController];
-    self.myClassPicker = popOver;
-    self.myClassPicker.delegate = self;
-    
-    //set the size
-    [self.myClassPicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
-
-    
-    //present the popover
-    [self.myClassPicker presentPopoverFromRect:self.classField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
-    
-    //assign as delegate
     classPickerVC.delegate = self;
     
+    navController.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popoverPC = [navController popoverPresentationController];
+    popoverPC.permittedArrowDirections = UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft;
+    popoverPC.delegate = self;
+    popoverPC.sourceRect = self.classField.frame;
+    popoverPC.sourceView = self.view;
+    
+    [self presentViewController:navController animated:YES completion:^{ }];
 }
 
 
 -(IBAction)removeClassButton:(id)sender{
-    
-    [self initiateRetrieveClassItem:nil];
+    [self clearClass];
 }
 
 
-
--(void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem;{
+- (void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem;{
     
-//    EQRClassPickerVC* classPickerVC = (EQRClassPickerVC*)[self.myClassPicker contentViewController];
-//    
-//    //can be nil... no class assigned to request
-//    EQRClassItem* thisClassItem = [classPickerVC retrieveClassItem];
-    
-    //update view objects
-//    [self.classField setHidden:NO];
     if (!selectedClassItem){
-        
-        [self.classField setTitle:@"(No Class Selected)" forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
-        
-        //update schedule request
-        self.privateRequestManager.request.classItem = nil;
-        self.privateRequestManager.request.classSection_foreignKey = nil;
-        self.privateRequestManager.request.classTitle_foreignKey = nil;
-        
+        [self clearClass];
     }else{
-        
         [self.classField setTitle:selectedClassItem.section_name forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
         
         //update schedule request
@@ -697,107 +675,126 @@
         self.privateRequestManager.request.classSection_foreignKey = selectedClassItem.key_id;
         self.privateRequestManager.request.classTitle_foreignKey = selectedClassItem.catalog_foreign_key;
     }
-
-    //____data layer is updated with save button___
     
-    //release self as delegate
-    self.myClassPicker.delegate = nil;
-    
-    //dismiss popover
-    [self.myClassPicker dismissPopoverAnimated:YES];
-    self.myClassPicker = nil;
-    
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
+
+- (void)clearClass {
+    [self.classField setTitle:@"(No Class Selected)" forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
+    
+    //update schedule request
+    self.privateRequestManager.request.classItem = nil;
+    self.privateRequestManager.request.classSection_foreignKey = nil;
+    self.privateRequestManager.request.classTitle_foreignKey = nil;
+}
 
 
 #pragma mark - handle date view controller
-
--(IBAction)showDateVCntrllr:(id)sender{
+- (IBAction)showDateVCntrllr:(id)sender{
     
     EQREditorDateVCntrllr* myDateViewController = [[EQREditorDateVCntrllr alloc] initWithNibName:@"EQREditorDateVCntrllr" bundle:nil];
-    
-    UIPopoverController* popOverC = [[UIPopoverController alloc] initWithContentViewController:myDateViewController];
-    self.theDatePopOver = popOverC;
-    self.theDatePopOver.delegate = self;
-    
-    self.theDatePopOver.popoverContentSize = CGSizeMake(320.f, 570.f);
 
+    self.myDateVC = myDateViewController;
     
-    [self.theDatePopOver presentPopoverFromRect:self.pickupDateField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:myDateViewController];
     
-    //update dates labels
-    myDateViewController.pickupDateField.date = self.pickUpDateDate;
-    myDateViewController.returnDateField.date = self.returnDateDate;
+    navController.modalPresentationStyle = UIModalPresentationFormSheet;
+
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelAction)];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(standardDateSave:)];
+    [myDateViewController.navigationItem setLeftBarButtonItem:leftButton];
+    [myDateViewController.navigationItem setRightBarButtonItem:rightButton];
     
-    //update requestItem date properties
+    // Update dates labels
+    [myDateViewController setPickupDate:self.pickUpDateDate returnDate:self.returnDateDate];
+    [myDateViewController setShowExtended:@"showExtendedDate:" withTarget:self];
+    
+    // Update requestItem date properties
     self.privateRequestManager.request.request_date_begin = self.pickUpDateDate;
     self.privateRequestManager.request.request_date_end = self.returnDateDate;
     
-    [myDateViewController.saveButton addTarget:self action:@selector(dateSaveButton:)
-                              forControlEvents:UIControlEventTouchUpInside];
-    [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(showExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
-    
-    //assign content VC as ivar
-    self.myDateVC = myDateViewController;
+    [self presentViewController:navController animated:YES completion:^{ }];
+}
+
+- (void)dismissDateSheet {
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
 }
 
 
--(IBAction)showExtendedDate:(id)sender{
+- (IBAction)showExtendedDate:(id)sender{
     
     //change to Extended view
     EQREditorExtendedDateVC* myDateViewController = [[EQREditorExtendedDateVC alloc] initWithNibName:@"EQREditorExtendedDateVC" bundle:nil];
-    CGSize thisSize = CGSizeMake(600.f, 570.f);
     
-    [self.theDatePopOver setPopoverContentSize:thisSize animated:YES];
-    [self.theDatePopOver setContentViewController:myDateViewController animated:YES];
+//    CGSize preferredSize = CGSizeMake(600.f, 570.f);
     
-    [myDateViewController.saveButton addTarget:self action:@selector(dateSaveButton:)
-                              forControlEvents:UIControlEventTouchUpInside];
-    [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(returnToStandardDate:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(extendedDateSave:)];
+    [myDateViewController.navigationItem setRightBarButtonItem:rightButton];
+    
+    [[self.myDateVC navigationController] pushViewController:myDateViewController animated:YES];
+    
+//    [myDateViewController.saveButton addTarget:self action:@selector(dateSaveButton:)
+//                              forControlEvents:UIControlEventTouchUpInside];
+    
+    [myDateViewController setShowExtended:@"returnToStandardDate:" withTarget:self];
+//    [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(returnToStandardDate:) forControlEvents:UIControlEventTouchUpInside];
     
     //need to set the date and time
-    myDateViewController.pickupDateField.date = [self.myDateVC retrievePickUpDate];
+    [myDateViewController setPickupDate:[self.myDateVC retrievePickUpDate] returnDate:[self.myDateVC retrieveReturnDate]];
+//    myDateViewController.pickupDateField.date = [self.myDateVC retrievePickUpDate];
+//    myDateViewController.returnDateField.date = [self.myDateVC retrieveReturnDate];
+
     myDateViewController.pickupTimeField.date = [self.myDateVC retrievePickUpDate];
-    myDateViewController.returnDateField.date = [self.myDateVC retrieveReturnDate];
     myDateViewController.returnTimeField.date = [self.myDateVC retrieveReturnDate];
     
-    //assign content VC as ivar (necessary, because VCs always need to be retained)
-    self.myDateVC = myDateViewController;
+    self.myExtendedDateVC = myDateViewController;
 }
 
 
--(void)returnToStandardDate:(id)sender{
-    
+- (void)returnToStandardDate:(id)sender{
+    [[self.myExtendedDateVC navigationController] popViewControllerAnimated:NO];
+
     //change to regular day view
-    EQREditorDateVCntrllr* myDateViewController = [[EQREditorDateVCntrllr alloc] initWithNibName:@"EQREditorDateVCntrllr" bundle:nil];
-    CGSize thisSize = CGSizeMake(320.f, 570.f);
+//    EQREditorDateVCntrllr* myDateViewController = [[EQREditorDateVCntrllr alloc] initWithNibName:@"EQREditorDateVCntrllr" bundle:nil];
     
-    [self.theDatePopOver setPopoverContentSize:thisSize animated:YES];
-    [self.theDatePopOver setContentViewController:myDateViewController animated:YES];
+//    CGSize thisSize = CGSizeMake(320.f, 570.f);
     
-    [myDateViewController.saveButton addTarget:self action:@selector(dateSaveButton:)
-                              forControlEvents:UIControlEventTouchUpInside];
-    [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(showExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.theDatePopOver setPopoverContentSize:thisSize animated:YES];
+//    [self.theDatePopOver setContentViewController:myDateViewController animated:YES];
     
-    //need to set the date
-    myDateViewController.pickupDateField.date = [self.myDateVC retrievePickUpDate];
-    myDateViewController.returnDateField.date = [self.myDateVC retrieveReturnDate];
-    
-    //assign content VC as ivar
-    self.myDateVC = myDateViewController;
+//    [myDateViewController.saveButton addTarget:self action:@selector(dateSaveButton:)
+//                              forControlEvents:UIControlEventTouchUpInside];
+//    [myDateViewController.showOrHideExtendedButton addTarget:self action:@selector(showExtendedDate:) forControlEvents:UIControlEventTouchUpInside];
+//
+//    //need to set the date
+//    myDateViewController.pickupDateField.date = [self.myDateVC retrievePickUpDate];
+//    myDateViewController.returnDateField.date = [self.myDateVC retrieveReturnDate];
+//
+//    //assign content VC as ivar
+//    self.myDateVC = myDateViewController;
 }
 
+- (IBAction)standardDateSave:(id)sender {
+    [self dateSaveButtonWithPickup:[self.myDateVC retrievePickUpDate]
+                            return:[self.myDateVC retrieveReturnDate]];
+}
 
--(IBAction)dateSaveButton:(id)sender{
+- (IBAction)extendedDateSave:(id)sender {
+    [self dateSaveButtonWithPickup:[self.myExtendedDateVC retrievePickUpDate]
+                            return:[self.myExtendedDateVC retrieveReturnDate]];
+}
+
+- (IBAction)dateSaveButtonWithPickup:(NSDate *)pickupDate return:(NSDate *)returnDate{
     
-    //set dates in the view
     NSDateFormatter* dateFormatterLookinNice = [[NSDateFormatter alloc] init];
     dateFormatterLookinNice.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     dateFormatterLookinNice.dateFormat = @"EEE, MMM d, h:mm a";
     
-    self.pickUpDateDate = [self.myDateVC retrievePickUpDate];
-    self.returnDateDate = [self.myDateVC retrieveReturnDate];
+    self.pickUpDateDate = pickupDate;
+    self.returnDateDate = returnDate;
     
     self.pickupDateField.text = [dateFormatterLookinNice stringFromDate:self.pickUpDateDate];
     self.returnDateField.text = [dateFormatterLookinNice stringFromDate:self.returnDateDate];
@@ -805,15 +802,12 @@
     self.privateRequestManager.request.request_date_begin = self.pickUpDateDate;
     self.privateRequestManager.request.request_date_end = self.returnDateDate;
     
-    //remove popover
-    [self.theDatePopOver dismissPopoverAnimated:YES];
-    self.theDatePopOver = nil;
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 
 #pragma mark - handle renter view controller
-
--(IBAction)showRenterVCntrllr:(id)sender{
+- (IBAction)showRenterVCntrllr:(id)sender{
     
     EQREditorRenterVCntrllr* myRenterVC = [[EQREditorRenterVCntrllr alloc] initWithNibName:@"EQREditorRenterVCntrllr" bundle:nil];
     self.myRenterViewController = myRenterVC;
@@ -1308,11 +1302,7 @@
 
 -(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
     
-    if (popoverController == self.theDatePopOver){
-        
-        self.theDatePopOver = nil;
-        
-    }else if (popoverController == self.theRenterPopOver){
+    if (popoverController == self.theRenterPopOver){
         
         self.theRenterPopOver = nil;
         
@@ -1320,16 +1310,16 @@
         
         self.theEquipSelectionPopOver = nil;
         
-    }else if (popoverController == self.myContactPicker){
-        
-        //release delegate
-        self.myContactVC.delegate = self;
-        
-        //release content view controller
-        self.myContactVC = nil;
-        
-        //release popover
-        self.myContactPicker = nil;
+//    }else if (popoverController == self.myContactPicker){
+//
+//        //release delegate
+//        self.myContactVC.delegate = self;
+//
+//        //release content view controller
+//        self.myContactVC = nil;
+//
+//        //release popover
+//        self.myContactPicker = nil;
         
     }else if (popoverController == self.distIDPopover){
         
@@ -1338,12 +1328,7 @@
     }else if(popoverController == self.myNotesPopover){
         
         self.myNotesPopover = nil;
-        
-    }else if(popoverController == self.myClassPicker){
-        
-        self.myClassPicker = nil;
     }
-    
 }
 
 

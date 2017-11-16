@@ -22,10 +22,10 @@
 //@property NSInteger unTickedJoinCountForButton2;
 
 
-
--(void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem;
+- (void)resetCellContentState;
+- (void)initialSetupWithRequestItem:(EQRScheduleRequestItem*) requestItem;
 //-(BOOL)checkForJoinWarnings:(EQRScheduleTracking_EquipmentUnique_Join *)join;
--(void)updateButtonLabels:(EQRScheduleRequestItem *)requestItem;
+- (void)updateButtonLabels:(EQRScheduleRequestItem *)requestItem;
 
 
 @end

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "EQRDistIDPickerTableVC.h"
 #import "EQRWebData.h"
+#import "EQRItineraryCellContent2VC.h"
 
 @interface EQRCheckVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRDistIDPickerDelegate, UIPopoverControllerDelegate, EQRWebDataDelegate>
 
@@ -16,7 +17,8 @@
 @property BOOL marked_for_returning;
 @property NSUInteger switch_num;
 
--(void)initialSetupWithInfo:(NSDictionary*)userInfo;
+//-(void)initialSetupWithInfo:(NSDictionary*)userInfo;
+- (void)initialSetup:(NSString *)scheduleKey mark:(BOOL)markedForReturning switch:(NSUInteger)switchNum cellContent:(EQRItineraryCellContent2VC *)cellContent;
 
 //dist id picker delegate method
 -(void)distIDSelectionMadeWithOriginalEquipUniqueKey:(NSString*)originalKeyID equipUniqueItem:(id)distEquipUniqueItem;

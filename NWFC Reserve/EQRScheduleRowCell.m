@@ -20,20 +20,15 @@
 
 @property (nonatomic, strong) NSIndexPath* rowCellIndexPath;
 @property (strong, nonatomic) NSMutableArray* temporaryArrayOfEquipUniqueJoins;
-
 @property (strong, nonatomic) EQRColors* myColors;
 
 //and it's year and month???
-
-
-
 @end
 
 @implementation EQRScheduleRowCell
 
 
 #pragma mark - setup
-
 -(void)initialSetupWithTitle:(NSString*) titleName equipKey:(NSString*)uniqueKeyID indexPath:(NSIndexPath*)indexPath dateForShow:(NSDate*)dateForShow{
     
     //set ivar
@@ -43,7 +38,6 @@
     //ivar colors
     self.myColors = [EQRColors sharedInstance];
     
-    //set background
     self.backgroundColor = [UIColor whiteColor];
     
     //_______does nothing with the titleName_______
@@ -55,7 +49,6 @@
 //    
 //    [self.contentView addSubview:self.titleLabel];
 
-
     //create a uicollectionview object programatically
     EQRScheduleNestedDayLayout* thisNestedDayLayout = [[EQRScheduleNestedDayLayout alloc] init];
     
@@ -64,17 +57,12 @@
     //assign the dateForShow property to the layout object
     thisNestedDayLayout.scheduleDateForShow = dateForShow;
 
-    //______this doesn't do anything______
-    //set preferred max width on label
-//    self.cellContentVC.myRowLabel.preferredMaxLayoutWidth = 10;
-    
     CGRect thisRect = CGRectMake(EQRScheduleLengthOfEquipUniqueLabel, 0, (1024 - EQRScheduleLengthOfEquipUniqueLabel), 30);
     UICollectionView* thisCollectionView = [[UICollectionView alloc] initWithFrame:thisRect collectionViewLayout:thisNestedDayLayout];
     self.myUniqueItemCollectionView = thisCollectionView;
     
     //register collection view cell
     [self.myUniqueItemCollectionView registerClass:[EQRScheduleNestedDayCell class] forCellWithReuseIdentifier:@"ThisCell"];
-    
     
     [self.myUniqueItemCollectionView setDataSource:self];
     [self.myUniqueItemCollectionView setDelegate:self];
@@ -83,13 +71,9 @@
     
     //______*******  ADD CONSTRAINTS TO THE SUB COLLECTION VIEW  ********__________
     
-    
-    
     self.myUniqueItemCollectionView.backgroundColor = [UIColor clearColor];
     
     //__*******  register its rect in an array that the flow layout can see???   *****____
-    
-    
 }
 
 
@@ -99,39 +83,19 @@
     //indicate for the cell content if orientation is portrait
     UIInterfaceOrientation orientationOnLaunch = [[UIApplication sharedApplication] statusBarOrientation];
     if (UIInterfaceOrientationIsPortrait(orientationOnLaunch)) {
-        
         self.cellContentVC.navBarDates.isNarrowFlag = YES;
         self.cellContentVC.navBarWeeks.isNarrowFlag = YES;
-        
     }else{
-        
         self.cellContentVC.navBarDates.isNarrowFlag = NO;
         self.cellContentVC.navBarWeeks.isNarrowFlag = NO;
     }
-    
     //refresh the view
     [self.cellContentVC.navBarDates setNeedsDisplay];
     [self.cellContentVC.navBarWeeks setNeedsDisplay];
 }
 
 
-#pragma mark - notifications
-
-//-(void)showScheduleRowQuickView:(NSNotification*)note{
-//    
-//    EQRScheduleRowQuickViewVCntrllr* quickView = [[EQRScheduleRowQuickViewVCntrllr alloc] initWithNibName:@"EQRScheduleRowQuickViewVCntrllr" bundle:nil];
-//    self.myScheduleRowQuickView = [[UIPopoverController alloc] initWithContentViewController:quickView];
-//    
-//    
-//    
-//    
-//    self.myScheduleRowQuickView presentPopoverFromRect:<#(CGRect)#> inView:<#(UIView *)#> permittedArrowDirections:<#(UIPopoverArrowDirection)#> animated:<#(BOOL)#>
-//    
-//}
-
-
 #pragma mark - collection view data source methods
-
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
 
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
@@ -140,34 +104,27 @@
     NSMutableArray* temporaryMuteArray = [NSMutableArray arrayWithCapacity:1];
     
     for (EQRScheduleTracking_EquipmentUnique_Join* join in requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins){
-        
         if ([join.equipUniqueItem_foreignKey isEqualToString:self.uniqueItem_keyID]){
-            
             [temporaryMuteArray addObject:join];
         }
     }
     
     //assign to loco ivar
     if (!self.temporaryArrayOfEquipUniqueJoins){
-        
         self.temporaryArrayOfEquipUniqueJoins  = [NSMutableArray arrayWithCapacity:1];
     }
     [self.temporaryArrayOfEquipUniqueJoins removeAllObjects];
     [self.temporaryArrayOfEquipUniqueJoins addObjectsFromArray:temporaryMuteArray];
     
     if ([temporaryMuteArray count] > 0){
-        
         return [temporaryMuteArray count];
-        
     }else{
-        
         return 0;
     }
 }
 
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-
     return 1;
 }
 
@@ -178,7 +135,6 @@
     EQRScheduleNestedDayCell* cell = [self.myUniqueItemCollectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
 
     for (UIView* view in cell.contentView.subviews){
-
         [view removeFromSuperview];
     }
 
@@ -236,7 +192,6 @@
 
 
 #pragma mark - collection view delegate methods
-
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
 
     //get the remaining join information...
@@ -250,7 +205,6 @@
              thisRequestItem = [muteArray objectAtIndex:0];
         }
     }];
-    
     
     //get the cgRect of the selected cell
     UICollectionViewCell* cellOfSelectedNestedDayCell = [collectionView cellForItemAtIndexPath:indexPath];
@@ -274,11 +228,7 @@
  
     NSValue* valueOfRect = [NSValue valueWithCGRect:frameSizeInSuperViewCooridnates];
     
-    //bring up editor view with notification
-//    NSDictionary* dic = [NSDictionary dictionaryWithObject:[(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] scheduleTracking_foreignKey]  forKey:@"keyID"];
-    
-    //... OR just send the Key_id and let the editor object run a SQL script to pull the scheduleTrackingRequest
-    
+    // send the Key_id and let the editor object run a SQL script to pull the scheduleTrackingRequest
     NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                          [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] scheduleTracking_foreignKey], @"key_ID",
                          [(EQRScheduleTracking_EquipmentUnique_Join*)[self.temporaryArrayOfEquipUniqueJoins objectAtIndex:indexPath.row] contact_name], @"contact_name",
@@ -305,31 +255,17 @@
         if (thisRequestItem.staff_shelf_id) [dic setObject:thisRequestItem.staff_shelf_id forKey:@"staff_shelf_id"];
         if (thisRequestItem.staff_shelf_date) [dic setObject:thisRequestItem.staff_shelf_date forKey:@"staff_shelf_date"];
     }
-    
     //sends note to scheduleTopVCntrllr
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentScheduleRowQuickView object:nil userInfo:dic];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:EQRPresentRequestEditorFromSchedule object:nil userInfo:dic];
-    
-    
 }
 
 
 #pragma mark - collection view flow layout delegate
-
 //- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-//    
-//    
 //    //______this is overridden in the flow layout subclass method______ Grrrr!!
 //    CGSize newSize = CGSizeMake(EQRScheduleItemWidthForDay, EQRScheduleItemHeightForDay);
-//    
 //    return newSize;
-//    
 //}
-
-
-
-
-
 
 
 @end
