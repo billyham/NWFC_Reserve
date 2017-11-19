@@ -73,29 +73,6 @@
     //make bg clear
     self.backgroundColor = [UIColor clearColor];
     
-//    //assess if it is in the collapsed view or not
-//    BOOL shouldBeCollapsed = NO;
-//    if (requestItem.markedForReturn && requestItem.shouldCollapseReturningCell){
-//        shouldBeCollapsed = YES;
-//    }
-//
-//    if (!requestItem.markedForReturn && requestItem.shouldCollapseGoingCell){
-//        shouldBeCollapsed = YES;
-//    }
-//
-//    if (shouldBeCollapsed == YES){
-//        self.contentVC.isCollapsed = YES;
-//        self.contentVC.topOfTextConstraint.constant = -8;
-//        self.contentVC.collapseButton.alpha = 0.0;
-//        self.contentVC.collapseButton.hidden = YES;
-//        self.contentVC.textOverButton1.alpha = 0.0;
-//        self.contentVC.textOverButton2.alpha = 0.0;
-//        self.contentVC.topOfButton1Constraint.constant = 16;
-//        self.contentVC.topOfButton2Constraint.constant = 16;
-//        [self.contentVC.button1 setTransform:CGAffineTransformMakeScale(.5, .5)];
-//        [self.contentVC.button2 setTransform:CGAffineTransformMakeScale(.5, .5)];
-//    }
-    
     // Add constraints to the custom view that gets added to the cell's contentView, otherwise, the animation movement
     // of the cell gets glitchy
     self.contentVC.view.translatesAutoresizingMaskIntoConstraints = NO;

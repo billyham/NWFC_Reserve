@@ -34,7 +34,7 @@
 #import "EQRTransaction.h"
 #import "EQRCheckPrintPage.h"
 
-@interface EQRInboxRightVC () <EQRWebDataDelegate, EQRPriceMatrixDelegate>
+@interface EQRInboxRightVC () <EQRWebDataDelegate, EQRPriceMatrixDelegate, UIPopoverPresentationControllerDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem* myScheduleRequest;
 @property (strong, nonatomic) EQRTransaction *myTransaction;
@@ -77,27 +77,20 @@
 @property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedEquipIDs;
 @property (strong, nonatomic) NSMutableArray* arrayOfToBeDeletedMiscJoins;
 
-//popOver controllers
-@property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
-@property (strong, nonatomic) UIPopoverController* myContactPicker;
-@property (strong, nonatomic) UIPopoverController* myRenterTypePicker;
-@property (strong, nonatomic) UIPopoverController* myClassPicker;
-@property (strong, nonatomic) UIPopoverController* distIDPopover;
-@property (strong, nonatomic) UIPopoverController* myNotesPopover;
-
 //popOver root VCs
 @property (strong, nonatomic) EQREditorDateVCntrllr* myDayDateVC;
 @property (strong, nonatomic) EQREditorExtendedDateVC *myExtendedDateVC;
 @property (strong, nonatomic) EQRContactPickerVC* myContactVC;
 @property (strong, nonatomic) EQREditorRenterVCntrllr* myRenterTypeVC;
 @property (strong, nonatomic) EQRClassPickerVC* myClassPickerVC;
+@property (strong, nonatomic) EQRDistIDPickerTableVC *myDistIdPicker;
+@property (strong, nonatomic) EQRStaffUserPickerViewController *myStaffUserPicker;
 
 //navigation controllers
 @property (strong, nonatomic) UINavigationController* contactNavController;
 
 //items for the add equip item function
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
-@property (strong, nonatomic) UIPopoverController* myAddEquipPopover;
 
 @property (strong, nonatomic) NSString *myEmailSignature;
 @property BOOL inEditModeFlag;
@@ -1196,32 +1189,25 @@
     EQRContactPickerVC* contactVC = [[EQRContactPickerVC alloc] initWithNibName:@"EQRContactPickerVC" bundle:nil];
     self.myContactVC = contactVC;
     
-    //place contact VC in a nav controller
+    // Place contact VC in a nav controller
     UINavigationController* navVC = [[UINavigationController alloc] initWithRootViewController:self.myContactVC];
     self.contactNavController = navVC;
     //hide nav controller nav bar
     [self.contactNavController setNavigationBarHidden:YES];
     
-    
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.contactNavController];
-    self.myContactPicker = popOver;
-    self.myContactPicker.delegate = self;
-    
-    //set the size
-    [self.myContactPicker setPopoverContentSize:CGSizeMake(320, 550)];
-    
-    //convert coordinates of textField frame to self.view
+    // Convert coordinates of textField frame to self.view
     UIView* originalRect = self.nameValueField;
     CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
     CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
     
-    //present the popOver
-    [self.myContactPicker presentPopoverFromRect:step2Rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft animated:YES];
+    navVC.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [navVC popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft;
+    popover.sourceRect = step2Rect;
+    popover.sourceView = self.view;
     
+    [self presentViewController:navVC animated:YES completion:^{ }];
     
-    //actions to perform AFTER presenting the popOver
-    
-    //assign self as delegate of name picker
     self.myContactVC.delegate = self;
 }
 
@@ -1231,20 +1217,20 @@
     EQREditorRenterVCntrllr* renterTypeVC = [[EQREditorRenterVCntrllr alloc] initWithNibName:@"EQREditorRenterVCntrllr" bundle:nil];
     self.myRenterTypeVC = renterTypeVC;
     
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.myRenterTypeVC];
-    self.myRenterTypePicker = popOver;
-    self.myRenterTypePicker.delegate = self;
-    
-    //set the size
-    [self.myRenterTypePicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
-    
-    //convert coordinates of textField frame to self.view
+    // Convert coordinates of textField frame to self.view
     UIView* originalRect = self.typeValueField;
     CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
     CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
     
-    //present the popover
-    [self.myRenterTypePicker presentPopoverFromRect:step2Rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
+
+    self.myRenterTypeVC.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [self.myRenterTypeVC popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight;
+    popover.sourceRect = step2Rect;
+    popover.sourceView = self.view;
+    
+    [self presentViewController:self.myRenterTypeVC animated:YES completion:^{ }];
+    
     
     //tell it what renter type to have pre selected
     [self.myRenterTypeVC initialSetupWithRenterTypeString:self.myScheduleRequest.renter_type];
@@ -1262,25 +1248,20 @@
     UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:self.myClassPickerVC];
     [navController setNavigationBarHidden:YES];
     
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:navController];
-    self.myClassPicker = popOver;
-    self.myClassPicker.delegate = self;
-    
-    //set the size
-    [self.myClassPicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
-    
-    //convert coordinates of textField frame to self.view
+    // Convert coordinates of textField frame to self.view
     UIView* originalRect = self.classValueField;
     CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
     CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
     
+    navController.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [navController popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight;
+    popover.sourceRect = step2Rect;
+    popover.sourceView = self.view;
     
-    //present the popover
-    [self.myClassPicker presentPopoverFromRect:step2Rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
+    [self presentViewController:navController animated:YES completion:^{ }];
     
-    //assign as delegate
     self.myClassPickerVC.delegate = self;
-    
 }
 
 
@@ -1297,11 +1278,6 @@
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.myDayDateVC];
     
     navController.modalPresentationStyle = UIModalPresentationFormSheet;
-    
-    // Convert coordinates of textField frame to self.view
-    UIView* originalRect = self.pickUpTimeValueField;
-    CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
-    CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
     
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelAction)];
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(standardDateSave:)];
@@ -1384,44 +1360,43 @@
     if (!self.myScheduleRequest) return;
 
     EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
-    
-    //need to specify a privateRequestManager for the equip selection v cntrllr
-    //also sets ivar isInPopover to YES
+
+    // Need to specify a privateRequestManager for the equip selection v cntrllr
     [genericEquipVCntrllr overrideSharedRequestManager:self.privateRequestManager];
     
-    //    genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeNone;
-    //    [self.navigationController pushViewController:genericEquipVCntrllr animated:NO];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:genericEquipVCntrllr];
     
-    UIPopoverController* popOverMe = [[UIPopoverController alloc] initWithContentViewController:genericEquipVCntrllr];
-    self.myAddEquipPopover = popOverMe;
-    self.myAddEquipPopover.delegate = self;
+    navController.modalPresentationStyle = UIModalPresentationPageSheet;
     
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelAction)];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(continueAddEquipItem:)];
+    [genericEquipVCntrllr.navigationItem setLeftBarButtonItem:leftButton];
+    [genericEquipVCntrllr.navigationItem setRightBarButtonItem:rightButton];
+    
+    [self presentViewController:navController animated:YES completion:^{
+        //need to reprogram the target of the save button
+        [genericEquipVCntrllr.continueButton removeTarget:genericEquipVCntrllr action:NULL forControlEvents:UIControlEventAllEvents];
+        [genericEquipVCntrllr.continueButton addTarget:self action:@selector(continueAddEquipItem:) forControlEvents:UIControlEventTouchUpInside];
+    }];
     //must manually set the size, cannot be wider than 600px!!!!???? But seems to work ok at 800 anyway???
-    self.myAddEquipPopover.popoverContentSize = CGSizeMake(700, 600);
-    
-    CGRect rect1 = [self.addButtonView.superview.superview convertRect:self.addButtonView.frame fromView:self.addButtonView.superview];
-    
-    [self.myAddEquipPopover presentPopoverFromRect:rect1 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated: YES];
-    
-    //need to reprogram the target of the save button
-    [genericEquipVCntrllr.continueButton removeTarget:genericEquipVCntrllr action:NULL forControlEvents:UIControlEventAllEvents];
-    [genericEquipVCntrllr.continueButton addTarget:self action:@selector(continueAddEquipItem:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+
+-(IBAction)cancelAction:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 
 -(IBAction)continueAddEquipItem:(id)sender{
     
-    //replaces the uniqueItem key from "1" to an accurate value
+    // Replaces the uniqueItem key from "1" to an accurate value
     [self.privateRequestManager justConfirm];
     
-    [self.myAddEquipPopover dismissPopoverAnimated:YES];
-    self.myAddEquipPopover = nil;
+    [self dismissViewControllerAnimated:YES completion:^{ }];
     
-    
-    //renew the list of joins by going to the data layer
+    // Renew the list of joins by going to the data layer
     [self renewTheViewWithRequest:self.myScheduleRequest];
 }
-
 
 
 #pragma mark - receive shared nib actions
@@ -1475,11 +1450,10 @@
     self.myContactVC.delegate = nil;
     
     //dismiss the popover
-    [self.myContactPicker dismissPopoverAnimated:YES];
-    self.myContactPicker = nil;
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
-
+#pragma mark - EditorRenter delegate method
 -(void)initiateRetrieveRenterItem{
     
     NSString* thisRenterType = [self.myRenterTypeVC retrieveRenterType];
@@ -1494,12 +1468,8 @@
     //update data layer
     [self updateScheduleRequest];
     
-    //release self as delegate
-    self.myRenterTypePicker.delegate = nil;
-    
     //dismiss popover
-    [self.myRenterTypePicker dismissPopoverAnimated:YES];
-    self.myRenterTypePicker = nil;
+    [self dismissViewControllerAnimated:YES completion:^{ }];
     
     //update pricing view
     if ([self.myScheduleRequest.renter_type isEqualToString:EQRRenterPublic]){
@@ -1510,7 +1480,7 @@
     }
 }
 
-
+#pragma mark - ClassPicker delegate method
 -(void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem{
     
     //can be nil... no class assigned to request
@@ -1543,49 +1513,36 @@
     //update data layer
     [self updateScheduleRequest];
     
-    //release self as delegate
-    self.myClassPicker.delegate = nil;
-    
     //dismiss popover
-    [self.myClassPicker dismissPopoverAnimated:YES];
-    self.myClassPicker = nil;
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 
 #pragma mark - EditorEquipDelegate methods
-
 -(void)tagEquipUniqueToDelete:(NSString*)key_id{
-    
     [self.arrayOfToBeDeletedEquipIDs addObject:key_id];
 }
 
 
 -(void)tagEquipUniqueToCancelDelete:(NSString*)key_id{
-    
     NSString* stringToBeRemoved;
-    
     for (NSString* thisString in self.arrayOfToBeDeletedEquipIDs){
-        
         if ([thisString isEqualToString:key_id]){
-            
             stringToBeRemoved = thisString;
             break;
         }
     }
-    
     [self.arrayOfToBeDeletedEquipIDs removeObject:stringToBeRemoved];
 }
 
 
 #pragma mark - EditorMiscListCell  Delegate methods
-
 -(void)tagMiscJoinToDelete:(NSString*)key_id{
-    
     [self.arrayOfToBeDeletedMiscJoins addObject:key_id];
 }
 
+
 -(void)tagMiscJoinToCancelDelete:(NSString*)key_id{
-    
     NSString* stringToBeRemoved;
     for (NSString *thisString in self.arrayOfToBeDeletedMiscJoins){
         if ([thisString isEqualToString:key_id]){
@@ -1597,28 +1554,21 @@
 }
 
 
-#pragma mark - Distingishing ID Picker Button
-
 // An equipCell delegate method
+#pragma mark - Distingishing ID Picker Button
 -(void)distIDPickerTapped:(NSDictionary*)infoDictionary{
     
-    //get cell's equipUniqueKey, titleKey, buttonRect and button
+    // Get cell's equipUniqueKey, titleKey, buttonRect and button
     NSString* equipTitleItem_foreignKey = [infoDictionary objectForKey:@"equipTitleItem_foreignKey"];
     NSString* equipUniqueItem_foreignKey = [infoDictionary objectForKey:@"equipUniqueItem_foreignKey"];
     UIButton* thisButton = (UIButton*)[infoDictionary objectForKey:@"distButton"];
     
-    //create content VC
+    // Create content VC
     EQRDistIDPickerTableVC* distIDPickerVC = [[EQRDistIDPickerTableVC alloc] initWithNibName:@"EQRDistIDPickerTableVC" bundle:nil];
     
-    //initial setup
     [distIDPickerVC initialSetupWithOriginalUniqueKeyID:equipUniqueItem_foreignKey equipTitleKey:equipTitleItem_foreignKey scheduleItem:self.privateRequestManager.request];
     distIDPickerVC.delegate = self;
-    
-    //create uiPopoverController
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:distIDPickerVC];
-    [popOver setPopoverContentSize:CGSizeMake(320.f, 300.f)];
-    popOver.delegate = self;
-    self.distIDPopover = popOver;
+    self.myDistIdPicker = distIDPickerVC;
     
     CGRect fixedRect2 = [thisButton.superview.superview convertRect:thisButton.frame fromView:thisButton.superview];
     CGRect fixedRect3 = [thisButton.superview.superview.superview convertRect:fixedRect2 fromView:thisButton.superview.superview];
@@ -1627,9 +1577,13 @@
     CGRect fixedRect6 = [thisButton.superview.superview.superview.superview.superview.superview convertRect:fixedRect5 fromView:thisButton.superview.superview.superview.superview.superview];
     CGRect fixedRect7 = [thisButton.superview.superview.superview.superview.superview.superview.superview convertRect:fixedRect6 fromView:thisButton.superview.superview.superview.superview.superview.superview];
     
+    distIDPickerVC.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [distIDPickerVC popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    popover.sourceRect = fixedRect7;
+    popover.sourceView = self.view;
     
-    //present popover
-    [self.distIDPopover presentPopoverFromRect:fixedRect7 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self presentViewController:distIDPickerVC animated:YES completion:^{ }];
 }
 
 
@@ -1670,14 +1624,12 @@
     [self.myTable reloadData];
     
     // Remove the popover
-    [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController setDelegate:nil];
+    self.myDistIdPicker.delegate = nil;
     
-    [self.distIDPopover dismissPopoverAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:^{ }];
     
     // Gracefully dealloc all the objects in the content VC
-    [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController resetDistIdPicker];
-    
-    self.distIDPopover = nil;
+    [self.myDistIdPicker resetDistIdPicker];
     
     // Update the data layer
     NSArray* topArray = @[ @[@"key_id", [saveThisJoin key_id]],
@@ -1700,22 +1652,22 @@
 
 
 #pragma mark - Notes popover methods
-
 -(void)openNotesEditor{
     
     EQRNotesVC* thisNotes = [[EQRNotesVC alloc] initWithNibName:@"EQRNotesVC" bundle:nil];
     thisNotes.delegate = self;
     
-    UIPopoverController* thisNotesPop = [[UIPopoverController alloc] initWithContentViewController:thisNotes];
-    self.myNotesPopover = thisNotesPop;
-    self.myNotesPopover.delegate = self;
+    thisNotes.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [thisNotes popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    popover.sourceRect = self.notesView.frame;
+    popover.sourceView = self.view;
     
-    [self.myNotesPopover setPopoverContentSize:CGSizeMake(320.f, 400.f)];
-
-    [self.myNotesPopover presentPopoverFromRect:self.notesView.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self presentViewController:thisNotes animated:YES completion:^{
+        [thisNotes initialSetupWithScheduleRequest:self.myScheduleRequest];
+    }];
     
-    //must be after presentation
-    [thisNotes initialSetupWithScheduleRequest:self.myScheduleRequest];
+    
 }
 
 
@@ -1736,39 +1688,35 @@
     [webData queryForStringWithLink:@"EQAlterNotesInScheduleRequest.php" parameters:topArray];
     
     //dismiss popover
-    [self.myNotesPopover dismissPopoverAnimated:YES];
-    self.myNotesPopover = nil;
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 
 #pragma mark - staff user
-
 -(void)showStaffUserPicker{
     
     EQRStaffUserPickerViewController* staffUserPicker = [[EQRStaffUserPickerViewController alloc] initWithNibName:@"EQRStaffUserPickerViewController" bundle:nil];
-    self.myStaffUserPicker = [[UIPopoverController alloc] initWithContentViewController:staffUserPicker];
-    self.myStaffUserPicker.delegate = self;
+    self.myStaffUserPicker = staffUserPicker;
     
-    //set size
-    [self.myStaffUserPicker setPopoverContentSize:CGSizeMake(400, 400)];
+    staffUserPicker.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [staffUserPicker popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    popover.barButtonItem = [self.navigationItem.rightBarButtonItems objectAtIndex: 0];
     
-    //present popover
-    [self.myStaffUserPicker presentPopoverFromBarButtonItem:[self.navigationItem.rightBarButtonItems objectAtIndex:0]  permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    
-    //set target of continue button
-    [staffUserPicker.continueButton addTarget:self action:@selector(dismissStaffUserPicker) forControlEvents:UIControlEventTouchUpInside];
-    
+    [self presentViewController:staffUserPicker animated:YES completion:^{
+        //set target of continue button
+        [staffUserPicker.continueButton addTarget:self action:@selector(dismissStaffUserPicker) forControlEvents:UIControlEventTouchUpInside];
+    }];
 }
 
 
 -(void)dismissStaffUserPicker{
     
     //do stuff with the iboutlet of the
-    EQRStaffUserPickerViewController* thisStaffUserPicker = (EQRStaffUserPickerViewController*)[self.myStaffUserPicker contentViewController];
-    int selectedRow = (int)[thisStaffUserPicker.myPicker selectedRowInComponent:0];
+    int selectedRow = (int)[self.myStaffUserPicker.myPicker selectedRowInComponent:0];
     
     //assign contact name object to shared staffUserManager
-    EQRContactNameItem* selectedNameObject = (EQRContactNameItem*)[thisStaffUserPicker.arrayOfContactObjects objectAtIndex:selectedRow];
+    EQRContactNameItem* selectedNameObject = (EQRContactNameItem*)[self.myStaffUserPicker.arrayOfContactObjects objectAtIndex:selectedRow];
     
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     staffUserManager.currentStaffUser = selectedNameObject;
@@ -1782,8 +1730,7 @@
     [[NSUserDefaults standardUserDefaults] setObject:newDic forKey:@"staffUserKey"];
     
     //dismiss the picker
-    [self.myStaffUserPicker dismissPopoverAnimated:YES];
-    self.myStaffUserPicker = nil;
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 
@@ -1792,22 +1739,16 @@
 -(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
     
     switch (result) {
-            
         case MFMailComposeResultCancelled:
-            
-            
             break;
             
         case MFMailComposeResultFailed:
-            
             break;
             
         case MFMailComposeResultSaved:
-            
             break;
             
         case MFMailComposeResultSent:
-            
             break;
             
         default:
@@ -1823,34 +1764,26 @@
 
 
 #pragma mark - split view delegate methods
-
 -(void)splitViewController:(UISplitViewController *)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)pc{
     
     barButtonItem.title = @"Requests";
     [self.navigationItem setLeftBarButtonItem:barButtonItem];
-    
-    self.popover = pc;
 }
 
 
 -(void)splitViewController:(UISplitViewController *)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem{
     
     [self.navigationItem setLeftBarButtonItem:nil];
-    
-    self.popover = nil;
 }
 
 
 #pragma mark - collectionView datasource
-
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    
     return [self.arrayOfJoinsWithStructure count];
 }
 
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    
     return [(NSArray*)[self.arrayOfJoinsWithStructure objectAtIndex:section] count];
 }
 
@@ -1920,7 +1853,6 @@
     EQREditorHeaderCell* cell = [self.myTable dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:CellIdentifier forIndexPath:indexPath];
     
     for (UIView* view in cell.contentView.subviews){
-        
         [view removeFromSuperview];
     }
     
@@ -1934,81 +1866,31 @@
 }
 
 
-
 #pragma mark - collection view delegate methods
-
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    
     
 }
 
 #pragma mark - collection view flow layout delegate methods
-
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     //width is equal to the collectionView's width
     return CGSizeMake(self.myTable.frame.size.width, 35.f);
-    
-}
-
-
-#pragma mark - popover delegate methods
-
--(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
- 
-    if (popoverController == self.myStaffUserPicker){
-        
-        self.myStaffUserPicker = nil;
-        
-    }else if (popoverController == self.myContactPicker){
-        
-        self.myContactPicker = nil;
-        
-    }else if (popoverController == self.myRenterTypePicker){
-        
-        self.myRenterTypePicker = nil;
-        
-    }else if (popoverController == self.myClassPicker){
-        
-        self.myClassPicker = nil;
-        
-    }else if (popoverController == self.myAddEquipPopover){
-        
-        self.myAddEquipPopover = nil;
-        
-    }else if (popoverController == self.popover){
-        
-        self.popover = nil;
-        
-    }else if (popoverController == self.distIDPopover){
-        
-        self.distIDPopover = nil;
-        
-    }else if (popoverController == self.myNotesPopover){
-        
-        self.myNotesPopover = nil;
-    }
 }
 
 
 #pragma mark - Dealloc
-
 -(void)dealloc{
-    
     self.privateRequestManager = nil;
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
 #pragma mark - memory warning
-
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

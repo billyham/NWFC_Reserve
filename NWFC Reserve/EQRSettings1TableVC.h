@@ -13,28 +13,18 @@
 
 @protocol EQRSettings1TableDelegate;
 
-@interface EQRSettings1TableVC : UITableViewController  <EQRPasswordEntryDelegate, UIPopoverControllerDelegate, EQRGenericEditorDelegate, UITableViewDelegate>{
+@interface EQRSettings1TableVC : UITableViewController  <EQRPasswordEntryDelegate,  EQRGenericEditorDelegate, UITableViewDelegate>{
     __weak id <EQRSettings1TableDelegate> delegate;
 }
-
 @property (weak, nonatomic) id <EQRSettings1TableDelegate> delegate;
 
-//-(IBAction)urlTextFieldDidChange:(id)sender;
 -(IBAction)termTextFieldDidChange:(id)sender;
 -(IBAction)campTermTextFieldDidChange:(id)sender;
-
-//passwordEntryVC delegate methods
--(void)passwordEntered:(BOOL)passwordSuccessful;
-
-//EQRGenericEditorDelegate  and EQRGenericBlockOfTextEditorDelegate methods
--(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod;
 
 @end
 
 
 @protocol EQRSettings1TableDelegate <NSObject>
-
 -(void)demoModeChanged:(BOOL)demoModeOn;
 -(void)kioskModeChanged:(BOOL)kioskModeOn;
-
 @end

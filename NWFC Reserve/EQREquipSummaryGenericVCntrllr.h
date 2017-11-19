@@ -11,7 +11,7 @@
 #import "EQREnterEmail.h"
 #import "EQRContactPickerVC.h"
 
-@interface EQREquipSummaryGenericVCntrllr : UIViewController <UITextViewDelegate, EQREnterPhoneDelegate, UIPopoverControllerDelegate, EQRContactPickerDelegate, EQREnterEmailDelegate>
+@interface EQREquipSummaryGenericVCntrllr : UIViewController <UITextViewDelegate, EQREnterPhoneDelegate, EQRContactPickerDelegate, EQREnterEmailDelegate>
 
 //why did I add these if they never get used???
 //@property (nonatomic, strong) NSAttributedString* rentorNameAtt;

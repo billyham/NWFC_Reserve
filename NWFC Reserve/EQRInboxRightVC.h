@@ -22,13 +22,12 @@
 @protocol EQRInboxRightDelegate;
 
 
-@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UISearchBarDelegate, EQRContactPickerDelegate, EQRRenterTypeDelegate, EQRClassPickerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREditorEquipCellDelegate, EQREditorMiscCellDelegate, UIPopoverControllerDelegate, EQRDistIDPickerDelegate, EQRNoteDelegate> {
+@interface EQRInboxRightVC : UIViewController <UISplitViewControllerDelegate, MFMailComposeViewControllerDelegate, UISearchBarDelegate, EQRContactPickerDelegate, EQRRenterTypeDelegate, EQRClassPickerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREditorEquipCellDelegate, EQREditorMiscCellDelegate, EQRDistIDPickerDelegate, EQRNoteDelegate> {
     
     __weak id <EQRInboxRightDelegate> delegateForRightSide;
 }
 
 @property (weak, nonatomic) id <EQRInboxRightDelegate> delegateForRightSide;
-@property (nonatomic, strong) UIPopoverController *popover;
 
 -(void)renewTheViewWithRequest:(EQRScheduleRequestItem*)request;
 

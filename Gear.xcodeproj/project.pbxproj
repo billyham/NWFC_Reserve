@@ -169,6 +169,7 @@
 		545661D918321D350067B40D /* EQREquipSelectionVCntrllr.m in Sources */ = {isa = PBXBuildFile; fileRef = 545661D818321D350067B40D /* EQREquipSelectionVCntrllr.m */; };
 		545661DC183239520067B40D /* EQRWebData.m in Sources */ = {isa = PBXBuildFile; fileRef = 545661DB183239520067B40D /* EQRWebData.m */; };
 		545661DF18323ABC0067B40D /* EQREquipItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 545661DE18323ABC0067B40D /* EQREquipItem.m */; };
+		545792091FC0F3E70021873B /* EQREquipSelectionFromReserveVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 545792081FC0F3E70021873B /* EQREquipSelectionFromReserveVC.m */; };
 		5460B69719EFA27700D3ED7B /* EQRNavBarDatesNarrowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5460B69619EFA27700D3ED7B /* EQRNavBarDatesNarrowView.m */; };
 		546436551BBBBF70002BF3FF /* EQRTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 546436541BBBBF70002BF3FF /* EQRTransaction.m */; };
 		546461E21F98547200FB9AD9 /* EQREquipTitleDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 546461E01F98547200FB9AD9 /* EQREquipTitleDetailVC.m */; };
@@ -528,6 +529,8 @@
 		545661DB183239520067B40D /* EQRWebData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EQRWebData.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		545661DD18323ABC0067B40D /* EQREquipItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQREquipItem.h; sourceTree = "<group>"; };
 		545661DE18323ABC0067B40D /* EQREquipItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQREquipItem.m; sourceTree = "<group>"; };
+		545792071FC0F3E70021873B /* EQREquipSelectionFromReserveVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EQREquipSelectionFromReserveVC.h; sourceTree = "<group>"; };
+		545792081FC0F3E70021873B /* EQREquipSelectionFromReserveVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EQREquipSelectionFromReserveVC.m; sourceTree = "<group>"; };
 		5460B69519EFA27700D3ED7B /* EQRNavBarDatesNarrowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRNavBarDatesNarrowView.h; sourceTree = "<group>"; };
 		5460B69619EFA27700D3ED7B /* EQRNavBarDatesNarrowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRNavBarDatesNarrowView.m; sourceTree = "<group>"; };
 		546436531BBBBF70002BF3FF /* EQRTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRTransaction.h; sourceTree = "<group>"; };
@@ -739,6 +742,8 @@
 				438EDCF5182B7ABE0090F882 /* EQRReserveTopVCntrllr.m */,
 				54032FE01872AC9000481D86 /* EQREquipDateVCntrllr.h */,
 				54032FE11872AC9000481D86 /* EQREquipDateVCntrllr.m */,
+				545792071FC0F3E70021873B /* EQREquipSelectionFromReserveVC.h */,
+				545792081FC0F3E70021873B /* EQREquipSelectionFromReserveVC.m */,
 				5416F99C1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.h */,
 				5416F99D1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.m */,
 				5416F99E1918E1D00062A497 /* EQREquipSelectionGenericVCntrllr.xib */,
@@ -1796,6 +1801,7 @@
 				01C83A7A199E792800CD5E9C /* EQRDayExtendedPickerVC.m in Sources */,
 				543CF39E198F1B4700A00E5E /* EQRQuickViewScrollVCntrllr.m in Sources */,
 				01600B3818CA51CA0006D75A /* EQRScheduleTopVCntrllr.m in Sources */,
+				545792091FC0F3E70021873B /* EQREquipSelectionFromReserveVC.m in Sources */,
 				54F4ED891C8D84660031A9BB /* Contact.m in Sources */,
 				54E9DB18199353590080FF1B /* EQRStaffUserManager.m in Sources */,
 				0115506B19956B9A009A459F /* EQRQuickViewPage2VCntrllr.m in Sources */,

@@ -608,8 +608,8 @@
     UIPopoverPresentationController *popoverPC = [navController popoverPresentationController];
     popoverPC.permittedArrowDirections = UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight;
     popoverPC.delegate = self;
-    [popoverPC setSourceRect:self.nameTextField.frame];
-    [popoverPC setSourceView:self.view];
+    popoverPC.sourceRect = self.nameTextField.frame;
+    popoverPC.sourceView = self.view;
     
     [self presentViewController:navController animated:YES completion:^{ }];
 }

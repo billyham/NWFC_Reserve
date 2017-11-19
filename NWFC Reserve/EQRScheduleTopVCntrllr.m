@@ -34,7 +34,7 @@
 #import "EQRClassItem.h"
 
 
-@interface EQRScheduleTopVCntrllr ()
+@interface EQRScheduleTopVCntrllr () <UIPopoverPresentationControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myMasterScheduleCollectionView;
 @property (strong ,nonatomic) IBOutlet UICollectionView* myNavBarCollectionView;
@@ -46,10 +46,9 @@
 
 @property (strong, nonatomic) NSArray* equipUniqueArray;
 @property (strong, nonatomic) NSMutableArray* equipUniqueArrayWithSections;
-//
-//an alternate to the above array with a further nested array of sections defined by titleItems
+// An alternate to the above array with a further nested array of sections defined by titleItems
 @property (strong, nonatomic) NSMutableArray* equipUniqueArrayWithSubArraysAndSections;
-//
+
 @property (strong, nonatomic) NSMutableArray* equipUniqueCategoriesList;
 
 @property (strong, nonatomic) NSDate* dateForShow;
@@ -64,9 +63,9 @@
 @property (strong, nonatomic) NSIndexPath* thisTempIndexPath;
 @property NSInteger thisTempNewRowInt;
 
-@property (strong, nonatomic) UIPopoverController* myDayDatePicker;
-@property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
-@property (strong, nonatomic) UIPopoverController* myScheduleRowQuickView;
+@property (strong, nonatomic) EQRStaffUserPickerViewController *staffUserPicker;
+@property (strong, nonatomic) EQRDayDatePickerVCntrllr *dayDateView;
+
 @property (strong, nonatomic) NSDictionary* temporaryDicFromNestedDayCell;
 @property (strong, nonatomic) EQRQuickViewScrollVCntrllr* myQuickViewScrollVCntrllr;
 
@@ -77,38 +76,28 @@
 @property NSInteger weekIndicatorOffset;
 @property BOOL dateForShowIsNOTCurrentMonth;
 
-@property (strong, nonatomic) UIPopoverController* myClassPicker;
 @property (strong, nonatomic) NSString *filter_classSectionKey;
 @property BOOL filterIsOnFlag;
 @property BOOL isSuppressingNavBarSelection;
 
 -(IBAction)moveToNextMonth:(id)sender;
 -(IBAction)moveToPreviousMonth:(id)sender;
-
-
 @end
 
 @implementation EQRScheduleTopVCntrllr
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
 #pragma mark - methods
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+
     }
     return self;
 }
 
 
-
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     //set ivar so that the initial load will load the schedule info
@@ -162,16 +151,14 @@
     
     //assign flow layout programmatically
 //    self.scheduleMasterFlowLayout = [[UICollectionViewFlowLayout alloc] init];
-//    
 //    [self.myMasterScheduleCollectionView setCollectionViewLayout:self.scheduleMasterFlowLayout];
-    
     
     //derive the current user name
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     NSString* logText = [NSString stringWithFormat:@"Logged in as %@", staffUserManager.currentStaffUser.first_name];
     
-    //_______custom bar buttons
-    //create uiimages
+    // Custom bar buttons
+    // Create uiimages
     UIImage* leftArrow = [UIImage imageNamed:@"GenericLeftArrow"];
     UIImage* rightArrow = [UIImage imageNamed:@"GenericRightArrow"];
     
@@ -194,8 +181,6 @@
     //set leftBarButton item on SELF
     [self.navigationItem setLeftBarButtonItems:arrayOfLeftButtons];
     
-    
-    
     //right button
     UIBarButtonItem* staffUserBarButton = [[UIBarButtonItem alloc] initWithTitle:logText style:UIBarButtonItemStylePlain target:self action:@selector(showStaffUserPicker)];
     
@@ -204,7 +189,6 @@
     //set rightBarButton item in SELF
     [self.navigationItem setRightBarButtonItems:arrayOfRightButtons];
      
-    //___________
     
     //add gesture recognizers for swiping
     UISwipeGestureRecognizer* swipeRightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(moveToPreviousMonth:)];
@@ -214,7 +198,6 @@
     UISwipeGestureRecognizer* swipeLeftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(moveToNextMonth:)];
     swipeLeftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:swipeLeftGesture];
-    
 }
 
 
@@ -225,9 +208,7 @@
         
         // Indicate that the array for the NavBar categories needs to be refeshed
         [self.equipUniqueCategoriesList removeAllObjects];
-        
         self.isSuppressingNavBarSelection = YES;
-        
         [self renewTheView];
     }
     
@@ -270,11 +251,15 @@
             //create a list of unique categories names by looping through the array of equipUniques
             for (EQREquipUniqueItem* obj in self.equipUniqueArray){
                 
+                
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 if ([tempSet containsObject:[obj performSelector:NSSelectorFromString(EQRScheduleGrouping)]] == NO){
                     
                     [tempSet addObject:[obj performSelector:NSSelectorFromString(EQRScheduleGrouping)]];
                     [self.equipUniqueCategoriesList addObject:[NSString stringWithString:[obj performSelector:NSSelectorFromString(EQRScheduleGrouping)]]];
                 }
+#pragma clang diagnostic pop
             }
             [tempSet removeAllObjects];
             tempSet = nil;
@@ -296,9 +281,13 @@
             
             for (EQREquipUniqueItem* equipItem in self.equipUniqueArray){
                 
+                
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 if ([[equipItem performSelector:NSSelectorFromString(EQRScheduleGrouping)] isEqualToString:groupingItem]){
                     [subNestArray addObject: equipItem];
                 }
+#pragma clang diagnostic pop
             }
             // Add subNested array to the master array
             [tempUniqueArrayWithSections addObject:subNestArray];
@@ -359,11 +348,8 @@
                 // This delay is not an ideal solution
                 [self performSelector:@selector(delayedHighlight:) withObject:@{@"sectionString": [self.equipUniqueCategoriesList objectAtIndex:0]} afterDelay:0.5];
             });
-            
         }
-        
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             self.equipUniqueArrayWithSections = [NSMutableArray arrayWithArray:tempUniqueArrayWithSections];
             
             [self.myMasterScheduleCollectionView reloadData];
@@ -371,10 +357,7 @@
             
             self.isSuppressingNavBarSelection = NO;
         });
-    
     });
-    
-    
     
     // Update opacity and width of navBarDates if changing orientation
     UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
@@ -469,7 +452,6 @@
         self.navWeeksConstraint.constant = EQRScheduleLengthOfEquipUniqueLabel + (EQRScheduleItemWidthForDay * self.weekIndicatorOffset);
     }
     [self.navBarWeeks setNeedsDisplay];
-    //____//
     
     //______Get a list of tracking items (defaulting with the current month)
     NSDate* todaysDate = self.dateForShow;
@@ -542,16 +524,12 @@
                 [self.myActivityIndicator stopAnimating];
                 self.myActivityIndicator.hidden = YES;
             }];
-            
         });
     }
 }
 
 
-
 #pragma mark - button actions... also swipe actions
-
-
 -(IBAction)moveToNextMonth:(id)sender{
     
     //cancel any existing web data parsing
@@ -719,10 +697,10 @@
     [self.myDateBarCollection reloadData];
 }
 
+
 -(BOOL)evaluateIfDateForShowIsNOTCurrentMonth{
     
     NSDate *currentDate = [NSDate date];
-    
     NSDateFormatter *monthFormatter = [[NSDateFormatter alloc] init];
     monthFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     [monthFormatter setDateFormat:@"MM yyyy"];
@@ -741,174 +719,145 @@
 -(void)showStaffUserPicker{
     
     EQRStaffUserPickerViewController* staffUserPicker = [[EQRStaffUserPickerViewController alloc] initWithNibName:@"EQRStaffUserPickerViewController" bundle:nil];
+    self.staffUserPicker = staffUserPicker;
     
-    self.myStaffUserPicker = [[UIPopoverController alloc] initWithContentViewController:staffUserPicker];
-    self.myStaffUserPicker.delegate = self;
-    [self.myStaffUserPicker setPopoverContentSize:CGSizeMake(400, 400)];
+    staffUserPicker.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [staffUserPicker popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    popover.barButtonItem = [self.navigationItem.rightBarButtonItems objectAtIndex:0];
     
-    //present popover
-    [self.myStaffUserPicker presentPopoverFromBarButtonItem:[self.navigationItem.rightBarButtonItems objectAtIndex:0]  permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self presentViewController:staffUserPicker animated:YES completion:^{ }];
     
-    //set target of continue button
+    // Set target of continue button
     [staffUserPicker.continueButton addTarget:self action:@selector(dismissStaffUserPicker) forControlEvents:UIControlEventTouchUpInside];
 }
 
 
--(void)dismissStaffUserPicker{
+- (void)dismissStaffUserPicker{
     
-    //do stuff with the iboutlet of the
-    EQRStaffUserPickerViewController* thisStaffUserPicker = (EQRStaffUserPickerViewController*)[self.myStaffUserPicker contentViewController];
-    int selectedRow = (int)[thisStaffUserPicker.myPicker selectedRowInComponent:0];
+    // Do stuff with the iboutlet of the
+    int selectedRow = (int)[self.staffUserPicker.myPicker selectedRowInComponent:0];
     
-    //assign contact name object to shared staffUserManager
-    EQRContactNameItem* selectedNameObject = (EQRContactNameItem*)[thisStaffUserPicker.arrayOfContactObjects objectAtIndex:selectedRow];
+    // Assign contact name object to shared staffUserManager
+    EQRContactNameItem* selectedNameObject = (EQRContactNameItem*)[self.staffUserPicker.arrayOfContactObjects objectAtIndex:selectedRow];
     
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     staffUserManager.currentStaffUser = selectedNameObject;
     
-    //set title on bar button item
+    // Set title on bar button item
     NSString* newUserString = [NSString stringWithFormat:@"Logged in as %@", selectedNameObject.first_name];
     [[self.navigationItem.rightBarButtonItems objectAtIndex:0] setTitle:newUserString];
     
-    //save as default
+    // Save as default
     NSDictionary* newDic = [NSDictionary dictionaryWithObject:selectedNameObject.key_id forKey:@"staffUserKey"];
     [[NSUserDefaults standardUserDefaults] setObject:newDic forKey:@"staffUserKey"];
     
-    
-    //dismiss the picker
-    [self.myStaffUserPicker dismissPopoverAnimated:YES];
-    self.myStaffUserPicker = nil;
-    
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
-
 
 
 -(void)showDatePicker{
     
     EQRDayDatePickerVCntrllr* dayDateView = [[EQRDayDatePickerVCntrllr alloc] initWithNibName:@"EQRDayDatePickerVCntrllr" bundle:nil];
-    self.myDayDatePicker = [[UIPopoverController alloc] initWithContentViewController:dayDateView];
-    self.myDayDatePicker.delegate = self;
+    self.dayDateView = dayDateView;
     
-    //set size
-    [self.myDayDatePicker setPopoverContentSize:CGSizeMake(400, 400)];
+    dayDateView.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [dayDateView popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    popover.barButtonItem = [self.navigationItem.leftBarButtonItems objectAtIndex:1];
     
-    //present popover
-    [self.myDayDatePicker presentPopoverFromBarButtonItem:[self.navigationItem.leftBarButtonItems objectAtIndex:1] permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self presentViewController:dayDateView animated:YES completion:^{ }];
     
-    //set target of continue button
+    // Set target of continue button
     [dayDateView.myContinueButton addTarget:self action:@selector(dismissShowDatePicker:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 
--(IBAction)dismissShowDatePicker:(id)sender{
+- (IBAction)dismissShowDatePicker:(id)sender{
     
-    //cancel any existing web data parsing
+    // Cancel any existing web data parsing
     if (self.myWebData){
         [self.myWebData stopXMLParsing];
         
-        //_________the former Webdata object continues feeding data for a fraction of a second after loading a new month,
-        //_________falsely showing equip joins from a previous month
-        //_________remedy by disconnecting the webdata's delegate
+        // The former Webdata object continues feeding data for a
+        // fraction of a second after loading a new month,
+        // falsely showing equip joins from a previous month.
+        // Remedy by disconnecting the webdata's delegate
         self.myWebData.delegateDataFeed = nil;
     }
     
-    //get date from the popover's content view controller, a public method
-    self.dateForShow = [(EQRDayDatePickerVCntrllr*)[self.myDayDatePicker contentViewController] retrieveSelectedDate];
+    //  Get date from the popover's content view controller, a public method
+    self.dateForShow = [self.dayDateView retrieveSelectedDate];
     
     self.dateForShowIsNOTCurrentMonth = [self evaluateIfDateForShowIsNOTCurrentMonth];
     
-    //assign new month label
+    // Assign new month label
     NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
     monthNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     monthNameFormatter.dateFormat =@"MMMM yyyy";
     
-    //assign month to nav bar title
+    // Assign month to nav bar title
     if (self.filterIsOnFlag == NO){
         self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
     }else{
-        //assign month to nav bar title
+        // Assign month to nav bar title
         self.navigationItem.title = [NSString stringWithFormat:@"%@ - Filtered Results",
                                      [monthNameFormatter stringFromDate:self.dateForShow]];
     }
-    
-    //dismiss the picker
-    [self.myDayDatePicker dismissPopoverAnimated:YES];
-    self.myDayDatePicker = nil;
-    
+    [self dismissViewControllerAnimated:YES completion:^{ }];
     [self renewTheView];
-    
-    //reload dates
+    // Reload dates
     [self.myDateBarCollection reloadData];
 }
 
 
--(void)filterResults{
-    
+- (void)filterResults{
     if (self.filterIsOnFlag == YES){
         self.filterIsOnFlag = NO;
         self.filter_classSectionKey = nil;
         
-        //update month label
+        // Update month label
         NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
         monthNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
         monthNameFormatter.dateFormat =@"MMMM yyyy";
         
-        //assign month to nav bar title
+        // Assign month to nav bar title
         self.navigationItem.title = [monthNameFormatter stringFromDate:self.dateForShow];
         
         [UIView animateWithDuration:0.3 animations:^{
             self.mainSubViewTopConstraint.constant = 0;
-            
             [self.view layoutIfNeeded];
         }];
-        
         [self renewTheView];
-        
     }else{
-
-        
         EQRClassPickerVC* classPickerVC = [[EQRClassPickerVC alloc] initWithNibName:@"EQRClassPickerVC" bundle:nil];
         
         UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:classPickerVC];
         [navController setNavigationBarHidden:YES];
         
-        UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:navController];
-        self.myClassPicker = popOver;
-        self.myClassPicker.delegate = self;
+        navController.modalPresentationStyle = UIModalPresentationPopover;
+        UIPopoverPresentationController *popover = [navController popoverPresentationController];
+        popover.permittedArrowDirections = UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight | UIPopoverArrowDirectionUp;
+        popover.barButtonItem = [self.navigationItem.leftBarButtonItems objectAtIndex:9];
         
-        //set the size
-        [self.myClassPicker setPopoverContentSize:CGSizeMake(300.f, 500.f)];
+        [self presentViewController:navController animated:YES completion:^{ }];
         
-        //convert coordinates of textField frame to self.view
-        UIView* originalRect = self.navigationItem.titleView;
-        CGRect step1Rect = [originalRect.superview.superview convertRect:originalRect.frame fromView:originalRect.superview];
-        CGRect step2Rect = [originalRect.superview.superview.superview convertRect:step1Rect fromView:originalRect.superview.superview];
-        
-        
-        //present the popover
-        [self.myClassPicker presentPopoverFromRect:step2Rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
-        
-        //assign as delegate
         classPickerVC.delegate = self;
     }
-    
-    
-    
-    
 }
 
-#pragma mark - class picker 
 
--(void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem{
+#pragma mark - class picker 
+- (void)initiateRetrieveClassItem:(EQRClassItem *)selectedClassItem{
     
     self.filterIsOnFlag = YES;
     
-    //update month label
+    // Update month label
     NSDateFormatter* monthNameFormatter = [[NSDateFormatter alloc] init];
     monthNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     monthNameFormatter.dateFormat =@"MMMM yyyy";
     
-    //assign month to nav bar title
+    // Assign month to nav bar title
     self.navigationItem.title = [NSString stringWithFormat:@"%@ - Filtered Results",
                                  [monthNameFormatter stringFromDate:self.dateForShow]];
     
@@ -916,53 +865,46 @@
     
     [UIView animateWithDuration:0.3 animations:^{
         self.mainSubViewTopConstraint.constant = 50;
-        
         [self.view layoutIfNeeded];
     }];
     
+    [self dismissViewControllerAnimated:YES completion:^{ }];
     [self renewTheView];
-    
-    //release self as delegate
-    self.myClassPicker.delegate = nil;
-    
-    //dismiss popover
-    [self.myClassPicker dismissPopoverAnimated:YES];
-    self.myClassPicker = nil;
 }
 
 
 #pragma mark - notifications
-
--(void)refreshTable:(NSNotification*)note{
+- (void)refreshTable:(NSNotification*)note{
     
-    //don't use animations when data is loading or it will crash
+    // Don't use animations when data is loading or it will crash
     if (self.isLoadingEquipDataFlag){
-        
         [self.myMasterScheduleCollectionView reloadData];
-        
     }else {
-        
         NSString* typeOfChange = [[note userInfo] objectForKey:@"type"];
         NSString* sectionString = [[note userInfo] objectForKey:@"sectionString"];
         
-        //array of index paths to add or delete
+        // Array of index paths to add or delete
         NSMutableArray* arrayOfIndexPaths = [NSMutableArray arrayWithCapacity:1];
         int indexPathToDelete;
         
-        //test whether inserting or deleting
+        // Test whether inserting or deleting
         if ([typeOfChange isEqualToString:@"insert"]){
             
-            //loop through the sections of the equipment list to identify the index of the section
+            // Loop through the sections of the equipment list to identify the index of the section
             for (NSArray* subArray in self.equipUniqueArrayWithSections){
                 
+                
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 NSString* thisIsGrouping = [(EQREquipUniqueItem*)[subArray objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)];
+#pragma clang diagnostic pop
                 
                 if ([thisIsGrouping isEqualToString:sectionString]){
                     
-                    //found a match, remember the index
+                    // Found a match, remember the index
                     indexPathToDelete = (int)[self.equipUniqueArrayWithSections indexOfObject:subArray];
                     
-                    //loop through all items to build an array of indexpaths
+                    // Loop through all items to build an array of indexpaths
                     [(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                         
                         NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
@@ -970,24 +912,25 @@
                     }];
                 }
             }
-            
-            //do the insert
+            // Do the insert
             [self.myMasterScheduleCollectionView insertItemsAtIndexPaths:arrayOfIndexPaths];
-            
-            
         }else if([typeOfChange isEqualToString:@"delete"]) {
             
-            //loop through the sections of the equipment list to identify the index of the section
+            // Loop through the sections of the equipment list to identify the index of the section
             for (NSArray* subArray in self.equipUniqueArrayWithSections){
                 
+                
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 NSString* thisIsGrouping = [(EQREquipUniqueItem*)[subArray objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)];
+#pragma clang diagnostic pop
                 
                 if ([thisIsGrouping isEqualToString:sectionString]){
                     
-                    //found a match, remember the index
+                    // Found a match, remember the index
                     indexPathToDelete = (int)[self.equipUniqueArrayWithSections indexOfObject:subArray];
                     
-                    //loop through all items to build an array of indexpaths
+                    // Loop through all items to build an array of indexpaths
                     [(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                         
                         NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
@@ -995,30 +938,24 @@
                     }];
                 }
             }
-            
-            //do the deletions
+            // Do the deletions
             [self.myMasterScheduleCollectionView deleteItemsAtIndexPaths:arrayOfIndexPaths];
-            
-            
-            //        [self.equipCollectionView reloadData];
         }
     }
 }
 
--(void)raiseFlagThatAChangeHasBeenMade:(NSNotification*)note{
-    
+
+- (void)raiseFlagThatAChangeHasBeenMade:(NSNotification*)note{
     self.aChangeWasMade = YES;
 }
 
 
-
--(void)showScheduleRowQuickView:(NSNotification*)note{
-    
-    //create quickview scroll view
+- (void)showScheduleRowQuickView:(NSNotification*)note{
+    // Create quickview scroll view
     EQRQuickViewScrollVCntrllr* quickView = [[EQRQuickViewScrollVCntrllr alloc] initWithNibName:@"EQRQuickViewScrollVCntrllr" bundle:nil];
     self.myQuickViewScrollVCntrllr = quickView;
     
-    //instatiate first page subview
+    // Instatiate first page subview
     EQRQuickViewPage1VCntrllr* quickViewPage1 = [[EQRQuickViewPage1VCntrllr alloc] initWithNibName:@"EQRQuickViewPage1VCntrllr" bundle:nil];
     EQRQuickViewPage2VCntrllr* quickViewPage2 = [[EQRQuickViewPage2VCntrllr alloc] initWithNibName:@"EQRQuickViewPage2VCntrllr" bundle:nil];
     EQRQuickViewPage3VCntrllr* quickViewPage3 = [[EQRQuickViewPage3VCntrllr alloc] initWithNibName:@"EQRQuickViewPage3VCntrllr" bundle:nil];
@@ -1027,15 +964,8 @@
     self.myQuickViewScrollVCntrllr.myQuickViewPage2 = quickViewPage2;
     self.myQuickViewScrollVCntrllr.myQuickViewPage3 = quickViewPage3;
     
-    self.myScheduleRowQuickView = [[UIPopoverController alloc] initWithContentViewController:self.myQuickViewScrollVCntrllr];
-    self.myScheduleRowQuickView.delegate = self;
-    [self.myScheduleRowQuickView setPopoverContentSize:CGSizeMake(300.f, 502.f)];
-    
-
-    
-    //__________****** assign userInfo dic to ivar SEEMS WEIRD but requires the dic in the showRequestEditor method *********_______
+    //  Assign userInfo dic to ivar SEEMS WEIRD but requires the dic in the showRequestEditor method
     self.temporaryDicFromNestedDayCell = [NSDictionary dictionaryWithDictionary:[note userInfo]];
-    
     
     //initial setup for pages
     [quickViewPage1 initialSetupWithDic:self.temporaryDicFromNestedDayCell];
@@ -1044,19 +974,27 @@
     
     NSValue* valueOfRect = [[note userInfo] objectForKey:@"rectOfSelectedNestedDayCell"];
     CGRect selectedRect = [valueOfRect CGRectValue];
-
     CGRect rect1 = [self.view convertRect:selectedRect fromView:self.mainSubView];
     
-    //show popover  MUST use NOT allow using the arrow directin from below, keyboard may cover the textview
-    [self.myScheduleRowQuickView presentPopoverFromRect:rect1 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionDown animated:YES];
+    self.myQuickViewScrollVCntrllr.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [self.myQuickViewScrollVCntrllr popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionDown;
+    popover.sourceRect = rect1;
+    popover.sourceView = self.view;
     
-    //attach page 1 & 2
+    self.myQuickViewScrollVCntrllr.preferredContentSize = CGSizeMake(300.f, 502.f);
+    
+    [self presentViewController:self.myQuickViewScrollVCntrllr animated:YES completion:^{
+        [self.myQuickViewScrollVCntrllr.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    // Attach page 1 & 2
     [self.myQuickViewScrollVCntrllr.myContentPage1 addSubview:quickViewPage1.view];
     [self.myQuickViewScrollVCntrllr.myContentPage2 addSubview:quickViewPage2.view];
     [self.myQuickViewScrollVCntrllr.myContentPage3 addSubview:quickViewPage3.view];
     
     
-    //add gesture recognizers
+    // Add gesture recognizers
     UISwipeGestureRecognizer* swipeLeftGestureOnQuickview = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideLeft:)];
     swipeLeftGestureOnQuickview.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.myQuickViewScrollVCntrllr.myContentPage1 addGestureRecognizer:swipeLeftGestureOnQuickview];
@@ -1072,100 +1010,57 @@
     UISwipeGestureRecognizer* swipeRightGestureOnQuickview2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideRight:)];
     swipeRightGestureOnQuickview2.direction = UISwipeGestureRecognizerDirectionRight;
     [self.myQuickViewScrollVCntrllr.myContentPage3 addGestureRecognizer:swipeRightGestureOnQuickview2];
-    
-    
-    //_____presenting the popover must be delayed (why?????)
-    [self performSelector:@selector(mustDelayThePresentationOfAPopOver:) withObject:[note userInfo] afterDelay:0.1];
-    
 }
 
 
--(void)mustDelayThePresentationOfAPopOver:(NSDictionary*)userInfo{
+- (void)showRequestEditor:(NSNotification*)note{
     
-    //it just doesn't work without a delay
-    
-    //assign target of popover's "edit request" button
-    [self.myQuickViewScrollVCntrllr.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventTouchUpInside];
-    
-    
-    
-}
-
-
--(void) showRequestEditor:(NSNotification*)note{
-    
-    //dismiss any popovers that may exist (ie the quickview when "duplicate" is tapped)
-    [self.myScheduleRowQuickView dismissPopoverAnimated:YES];
-    self.myScheduleRowQuickView = nil;
-    
-    
-   
-    
-    EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
-    
-    //prevent edges from extending beneath nav and tab bars
-    editorViewController.edgesForExtendedLayout = UIRectEdgeNone;
-    
-    //initial setup
-    [editorViewController initialSetupWithInfo:[NSDictionary dictionaryWithDictionary:note.userInfo]];
-    
-    //assign editor's keyID property
-//    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
-    
-    
-    
-    //______1_______pushes from the side and preserves navigation controller
-//    [self.navigationController pushViewController:editorViewController animated:YES];
-    
-    
-    //______2_______model pops up from below, removes navigiation controller
-    UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
-    //add cancel button
-    
-    [self presentViewController:newNavController animated:YES completion:^{
+    // Dismiss the Quickview popover that exists
+    [self dismissViewControllerAnimated:YES completion:^{
+        EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
         
+        // Prevent edges from extending beneath nav and tab bars
+        editorViewController.edgesForExtendedLayout = UIRectEdgeNone;
+        
+        // Initial setup
+        [editorViewController initialSetupWithInfo:[NSDictionary dictionaryWithDictionary:note.userInfo]];
+        
+        // Assign editor's keyID property
+        //    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
+        
+        // Modal pops up from below, removes navigiation controller
+        UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
+        
+        [self presentViewController:newNavController animated:YES completion:^{  }];
     }];
 }
 
 
--(IBAction)showRequestEditorFromQuickView:(id)sender{
+- (IBAction)showRequestEditorFromQuickView:(id)sender{
     
-    //dismiss the quickView popover
-    [self.myScheduleRowQuickView dismissPopoverAnimated:YES];
-    self.myScheduleRowQuickView = nil;
-    
-    EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
-    
-    //prevent edges from extending beneath nav and tab bars
-    editorViewController.edgesForExtendedLayout = UIRectEdgeTop;
-    
-    //initial setup
-    [editorViewController initialSetupWithInfo:self.temporaryDicFromNestedDayCell];;
-    
-    //assign editor's keyID property
-    //    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
-    
-    
-    
-    //______1_______pushes from the side and preserves navigation controller
-    //    [self.navigationController pushViewController:editorViewController animated:YES];
-    
-    
-    //______2_______model pops up from below, removes navigiation controller
-    UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
-    //add cancel button
-    
-    [self presentViewController:newNavController animated:YES completion:^{
+    // Dismiss the quickView popover
+    [self dismissViewControllerAnimated:YES completion:^{
+        EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
         
+        // Prevent edges from extending beneath nav and tab bars
+        editorViewController.edgesForExtendedLayout = UIRectEdgeTop;
+        
+        // Initial setup
+        [editorViewController initialSetupWithInfo:self.temporaryDicFromNestedDayCell];;
+        
+        // Assign editor's keyID property
+        //editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
+        
+        // Modal pops up from below, removes navigiation controller
+        UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
+        
+        [self presentViewController:newNavController animated:YES completion:^{ }];
     }];
-    
 }
-
 
 
 #pragma mark - handle movement of nested day cells
-
--(void)longPressMoveNestedDayCell:(NSNotification*)note{
+- (void)longPressMoveNestedDayCell:(NSNotification*)note{
     
     UIGestureRecognizer* gesture = [[note userInfo] objectForKey:@"gesture"];
     CGRect frameSize = [[[note userInfo] objectForKey:@"frameSizeValue"] CGRectValue];
@@ -1179,76 +1074,63 @@
         self.movingNestedCellView = [[UIView alloc] initWithFrame:frameSize];
         self.movingNestedCellView.backgroundColor = myCellColor;
         
-        //expand the rect itself to new size
+        // Expand the rect itself to new size
         [UIView animateWithDuration:0.25 animations:^{
-            
             self.movingNestedCellView.frame = CGRectMake(frameSize.origin.x - 20, frameSize.origin.y - 10, frameSize.size.width + 40, frameSize.size.height + 20);
-            
             self.movingNestedCellView.layer.cornerRadius = 5;
         }];
 
-        
-        
         [self.mainSubView addSubview:self.movingNestedCellView];
     }
     
     if (gesture.state == UIGestureRecognizerStateChanged){
         
-        //get the y value
+        // Get the y value
         CGPoint thisPoint = [gesture locationInView:self.mainSubView];
         
-        //add 15 pts becasue origin is about the touch... plus a little sumptin' sumptin'
+        // Add 15 pts becasue origin is about the touch... plus a little sumptin' sumptin'
         float valueWithHalfHeight = thisPoint.y + (EQRScheduleItemHeightForDay * 0.5) + 10;
         
-        //move only in increments equal to the cell height
+        // Move only in increments equal to the cell height
         valueWithHalfHeight = valueWithHalfHeight / EQRScheduleItemHeightForDay;
         int newValueInt = valueWithHalfHeight;
         float newValueExpanded = newValueInt * EQRScheduleItemHeightForDay;
         
-        //add in the scroll view offset from the collection view
+        // Add in the scroll view offset from the collection view
         CGPoint scrollViewOffsetPoint = self.myMasterScheduleCollectionView.contentOffset;
         float scrollViewOffsetY = (int)scrollViewOffsetPoint.y % (int)EQRScheduleItemHeightForDay;
         newValueExpanded = newValueExpanded - scrollViewOffsetY;
         
-        //subtract a further 10pnts to get the coordinates for the view to sync with our increment (based on origin of the collection view)
+        // Subtract a further 10pnts to get the coordinates for the view to sync with our increment (based on origin of the collection view)
         newValueExpanded = newValueExpanded - 10;
         
 
-        //add back into it, the resize adjustment
+        // Add back into it, the resize adjustment
         newValueExpanded = newValueExpanded - 10;
         
-        //create modified rect with new y value...
+        // Create modified rect with new y value...
         CGRect thisRect = CGRectMake(self.movingNestedCellView.frame.origin.x, newValueExpanded, self.movingNestedCellView.frame.size.width, self.movingNestedCellView.frame.size.height);
         
-        //assign to moving cell ivar
+        // Assign to moving cell ivar
         self.movingNestedCellView.frame = thisRect;
-        
     }
     
-    
     if (gesture.state == UIGestureRecognizerStateEnded){
-        
         NSString* equipUniqueItem_foreignKey;
         NSString* equipTitleItem_foreignKey;
         
-        //change equipKeyID on requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins
+        // Change equipKeyID on requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins
         EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
         
-        //use the touch location to derive the target equipItem from the self.equipUniqueArrayWithSections ivar
-        //we know the section from the supplied indexPath...
-        //_______Use the center of the moving nested cell view_______
+        // Use the touch location to derive the target equipItem from the self.equipUniqueArrayWithSections ivar
+        // We know the section from the supplied indexPath...
+        // Use the center of the moving nested cell view
         CGPoint thatPoint = self.movingNestedCellView.center;
         
-        //144 is the distance between the collectionView and the top of the view  //80 is original value
-        //must also add in the collection view offset
+        // 144 is the distance between the collectionView and the top of the view  //80 is original value
+        // Must also add in the collection view offset
         //______!!!!!!  need to add in the added distance of the VC prompt with in demo mode   !!!!_______
         int addedYValueForPromptInNavItem = 0;
-//        if ([[EQRModeManager sharedInstance] isInDemoMode]){
-//            addedYValueForPromptInNavItem = 30;
-//        }
-//        if (self.filterIsOnFlag == YES){
-//            addedYValueForPromptInNavItem = addedYValueForPromptInNavItem - self.mainSubViewTopConstraint.constant;
-//        }
         
         CGPoint offsetPoint = self.myMasterScheduleCollectionView.contentOffset;
         int newRowInt = (((thatPoint.y - 80) + offsetPoint.y) - addedYValueForPromptInNavItem) / EQRScheduleItemHeightForDay;
@@ -1257,15 +1139,13 @@
             
             if ([thisJoin.key_id isEqualToString:joinKey_id]){
                 
-                //found a match
-                
                 equipTitleItem_foreignKey =[(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] equipTitleItem_foreignKey];
                 
-                
-                //if titleKey doesn't match the original title key, then pause and give warning in an alert view
+                // If titleKey doesn't match the original title key,
+                // then pause and give warning in an alert view
                 if (![equipTitleItem_foreignKey isEqualToString:joinTitleKey_id]){
                     
-                    //save joinkey and indexpath to use in alert delegate method
+                    // Save joinkey and indexpath to use in alert delegate method
                     self.thisTempJoinKey = joinKey_id;
                     self.thisTempIndexPath = indexPathForRowCell;
                     self.thisTempNewRowInt = newRowInt;
@@ -1284,12 +1164,12 @@
                     [alert addAction:alertCancel];
                     [self presentViewController:alert animated:YES completion:^{ }];
                     
-                }else{  //titleKey remains the same
+                }else{  // TitleKey remains the same
                     
-                    //alert if selected an item that has serious service issues
+                    // Alert if selected an item that has serious service issues
                     if ([[(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] status_level] integerValue] >= EQRThresholdForSeriousIssue){
                         
-                        //save joinkey and indexpath to use in alert delegate method
+                        // Save joinkey and indexpath to use in alert delegate method
                         self.thisTempJoinKey = joinKey_id;
                         self.thisTempIndexPath = indexPathForRowCell;
                         self.thisTempNewRowInt = newRowInt;
@@ -1308,7 +1188,7 @@
                         [alert addAction:alertCancel];
                         [self presentViewController:alert animated:YES completion:^{  }];
                         
-                    }else{  //continue as planned
+                    }else{  // Continue as planned
                         
                         // Now update the equipUnique and equipTitle values
                         equipUniqueItem_foreignKey = [(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] key_id];
@@ -1316,7 +1196,7 @@
                         thisJoin.equipUniqueItem_foreignKey = equipUniqueItem_foreignKey;
                         thisJoin.equipTitleItem_foreignKey = equipTitleItem_foreignKey;
                         
-                        //Then reload the collection views in the former and new rowCells
+                        // Then reload the collection views in the former and new rowCells
                         [self.myMasterScheduleCollectionView reloadData];
                         
                         // WebData query to change equipKeyID on schedule_equip_join (or delete previous and create a new one)
@@ -1342,7 +1222,6 @@
     }
     
     if ((gesture.state == UIGestureRecognizerStateCancelled) || (gesture.state ==UIGestureRecognizerStateFailed)){
-        
     }
 }
 
@@ -1361,7 +1240,7 @@
         
         if ([thisJoin.key_id isEqualToString:joinKey_id]){
             
-            //now update the equipUnique and equipTitle values
+            // Now update the equipUnique and equipTitle values
             equipUniqueItem_foreignKey = [(EQREquipUniqueItem*)[[self.equipUniqueArrayWithSections objectAtIndex:indexPathForRowCell.section] objectAtIndex:newRowInt] key_id];
             
             thisJoin.equipUniqueItem_foreignKey = equipUniqueItem_foreignKey;
@@ -1370,7 +1249,7 @@
             
             thisJoin.equipTitleItem_foreignKey = equipTitleItem_foreignKey;
             
-            //then reload the collection views in the former and new rowCells
+            // Then reload the collection views in the former and new rowCells
             [self.myMasterScheduleCollectionView reloadData];
             
             // WebData query to change equipKeyID on schedule_equip_join (or delete previous and create a new one)
@@ -1395,90 +1274,65 @@
 
 - (void)cancelLongPressAction {
     [self.movingNestedCellView removeFromSuperview];
-    //make original cell visible again
+    // Make original cell visible again
     [self.myMasterScheduleCollectionView reloadData];
 }
 
 
 #pragma mark - collection view data source methods
-
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
-    //DECIDE WHICH COLLECTION VIEW SHOULD BE AFFECTED
-    
+    //Decide which collection should be affected
     if (collectionView == self.myMasterScheduleCollectionView){
-        
         if ([self.equipUniqueArrayWithSections count] <= section){
             return 0;
         }
         if ([(NSArray *)[self.equipUniqueArrayWithSections objectAtIndex:section] count] == 0){
             return 0;
         }
-        
         // Test if this section is flagged to be collapsed
         EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
-        
-//        NSLog(@"count of equipUniqueArrayWithSections: %lu", [self.equipUniqueArrayWithSections count]);
-//        if ([self.equipUniqueArrayWithSections count] >= section + 1){
-//            NSLog(@"count of items in section index: %lu", [[self.equipUniqueArrayWithSections objectAtIndex:section] count]);
-//        }
-        
-        
         EQREquipUniqueItem* sampleItem = [[self.equipUniqueArrayWithSections objectAtIndex:section] objectAtIndex:0];
-        
-        //loop through array of hidden sections
+        // Loop through array of hidden sections
         for (NSString* objectSection in requestManager.arrayOfEquipSectionsThatShouldBeVisibleInSchedule){
             
+            
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             if ([[sampleItem performSelector:NSSelectorFromString(EQRScheduleGrouping)] isEqualToString:objectSection]){
-                
                 return [(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:section] count];
             }
+#pragma clang diagnostic pop
         }
-        
-        //otherwise...
+        // Otherwise...
         return 0;
-        
     } else if (collectionView == self.myNavBarCollectionView){
-        
         return [self.equipUniqueCategoriesList count];
-        
-    } else {  //must be self.myDateBarCollection
-        
+    } else {  // Must be self.myDateBarCollection
         return 31;
     }
-    
 }
 
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     
-    //DECIDE WHICH COLLECTION VIEW SHOULD BE AFFECTED
-    
+    // Decide which collection should be affected
     if (collectionView == self.myMasterScheduleCollectionView){
-        
         return [self.equipUniqueArrayWithSections count];
-        
     } else if (collectionView == self.myNavBarCollectionView){
-        
         return 1;
-        
-    }else{   //must be self.myDateBarCollection
-        
+    }else{   // Must be self.myDateBarCollection
         return 1;
     }
 }
 
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
     static NSString* CellIdentifier = @"Cell";
-
-    
-    //DECIDE WHICH COLLECTION VIEW SHOULD BE AFFECTED
-    
+    // Decide which collection should be affected
     if (collectionView == self.myMasterScheduleCollectionView){
         
-        //FOR Row Cell
+        // For Row Cell
         EQRScheduleRowCell* cell = [self.myMasterScheduleCollectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
         
         for (UIView* view in cell.contentView.subviews){
@@ -1486,21 +1340,21 @@
             //____!!!!!!  SEE below
             [view removeFromSuperview];
             
-            //also remove notifications
+            // Also remove notifications
             [[NSNotificationCenter defaultCenter] removeObserver:cell];
         }
         
-        //and reset the cell's background color...
+        // And reset the cell's background color...
         cell.backgroundColor = [UIColor whiteColor];
         
-        //get the item name and distinquishing ID from the nested array
+        // Get the item name and distinquishing ID from the nested array
         NSString* myTitleString = [NSString stringWithFormat:@"%@  #%@",
                                    [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] short_name],
                                    [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] distinquishing_id]];
         
         [cell initialSetupWithTitle:myTitleString equipKey:[(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id] indexPath:indexPath dateForShow:self.dateForShow];
         
-        //modify the background color to have alternate colors in rows
+        // Modify the background color to have alternate colors in rows
         if (indexPath.row % 2){
             //odd
             EQRColors* myColors = [EQRColors sharedInstance];
@@ -1510,30 +1364,30 @@
         //_____!!!!!  MAYBE instead of removing the contentViewController and reloading every time, we can just alter the
         //_____!!!!!  the contentViewController as necessary ???
         //_____!!!!! in the interest of smoother scrolling
-        //add content view from xib
+        // Add content view from xib
         EQRScheduleCellContentVCntrllr* myContentViewController = [[EQRScheduleCellContentVCntrllr alloc] initWithNibName:@"EQRScheduleCellContentVCntrllr" bundle:nil];
         
-        //tell cell content view if it is in the current month
+        // Tell cell content view if it is in the current month
         if (self.dateForShowIsNOTCurrentMonth){
             myContentViewController.dateForShowIsCurrentMonth = NO;
         }else{
             myContentViewController.dateForShowIsCurrentMonth = YES;
         }
         
-        //assign to cell's ivar
+        // Assign to cell's ivar
         cell.cellContentVC = myContentViewController;
         //add subview
         [cell.contentView addSubview:myContentViewController.view];
-        //move to rear
+        // Move to rear
         [cell.contentView sendSubviewToBack:myContentViewController.view];
         
-        //define if narrow or not
+        // Define if narrow or not
         [cell signalToAssignNarrow];
         
-        //change label AFTER adding it to the view else defaults to XIB file
+        // Change label AFTER adding it to the view else defaults to XIB file
         myContentViewController.myRowLabel.text = myTitleString;
         
-        //offset week vertical line indicators
+        // Offset week vertical line indicators
         myContentViewController.weekIndicatorOffset = self.weekIndicatorOffset;
         UIInterfaceOrientation orientationOnLaunch = [[UIApplication sharedApplication] statusBarOrientation];
         if (UIInterfaceOrientationIsPortrait(orientationOnLaunch)) {
@@ -1542,8 +1396,8 @@
             myContentViewController.weeksLeadingConstraint.constant = EQRScheduleLengthOfEquipUniqueLabel + (EQRScheduleItemWidthForDay * self.weekIndicatorOffset);
         }
         
-        //determine if service issues should be visible or hidden (default hidden)
-        //does a servcie issue exist?
+        // Determine if service issues should be visible or hidden (default hidden)
+        // Does a servcie issue exist?
         NSString* issue_short_name = [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] issue_short_name];
         
         NSString* statusLevel = [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] status_level];
@@ -1551,27 +1405,26 @@
         
         if ([issue_short_name isEqualToString:@""]){
             
-            //no issues, hide button
+            // No issues, hide button
             myContentViewController.serviceIssuesButton.hidden = YES;
             
-        } else if(statusLevelInt < EQRThresholdForDescriptiveNote){   //service issue exists but it is resolved, so don't show
+        } else if(statusLevelInt < EQRThresholdForDescriptiveNote){   //Service issue exists but it is resolved, so don't show
             
             myContentViewController.serviceIssuesButton.hidden = YES;
             
         }else{
-            
-            //show issue button
+            // Show issue button
             myContentViewController.serviceIssuesButton.hidden = NO;
             [myContentViewController.serviceIssuesButton setTitle:issue_short_name forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
             
-            //set color of button
+            // Set color of button
             EQRColors* colors = [EQRColors sharedInstance];
             
-            if (statusLevelInt >= EQRThresholdForSeriousIssue){  //outstanding issue that should prevent selection
+            if (statusLevelInt >= EQRThresholdForSeriousIssue){  //Outstanding issue that should prevent selection
                 
                 [myContentViewController.serviceIssuesButton setTitleColor:[colors.colorDic objectForKey:EQRColorIssueSerious] forState:UIControlStateNormal & UIControlStateSelected & UIControlStateHighlighted];
                 
-                //change background color
+                // Change background color
                 cell.backgroundColor = [UIColor lightGrayColor];
                 
             }else if((statusLevelInt >= EQRThresholdForMinorIssue) && (statusLevelInt < EQRThresholdForSeriousIssue)){  //equip is flawed but functional
@@ -1583,28 +1436,26 @@
             }
         }
         
-        //text label on issue button must be altered for two lines
+        // Text label on issue button must be altered for two lines
         myContentViewController.serviceIssuesButton.titleLabel.numberOfLines = 2;
         myContentViewController.serviceIssuesButton.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         
-        
         return cell;
-        
     } else if (collectionView == self.myNavBarCollectionView){
         
-        //FOR Nav Bar
+        // For Nav Bar
         EQRScheduleNavBarCell* cell2 = [self.myNavBarCollectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
         
         for (UIView* view in cell2.contentView.subviews){
             [view removeFromSuperview];
         }
         
-        //and reset the cell's background color...
+        // And reset the cell's background color...
         cell2.backgroundColor = [UIColor whiteColor];
         
         [cell2 initialSetupWithTitle:(NSString*)[self.equipUniqueCategoriesList objectAtIndex:indexPath.row]];
 
-        //modify the background color to have alternate colors in rows
+        // Modify the background color to have alternate colors in rows
         if (indexPath.row % 2){
             //odd
             cell2.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1.0];
@@ -1612,7 +1463,7 @@
         
         return cell2;
         
-    }else{  //must be self.myDateBarCollection
+    }else{  // Must be self.myDateBarCollection
         
         static NSString* CellIdentifier = @"CellForDateBar";
         EQRScheduleNestedDateBarCell* cell = [self.myDateBarCollection dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
@@ -1651,9 +1502,9 @@
             letterString = @"Su";
         }
         
-        NSString *dateString = [NSString stringWithFormat:@"%u", (NSInteger)indexPath.row + 1];
+        NSString *dateString = [NSString stringWithFormat:@"%ld", (long)indexPath.row + (long)1];
         
-        //delete the datestring if the month doesn't extend that far
+        // Delete the datestring if the month doesn't extend that far
         if (!letterString){
             dateString = @"";
         }
@@ -1667,26 +1518,28 @@
 
 
 #pragma mark - section header data source methods
-
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
     
     static NSString* CellIdentifier = @"SupplementaryCell";
     EQRHeaderCellForSchedule* cell = [self.myMasterScheduleCollectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    //remove subviews
+    // Remove subviews
     for (UIView* thisSubview in cell.contentView.subviews){
         [thisSubview removeFromSuperview];
     }
     
-    //DECIDE WHICH COLLECTION VIEW SHOULD BE AFFECTED
+    // DECIDE WHICH COLLECTION VIEW SHOULD BE AFFECTED
     
     if (collectionView == self.myMasterScheduleCollectionView){
         
-        //_____test whether the section is collapsed or expanded
+        // Test whether the section is collapsed or expanded
         BOOL iAmVisible = NO;
         EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
         for (NSString* sectionString in requestManager.arrayOfEquipSectionsThatShouldBeVisibleInSchedule){
             
+            
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             if ([sectionString isEqualToString:[(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)]]){
                 
                 //found a match in the array of visible sections
@@ -1694,44 +1547,39 @@
                 
                 break;
             }
+#pragma clang diagnostic pop
         }
         
-        //inverse the logic
+        // Inverse the logic
         BOOL iAmHidden = abs(1 - iAmVisible);
         
-        //get the category or subcategory for a sample item in the nested array
+        // Get the category or subcategory for a sample item in the nested array
+        
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         NSString* thisTitleString = [(EQREquipUniqueItem*)[(NSArray*)[self.equipUniqueArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:0] performSelector:NSSelectorFromString(EQRScheduleGrouping)];
+#pragma clang diagnostic pop
         
-        //cell's initial setup method with label
+        // Cell's initial setup method with label
         [cell initialSetupWithTitle:thisTitleString isHidden:iAmHidden isSearchResult:NO];
-        
-        
-        
     } else if (collectionView == self.myNavBarCollectionView){
-        
-        //no action necessary
-        
-    }else{  //must be self.myDateBarCollection
-        
-        //no action necessary
+        // No action necessary
+    }else{  // Must be self.myDateBarCollection
+        // No action necessary
     }
-    
     return cell;
 }
 
 
-
 #pragma mark - change in orientation methods
-
-
 //!!!!_______       THESE METHODS ARE DEPRECATED IN IOS 8!!!  _______________
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
         
-    //inform schedulecellcontentVcntrllrs about change in orientation
+    // Inform schedulecellcontentVcntrllrs about change in orientation
     NSDictionary* dic = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:toInterfaceOrientation] forKey:@"orientation"];
     [[NSNotificationCenter defaultCenter] postNotificationName:EQRRefreshViewWhenOrientationRotates object:nil userInfo:dic];
     
-    //update navBarDates view
+    // Update navBarDates view
     if ((toInterfaceOrientation == UIInterfaceOrientationPortrait) || (toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)){
         
         self.navBarDates.isNarrowFlag = YES;
@@ -1762,13 +1610,14 @@
 }
 
 
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
     
     [self.myMasterScheduleCollectionView performBatchUpdates:nil completion:nil];
     [self.myNavBarCollectionView performBatchUpdates:nil completion:nil];
     [self.myDateBarCollection performBatchUpdates:nil completion:nil];
 
-    //enumerate through visible cells and invalidate the layout to force the update of nested cells
+    // Enumerate through visible cells and invalidate the layout
+    // to force the update of nested cells
     [[self.myMasterScheduleCollectionView visibleCells] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
        
         [[[(EQRScheduleRowCell*)obj myUniqueItemCollectionView] collectionViewLayout] invalidateLayout];
@@ -1779,31 +1628,23 @@
 
 
 #pragma mark - collection view delegate methods
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    // DECIDE WHICH COLLECTION VIEW SHOULD BE AFFECTED
 
--(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    
-    //DECIDE WHICH COLLECTION VIEW SHOULD BE AFFECTED
-    
     if (collectionView == self.myMasterScheduleCollectionView){
-        
         //no action necessary
-        
     } else if (collectionView == self.myNavBarCollectionView){
-        
         if (self.isSuppressingNavBarSelection) return;
         
         EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
         
         //_____********  must close any currently open sections first, then open the selected one  ********____
         
-        //update request Manager to do the action and keep persistence
+        // Update request Manager to do the action and keep persistence
         [requestManager collapseOrExpandSectionInSchedule:[self.equipUniqueCategoriesList objectAtIndex:indexPath.row]];
-        
     }else{  //must be self.myDateBarCollection
-        
-        
     }
-    
 }
 
 #pragma mark - collection view flow layout delegate methods
@@ -1814,66 +1655,53 @@
     
     if (collectionView == self.myMasterScheduleCollectionView){
         
-        //for EquipUnique Stuff
+        // For EquipUnique Stuff
         //______******   a better implementation of this is here:   ******_______
         //  http://stackoverflow.com/questions/13556554/change-uicollectionviewcell-size-on-different-device-orientations
-        //uses two different flowlayout objects, one for each orientation
+        // Uses two different flowlayout objects, one for each orientation
         
         UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
         
         if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
-            
-            //set size
+            // Set size
             return CGSizeMake(768.f, 30.f);
-            
         }else{
-            
-            //set size
+            // Set size
             return CGSizeMake(1024.f, 30.f);
         }
-        
     } else if (collectionView == self.myNavBarCollectionView){
         
-        //for NAV BAR
-        //size of cell is based available length of collectoin view divided by count in array,
+        // For NAV BAR
+        // Size of cell is based available length of collectoin view divided by count in array,
         
         float widthOfMe;
-        
         UIInterfaceOrientation orientationOnLunch = [[UIApplication sharedApplication] statusBarOrientation];
         
         if (UIInterfaceOrientationIsPortrait(orientationOnLunch)) {
-            
             widthOfMe = 768.f / [self.equipUniqueCategoriesList count];
-            
         }else{
-            
             widthOfMe = 1024.f / [self.equipUniqueCategoriesList count];
-
         }
-        
         return CGSizeMake(widthOfMe, 50);
-        
-    }else{   //must be self.myNavBarCollection
-        
-        //_____doesn't use flow layout so this doesn't get called??? maybe...
+    }else{   // Must be self.myNavBarCollection
+        // Doesn't use flow layout so this doesn't get called??? maybe...
         return CGSizeMake(0, 0);
     }
 }
 
 
 #pragma mark - EQRWebData Delegate methods
-
 -(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
     
-    //abort if selector is unrecognized
+    //a Abort if selector is unrecognized
     if (![self respondsToSelector:action]){
         NSLog(@"cannot perform selector: %@", NSStringFromSelector(action));
         return;
     }
     
-    //test if filter is on, act accordingly???
+    // Test if filter is on, act accordingly???
 
-    //save array to requestManager (for rowCell to access it as needed)
+    // Save array to requestManager (for rowCell to access it as needed)
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
     
     NSMutableArray* newArray = [NSMutableArray arrayWithArray:requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins];
@@ -1882,8 +1710,8 @@
     
     requestManager.arrayOfMonthScheduleTracking_EquipUnique_Joins = [NSArray arrayWithArray:newArray];
     
-    //should do this only once every 1 second (with NSTimer) to prevent the 1000+ calls to reload
-    //if the timer currently exists, don't do anything...
+    // Should do this only once every 1 second (with NSTimer) to prevent the 1000+ calls to reload
+    // If the timer currently exists, don't do anything...
     
     if (![self.timerForReloadCollectionView isValid]){
         
@@ -1894,57 +1722,28 @@
 }
 
 -(void)timerFiredReloadCollectionView{
-    
     [self.myMasterScheduleCollectionView reloadData];
 }
 
 
-#pragma mark - popover delegate methods
-
--(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
-    
-    if (popoverController == self.myDayDatePicker){
-        
-        self.myDayDatePicker = nil;
-        
-    }else if (popoverController == self.myStaffUserPicker){
-        
-        self.myStaffUserPicker = nil;
-        
-    }else if (popoverController == self.myScheduleRowQuickView){
-        
-        self.myScheduleRowQuickView = nil;
-        
-    }else if (popoverController == self.myClassPicker){
-        
-        self.myClassPicker = nil;
-    }
-}
-
 #pragma mark - view disappear
-
 - (void)viewWillDisappear:(BOOL)animated{
     
-    //___!!!!  stop the async data loading...
+    // Stop the async data loading...
     [self.myWebData stopXMLParsing];
     
-    //tell view to reload if it aborts loading
+    // Tell view to reload if it aborts loading
     if (self.isLoadingEquipDataFlag){
         self.aChangeWasMade = YES;
     }
-    
     [super viewWillDisappear:animated];
 }
 
 #pragma mark - memory warning
-
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
-#pragma clang diagnostic pop
 
 @end

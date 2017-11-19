@@ -94,10 +94,10 @@
     //    self.equipCollectionView.allowsSelection = NO;
     
     //add the cancel button
-    UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelTheThing:)];
-    
-    //add button to the current navigation item
-    [self.navigationItem setRightBarButtonItem:cancelButton];
+//    UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelTheThing:)];
+//    
+//    //add button to the current navigation item
+//    [self.navigationItem setRightBarButtonItem:cancelButton];
     
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){

@@ -288,7 +288,6 @@
     // BUG-to-Fix here EXC_BAD_ACCESS
     // Experience after tapping quickly between two requests in the master/Left column of inbox
     // but not too quickly
-    NSLog(@"EQRScheduleRequestManager > retreiveAllEquip2 about to assign arrayWithSubArrays");
     self.arrayOfEquipUniqueItemsWithSubArrays = arrayWithSubArrays;
     
     NSMutableArray *arrayToReturn = [NSMutableArray arrayWithArray:self.arrayOfEquipUniqueItemsAll];

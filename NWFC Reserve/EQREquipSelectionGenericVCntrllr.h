@@ -16,28 +16,26 @@
 
 
 @interface EQREquipSelectionGenericVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREquipOptionsDelegate, EQRNoteDelegate, EQRMiscEditVCDelegate, UIPopoverControllerDelegate, EQREquipSelectionDelegate>{
-    
 }
-
-
 
 @property (nonatomic, strong) IBOutlet UICollectionView* equipCollectionView;
 @property (nonatomic, strong) IBOutlet UIButton* continueButton;
 @property BOOL isInPopover;
 
--(void)overrideSharedRequestManager:(id)privateRequestManager;
+- (void)overrideSharedRequestManager:(id)privateRequestManager;
+- (IBAction)cancelTheThing:(id)sender;
 
 //equip options delegate method
--(void)optionsSelectionMade;
+- (void)optionsSelectionMade;
 
 //notes delegate method
--(void)retrieveNotesData:(NSString*)noteText;
+- (void)retrieveNotesData:(NSString*)noteText;
 
 //miscEditVC methods
--(void)receiveMiscData:(NSString *)miscItemText;
+- (void)receiveMiscData:(NSString *)miscItemText;
 
 //scheduleRequestManager delegate method
--(void)refreshTheCollectionWithType:(NSString *)type SectionArray:(NSArray *)array;
+- (void)refreshTheCollectionWithType:(NSString *)type SectionArray:(NSArray *)array;
 
 
 @end

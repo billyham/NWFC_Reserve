@@ -22,7 +22,7 @@
 #import "EQRMiscJoin.h"
 #import "EQRColors.h"
 
-@interface EQREquipSummaryGenericVCntrllr ()
+@interface EQREquipSummaryGenericVCntrllr () <UIPopoverPresentationControllerDelegate>
 
 @property (nonatomic, strong) NSString* rentorNameAtt;
 @property (nonatomic, strong) NSString* rentorPhoneAtt;
@@ -43,10 +43,6 @@
 @property (strong, nonatomic) IBOutlet UILabel* contactName;
 @property (strong, nonatomic) IBOutlet UILabel* contactPhone;
 @property (strong, nonatomic) IBOutlet UILabel* contactEmail;
-
-@property (strong, nonatomic) UIPopoverController* phonePopover;
-@property (strong, nonatomic) UIPopoverController* emailPopover;
-@property (strong, nonatomic) UIPopoverController *myContactPicker;
 
 @end
 
@@ -368,13 +364,15 @@
     EQREnterPhoneVC* phoneVC = [[EQREnterPhoneVC alloc] initWithNibName:@"EQREnterPhoneVC" bundle:nil];
     phoneVC.delegate = self;
     
-    self.phonePopover = [[UIPopoverController alloc] initWithContentViewController:phoneVC];
-    self.phonePopover.delegate = self;
-    [self.phonePopover setPopoverContentSize:CGSizeMake(320.f, 200.f)];
-    
     CGRect thisRect = [self.editPhoneButton.superview.superview convertRect:self.editPhoneButton.frame fromView:self.editPhoneButton.superview];
     
-    [self.phonePopover presentPopoverFromRect:thisRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
+    phoneVC.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [phoneVC popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight;
+    popover.sourceRect = thisRect;
+    popover.sourceView = self.view;
+    
+    [self presentViewController:phoneVC animated:YES completion:^{ }];
 }
 
 
@@ -397,8 +395,7 @@
     dispatch_async(queue, ^{
         EQRWebData* webData = [EQRWebData sharedInstance];
         [webData queryForStringwithAsync:@"EQAlterPhoneInContact.php" parameters:topArray completion:^(id object) {
-            [self.phonePopover dismissPopoverAnimated:YES];
-            self.phonePopover = nil;
+            [self dismissViewControllerAnimated:YES completion:^{ }];
         }];
     });
 }
@@ -409,13 +406,15 @@
     EQREnterEmail* emailVC = [[EQREnterEmail alloc] initWithNibName:@"EQREnterEmail" bundle:nil];
     emailVC.delegate = self;
     
-    self.emailPopover = [[UIPopoverController alloc] initWithContentViewController:emailVC];
-    self.emailPopover.delegate = self;
-    [self.emailPopover setPopoverContentSize:CGSizeMake(320.f, 200.f)];
-    
     CGRect thisRect = [self.editEmailButton.superview.superview convertRect:self.editEmailButton.frame fromView:self.editEmailButton.superview];
     
-    [self.emailPopover presentPopoverFromRect:thisRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
+    emailVC.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [emailVC popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft;
+    popover.sourceRect = thisRect;
+    popover.sourceView = self.view;
+    
+    [self presentViewController:emailVC animated:YES completion:^{ }];
 }
 
 
@@ -437,8 +436,7 @@
     dispatch_async(queue, ^{
         EQRWebData *webData = [EQRWebData sharedInstance];
         [webData queryForStringwithAsync:@"EQAlterEmailInContact.php" parameters:topArray completion:^(id object) {
-            [self.emailPopover dismissPopoverAnimated:YES];
-            self.emailPopover = nil;
+            [self dismissViewControllerAnimated:YES completion:^{  }];
         }];
     });
 }
@@ -452,18 +450,13 @@
     UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:contactPickerVC];
     [navController setNavigationBarHidden:YES];
     
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:navController];
-    self.myContactPicker = popOver;
-    self.myContactPicker.delegate = self;
+    navController.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [navController popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft;
+    popover.sourceRect = self.changeContactButton.frame;
+    popover.sourceView = self.view;
     
-    //set the size
-    [self.myContactPicker setPopoverContentSize:CGSizeMake(320, 550)];
-    
-    //get coordinates in proper view
-    
-    //present popOver
-    [self.myContactPicker presentPopoverFromRect:self.changeContactButton.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight animated:YES];
-    
+    [self presentViewController:navController animated:YES completion:^{ }];
 }
 
 
@@ -513,15 +506,11 @@
         self.contactPhone.textColor = [UIColor blackColor];
     }
     
-    //dismiss popover
-    [self.myContactPicker dismissPopoverAnimated:YES];
-    self.myContactPicker = nil;
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 
-
 #pragma mark - confirm button
-
 -(IBAction)confirm:(id)sender{
     
     EQRScheduleRequestManager* requestManager = [EQRScheduleRequestManager sharedInstance];
@@ -537,30 +526,10 @@
     
     //reset eveything back to 0 (which in turn sends an nsnotification)
     [requestManager dismissRequest:NO];
-    
 }
 
 
-#pragma mark - popover delegate methods
-
--(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
-    
-    if (popoverController == self.phonePopover){
-        
-        self.phonePopover = nil;
-        
-    }else if (popoverController == self.emailPopover){
-        
-        self.emailPopover = nil;
-        
-    }else if (popoverController == self.myContactPicker){
-        
-        self.myContactPicker = nil;
-        
-    }
-}
-
-
+#pragma mark - memory warning
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

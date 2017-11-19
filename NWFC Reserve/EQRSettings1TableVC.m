@@ -17,7 +17,7 @@
 #import "EQRQRCodeVC.h"
 
 
-@interface EQRSettings1TableVC () <EQRWebDataDelegate>
+@interface EQRSettings1TableVC () <EQRWebDataDelegate, UIPopoverPresentationControllerDelegate>
 
 //@property (strong, nonatomic) IBOutlet UIView* lockableItemsView;
 @property (strong, nonatomic) IBOutlet UILabel* termString;
@@ -27,8 +27,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *qrCodeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *qrItemNameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *qrItemNumberLabel;
-
-@property (strong, nonatomic) UIPopoverController* passwordPopover;
 
 @property (strong, nonatomic) EQRGenericTextEditor* genericTextEditor;
 @property (strong, nonatomic) EQRGenericBlockOfTextEditor *myGenericBlockTextEditor;
@@ -441,7 +439,6 @@
 -(IBAction)kioskModeDidChange:(id)sender{
     
     if (self.kioskModeSwitch.on){
-        
         EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
         NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
         NSString* setStringForDefaults;
@@ -452,7 +449,7 @@
         
         setStringForDefaults = @"yes";
         
-        //change user defaults with new string text
+        // change user defaults with new string text
         NSDictionary* newDic = [NSDictionary dictionaryWithObjectsAndKeys:
                                 setStringForDefaults, @"kioskModeIsOn"
                                 , nil];
@@ -461,28 +458,26 @@
         [defaults synchronize];
         
         [self.delegate kioskModeChanged:YES];
-        
     }else{
-        
-        //need password to change back to kiosk off
-        
+        // Need password to change back to kiosk off
         EQRPasswordEntryVC* passEntry = [[EQRPasswordEntryVC alloc] initWithNibName:@"EQRPasswordEntryVC" bundle:nil];
         passEntry.delegate = self;
         
-        UIPopoverController* passPopover = [[UIPopoverController alloc] initWithContentViewController:passEntry];
-        self.passwordPopover = passPopover;
-        self.passwordPopover.delegate = self;
-        [self.passwordPopover setPopoverContentSize:CGSizeMake(320.f, 300.f)];
-        
         CGRect thisRect = [self.kioskModeSwitch.superview.superview convertRect:self.kioskModeSwitch.frame fromView:self.kioskModeSwitch.superview];
+    
+        passEntry.modalPresentationStyle = UIModalPresentationPopover;
+        UIPopoverPresentationController *popoverPC = [passEntry popoverPresentationController];
+        popoverPC.permittedArrowDirections = UIPopoverArrowDirectionAny;
+        popoverPC.sourceRect = thisRect;
+        popoverPC.sourceView = self.kioskModeSwitch.superview;
+        popoverPC.delegate = self;
         
-        [self.passwordPopover presentPopoverFromRect:thisRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        [self presentViewController:passEntry animated:YES completion:^{ }];
     }
 }
 
 
-#pragma mark - password methods
-
+#pragma mark - password entry delegate methods
 -(void)passwordEntered:(BOOL)passwordSuccessful{
     
     if (passwordSuccessful){
@@ -505,9 +500,7 @@
         [defaults setObject:newDic forKey:@"kioskModeIsOn"];
         [defaults synchronize];
         
-        [self.passwordPopover dismissPopoverAnimated:YES];
-        self.passwordPopover = nil;
-        
+        [self dismissViewControllerAnimated:YES completion:^{ }];
         [self.delegate kioskModeChanged:NO];
     }
     
@@ -516,7 +509,6 @@
 -(void)changeUserInteractionAndAlphaForKioskMode:(BOOL)isInKioskMode{
     
     if (isInKioskMode == YES){
-        
         [self.demoModeSwitch setUserInteractionEnabled:NO];
         UITableViewCell *cell2 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
         UITableViewCell *cell3 = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
@@ -540,23 +532,14 @@
         cell3.alpha = 1.0;
         [cell4 setUserInteractionEnabled:YES];
         cell4.alpha = 1.0;
-        
     }
-    
 }
 
 
 #pragma mark - popover delegate methods
-
--(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
-    
-    if (popoverController == self.passwordPopover){
-        
-        self.passwordPopover = nil;
-        
-        //a failed password entry, should flip kiosk mode back
-        [self.kioskModeSwitch setOn:YES animated:YES];
-    }
+-(void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController {
+    // A failed password entry, should flip kiosk mode back
+    [self.kioskModeSwitch setOn:YES animated:YES];
 }
 
 #pragma mark - table view delegate methods
@@ -564,50 +547,30 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     if (indexPath.section == 1){
-        
         if (indexPath.row == 0){
-            
             [self tapInAdultTermField:nil];
-            
         }else if (indexPath.row == 1){
-            
             [self tapInCampField:nil];
-            
         }
-        
     }
     
     if (indexPath.section == 2){  //Email
-        
         if (indexPath.row == 0){   //Email Signature
-            
             [self tapInEmailSignatureField:nil];
-            
-            
         }
     }
     
     if (indexPath.section == 3){  // Print QR Code
-        
         if (indexPath.row == 0){ // Enter code
-            
             [self tapInQRCode];
-            
         }else if (indexPath.row == 1){  // Enter Name
-            
             [self tapInQRItemName];
-            
         }else if (indexPath.row == 2){ // Enter Number
-            
             [self tapInQRItemNumber];
-            
         }else if (indexPath.row == 3){  // Print Code
-            
             [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-            
             // Exit and show alert if the QR code property is nil
             if (self.myQRCode == nil){
-                
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Incomplete" message:@"Please enter an alphanumeric code before printing" preferredStyle:UIAlertControllerStyleAlert];
                 
                 UIAlertAction *alertCancel = [UIAlertAction actionWithTitle:@"Continue" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {  }];
@@ -622,17 +585,12 @@
             self.myQRVC.modalPresentationStyle = UIModalPresentationFormSheet;
             
             [self presentViewController:self.myQRVC animated:YES completion:^{
-               
                 [self.myQRVC initialSetupWithCode:self.myQRCode Name:self.myQRItemName Number:self.myQRItemNumber];
-                
             }];
             
         }
     }
 }
-
-
-
 
 
 //- (void)didReceiveMemoryWarning {

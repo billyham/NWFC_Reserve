@@ -11,6 +11,7 @@
 #import "EQRScheduleRequestManager.h"
 #import "EQRGlobals.h"
 #import "EQREquipSelectionGenericVCntrllr.h"
+#import "EQREquipSelectionFromReserveVC.h"
 #import "EQREditorDateVCntrllr.h"
 #import "EQREditorExtendedDateVC.h"
 #import "EQRModeManager.h"
@@ -129,11 +130,13 @@
 #pragma mark - childviewcontroller for dateview
 -(IBAction)receiveContinueAction:(id)sender{
     
-    EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
+//    EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
     
-    genericEquipVCntrllr.edgesForExtendedLayout = UIRectEdgeAll;
+    EQREquipSelectionFromReserveVC *equipVC = [[EQREquipSelectionFromReserveVC alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
     
-    [self.navigationController pushViewController:genericEquipVCntrllr animated:YES];
+    equipVC.edgesForExtendedLayout = UIRectEdgeAll;
+    
+    [self.navigationController pushViewController:equipVC animated:YES];
 }
 
 
