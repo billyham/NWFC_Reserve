@@ -37,7 +37,7 @@
 #import "EQRAlternateWrappperPriceMatrix.h"
 
 
-@interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate, UISearchBarDelegate, UISearchResultsUpdating, UISearchControllerDelegate, EQRPriceMatrixDelegate, EQRSigCaptureDelegate>
+@interface EQRCheckVCntrllr ()<AVCaptureMetadataOutputObjectsDelegate, UISearchBarDelegate, UISearchResultsUpdating, UISearchControllerDelegate, EQRPriceMatrixDelegate, EQRSigCaptureDelegate, UIPopoverPresentationControllerDelegate>
 
 @property (strong, nonatomic) EQRScheduleRequestItem* myScheduleRequestItem;
 @property (strong, nonatomic) EQRItineraryCellContent2VC *cellContent;
@@ -83,32 +83,33 @@
 @property double timeOfLastCallback;
 @property (strong, nonatomic) EQRContactNameItem *tempContact;
 
-//pricing widget
+// Pricing widget
 @property (strong, nonatomic) EQRTransaction *myTransaction;
 @property (strong, nonatomic) IBOutlet UIView *priceMatrixSubView;
 @property (strong, nonatomic) EQRPricingWidgetCheckInVC *priceWidget;
 
-//searchController
+// SearchController
 @property (strong, nonatomic) UISearchController *mySearchController;
 @property (strong, nonatomic) IBOutlet UIView *searchBoxView;
 @property (strong, nonatomic) NSArray *searchResultArrayOfEquipTitles;
 //@property (strong, nonatomic) NSArray *verticalConstraintsForSearchBar;
 //@property (strong, nonatomic) NSArray *horizontalConstraintsForSearchBar;
 
-//for staff user picker
-@property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
+// For staff user picker
+//@property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
+@property (strong, nonatomic) EQRStaffUserPickerViewController *staffUserPicker;
 
-//for qr code reader
+// For qr code reader
 @property(nonatomic, strong) AVCaptureSession *session;
 @property (nonatomic, strong) NSMutableSet* setOfAlreadyCapturedQRs;
 
-//for dist id picker
-@property (strong, nonatomic) UIPopoverController* distIDPopover;
-//@property (strong, nonatomic) EQRDistIDPickerTableVC* distIDPickerVC;
+// For dist id picker
+//@property (strong, nonatomic) UIPopoverController* distIDPopover;
+@property (strong, nonatomic) EQRDistIDPickerTableVC* distIDPickerVC;
 
-//for add item popover
+// For add item popover
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
-@property (strong, nonatomic) UIPopoverController* myEquipSelectionPopover;
+//@property (strong, nonatomic) UIPopoverController* myEquipSelectionPopover;
 @property (strong, nonatomic) IBOutlet UIButton* addButton;
 
 
@@ -1449,7 +1450,7 @@
 
 -(void)distIDPickerTapped:(NSNotification*)note{
     
-    //get cell's equipUniqueKey and IndexPath and button's frame?? UIButton??
+    // Get cell's equipUniqueKey and IndexPath and button's frame?? UIButton??
 //    NSString* joinKey_ID = [[note userInfo] objectForKey:@"joinKey_id"];
     NSString* equipTitleItem_foreignKey = [[note userInfo] objectForKey:@"equipTitleItem_foreignKey"];
     NSString* equipUniqueItem_foreignKey = [[note userInfo] objectForKey:@"equipUniqueItem_foreignKey"];
@@ -1459,29 +1460,27 @@
     
     
     EQRDistIDPickerTableVC* distIDPickerVC = [[EQRDistIDPickerTableVC alloc] initWithNibName:@"EQRDistIDPickerTableVC" bundle:nil];
-//    self.distIDPickerVC = distIDPickerVC;
+    self.distIDPickerVC = distIDPickerVC;
     
-    //initial setup
+    // Initial setup
     [distIDPickerVC initialSetupWithOriginalUniqueKeyID:equipUniqueItem_foreignKey equipTitleKey:equipTitleItem_foreignKey scheduleItem:self.myScheduleRequestItem];
     distIDPickerVC.delegate = self;
     
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:distIDPickerVC];
-    [popOver setPopoverContentSize:CGSizeMake(320.f, 300.f)];
-    popOver.delegate = self;
-    self.distIDPopover = popOver;
-    
-//    CGRect fixedRect1 = [thisButton.superview convertRect:buttonRect fromView:thisButton];
     CGRect fixedRect2 = [thisButton.superview.superview convertRect:buttonRect fromView:thisButton.superview];
     CGRect fixedRect3 = [thisButton.superview.superview.superview convertRect:fixedRect2 fromView:thisButton.superview.superview];
     CGRect fixedrect4 = [thisButton.superview.superview.superview.superview convertRect:fixedRect3 fromView:thisButton.superview.superview.superview];
     CGRect fixedRect5 = [thisButton.superview.superview.superview.superview.superview convertRect:fixedrect4 fromView:thisButton.superview.superview.superview.superview];
     CGRect fixedRect6 = [thisButton.superview.superview.superview.superview.superview.superview convertRect:fixedRect5 fromView:thisButton.superview.superview.superview.superview.superview];
     CGRect fixedRect7 = [thisButton.superview.superview.superview.superview.superview.superview.superview convertRect:fixedRect6 fromView:thisButton.superview.superview.superview.superview.superview.superview];
-//    CGRect fixedRect8 = [thisButton.superview.superview.superview.superview.superview.superview.superview.superview convertRect:fixedRect7 fromView:thisButton.superview.superview.superview.superview.superview.superview.superview];
     
-    //present popover
-    [self.distIDPopover presentPopoverFromRect:fixedRect7 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    distIDPickerVC.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [distIDPickerVC popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    popover.sourceRect = fixedRect7;
+    popover.sourceView = self.view;
+    popover.delegate = self;
     
+    [self presentViewController:distIDPickerVC animated:YES completion:^{ }];
 }
 
 
@@ -1541,171 +1540,130 @@
         }];
     });
     
-    // Remove the popover
-    [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController setDelegate:nil];
-    
-    [self.distIDPopover dismissPopoverAnimated:YES];
+    [self.distIDPickerVC setDelegate:nil];
+    [self dismissViewControllerAnimated:YES completion:^{ }];
     
     // Gracefully dealloc all the objects in the content VC
-    [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController resetDistIdPicker];
-    
-    //_______THIS IS SUPER DUPER DUPER SUPER IMPORTANT!!!!!_______
-    self.distIDPopover = nil;
+    [self.distIDPickerVC resetDistIdPicker];
 }
 
 
 #pragma mark - popover delegate methods
-
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
+- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController{
     
-    //there are 3 popovers:
-    //myStaffUserPicker
-    //distIDPopover
-    //myEquipSelectionPopover
-    
-    if (popoverController == self.myEquipSelectionPopover){
+    if ([popoverPresentationController presentedViewController] == self.distIDPickerVC){
+        NSLog(@"popover found a match to distIDPickerVC");
+        [self.distIDPickerVC setDelegate:nil];
         
-        self.myEquipSelectionPopover = nil;
-        
-    }else if (popoverController == self.distIDPopover){
-        
-        [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController setDelegate:nil];
-        
-        //gracefully dealloc all the objects in the content VC
-        [(EQRDistIDPickerTableVC*)self.distIDPopover.contentViewController resetDistIdPicker];
-        
-        //_______THIS IS SUPER DUPER DUPER SUPER IMPORTANT!!!!!_______
-        self.distIDPopover = nil;
-        
-    }else if (popoverController == self.myStaffUserPicker){
-        
-        self.myStaffUserPicker = nil;
+        // Gracefully dealloc all the objects in the content VC
+        [self.distIDPickerVC resetDistIdPicker];
     }
 }
 
 
-
-
 #pragma mark - handle add equip item
-
 -(IBAction)addEquipItem:(id)sender{
     
     EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
     
-    //need to specify a privateRequestManager for the equip selection v cntrllr
-    //also sets ivar isInPopover to YES
     [genericEquipVCntrllr overrideSharedRequestManager:self.privateRequestManager];
     
-    UIPopoverController* popOverMe = [[UIPopoverController alloc] initWithContentViewController:genericEquipVCntrllr];
-    self.myEquipSelectionPopover = popOverMe;
-    self.myEquipSelectionPopover.delegate = self;
-    
-    //must manually set the size, cannot be wider than 600px!!!!???? But seems to work ok at 800 anyway???
-    self.myEquipSelectionPopover.popoverContentSize = CGSizeMake(700, 600);
-    
-    //save the current content offset to return to the same place
+    // Save the current content offset to return to the same place
     self.myEquipCollectionContentOffset = self.myEquipCollection.contentOffset;
+
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:genericEquipVCntrllr];
     
-    CGRect rect1 = [self.addButton.superview.superview convertRect:self.addButton.frame fromView:self.addButton.superview];
-    CGRect rect2  = [self.addButton.superview.superview.superview convertRect:rect1 fromView:self.addButton.superview.superview];
+    navController.modalPresentationStyle = UIModalPresentationPageSheet;
     
-    [self.myEquipSelectionPopover presentPopoverFromRect:rect2 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated: YES];
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelAction)];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(continueAddEquipItem:)];
+    [genericEquipVCntrllr.navigationItem setLeftBarButtonItem:leftButton];
+    [genericEquipVCntrllr.navigationItem setRightBarButtonItem:rightButton];
     
-    //need to reprogram the target of the save button
-    [genericEquipVCntrllr.continueButton removeTarget:genericEquipVCntrllr action:NULL forControlEvents:UIControlEventAllEvents];
-    [genericEquipVCntrllr.continueButton addTarget:self action:@selector(continueAddEquipItem:) forControlEvents:UIControlEventTouchUpInside];
+    [self presentViewController:navController animated:YES completion:^{
+        // Need to reprogram the target of the save button
+        [genericEquipVCntrllr.continueButton removeTarget:genericEquipVCntrllr action:NULL forControlEvents:UIControlEventAllEvents];
+        [genericEquipVCntrllr.continueButton addTarget:self action:@selector(continueAddEquipItem:) forControlEvents:UIControlEventTouchUpInside];
+    }];
+}
+
+
+- (IBAction)cancelAction:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
 
 -(IBAction)continueAddEquipItem:(id)sender{
     
-    //replaces the uniqueItem key from "1" to an accurate value
+    // Replaces the uniqueItem key from "1" to an accurate value
     [self.privateRequestManager justConfirm];
     
-    [self.myEquipSelectionPopover dismissPopoverAnimated:YES];
-    self.myEquipSelectionPopover = nil;
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 
-    //renew the list of joins by going to the data layer
-    //    [self renewTheArrayWithScheduleTracking_foreignKey:self.myScheduleRequestItem.key_id];
+    // Renew the list of joins by going to the data layer
     [self initialSetupStage2];
     
     [self.myEquipCollection setContentOffset:self.myEquipCollectionContentOffset];
-    
-    //this is necessary
-//    [self.myEquipCollection reloadData];
 }
 
 
 #pragma mark - staff picker method
-
 -(void)showStaffUserPicker{
     
     EQRStaffUserPickerViewController* staffUserPicker = [[EQRStaffUserPickerViewController alloc] initWithNibName:@"EQRStaffUserPickerViewController" bundle:nil];
-    self.myStaffUserPicker = [[UIPopoverController alloc] initWithContentViewController:staffUserPicker];
-    self.myStaffUserPicker.delegate = self;
+    self.staffUserPicker = staffUserPicker;
     
-    //set size
-    [self.myStaffUserPicker setPopoverContentSize:CGSizeMake(400, 400)];
+    staffUserPicker.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [staffUserPicker popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    popover.barButtonItem = [self.navigationItem.rightBarButtonItems objectAtIndex:0];
     
-    //present popover
-    [self.myStaffUserPicker presentPopoverFromBarButtonItem:[self.navigationItem.rightBarButtonItems objectAtIndex:0]  permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    
-    //set target of continue button
-    [staffUserPicker.continueButton addTarget:self action:@selector(dismissStaffUserPicker) forControlEvents:UIControlEventTouchUpInside];
-    
+    [self presentViewController:staffUserPicker animated:YES completion:^{
+        // Set target of continue button
+        [staffUserPicker.continueButton addTarget:self action:@selector(dismissStaffUserPicker) forControlEvents:UIControlEventTouchUpInside];
+    }];
 }
 
 
--(void)dismissStaffUserPicker{
+- (void)dismissStaffUserPicker{
+    // Do stuff with the iboutlet of the
+    int selectedRow = (int)[self.staffUserPicker.myPicker selectedRowInComponent:0];
     
-    //do stuff with the iboutlet of the
-    EQRStaffUserPickerViewController* thisStaffUserPicker = (EQRStaffUserPickerViewController*)[self.myStaffUserPicker contentViewController];
-    int selectedRow = (int)[thisStaffUserPicker.myPicker selectedRowInComponent:0];
-    
-    //assign contact name object to shared staffUserManager
-    EQRContactNameItem* selectedNameObject = (EQRContactNameItem*)[thisStaffUserPicker.arrayOfContactObjects objectAtIndex:selectedRow];
+    // Assign contact name object to shared staffUserManager
+    EQRContactNameItem* selectedNameObject = (EQRContactNameItem*)[self.staffUserPicker.arrayOfContactObjects objectAtIndex:selectedRow];
     
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     staffUserManager.currentStaffUser = selectedNameObject;
     
-    //set title on bar button item
+    // Set title on bar button item
     NSString* newUserString = [NSString stringWithFormat:@"Logged in as %@", selectedNameObject.first_name];
     [[self.navigationItem.rightBarButtonItems objectAtIndex:0] setTitle:newUserString];
     
-    //save as default
+    // Save as default
     NSDictionary* newDic = [NSDictionary dictionaryWithObject:selectedNameObject.key_id forKey:@"staffUserKey"];
     [[NSUserDefaults standardUserDefaults] setObject:newDic forKey:@"staffUserKey"];
     
-    //dismiss the picker
-    [self.myStaffUserPicker dismissPopoverAnimated:YES];
-    self.myStaffUserPicker = nil;
-    
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 
 #pragma mark - capture signature
-
--(IBAction)captureSig:(id)sender{
-    
-//    NSLog(@"this is the class title, so says CheckVController > captureSig: %@", self.myScheduleRequestItem.title);
+- (IBAction)captureSig:(id)sender{
     
     UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"SigCapture" bundle:nil];
     UINavigationController *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"main"];
     newView.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:newView animated:YES completion:^{
         
-        //___________this is ugly, it assumes the subclass type of VC at the root of the nav controller
+        // This is ugly, it assumes the subclass type of VC at the root of the nav controller
         [(EQRSigCaptureMainVC*)[[newView viewControllers] objectAtIndex:0] setDelegate:self];
         [(EQRSigCaptureMainVC*)[[newView viewControllers] objectAtIndex:0] loadTheDataWithRequestItem:self.myScheduleRequestItem];
     }];
-    
 }
 
 
 -(void)pdfHasCompletedWithName:(NSString *)pdfName timestamp:(NSDate *)pdfTimestamp{
-    
     if (pdfTimestamp){
-        
         // Update view with sig confirmation
         self.xLabel.hidden = NO;
         
@@ -1727,17 +1685,14 @@
         dispatch_async(queue, ^{
            
             [webData queryForStringwithAsync:@"EQAlterPDFInScheduleRequest.php" parameters:topArray completion:^(NSString *object) {
-//                NSLog(@"CheckVCntrllr > pdfHasCompletedWithName says request key_id is: %@", object);
             }];
-            
         });
     }
 }
 
 
 #pragma mark - price matrix
-
--(IBAction)showPricingButton:(id)sender{
+- (IBAction)showPricingButton:(id)sender{
     
     UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"Pricing" bundle:nil];
     EQRAlternateWrappperPriceMatrix *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"price_alternate_wrapper"];
@@ -1746,26 +1701,21 @@
     newView.modalPresentationStyle = UIModalPresentationPageSheet;
     [self presentViewController:newView animated:YES completion:^{
         
-        //provide VC with request information
+        // Provide VC with request information
         [newView provideScheduleRequest:self.privateRequestManager.request];
-        
-        
     }];
-    
-    
-    //
     //    newView.edgesForExtendedLayout = UIRectEdgeAll;
     //    [self.navigationController pushViewController:newView animated:YES];
 }
 
-// EQRPriceMatrixVC delegate method
 
+#pragma mark - EQRPriceMatrixVC delegate method
 -(void)aChangeWasMadeToPriceMatrix{
-    
     [self getTransactionInfo];
 }
 
--(void)getTransactionInfo{
+
+- (void)getTransactionInfo{
     
     EQRWebData *webData = [EQRWebData sharedInstance];
     NSArray *firstArray = @[@"scheduleTracking_foreignKey", self.privateRequestManager.request.key_id];
@@ -1777,107 +1727,69 @@
         [webData queryForStringwithAsync:@"EQGetTransactionWithScheduleRequestKey.php" parameters:topArray completion:^(EQRTransaction *transaction) {
             
             if (transaction){
-                
                 self.myTransaction = transaction;
-                
-                //found a matching transaction for this schedule Request, go on...
+                // Found a matching transaction for this schedule Request, go on...
                 [self populatePricingWidget];
-                
             }else{
-                
-                //no matching transaction, create a fresh one.
-//                NSLog(@"didn't find a matching Transaction");
+                // No matching transaction, create a fresh one.
                 [self.priceWidget deleteExistingData];
             }
         }];
     });
 }
 
--(void)populatePricingWidget{
-    
+
+- (void)populatePricingWidget{
     if (self.myTransaction){
         [self.priceWidget initialSetupWithTransaction:self.myTransaction];
     }else{
         [self.priceWidget deleteExistingData];
     }
-    
 }
 
 
 #pragma mark - webdata delegate methods
-
--(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
-    
-    //abort if selector is unrecognized, otherwise crash
+- (void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
+    // Abort if selector is unrecognized, otherwise crash
     if (![self respondsToSelector:action]){
         NSLog(@"inside EQRCheckVC, cannot perform selector: %@", NSStringFromSelector(action));
         return;
     }
-    
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    
     [self performSelector:action withObject:currentThing];
-    
 #pragma clang diagnostic pop
-    
 }
+
 
 -(void)addRequestObject:(id)currentThing{
-    
     if (!currentThing){
         return;
     }
-    
-    //set reqeust item property
+    // Set reqeust item property
     self.myScheduleRequestItem = currentThing;
     
-    //set notes for display
+    // Set notes for display
     self.notesText = self.myScheduleRequestItem.notes;
-    
-    
 }
 
--(void)addContactComplete:(id)currentThing{
-    
+
+- (void)addContactComplete:(id)currentThing{
     if (!currentThing){
         return;
     }
-    
-    //set property
+    // Set property
     self.tempContact = currentThing;
-    
 }
 
--(void)addEquipJoinToArray:(id)currentThing{
- 
+
+- (void)addEquipJoinToArray:(id)currentThing{
     float delayTime = 0.0;
-    
-//    double currentTime = [[NSDate date] timeIntervalSince1970];
-//    
-//    if (!self.timeOfLastCallback || (self.timeOfLastCallback == 0)){
-//        self.timeOfLastCallback = currentTime;
-//    }
-//    
-//    //delay between calls is 0.05 seconds
-//    delayTime = self.timeOfLastCallback - currentTime  + 0.1;
-//    
-//    //guard against a negative delay
-//    if (delayTime < 0.05) delayTime = 0.05;
-//    
-//    self.timeOfLastCallback = currentTime + delayTime;
-//    
-//    NSLog(@"this is the delay time: %f", delayTime);
-
-    
     [self performSelector:@selector(addEquipJoinToArrayAfterDelay:) withObject:currentThing afterDelay:delayTime];
-    
 }
-
 
 
 -(void)addMiscJoinToArray:(id)currentThing{
-    
     if (!currentThing){
         return;
     }
@@ -1886,28 +1798,22 @@
     [self genericAddItemToArray:currentThing];
 }
 
--(void)addEquipJoinToArrayAfterDelay:(id)currentThing{
-    
-    
+
+- (void)addEquipJoinToArrayAfterDelay:(id)currentThing{
     if (!currentThing){
         return;
     }
     
     [self.arrayOfEquipJoins addObject:currentThing];
     [self genericAddItemToArray:currentThing];
-    
 }
 
 
 -(void)genericAddItemToArray:(id)currentThing{
-    
     if (!currentThing){
         return;
     }
-    
-    //expand the array
-    //    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
-    
+
     NSMutableArray *newSubArray = [NSMutableArray arrayWithCapacity:1];
     
     if (self.arrayOfEquipJoinsWithStructure){
@@ -1919,7 +1825,7 @@
             [newSubArray addObject:currentThing];
             self.arrayOfEquipJoinsWithStructure = [NSArray arrayWithObject:newSubArray];
         }
-    }else{  //if the main array doesn't exist yet
+    }else{  // If the main array doesn't exist yet
         [newSubArray addObject:currentThing];
         self.arrayOfEquipJoinsWithStructure = [NSArray arrayWithObject:newSubArray];
     }
@@ -1949,14 +1855,8 @@
 }
 
 
-
 #pragma mark - UISearchResultsUpdating
-
 -(void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    
-    if (self.mySearchController.active){
-        
-    }
     
     NSString *searchString = [self.mySearchController.searchBar text];
     
@@ -1965,15 +1865,14 @@
     }
     
     NSString *scope = nil;
-    
     [self filterContentForSearchText:searchString scope:scope];
-    
     [self.myEquipCollection reloadData];
 }
 
-#pragma mark - UISearchBarDelegate
 
-// Workaround for bug: -updateSearchResultsForSearchController: is not called when scope buttons change
+#pragma mark - UISearchBarDelegate
+// Workaround for bug: -updateSearchResultsForSearchController: is not
+// called when scope buttons change
 - (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
     [self updateSearchResultsForSearchController:self.mySearchController];
 }
@@ -2015,21 +1914,19 @@
 
 
 #pragma mark - UISearchControllerDelegate methods
-
--(void)didPresentSearchController:(UISearchController *)searchController {
+- (void)didPresentSearchController:(UISearchController *)searchController {
     // Somewhere after searchBarTextDidBeginEditing: and willPresentSearchController, the frame for the searchbar changes to
     // width of the device's screen size. Super annoying
     self.mySearchController.searchBar.frame = CGRectMake(0, 0, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
 }
 
--(void)didDismissSearchController:(UISearchController *)searchController {
+
+- (void)didDismissSearchController:(UISearchController *)searchController {
     self.mySearchController.searchBar.frame = CGRectMake(0, 0, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
 }
 
 
-
 #pragma mark - Content Filtering
-
 //Basically, a predicate is an expression that returns a Boolean value (true or false). You specify the search criteria in the format of NSPredicate and use it to filter data in the array. As the search is on the name of recipe, we specify the predicate as “name contains[c] %@”. The “name” refers to the name property of the Recipe object. NSPredicate supports a wide range of filters including: BEGINSWITH, ENDSWITH, LIKE, MATCHES, CONTAINS. Here we choose to use the “contains” filter. The operator “[c]” means the comparison is case-insensitive.
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope{
@@ -2039,11 +1936,8 @@
 }
 
 
-
-
-#pragma mark - datasource methods
-
--(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+#pragma mark - datasource method
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     
     //test if in search, tap out with 1
     if (self.mySearchController.active){
@@ -2054,7 +1948,7 @@
 }
 
 
--(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
     //test if in search, tap out with count of search array
     if (self.mySearchController.active){
@@ -2065,7 +1959,7 @@
 }
 
 
--(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+- (UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     //__1__ An equipUniqueJoin item
     //__2__ A MiscJoin Item
@@ -2176,7 +2070,6 @@
 
 
 #pragma mark - section header data source methods
-
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
     
     static NSString* CellIdentifier = @"SupplementaryCell";
@@ -2212,13 +2105,10 @@
     self.privateRequestManager = nil;
 }
 
+
 #pragma mark - memory warning
-
-
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

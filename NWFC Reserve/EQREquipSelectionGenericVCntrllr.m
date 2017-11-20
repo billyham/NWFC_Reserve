@@ -25,7 +25,7 @@
 #import "EQRStaffUserManager.h"
 #import "EQRMiscJoin.h"
 
-@interface EQREquipSelectionGenericVCntrllr () <UISearchResultsUpdating, UISearchBarDelegate, UISearchControllerDelegate>
+@interface EQREquipSelectionGenericVCntrllr () <UISearchResultsUpdating, UISearchBarDelegate, UISearchControllerDelegate, UIPopoverPresentationControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView* mainSubView;
 @property (strong, nonatomic) IBOutlet UIView *dataIsLoadingView;
@@ -43,15 +43,13 @@
 
 //options button
 @property (strong, nonatomic) EQREquipOptionsTableVC* optionsVC;
-@property (strong, nonatomic) UIPopoverController* optionsPopover;
 
 //notes button
 @property (strong, nonatomic) IBOutlet UIButton* editNotesButton;
-@property (strong, nonatomic) UIPopoverController* notesPopover;
 
 // add miscellaneous button
 @property (strong, nonatomic) IBOutlet UIButton *addMiscellaneousButton;
-@property (strong, nonatomic) UIPopoverController* miscPopover;
+@property (strong, nonatomic) EQRMiscEditVC *miscEditVC;
 
 //UISearchController
 @property (strong, nonatomic) IBOutlet UIView *searchBoxView;
@@ -66,14 +64,9 @@
 @end
 
 
-
-
-
 @implementation EQREquipSelectionGenericVCntrllr
 
 #pragma mark - methods
-
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -130,7 +123,7 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    //update navigation bar
+    // Update navigation bar
     self.navigationItem.title = @"Equipment Selection";
     
     // Update navigation bar
@@ -299,7 +292,6 @@
         self.equipTitleArray = [NSArray arrayWithArray:tempEquipMuteArray];
     }];
     
-    
     NSBlockOperation *everythingElse = [NSBlockOperation blockOperationWithBlock:^{
         // Go through this single array and build a nested array to accommodate sections based on category
         if (!self.equipTitleCategoriesList){
@@ -437,16 +429,15 @@
 
 
 #pragma mark - cancel
-
--(IBAction)cancelTheThing:(id)sender{
+- (IBAction)cancelTheThing:(id)sender{
     
-    //go back to first page in nav
+    // Go back to first page in nav
     [self.navigationController popToRootViewControllerAnimated:YES];
     
-    //send note to reset eveything back to 0
+    // Send note to reset eveything back to 0
     //    [[NSNotificationCenter defaultCenter] postNotificationName:EQRVoidScheduleItemObjects object:nil];
     
-    //reset eveything back to 0 (which in turn sends an nsnotification)
+    // Reset eveything back to 0 (which in turn sends an nsnotification)
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
         requestManager = self.privateRequestManager;
@@ -464,8 +455,7 @@
 
 
 #pragma mark - list all buttons (only for staff user)
-
--(IBAction)listAllEquipment:(id)sender{
+- (IBAction)listAllEquipment:(id)sender{
     
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
@@ -475,31 +465,30 @@
     }
     requestManager.equipSelectionDelegate = self;
     
-    //show options submenu in popover
+    // Show options submenu in popover
     EQREquipOptionsTableVC* optionsVC = [[EQREquipOptionsTableVC alloc] initWithNibName:@"EQREquipOptionsTableVC" bundle:nil];
     self.optionsVC = optionsVC;
     
-    //set self as delegate to receive information about selection
+    // Set self as delegate to receive information about selection
     self.optionsVC.delegate = self;
     
-    //set flags
+    // Set flags
     self.optionsVC.showAllEquipFlag = requestManager.request.showAllEquipmentFlag;
     self.optionsVC.allowSameDayFlag = requestManager.request.allowSameDayFlag;
     self.optionsVC.allowConflictFlag = requestManager.request.allowConflictFlag;
     self.optionsVC.allowSeriousServiceIssueFlag = requestManager.request.allowSeriousServiceIssueFlag;
     
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:self.optionsVC];
-    self.optionsPopover = popOver;
-    self.optionsPopover.delegate = self;
+    optionsVC.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [optionsVC popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    popover.sourceRect = self.listAllEquipButton.frame;
+    popover.sourceView = self.view;
     
-    [self.optionsPopover setPopoverContentSize:CGSizeMake(320.f, 300.f)];
-
-    //show popover
-    [self.optionsPopover presentPopoverFromRect:self.listAllEquipButton.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    
+    [self presentViewController:optionsVC animated:YES completion:^{}];
 }
 
--(void)optionsSelectionMade{
+
+- (void)optionsSelectionMade{
     
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
@@ -509,24 +498,19 @@
     }
     requestManager.equipSelectionDelegate = self;
     
-    //sync flags
+    // Sync flags
     requestManager.request.showAllEquipmentFlag = self.optionsVC.showAllEquipFlag;
     requestManager.request.allowSameDayFlag = self.optionsVC.allowSameDayFlag;
     requestManager.request.allowConflictFlag = self.optionsVC.allowConflictFlag;
     requestManager.request.allowSeriousServiceIssueFlag = self.optionsVC.allowSeriousServiceIssueFlag;
     
-    //dismiss popover
-    [self.optionsPopover dismissPopoverAnimated:YES];
-    self.optionsPopover = nil;
+    [self dismissViewControllerAnimated:YES completion:^{ }];
     
-    //______somehow save any current selections made...
-    
-    //reload the view
     [self renewTheViewWithRequestManager:requestManager];
 }
 
 
--(IBAction)notesButtonTapped:(id)sender{
+- (IBAction)notesButtonTapped:(id)sender{
     
     EQRNotesVC* notesVC = [[EQRNotesVC alloc] initWithNibName:@"EQRNotesVC" bundle:nil];
     
@@ -539,27 +523,24 @@
     requestManager.equipSelectionDelegate = self;
     
     notesVC.delegate = self;
-    
-    UIPopoverController* popOver = [[UIPopoverController alloc] initWithContentViewController:notesVC];
-    self.notesPopover = popOver;
-    self.notesPopover.delegate = self;
-    
-    [self.notesPopover setPopoverContentSize:CGSizeMake(320.f, 400.f)];
-    
+
     CGRect rect1 = [self.editNotesButton.superview.superview convertRect:self.editNotesButton.frame fromView:self.editNotesButton.superview];
+
+    notesVC.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [notesVC popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    popover.sourceRect = rect1;
+    popover.sourceView = self.view;
     
-    //present popOver
-    [self.notesPopover presentPopoverFromRect:rect1 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    
-    //must be after presentation
-    [notesVC initialSetupWithScheduleRequest:requestManager.request];
-    
+    [self presentViewController:notesVC animated:YES completion:^{
+        [notesVC initialSetupWithScheduleRequest:requestManager.request];
+    }];
 }
 
 
--(void)retrieveNotesData:(NSString*)noteText{
+- (void)retrieveNotesData:(NSString*)noteText{
     
-    //update request
+    // Update request
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
         requestManager = self.privateRequestManager;
@@ -570,14 +551,7 @@
     
     requestManager.request.notes = noteText;
     
-    //dismiss popover
-    [self.notesPopover dismissPopoverAnimated:YES];
-    
-    //release delegate status
-    [(EQRNotesVC*)[self.notesPopover contentViewController] setDelegate:nil];
-    
-    //dealloc popover
-    self.notesPopover = nil;
+    [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 
@@ -585,6 +559,7 @@
     
     EQRMiscEditVC* miscEditVC = [[EQRMiscEditVC alloc] init];
     miscEditVC.delegate = self;
+    self.miscEditVC = miscEditVC;
     
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
@@ -594,19 +569,17 @@
     }
     requestManager.equipSelectionDelegate = self;
     
-    UIPopoverController* miscEditPopover = [[UIPopoverController alloc] initWithContentViewController:miscEditVC];
-    self.miscPopover = miscEditPopover;
-    self.miscPopover.delegate = self;
-    [self.miscPopover setPopoverContentSize:CGSizeMake(320.f, 500.f)];
-    
     CGRect rect1 = [self.addMiscellaneousButton.superview.superview convertRect:self.editNotesButton.frame fromView:self.addMiscellaneousButton.superview];
     
-    //present popOver
-    [self.miscPopover presentPopoverFromRect:rect1 inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    miscEditVC.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [miscEditVC popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    popover.sourceRect = rect1;
+    popover.sourceView = self.view;
     
-    //must be after presentation
-    [miscEditVC initialSetupWithScheduleTrackingKey:requestManager.request.key_id];
-    
+    [self presentViewController:miscEditVC animated:YES completion:^{
+        [miscEditVC initialSetupWithScheduleTrackingKey:requestManager.request.key_id];
+    }];
 }
 
 
@@ -641,20 +614,18 @@
            }
            [requestManager.request.arrayOfMiscJoins addObject:miscJoin];
            
-           //refresh the popover's view
-           [(EQRMiscEditVC*)[self.miscPopover contentViewController] renewTheViewWithScheduleKey:requestManager.request.key_id];
+           // Refresh the miscEditVC's view
+           [self.miscEditVC renewTheViewWithScheduleKey:requestManager.request.key_id];
        }];
     });
 }
 
 
 #pragma mark - allocation of gear items
-
-
--(IBAction)receiveContinueAction:(id)sender{
+- (IBAction)receiveContinueAction:(id)sender{
     
-    //____show pricing ONLY if it is a public rental AND it is not in kiosk mode.
-    
+    // Show pricing ONLY if it is a public rental
+    // AND it is not in kiosk mode.
     EQRStaffUserManager *staffUserManager = [EQRStaffUserManager sharedInstance];
     
     EQRScheduleRequestManager* requestManager;
@@ -686,26 +657,27 @@
 
 
 //!!!!_______       THESE METHODS ARE DEPRECATED IN IOS 8!!!  _______________
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
-    //invalidate the flowlayout to force it to update with the correct inset
+    // Invalidate the flowlayout to force it to update with the correct inset
     [self.equipCollectionView.collectionViewLayout invalidateLayout];
     
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
 
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
     
-    //needs to update the headings...
+    // Needs to update the headings...
     [self.equipCollectionView reloadData];
     
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     
     //____!!!! yuck   !!!!!_____
-    //this works and is necessary to overcome a bug in the change in origin of the search bar
-    //when rotated... but man does it look ugly....
-    //only needs update if search bar is currently active
+    // This works and is necessary to overcome a bug in the change
+    // in origin of the search bar when rotated...
+    // but man does it look ugly....
+    // only needs update if search bar is currently active
     if (self.mySearchController.active){
         [self performSelector:@selector(delayedSearchBarResizeWithText:) withObject:self.mySearchController.searchBar.text afterDelay:0.15];
         
@@ -713,57 +685,47 @@
     }
 }
 
--(void)delayedSearchBarResizeWithText:(NSString *)searchText{
+
+- (void)delayedSearchBarResizeWithText:(NSString *)searchText{
     
     CGRect thisRect = CGRectMake(self.searchBoxView.bounds.origin.x, self.searchBoxView.bounds.origin.y, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
 
     [UIView animateWithDuration:0.3 animations:^{
-        
         self.mySearchController.searchBar.frame = thisRect;
-        
     } completion:^(BOOL finished) {
-        
         self.mySearchController.active = YES;
-        
         [self.mySearchController.searchBar setText:searchText];
     }];
 }
 
 
 #pragma mark - schedule request manager delegate methods
-
--(void)refreshTheCollectionWithType:(NSString *)type SectionArray:(NSArray *)array{
+- (void)refreshTheCollectionWithType:(NSString *)type SectionArray:(NSArray *)array{
     
     NSString* typeOfChange = type;
     NSArray* sectionArray = array;
     
-    //abort if in search mode
+    // Abort if in search mode
     if (self.mySearchController.active){
         return;
     }
     
-    //array of index paths to add or delete
+    // Array of index paths to add or delete
     NSMutableArray* arrayOfIndexPaths = [NSMutableArray arrayWithCapacity:1];
     
     int indexPathToDelete;
-    
-    //test whether inserting or deleting
+    // Test whether inserting or deleting
     if ([typeOfChange isEqualToString:@"insert"]){
-        
-        //loop through the sections of the equipment list to identify the index of the section
+        // Loop through the sections of the equipment list to identify the index of the section
         for (NSArray* subArray in self.equipTitleArrayWithSections){
-            
             NSString* thisIsCategory = [(EQREquipItem*)[subArray objectAtIndex:0] category];
             
-            //loop through array of chosen sections
+            // Loop through array of chosen sections
             for (NSString* sectionString in sectionArray){
-                
                 if ([thisIsCategory isEqualToString:sectionString]){
-                    
-                    //found a match, remember the index
+                    // Found a match, remember the index
                     indexPathToDelete = (int)[self.equipTitleArrayWithSections indexOfObject:subArray];
-                    
-                    //loop through all items to build an array of indexpaths
+                    // Loop through all items to build an array of indexpaths
                     [(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                         
                         NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
@@ -772,35 +734,23 @@
                 }
             }
         }
-        
-        //do the insert
+        // Do the insert
         [self.equipCollectionView performBatchUpdates:^{
-            
             [self.equipCollectionView insertItemsAtIndexPaths:arrayOfIndexPaths];
-            
         } completion:^(BOOL finished) {
-            
             [[NSNotificationCenter defaultCenter] postNotificationName:EQRUpdateHeaderCellsInEquipSelection object:nil];
-            
         }];
-        
-        
     }else if([typeOfChange isEqualToString:@"delete"]) {
-        
-        //loop through the sections of the equipment list to identify the index of the section
+        // Loop through the sections of the equipment list to identify the index of the section
         for (NSArray* subArray in self.equipTitleArrayWithSections){
-            
             NSString* thisIsCategory = [(EQREquipItem*)[subArray objectAtIndex:0] category];
-            
-            //loop through array of chosen sections
+            // Loop through array of chosen sections
             for (NSString* sectionString in sectionArray){
-                
                 if ([thisIsCategory isEqualToString:sectionString]){
-                    
-                    //found a match, remember the index
+                    // Found a match, remember the index
                     indexPathToDelete = (int)[self.equipTitleArrayWithSections indexOfObject:subArray];
                     
-                    //loop through all items to build an array of indexpaths
+                    // Loop through all items to build an array of indexpaths
                     [(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPathToDelete] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                         
                         NSIndexPath* newIndexPath = [NSIndexPath indexPathForRow:idx inSection:indexPathToDelete];
@@ -809,28 +759,20 @@
                 }
             }
         }
-        
-        //do the deletions
+        // Do the deletions
         [self.equipCollectionView performBatchUpdates:^{
-            
             [self.equipCollectionView deleteItemsAtIndexPaths:arrayOfIndexPaths];
-
         } completion:^(BOOL finished) {
-            
             [[NSNotificationCenter defaultCenter] postNotificationName:EQRUpdateHeaderCellsInEquipSelection object:nil];
-            
         }];
     }
-    
     //reload data to ensure that header cells are updated correctly when the "All" button is tapped
 //    [self.equipCollectionView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5];
-    
 }
 
 
 #pragma mark - allocation
-
--(void)allocateGearList{
+- (void)allocateGearList{
     
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
@@ -844,10 +786,8 @@
 }
 
 
-
 #pragma mark - UISearchResultsUpdating
-
--(void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     
     if (self.mySearchController.active){
         [self hideTheButtons];
@@ -859,19 +799,14 @@
     if ([searchString isEqualToString:@""]){
         searchString = @" ";
     }
-    
-    //    NSLog(@"inside updateSearchResultsForSearchController with search text: %@", searchString);
-    
     NSString *scope = nil;
-    
     [self filterContentForSearchText:searchString scope:scope];
-    
     [self.equipCollectionView reloadData];
 }
 
 #pragma mark - UISearchBarDelegate
-
-// Workaround for bug: -updateSearchResultsForSearchController: is not called when scope buttons change
+// Workaround for bug: -updateSearchResultsForSearchController:
+// is not called when scope buttons change
 - (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
     [self updateSearchResultsForSearchController:self.mySearchController];
 }
@@ -879,22 +814,18 @@
 - (void)hideTheButtons{
     
     [UIView animateWithDuration:0.25 animations:^{
-        
         self.editNotesButton.alpha = 0.3;
         self.addMiscellaneousButton.alpha = 0.3;
-//        self.continueButton.alpha = 0.3;
         self.listAllEquipButton.alpha = 0.3;
     }];
     
     [self.editNotesButton setEnabled:NO];
     [self.addMiscellaneousButton setEnabled:NO];
-//    [self.continueButton setEnabled:NO];
     [self.listAllEquipButton setEnabled:NO];
     
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
-    
     //change background color
 //    EQRColors *colors = [EQRColors sharedInstance];
 //    self.searchBoxView.backgroundColor = [colors.colorDic objectForKey:EQRColorFilterBarAndSearchBarBackground];
@@ -902,7 +833,6 @@
 //    self.mySearchController.searchBar.searchBarStyle = UISearchBarStyleProminent;
 //    self.mySearchController.searchBar.barTintColor = [colors.colorDic objectForKey:EQRColorFilterBarAndSearchBarBackground];
 }
-
 
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
@@ -916,20 +846,18 @@
         
         self.editNotesButton.alpha = 1.0;
         self.addMiscellaneousButton.alpha = 1.0;
-//        self.continueButton.alpha = 1.0;
         self.listAllEquipButton.alpha = 1.0;
     }];
     
     [self.editNotesButton setEnabled:YES];
     [self.addMiscellaneousButton setEnabled:YES];
-//    [self.continueButton setEnabled:YES];
     [self.listAllEquipButton setEnabled:YES];
 }
 
 #pragma mark - UISearchControllerDelegate methods
-
 -(void)didPresentSearchController:(UISearchController *)searchController {
-    // Somewhere after searchBarTextDidBeginEditing: and willPresentSearchController, the frame for the searchbar changes to
+    // Somewhere after searchBarTextDidBeginEditing: and willPresentSearchController,
+    // the frame for the searchbar changes to
     // width of the device's screen size. Super annoying
     self.mySearchController.searchBar.frame = CGRectMake(0, 0, self.searchBoxView.frame.size.width, self.searchBoxView.frame.size.height);
 }
@@ -950,30 +878,18 @@
 }
 
 
-
-
-
 #pragma mark - view collection data source protocol methods
-
-//Section Methods
-
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
     
     static NSString* CellIdentifier = @"SupplementaryCell";
     EQRHeaderCellTemplate* cell = [self.equipCollectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    //remove subviews
+    // Remove subviews
     for (UIView* thisSubview in cell.contentView.subviews){
-        
         [thisSubview removeFromSuperview];
     }
     
-    //______this is unnecessary(?)
-    //and ensure cell has user interaction enabled
-    //    [cell setUserInteractionEnabled:YES];
-    
-    
-    //_____test whether the section is collapsed or expanded
+    // Test whether the section is collapsed or expanded
     BOOL iAmHidden = NO;
     
     EQRScheduleRequestManager* requestManager;
@@ -986,51 +902,46 @@
     
     [cell setDelegate:requestManager];
     
-    
-    //test if in search mode, and tap out
+    // Test if in search mode, and tap out
     if (self.mySearchController.active){
         [cell initialSetupWithTitle:@"Search results" isHidden:NO isSearchResult:YES];
         return  cell;
     }
     
-    
     for (NSString* sectionString in requestManager.arrayOfEquipSectionsThatShouldBeHidden){
-        
         if ([sectionString isEqualToString:[(EQREquipItem*)[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:0] category]]){
             
-            //found a match in the array of hidden sections
+            // Found a match in the array of hidden sections
             iAmHidden = YES;
             
             break;
         }
     }
     
-    //cell's initial setup method with label
+    // Cell's initial setup method with label
     [cell initialSetupWithTitle:[self.equipTitleCategoriesList objectAtIndex:indexPath.section]
                        isHidden:iAmHidden
                  isSearchResult:NO];
-    
     return cell;
 }
 
-//_____________  DO THIS EVERYWHERE A CELL IS REGISTERED TO OBSERVE NOTIFICATIONS!!! _________________
+
+// DO THIS EVERYWHERE A CELL IS REGISTERED TO OBSERVE NOTIFICATIONS!!!
 -(void)collectionView:(UICollectionView *)collectionView didEndDisplayingSupplementaryView:(UICollectionReusableView *)view forElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath{
     
     [[NSNotificationCenter defaultCenter] removeObserver:view];
 }
 
 
-
-//Cell Methods
-
+// Cell Methods
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
-    //test if in search, tap out with count of search array
+    // Test if in search, tap out with count of search array
     if (self.mySearchController.active){
         return [self.searchResultArrayOfEquipTitles count];
     }
     
-    //test if this section is flagged to be collapsed
+    // Test if this section is flagged to be collapsed
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
         requestManager = self.privateRequestManager;
@@ -1041,25 +952,20 @@
 
     EQREquipItem* sampleItem = [[self.equipTitleArrayWithSections objectAtIndex:section] objectAtIndex:0];
     
-    
-    //loop through array of hidden sections
+    // Loop through array of hidden sections
     for (NSString* objectSection in requestManager.arrayOfEquipSectionsThatShouldBeHidden){
-        
         if ([sampleItem.category isEqualToString:objectSection]){
-            
             return 0;
         }
     }
-    
-    //otherwise... return the count of the array object
+    // Otherwise... return the count of the array object
     NSArray* tempArray = [self.equipTitleArrayWithSections objectAtIndex:section];
     return [tempArray count];
 }
 
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    
-    //test if in search, tap out with 1
+    // Test if in search, tap out with 1
     if (self.mySearchController.active){
         return 1;
     }else{
@@ -1074,18 +980,14 @@
     EQREquipItemCell* cell = [self.equipCollectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
     
     for (UIView* view in cell.contentView.subviews){
-        
         [view removeFromSuperview];
     }
     
-    //and ensure cell has user interaction enabled
+    // Ensure cell has user interaction enabled
     [cell setUserInteractionEnabled:YES];
     
-    //    cell.backgroundColor = [UIColor yellowColor];
-    //    [cell setOpaque:YES];
-    
-    
-    //assign the shared requestManager OR a private reqeust manager as a delegate to the equipItemCell
+    // Assign the shared requestManager OR a private reqeust manager as a
+    // delegate to the equipItemCell
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
         requestManager = self.privateRequestManager;
@@ -1097,126 +999,75 @@
     [cell setDelegate: requestManager];
     
     if ([self.equipTitleArray count] > 0){
-        
-        //_______determine either search results table or normal table
+        //  Determine either search results table or normal table
         if (self.mySearchController.active) {
-            
             [cell initialSetupWithTitle:[[self.searchResultArrayOfEquipTitles objectAtIndex:indexPath.row]  short_name] andEquipItem:[self.searchResultArrayOfEquipTitles objectAtIndex:indexPath.row]];
-            
         }else{
-            
             [cell initialSetupWithTitle:[[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]  short_name] andEquipItem:[(NSArray*)[self.equipTitleArrayWithSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row]];
-            
-            //        [cell initialSetupWithTitle:[(EQREquipItem*)[self.equipTitleArray objectAtIndex:indexPath.row] name] andEquipItem:[self.equipTitleArray objectAtIndex:indexPath.row]];
         }
-        
-    }else{
-        
-        NSLog(@"no count in the equiptitlearray");
     }
-    
     return cell;
 }
 
 
 //- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
-//    
 //}
 
 
 #pragma mark - collection view delegate methods
-
-
-//for equip item
+// For equip item
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     
-//    NSLog(@"view collection delegate fires touch with indexPath: %u, %u", (int)indexPath.section, (int)indexPath.row);
-    
-    //if the selected cell has 0 for quantity, add one. otherwise, do nothing
+    // If the selected cell has 0 for quantity, add one. otherwise, do nothing
     EQREquipItemCell* selectedCell = (EQREquipItemCell*)[collectionView cellForItemAtIndexPath:indexPath];
     
     if ([selectedCell itemQuantity] < 1){
-        
         [selectedCell plusHit:nil];
     }
 }
 
 
 #pragma mark - collection view flow layout delegate methods
-
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
                         layout:(UICollectionViewLayout *)collectionViewLayout
         insetForSectionAtIndex:(NSInteger)section{
     
-    //_______   NEED to know if it appears in a popOver, then DON'T implement this !!!!______
+    // NEED to know if it appears in a popOver, then DON'T implement this !!!!
     if (self.isInPopover == YES){
-        
         return UIEdgeInsetsMake(4.f, 0.f, 8.f, 0.f);
-        
     } else {
-        
         UIEdgeInsets edgeInsets;
         
-        //test if in portrait or landscape view
-        //______******   a better implementation of this is here:   ******_______
+        // Test if in portrait or landscape view
+        // A better implementation of this is here:
         //  http://stackoverflow.com/questions/13556554/change-uicollectionviewcell-size-on-different-device-orientations
-        //uses two different flowlayout objects, one for each orientation
+        //u Uses two different flowlayout objects, one for each orientation
         
         UIInterfaceOrientation orientationOnLaunch = [[UIApplication sharedApplication] statusBarOrientation];
         
         if (UIInterfaceOrientationIsPortrait(orientationOnLaunch)) {
-            
             edgeInsets = UIEdgeInsetsMake(4.f, 4.f, 8.f, 4.f);
-            
         }else{
-            
             edgeInsets = UIEdgeInsetsMake(4.f, 132.f, 8.f, 132.f);
-            
         }
-        
         return edgeInsets;
     }
 }
 
 
 #pragma mark - popover delegate methods
-
--(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
-    
-    if (popoverController == self.notesPopover){
-        
-        self.notesPopover = nil;
-        
-    }else if( popoverController == self.optionsPopover){
-        
-        self.optionsPopover = nil;
-        
-    }else if (popoverController == self.miscPopover){
-        
-        //release delegate status
-        [(EQRMiscEditVC*)[self.miscPopover contentViewController] setDelegate:nil];
-        self.miscPopover = nil;
-    }
+- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController {
+    [self.miscEditVC setDelegate:nil];
 }
 
+
+- (void)dealloc{
+    self.privateRequestManager = nil;
+}
 
 #pragma mark - memory warning
-
--(void)dealloc{
-    
-    self.privateRequestManager = nil;
-    
-    //____tested and I don't this is necessary(???)
-    //unlist self from notificationCenter
-//    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-}
-
-
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 

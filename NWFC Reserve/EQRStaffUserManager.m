@@ -10,7 +10,6 @@
 #import "EQRReserveTopVCntrllr.h"
 #import "EQRItineraryVCntrllr.h"
 #import "EQRScheduleTopVCntrllr.h"
-#import "EQRStaffPage1VCntrllr.h"
 #import "EQRInboxLeftTopVC.h"
 
 @interface EQRStaffUserManager ()
@@ -23,28 +22,21 @@
 @implementation EQRStaffUserManager
 
 
-+(EQRStaffUserManager*)sharedInstance{
-    
++ (EQRStaffUserManager*)sharedInstance{
     static EQRStaffUserManager* myInstance = nil;
-    
     if (!myInstance) {
-        
         myInstance = [[EQRStaffUserManager alloc] init];
     }
-    
     return myInstance;
 }
 
 - (BOOL)currentKioskMode{
-    
     return self.isInKioskMode;
 }
 
 
 - (void)goToKioskMode:(BOOL)isInKioskMode{
-    
     self.isInKioskMode = isInKioskMode;
-    
     if (self.isInKioskMode){
         
         if (!self.arrayOfHiddenVCs){
@@ -81,15 +73,11 @@
         
     } else {
         
-//        if (!self.arrayOfHiddenVCs){
-//            self.arrayOfHiddenVCs = [NSMutableArray arrayWithCapacity:1];
-//        }
-        
         UIApplication* thisApp = [UIApplication sharedApplication];
         NSArray* originalArray = [(UITabBarController*)thisApp.keyWindow.rootViewController viewControllers];
         NSMutableArray* arrayToKeep = [NSMutableArray arrayWithCapacity:1];
         
-        //combined hidden and visible arrays
+        // Combined hidden and visible arrays
         [arrayToKeep addObjectsFromArray:originalArray];
         for (id object in self.arrayOfHiddenVCs){
             [arrayToKeep insertObject:object atIndex:1];
@@ -102,7 +90,7 @@
 }
 
 
-//UITabViewController delegate methods
+#pragma mark - UITabViewController delegate methods
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController{
     
 //    if (self.isInKioskMode == NO){

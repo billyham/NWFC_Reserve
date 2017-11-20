@@ -15,7 +15,7 @@
 #import "EQRScheduleRequestManager.h"
 
 
-@interface EQREquipSelectionGenericVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREquipOptionsDelegate, EQRNoteDelegate, EQRMiscEditVCDelegate, UIPopoverControllerDelegate, EQREquipSelectionDelegate>{
+@interface EQREquipSelectionGenericVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EQREquipOptionsDelegate, EQRNoteDelegate, EQRMiscEditVCDelegate, EQREquipSelectionDelegate>{
 }
 
 @property (nonatomic, strong) IBOutlet UICollectionView* equipCollectionView;

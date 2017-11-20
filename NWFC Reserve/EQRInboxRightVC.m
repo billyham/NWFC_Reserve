@@ -1300,7 +1300,7 @@
 }
 
 
--(IBAction)showExtendedDate:(id)sender{
+- (IBAction)showExtendedDate:(id)sender{
     
     // Change to Extended view
     EQREditorExtendedDateVC* myDateViewController = [[EQREditorExtendedDateVC alloc] initWithNibName:@"EQREditorExtendedDateVC" bundle:nil];
@@ -1324,17 +1324,17 @@
 }
 
 
--(void)returnToStandardDate:(id)sender{
+- (void)returnToStandardDate:(id)sender{
     [[self.myExtendedDateVC navigationController] popViewControllerAnimated:NO];
 }
 
--(void)cancelAction{
+- (void)cancelAction{
     [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 
 #pragma mark - Pricing Matrix 
--(IBAction)showPricingButton:(id)sender{
+- (IBAction)showPricingButton:(id)sender{
     
     UIStoryboard *captureStoryboard = [UIStoryboard storyboardWithName:@"Pricing" bundle:nil];
     EQRAlternateWrappperPriceMatrix *newView = [captureStoryboard instantiateViewControllerWithIdentifier:@"price_alternate_wrapper"];
@@ -1349,19 +1349,18 @@
 }
 
 
--(void)aChangeWasMadeToPriceMatrix{
+- (void)aChangeWasMadeToPriceMatrix{
         [self getTransactionInfo];
 }
 
 
 #pragma mark - handle add equip item
--(IBAction)addEquipItem:(id)sender{
+- (IBAction)addEquipItem:(id)sender{
     
     if (!self.myScheduleRequest) return;
 
     EQREquipSelectionGenericVCntrllr* genericEquipVCntrllr = [[EQREquipSelectionGenericVCntrllr alloc] initWithNibName:@"EQREquipSelectionGenericVCntrllr" bundle:nil];
 
-    // Need to specify a privateRequestManager for the equip selection v cntrllr
     [genericEquipVCntrllr overrideSharedRequestManager:self.privateRequestManager];
     
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:genericEquipVCntrllr];
@@ -1374,15 +1373,14 @@
     [genericEquipVCntrllr.navigationItem setRightBarButtonItem:rightButton];
     
     [self presentViewController:navController animated:YES completion:^{
-        //need to reprogram the target of the save button
+        // Need to reprogram the target of the save button
         [genericEquipVCntrllr.continueButton removeTarget:genericEquipVCntrllr action:NULL forControlEvents:UIControlEventAllEvents];
         [genericEquipVCntrllr.continueButton addTarget:self action:@selector(continueAddEquipItem:) forControlEvents:UIControlEventTouchUpInside];
     }];
-    //must manually set the size, cannot be wider than 600px!!!!???? But seems to work ok at 800 anyway???
 }
 
 
--(IBAction)cancelAction:(id)sender {
+- (IBAction)cancelAction:(id)sender {
     [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
@@ -1652,7 +1650,7 @@
 
 
 #pragma mark - Notes popover methods
--(void)openNotesEditor{
+- (void)openNotesEditor{
     
     EQRNotesVC* thisNotes = [[EQRNotesVC alloc] initWithNibName:@"EQRNotesVC" bundle:nil];
     thisNotes.delegate = self;
@@ -1666,12 +1664,10 @@
     [self presentViewController:thisNotes animated:YES completion:^{
         [thisNotes initialSetupWithScheduleRequest:self.myScheduleRequest];
     }];
-    
-    
 }
 
 
--(void)retrieveNotesData:(NSString*)noteText{
+- (void)retrieveNotesData:(NSString*)noteText{
     
     //update notes view
     self.notesView.text = noteText;
@@ -1693,7 +1689,7 @@
 
 
 #pragma mark - staff user
--(void)showStaffUserPicker{
+- (void)showStaffUserPicker{
     
     EQRStaffUserPickerViewController* staffUserPicker = [[EQRStaffUserPickerViewController alloc] initWithNibName:@"EQRStaffUserPickerViewController" bundle:nil];
     self.myStaffUserPicker = staffUserPicker;
@@ -1704,39 +1700,37 @@
     popover.barButtonItem = [self.navigationItem.rightBarButtonItems objectAtIndex: 0];
     
     [self presentViewController:staffUserPicker animated:YES completion:^{
-        //set target of continue button
+        // Set target of continue button
         [staffUserPicker.continueButton addTarget:self action:@selector(dismissStaffUserPicker) forControlEvents:UIControlEventTouchUpInside];
     }];
 }
 
 
--(void)dismissStaffUserPicker{
+- (void)dismissStaffUserPicker{
     
-    //do stuff with the iboutlet of the
+    // Do stuff with the iboutlet of the
     int selectedRow = (int)[self.myStaffUserPicker.myPicker selectedRowInComponent:0];
     
-    //assign contact name object to shared staffUserManager
+    // Assign contact name object to shared staffUserManager
     EQRContactNameItem* selectedNameObject = (EQRContactNameItem*)[self.myStaffUserPicker.arrayOfContactObjects objectAtIndex:selectedRow];
     
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     staffUserManager.currentStaffUser = selectedNameObject;
     
-    //set title on bar button item
+    // Set title on bar button item
     NSString* newUserString = [NSString stringWithFormat:@"Logged in as %@", selectedNameObject.first_name];
     [[self.navigationItem.rightBarButtonItems objectAtIndex:0] setTitle:newUserString];
     
-    //save as default
+    // Save as default
     NSDictionary* newDic = [NSDictionary dictionaryWithObject:selectedNameObject.key_id forKey:@"staffUserKey"];
     [[NSUserDefaults standardUserDefaults] setObject:newDic forKey:@"staffUserKey"];
     
-    //dismiss the picker
     [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 
 #pragma mark - mail compose delegate methods
-
--(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
     
     switch (result) {
         case MFMailComposeResultCancelled:
