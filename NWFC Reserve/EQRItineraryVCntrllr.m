@@ -25,7 +25,7 @@
 #import "EQRItineraryGoingCell.h"
 #import "EQRItineraryIncomingCell.h"
 
-@interface EQRItineraryVCntrllr () <EQRItineraryContentDelegate>
+@interface EQRItineraryVCntrllr () <EQRItineraryContentDelegate, UIPopoverPresentationControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UICollectionView* myMasterItineraryCollection;
 @property (strong ,nonatomic) IBOutlet UICollectionView* myNavBarCollectionView;
@@ -48,9 +48,9 @@
 @property (strong, nonatomic) IBOutlet UIButton* buttonReturningReturned;
 @property (strong, nonatomic) IBOutlet UIButton* buttonReturningShelved;
 
-@property (strong, nonatomic) UIPopoverController* myDayDatePicker;
-@property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
-@property (strong, nonatomic) UIPopoverController* myQuickView;
+@property (strong, nonatomic) EQRStaffUserPickerViewController *staffUserPicker;
+@property (strong, nonatomic) EQRDayDatePickerVCntrllr *datePicker;
+
 @property (strong, nonatomic) EQRQuickViewScrollVCntrllr* myQuickViewScrollVCntrllr;
 @property (strong, nonatomic) NSDictionary* temporaryDicFromQuickView;
 
@@ -86,8 +86,7 @@
 @implementation EQRItineraryVCntrllr
 
 #pragma mark - computed properties
-
--(NSArray *)pickupAndReturnDatesAsSQLStrings{
+- (NSArray *)pickupAndReturnDatesAsSQLStrings{
     NSDateFormatter* dateFormatForDate = [[NSDateFormatter alloc] init];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     [dateFormatForDate setLocale:usLocale];
@@ -101,10 +100,9 @@
     return arr;
 }
 
-#pragma mark - init methods
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+#pragma mark - init methods
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
@@ -112,71 +110,65 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+
+- (void)viewDidLoad{
     [super viewDidLoad];
 
-    //register for notifications
+    // Register for notifications
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
-    //refresh the view when a change is made
+    // Refresh the view when a change is made
     [nc addObserver:self selector:@selector(raiseFlagThatAChangeHasBeenMade:) name:EQRAChangeWasMadeToTheSchedule object:nil];
-    //partial refresh to when a switch is thrown in the itinarary cell view
+    // Partial refresh to when a switch is thrown in the itinarary cell view
     [nc addObserver:self selector:@selector(partialRefreshFromCheckInOutCellNotification:) name:EQRPartialRefreshToItineraryArray object:nil];
-    //receive note from itinerary row to show quick view
+    // Receive note from itinerary row to show quick view
     [nc addObserver:self selector:@selector(showQuickView:) name:EQRPresentItineraryQuickView object:nil];
-    //show request editor (from quick view duplicate button)
+    // Show request editor (from quick view duplicate button)
     [nc addObserver:self selector:@selector(showRequestEditor:) name:EQRPresentRequestEditorFromItinerary object:nil];
     
     
     
-    //register collection view cell
-//    [self.myMasterItineraryCollection registerClass:[EQRItineraryCell class] forCellWithReuseIdentifier:@"Cell2"];
+    // Register collection view cell
     [self.myMasterItineraryCollection registerClass:[EQRItineraryGoingCell class] forCellWithReuseIdentifier:@"CellGoing"];
     [self.myMasterItineraryCollection registerClass:[EQRItineraryIncomingCell class] forCellWithReuseIdentifier:@"CellIncoming"];
-//    UINib *nib = [UINib nibWithNibName:@"EQRItineraryCellContent2VC" bundle:nil];
-//    [self.myMasterItineraryCollection registerNib:nib  forCellWithReuseIdentifier:@"Cell2"];
-
-    
-    
     
     self.myMasterItineraryCollection.backgroundColor = [UIColor darkGrayColor];
     
-    //set initial filter bitmask to 'all'
+    // Set initial filter bitmask to 'all'
     self.currentFilterBitmask = EQRFilterAll;
     
-    //set all button to filter on color
+    // Set all button to filter on color
     EQRColors* sharedColors = [EQRColors sharedInstance];
     [self.buttonAll setTitleColor:[sharedColors.colorDic objectForKey:EQRColorFilterOn] forState:UIControlStateNormal];
     
 
-    //initial day is the current day
+    // Initial day is the current day
     self.dateForShow = [NSDate date];
     
-    //update day label
+    // Update day label
     NSDateFormatter* dayNameFormatter = [[NSDateFormatter alloc] init];
     dayNameFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     dayNameFormatter.dateFormat =@"EEEE, MMM d, yyyy";
     
-    //assign date to nav bar title
+    // Assign date to nav bar title
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
     
-    //derive the current user name
+    // Derive the current user name
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     NSString* logText = [NSString stringWithFormat:@"Logged in as %@", staffUserManager.currentStaffUser.first_name];
     
-    //_______custom bar buttons
-    //create uiimages
+    // Custom bar buttons
+    // Create uiimages
     UIImage* leftArrow = [UIImage imageNamed:@"GenericLeftArrow"];
     UIImage* rightArrow = [UIImage imageNamed:@"GenericRightArrow"];
     
-    //uibar buttons
-    //create fixed spaces
+    // UIBar buttons
+    // Create fixed spaces
     UIBarButtonItem* twentySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
     twentySpace.width = 20;
     UIBarButtonItem* thirtySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
     thirtySpace.width = 30;
     
-    //wrap buttons in barbuttonitem
+    // Wrap buttons in barbuttonitem
     UIBarButtonItem* leftBarButtonArrow =[[UIBarButtonItem alloc] initWithImage:leftArrow style:UIBarButtonItemStylePlain target:self action:@selector(moveToPreviousDay:)];
     UIBarButtonItem* todayBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Today" style:UIBarButtonItemStylePlain target:self action:@selector(moveToToday:)];
     UIBarButtonItem* rightBarButtonArrow = [[UIBarButtonItem alloc] initWithImage:rightArrow style:UIBarButtonItemStylePlain target:self action:@selector(moveToNextDay:)];
@@ -184,24 +176,23 @@
     
     NSArray* arrayOfLeftButtons = [NSArray arrayWithObjects:twentySpace, searchBarButton, thirtySpace, leftBarButtonArrow, thirtySpace, todayBarButton, thirtySpace, rightBarButtonArrow, nil];
     
-    //set leftBarButton item on SELF
+    // Set leftBarButton item on SELF
     [self.navigationItem setLeftBarButtonItems:arrayOfLeftButtons];
     
-    //right button
+    // Right button
     UIBarButtonItem* staffUserBarButton = [[UIBarButtonItem alloc] initWithTitle:logText style:UIBarButtonItemStylePlain target:self action:@selector(showStaffUserPicker)];
     
     NSArray* arrayOfRightButtons = [NSArray arrayWithObjects:staffUserBarButton, nil];
     
-    //set rightBarButton item in SELF
+    // Set rightBarButton item in SELF
     [self.navigationItem setRightBarButtonItems:arrayOfRightButtons];
     
-    //this will load the ivar array of scheduleReqeust items based on the dateForShow ivar
+    // This will load the ivar array of scheduleReqeust items based on the dateForShow ivar
     [self refreshTheView];
 }
 
 
--(void)viewWillAppear:(BOOL)animated{
-
+- (void)viewWillAppear:(BOOL)animated{
     // Test if a change has occurred in the data
     if (self.aChangeWasMade == YES){
         self.aChangeWasMade = NO;
@@ -557,62 +548,58 @@
 
 
 #pragma mark - showStaffUser view
--(void)showStaffUserPicker{
+- (void)showStaffUserPicker{
     EQRStaffUserPickerViewController* staffUserPicker = [[EQRStaffUserPickerViewController alloc] initWithNibName:@"EQRStaffUserPickerViewController" bundle:nil];
-    self.myStaffUserPicker = [[UIPopoverController alloc] initWithContentViewController:staffUserPicker];
-    self.myStaffUserPicker.delegate = self;
+    self.staffUserPicker = staffUserPicker;
     
-    //set size
-    [self.myStaffUserPicker setPopoverContentSize:CGSizeMake(400, 400)];
+    staffUserPicker.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [staffUserPicker popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    popover.barButtonItem = [self.navigationItem.rightBarButtonItems objectAtIndex:0];
     
-    //present popover
-    [self.myStaffUserPicker presentPopoverFromBarButtonItem:[self.navigationItem.rightBarButtonItems objectAtIndex:0]  permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    
-    //set target of continue button
-    [staffUserPicker.continueButton addTarget:self action:@selector(dismissStaffUserPicker) forControlEvents:UIControlEventTouchUpInside];
+    [self presentViewController:staffUserPicker animated:YES completion:^{
+        // Set target of continue button
+        [staffUserPicker.continueButton addTarget:self action:@selector(dismissStaffUserPicker) forControlEvents:UIControlEventTouchUpInside];
+    }];
 }
 
 
--(void)dismissStaffUserPicker{
+- (void)dismissStaffUserPicker{
     // Do stuff with the iboutlet of the
-    EQRStaffUserPickerViewController* thisStaffUserPicker = (EQRStaffUserPickerViewController*)[self.myStaffUserPicker contentViewController];
-    int selectedRow = (int)[thisStaffUserPicker.myPicker selectedRowInComponent:0];
+    int selectedRow = (int)[self.staffUserPicker.myPicker selectedRowInComponent:0];
 
-    //assign contact name object to shared staffUserManager
-    EQRContactNameItem* selectedNameObject = (EQRContactNameItem*)[thisStaffUserPicker.arrayOfContactObjects objectAtIndex:selectedRow];
+    // Assign contact name object to shared staffUserManager
+    EQRContactNameItem* selectedNameObject = (EQRContactNameItem*)[self.staffUserPicker.arrayOfContactObjects objectAtIndex:selectedRow];
     
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     staffUserManager.currentStaffUser = selectedNameObject;
     
-    //set title on bar button item
+    // Set title on bar button item
     NSString* newUserString = [NSString stringWithFormat:@"Logged in as %@", selectedNameObject.first_name];
     [[self.navigationItem.rightBarButtonItems objectAtIndex:0] setTitle:newUserString];
     
-    //save as default
+    // Save as default
     NSDictionary* newDic = [NSDictionary dictionaryWithObject:selectedNameObject.key_id forKey:@"staffUserKey"];
     [[NSUserDefaults standardUserDefaults] setObject:newDic forKey:@"staffUserKey"];
     
-    //dismiss the picker
-    [self.myStaffUserPicker dismissPopoverAnimated:YES];
-    self.myStaffUserPicker = nil;
+    [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
 
 #pragma mark - show request editor
--(void) showRequestEditor:(NSNotification*)note{
+- (void)showRequestEditor:(NSNotification*)note{
     // Dismiss any popovers that may exist (ie the quickview when "duplicate" is tapped)
-    [self.myQuickView dismissPopoverAnimated:YES];
-    self.myQuickView = nil;
+    [self dismissViewControllerAnimated:YES completion:^{ }];
     
     EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
     
-    //prevent edges from extending beneath nav and tab bars
+    // Prevent edges from extending beneath nav and tab bars
     editorViewController.edgesForExtendedLayout = UIRectEdgeNone;
     
-    //initial setup
+    // Initial setup
     [editorViewController initialSetupWithInfo:[NSDictionary dictionaryWithDictionary:note.userInfo]];
     
-    //assign editor's keyID property
+    // Assign editor's keyID property
     //    editorViewController.scheduleRequestKeyID = [note.userInfo objectForKey:@"keyID"];
     
     //______1_______pushes from the side and preserves navigation controller
@@ -620,21 +607,18 @@
     
     //______2_______model pops up from below, removes navigiation controller
     UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
-    //add cancel button
     
-    [self presentViewController:newNavController animated:YES completion:^{
-    }];
+    [self presentViewController:newNavController animated:YES completion:^{ }];
 }
 
 
--(IBAction)showRequestEditorFromQuickView:(id)sender{
+- (IBAction)showRequestEditorFromQuickView:(id)sender{
     // Dismiss the quickView popover
-    [self.myQuickView dismissPopoverAnimated:YES];
-    self.myQuickView = nil;
+    [self dismissViewControllerAnimated:YES completion:^{}];
     
     EQREditorTopVCntrllr* editorViewController = [[EQREditorTopVCntrllr alloc] initWithNibName:@"EQREditorTopVCntrllr" bundle:nil];
     
-    //prevent edges from extending beneath nav and tab bars
+    // Prevent edges from extending beneath nav and tab bars
     editorViewController.edgesForExtendedLayout = UIRectEdgeTop;
     
     //_______******* THIS IS WEIRD need to subtract a day off the the dates
@@ -660,9 +644,7 @@
     UINavigationController* newNavController = [[UINavigationController alloc] initWithRootViewController:editorViewController];
     // Add cancel button
     
-    [self presentViewController:newNavController animated:YES completion:^{
-    }];
-    
+    [self presentViewController:newNavController animated:YES completion:^{ }];
 }
 
 
@@ -672,7 +654,7 @@
     EQRQuickViewScrollVCntrllr* quickView = [[EQRQuickViewScrollVCntrllr alloc] initWithNibName:@"EQRQuickViewScrollVCntrllr" bundle:nil];
     self.myQuickViewScrollVCntrllr = quickView;
     
-    //instatiate first page subview
+    // Instatiate first page subview
     EQRQuickViewPage1VCntrllr* quickViewPage1 = [[EQRQuickViewPage1VCntrllr alloc] initWithNibName:@"EQRQuickViewPage1VCntrllr" bundle:nil];
     EQRQuickViewPage2VCntrllr* quickViewPage2 = [[EQRQuickViewPage2VCntrllr alloc] initWithNibName:@"EQRQuickViewPage2VCntrllr" bundle:nil];
     EQRQuickViewPage3VCntrllr* quickViewPage3 = [[EQRQuickViewPage3VCntrllr alloc] initWithNibName:@"EQRQuickViewPage3VCntrllr" bundle:nil];
@@ -681,12 +663,7 @@
     self.myQuickViewScrollVCntrllr.myQuickViewPage2 = quickViewPage2;
     self.myQuickViewScrollVCntrllr.myQuickViewPage3 = quickViewPage3;
     
-    self.myQuickView = [[UIPopoverController alloc] initWithContentViewController:self.myQuickViewScrollVCntrllr];
-    self.myQuickView.delegate = self;
-    
-    [self.myQuickView setPopoverContentSize:CGSizeMake(300.f, 502.f)];
-    
-    //empty the temp array
+    // Empty the temp array
     if ([self.temporaryDicFromQuickView count] > 0){
         self.temporaryDicFromQuickView = nil;
     }
@@ -715,7 +692,7 @@
                 }
             }];
             
-            //add in information from quickviewData request
+            // Add in information from quickviewData request
             if (thisRequestItem){
                 if (thisRequestItem.notes)[dicAlso setObject:thisRequestItem.notes forKey:@"notes"];
                 if (thisRequestItem.classTitle_foreignKey) [dicAlso setObject:thisRequestItem.classTitle_foreignKey forKey:@"classTitle_foreignKey"];
@@ -733,7 +710,7 @@
         }
     }
     
-    //instantiate with details
+    // Instantiate with details
     NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                 [[note userInfo] objectForKey: @"key_ID"],@"key_ID",
                                 myItem.contact_name , @"contact_name",
@@ -746,13 +723,13 @@
     
     [dic addEntriesFromDictionary:dicAlso];
     
-    //undo the adjustment to the time difference
-    //adjust the time by adding 9 hours... or 8 hours
+    // Undo the adjustment to the time difference
+    // Adjust the time by adding 9 hours... or 8 hours
     float secondsForOffset = 0 * 2;    //this is 9 hours = 32400, this is 8 hour = 28800;
     [dic setValue:[myItem.request_time_begin dateByAddingTimeInterval:secondsForOffset] forKey:@"request_time_begin"];
     [dic setValue:[myItem.request_time_end dateByAddingTimeInterval:secondsForOffset] forKey:@"request_time_end"];
     
-    //pass dic to ivar to use in editor request
+    // Pass dic to ivar to use in editor request
     self.temporaryDicFromQuickView = [NSDictionary dictionaryWithDictionary:dic];
     
     //initial infor
@@ -761,47 +738,43 @@
     [quickViewPage3 initialSetupWithKeyID:[[note userInfo] objectForKey: @"key_ID"] andUserInfoDic:dic];
     quickViewPage3.fromItinerary = YES;
     
-    //_____presenting the popover must be delayed (why?????)
-    [self performSelector:@selector(mustDelayThePresentationOfAPopOver:) withObject:[note userInfo] afterDelay:0.1];
-}
-
-
--(void)mustDelayThePresentationOfAPopOver:(NSDictionary*)userInfo{
-    NSValue* rectValue = [userInfo objectForKey:@"rectValue"];
+    self.myQuickViewScrollVCntrllr.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [self.myQuickViewScrollVCntrllr popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight | UIPopoverArrowDirectionDown;
+    self.myQuickViewScrollVCntrllr.preferredContentSize = CGSizeMake(300.f, 503.f);
+    
+    NSValue* rectValue = [[note userInfo] objectForKey:@"rectValue"];
     CGRect thisRect = [rectValue CGRectValue];
-    UIView* thisView = [userInfo objectForKey:@"thisView"];
+    UIView* thisView = [[note userInfo] objectForKey:@"thisView"];
+    popover.sourceRect = thisRect;
+    popover.sourceView = thisView;
     
-    
-    //show popover  MUST use NOT allow using the arrow directin from below, keyboard may cover the textview
-    [self.myQuickView presentPopoverFromRect:thisRect inView:thisView permittedArrowDirections:UIPopoverArrowDirectionRight | UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionDown animated:YES];
-    
-    //attach page 1 & 2
-    [self.myQuickViewScrollVCntrllr.myContentPage1 addSubview:self.myQuickViewScrollVCntrllr.myQuickViewPage1.view];
-    [self.myQuickViewScrollVCntrllr.myContentPage2 addSubview:self.myQuickViewScrollVCntrllr.myQuickViewPage2.view];
-    [self.myQuickViewScrollVCntrllr.myContentPage3 addSubview:self.myQuickViewScrollVCntrllr.myQuickViewPage3.view];
-    
-    
-    //__________needs a delay before assigning button target____________
-    //assign target of popover's "edit request" button
-    [self.myQuickViewScrollVCntrllr.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventTouchUpInside];
-    
-    
-    //add gesture recognizers
-    UISwipeGestureRecognizer* swipeLeftGestureOnQuickview = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideLeft:)];
-    swipeLeftGestureOnQuickview.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.myQuickViewScrollVCntrllr.myContentPage1 addGestureRecognizer:swipeLeftGestureOnQuickview];
-    
-    UISwipeGestureRecognizer* swipeLeftGestureOnQuickview2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideLeft:)];
-    swipeLeftGestureOnQuickview2.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.myQuickViewScrollVCntrllr.myContentPage2 addGestureRecognizer:swipeLeftGestureOnQuickview2];
-    
-    UISwipeGestureRecognizer* swipeRightGestureOnQuickview = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideRight:)];
-    swipeRightGestureOnQuickview.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.myQuickViewScrollVCntrllr.myContentPage2 addGestureRecognizer:swipeRightGestureOnQuickview];
-    
-    UISwipeGestureRecognizer* swipeRightGestureOnQuickview2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideRight:)];
-    swipeRightGestureOnQuickview2.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.myQuickViewScrollVCntrllr.myContentPage3 addGestureRecognizer:swipeRightGestureOnQuickview2];
+    [self presentViewController:self.myQuickViewScrollVCntrllr animated:YES completion:^{
+        // Attach page 1 & 2
+        [self.myQuickViewScrollVCntrllr.myContentPage1 addSubview:self.myQuickViewScrollVCntrllr.myQuickViewPage1.view];
+        [self.myQuickViewScrollVCntrllr.myContentPage2 addSubview:self.myQuickViewScrollVCntrllr.myQuickViewPage2.view];
+        [self.myQuickViewScrollVCntrllr.myContentPage3 addSubview:self.myQuickViewScrollVCntrllr.myQuickViewPage3.view];
+        
+        // Assign target of popover's "edit request" button
+        [self.myQuickViewScrollVCntrllr.editRequestButton addTarget:self action:@selector(showRequestEditorFromQuickView:)  forControlEvents:UIControlEventTouchUpInside];
+        
+        // Add gesture recognizers
+        UISwipeGestureRecognizer* swipeLeftGestureOnQuickview = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideLeft:)];
+        swipeLeftGestureOnQuickview.direction = UISwipeGestureRecognizerDirectionLeft;
+        [self.myQuickViewScrollVCntrllr.myContentPage1 addGestureRecognizer:swipeLeftGestureOnQuickview];
+        
+        UISwipeGestureRecognizer* swipeLeftGestureOnQuickview2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideLeft:)];
+        swipeLeftGestureOnQuickview2.direction = UISwipeGestureRecognizerDirectionLeft;
+        [self.myQuickViewScrollVCntrllr.myContentPage2 addGestureRecognizer:swipeLeftGestureOnQuickview2];
+        
+        UISwipeGestureRecognizer* swipeRightGestureOnQuickview = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideRight:)];
+        swipeRightGestureOnQuickview.direction = UISwipeGestureRecognizerDirectionRight;
+        [self.myQuickViewScrollVCntrllr.myContentPage2 addGestureRecognizer:swipeRightGestureOnQuickview];
+        
+        UISwipeGestureRecognizer* swipeRightGestureOnQuickview2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self.myQuickViewScrollVCntrllr action:@selector(slideRight:)];
+        swipeRightGestureOnQuickview2.direction = UISwipeGestureRecognizerDirectionRight;
+        [self.myQuickViewScrollVCntrllr.myContentPage3 addGestureRecognizer:swipeRightGestureOnQuickview2];
+    }];
 }
 
 
@@ -867,23 +840,23 @@
 
 -(void)showDatePicker{
     EQRDayDatePickerVCntrllr* dayDateView = [[EQRDayDatePickerVCntrllr alloc] initWithNibName:@"EQRDayDatePickerVCntrllr" bundle:nil];
-    self.myDayDatePicker = [[UIPopoverController alloc] initWithContentViewController:dayDateView];
-    self.myDayDatePicker.delegate = self;
+    self.datePicker = dayDateView;
     
-    // Set size
-    [self.myDayDatePicker setPopoverContentSize:CGSizeMake(400, 400)];
+    dayDateView.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popover = [dayDateView popoverPresentationController];
+    popover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    popover.barButtonItem = [self.navigationItem.leftBarButtonItems objectAtIndex:1];
     
-    // Present popover
-    [self.myDayDatePicker presentPopoverFromBarButtonItem:[self.navigationItem.leftBarButtonItems objectAtIndex:1]  permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    
-    // Set target of continue button
-    [dayDateView.myContinueButton addTarget:self action:@selector(dismissShowDatePicker:) forControlEvents:UIControlEventTouchUpInside];
+    [self presentViewController:dayDateView animated:YES completion:^{
+        // Set target of continue button
+        [dayDateView.myContinueButton addTarget:self action:@selector(dismissShowDatePicker:) forControlEvents:UIControlEventTouchUpInside];
+    }];
 }
 
 
 -(IBAction)dismissShowDatePicker:(id)sender{
     // Get date from the popover's content view controller, a public method
-    self.dateForShow = [(EQRDayDatePickerVCntrllr*)[self.myDayDatePicker contentViewController] retrieveSelectedDate];
+    self.dateForShow = [self.datePicker retrieveSelectedDate];
 
     // Update day label
     NSDateFormatter* dayNameFormatter = [[NSDateFormatter alloc] init];
@@ -893,9 +866,7 @@
     // Assign day to nav bar title
     self.navigationItem.title = [dayNameFormatter stringFromDate:self.dateForShow];
     
-    // Dismiss the picker
-    [self.myDayDatePicker dismissPopoverAnimated:YES];
-    self.myDayDatePicker = nil;
+    [self dismissViewControllerAnimated:YES completion:^{ }];
     
     // Remove all filters
     self.currentFilterBitmask = EQRFilterAll;
@@ -1666,6 +1637,7 @@
     }
 }
 
+
 #pragma mark - dealloc and such
 -(void)dealloc{
     self.privateRequestManager = nil;
@@ -1680,23 +1652,10 @@
 }
 
 
-#pragma mark - popover delegate methods
--(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
-    
-    if (popoverController == self.myDayDatePicker){
-        self.myDayDatePicker = nil;
-    }else if (popoverController == self.myStaffUserPicker){
-        self.myStaffUserPicker = nil;
-    }else if (popoverController == self.myQuickView){
-        self.myQuickView = nil;
-    }
-}
-
 #pragma mark - memory warning
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+
 }
 
 

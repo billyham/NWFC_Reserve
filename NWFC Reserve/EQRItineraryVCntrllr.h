@@ -23,7 +23,7 @@ typedef NS_OPTIONS(NSUInteger, EQRItineraryFilter){
 };
 
 
-@interface EQRItineraryVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UIPopoverControllerDelegate, EQRWebDataDelegate>
+@interface EQRItineraryVCntrllr : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EQRWebDataDelegate>
 
 -(IBAction)applyFilter:(id)sender;
 

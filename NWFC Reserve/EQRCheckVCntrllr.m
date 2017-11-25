@@ -96,7 +96,6 @@
 //@property (strong, nonatomic) NSArray *horizontalConstraintsForSearchBar;
 
 // For staff user picker
-//@property (strong, nonatomic) UIPopoverController* myStaffUserPicker;
 @property (strong, nonatomic) EQRStaffUserPickerViewController *staffUserPicker;
 
 // For qr code reader
@@ -104,14 +103,12 @@
 @property (nonatomic, strong) NSMutableSet* setOfAlreadyCapturedQRs;
 
 // For dist id picker
-//@property (strong, nonatomic) UIPopoverController* distIDPopover;
 @property (strong, nonatomic) EQRDistIDPickerTableVC* distIDPickerVC;
 
 // For add item popover
 @property (strong, nonatomic) EQRScheduleRequestManager* privateRequestManager;
-//@property (strong, nonatomic) UIPopoverController* myEquipSelectionPopover;
-@property (strong, nonatomic) IBOutlet UIButton* addButton;
 
+@property (strong, nonatomic) IBOutlet UIButton* addButton;
 
 
 @end
@@ -119,7 +116,6 @@
 @implementation EQRCheckVCntrllr
 
 #pragma mark - methods
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -337,172 +333,122 @@
 }
 
 
--(void)initialSetupStage3{
-    //expand the array
+- (void)initialSetupStage3{
+    // Expand the array
     self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
     [self.myEquipCollection reloadData];
     
-    //content height minus the window height will result in the maximum offset value
+    // Content height minus the window height will result in the maximum offset value
     float differenceBetweenHeights = self.myEquipCollection.contentSize.height - self.myEquipCollection.frame.size.height;
-    //but it can't be a negative number
+    // But it can't be a negative number
     if (differenceBetweenHeights < 0){
         differenceBetweenHeights = 0;
     }
     if (self.myEquipCollectionContentOffset.y > differenceBetweenHeights){
         self.myEquipCollectionContentOffset = CGPointMake(0, differenceBetweenHeights);
     }
-    //move the colleciton view scroll to the place before add or delete was used
+    // Move the colleciton view scroll to the place before add or delete was used
     [self.myEquipCollection setContentOffset:self.myEquipCollectionContentOffset];
     
-    //un-dim the collection view
+    // Un-dim the collection view
     self.myEquipCollection.alpha = 1.0;
     self.updateView.alpha = 1.0;
     self.myEquipCollection.userInteractionEnabled = YES;
     
     
-    //____set up private request manager______
+    // Set up private request manager
     
-    //create private request manager as ivar
+    // Create private request manager as ivar
     if (!self.privateRequestManager){
-        
         self.privateRequestManager = [[EQRScheduleRequestManager alloc] init];
     }
     
-    //set the request as ivar in requestManager
+    // Set the request as ivar in requestManager
     self.privateRequestManager.request = self.myScheduleRequestItem;
     self.privateRequestManager.request.arrayOfEquipmentJoins = self.arrayOfEquipJoins;
     
-    //important methods that initiate requestManager ivar arrays
+    // Important methods that initiate requestManager ivar arrays
 //    [self.privateRequestManager resetEquipListAndAvailableQuantites];
 //    [self.privateRequestManager retrieveAllEquipUniqueItems];  !! THIS IS NOT HOW THE METHODS WORKS ANYMORE
     
-    //pricing info
+    // Pricing info
     if ([self.privateRequestManager.request.renter_type isEqualToString:EQRRenterPublic]){
         self.priceMatrixSubView.hidden = NO;
         [self getTransactionInfo];
     }else{
         self.priceMatrixSubView.hidden = YES;
     }
-    
 }
-
-
-//-(void)renewTheArrayWithScheduleTracking_foreignKey:(NSString*)scheduleRequestKeyID{
-//    
-//
-//    NSMutableArray* altMuteArray = [NSMutableArray arrayWithCapacity:1];
-//
-//    
-//    //initiate the nsmutable array if necessary
-//    if (!self.arrayOfEquipJoins){
-//        self.arrayOfEquipJoins = [NSMutableArray arrayWithCapacity:1];
-//    }
-//    [self.arrayOfEquipJoins removeAllObjects];
-//    
-//    [self.arrayOfEquipJoins addObjectsFromArray:altMuteArray];
-//    
-//
-//    //gather any misc joins
-//    NSMutableArray* tempMiscMuteArray = [NSMutableArray arrayWithCapacity:1];
-//    NSArray* alphaArray = @[@"scheduleTracking_foreignKey", scheduleRequestKeyID];
-//    NSArray* omegaArray = @[alphaArray];
-//    [webData queryWithLink:@"EQGetMiscJoinsWithScheduleTrackingKey.php" parameters:omegaArray class:@"EQRMiscJoin" completion:^(NSMutableArray *muteArray2) {
-//        for (id object in muteArray2){
-//            [tempMiscMuteArray addObject:object];
-//        }
-//    }];
-//    
-//    //initiate the nsmutable array if necessary
-//    if (!self.arrayOfMiscJoins){
-//        self.arrayOfMiscJoins = [NSMutableArray arrayWithCapacity:1];
-//    }
-//    [self.arrayOfMiscJoins removeAllObjects];
-//
-//    [self.arrayOfMiscJoins addObjectsFromArray:tempMiscMuteArray];
-//    
-//    
-//    
-//    //add nested structure to the array of equip items
-//    self.arrayOfEquipJoinsWithStructure = [EQRDataStructure turnFlatArrayToStructuredArray:self.arrayOfEquipJoins withMiscJoins:self.arrayOfMiscJoins];
-//}
 
 
 - (void)viewDidLoad{
     [super viewDidLoad];
 
-    //register collection view cells
+    // Register collection view cells
     [self.myEquipCollection registerClass:[EQRCheckRowCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.myEquipCollection registerClass:[EQRCheckRowMiscItemCell class] forCellWithReuseIdentifier:@"CellForMiscJoin"];
     
-    //register for header cell
+    // Register for header cell
     [self.myEquipCollection registerClass:[EQRCheckHeaderCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SupplementaryCell"];
     
-    //register for notes
+    // Register for notes
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
-    //receive change in state from row items
+    // Receive change in state from row items
     [nc addObserver:self selector:@selector(updateArrayOfJoins:) name:EQRUpdateCheckInOutArrayOfJoins object:nil];
-    //receive notes from cell's content VCs when delete button is tapped
+    // Receive notes from cell's content VCs when delete button is tapped
     [nc addObserver:self selector:@selector(addJoinKeyIDToBeDeletedArray:) name:EQRJoinToBeDeletedInCheckInOut object:nil];
     [nc addObserver:self selector:@selector(removeJoinKeyIDToBeDeletedArray:) name:EQRJoinToBeDeletedInCheckInOutCancel object:nil];
-    //receive notes from cell's content when distIDPicker is tapped
+    // Receive notes from cell's content when distIDPicker is tapped
     [nc addObserver:self selector:@selector(distIDPickerTapped:) name:EQRDistIDPickerTapped object:nil];
-    
-    
-    //cancel bar button
-//    UIBarButtonItem* rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction)];
-//    
-//    [self.navigationItem setRightBarButtonItem:rightButton];
 
-
-    //QR Code if application options bool is set in globals
+    // QR Code if application options bool is set in globals
     if (EQRIncludeQRCodeReader == YES){
-        
         [self initiateQRCodeSteps];
     }
     
-    //instantiate mutableArray for deletion ivar
+    // Instantiate mutableArray for deletion ivar
     if (!self.arrayOfToBeDeletedEquipIDs){
         self.arrayOfToBeDeletedEquipIDs = [NSMutableArray arrayWithCapacity:1];
     } else {
         [self.arrayOfToBeDeletedEquipIDs removeAllObjects];
     }
     
-    //instantiate mutableArray for deletion miscJoins
+    // Instantiate mutableArray for deletion miscJoins
     if (!self.arrayOfToBeDeletedMiscJoins){
         self.arrayOfToBeDeletedMiscJoins = [NSMutableArray arrayWithCapacity:1];
     } else {
         [self.arrayOfToBeDeletedMiscJoins removeAllObjects];
     }
     
-    //derive the current user name
+    // Derive the current user name
     EQRStaffUserManager* staffUserManager = [EQRStaffUserManager sharedInstance];
     NSString* logText = [NSString stringWithFormat:@"Logged in as %@", staffUserManager.currentStaffUser.first_name];
     
-    //uibar buttons
-    //create fixed spaces
+    // UIBar buttons
+    // Create fixed spaces
     UIBarButtonItem* twentySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
     twentySpace.width = 20;
     UIBarButtonItem* thirtySpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
     thirtySpace.width = 30;
     
-    //wrap buttons in barbuttonitem
+    // Wrap buttons in barbuttonitem
     UIBarButtonItem *leftBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(cancelAction)];
     
     NSArray* arrayOfLeftButtons = [NSArray arrayWithObjects:leftBarButton, nil];
     
-    //set leftBarButton item on SELF
+    // Set leftBarButton item on SELF
     [self.navigationItem setLeftBarButtonItems:arrayOfLeftButtons];
     
-    //right button
+    // Right button
     UIBarButtonItem* staffUserBarButton = [[UIBarButtonItem alloc] initWithTitle:logText style:UIBarButtonItemStylePlain target:self action:@selector(showStaffUserPicker)];
     
     NSArray* arrayOfRightButtons = [NSArray arrayWithObjects:staffUserBarButton, nil];
     
-    //set rightBarButton item in SELF
+    // Set rightBarButton item in SELF
     [self.navigationItem setRightBarButtonItems:arrayOfRightButtons];
 
     
-    // price widget
+    // Price widget
     EQRPricingWidgetCheckInVC *priceWidget = [[EQRPricingWidgetCheckInVC alloc] initWithNibName:@"EQRPricingWidgetCheckInVC" bundle:nil];
     self.priceWidget = priceWidget;
     CGRect tempRect = CGRectMake(0, 0, self.priceMatrixSubView.frame.size.width, self.priceMatrixSubView.frame.size.height);
@@ -510,14 +456,14 @@
     
     [self.priceMatrixSubView addSubview:self.priceWidget.view];
     
-    //set button target
+    // Set button target
     [self.priceWidget.editButton addTarget:self action:@selector(showPricingButton:) forControlEvents:UIControlEventTouchUpInside];
-    
 }
 
--(void)placeSearchBox{
+
+- (void)placeSearchBox{
     
-    //searchcontroller setup
+    // Searchcontroller setup
     self.mySearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     
     self.mySearchController.searchResultsUpdater = self;
@@ -1550,9 +1496,7 @@
 
 #pragma mark - popover delegate methods
 - (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController{
-    
     if ([popoverPresentationController presentedViewController] == self.distIDPickerVC){
-        NSLog(@"popover found a match to distIDPickerVC");
         [self.distIDPickerVC setDelegate:nil];
         
         // Gracefully dealloc all the objects in the content VC
@@ -1575,7 +1519,7 @@
     
     navController.modalPresentationStyle = UIModalPresentationPageSheet;
     
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelAction)];
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelAddEquipItemAction:)];
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(continueAddEquipItem:)];
     [genericEquipVCntrllr.navigationItem setLeftBarButtonItem:leftButton];
     [genericEquipVCntrllr.navigationItem setRightBarButtonItem:rightButton];
@@ -1588,13 +1532,14 @@
 }
 
 
-- (IBAction)cancelAction:(id)sender {
+- (IBAction)cancelAddEquipItemAction:(id)sender {
     [self dismissViewControllerAnimated:YES completion:^{}];
+    // Renew the list of joins by going to the data layer
+    [self initialSetupStage2];
 }
 
 
 -(IBAction)continueAddEquipItem:(id)sender{
-    
     // Replaces the uniqueItem key from "1" to an accurate value
     [self.privateRequestManager justConfirm];
     

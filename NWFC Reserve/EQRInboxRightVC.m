@@ -1707,7 +1707,6 @@
 
 
 - (void)dismissStaffUserPicker{
-    
     // Do stuff with the iboutlet of the
     int selectedRow = (int)[self.myStaffUserPicker.myPicker selectedRowInComponent:0];
     
@@ -1731,7 +1730,6 @@
 
 #pragma mark - mail compose delegate methods
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
-    
     switch (result) {
         case MFMailComposeResultCancelled:
             break;
@@ -1749,9 +1747,8 @@
             break;
     }
     
-    //dismiss email compose
+    // Dismiss email compose
     [self dismissViewControllerAnimated:YES completion:^{
-        
         [self exitEditMode];
     }];
 }
@@ -1766,7 +1763,6 @@
 
 
 -(void)splitViewController:(UISplitViewController *)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem{
-    
     [self.navigationItem setLeftBarButtonItem:nil];
 }
 
@@ -1783,16 +1779,11 @@
 
 
 -(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
     //__1__ An equipUniqueJoin item
     //__2__ A MiscJoin Item
-    
     if ([[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] respondsToSelector:@selector(schedule_grouping)]){
-        
         EQREditorEquipListCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
-        
         for (UIView* view in cell.contentView.subviews){
-            
             [view removeFromSuperview];
         }
         
@@ -1801,23 +1792,16 @@
         
         BOOL toBeDeleted = NO;
         for (NSString* keyToDelete in self.arrayOfToBeDeletedEquipIDs){
-            
             if ([keyToDelete isEqualToString:[[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] equipUniqueItem_foreignKey]]){
-                
                 toBeDeleted = YES;
             }
         }
-        
         [cell initialSetupWithJoinObject:[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] deleteFlag:toBeDeleted editMode:self.inEditModeFlag];
         
         return cell;
-        
     }else{
-        
         EQREditorMiscListCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CellForMiscJoin" forIndexPath:indexPath];
-        
         for (UIView* view in cell.contentView.subviews){
-            
             [view removeFromSuperview];
         }
         
@@ -1826,13 +1810,10 @@
         
         BOOL toBeDeleted = NO;
         for (NSString* keyToDelete in self.arrayOfToBeDeletedMiscJoins){
-            
             if ([keyToDelete isEqualToString:[[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] key_id]]){
-                
                 toBeDeleted = YES;
             }
         }
-        
         [cell initialSetupWithMiscJoin:[[self.arrayOfJoinsWithStructure objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] deleteFlag:toBeDeleted editMode:self.inEditModeFlag];
         
         return cell;
@@ -1870,7 +1851,7 @@
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    //width is equal to the collectionView's width
+    // Width is equal to the collectionView's width
     return CGSizeMake(self.myTable.frame.size.width, 35.f);
 }
 

@@ -86,12 +86,6 @@
     //________but is unnecessary, the plus and minus buttons will work with or without this disabled.
     //    self.equipCollectionView.allowsSelection = NO;
     
-    //add the cancel button
-//    UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelTheThing:)];
-//    
-//    //add button to the current navigation item
-//    [self.navigationItem setRightBarButtonItem:cancelButton];
-    
     EQRScheduleRequestManager* requestManager;
     if (self.privateRequestManagerFlag){
         requestManager = self.privateRequestManager;
@@ -101,7 +95,7 @@
     }
     requestManager.equipSelectionDelegate = self;
     
-    //searchcontroller setup
+    // Searchcontroller setup
     self.mySearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     self.mySearchController.delegate = self;
     
