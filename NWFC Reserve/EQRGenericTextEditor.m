@@ -10,6 +10,8 @@
 
 @interface EQRGenericTextEditor ()
 
+@property (copy) void (^enterAction)(NSString *value);
+
 @property (strong, nonatomic) IBOutlet UILabel *titleLabel;
 @property (strong, nonatomic) IBOutlet UILabel *subTitleLabel;
 @property (strong, nonatomic) IBOutlet UITextField *textViewText;
@@ -53,7 +55,7 @@
 }
 
 
--(void)initalSetupWithTitle:(NSString *)title
+- (void)initalSetupWithTitle:(NSString *)title
                    subTitle:(NSString *)subtitle
                 currentText:(NSString *)currentText
                    keyboard:(NSString *)keyboard
@@ -66,15 +68,20 @@
     self.returnMethod = returnMethod;
 }
 
--(IBAction)enterButton:(id)sender{
-    
-    [self.delegate returnWithText:self.textViewText.text method:self.returnMethod];
+- (void)setEnterButtonBlock:(void(^)(NSString *value))returnMethod {
+    self.enterAction = returnMethod;
 }
 
--(IBAction)cancelButton:(id)sender{
-    
+- (IBAction)enterButton:(id)sender{
+    if (self.enterAction != nil) {
+        self.enterAction(self.textViewText.text);
+    } else {
+        [self.delegate returnWithText:self.textViewText.text method:self.returnMethod];
+    }
+}
+
+- (IBAction)cancelButton:(id)sender{
     [self.delegate cancelByDismissingVC];
-    
 }
 
 

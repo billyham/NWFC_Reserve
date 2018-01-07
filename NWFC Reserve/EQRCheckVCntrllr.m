@@ -1125,7 +1125,7 @@
 
 
 #pragma mark - navigation buttons
--(void)cancelAction{
+- (void)cancelAction{
 
     [self.webDataForEquipJoins stopXMLParsing];
     [self.webDataForMiscJoins stopXMLParsing];
@@ -1136,9 +1136,7 @@
 }
 
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
--(IBAction)markAsComplete:(id)sender{
+- (IBAction)markAsComplete:(id)sender{
     
     // Check that a user has logged in
     EQRStaffUserManager* staffManager = [EQRStaffUserManager sharedInstance];
@@ -1183,7 +1181,7 @@
 }
 
 
--(void)confirmMarkAsComplete{
+- (void)confirmMarkAsComplete{
     
     // make special note if any of the joins in the ivar array are not complete
     BOOL foundOutstandingItem = NO;
@@ -1191,7 +1189,10 @@
     for (EQRScheduleTracking_EquipmentUnique_Join* join in self.arrayOfEquipJoins){
         if ([join respondsToSelector:NSSelectorFromString(self.myProperty)]){
             SEL thisSelector = NSSelectorFromString(self.myProperty);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             NSString* thisLiteralProperty = [join performSelector:thisSelector];
+#pragma clang diagnostic pop
             if (([thisLiteralProperty isEqualToString:@""]) || (thisLiteralProperty == nil)){
                 foundOutstandingItem = YES;
             }
@@ -1202,7 +1203,10 @@
     for (EQRMiscJoin* join in self.arrayOfMiscJoins){
         if ([join respondsToSelector:NSSelectorFromString(self.myProperty)]){
             SEL thisSelector = NSSelectorFromString(self.myProperty);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             NSString* thisLiteralProperty = [join performSelector:thisSelector];
+#pragma clang diagnostic pop
             if (([thisLiteralProperty isEqualToString:@""]) || (thisLiteralProperty == nil)){
                 foundOutstandingItem = YES;
             }
@@ -1215,15 +1219,15 @@
 }
 
 
-#pragma clang diagnostic pop
--(IBAction)printMeForReal:(id)sender{
+
+- (IBAction)printMeForReal:(id)sender{
     [self printPageWithScheduleRequestItemKey:self.scheduleRequestKeyID];
 }
 
 
--(void)printPageWithScheduleRequestItemKey:(NSString*)scheduleKey{
+- (void)printPageWithScheduleRequestItemKey:(NSString*)scheduleKey{
     
-    //get complete scheduleRequest item info
+    // Get complete scheduleRequest item info
     EQRWebData* webData = [EQRWebData sharedInstance];
     NSArray* firstRequestArray = [NSArray arrayWithObjects:@"key_id", scheduleKey, nil];
     NSArray* secondRequestArray = [NSArray arrayWithObjects:firstRequestArray, nil];
@@ -1237,10 +1241,10 @@
                return;
            }
            
-           //add the notes
+           // Add the notes
            chosenItem.notes = self.notesText;
            
-           //add contact information
+           // Add contact information
            NSString* email;
            NSString* phone;
            if (self.myScheduleRequestItem.contactNameItem){
@@ -1250,27 +1254,26 @@
                chosenItem.contactNameItem = self.myScheduleRequestItem.contactNameItem;
            }
            
-           //create printable page view controller
+           // Create printable page view controller
            EQRCheckPrintPage* pageForPrint = [[EQRCheckPrintPage alloc] initWithNibName:@"EQRCheckPrintPage" bundle:nil];
            
-           //add the request item to the view controller
+           // Add the request item to the view controller
            [pageForPrint initialSetupWithScheduleRequestItem:chosenItem forPDF:NO];
            
-           //assign ivar variables
+           // Assign ivar variables
            pageForPrint.rentorNameAtt = chosenItem.contact_name;
            pageForPrint.rentorEmailAtt = email;
            pageForPrint.rentorPhoneAtt = phone;
            
-           //show the view controller
            [self presentViewController:pageForPrint animated:YES completion:^{ }];
        }];
     });
 }
 
 
--(IBAction)markAsIncomplete:(id)sender{
+- (IBAction)markAsIncomplete:(id)sender{
     
-    //MUST CHECK THAT THE USER HAS LOGGED IN FIRST:
+    // MUST CHECK THAT THE USER HAS LOGGED IN FIRST:
     EQRStaffUserManager* staffManager = [EQRStaffUserManager sharedInstance];
     if (!staffManager.currentStaffUser){
         
@@ -1284,18 +1287,14 @@
         return;
     }
 
-    [self.cellContent dismissedCheckInOut:self.scheduleRequestKeyID complete:@"incomplete" returning:self.marked_for_returning switch:self.switch_num outstanding:[NSNumber numberWithBool:0]];
+    [self.cellContent dismissedCheckInOut:self.scheduleRequestKeyID complete:@"incomplete" returning:self.marked_for_returning switch:self.switch_num outstanding:NO];
     
     [self dismissViewControllerAnimated:YES completion:^{ }];
 }
 
 
 #pragma mark - receive messages from row content
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-
--(void)updateArrayOfJoins:(NSNotification*)note{
+- (void)updateArrayOfJoins:(NSNotification*)note{
     
     NSString* joinKeyID = [[note userInfo] objectForKey:@"joinKeyID"];
     NSString* joinProperty = [[note userInfo] objectForKey:@"joinProperty"];
@@ -1318,7 +1317,10 @@
                 
                 if ([joinItem respondsToSelector:mySelector]){
                     
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                     [joinItem performSelector:mySelector withObject:verdict];
+#pragma clang diagnostic pop
                 }
                 break;
             }
@@ -1341,18 +1343,19 @@
                 
                 if ([miscJoin respondsToSelector:mySelector]){
                     
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                     [miscJoin performSelector:mySelector withObject:verdict];
+#pragma clang diagnostic pop
                 }
                 break;
             }
         }
     }
 }
-#pragma clang diagnostic pop
 
 
-
--(void)addJoinKeyIDToBeDeletedArray:(NSNotification*)note{
+- (void)addJoinKeyIDToBeDeletedArray:(NSNotification*)note{
     
     BOOL isContentForMiscJoin = [[note.userInfo objectForKey:@"isContentForMiscJoin"] boolValue];
     
@@ -1364,28 +1367,20 @@
     
 }
 
+
 -(void)removeJoinKeyIDToBeDeletedArray:(NSNotification*)note{
-    
     BOOL isContentForMiscJoin = [[note.userInfo objectForKey:@"isContentForMiscJoin"] boolValue];
-    
     NSString* stringToBeRemoved;
-    
     if (isContentForMiscJoin == NO){
         for (NSString* thisString in self.arrayOfToBeDeletedEquipIDs){
-            
             if ([thisString isEqualToString:[note.userInfo objectForKey:@"key_id"]]){
-                
                 stringToBeRemoved = thisString;
             }
         }
         [self.arrayOfToBeDeletedEquipIDs removeObject:stringToBeRemoved];
-        
     }else{
-        
         for (NSString* thisString in self.arrayOfToBeDeletedMiscJoins){
-            
             if ([thisString isEqualToString:[note.userInfo objectForKey:@"key_id"]]){
-                
                 stringToBeRemoved = thisString;
             }
         }
@@ -1397,10 +1392,8 @@
 -(void)distIDPickerTapped:(NSNotification*)note{
     
     // Get cell's equipUniqueKey and IndexPath and button's frame?? UIButton??
-//    NSString* joinKey_ID = [[note userInfo] objectForKey:@"joinKey_id"];
     NSString* equipTitleItem_foreignKey = [[note userInfo] objectForKey:@"equipTitleItem_foreignKey"];
     NSString* equipUniqueItem_foreignKey = [[note userInfo] objectForKey:@"equipUniqueItem_foreignKey"];
-//    NSIndexPath* thisIndexPath = [[note userInfo] objectForKey:@"indexPath"];
     CGRect buttonRect = [(UIButton*)[[note userInfo] objectForKey:@"distButton"] frame];
     UIButton* thisButton = (UIButton*)[[note userInfo] objectForKey:@"distButton"];
     

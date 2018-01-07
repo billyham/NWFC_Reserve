@@ -292,34 +292,25 @@
     }
     
     
-    //set preferred display modes on splitviews
+    // Set preferred display modes on splitviews
     UIApplication* thisApp = [UIApplication sharedApplication];
     NSArray* originalArray = [(UITabBarController*)thisApp.keyWindow.rootViewController viewControllers];
+    NSMutableArray *arrayToKeep = [NSMutableArray arrayWithCapacity:1];
     for (UIViewController* VC in originalArray){
-        if ([VC class] == [UISplitViewController class]){   //must be a split view
-            
-            //need to discern inbox from settings
-            if ([VC.title isEqualToString:@"Inbox"]){   //must be inbox
-                [(UISplitViewController *)VC setPreferredDisplayMode:UISplitViewControllerDisplayModeAutomatic];
-//                NSLog(@"Identifed as Inbox");
-            } else if ([VC.title isEqualToString:@"Settings"]){  //must be settings
-//                NSLog(@"identified as Settings, this is the title: %@", VC.title);
-                [(UISplitViewController *)VC setPreferredDisplayMode:UISplitViewControllerDisplayModeAllVisible];
-            }
+        if ([VC.title isEqualToString:@"Inbox"]){
+            [(UISplitViewController *)VC setPreferredDisplayMode:UISplitViewControllerDisplayModeAutomatic];
+        } else if ([VC.title isEqualToString:@"Settings"]){
+            [(UISplitViewController *)VC setPreferredDisplayMode:UISplitViewControllerDisplayModeAllVisible];
+        }
+        
+        if (![VC.title isEqualToString:@"Catalog"]){
+            [arrayToKeep addObject:VC];
         }
     }
-
-    //set initial seleted tab bar view
-//    if (self.isInitialLaunch){
-//        UITabBarController *rootViewController = (UITabBarController*)thisApp.keyWindow.rootViewController;
-//        NSArray* originalArray2 = [(UITabBarController*)thisApp.keyWindow.rootViewController viewControllers];
-//        for (UIViewController* VC in originalArray2){
-//            if ([VC.title isEqualToString:@"Settings"]){
-//                rootViewController.selectedViewController = VC;
-//            }
-//        }
-//        self.isInitialLaunch = NO;
-//    }
+    
+    if (EQRHideCatalog == YES) {
+        [(UITabBarController*)thisApp.keyWindow.rootViewController setViewControllers:arrayToKeep];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

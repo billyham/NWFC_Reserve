@@ -9,13 +9,16 @@
 #import "EQRGlobals.h"
 
 // Build spec, defaults to NWFC
-BOOL EQRBuildNWDoc = YES;
+BOOL EQRBuildNWDoc = NO;
 BOOL EQRBuildPSU = NO;
 
 BOOL EQRSuppressDemoColor = NO;
 
 // Logs
 BOOL EQRLogInputStrings = NO;
+
+// Tab Bar Settings
+BOOL EQRHideCatalog = NO;
 
 // Datastore Settings
 BOOL EQRUseCoreData = NO;

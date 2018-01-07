@@ -15,17 +15,16 @@
 }
 @property (weak, nonatomic) id <EQRGenericEditorDelegate> delegate;
 
--(void)initalSetupWithTitle:(NSString *)title
+- (void)initalSetupWithTitle:(NSString *)title
                    subTitle:(NSString *)subtitle
                 currentText:(NSString *)currentText
                    keyboard:(NSString *)keyboard
                returnMethod:(NSString *)returnMethod;
 
+- (void)setEnterButtonBlock:(void(^)(NSString *value))returnMethod;
 @end
 
 @protocol EQRGenericEditorDelegate <NSObject>
-
--(void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod;
--(void)cancelByDismissingVC;
-
+- (void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod;
+- (void)cancelByDismissingVC;
 @end

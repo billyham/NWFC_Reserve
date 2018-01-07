@@ -18,6 +18,9 @@ extern BOOL EQRSuppressDemoColor;
 // Logs
 extern BOOL EQRLogInputStrings;
 
+// Tab Bar Settings
+extern BOOL EQRHideCatalog;
+
 // Datastore Settings
 extern BOOL EQRUseCoreData;
 extern NSString *EQRCloudKitContainer;

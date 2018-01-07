@@ -64,7 +64,6 @@
 
 #pragma mark - generic editor delegate methods
 - (void)returnWithText:(NSString *)returnText method:(NSString *)returnMethod {
-    
     self.genericTextEditor.delegate = nil;
     [self dismissViewControllerAnimated:YES completion:^{
 #   pragma clang diagnostic push
@@ -110,7 +109,6 @@
 }
 
 #pragma mark - data methods
-
 - (void)loadTitles{
     
     self.arrayOfTitles = @[];
@@ -139,7 +137,6 @@
 }
 
 #pragma mark - Table view data source
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }

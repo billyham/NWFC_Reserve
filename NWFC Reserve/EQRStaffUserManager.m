@@ -11,6 +11,7 @@
 #import "EQRItineraryVCntrllr.h"
 #import "EQRScheduleTopVCntrllr.h"
 #import "EQRInboxLeftTopVC.h"
+#import "EQRGlobals.h"
 
 @interface EQRStaffUserManager ()
 
@@ -50,25 +51,20 @@
             
             if ([thisVC.title isEqualToString:@"Request"]){
                 [arrayToKeep addObject:thisVC];
-                
             }else if ([thisVC.title isEqualToString:@"Month"]){
                 [self.arrayOfHiddenVCs insertObject:thisVC  atIndex:0];
-                
             }else if ([thisVC.title isEqualToString:@"Day"]){
                 [self.arrayOfHiddenVCs insertObject:thisVC atIndex:0];
-                
             }else if ([thisVC.title isEqualToString:@"Inbox"]){
                 [self.arrayOfHiddenVCs insertObject:thisVC atIndex:0];
-                
+            }else if ([thisVC.title isEqualToString:@"Catalog"]){
+                [self.arrayOfHiddenVCs insertObject:thisVC atIndex:0];
             }else if ([thisVC.title isEqualToString:@"Settings"]){
                 [arrayToKeep addObject:thisVC];
-                
             }else{
-                
                 NSLog(@"EQRStaffUserManager > goToKioskMode  Failed to identify the VC");
             }
         }
-        
         [(UITabBarController*)thisApp.keyWindow.rootViewController setViewControllers:arrayToKeep];
         
     } else {
@@ -79,7 +75,10 @@
         
         // Combined hidden and visible arrays
         [arrayToKeep addObjectsFromArray:originalArray];
-        for (id object in self.arrayOfHiddenVCs){
+        for (UIViewController *object in self.arrayOfHiddenVCs){
+            if (EQRHideCatalog == YES && [object.title isEqualToString:@"Catalog"]) {
+                continue;
+            }
             [arrayToKeep insertObject:object atIndex:1];
         }
         
