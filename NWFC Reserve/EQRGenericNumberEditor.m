@@ -57,10 +57,6 @@
     self.textViewText.text = self.textFieldString;
 }
 
-- (void)setReturnMethod:(NSString *)returnMethod {
-    self.returnMethod = returnMethod;
-}
-
 
 -(IBAction)enterButton:(id)sender{
     

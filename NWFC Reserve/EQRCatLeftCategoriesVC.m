@@ -13,11 +13,12 @@
 #import "EQREquipCategory.h"
 #import "EQRGenericTextEditor.h"
 #import "EQRMultiTextEditorVC.h"
+#import "EQRGenericPickerVC.h"
 
 @interface EQRCatLeftCategoriesVC () <EQRCatEquipTitleDelegate, EQRMultiTextEditorDelegate>
 @property (nonatomic, strong) NSArray *arrayOfCategories;
-//@property (nonatomic, strong) EQRGenericTextEditor *genericTextEditor;
 @property (nonatomic, strong) EQRMultiTextEditorVC *multiTextEditor;
+@property (nonatomic, strong) EQRGenericPickerVC *pickerEditor;
 @property (nonatomic, weak) EQRCatLeftEquipTitlesVC *titlesVC;
 @end
 
@@ -49,20 +50,32 @@
 
 #pragma mark - button actions
 - (IBAction)newCategory:(id)sender {
-    EQRGenericEditor *genericTextEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
-    [genericTextEditor initalSetupWithTitle:@"Name" subTitle:@"Enter a new category" currentText:@"" keyboard:nil returnMethod:@""];
-
-    EQRGenericTextEditor *genericTextEditor2 = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
-    [genericTextEditor2 initalSetupWithTitle:@"Title" subTitle:@"Enter an item name" currentText:@"" keyboard:nil returnMethod:@""];
+    EQRGenericPickerVC *genericPicker = [[EQRGenericPickerVC alloc] initWithNibName:@"EQRGenericPickerVC" bundle:nil];
+    [genericPicker initialSetupWithTitle:@"Existing Category" subTitle:@"Select on or create a new one" array:@[@"one", @"two"] selectedValue:nil];
+    [genericPicker setModalPresentationStyle:UIModalPresentationFormSheet];
     
-    self.multiTextEditor = [[EQRMultiTextEditorVC alloc] init];
-    [self.multiTextEditor initialSetupWithReturnCallback:^(NSArray *values){
-        [self writeNewTitle:values[1] category:values[0]];
+    
+    [self presentViewController:genericPicker animated:YES completion:^{
+        
     }];
-    [self.multiTextEditor pushNewTextEditor:genericTextEditor];
-    [self.multiTextEditor pushNewTextEditor:genericTextEditor2];
     
-    [self.multiTextEditor presentEditor:self];
+    self.pickerEditor = genericPicker;
+
+    
+//    EQRGenericEditor *genericTextEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
+//    [genericTextEditor initalSetupWithTitle:@"Name" subTitle:@"Enter a new category" currentText:@"" keyboard:nil returnMethod:@""];
+//
+//    EQRGenericTextEditor *genericTextEditor2 = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
+//    [genericTextEditor2 initalSetupWithTitle:@"Title" subTitle:@"Enter an item name" currentText:@"" keyboard:nil returnMethod:@""];
+//
+//    self.multiTextEditor = [[EQRMultiTextEditorVC alloc] init];
+//    [self.multiTextEditor initialSetupWithReturnCallback:^(NSArray *values){
+//        [self writeNewTitle:values[1] category:values[0]];
+//    }];
+//    [self.multiTextEditor pushNewTextEditor:genericTextEditor];
+//    [self.multiTextEditor pushNewTextEditor:genericTextEditor2];
+//
+//    [self.multiTextEditor presentEditor:self];
 }
 
 

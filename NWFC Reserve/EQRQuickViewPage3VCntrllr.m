@@ -85,13 +85,15 @@
     NSBlockOperation *getScheduleRequestNotes = [NSBlockOperation blockOperationWithBlock:^{
         NSArray* alphaArray = @[@"key_id", self.mykeyID];
         NSArray* omegaArray = @[alphaArray];
-        __block NSMutableString* notesReturned = [NSMutableString stringWithString:EQRErrorCode88888888];
+        __block NSString *notesReturned = @"";
         
         EQRWebData* webData = [EQRWebData sharedInstance];
         [webData queryWithLink:@"EQGetScheduleRequestNotes.php" parameters:omegaArray class:@"EQRScheduleRequestItem" completion:^(NSMutableArray *muteArray2) {
             
             if ([muteArray2 count] > 0){
-                [notesReturned setString:[(EQRScheduleRequestItem*)[muteArray2 objectAtIndex:0] notes]];
+                if ([(EQRScheduleRequestItem*)[muteArray2 objectAtIndex:0] notes]) {
+                    notesReturned = [(EQRScheduleRequestItem*)[muteArray2 objectAtIndex:0] notes];
+                }
             }
         }];
         

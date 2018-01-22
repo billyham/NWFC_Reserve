@@ -220,6 +220,8 @@
 		54B5632F1F99BD3900A95789 /* EQREquipTitlePricesTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B5632E1F99BD3900A95789 /* EQREquipTitlePricesTVC.m */; };
 		54B5A2A41BFDD743003FE6DD /* EQRSigAgreementVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B5A2A21BFDD743003FE6DD /* EQRSigAgreementVC.m */; };
 		54B5A2A51BFDD743003FE6DD /* EQRSigAgreementVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54B5A2A31BFDD743003FE6DD /* EQRSigAgreementVC.xib */; };
+		54B7F1F92011C4E7000D3190 /* EQRGenericPickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B7F1F72011C4E7000D3190 /* EQRGenericPickerVC.m */; };
+		54B7F1FA2011C4E7000D3190 /* EQRGenericPickerVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54B7F1F82011C4E7000D3190 /* EQRGenericPickerVC.xib */; };
 		54B890AB1FA6E977006E71F4 /* EQRItineraryGoingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B890AA1FA6E977006E71F4 /* EQRItineraryGoingCell.m */; };
 		54B890AE1FA6E994006E71F4 /* EQRItineraryIncomingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B890AD1FA6E994006E71F4 /* EQRItineraryIncomingCell.m */; };
 		54BB2D1719F77AF900CF4AE8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54BB2D1619F77AF900CF4AE8 /* CoreData.framework */; };
@@ -613,6 +615,9 @@
 		54B5A2A11BFDD743003FE6DD /* EQRSigAgreementVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EQRSigAgreementVC.h; sourceTree = "<group>"; };
 		54B5A2A21BFDD743003FE6DD /* EQRSigAgreementVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EQRSigAgreementVC.m; sourceTree = "<group>"; };
 		54B5A2A31BFDD743003FE6DD /* EQRSigAgreementVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EQRSigAgreementVC.xib; sourceTree = "<group>"; };
+		54B7F1F62011C4E7000D3190 /* EQRGenericPickerVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EQRGenericPickerVC.h; sourceTree = "<group>"; };
+		54B7F1F72011C4E7000D3190 /* EQRGenericPickerVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EQRGenericPickerVC.m; sourceTree = "<group>"; };
+		54B7F1F82011C4E7000D3190 /* EQRGenericPickerVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EQRGenericPickerVC.xib; sourceTree = "<group>"; };
 		54B890A91FA6E977006E71F4 /* EQRItineraryGoingCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EQRItineraryGoingCell.h; sourceTree = "<group>"; };
 		54B890AA1FA6E977006E71F4 /* EQRItineraryGoingCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EQRItineraryGoingCell.m; sourceTree = "<group>"; };
 		54B890AC1FA6E994006E71F4 /* EQRItineraryIncomingCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EQRItineraryIncomingCell.h; sourceTree = "<group>"; };
@@ -1151,6 +1156,9 @@
 				54E5E9391BE095AC00C23F58 /* EQRGenericBlockOfTextEditor.xib */,
 				5401AAB31FEF67CC005382E4 /* EQRMultiTextEditorVC.h */,
 				5401AAB41FEF67CC005382E4 /* EQRMultiTextEditorVC.m */,
+				54B7F1F62011C4E7000D3190 /* EQRGenericPickerVC.h */,
+				54B7F1F72011C4E7000D3190 /* EQRGenericPickerVC.m */,
+				54B7F1F82011C4E7000D3190 /* EQRGenericPickerVC.xib */,
 			);
 			name = "shared nibs";
 			sourceTree = "<group>";
@@ -1546,6 +1554,7 @@
 				TargetAttributes = {
 					438EDCDB182B7ABD0090F882 = {
 						DevelopmentTeam = C3YDZ7M5S2;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1610,6 +1619,7 @@
 				438EDCF3182B7ABE0090F882 /* Main.storyboard in Resources */,
 				548549EE1A23193600475345 /* EQRContactAddNewVC.xib in Resources */,
 				54263FFA1AAF043D0095797E /* tab_new_request.png in Resources */,
+				54B7F1FA2011C4E7000D3190 /* EQRGenericPickerVC.xib in Resources */,
 				544253161BC3837A0007331E /* EQRPricingWidgetVC.xib in Resources */,
 				542CC20E197B56B100BFD581 /* EQRInboxCellContentVCntrllr.xib in Resources */,
 				54ECF1E91998A9D900298996 /* EQRQuickViewPage3VCntrllr.xib in Resources */,
@@ -1847,6 +1857,7 @@
 				54BCF2011F988DD300F483F9 /* EQREquipTitleInfoTVC.m in Sources */,
 				0119D2FF18DBB25C009126CB /* EQRScheduleCellContentVCntrllr.m in Sources */,
 				546436551BBBBF70002BF3FF /* EQRTransaction.m in Sources */,
+				54B7F1F92011C4E7000D3190 /* EQRGenericPickerVC.m in Sources */,
 				5416CDD11C30D72F00587DD7 /* EQRPageFooter.m in Sources */,
 				542D59B61A00DD8800989617 /* EQRTextEmailStudent.m in Sources */,
 				438EDCF9182B7ABE0090F882 /* EQRSecondViewController.m in Sources */,
@@ -2005,13 +2016,16 @@
 				CODE_SIGN_ENTITLEMENTS = Gear.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = C3YDZ7M5S2;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NWFC Reserve/Gear-Prefix.pch";
 				INFOPLIST_FILE = "NWFC Reserve/Gear-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "David-Vincent-Hanagan.Gear";
 				PRODUCT_NAME = Gear;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "051135c2-a2fa-416c-957e-2fa89272ef6e";
+				PROVISIONING_PROFILE_SPECIFIER = 1dec2017devoforGear;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2024,13 +2038,16 @@
 				CODE_SIGN_ENTITLEMENTS = Gear.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = C3YDZ7M5S2;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NWFC Reserve/Gear-Prefix.pch";
 				INFOPLIST_FILE = "NWFC Reserve/Gear-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "David-Vincent-Hanagan.Gear";
 				PRODUCT_NAME = Gear;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "051135c2-a2fa-416c-957e-2fa89272ef6e";
+				PROVISIONING_PROFILE_SPECIFIER = 1dec2017devoforGear;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

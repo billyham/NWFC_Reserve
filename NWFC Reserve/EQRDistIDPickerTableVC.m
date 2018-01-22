@@ -33,12 +33,6 @@
     [super viewDidLoad];
     
     [self.tableView registerClass:([UITableViewCell class]) forCellReuseIdentifier:@"Cell"];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 -(void)initialSetupWithOriginalUniqueKeyID:(NSString*)originalK
@@ -182,14 +176,11 @@
 
 
 #pragma mark - Table view data source
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-
     return [self.arrayOfEquipUniques count];
 }
 
@@ -238,9 +229,7 @@
         
         //unavailable selection, gray out
         cell.contentView.alpha = 0.3;
-        
     }else{
-        
         cell.contentView.alpha = 1.0;
     }
     
@@ -248,43 +237,7 @@
 }
 
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-
 #pragma mark - Table view delegate
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if ([(EQREquipUniqueItem*)[self.arrayOfEquipUniques objectAtIndex:indexPath.row] unavailableFlag] == YES){
@@ -314,7 +267,6 @@
 }
 
 #pragma mark - EQRWebData delegate methods
-
 -(void)addASyncDataItem:(id)currentThing toSelector:(SEL)action{
     if(![self respondsToSelector:action]){
         NSLog(@"EQRDistIDPickerTableVC > cannot perform selector: %@", NSStringFromSelector(action));
@@ -331,7 +283,6 @@
     if (!currentThing){
         return;
     }
-    
     [self.joinsWithDateRange addObject:currentThing];
 }
 
@@ -347,18 +298,15 @@
 */
 
 #pragma mark - Dealloc
-
--(void)resetDistIdPicker{
+- (void)resetDistIdPicker{
     
     self.delegate = nil;
     self.privateRequestManager = nil;
     self.arrayOfEquipUniques = nil;
-    
 }
 
 
 #pragma mark - memory warning
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

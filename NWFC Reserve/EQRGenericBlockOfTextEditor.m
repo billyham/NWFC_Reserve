@@ -67,10 +67,6 @@
     self.textViewText.text = self.textViewString;
 }
 
-- (void)setReturnMethod:(NSString *)returnMethod {
-    self.returnMethod = returnMethod;
-}
-
 -(IBAction)enterButton:(id)sender{
     
     [self.delegate returnWithText:self.textViewText.text method:self.returnMethod];

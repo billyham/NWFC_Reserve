@@ -40,7 +40,6 @@
         [self.subTitleLabel setHidden:YES];
     }
     
-    [self.textViewText becomeFirstResponder];
     
     if ([self.keyboardPreference isEqualToString:@"UIKeyboardTypeEmailAddress"]){
         self.textViewText.keyboardType = UIKeyboardTypeEmailAddress;
@@ -52,6 +51,12 @@
         self.textViewText.keyboardType = UIKeyboardTypeDefault;
     }
     
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self.textViewText becomeFirstResponder];
 }
 
 
