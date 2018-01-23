@@ -114,7 +114,10 @@
     NSMutableArray* arrayOfEquipUniquesWithSpecificTitle = [NSMutableArray arrayWithCapacity:1];
     [webData queryWithLink:@"EQGetEquipUniquesWithEquipTitleKey.php" parameters:topArray class:@"EQREquipUniqueItem" completion:^(NSMutableArray *muteArray) {
         
-        for (id object in muteArray){
+        for (EQREquipUniqueItem *object in muteArray){
+            if (!object.issue_short_name) {
+                object.issue_short_name = @"";
+            }
             [arrayOfEquipUniquesWithSpecificTitle addObject:object];
         }
     }];
@@ -211,6 +214,9 @@
     }else{
         issueString = @"";  //status is resolved, so hide any issues
     }
+    
+    NSLog(@"nameAndDistId: %@", nameAndDistID);
+    NSLog(@"issueString: %@", issueString);
     
     NSDictionary* arrayAttA = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName, nil];
     NSAttributedString* thisAttString = [[NSAttributedString alloc] initWithString:nameAndDistID attributes:arrayAttA];
