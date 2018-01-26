@@ -193,8 +193,9 @@
     
     // Configure the cell... with attributed strings
     //name and dist id
+    NSString *nameWithoutLineBreaks = [[(EQREquipUniqueItem*)[self.arrayOfEquipUniques objectAtIndex:indexPath.row] name] stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     NSString* nameAndDistID = [NSString stringWithFormat:@"%@: %@  ",
-    [(EQREquipUniqueItem*)[self.arrayOfEquipUniques objectAtIndex:indexPath.row] name],
+    nameWithoutLineBreaks,
     [(EQREquipUniqueItem*)[self.arrayOfEquipUniques objectAtIndex:indexPath.row] distinquishing_id]];
     
     NSString* issueString = [(EQREquipUniqueItem*) [self.arrayOfEquipUniques objectAtIndex:indexPath.row] issue_short_name];
@@ -214,9 +215,6 @@
     }else{
         issueString = @"";  //status is resolved, so hide any issues
     }
-    
-    NSLog(@"nameAndDistId: %@", nameAndDistID);
-    NSLog(@"issueString: %@", issueString);
     
     NSDictionary* arrayAttA = [NSDictionary dictionaryWithObjectsAndKeys:normalFont, NSFontAttributeName, nil];
     NSAttributedString* thisAttString = [[NSAttributedString alloc] initWithString:nameAndDistID attributes:arrayAttA];
