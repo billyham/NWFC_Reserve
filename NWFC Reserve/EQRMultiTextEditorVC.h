@@ -19,11 +19,10 @@
 - (void)initialSetupWithReturnCallback:(void(^)(NSArray *values))cb;
 - (void)pushNewTextEditor:(EQRGenericEditor *)genericEditor;
 - (void)presentEditor:(UIViewController *)vc;
-
 @end
 
-@protocol EQRMultiTextEditorDelegate <NSObject>
 
+@protocol EQRMultiTextEditorDelegate <NSObject>
 @optional
 //- (void)returnWithTextArray:(NSArray *)returnTextArray method:(NSString *)returnMethod;
 //- (void)cancelByDismissingVC;

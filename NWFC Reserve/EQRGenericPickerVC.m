@@ -16,11 +16,14 @@
 @property (strong, nonatomic) IBOutlet UILabel *titleLabel;
 @property (strong, nonatomic) IBOutlet UILabel *subTitleLabel;
 @property (strong, nonatomic) IBOutlet UIButton *enterButton;
+@property (strong, nonatomic) IBOutlet UITextField *manualEntryField;
 
 @property (copy) void (^enterAction)(NSString *value);
 
 @property (strong, nonatomic) NSString* titleString;
 @property (strong, nonatomic) NSString* subTitleString;
+@property (strong, nonatomic) NSString *selectedValue;
+@property BOOL isManualEntry;
 @end
 
 @implementation EQRGenericPickerVC
@@ -38,18 +41,49 @@
     }else{
         [self.subTitleLabel setHidden:YES];
     }
+    
+    if (self.isManualEntry) {
+        self.manualEntryField.text = self.selectedValue;
+        self.manualEntryField.hidden = NO;
+    } else {
+        self.manualEntryField.hidden = YES;
+    }
 }
 
 
 - (void)initialSetupWithTitle:(NSString *)title
                      subTitle:(NSString *)subTitle
                         array:(NSArray *)array
-                selectedValue:(NSString *)selectedValue {
+                selectedValue:(NSString *)selectedValue
+             allowManualEntry:(BOOL)isManualEntry
+                  callback:(void(^)(NSString *value))cb {
     
     self.array = array;
     self.titleString = title;
     self.subTitleString = subTitle;
+    self.selectedValue = selectedValue;
+    self.isManualEntry = isManualEntry;
+    self.enterAction = cb;
 }
+
+- (void)setEnterButtonBlock:(void(^)(NSString *value))returnMethod {
+    self.enterAction = returnMethod;
+}
+
+#pragma mark - cancel button
+- (IBAction)cancelButton:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:^{ }];
+}
+
+- (IBAction)enterButton:(id)sender {
+    self.enterAction(self.manualEntryField.text);
+}
+
+#pragma mark - text field action
+//- (IBAction)onChange:(id)sender {
+//    NSLog(@"onChange fires with %@", self.manualEntryField.text);
+//    self.selectedValue = self.manualEntryField.text;
+//}
 
 
 #pragma mark - table data source
@@ -71,10 +105,16 @@
 }
 
 
+#pragma mark - table delegate
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    self.selectedValue = [self.array objectAtIndex:indexPath.row];
+    self.manualEntryField.text = self.selectedValue;
+}
+
+
 #pragma mark - memory warning
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 

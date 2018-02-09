@@ -15,6 +15,10 @@
 #import "EQRGenericTextEditor.h"
 #import "EQRGenericNumberEditor.h"
 #import "EQRGenericEditor.h"
+#import "EQRGenericPickerVC.h"
+#import "EQREquipCategory.h"
+#import "EQREquipSubcategory.h"
+#import "EQREquipScheduleGrouping.h"
 
 @interface EQREquipTitleDetailVC () <EQRGenericEditorDelegate, EQREquipTitleInfoDelegate, EQREquipTitlePricesDelegate>
 
@@ -60,7 +64,6 @@
                 NSLog(@"EQREquipTitleDetailTableVC > launch, failed to retrieve equipTitleItem");
                 return;
             }
-            
             currentItem = [muteArray objectAtIndex:0];
         }];
         
@@ -249,6 +252,82 @@
     }];
 }
 
+#pragma mark - load data methods
+- (void)loadCategoriesWithCallback:(void(^)(NSArray *array))cb {
+    __block NSArray *arrayOfCategories = @[];
+    
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"allCategories";
+    queue.maxConcurrentOperationCount = 1;
+    
+    NSBlockOperation *getEquipCategories = [NSBlockOperation blockOperationWithBlock:^{
+    
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetEquipCategoriesAll.php" parameters:nil class:@"EQREquipCategory" completion:^(NSMutableArray *arrayOfEquipCategories) {
+            NSMutableArray *muteArray = [NSMutableArray arrayWithCapacity:1];
+            for (EQREquipCategory *cat in arrayOfEquipCategories) {
+                [muteArray addObject:cat.category];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                arrayOfCategories = [NSArray arrayWithArray:muteArray];
+                cb(arrayOfCategories);
+            });
+        }];
+    }];
+    
+    [queue addOperation:getEquipCategories];
+}
+
+- (void)loadSubcategoriesWithCallback:(void(^)(NSArray *array))cb {
+    __block NSArray *arrayOfSubcategories = @[];
+    
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"allSubcategories";
+    queue.maxConcurrentOperationCount = 1;
+    
+    NSBlockOperation *getEquipSubcategories = [NSBlockOperation blockOperationWithBlock:^{
+        
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetEquipSubcategoriesAll.php" parameters:nil class:@"EQREquipSubcategory" completion:^(NSMutableArray *arrayOfEquipSubcategories) {
+            NSMutableArray *muteArray = [NSMutableArray arrayWithCapacity:1];
+            for (EQREquipSubcategory *cat in arrayOfEquipSubcategories) {
+                [muteArray addObject:cat.subcategory];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                arrayOfSubcategories = [NSArray arrayWithArray:muteArray];
+                cb(arrayOfSubcategories);
+            });
+        }];
+    }];
+    
+    [queue addOperation:getEquipSubcategories];
+}
+
+- (void)loadScheduleGroupingWithCallback:(void(^)(NSArray *array))cb {
+    __block NSArray *arrayOfScheduleGroupings = @[];
+    
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"allScheduleGrouping";
+    queue.maxConcurrentOperationCount = 1;
+    
+    NSBlockOperation *getEquipScheduleGrouping = [NSBlockOperation blockOperationWithBlock:^{
+       
+        EQRWebData *webData = [EQRWebData sharedInstance];
+        [webData queryWithLink:@"EQGetEquipScheduleGroupingAll.php" parameters:nil class:@"EQREquipScheduleGrouping" completion:^(NSMutableArray *arrayOfEquipScheduleGroupings) {
+            NSMutableArray *muteArray = [NSMutableArray arrayWithCapacity:1];
+            for (EQREquipScheduleGrouping *cat in arrayOfEquipScheduleGroupings) {
+                [muteArray addObject:cat.schedule_grouping];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                arrayOfScheduleGroupings = [NSArray arrayWithArray:muteArray];
+                cb(arrayOfScheduleGroupings);
+            });
+        }];
+    }];
+    
+    [queue addOperation:getEquipScheduleGrouping];
+}
+
 #pragma mark - Info and Prices table delegate method
 - (void)propertySelection:(NSString *)property value:(NSString *)value {
     
@@ -260,14 +339,46 @@
         self.genericEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
         updateMethod = @"updateShortName:";
     }else if([property isEqualToString:@"category"]) {
-        self.genericEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
-        updateMethod = @"updateCategory:";
+        [self loadCategoriesWithCallback:^(NSArray *array) {
+            EQRGenericPickerVC *genericPicker = [[EQRGenericPickerVC alloc] initWithNibName:@"EQRGenericPickerVC" bundle:nil];
+            genericPicker.modalPresentationStyle = UIModalPresentationFormSheet;
+            [genericPicker initialSetupWithTitle:@"Existing Category" subTitle:@"Select one or create a new one" array:array selectedValue:nil allowManualEntry:YES callback:^(NSString *value) {
+                self.equipTitle.category = value;
+                [self updateEquipTitle:^{
+                    [self dismissViewControllerAnimated:YES completion:^{ }];
+                }];
+            }
+             ];
+            [self presentViewController:genericPicker animated:YES completion:^{ }];
+        }];
+        return;
     }else if([property isEqualToString:@"subcategory"]) {
-        self.genericEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
-        updateMethod = @"updateSubcategory:";
+        [self loadSubcategoriesWithCallback:^(NSArray *array) {
+            EQRGenericPickerVC *genericPicker = [[EQRGenericPickerVC alloc] initWithNibName:@"EQRGenericPickerVC" bundle:nil];
+            genericPicker.modalPresentationStyle = UIModalPresentationFormSheet;
+            [genericPicker initialSetupWithTitle:@"Existing Subcategory" subTitle:@"Select one or create a new one" array:array selectedValue:nil allowManualEntry:YES callback:^(NSString *value) {
+                self.equipTitle.subcategory = value;
+                [self updateEquipTitle:^{
+                    [self dismissViewControllerAnimated:YES completion:^{ }];
+                }];
+            }
+             ];
+            [self presentViewController:genericPicker animated:YES completion:^{ }];
+        }];
+        return;
     }else if([property isEqualToString:@"schedule_grouping"]) {
-        self.genericEditor = [[EQRGenericTextEditor alloc] initWithNibName:@"EQRGenericTextEditor" bundle:nil];
-        updateMethod = @"updateScheduleGrouping:";
+        [self loadScheduleGroupingWithCallback:^(NSArray *array) {
+            EQRGenericPickerVC *genericPicker = [[EQRGenericPickerVC alloc] initWithNibName:@"EQRGenericPickerVC" bundle:nil];
+            genericPicker.modalPresentationStyle = UIModalPresentationFormSheet;
+            [genericPicker initialSetupWithTitle:@"Existing Schedule Grouping" subTitle:@"Select one or create a new one" array:array selectedValue:nil allowManualEntry:YES callback:^(NSString *value) {
+                self.equipTitle.schedule_grouping = value;
+                [self updateEquipTitle:^{
+                    [self dismissViewControllerAnimated:YES completion:^{ }];
+                }];
+            }];
+            [self presentViewController:genericPicker animated:YES completion:^{ }];
+        }];
+        return;
     }else if([property isEqualToString:@"price_commercial"]) {
         self.genericEditor = [[EQRGenericNumberEditor alloc] initWithNibName:@"EQRGenericNumberEditor" bundle:nil];
         updateMethod = @"updatePriceCommercial:";
@@ -291,9 +402,7 @@
     self.genericEditor.modalPresentationStyle = UIModalPresentationFormSheet;
     self.genericEditor.delegate = self;
     [self.genericEditor initalSetupWithTitle:@"none" subTitle:@"none" currentText:value keyboard:nil returnMethod:updateMethod];
-    [self presentViewController:self.genericEditor animated:YES completion:^{
-        
-    }];
+    [self presentViewController:self.genericEditor animated:YES completion:^{  }];
 }
 
 #pragma mark - generic editor delegate methods

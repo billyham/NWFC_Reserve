@@ -14,6 +14,10 @@
 - (void)initialSetupWithTitle:(NSString *)title
                      subTitle:(NSString *)subTitle
                         array:(NSArray *)array
-                selectedValue:(NSString *)selectedValue;
+                selectedValue:(NSString *)selectedValue
+             allowManualEntry:(BOOL)isManualEntry
+                     callback:(void(^)(NSString *value))cb;
+
+- (void)setEnterButtonBlock:(void(^)(NSString *value))returnMethod;
 
 @end

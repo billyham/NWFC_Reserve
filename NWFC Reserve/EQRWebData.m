@@ -66,6 +66,8 @@ const int intEQRMiscJoin = 9;
 const int intEQRTextElement = 10;
 const int intEQRTransaction = 11;
 const int intEQREquipCategory = 12;
+const int intEQREquipSubcategory = 13;
+const int intEQREquipScheduleGrouping = 14;
 
 
 @implementation EQRWebData
@@ -167,6 +169,16 @@ const int intEQREquipCategory = 12;
     
     if ([classString isEqualToString:@"EQREquipCategory"]){
         self.returnClassInt = intEQREquipCategory;
+        return;
+    }
+    
+    if ([classString isEqualToString:@"EQREquipSubcategory"]){
+        self.returnClassInt = intEQREquipSubcategory;
+        return;
+    }
+    
+    if ([classString isEqualToString:@"EQREquipScheduleGrouping"]){
+        self.returnClassInt = intEQREquipScheduleGrouping;
         return;
     }
     
