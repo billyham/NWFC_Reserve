@@ -527,7 +527,10 @@
         }
     }
     //______the result is a nested array of just the titleItems requested, with sub_arrays of ALL uniqueItems
-    
+    for (EQREquipUniqueItem *item in tempListOfUniqueItemsJustRequested) {
+        NSLog(@"tempListOfUniqueItemsJustRequested class: %@", [item class]);
+    }
+    NSLog(@"count of arrayOfEquipUniqueItemsByDateCollision: %ld", self.arrayOfEquipUniqueItemsByDateCollision.count);
     
     //____now remove the unique items that have date collisions
     //the top array
@@ -540,7 +543,7 @@
             
             for (EQREquipUniqueItem* unItem in self.arrayOfEquipUniqueItemsByDateCollision){
                 
-                //                NSLog(@"this is the selectedUniqueItem.key_id: %@  and this is the unItem.key_id: %@", selectedUniqueItem.key_id,unItem.key_id );
+                                NSLog(@"this is the selectedUniqueItem.key_id: %@  and this is the unItem.key_id: %@", selectedUniqueItem.key_id,unItem.key_id );
                 
                 if ([selectedUniqueItem.key_id isEqualToString:unItem.key_id]){
                     
@@ -550,6 +553,7 @@
             }
         }
         
+        NSLog(@"removed items: %@", arrayOfUniquesToRemove);
         //here is where we deduct the list of deductions
         [selectedUniqueList removeObjectsInArray:arrayOfUniquesToRemove];
     }
@@ -839,6 +843,25 @@
         dateBeginString = [dateFormatter stringFromDate:self.request.request_date_begin];
         dateEndString = [dateFormatter stringFromDate:self.request.request_date_end];
     }
+    
+    self.arrayOfEquipUniqueItemsByDateCollision = [self getArrayOfEquipUniquesWithBeginDate:dateBeginString EndDate:dateEndString];
+    //remove duplicate equipUniqueItems so they don't get double counted in the next step
+    NSMutableArray *arrayOfEquipUniqueItemsByDataCollisionDeDuped = [NSMutableArray arrayWithCapacity:1];
+    for (EQREquipUniqueItem *thisItem in self.arrayOfEquipUniqueItemsByDateCollision){
+        BOOL addMeToTheArray = YES;
+        for (EQREquipUniqueItem *thisOtherItem in arrayOfEquipUniqueItemsByDataCollisionDeDuped){
+            if ([thisItem.key_id isEqualToString:thisOtherItem.key_id]){
+                //found a match to an existing uniqueItem, so dismiss me
+                addMeToTheArray = NO;
+                break;
+            }
+        }
+        if (addMeToTheArray){
+            [arrayOfEquipUniqueItemsByDataCollisionDeDuped addObject:thisItem];
+        }
+    }
+    //assign de-duped array to property
+    self.arrayOfEquipUniqueItemsByDateCollision = arrayOfEquipUniqueItemsByDataCollisionDeDuped;
 
     //use request item's dates or supplied dateDic
     //______this never gets called and will ignore the usefulness of the expanded list for buffer zones_____
