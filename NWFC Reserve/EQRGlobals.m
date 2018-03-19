@@ -18,7 +18,7 @@ BOOL EQRSuppressDemoColor = NO;
 BOOL EQRLogInputStrings = NO;
 
 // Tab Bar Settings
-BOOL EQRHideCatalog = NO;
+BOOL EQRHideCatalog = YES;
 
 // Datastore Settings
 BOOL EQRUseCoreData = NO;

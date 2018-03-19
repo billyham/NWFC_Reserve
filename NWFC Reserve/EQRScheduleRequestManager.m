@@ -527,11 +527,6 @@
         }
     }
     //______the result is a nested array of just the titleItems requested, with sub_arrays of ALL uniqueItems
-    for (EQREquipUniqueItem *item in tempListOfUniqueItemsJustRequested) {
-        NSLog(@"tempListOfUniqueItemsJustRequested class: %@", [item class]);
-    }
-    NSLog(@"count of arrayOfEquipUniqueItemsByDateCollision: %ld", self.arrayOfEquipUniqueItemsByDateCollision.count);
-    
     //____now remove the unique items that have date collisions
     //the top array
     for (NSMutableArray* selectedUniqueList in tempListOfUniqueItemsJustRequested){
@@ -542,19 +537,13 @@
         for (EQREquipUniqueItem* selectedUniqueItem in selectedUniqueList){
             
             for (EQREquipUniqueItem* unItem in self.arrayOfEquipUniqueItemsByDateCollision){
-                
-                                NSLog(@"this is the selectedUniqueItem.key_id: %@  and this is the unItem.key_id: %@", selectedUniqueItem.key_id,unItem.key_id );
-                
                 if ([selectedUniqueItem.key_id isEqualToString:unItem.key_id]){
-                    
                     //on a match, remove item from the tempList by adding to the list of objects to remove
                     [arrayOfUniquesToRemove addObject:selectedUniqueItem];
                 }
             }
         }
-        
-        NSLog(@"removed items: %@", arrayOfUniquesToRemove);
-        //here is where we deduct the list of deductions
+        // Deduct the list of deductions
         [selectedUniqueList removeObjectsInArray:arrayOfUniquesToRemove];
     }
     
